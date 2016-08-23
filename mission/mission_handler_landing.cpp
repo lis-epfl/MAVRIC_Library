@@ -111,7 +111,7 @@ bool Mission_handler_landing::setup(Mission_planner& mission_planner, const Wayp
     return success;
 }
 
-void Mission_handler_landing::handle(Mission_planner& mission_planner)
+int Mission_handler_landing::handle(Mission_planner& mission_planner)
 {
     // Determine waypoint position
     local_position_t local_pos = waypoint_.local_pos();
@@ -185,19 +185,23 @@ void Mission_handler_landing::handle(Mission_planner& mission_planner)
                                     local_pos[X],
                                     local_pos[Y],
                                     local_pos[Z]);
-    navigation_.set_goal(landing_waypoint_);
-}
+    bool ret = navigation_.set_goal(landing_waypoint_);
 
-bool Mission_handler_landing::is_finished(Mission_planner& mission_planner)
-{
+    /*********************
+     Determine status code 
+    **********************/
     if (waypoint_.autocontinue() == 1 && is_landed_)
     {
-        return true;
+        return 1;
     }
-    else
+
+    // Handle control command failed status
+    if (!ret)
     {
-        return false;
+        return -1;
     }
+
+    return 0;
 }
 
 Mission_planner::internal_state_t Mission_handler_landing::handler_mission_state() const

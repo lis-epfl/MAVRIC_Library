@@ -99,24 +99,16 @@ public:
     /**
      * \brief   Handles the mission every iteration
      *  
-     * \details     
-     *
-     * \param   mission_planner     The mission planner class
-     */
-    virtual void handle(Mission_planner& mission_planner);
-
-    /**
-     * \brief   Checks if the handler has finished the request of the waypoint
-     *  
-     * \details     Will only return true if we can autocontinue towards the
-     *              next waypoint and we are facing the right direction (dubin)
-     *              or are in direct to (or radius == 0)
+     * \details     Handles the navigation to the waypoint and determines the
+     *              status code. The status code is 0 for currently navigating
+     *              to the waypoint, 1 for waypoint reached and autocontinue,
+     *              -1 for control command failed.
      *
      * \param   mission_planner     The mission planner class
      *
-     * \return  Is finished
+     * \return  Status code
      */
-    virtual bool is_finished(Mission_planner& mission_planner);
+    virtual int handle(Mission_planner& mission_planner);
 
     /**
      * \brief   Returns that the mission state is in MISSION

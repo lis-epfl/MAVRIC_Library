@@ -87,25 +87,15 @@ public:
     virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
 
     /**
-     * \brief   Does nothing
+     * \brief   Returns 0
      *  
-     * \details     Does nothing
-     *
-     * \param   mission_planner     The mission planner class
-     */
-    virtual void handle(Mission_planner& mission_planner);
-
-    /**
-     * \brief   Returns false
-     *  
-     * \details     Returns false as the on ground state should never
-                    end without user input from somewhere elses
+     * \details     Returns 0
      *
      * \param   mission_planner     The mission planner class
      *
-     * \return  False
+     * \return  0
      */
-    virtual bool is_finished(Mission_planner& mission_planner);
+    virtual int handle(Mission_planner& mission_planner);
 
     /**
      * \brief   Returns that the mission state is in STANDBY

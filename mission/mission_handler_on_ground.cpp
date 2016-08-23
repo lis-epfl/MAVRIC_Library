@@ -71,13 +71,9 @@ bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, const Wa
     return true;
 }
 
-void Mission_handler_on_ground::handle(Mission_planner& mission_planner)
+int Mission_handler_on_ground::handle(Mission_planner& mission_planner)
 {
-}
-
-bool Mission_handler_on_ground::is_finished(Mission_planner& mission_planner)
-{
-    return false;
+    return 0;
 }
 
 Mission_planner::internal_state_t Mission_handler_on_ground::handler_mission_state() const

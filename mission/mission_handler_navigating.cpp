@@ -117,12 +117,14 @@ bool Mission_handler_navigating::setup(Mission_planner& mission_planner, const W
     return success;
 }
 
-void Mission_handler_navigating::handle(Mission_planner& mission_planner)
+int Mission_handler_navigating::handle(Mission_planner& mission_planner)
 {
     // Set goal
-    navigation_.set_goal(waypoint_);
-
-    /* Check for flag to set waiting at waypoint */
+    bool ret = navigation_.set_goal(waypoint_);
+    
+    /************************************
+     Determine if arrived for first time 
+    ************************************/
     // Find distance to waypoint
     local_position_t wpt_pos = waypoint_.local_pos();
     float rel_pos[3];
@@ -175,16 +177,10 @@ void Mission_handler_navigating::handle(Mission_planner& mission_planner)
             navigation_.set_waiting_at_waypoint(true);
         }
     }
-}
 
-bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
-{
-    float radius;
-    if (!waypoint_.radius(radius))
-    {
-        radius = 0.0f;
-    }
-
+    /*********************
+     Determine status code 
+    **********************/
     // First check if we have reached the waypoint
     if (navigation_.waiting_at_waypoint())
     {
@@ -195,7 +191,7 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
             if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO || 
                 radius == 0.0f)
             {
-                return true;
+                return 1;
             }
             else if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
             {
@@ -235,13 +231,19 @@ bool Mission_handler_navigating::is_finished(Mission_planner& mission_planner)
 
                 if (maths_f_abs(rel_heading) < navigation_.heading_acceptance)
                 {
-                    return true;
+                    return 1;
                 }
             }
         }
     }
 
-    return false;
+    // Handle control command failed status
+    if (!ret)
+    {
+        return -1;
+    }
+    
+    return 0;
 }
 
 Mission_planner::internal_state_t Mission_handler_navigating::handler_mission_state() const

@@ -111,23 +111,15 @@ public:
     /**
      * \brief   Handles the mission every iteration
      *  
-     * \details     
-     *
-     * \param   mission_planner     The mission planner class
-     */
-    virtual void handle(Mission_planner& mission_planner);
-
-    /**
-     * \brief   Return false
-     *  
-     * \details     This returns false as we do not want the drone to take off
-     *              immediately after landing
+     * \details     Sets the goal location and determines the status code. The
+     *              code is 0 for landing in progress, 1 for landing finished
+     *              and autocontinue on, -1 for control command rejected.
      *
      * \param   mission_planner     The mission planner class
      *
-     * \return  False
+     * \return  Status code
      */
-    virtual bool is_finished(Mission_planner& mission_planner);
+    virtual int handle(Mission_planner& mission_planner);
 
     /**
      * \brief   Returns that the mission state is in POSTMISSION

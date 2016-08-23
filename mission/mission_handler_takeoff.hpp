@@ -94,22 +94,15 @@ public:
     /**
      * \brief   Handles the mission every iteration
      *  
-     * \details     
-     *
-     * \param   mission_planner     The mission planner class
-     */
-    virtual void handle(Mission_planner& mission_planner);
-
-    /**
-     * \brief   Checks if the handler has finished the request of the waypoint
-     *  
-     * \details     
+     * \details     Sets the goal and determines the handler status. The status
+     *              is: 0 for takeoff in process, 1 for takeoff complete, and
+     *              -1 for control impossible
      *
      * \param   mission_planner     The mission planner class
      *
-     * \return  Is finished
+     * \return  Status code
      */
-    virtual bool is_finished(Mission_planner& mission_planner);
+    virtual int handle(Mission_planner& mission_planner);
 
     /**
      * \brief   Returns that the mission state is in PREMISSION

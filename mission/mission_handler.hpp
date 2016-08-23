@@ -47,7 +47,13 @@
 #include "control/waypoint.hpp"
 
 /*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ * This mission handler interface. Outine functions that child classes must
+ * implement in order to have the drone achieve the desired mission command.
+ * Child classes will probably pass in a reference to some controller and
+ * pass the desired control commands. If a specific handler should have more
+ * than one possible method of controlling it (e.g. position control, velocity
+ * control), then the mission handler child class can be a template that allows
+ * a template to be inputted instead of a specific control type.
  */
 
 class Mission_handler
@@ -87,24 +93,22 @@ public:
      *  
      * \details     This must be defined in the subclasses. It should perform
      *              routine checks and code that needs to be done every iteration
+     *              The effective goal of the handle function is to set some
+     *              command that will have the drone achieve the mission item.
+     *              The return integer is a status that shows how successful this
+     *              handler has been. It follows this layout:
+     *                   0: Handler in progress, not finished but not failed (if
+     *                          the handler has finished but the drone should not
+     *                          continue to the next waypoint, this should be
+     *                          outputted as 0)
+     *                  +1: Handler successful, continue to next waypoint
+     *                  -1: Handler failed, signifies error
      *
      * \param   mission_planner     The mission planner class
-     */
-    virtual void handle(Mission_planner& mission_planner) = 0;
-
-    /**
-     * \brief   Checks if the handler has finished the request of the waypoint
-     *  
-     * \details     This must be defined in the subclasses. It should perform
-     *              a check to see if the mission item has been finished. For
-     *              example, check to see if we are within acceptable radius
-     *              of the waypoint
      *
-     * \param   mission_planner     The mission planner class
-     *
-     * \return  Is finished
+     * \return  Status code. See details
      */
-    virtual bool is_finished(Mission_planner& mission_planner) = 0;
+    virtual int handle(Mission_planner& mission_planner) = 0;
 
     /**
      * \brief   Gets the mission state of this handler
@@ -122,17 +126,6 @@ public:
      * \return  Mission handler's mission state
      */
     virtual Mission_planner::internal_state_t handler_mission_state() const = 0;
-
-    /**
-     * \brief   Modifies the controls command based on the desired control
-     *          behavior for this mission handler.
-     *
-     * \details Child classes can override this to provide additional
-     *          control modifications. Defaults to no changes.
-     *
-     * \param   control     Control command reference to change
-     */
-    virtual void modify_control_command(control_command_t& control);
 };
 
 

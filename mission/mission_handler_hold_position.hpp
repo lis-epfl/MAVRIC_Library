@@ -95,23 +95,15 @@ public:
     /**
      * \brief   Handles the mission every iteration
      *  
-     * \details     Sets the waypoint goal to the setup waypoint
-     *
-     * \param   mission_planner     The mission planner class
-     */
-    virtual void handle(Mission_planner& mission_planner);
-
-    /**
-     * \brief   Checks if the handler has finished the request of the waypoint
-     *  
-     * \details     Returns true or false based on the specifications of
-                    the inputted waypoint
+     * \details     Sets the waypoint goal to the setup waypoint. Returns 0
+     *              if the drone is still holding position, 1 if it should move
+     *              to the next waypoint, and -1 if the drone cannot hold position
      *
      * \param   mission_planner     The mission planner class
      *
-     * \return  Is finished
+     * \return  Status code
      */
-    virtual bool is_finished(Mission_planner& mission_planner);
+    virtual int handle(Mission_planner& mission_planner);
 
     /**
      * \brief   Returns that the mission state is in MISSION

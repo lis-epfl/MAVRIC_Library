@@ -111,64 +111,74 @@ bool Mission_handler_takeoff::setup(Mission_planner& mission_planner, const Wayp
     return success;
 }
 
-void Mission_handler_takeoff::handle(Mission_planner& mission_planner)
+int Mission_handler_takeoff::handle(Mission_planner& mission_planner)
 {
     // Set goal
-    navigation_.set_goal(waypoint_);
-}
+    bool ret = navigation_.set_goal(waypoint_);
 
-bool Mission_handler_takeoff::is_finished(Mission_planner& mission_planner)
-{
+    /*********************
+     Determine status code 
+    **********************/
     bool finished = false;
+    
 
     // Determine distance to the waypoint
-    if (waypoint_.autocontinue() == 1)
+    float xy_radius_sqr = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
+
+    local_position_t wpt_pos = waypoint_.local_pos();
+    float xy_dist2wp_sqr;
+    float rel_pos[3];
+    for (int i = 0; i < 2; i++)
     {
-        float xy_radius_sqr = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
+        rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+    }
+    rel_pos[2] = 0.0f;
+    xy_dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
-        local_position_t wpt_pos = waypoint_.local_pos();
-        float xy_dist2wp_sqr;
-        float rel_pos[3];
-        for (int i = 0; i < 2; i++)
+    // Determine if finished
+    switch(navigation_.navigation_strategy)
+    {
+    case Navigation::strategy_t::DIRECT_TO:
+       if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
         {
-            rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+            finished = true;
+            navigation_.set_waiting_at_waypoint(true);
         }
-        rel_pos[2] = 0.0f;
-        xy_dist2wp_sqr = vectors_norm_sqr(rel_pos);
+        break;
 
-        // Determine if finished
-        switch(navigation_.navigation_strategy)
+    case Navigation::strategy_t::DUBIN:
+        if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
         {
-        case Navigation::strategy_t::DIRECT_TO:
-           if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
+            if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
             {
                 finished = true;
                 navigation_.set_waiting_at_waypoint(true);
             }
-            break;
-
-        case Navigation::strategy_t::DUBIN:
-            if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
-            {
-                if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
-                {
-                    finished = true;
-                    navigation_.set_waiting_at_waypoint(true);
-                }
-            }
-            else
-            {
-                if (ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
-                {
-                    finished = true;
-                    navigation_.set_waiting_at_waypoint(true);
-                }
-            }
-            break;
         }
+        else
+        {
+            if (ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
+            {
+                finished = true;
+                navigation_.set_waiting_at_waypoint(true);
+            }
+        }
+        break;
     }
 
-    return finished;
+    // Return true if waiting at waypoint and autocontinue
+    if (finished && waypoint_.autocontinue() == 1)
+    {
+        return 1;
+    }
+
+    // Handle control command failed status
+    if (!ret)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
 Mission_planner::internal_state_t Mission_handler_takeoff::handler_mission_state() const
