@@ -366,8 +366,8 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
 
     // SPI 3 config
     conf.spi_config[1].spi_device               = STM32_SPI3;
-    conf.spi_config[1].mode                     = STM32_SPI_MODE_CPOL1_CPHA1;
-    conf.spi_config[1].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_64;
+    conf.spi_config[1].mode                     = STM32_SPI_MODE_CPOL0_CPHA0;
+    conf.spi_config[1].clk_div                  = SPI_CR1_BAUDRATE_FPCLK_DIV_8;
     conf.spi_config[1].ss_mode_hard             = true;
 
     conf.spi_config[1].miso_gpio_config.port    = GPIO_STM32_PORT_C;

@@ -104,6 +104,7 @@ bool Mpu_9250::init(void)
 
     // Initializing Slave Select GPIO
     success &= nss_.init();
+    unselect_slave();
 
     // Reset accelerometer and gyroscope
     success &= mpu_reset();

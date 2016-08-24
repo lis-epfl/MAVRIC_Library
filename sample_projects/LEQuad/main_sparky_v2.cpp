@@ -40,7 +40,7 @@
 
 #include "boards/sparky_v2.hpp"
 
-#include "drivers/mpu_9250.hpp"
+#include "drivers/rfm22b.hpp"
 #include "drivers/spektrum_satellite.hpp"
 
 #include "hal/common/time_keeper.hpp"
@@ -188,16 +188,18 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    mav.loop();
+    // mav.loop();
 
-    // board.led_err_.off();
-    // board.led_stat_.off();
-    // board.led_rf_.off();
+    board.led_err_.off();
+    board.led_stat_.off();
+    board.led_rf_.off();
 
-    // Console<Serial> console(board.serial_);
+    Console<Serial> console(board.serial_);
+    Rfm22b rfm22b(board.spi_3_, board.nss_2_gpio_);
+    bool bo = rfm22b.init();
 
-    // while (1)
-    // {
+    while (1)
+    {
 
         // Write mavlink message
         // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
@@ -210,36 +212,36 @@ int main(int argc, char** argv)
         //                             0);     //uint8_t system_status)
         // mavlink_stream.send(&msg);
 
-    //     time_keeper_delay_ms(500);
+        time_keeper_delay_ms(500);
 
 
-    //     const char* sep = "\t";
-    //     uint64_t delay = 25;
+        // const char* sep = "\t";
+        // uint64_t delay = 25;
 
-    //     console.write(valx);
-    //     time_keeper_delay_ms(delay);
-    //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     time_keeper_delay_ms(delay);
-    //     console.write(valy);
-    //     time_keeper_delay_ms(delay);
-    //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     time_keeper_delay_ms(delay);
-    //     console.write(valz);
-    //     time_keeper_delay_ms(delay);
+        // console.write(read);
+        // time_keeper_delay_ms(delay);
+        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        // time_keeper_delay_ms(delay);
+        // console.write(valy);
+        // time_keeper_delay_ms(delay);
+        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        // time_keeper_delay_ms(delay);
+        // console.write(valz);
+        // time_keeper_delay_ms(delay);
 
-    //     const char* newline = "\r\n";
-    //     board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        // const char* newline = "\r\n";
+        // board.serial_.write((const uint8_t*)newline, sizeof(newline));
 
-    //     if (bo)
-    //     {
-    //         board.led_stat_.toggle();
-    //     }
-    //     else
-    //     {
-    //         board.led_err_.toggle();
-    //     }
+        if (bo)
+        {
+            board.led_stat_.toggle();
+        }
+        else
+        {
+            board.led_err_.toggle();
+        }
 
-    // }
+    }
 
     return 0;
 }
