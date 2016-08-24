@@ -251,13 +251,13 @@ protected:
     Navigation navigation;                                      ///< The structure to perform GPS navigation
 
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
-    Mission_handler_hold_position hold_position_handler;
-    Mission_handler_landing landing_handler;
-    Mission_handler_navigating navigating_handler;
-    Mission_handler_on_ground on_ground_handler;
-    Mission_handler_takeoff takeoff_handler;
-    Mission_handler_critical_landing critical_landing_handler;
-    Mission_handler_critical_navigating critical_navigating_handler;
+    Mission_handler_hold_position<INavigation_controller> hold_position_handler;
+    Mission_handler_landing<INavigation_controller, IPosition_zvelocity_controller> landing_handler;
+    Mission_handler_navigating<INavigation_controller> navigating_handler;
+    Mission_handler_on_ground<INavigation_controller> on_ground_handler;
+    Mission_handler_takeoff<INavigation_controller> takeoff_handler;
+    Mission_handler_critical_landing<INavigation_controller> critical_landing_handler;
+    Mission_handler_critical_navigating<INavigation_controller> critical_navigating_handler;
     Mission_planner mission_planner;                            ///< Controls the mission plan
 
 

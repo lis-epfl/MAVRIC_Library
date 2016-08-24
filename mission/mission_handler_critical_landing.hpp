@@ -48,8 +48,8 @@
 /*
  * The handler class takes in a template parameter that allows control inputs.
  */
-template <class T>
-class Mission_handler_critical_landing : public Mission_handler_landing<T>
+template <class T1, class T2>
+class Mission_handler_critical_landing : public Mission_handler_landing<T1, T2>
 {
 public:
 
@@ -57,12 +57,14 @@ public:
     /**
      * \brief   Initialize the landing mission planner handler
      *
-     * \param   controller              The reference to the controller
-     * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
+     * \param   desc_to_small_alt_controller    The reference to the controller used during the descent to small altitudes phase
+     * \param   desc_to_ground_controller       The reference to the controller used during the descent to ground phase
+     * \param   ins                             The reference to the ins
+     * \param   navigation                      The reference to the navigation structure
+     * \param   state                           The reference to the state structure
      */
-     Mission_handler_critical_landing(  T& controller,
+     Mission_handler_critical_landing(  T1& desc_to_small_alt_controller,
+                                        T2& desc_to_ground_controller,
                                         const INS& ins,
                                         Navigation& navigation,
                                         State& state);

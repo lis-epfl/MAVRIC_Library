@@ -44,17 +44,18 @@
 #ifndef MISSION_HANDLER_CRITICAL_LANDING_HXX__
 #define MISSION_HANDLER_CRITICAL_LANDING_HXX__
 
-template <class T>
-Mission_handler_critical_landing<T>::Mission_handler_critical_landing<T>(   T& controller,
-                                                                            const INS& ins,
-                                                                            Navigation& navigation,
-                                                                            State& state):
-            Mission_handler_landing(controller, ins, navigation, state)
+template <class T1, class T2>
+Mission_handler_critical_landing<T1, T2>::Mission_handler_critical_landing<T1, T2>( T1& desc_to_small_alt_controller,
+                                                                                    T2& desc_to_ground_controller,
+                                                                                    const INS& ins,
+                                                                                    Navigation& navigation,
+                                                                                    State& state):
+            Mission_handler_landing(desc_to_small_alt_controller, desc_to_ground_controller, ins, navigation, state)
 {
 }
 
-template <class T>
-bool Mission_handler_critical_landing<T>::can_handle(const Waypoint& wpt) const
+template <class T1, class T2>
+bool Mission_handler_critical_landing<T1, T2>::can_handle(const Waypoint& wpt) const
 {
     bool handleable = false;
 
