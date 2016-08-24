@@ -30,36 +30,48 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_takeoff.cpp
+ * \file mission_handler_critical_navigating.hxx
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the takeoff state
+ * \brief   The MAVLink mission planner handler functions for the critical 
+ *          navigating state
  *
  ******************************************************************************/
 
 
-#include "mission/mission_handler_takeoff.hpp"
+#ifndef MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
+#define MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
+
+#include "communication/mavlink_waypoint_handler.hpp"
 
 extern "C"
 {
-
 }
 
-
-
-//------------------------------------------------------------------------------
-// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-template <>
-bool Mission_handler_takeoff<IPos>::set_controller(Mission_planner& mission_planner)
+template <class T>
+Mission_handler_critical_navigating<T>::Mission_handler_critical_navigating<T>( T& controller,
+                                                                                const INS& ins,
+                                                                                Navigation& navigation,
+                                                                                const Mavlink_stream& mavlink_stream,
+                                                                                Mavlink_waypoint_handler& waypoint_handler):
+            Mission_handler_navigating(controller, ins, navigation, mavlink_stream, waypoint_handler)
 {
-    controller_.set_position(...);
 }
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+template <class T>
+bool Mission_handler_critical_navigating<T>::can_handle(const Waypoint& wpt) const
+{
+    bool handleable = false;
 
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_CRITICAL_WAYPOINT)
+    {
+        handleable = true;
+    }
+
+    return handleable;
+}
+
+#endif // MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__

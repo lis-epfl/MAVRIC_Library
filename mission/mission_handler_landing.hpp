@@ -48,9 +48,9 @@
 #include "mission/navigation.hpp"
 
 /*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ * The handler class takes in a template parameter that allows control inputs.
  */
-
+template <class T>
 class Mission_handler_landing : public Mission_handler
 {
 public:
@@ -74,12 +74,14 @@ public:
     /**
      * \brief   Initialize the landing mission planner handler
      *
+     * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      * \param   config                  The landing mission handler config structure
      */
-     Mission_handler_landing(   const INS& ins,
+     Mission_handler_landing(   T& controller,
+                                const INS& ins,
                                 Navigation& navigation,
                                 State& state,
                                 conf_t config = default_config());
@@ -129,15 +131,6 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
     /**
-     * \brief   Limits the vertical velocity
-     *
-     * \details Limits the vertical velocity during the descent to ground state
-     *
-     * \param   control     Control command reference to change
-     */
-    virtual void modify_control_command(control_command_t& control);
-
-    /**
      * \brief   default configuration for navigation
      *
      * \return default config
@@ -152,9 +145,19 @@ protected:
     float alt_lpf_;                                             ///< The low-pass filtered altitude for auto-landing
     float LPF_gain_;                                            ///< The low-pass filter gain
     
+    T& controller_;                                             ///< The reference to the controller
     const INS& ins_;                                            ///< The reference to the ins interface
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
+
+    /**
+     * \brief   Function to controller specific functions
+     *
+     * \param   mission_planner     The reference to the mission planner class
+     *
+     * \return  Controller accepted input
+     */
+    virtual bool set_controller(Mission_planner& mission_planner);
 };
 
 Mission_handler_landing::conf_t Mission_handler_landing::default_config()
@@ -166,8 +169,6 @@ Mission_handler_landing::conf_t Mission_handler_landing::default_config()
     return conf;
 };
 
-
-
-
+#include "mission/mission_handler_landing.hxx"
 
 #endif // MISSION_HANDLER_LANDING__

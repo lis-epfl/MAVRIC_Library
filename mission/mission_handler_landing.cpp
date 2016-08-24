@@ -53,162 +53,17 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-
+template <>
+bool Mission_handler_landing<IPosZVel>::set_controller(Mission_planner& mission_planner)
+{
+    controller_.set_position_zvel(...);
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_landing::Mission_handler_landing(   const INS& ins,
-                                                    Navigation& navigation,
-                                                    State& state,
-                                                    conf_t config):
-            Mission_handler(),
-            ins_(ins),
-            navigation_(navigation),
-            state_(state)
-{
-    waypoint_ = Waypoint (  MAV_FRAME_LOCAL_NED,
-                            MAV_CMD_NAV_LAND,
-                            0,
-                            0.0f,
-                            0.0f,
-                            0.0f,
-                            0.0f,
-                            0.0f,
-                            0.0f,
-                            0.0f);
-    auto_landing_behavior_ = DESCENT_TO_SMALL_ALTITUDE;
-    LPF_gain_ = config.LPF_gain;
-}
-
-bool Mission_handler_landing::can_handle(const Waypoint& wpt) const
-{
-    bool handleable = false;
-
-    uint16_t cmd = wpt.command();
-    if (cmd == MAV_CMD_NAV_LAND)
-    {
-        handleable = true;
-    }
-
-    return handleable;
-}
-
-bool Mission_handler_landing::setup(Mission_planner& mission_planner, const Waypoint& wpt)
-{
-    bool success = true;
-
-    print_util_dbg_print("Automatic-landing: descent_to_small_altitude\r\n");
-    auto_landing_behavior_ = DESCENT_TO_SMALL_ALTITUDE;
-    state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
-    state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
-    navigation_.set_waiting_at_waypoint(false);
-    is_landed_ = false;
-
-    waypoint_ = wpt;
-
-    return success;
-}
-
-int Mission_handler_landing::handle(Mission_planner& mission_planner)
-{
-    // Determine waypoint position
-    local_position_t local_pos = waypoint_.local_pos();
-    switch (auto_landing_behavior_)
-    {
-        case DESCENT_TO_SMALL_ALTITUDE:
-        {
-            local_pos[Z] = navigation_.takeoff_altitude/2.0f;
-            break;
-        }
-
-        case DESCENT_TO_GND:
-        {
-            local_pos[Z] = 0.0f;
-            break;
-        }
-    }
-
-    // Determine if we should switch between the landing states
-    bool next_state = false;
-    if (auto_landing_behavior_ == DESCENT_TO_GND)
-    {
-        alt_lpf_ = LPF_gain_ * (alt_lpf_) + (1.0f - LPF_gain_) * ins_.position_lf()[Z];
-        if ((ins_.position_lf()[Z] > -0.1f) && (maths_f_abs(ins_.position_lf()[Z] - alt_lpf_) <= 0.2f))
-        {
-            next_state = true;
-        }
-    }
-    else if (auto_landing_behavior_ == DESCENT_TO_SMALL_ALTITUDE)
-    {
-        if (maths_f_abs(ins_.position_lf()[Z] - local_pos[Z]) < 0.5f)
-        {
-            next_state = true;
-        }
-    }
-
-    // If we are switching between states, ... then switch
-    if (next_state)
-    {
-        switch (auto_landing_behavior_)
-        {
-            case DESCENT_TO_SMALL_ALTITUDE:
-                print_util_dbg_print("Automatic-landing: descent_to_GND\r\n");
-                auto_landing_behavior_ = DESCENT_TO_GND;
-                state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
-                state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_GND;
-                alt_lpf_ = ins_.position_lf()[Z];
-                break;
-
-            case DESCENT_TO_GND:
-                print_util_dbg_print("Auto-landing: disarming motors \r\n");
-                auto_landing_behavior_ = DESCENT_TO_SMALL_ALTITUDE;
-                //Do not reset custom flag here, to be able to check after landing
-                // in case something went wrong. Is reset while arming
-                state_.set_armed(false);
-                state_.mav_state_ = MAV_STATE_STANDBY;
-                navigation_.set_waiting_at_waypoint(true);
-                is_landed_ = true;
-                break;
-        }
-    }
-
-    // Set goal
-    landing_waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,    // Needs to be local NED as we input the local position as param 5, 6, and 7
-                                    waypoint_.command(),
-                                    waypoint_.autocontinue(),
-                                    waypoint_.param1(),
-                                    waypoint_.param2(),
-                                    waypoint_.param3(),
-                                    waypoint_.param4(),
-                                    local_pos[X],
-                                    local_pos[Y],
-                                    local_pos[Z]);
-    bool ret = navigation_.set_goal(landing_waypoint_);
-
-    /*********************
-     Determine status code 
-    **********************/
-    if (waypoint_.autocontinue() == 1 && is_landed_)
-    {
-        return 1;
-    }
-
-    // Handle control command failed status
-    if (!ret)
-    {
-        return -1;
-    }
-
-    return 0;
-}
-
-Mission_planner::internal_state_t Mission_handler_landing::handler_mission_state() const
-{
-    return Mission_planner::POSTMISSION;
-}
-
+/*
 void Mission_handler_landing::modify_control_command(control_command_t& control)
 {
     if (auto_landing_behavior_ == DESCENT_TO_GND)
@@ -217,3 +72,4 @@ void Mission_handler_landing::modify_control_command(control_command_t& control)
         control.tvel[Z] = 0.3f;
     }
 }
+*/

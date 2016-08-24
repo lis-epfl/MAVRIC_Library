@@ -47,137 +47,17 @@ extern "C"
 
 }
 
+//------------------------------------------------------------------------------
+// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+template <>
+bool Mission_handler_hold_position<IPos>::set_controller(Mission_planner& mission_planner)
+{
+    controller_.set_position(...);
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_hold_position::Mission_handler_hold_position(   const INS& ins,
-                                                                Navigation& navigation):
-            Mission_handler(),
-            ins_(ins),
-            navigation_(navigation)
-{
-    waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
-                            MAV_CMD_NAV_LOITER_UNLIM,
-                            0,
-                            0.0f,
-                            0.0f,
-                            0.0f,
-                            0.0f,
-                            0.0f,
-                            0.0f,
-                            0.0f);
-}
-
-bool Mission_handler_hold_position::can_handle(const Waypoint& wpt) const
-{
-    bool handleable = false;
-
-    uint16_t cmd = wpt.command();
-    if (cmd == MAV_CMD_NAV_LOITER_UNLIM ||
-        cmd == MAV_CMD_NAV_LOITER_TIME  ||
-        cmd == MAV_CMD_NAV_LOITER_TO_ALT ||
-        (cmd == MAV_CMD_OVERRIDE_GOTO && wpt.param1() == MAV_GOTO_DO_HOLD))
-    {
-        handleable = true;
-    }
-
-    return handleable;
-}
-
-bool Mission_handler_hold_position::setup(Mission_planner& mission_planner, const Waypoint& wpt)
-{
-    bool success = true;
-    waypoint_ = wpt;
-    start_time_ = time_keeper_get_ms();
-    within_radius_ = false;
-    navigation_.set_waiting_at_waypoint(true);
-
-    return success;
-}
-
-int Mission_handler_hold_position::handle(Mission_planner& mission_planner)
-{
-    // Set goal
-    bool ret = navigation_.set_goal(waypoint_);
-
-    /*********************
-     Determine status code 
-    **********************/
-    // Determine if we have entered the hold position volume
-    local_position_t wpt_pos = waypoint_.local_pos();
-
-    float radius;
-    if (!waypoint_.radius(radius))
-    {
-        radius = 0.0f;
-    }
-    
-    // Check if we are doing dubin circles
-    if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
-    {
-        within_radius_ = true;
-    }
-    // Or that we are at the waypoint
-    else if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO &&
-            ((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < radius*radius)
-    {
-        within_radius_ = true;
-    }
-    else
-    {
-        within_radius_ = false;
-
-        // Reset start time
-        start_time_ = time_keeper_get_ms();
-    }
-
-    // Determine if we should advance to the next waypoint
-    if (waypoint_.autocontinue() == 1)
-    {
-        switch (waypoint_.command())
-        {
-        case MAV_CMD_NAV_LOITER_UNLIM:
-            return 0;
-
-        case MAV_CMD_NAV_LOITER_TIME:
-            if (within_radius_ && ((time_keeper_get_ms() - start_time_) > waypoint_.param1() * 1000))
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
-            break;
-
-        case MAV_CMD_NAV_LOITER_TO_ALT:
-            if (maths_f_abs(ins_.position_lf()[Z] - waypoint_.local_pos()[Z]) < waypoint_.param2()) // TODO: Add check for heading
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
-            break;
-
-        default:
-            return 0;
-        }
-    }
-
-    // Handle control command failed status
-    if (!ret)
-    {
-        return -1;
-    }
-
-    return 0;
-}
-
-Mission_planner::internal_state_t Mission_handler_hold_position::handler_mission_state() const
-{
-    return Mission_planner::MISSION;
-}

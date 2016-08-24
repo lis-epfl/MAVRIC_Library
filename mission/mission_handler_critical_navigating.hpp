@@ -43,17 +43,13 @@
 #ifndef MISSION_HANDLER_CRITICAL_NAVIGATING__
 #define MISSION_HANDLER_CRITICAL_NAVIGATING__
 
-#include "communication/mavlink_message_handler.hpp"
 #include "mission/mission_handler_navigating.hpp"
-#include "mission/navigation.hpp"
-
-class Mavlink_waypoint_handler;
 
 /*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ * The handler class takes in a template parameter that allows control inputs.
  */
-
-class Mission_handler_critical_navigating : public Mission_handler_navigating
+template <class T>
+class Mission_handler_critical_navigating : public Mission_handler_navigating<T>
 {
 public:
 
@@ -61,13 +57,15 @@ public:
     /**
      * \brief   Initialize the navigating mission planner handler
      *
+     * \param   controller                          The reference to the controller
      * \param   ins                                 The reference to the ins
      * \param   navigation                          The reference to the navigation structure
      * \param   mission_planner                     The reference to the mission planner
      * \param   mavlink_stream                      The reference to the MAVLink stream structure
      * \param   waypoint_handler                    The handler for the manual control state
      */
-     Mission_handler_critical_navigating(   const INS& ins,
+     Mission_handler_critical_navigating(   T& controller,
+                                            const INS& ins,
                                             Navigation& navigation,
                                             const Mavlink_stream& mavlink_stream,
                                             Mavlink_waypoint_handler& waypoint_handler);
@@ -85,10 +83,6 @@ public:
     virtual bool can_handle(const Waypoint& wpt) const;
 };
 
-
-
-
-
-
+#include "mission/mission_handler_navigating.hxx"
 
 #endif // MISSION_HANDLER_CRITICAL_NAVIGATING__

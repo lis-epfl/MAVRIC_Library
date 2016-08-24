@@ -30,36 +30,41 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_takeoff.cpp
+ * \file mission_handler_critical_landing.hxx
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler for the takeoff state
+ * \brief   The MAVLink mission planner handler functions for the critical 
+ *          landing state
  *
  ******************************************************************************/
 
 
-#include "mission/mission_handler_takeoff.hpp"
+#ifndef MISSION_HANDLER_CRITICAL_LANDING_HXX__
+#define MISSION_HANDLER_CRITICAL_LANDING_HXX__
 
-extern "C"
+template <class T>
+Mission_handler_critical_landing<T>::Mission_handler_critical_landing<T>(   T& controller,
+                                                                            const INS& ins,
+                                                                            Navigation& navigation,
+                                                                            State& state):
+            Mission_handler_landing(controller, ins, navigation, state)
 {
-
 }
 
-
-
-//------------------------------------------------------------------------------
-// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-template <>
-bool Mission_handler_takeoff<IPos>::set_controller(Mission_planner& mission_planner)
+template <class T>
+bool Mission_handler_critical_landing<T>::can_handle(const Waypoint& wpt) const
 {
-    controller_.set_position(...);
+    bool handleable = false;
+
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_CRITICAL_LAND)
+    {
+        handleable = true;
+    }
+
+    return handleable;
 }
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
+#endif // MISSION_HANDLER_CRITICAL_LANDING_HXX__

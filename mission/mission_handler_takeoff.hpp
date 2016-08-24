@@ -48,9 +48,9 @@
 #include "mission/navigation.hpp"
 
 /*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ * The handler class takes in a template parameter that allows control inputs.
  */
-
+template <class T>
 class Mission_handler_takeoff : public Mission_handler
 {
 public:
@@ -59,11 +59,13 @@ public:
     /**
      * \brief   Initialize the takeoff mission planner handler
      *
+     * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation class
      * \param   state                   The reference to the state class
      */
-     Mission_handler_takeoff(   const INS& ins,
+     Mission_handler_takeoff(   T& controller,
+                                const INS& ins,
                                 Navigation& navigation,
                                 State& state);
 
@@ -112,17 +114,23 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
+    T& controller_;                                             ///< The reference to the controller
     const INS& ins_;                                            ///< The reference to the ins interface
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
 
     Waypoint waypoint_;
+
+    /**
+     * \brief   Function to controller specific functions
+     *
+     * \param   mission_planner     The reference to the mission planner class
+     *
+     * \return  Controller accepted input
+     */
+    virtual bool set_controller(Mission_planner& mission_planner);
 };
 
-
-
-
-
-
+#include "mission/mission_handler_takeoff.hxx"
 
 #endif // MISSION_HANDLER_TAKEOFF__

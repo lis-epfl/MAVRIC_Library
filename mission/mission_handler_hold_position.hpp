@@ -47,9 +47,9 @@
 #include "mission/navigation.hpp"
 
 /*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ * The handler class takes in a template parameter that allows control inputs.
  */
-
+template <class T>
 class Mission_handler_hold_position : public Mission_handler
 {
 public:
@@ -58,10 +58,12 @@ public:
     /**
      * \brief   Initialize the hold position mission planner handler
      *
+     * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation structure
      */
-     Mission_handler_hold_position( const INS& ins,
+     Mission_handler_hold_position( T& controller,
+                                    const INS& ins,
                                     Navigation& navigation);
 
     /**
@@ -117,14 +119,20 @@ protected:
     uint64_t start_time_;               ///< The start time of the waypoint hold
     bool within_radius_;                ///< Flag stating if we are within the radius
 
+    T& controller_;                     ///< The reference to the controller
     const INS& ins_;                    ///< The reference to the ins structure
     Navigation& navigation_;            ///< The reference to the navigation structure
+
+    /**
+     * \brief   Function to controller specific functions
+     *
+     * \param   mission_planner     The reference to the mission planner class
+     *
+     * \return  Controller accepted input
+     */
+    virtual bool set_controller(Mission_planner& mission_planner);
 };
 
-
-
-
-
-
+#include "mission/mission_handler_hold_position.hxx"
 
 #endif // MISSION_HANDLER_HOLD_POSITION__

@@ -42,15 +42,6 @@
 
 #include "mission/mission_handler_critical_navigating.hpp"
 
-#include "communication/mavlink_waypoint_handler.hpp"
-
-extern "C"
-{
-#include "hal/common/time_keeper.hpp"
-}
-
-
-
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -61,23 +52,3 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_critical_navigating::Mission_handler_critical_navigating(   const INS& ins,
-                                                                            Navigation& navigation,
-                                                                            const Mavlink_stream& mavlink_stream,
-                                                                            Mavlink_waypoint_handler& waypoint_handler):
-            Mission_handler_navigating(ins, navigation, mavlink_stream, waypoint_handler)
-{
-}
-
-bool Mission_handler_critical_navigating::can_handle(const Waypoint& wpt) const
-{
-    bool handleable = false;
-
-    uint16_t cmd = wpt.command();
-    if (cmd == MAV_CMD_NAV_CRITICAL_WAYPOINT)
-    {
-        handleable = true;
-    }
-
-    return handleable;
-}

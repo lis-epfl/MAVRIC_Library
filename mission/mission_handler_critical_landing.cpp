@@ -59,22 +59,3 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_critical_landing::Mission_handler_critical_landing( const INS& ins,
-                                                                    Navigation& navigation,
-                                                                    State& state):
-            Mission_handler_landing(ins, navigation, state)
-{
-}
-
-bool Mission_handler_critical_landing::can_handle(const Waypoint& wpt) const
-{
-    bool handleable = false;
-
-    uint16_t cmd = wpt.command();
-    if (cmd == MAV_CMD_NAV_CRITICAL_LAND)
-    {
-        handleable = true;
-    }
-
-    return handleable;
-}

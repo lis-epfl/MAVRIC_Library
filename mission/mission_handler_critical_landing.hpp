@@ -43,15 +43,13 @@
 #ifndef MISSION_HANDLER_CRITICAL_LANDING__
 #define MISSION_HANDLER_CRITICAL_LANDING__
 
-#include "communication/state.hpp"
 #include "mission/mission_handler_landing.hpp"
-#include "mission/navigation.hpp"
 
 /*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ * The handler class takes in a template parameter that allows control inputs.
  */
-
-class Mission_handler_critical_landing : public Mission_handler_landing
+template <class T>
+class Mission_handler_critical_landing : public Mission_handler_landing<T>
 {
 public:
 
@@ -59,11 +57,13 @@ public:
     /**
      * \brief   Initialize the landing mission planner handler
      *
+     * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
      * \param   navigation              The reference to the navigation structure
      * \param   state                   The reference to the state structure
      */
-     Mission_handler_critical_landing(  const INS& ins,
+     Mission_handler_critical_landing(  T& controller,
+                                        const INS& ins,
                                         Navigation& navigation,
                                         State& state);
 
