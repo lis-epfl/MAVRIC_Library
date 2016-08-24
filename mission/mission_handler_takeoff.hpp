@@ -122,13 +122,13 @@ protected:
     Waypoint waypoint_;
 
     /**
-     * \brief   Function to controller specific functions
+     * \brief   Function to set the controller specific command
      *
      * \param   mission_planner     The reference to the mission planner class
      *
      * \return  Controller accepted input
      */
-    virtual bool set_controller(Mission_planner& mission_planner);
+    virtual bool set_control_command(Mission_planner& mission_planner);
 };
 
 #include "mission/mission_handler_takeoff.hxx"

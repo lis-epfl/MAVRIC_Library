@@ -43,14 +43,16 @@
 #ifndef MISSION_HANDLER_LANDING_HXX__
 #define MISSION_HANDLER_LANDING_HXX__
 
-template <class T>
-Mission_handler_landing<T>::Mission_handler_landing<T>( T& controller,
+template <class T1, class T2>
+Mission_handler_landing<T1, T2>::Mission_handler_landing<T>( T1& desc_to_small_alt_controller,
+                                                        T2& desc_to_ground_controller,
                                                         const INS& ins,
                                                         Navigation& navigation,
                                                         State& state,
                                                         conf_t config):
             Mission_handler(),
-            controller_(controller),
+            desc_to_small_alt_controller_(desc_to_small_alt_controller),
+            desc_to_ground_controller_(desc_to_ground_controller),
             ins_(ins),
             navigation_(navigation),
             state_(state)
@@ -69,8 +71,8 @@ Mission_handler_landing<T>::Mission_handler_landing<T>( T& controller,
     LPF_gain_ = config.LPF_gain;
 }
 
-template <class T>
-bool Mission_handler_landing<T>::can_handle(const Waypoint& wpt) const
+template <class T1, class T2>
+bool Mission_handler_landing<T1, T2>::can_handle(const Waypoint& wpt) const
 {
     bool handleable = false;
 
@@ -83,8 +85,8 @@ bool Mission_handler_landing<T>::can_handle(const Waypoint& wpt) const
     return handleable;
 }
 
-template <class T>
-bool Mission_handler_landing<T>::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+template <class T1, class T2>
+bool Mission_handler_landing<T1, T2>::setup(Mission_planner& mission_planner, const Waypoint& wpt)
 {
     bool success = true;
 
@@ -100,26 +102,12 @@ bool Mission_handler_landing<T>::setup(Mission_planner& mission_planner, const W
     return success;
 }
 
-template <class T>
-int Mission_handler_landing<T>::update(Mission_planner& mission_planner)
+template <class T1, class T2>
+int Mission_handler_landing<T1, T2>::update(Mission_planner& mission_planner)
 {
-    // Determine waypoint position
-    local_position_t local_pos = waypoint_.local_pos();
-    switch (auto_landing_behavior_)
-    {
-        case DESCENT_TO_SMALL_ALTITUDE:
-        {
-            local_pos[Z] = navigation_.takeoff_altitude/2.0f;
-            break;
-        }
-
-        case DESCENT_TO_GND:
-        {
-            local_pos[Z] = 0.0f;
-            break;
-        }
-    }
-
+    /*****************************
+    Handle internal landing states 
+    *****************************/
     // Determine if we should switch between the landing states
     bool next_state = false;
     if (auto_landing_behavior_ == DESCENT_TO_GND)
@@ -132,7 +120,7 @@ int Mission_handler_landing<T>::update(Mission_planner& mission_planner)
     }
     else if (auto_landing_behavior_ == DESCENT_TO_SMALL_ALTITUDE)
     {
-        if (maths_f_abs(ins_.position_lf()[Z] - local_pos[Z]) < 0.5f)
+        if (maths_f_abs(ins_.position_lf()[Z] - navigation_.takeoff_altitude/2.0f) < 0.5f)
         {
             next_state = true;
         }
@@ -163,23 +151,26 @@ int Mission_handler_landing<T>::update(Mission_planner& mission_planner)
                 break;
         }
     }
+    
+    
+    /*************
+    Set controller 
+    *************/
+    bool ret = false;
+    switch (auto_landing_behavior_)
+    {
+        case DESCENT_TO_SMALL_ALTITUDE:
+            ret = set_desc_to_small_alt_control_command(mission_planner);
+            break;
 
-    // Set goal
-    landing_waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,    // Needs to be local NED as we input the local position as param 5, 6, and 7
-                                    waypoint_.command(),
-                                    waypoint_.autocontinue(),
-                                    waypoint_.param1(),
-                                    waypoint_.param2(),
-                                    waypoint_.param3(),
-                                    waypoint_.param4(),
-                                    local_pos[X],
-                                    local_pos[Y],
-                                    local_pos[Z]);
-    bool ret = navigation_.set_goal(landing_waypoint_);
+        case DESCENT_TO_GND:
+            ret = set_desc_to_ground_control_command(mission_planner);
+            break;
+    }
 
-    /*********************
-     Determine status code 
-    **********************/
+    /********************
+    Determine status code 
+    ********************/
     if (waypoint_.autocontinue() == 1 && is_landed_)
     {
         return 1;
@@ -194,8 +185,8 @@ int Mission_handler_landing<T>::update(Mission_planner& mission_planner)
     return 0;
 }
 
-template <class T>
-Mission_planner::internal_state_t Mission_handler_landing<T>::handler_mission_state() const
+template <class T1, class T2>
+Mission_planner::internal_state_t Mission_handler_landing<T1, T2>::handler_mission_state() const
 {
     return Mission_planner::POSTMISSION;
 }

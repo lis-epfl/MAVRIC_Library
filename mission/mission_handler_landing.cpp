@@ -53,23 +53,21 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-template <>
-bool Mission_handler_landing<IPosZVel>::set_controller(Mission_planner& mission_planner)
+template <class T2>
+bool Mission_handler_landing<INavigation_controller>::set_desc_to_small_alt_control_command(Mission_planner& mission_planner)
 {
-    controller_.set_position_zvel(...);
+	INavigation_controller::nav_command_t cmd;
+	cmd.local_position = waypoint_.local_pos();
+	cmd.local_position[Z] = navigation_.takeoff_altitude/2.0f;
+	desc_to_small_alt_controller_.set_navigation_command(cmd);
 }
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-/*
-void Mission_handler_landing::modify_control_command(control_command_t& control)
+template <class T1>
+bool Mission_handler_landing<IPosition_zvelocity_controller>::set_desc_to_ground_control_command(Mission_planner& mission_planner)
 {
-    if (auto_landing_behavior_ == DESCENT_TO_GND)
-    {
-        // Constant velocity to the ground
-        control.tvel[Z] = 0.3f;
-    }
+	IPosition_zvelocity_controller::xy_pos_z_vel_command_t cmd;
+	cmd.x_pos = waypoint_.local_pos()[X];
+	cmd.y_pos = waypoint_.local_pos()[Y];
+	cmd.z_vel = 0.3f;
+    controller_.set_position_zvel_command(cmd);
 }
-*/

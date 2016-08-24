@@ -97,11 +97,11 @@ template <class T>
 int Mission_handler_hold_position<T>::update(Mission_planner& mission_planner)
 {
     // Set goal
-    bool ret = set_controller(mission_planner);navigation_.set_goal(waypoint_);
+    bool ret = set_controller(mission_planner);
 
-    /*********************
-     Determine status code 
-    **********************/
+    /*******************
+    Determine status code 
+    ********************/
     // Determine if we have entered the hold position volume
     local_position_t wpt_pos = waypoint_.local_pos();
 

@@ -128,9 +128,9 @@ int Mission_handler_navigating<T>::update(Mission_planner& mission_planner)
     // Set goal
     bool ret = set_controller(mission_planner);
     
-    /************************************
-     Determine if arrived for first time 
-    ************************************/
+    /**********************************
+    Determine if arrived for first time 
+    **********************************/
     // Find distance to waypoint
     local_position_t wpt_pos = waypoint_.local_pos();
     float rel_pos[3];
@@ -184,9 +184,9 @@ int Mission_handler_navigating<T>::update(Mission_planner& mission_planner)
         }
     }
 
-    /*********************
-     Determine status code 
-    **********************/
+    /*******************
+    Determine status code 
+    ********************/
     // First check if we have reached the waypoint
     if (navigation_.waiting_at_waypoint())
     {

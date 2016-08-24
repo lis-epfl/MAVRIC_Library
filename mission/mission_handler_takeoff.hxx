@@ -106,9 +106,9 @@ int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
     // Set goal
     bool ret = set_controller(mission_planner);
 
-    /*********************
-     Determine status code 
-    **********************/
+    /*******************
+    Determine status code 
+    ********************/
     bool finished = false;
     
 

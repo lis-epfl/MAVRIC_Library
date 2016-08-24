@@ -131,13 +131,13 @@ protected:
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
     /**
-     * \brief   Function to controller specific functions
+     * \brief   Function to set the controller specific command
      *
      * \param   mission_planner     The reference to the mission planner class
      *
      * \return  Controller accepted input
      */
-    virtual bool set_controller(Mission_planner& mission_planner);
+    virtual bool set_control_command(Mission_planner& mission_planner);
     
     /**
      * \brief   Sends the travel time between the last two waypoints

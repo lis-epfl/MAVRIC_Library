@@ -50,7 +50,7 @@
 /*
  * The handler class takes in a template parameter that allows control inputs.
  */
-template <class T>
+template <class T1, class T2>
 class Mission_handler_landing : public Mission_handler
 {
 public:
@@ -74,13 +74,15 @@ public:
     /**
      * \brief   Initialize the landing mission planner handler
      *
-     * \param   controller              The reference to the controller
-     * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation structure
-     * \param   state                   The reference to the state structure
-     * \param   config                  The landing mission handler config structure
+     * \param   desc_to_small_alt_controller    The reference to the controller used during the descent to small altitudes phase
+     * \param   desc_to_ground_controller       The reference to the controller used during the descent to ground phase
+     * \param   ins                             The reference to the ins
+     * \param   navigation                      The reference to the navigation structure
+     * \param   state                           The reference to the state structure
+     * \param   config                          The landing mission handler config structure
      */
-     Mission_handler_landing(   T& controller,
+     Mission_handler_landing(   T1& desc_to_small_alt_controller,
+                                T2& desc_to_ground_controller,
                                 const INS& ins,
                                 Navigation& navigation,
                                 State& state,
@@ -139,25 +141,36 @@ public:
 
 protected:
     Waypoint waypoint_;                                         ///< The waypoint that we are landing under
-    Waypoint landing_waypoint_;                                 ///< The waypoint that we want our drone to go
     bool is_landed_;                                            ///< Boolean flag stating that we have finished the landing procedure
     auto_landing_behavior_t auto_landing_behavior_;             ///< The auto landing behavior
     float alt_lpf_;                                             ///< The low-pass filtered altitude for auto-landing
     float LPF_gain_;                                            ///< The low-pass filter gain
     
-    T& controller_;                                             ///< The reference to the controller
+    T1& desc_to_small_alt_controller_;                          ///< The reference to the controller used during the descent to small altitudes phase
+    T2& desc_to_ground_controller_;                             ///< The reference to the controller used during the descent to ground phase
     const INS& ins_;                                            ///< The reference to the ins interface
     Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
 
     /**
-     * \brief   Function to controller specific functions
+     * \brief   Function to set the controller specific command for the descent to
+     *          small altitude state
      *
      * \param   mission_planner     The reference to the mission planner class
      *
      * \return  Controller accepted input
      */
-    virtual bool set_controller(Mission_planner& mission_planner);
+    virtual bool set_desc_to_small_alt_control_command(Mission_planner& mission_planner);
+
+    /**
+     * \brief   Function to set the controller specific command for the descent to
+     *          ground state
+     *
+     * \param   mission_planner     The reference to the mission planner class
+     *
+     * \return  Controller accepted input
+     */
+    virtual bool set_desc_to_ground_control_command(Mission_planner& mission_planner);
 };
 
 Mission_handler_landing::conf_t Mission_handler_landing::default_config()
