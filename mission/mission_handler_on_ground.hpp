@@ -95,7 +95,7 @@ public:
      *
      * \return  0
      */
-    virtual int handle(Mission_planner& mission_planner);
+    virtual int update(Mission_planner& mission_planner);
 
     /**
      * \brief   Returns that the mission state is in STANDBY

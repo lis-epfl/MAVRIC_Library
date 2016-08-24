@@ -71,7 +71,7 @@ bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, const Wa
     return true;
 }
 
-int Mission_handler_on_ground::handle(Mission_planner& mission_planner)
+int Mission_handler_on_ground::update(Mission_planner& mission_planner)
 {
     return 0;
 }

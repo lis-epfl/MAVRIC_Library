@@ -101,7 +101,7 @@ bool Mission_handler_takeoff<T>::setup(Mission_planner& mission_planner, const W
 }
 
 template <class T>
-int Mission_handler_takeoff<T>::handle(Mission_planner& mission_planner)
+int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
 {
     // Set goal
     bool ret = set_controller(mission_planner);

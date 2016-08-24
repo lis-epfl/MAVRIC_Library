@@ -419,7 +419,7 @@ void Mission_planner::state_machine()
         if (current_mission_handler_ != NULL)
         {
             // Handle current mission
-            bool ret = current_mission_handler_->handle(*this);
+            bool ret = current_mission_handler_->update(*this);
 
             // Check if we should be switch states
             // This is for automatic advancement (states can also advance from callback
@@ -655,7 +655,7 @@ void Mission_planner::critical_handler()
     // Handle critical state
     if (current_mission_handler_ != NULL)
     {
-        bool ret =current_mission_handler_->handle(*this);
+        bool ret =current_mission_handler_->update(*this);
 
         // If we move to the next state, set the next state
         if (ret == 1)

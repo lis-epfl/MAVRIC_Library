@@ -94,7 +94,7 @@ bool Mission_handler_hold_position<T>::setup(Mission_planner& mission_planner, c
 }
 
 template <class T>
-int Mission_handler_hold_position<T>::handle(Mission_planner& mission_planner)
+int Mission_handler_hold_position<T>::update(Mission_planner& mission_planner)
 {
     // Set goal
     bool ret = set_controller(mission_planner);navigation_.set_goal(waypoint_);

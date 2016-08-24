@@ -123,7 +123,7 @@ bool Mission_handler_navigating<T>::setup(Mission_planner& mission_planner, cons
 }
 
 template <class T>
-int Mission_handler_navigating<T>::handle(Mission_planner& mission_planner)
+int Mission_handler_navigating<T>::update(Mission_planner& mission_planner)
 {
     // Set goal
     bool ret = set_controller(mission_planner);

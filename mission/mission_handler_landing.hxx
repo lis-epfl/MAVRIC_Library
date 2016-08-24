@@ -101,7 +101,7 @@ bool Mission_handler_landing<T>::setup(Mission_planner& mission_planner, const W
 }
 
 template <class T>
-int Mission_handler_landing<T>::handle(Mission_planner& mission_planner)
+int Mission_handler_landing<T>::update(Mission_planner& mission_planner)
 {
     // Determine waypoint position
     local_position_t local_pos = waypoint_.local_pos();

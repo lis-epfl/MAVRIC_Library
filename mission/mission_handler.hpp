@@ -108,7 +108,7 @@ public:
      *
      * \return  Status code. See details
      */
-    virtual int handle(Mission_planner& mission_planner) = 0;
+    virtual int update(Mission_planner& mission_planner) = 0;
 
     /**
      * \brief   Gets the mission state of this handler
