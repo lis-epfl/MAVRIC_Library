@@ -166,6 +166,8 @@ typedef struct
 } command_t;
 
 
+struct base_command_t {};
+
 #ifdef __cplusplus
 }
 #endif
