@@ -44,7 +44,7 @@
 #define MISSION_HANDLER__
 
 #include "mission/mission_planner.hpp"
-#include "control/waypoint.hpp"
+#include "mission/waypoint.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"

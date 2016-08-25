@@ -46,7 +46,7 @@
 
 class Mission_handler;
 
-#include "control/waypoint.hpp"
+#include "mission/waypoint.hpp"
 
 #define MAX_REGISTERED_MISSION_HANDLERS 20
 
