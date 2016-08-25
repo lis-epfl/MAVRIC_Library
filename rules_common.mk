@@ -74,7 +74,6 @@ LIB_SRCS += control/vector_field_waypoint.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/gimbal_controller.cpp
 LIB_SRCS += control/gimbal_controller_telemetry.cpp
-LIB_SRCS += control/waypoint.cpp
 
 
 LIB_SRCS += drivers/airspeed_analog.cpp
@@ -115,6 +114,7 @@ LIB_SRCS += mission/mission_handler_on_ground.cpp
 LIB_SRCS += mission/mission_handler_registry.cpp
 LIB_SRCS += mission/mission_handler_takeoff.cpp
 LIB_SRCS += mission/navigation.cpp
+LIB_SRCS += mission/waypoint.cpp
 
 LIB_SRCS += runtime/scheduler.cpp
 LIB_SRCS += runtime/scheduler_task.cpp

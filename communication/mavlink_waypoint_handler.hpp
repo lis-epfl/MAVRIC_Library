@@ -48,8 +48,8 @@
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
-#include "control/waypoint.hpp"
 #include "mission/navigation.hpp"
+#include "mission/waypoint.hpp"
 
 class Mission_planner;
 

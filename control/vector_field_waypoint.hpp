@@ -44,7 +44,7 @@
 #define VECTOR_FIELD_WAYPOINT_HPP_
 
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "control/waypoint.hpp"
+#include "mission/waypoint.hpp"
 #include "sensing/position_estimation.hpp"
 
 extern "C"
