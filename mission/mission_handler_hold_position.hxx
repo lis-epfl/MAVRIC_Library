@@ -44,9 +44,9 @@
 #define MISSION_HANDLER_HOLD_POSITION_HXX__
 
 template <class T>
-Mission_handler_hold_position<T>::Mission_handler_hold_position<T>( T& controller,
-                                                                    const INS& ins,
-                                                                    Navigation& navigation):
+Mission_handler_hold_position<T>::Mission_handler_hold_position(T& controller,
+                                                                const INS& ins,
+                                                                Navigation& navigation):
             Mission_handler(),
             controller_(controller),
             ins_(ins),
@@ -81,7 +81,7 @@ bool Mission_handler_hold_position<T>::can_handle(const Waypoint& wpt) const
     return handleable;
 }
 
-
+template <class T>
 bool Mission_handler_hold_position<T>::setup(Mission_planner& mission_planner, const Waypoint& wpt)
 {
     bool success = true;
@@ -97,7 +97,7 @@ template <class T>
 int Mission_handler_hold_position<T>::update(Mission_planner& mission_planner)
 {
     // Set goal
-    bool ret = set_controller(mission_planner);
+    bool ret = set_control_command(mission_planner);
 
     /*******************
     Determine status code 

@@ -173,7 +173,8 @@ protected:
     virtual bool set_desc_to_ground_control_command(Mission_planner& mission_planner);
 };
 
-Mission_handler_landing::conf_t Mission_handler_landing::default_config()
+template <class T1, class T2>
+typename Mission_handler_landing<T1, T2>::conf_t Mission_handler_landing<T1, T2>::default_config()
 {
     conf_t conf                                      = {};
 

@@ -50,7 +50,7 @@ template <>
 bool Mission_handler_navigating<INavigation_controller>::set_control_command(Mission_planner& mission_planner)
 {
     INavigation_controller::nav_command_t cmd;
-	cmd.local_position = waypoint_.local_pos();
+	cmd.pos = waypoint_.local_pos();
 	controller_.set_navigation_command(cmd);
 }
 

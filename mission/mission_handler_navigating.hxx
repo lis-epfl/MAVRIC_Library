@@ -70,11 +70,11 @@ void Mission_handler_navigating<T>::send_nav_time(const Mavlink_stream* mavlink_
 //------------------------------------------------------------------------------
 
 template <class T>
-Mission_handler_navigating<T>::Mission_handler_navigating<T>(   T& controller,
-                                                                const INS& ins,
-                                                                Navigation& navigation,
-                                                                const Mavlink_stream& mavlink_stream,
-                                                                Mavlink_waypoint_handler& waypoint_handler):
+Mission_handler_navigating<T>::Mission_handler_navigating(  T& controller,
+                                                            const INS& ins,
+                                                            Navigation& navigation,
+                                                            const Mavlink_stream& mavlink_stream,
+                                                            Mavlink_waypoint_handler& waypoint_handler):
             Mission_handler(),
             controller_(controller),
             ins_(ins),
@@ -126,7 +126,7 @@ template <class T>
 int Mission_handler_navigating<T>::update(Mission_planner& mission_planner)
 {
     // Set goal
-    bool ret = set_controller(mission_planner);
+    bool ret = set_control_command(mission_planner);
     
     /**********************************
     Determine if arrived for first time 

@@ -44,10 +44,10 @@
 #define MISSION_HANDLER_TAKEOFF_HXX__
 
 template <class T>
-Mission_handler_takeoff<T>::Mission_handler_takeoff<T>( T& controller,
-                                                        const INS& ins,
-                                                        Navigation& navigation,
-                                                        State& state):
+Mission_handler_takeoff<T>::Mission_handler_takeoff(T& controller,
+                                                    const INS& ins,
+                                                    Navigation& navigation,
+                                                    State& state):
             Mission_handler(),
             controller_(controller),
             ins_(ins),
@@ -104,7 +104,7 @@ template <class T>
 int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
 {
     // Set goal
-    bool ret = set_controller(mission_planner);
+    bool ret = set_control_command(mission_planner);
 
     /*******************
     Determine status code 
