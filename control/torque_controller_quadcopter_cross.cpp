@@ -45,8 +45,8 @@
 #include "control/torque_controller_quadcopter_cross.hpp"
 
 
-Torque_controller_quadcopter_cross::Torque_controller_quadcopter_cross(args_t args, const conf_t& config = default_config()) : 
-    Torque_controller_quadcopter(config.torque_controller_quadcopter_config),
+Torque_controller_quadcopter_cross::Torque_controller_quadcopter_cross(args_t args, const conf_t& config) : 
+    Torque_controller(config.torque_controller_config),
     motor_front_dir_(config.motor_front_dir),
     motor_left_dir_(config.motor_left_dir),
     motor_right_dir_(config.motor_front_dir),
@@ -59,30 +59,30 @@ Torque_controller_quadcopter_cross::Torque_controller_quadcopter_cross(args_t ar
 
 }
 
-void Torque_controller_quadcopter_diag::update()
+void Torque_controller_quadcopter_cross::update()
 {
     float motor[4];
 
     // Front Right motor
     motor[0] =  torq_command_.thrust +
                 torq_command_.torq[1] +
-                motor_front_right_dir_ * torq_command_.torq[2];
+                motor_front_dir_ * torq_command_.torq[2];
 
     // Front Left motor
     motor[1] =  torq_command_.thrust +
                 (- torq_command_.torq[0]) +
-                motor_front_left_dir_ * torq_command_.torq[2];
+                motor_right_dir_ * torq_command_.torq[2];
 
     // Rear Right motor
     motor[2]  = torq_command_.thrust +
                 (- torq_command_.torq[1]) +
                 torq_command_.torq[1] +
-                motor_rear_right_dir_ * torq_command_.torq[2];
+                motor_rear_dir_ * torq_command_.torq[2];
 
     // Rear Left motor
     motor[3]  = torq_command_.thrust +
                 torq_command_.torq[0] +
-                motor_rear_left_dir_ * torq_command_.torq[2];
+                motor_left_dir_ * torq_command_.torq[2];
 
     // Clip values
     for (int32_t i = 0; i < 4; i++)

@@ -71,7 +71,6 @@ LIB_SRCS += control/torque_controller.cpp
 LIB_SRCS += control/torque_controller_quadcopter_diag.cpp
 LIB_SRCS += control/torque_controller_quadcopter_cross.cpp
 LIB_SRCS += control/vector_field_waypoint.cpp
-LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/gimbal_controller.cpp
 LIB_SRCS += control/gimbal_controller_telemetry.cpp
 

@@ -44,9 +44,9 @@
 
 #include "control/torque_controller.hpp"
 
-Torque_controller::Torque_controller(args_t args, const conf_t& config) :
+Torque_controller::Torque_controller(const conf_t& config) :
     min_thrust_(config.min_thrust),
-    max_thrust_(config.max_thrust),
+    max_thrust_(config.max_thrust)
 {
     /* set initial torque command */
     torq_command_t initial_torque_command;

@@ -85,7 +85,7 @@ public:
      * \param motor_rear_right  Rear right motor
      * \param config            configuration
      */
-    Torque_controller_quadcopter_diag(args_t args, const conf_t& config = default_config());
+    Torque_controller_quadcopter_diag(args_t& args, const conf_t& config = default_config());
 
 
     /*

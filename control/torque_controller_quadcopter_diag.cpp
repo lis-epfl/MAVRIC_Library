@@ -48,7 +48,7 @@
 
 
 
-Torque_controller_quadcopter_diag::Torque_controller_quadcopter_diag(args_t args, const conf_t config) : 
+Torque_controller_quadcopter_diag::Torque_controller_quadcopter_diag(args_t& args, const conf_t& config) : 
     Torque_controller(config.torque_controller_config),
     motor_rear_left_dir_(config.motor_rear_left_dir),
     motor_front_left_dir_(config.motor_front_left_dir),
