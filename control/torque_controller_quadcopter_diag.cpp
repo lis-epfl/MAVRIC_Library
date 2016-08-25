@@ -46,6 +46,22 @@
 
 #include "util/print_util.h"
 
+
+
+Torque_controller_quadcopter_diag::Torque_controller_quadcopter_diag(args_t args, const conf_t config) : 
+    Torque_controller(config.torque_controller_config),
+    motor_rear_left_dir_(config.motor_rear_left_dir),
+    motor_front_left_dir_(config.motor_front_left_dir),
+    motor_front_right_dir_(config.motor_front_right_dir),
+    motor_rear_right_dir_(config.motor_rear_right_dir),
+    motor_rear_left_(args.motor_rear_left),
+    motor_front_left_(args.motor_front_left),
+    motor_front_right_(args.motor_front_right),
+    motor_rear_right_(args.motor_rear_right)
+{
+
+}
+
 void Torque_controller_quadcopter_diag::update()
 {
     float motor[4];

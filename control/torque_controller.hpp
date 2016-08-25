@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_quadcopter.hpp
+ * \file torque_controller.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -42,8 +42,8 @@
  ******************************************************************************/
 
 
-#ifndef TORQUE_CONTROLLER_QUADCOPTER_HPP_
-#define TORQUE_CONTROLLER_QUADCOPTER_HPP_
+#ifndef TORQUE_CONTROLLER_HPP_
+#define TORQUE_CONTROLLER_HPP_
 
 #include "drivers/servo.hpp"
 #include "util/constants.hpp"
@@ -52,7 +52,7 @@
 #include "control/base_cascade_controller.hpp"
 
 
-class Torque_controller_quadcopter : public Base_cascade_controller, public ITorque_controller
+class Torque_controller : public Base_cascade_controller, public ITorque_controller
 {
 public:
     /**
@@ -60,35 +60,17 @@ public:
      */
     struct conf_t
     {
-        rot_dir_t   motor_rear_left_dir;        ///< Rear  motor turning direction
-        rot_dir_t   motor_front_left_dir;       ///< Left  motor turning direction
-        rot_dir_t   motor_front_right_dir;      ///< Front motor turning direction
-        rot_dir_t   motor_rear_right_dir;       ///< Right motor turning direction
         float       min_thrust;                 ///< Minimum thrust
         float       max_thrust;                 ///< Maximum thrust
     };
 
-    /**
-     * \brief Constructor arguments
-     */
-    struct args_t
-    {
-        Servo& motor_rear_left;
-        Servo& motor_front_left;
-        Servo& motor_front_right;
-        Servo& motor_rear_right;
-    };   
 
     /**
      * \brief                   Constructor
      *
-     * \param motor_rear_left   Rear left motor
-     * \param motor_front_left  Front left motor
-     * \param motor_front_right Front right motor
-     * \param motor_rear_right  Rear right motor
      * \param config            configuration
      */
-    Torque_controller_quadcopter(args_t args, const conf_t& config);
+    Torque_controller(const conf_t& config);
 
     /*
      * \brief   Write motor commands to servo structure based on torque command
@@ -112,16 +94,8 @@ protected:
      */
     inline void update_cascade(const torq_command_t& torq_command){set_torque_command(torq_command); update();};
 
-    rot_dir_t   motor_rear_left_dir_;            ///< Rear  motor turning direction
-    rot_dir_t   motor_front_left_dir_;           ///< Left  motor turning direction
-    rot_dir_t   motor_front_right_dir_;          ///< Front motor turning direction
-    rot_dir_t   motor_rear_right_dir_;           ///< Right motor turning direction
     float       min_thrust_;                     ///< Minimum thrust
     float       max_thrust_;                     ///< Maximum thrust
-    Servo&      motor_rear_left_;                ///< Servo for rear left motor
-    Servo&      motor_front_left_;               ///< Servo for front left motor
-    Servo&      motor_front_right_;              ///< Servo for front right motor
-    Servo&      motor_rear_right_;               ///< Servo for rear right motor
 
     torq_command_t torq_command_;               ///< torque command (desired torque and thrust)
 };
