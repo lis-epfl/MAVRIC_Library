@@ -66,7 +66,7 @@ public:
      * \brief           sets the navigation command (desired position)
      * \param command   navigation command indicating navigation target location in local frame
      */
-    inline virtual void set_navigation_command(nav_command_t& command) = 0;
+    inline virtual void set_navigation_command(const nav_command_t& command) = 0;
 };
 
 #endif /* INAVIGATION_CONTROLLER_HPP_ */

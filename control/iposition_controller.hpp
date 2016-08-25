@@ -66,7 +66,7 @@ public:
      * \brief           sets the position command (desired position)
      * \param command   position command indicating target location in local frame
      */
-    inline virtual void set_position_command(pos_command_t& command) = 0;
+    inline virtual void set_position_command(const pos_command_t& command) = 0;
 };
 
 #endif /* IPOSITION_CONTROLLER_HPP_ */

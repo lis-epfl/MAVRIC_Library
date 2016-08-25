@@ -67,7 +67,7 @@ public:
      * \brief           sets the torque command (desired torque and thrust)
      * \param command   torque command indicating desired torque and thrust in body frame
      */
-    inline virtual void set_torque_command(torq_command_t& command) = 0;
+    virtual void set_torque_command(const torq_command_t& command) = 0;
 };
 
 #endif /* ITORQUE_CONTROLLER_HPP_ */
