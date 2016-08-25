@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/waypoint.hpp"
+#include "mission/waypoint.hpp"
 
 #include "sensing/ins.hpp"
 

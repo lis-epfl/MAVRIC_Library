@@ -44,7 +44,7 @@
 #define MISSION_HANDLER__
 
 #include "mission/mission_planner.hpp"
-#include "control/waypoint.hpp"
+#include "mission/waypoint.hpp"
 
 /*
  * This mission handler interface. Outine functions that child classes must
