@@ -54,7 +54,7 @@ LIB_SRCS += communication/state_telemetry.cpp
 
 LIB_SRCS += control/adaptive_parameter.c
 LIB_SRCS += control/altitude_controller.cpp
-LIB_SRCS += control/attitude_controller.cpp
+
 LIB_SRCS += control/attitude_controller_p2.c
 LIB_SRCS += control/attitude_error_estimator.c
 LIB_SRCS += control/dubin.cpp
@@ -65,12 +65,11 @@ LIB_SRCS += control/manual_control_telemetry.cpp
 LIB_SRCS += control/navigation.cpp
 LIB_SRCS += control/pid_controller.cpp
 LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
-LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
 LIB_SRCS += control/servos_mix_wing.c
 LIB_SRCS += control/stabilisation.cpp
-LIB_SRCS += control/stabilisation_copter.cpp
 LIB_SRCS += control/stabilisation_wing.cpp
-LIB_SRCS += control/stabilisation_telemetry.cpp
+LIB_SRCS += control/torque_controller_quadcopter.cpp
+LIB_SRCS += control/torque_controller_quadcopter_diag.cpp
 LIB_SRCS += control/vector_field_waypoint.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/gimbal_controller.cpp

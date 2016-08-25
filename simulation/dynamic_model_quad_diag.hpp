@@ -46,7 +46,7 @@
 
 #include "simulation/dynamic_model.hpp"
 #include "drivers/servo.hpp"
-#include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/torque_controller_quadcopter_diag.hpp"
 #include "util/constants.hpp"
 
 
@@ -79,7 +79,7 @@ typedef struct
     float gravity;                      ///< Gravity value used for the simulated forces
     float air_density;                  ///< Air density in kg/m3
 
-    servos_mix_quadcopter_diag_conf_t  servos_mix_config;
+    Torque_controller_quadcopter_diag::conf_t  servos_mix_config;
 
 } dynamic_model_quad_diag_conf_t;
 
@@ -246,7 +246,7 @@ static inline dynamic_model_quad_diag_conf_t dynamic_model_quad_diag_default_con
     conf.gravity                = 9.8f;                 ///< Simulation gravity
     conf.air_density            = 1.2f;                 ///< Air density
 
-    conf.servos_mix_config = servos_mix_quadcopter_diag_default_config();
+    conf.servos_mix_config = Torque_controller_quadcopter_diag::default_config();
 
     return conf;
 }
