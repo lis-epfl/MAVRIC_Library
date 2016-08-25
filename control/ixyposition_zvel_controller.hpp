@@ -66,9 +66,12 @@ public:
 
     /**
      * \brief           sets the horizontal position & vertical velocity command
+     *
      * \param command   xy position z velocity command indicating target location & velocity in local frame
+     *
+     * \return success  whether command was accepted
      */
-    inline virtual void set_xyposition_zvel_command(xypos_zvel_command_t& command) = 0;
+    inline virtual bool set_xyposition_zvel_command(xypos_zvel_command_t& command) = 0;
 };
 
 #endif /* IXYPOSITION__ZVEL_CONTROLLER_HPP_ */
