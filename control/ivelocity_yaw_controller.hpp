@@ -30,31 +30,32 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ivelocity_controller.hpp
+ * \file ivelocity_yaw_controller.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
  *
- * \brief Interface for velocity controller with yaw aligned with velocity vector
+ * \brief Interface for velocity controller taking also a yaw command
  *
  ******************************************************************************/
 
 
-#ifndef IVELOCITY_CONTROLLER_HPP_
-#define IVELOCITY_CONTROLLER_HPP_
+#ifndef IVELOCITY_CONTROLLER_YAW_HPP_
+#define IVELOCITY_CONTROLLER_YAW_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "control/control_command.h"
 
-class IVelocity_controller
+class IVelocity_yaw_controller
 {
 public:
     /*
      * \brief   structure representing containing a velocity command; contains desired velocity in local frame
      */
-    struct vel_command_t : base_command_t
+    struct vel_yaw_command_t : base_command_t
     {
         local_velocity_t    vel;        ///< desired velocity in local frame
+        float               yaw;        ///< desired absolute yaw in local frame
     };
 
     /**
@@ -63,13 +64,13 @@ public:
     virtual void update() = 0;
 
     /**
-     * \brief           sets the velocity command (desired velocity)
+     * \brief           sets the velocity yaw command (desired velocity and desired yaw)
      *
-     * \param command   velocity command indicating desired velocity in local frame
+     * \param command   velocity command indicating desired velocity and yaw in local frame
      *
      * \return success  whether command was accepted
      */
-    inline virtual bool set_velocity_command(const vel_command_t& command) = 0;
+    inline virtual bool set_velocity_yaw_command(const vel_yaw_command_t& command) = 0;
 };
 
-#endif /* IVELOCITY_CONTROLLER_HPP_ */
+#endif /* IVELOCITY_CONTROLLER_YAW_HPP_ */
