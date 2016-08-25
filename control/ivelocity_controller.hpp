@@ -64,9 +64,12 @@ public:
 
     /**
      * \brief           sets the velocity command (desired velocity)
+     *
      * \param command   velocity command indicating desired velocity in local frame
+     *
+     * \return success  whether command was accepted
      */
-    inline virtual void set_velocity_command(const pos_command_t& command) = 0;
+    inline virtual bool set_velocity_command(const pos_command_t& command) = 0;
 };
 
 #endif /* IVELOCITY_CONTROLLER_HPP_ */

@@ -65,9 +65,12 @@ public:
 
     /**
      * \brief           sets the attitude command (desired attitude and thrust)
+     *
      * \param command   attitude command indicating desired attitude and thrust in local frame
+     *
+     * \return success  whether command was accepted
      */
-    inline virtual void set_attitude_command(const att_command_t& command) = 0;
+    inline virtual bool set_attitude_command(const att_command_t& command) = 0;
 };
 
 #endif /* IATTITUDE_CONTROLLER_HPP_ */

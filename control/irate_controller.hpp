@@ -65,9 +65,12 @@ public:
 
     /**
      * \brief           sets the rate command (desired angular velocity and thrust)
+     *
      * \param command   rate command indicating desired angular velocity and thrust in body frame
+     *
+     * \return success  whether command was accepted
      */
-    inline virtual void set_rate_command(const rate_command_t& command) = 0;
+    inline virtual bool set_rate_command(const rate_command_t& command) = 0;
 };
 
 #endif /* IRATE_CONTROLLER_HPP_ */
