@@ -140,10 +140,11 @@ typename TAttitude_controller::att_command_t Velocity_controller_copter<TAttitud
 
     // Map thrust dir to attitude
     typename TAttitude_controller::att_command_t attitude_command;
-    attitude_command.rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
-    attitude_command.rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
-    attitude_command.rpy[YAW]   = 0; //UNTOUCHED;
-    attitude_command.quat = coord_conventions_quaternion_from_rpy(attitude_command);
+    float rpy[3];
+    rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
+    rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
+    rpy[YAW]   = 0; //UNTOUCHED;
+    attitude_command.att = coord_conventions_quaternion_from_rpy(rpy);
 
     // Map PID output to thrust
     attitude_command.thrust  = thrust_hover_point_ - thrust_vector[Z];

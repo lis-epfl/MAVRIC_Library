@@ -93,7 +93,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication_.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication_.message_handler(), mavlink_communication_.mavlink_stream(), config.waypoint_handler_config),
-    cascade_controller_({ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}, config.cascade_controller_config),
+    cascade_controller_({ahrs, position_estimation, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}, config.cascade_controller_config),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
@@ -565,11 +565,12 @@ bool LEQuad::main_task(void)
                 }
                 break;
 
-            // case Mav_mode::VELOCITY:
-            //     manual_control.get_velocity_vector(&controls);
-            //     controls.control_mode = VELOCITY_COMMAND_MODE;
-            //     controls.yaw_mode = YAW_RELATIVE;
-            //     break;
+            case Mav_mode::VELOCITY:
+                manual_control.get_velocity_vector(&controls);
+                Cascade_controller::vel_command_t vel_command;
+                vel_command.vel = {controls.tvel[0], controls.tvel[1], controls.tvel[2]};
+                cascade_controller_.set_velocity_command(vel_command);
+                break;
 
             case Mav_mode::ATTITUDE:
                 manual_control.get_control_command(&controls);

@@ -94,7 +94,7 @@ extern "C"
 #include "util/print_util.h"
 }
 
-typedef Attitude_controller<Rate_controller<Torque_controller_quadcopter_diag> > Cascade_controller;
+typedef Velocity_controller_copter<Attitude_controller<Rate_controller<Torque_controller_quadcopter_diag> > > Cascade_controller;
 
 /**
  * \brief MAV class
