@@ -164,8 +164,18 @@
      */
     bool reset(void);
 
+    bool temp_sens_config(void);
+    bool set_normal_carrier_freq(void);
+    bool set_datarate(void);
+    bool rfm22b_init(void);
+    bool to_tx_mode(void);
+
     // rfm22b register adresses
     static const uint8_t DEVICE_TYPE_REG 	= 0x00;
+    static const uint8_t DEVICE_VERSION_REG	= 0x01;
+    static const uint8_t DEVICE_STATUS		= 0x02;
+    static const uint8_t INTERRUPT_STAT_1	= 0x03;		// Interrupt Status 1
+    static const uint8_t INTERRUPT_STAT_2	= 0x04;		// Interrupt Status 2
     static const uint8_t INTERRUPT_EN_1		= 0x05;		// Interrupt Enable 1
     static const uint8_t INTERRUPT_EN_2		= 0x06;		// Interrupt Enable 2
     static const uint8_t OP_FUNC_CNTL_1 	= 0x07; 	// Operating and Function Control 1
@@ -176,9 +186,20 @@
     static const uint8_t GPIO1_CONFIG_REG	= 0x0C;		// GPIO 1 Configuration Register
     static const uint8_t GPIO2_CONFIG_REG	= 0x0D;		// GPIO 2 Configuration Register
     static const uint8_t IO_PORT_CONFIG		= 0x0E;		// I/Os Port Configuration
+    static const uint8_t ADC_CONFIG			= 0x0F;		// ADC Configuration
+    static const uint8_t ADC_SENS_AMP_OFST	= 0x10;		// ADC Sensor Amplifer Offset
+    static const uint8_t TEMP_SENS_CNTL		= 0x12;		// Temperature Sensor Control
+    static const uint8_t TEMP_VAL_OFST		= 0x13;		// Temperature Value Offset
+    static const uint8_t IF_FILTER_BW		= 0x1C;		// IF Filter Bandwidth
+    static const uint8_t AFC_LOOP_GS_OVRRD	= 0x1D;		// AFC Loop Gearshift Override
+    static const uint8_t CLK_REC_GS_OVRRD	= 0x1F;		// CLK Recovery Gearshift Override
+    static const uint8_t CLK_REC_OVRSMP_RT	= 0x20;		// Clock Recovery Oversampling Ratio
+    static const uint8_t RSSI_THRESH_CLR_CH	= 0x27;		// RSSI Threshold for Clear Channel Indicator
     static const uint8_t OOK_COUNTER_VAL_1	= 0x2C;
     static const uint8_t OOK_COUNTER_VAL_2	= 0x2D;
+    static const uint8_t SLICER_PEAK_HOLD	= 0x2E;
     static const uint8_t DATA_ACCESS_CNTL	= 0x30;
+    static const uint8_t EZMAC_STATUS		= 0x31;		// EzMAC Status
     static const uint8_t HEADER_CNTL_1		= 0x32;		// Header Control 1
     static const uint8_t HEADER_CNTL_2		= 0x33;		// Header Control 2
     static const uint8_t PREAMBLE_LEN_REG	= 0x34;
@@ -187,7 +208,22 @@
     static const uint8_t SYNC_WORD_2		= 0x37;
     static const uint8_t SYNC_WORD_1		= 0x38;
     static const uint8_t SYNC_WORD_0		= 0x39;
+    static const uint8_t TRANSMIT_HEADER_3	= 0x3A;
+    static const uint8_t TRANSMIT_HEADER_2	= 0x3B;
+    static const uint8_t TRANSMIT_HEADER_1	= 0x3C;
+    static const uint8_t TRANSMIT_HEADER_0	= 0x3D;
+    static const uint8_t TRANSMIT_PKT_LEN	= 0x3E;		// Transmit Packet Length
+    static const uint8_t CHECK_HEADER_3		= 0x3F;
+    static const uint8_t CHECK_HEADER_2		= 0x40;
+    static const uint8_t CHECK_HEADER_1		= 0x41;
+    static const uint8_t CHECK_HEADER_0		= 0x42;
+    static const uint8_t HEADER_EN_3		= 0x43;		// Header 3 Enable
+    static const uint8_t HEADER_EN_2		= 0x44;		// Header 2 Enable
+    static const uint8_t HEADER_EN_1		= 0x45;		// Header 1 Enable
+    static const uint8_t HEADER_EN_0		= 0x46;		// Header 0 Enable
     static const uint8_t TX_POWER			= 0x6D;
+    static const uint8_t TX_DATA_RATE_1		= 0x6E;
+    static const uint8_t TX_DATA_RATE_0		= 0x6F;
     static const uint8_t MOD_MODE_CNTL_1	= 0x70; 	// Modulation Mode Control 1
     static const uint8_t MOD_MODE_CNTL_2	= 0x71; 	// Modulation Mode Control 2
     static const uint8_t FREQ_DEVIATION		= 0x72;
@@ -207,6 +243,7 @@
     static const uint8_t READ_FLAG     	= 0x7F;
     static const uint8_t WRITE_FLAG		= 0x80;
     static const uint8_t DEVICE_TYPE	= 0x08;
+    static const uint8_t DEVICE_VERSION = 0x06;
 
     // Operating and Function Control 1 bits
     static const uint8_t OP_CNTL1_MODE_IDLE_READY 		= 0x01;
@@ -219,7 +256,18 @@
     static const uint8_t OP_CNTL1_SWRESET				= 0x80;
 
     // Operating and Function Control 2 bits
+    static const uint8_t OP_CNTL2_FIFOS_RESET	= 0x03;
     static const uint8_t OP_CNTL2_LOW_DC_EN		= 0x04;
+
+    // ADC Configuration bits
+    static const uint8_t ADC_SOURCE_SEL_TEMP_SENSOR = 0x00;
+    static const uint8_t ADC_START					= 0x80;
+
+    // Temperature Sensor Control bits
+    static const uint8_t TEMP_SENS_CALIB_0	= 0x00;		// -64C to  +64C, 0.5C resolution
+    static const uint8_t TEMP_SENS_CALIB_1	= 0x40;		// -40C to  +85C, 1.0C resolution
+    static const uint8_t TEMP_SENS_CALIB_2	= 0x80;		//   0C to  +85C, 0.5C resolution
+    static const uint8_t TEMP_SENS_CALIB_3	= 0xC0;		// -40F to +216C, 1.0F resolution
 
     // Modulation Mode Control 1 bits
     static const uint8_t MOD_CNTL1_WHITE_EN	= 0x01;
@@ -242,6 +290,7 @@
 
     // Microcontroller Output Clock bits
     static const uint8_t CPU_OUTPUT_CLK_1MHZ	= 0x06;
+    static const uint8_t CPU_OUTPUT_CLK_2MHZ	= 0x05;
 
     // GPIO 0-1-2 Configuration bits
     static const uint8_t GPIOX_CONFIG_TX_STATE	= 0x12;
