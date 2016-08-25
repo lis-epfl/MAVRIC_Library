@@ -30,50 +30,42 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_birotor.cpp
+ * \file torque_controller_birotor.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief Links between torque commands and servos PWM command for quadcopters
- * in diagonal configuration
+ * \brief Links between torque commands and servos PWM command for birotoers
  *
  ******************************************************************************/
 
 
-#include "control/servos_mix_birotor.hpp"
+#include "control/torque_controller_birotor.hpp"
 
 
-bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command,  Servo* motor_left, Servo* motor_right, Servo* servo_left, Servo* servo_right, daler_dc_motor_ctrl_t* dc_motors)
+Torque_controller_birotor::Torque_controller_birotor(args_t& args, const conf_t& config) : 
+    motor_left_dir_(config.motor_left_dir),
+    motor_right_dir_(config.motor_right_dir),
+    servo_left_dir_(config.servo_left_dir),
+    servo_right_dir_(config.servo_right_dir),
+    min_servo_(config.min_servo),
+    max_servo_(config.max_servo),
+    min_thrust_(config.min_thrust),
+    max_thrust_(config.max_thrust),
+    motor_left_(args.motor_left),
+    motor_right_(args.motor_right),
+    servo_left_(args.servo_left),
+    servo_right_(args.servo_right),
+    dc_motors_(args.dc_motors)
 {
-    // Init dependencies
-    mix->torque_command = torque_command;
-    mix->thrust_command = thrust_command;
-    mix->motor_left     = motor_left;
-    mix->motor_right    = motor_right;
-    mix->servo_left     = servo_left;
-    mix->servo_right    = servo_right;
-    mix->dc_motors      = dc_motors;
 
-    // Init parameters
-    mix->motor_left_dir     = config->motor_left_dir;
-    mix->motor_right_dir    = config->motor_right_dir;
-    mix->servo_left_dir     = config->servo_left_dir;
-    mix->servo_right_dir    = config->servo_right_dir;
-
-    mix->min_thrust         = config->min_thrust;
-    mix->max_thrust         = config->max_thrust;
-
-    mix->min_servo          = config->min_servo;
-    mix->max_servo          = config->max_servo;
-
-    return true;
 }
 
 
-bool servos_mix_birotor_update(servo_mix_birotor_t* mix)
+
+void Torque_controller_birotor::update()
 {
-    //int32_t i;
     float motor[4];
 
     // torque_command->xyz[0] ==== ROLL
@@ -81,56 +73,56 @@ bool servos_mix_birotor_update(servo_mix_birotor_t* mix)
     // torque_command->xyz[2] ==== YAW
 
     // Motor left
-    motor[0] =  mix->thrust_command->thrust +
-                (+ mix->torque_command->xyz[2]);
+    motor[0] =  torq_command_.thrust +
+                (+ torq_command_.torq[2]);
 
     // Motor right
-    motor[1] =  mix->thrust_command->thrust +
-                (- mix->torque_command->xyz[2]);
+    motor[1] =  torq_command_.thrust +
+                (- torq_command_.torq[2]);
 
     // Servo left
-    motor[2]  = mix->servo_left_dir * (+ mix->torque_command->xyz[0]
-                                       + mix->torque_command->xyz[1]);
+    motor[2]  = mix->servo_left_dir * (+ torq_command_.torq[0]
+                                       + torq_command_.torq[1]);
 
     // Servo right
-    motor[3]  = mix->servo_right_dir * (- mix->torque_command->xyz[0]
-                                        + mix->torque_command->xyz[1]);
+    motor[3]  = mix->servo_right_dir * (- torq_command_.torq[0]
+                                        + torq_command_.torq[1]);
 
 
     // Clip values
     /*for (i=0; i<2; i++)
     {
-        if ( motor[i] < mix->min_thrust )
+        if ( motor[i] < min_thrust_ )
         {
-            motor[i] = mix->min_thrust;
+            motor[i] = min_thrust_;
         }
-        else if ( motor[i] > mix->max_thrust )
+        else if ( motor[i] > max_thrust_ )
         {
-            motor[i] = mix->max_thrust;
+            motor[i] = max_thrust_;
         }
     }
 
     int i=0;
     for (i=2; i<4; i++)
     {
-        if ( motor[i] < mix->min_servo )
+        if ( motor[i] < min_servo_ )
         {
-            motor[i] = mix->min_servo;
+            motor[i] = min_servo_;
         }
-        else if ( motor[i] > mix->max_servo )
+        else if ( motor[i] > max_servo_ )
         {
-            motor[i] = mix->max_servo;
+            motor[i] = max_servo_;
         }
     }
     */
 
-    mix->motor_left->write(motor[0]);
-    mix->motor_right->write(motor[1]);
-    mix->servo_left->write(motor[2]);
-    mix->servo_right->write(motor[3]);
+    motor_left.write(motor[0]);
+    motor_right.write(motor[1]);
+    servo_left.write(motor[2]);
+    servo_right.write(motor[3]);
 
-    mix->dc_motors->wingrons_angle[0] =  motor[2];
-    mix->dc_motors->wingrons_angle[1] =  motor[3];
+    dc_motors.wingrons_angle[0] =  motor[2];
+    dc_motors.wingrons_angle[1] =  motor[3];
 
     return true;
 }

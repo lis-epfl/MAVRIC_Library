@@ -62,7 +62,9 @@ public:
         rot_dir_t   motor_front_left_dir;       ///< Left  motor turning direction
         rot_dir_t   motor_front_right_dir;      ///< Front motor turning direction
         rot_dir_t   motor_rear_right_dir;       ///< Right motor turning direction
-        Torque_controller::conf_t torque_controller_config; ///< Config for parent class
+        float       min_thrust;                ///< Minimal thrust
+        float       max_thrust;                ///< Maxmal thrust
+    
     };
 
     /**
@@ -100,6 +102,8 @@ private:
     rot_dir_t   motor_front_left_dir_;           ///< Left  motor turning direction
     rot_dir_t   motor_front_right_dir_;          ///< Front motor turning direction
     rot_dir_t   motor_rear_right_dir_;           ///< Right motor turning direction
+    float       min_thrust_;                     ///< Minimal thrust
+    float       max_thrust_;                     ///< Maxmal thrust
     Servo&      motor_rear_left_;                ///< Servo for rear left motor
     Servo&      motor_front_left_;               ///< Servo for front left motor
     Servo&      motor_front_right_;              ///< Servo for front right motor
@@ -114,9 +118,8 @@ Torque_controller_quadcopter_diag::conf_t Torque_controller_quadcopter_diag::def
     conf.motor_front_left_dir                = CW;
     conf.motor_front_right_dir               = CCW;
     conf.motor_rear_right_dir                = CW;
-    conf.torque_controller_config            = {};
-    conf.torque_controller_config.min_thrust = -0.9f;
-    conf.torque_controller_config.max_thrust = 1.0f;
+    conf.min_thrust                          = -0.9f;
+    conf.max_thrust                          = 1.0f;
 
     return conf;
 }

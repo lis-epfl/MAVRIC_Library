@@ -30,41 +30,64 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_ywing_default_config.h
+ * \file torque_controller_wing.cpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Simon Pyroth
+ * \author Basil Huber
  *
- * \brief Default configuration for Ywing servo mix
+ * \brief Links between regulation output and PWM commands for a wing aircraft
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
+#include "control/torque_controller_wing.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+Torque_controller_wing::Torque_controller_wing(args_t& args, const conf_t& config) :
+    config_(config),
+    servo_left_(args.servo_left),
+    servo_right_(args.servo_right),
+    motor_(args.motor)
+    {}
 
 
-#include "servos_mix_ywing.h"
-
-
-servo_mix_ywing_conf_t servo_mix_ywing_default_config =
+void Torque_controller_wing::update()
 {
-    .flap_top_dir   = FLAP_INVERTED,
-    .flap_right_dir = FLAP_INVERTED,
-    .flap_left_dir  = FLAP_INVERTED,
-    .min_thrust     = -0.9f,
-    .max_thrust     = 1.0f,
-    .min_deflection = -1.0f,
-    .max_deflection = 1.0f,
-};
+    // Calculate value to be sent to the motors
+    float tmp_right_servo   = config_.servo_right_dir * ( (torq_command_.torq[1] + config_.trim_pitch) + (torq_command_.torq[0] + config_.trim_roll) );
+    float tmp_left_servo    = config_.servo_left_dir  * ( (torq_command_.torq[1] + config_.trim_pitch) - (torq_command_.torq[0] + config_.trim_roll) );
+    float tmp_motor         = torq_command_.thrust;
 
+    // Clip values
+    if (tmp_right_servo < config_.min_amplitude)
+    {
+        tmp_right_servo = config_.min_amplitude;
+    }
+    else if (tmp_right_servo > config_.max_amplitude)
+    {
+        tmp_right_servo = config_.max_amplitude;
+    }
 
-#ifdef __cplusplus
+    if (tmp_left_servo < config_.min_amplitude)
+    {
+        tmp_left_servo = config_.min_amplitude;
+    }
+    else if (tmp_left_servo > config_.max_amplitude)
+    {
+        tmp_left_servo = config_.max_amplitude;
+    }
+
+    if (tmp_motor < config_.min_thrust)
+    {
+        tmp_motor = config_.min_thrust;
+    }
+    else if (tmp_motor > config_.max_thrust)
+    {
+        tmp_motor = config_.max_thrust;
+    }
+
+    // Set the calculated values to each motors
+    servo_left_.write(tmp_left_servo);
+    servo_right_.write(tmp_right_servo);
+    motor_.write(tmp_motor);
 }
-#endif
-
-#endif // SERVOS_MIX_YWING_DEFAULT_CONFIG_H_

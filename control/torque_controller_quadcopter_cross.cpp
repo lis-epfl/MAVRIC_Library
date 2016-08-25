@@ -46,11 +46,12 @@
 
 
 Torque_controller_quadcopter_cross::Torque_controller_quadcopter_cross(args_t args, const conf_t& config) : 
-    Torque_controller(config.torque_controller_config),
     motor_front_dir_(config.motor_front_dir),
     motor_left_dir_(config.motor_left_dir),
     motor_right_dir_(config.motor_front_dir),
     motor_rear_dir_(config.motor_rear_dir),
+    min_thrust_(config.min_thrust),
+    max_thrust_(config.max_thrust),
     motor_front_(args.motor_front),
     motor_left_(args.motor_left),
     motor_right_(args.motor_right),

@@ -62,7 +62,8 @@ public:
         rot_dir_t   motor_left_dir;               ///< Left  motor turning direction
         rot_dir_t   motor_right_dir;              ///< Front motor turning direction
         rot_dir_t   motor_rear_dir;               ///< Right motor turning direction
-        Torque_controller::conf_t torque_controller_config; ///< Config for parent class
+        float       min_thrust;                   ///< Minimal thrust
+        float       max_thrust;                   ///< Maxmal thrust
     };
 
     /**
@@ -97,6 +98,8 @@ private:
     rot_dir_t   motor_left_dir_;               ///< Left  motor turning direction
     rot_dir_t   motor_right_dir_;              ///< Right motor turning direction
     rot_dir_t   motor_rear_dir_;               ///< Rear motor turning direction
+    float       min_thrust_;                   ///< Minimal thrust
+    float       max_thrust_;                   ///< Maxmal thrust
     Servo&      motor_front_;                  ///< Servo for front motor
     Servo&      motor_left_;                   ///< Servo for left left motor
     Servo&      motor_right_;                  ///< Servo for right right motor

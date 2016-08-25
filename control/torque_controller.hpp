@@ -55,22 +55,8 @@
 class Torque_controller : public Base_cascade_controller, public ITorque_controller
 {
 public:
-    /**
-     * \brief Configuration
-     */
-    struct conf_t
-    {
-        float       min_thrust;                 ///< Minimum thrust
-        float       max_thrust;                 ///< Maximum thrust
-    };
 
-
-    /**
-     * \brief                   Constructor
-     *
-     * \param config            configuration
-     */
-    Torque_controller(const conf_t& config);
+    Torque_controller();
 
     /*
      * \brief   Write motor commands to servo structure based on torque command
@@ -93,9 +79,6 @@ protected:
      * \param torq_command  torque command to be set and used for motor commands
      */
     inline void update_cascade(const torq_command_t& torq_command){set_torque_command(torq_command); update();};
-
-    float       min_thrust_;                     ///< Minimum thrust
-    float       max_thrust_;                     ///< Maximum thrust
 
     torq_command_t torq_command_;               ///< torque command (desired torque and thrust)
 };

@@ -30,96 +30,82 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_ywing.hpp
+ * \file torque_controller_ywing.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *
  * \brief Links between torque commands and servos PWM command for Ywing
  *
  ******************************************************************************/
 
 
-#include "control/servos_mix_ywing.hpp"
+#include "control/torque_controller_ywing.hpp"
 
-extern "C"
+Torque_controller_ywing::Torque_controller_ywing(args_t& args, const conf_t& config)
+    flap_top_dir_(config.flap_top_dir),
+    flap_right_dir_(config.flap_right_dir),
+    flat_left_dir_(config.flap_left_dir),
+    min_thrust_(config.min_thrust),
+    max_thrust_(config.max_thrust),
+    min_deflection_(config.min_deflection),
+    max_deflection_(config.max_deflection),
+    motor_(args.servo_motor),
+    flap_top_(args.servo_flap_top),
+    flap_right_(args.servo_flap_right),
+    flap_left_(args.servo_flap_left)
 {
-#include "util/print_util.h"
-}
 
-bool servo_mix_ywing_init(servo_mix_ywing_t* mix, const servo_mix_ywing_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, Servo* motor, Servo* flap_top, Servo* flap_right, Servo* flap_left)
-{
-    bool init_success = true;
-
-    // Init dependencies
-    mix->torque_command = torque_command;
-    mix->thrust_command = thrust_command;
-    mix->motor          = motor;
-    mix->flap_top       = flap_top;
-    mix->flap_right     = flap_right;
-    mix->flap_left      = flap_left;
-
-    // Init parameters
-    mix->flap_top_dir   = config->flap_top_dir;
-    mix->flap_right_dir = config->flap_right_dir;
-    mix->flap_left_dir  = config->flap_left_dir;
-    mix->min_thrust     = config->min_thrust;
-    mix->max_thrust     = config->max_thrust;
-    mix->min_deflection = config->min_deflection;
-    mix->max_deflection = config->max_deflection;
-
-    print_util_dbg_print("[SERVOS MIX YWING] initialised \r\n");
-
-    return init_success;
 }
 
 
-void servos_mix_ywing_update(servo_mix_ywing_t* mix)
+void Torque_controller_ywing::update()
 {
     float servos[4];
 
     // Main motor
-    servos[0] = mix->thrust_command->thrust;
+    servos[0] = torq_command_.thrust;
 
     // Clip values
-    if (servos[0] < mix->min_thrust)
+    if (servos[0] < min_thrust)
     {
-        servos[0] = mix->min_thrust;
+        servos[0] = min_thrust;
     }
-    else if (servos[0] > mix->max_thrust)
+    else if (servos[0] > max_thrust)
     {
-        servos[0] = mix->max_thrust;
+        servos[0] = max_thrust;
     }
 
     // Top flap
-    servos[1] = mix->flap_top_dir * (mix->torque_command->xyz[ROLL]
-                                     - mix->torque_command->xyz[YAW]);
+    servos[1] = flap_top_dir * (torq_command_.torq[ROLL]
+                                     - torq_command_.torq[YAW]);
 
     // Right flap
-    servos[2]  = mix->flap_right_dir * (mix->torque_command->xyz[ROLL]
-                                        + 0.86f * mix->torque_command->xyz[PITCH]
-                                        + 0.50f * mix->torque_command->xyz[YAW]);
+    servos[2]  = flap_right_dir * (torq_command_.torq[ROLL]
+                                        + 0.86f * torq_command_.torq[PITCH]
+                                        + 0.50f * torq_command_.torq[YAW]);
 
     // Left flap
-    servos[3]  = mix->flap_left_dir * (mix->torque_command->xyz[ROLL]
-                                       - 0.86f * mix->torque_command->xyz[PITCH]
-                                       + 0.50f * mix->torque_command->xyz[YAW]);
+    servos[3]  = flap_left_dir * (torq_command_.torq[ROLL]
+                                       - 0.86f * torq_command_.torq[PITCH]
+                                       + 0.50f * torq_command_.torq[YAW]);
 
     // Clip values
     for (int32_t i = 1; i < 4; i++)
     {
-        if (servos[i] < mix->min_deflection)
+        if (servos[i] < min_deflection)
         {
-            servos[i] = mix->min_deflection;
+            servos[i] = min_deflection;
         }
-        else if (servos[i] > mix->max_deflection)
+        else if (servos[i] > max_deflection)
         {
-            servos[i] = mix->max_deflection;
+            servos[i] = max_deflection;
         }
     }
 
-    mix->motor->write(servos[0]);
-    mix->flap_top->write(servos[1]);
-    mix->flap_right->write(servos[2]);
-    mix->flap_left->write(servos[3]);
+    motor.write(servos[0]);
+    flap_top.write(servos[1]);
+    flap_right.write(servos[2]);
+    flap_left.write(servos[3]);
 }
