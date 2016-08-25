@@ -67,7 +67,7 @@ typedef struct
 
 typedef std::array<float,3> local_position_t;
 
-typedef std::array<float,3> local_velocity_t
+typedef std::array<float,3> local_velocity_t;
 
 /*
  * \brief       Attitude with aeronautics convention
