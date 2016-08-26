@@ -73,4 +73,8 @@ public:
     virtual bool set_torque_command(const torq_command_t& command) = 0;
 };
 
+
+/* implementation to avoid warning in mission_handlers (func still requires to be implemented) */
+ITorque_controller::set_torque_command(const torq_command_t& command){return false;}
+
 #endif /* ITORQUE_CONTROLLER_HPP_ */

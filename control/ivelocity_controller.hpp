@@ -72,4 +72,8 @@ public:
     inline virtual bool set_velocity_command(const vel_command_t& command) = 0;
 };
 
+
+/* implementation to avoid warning in mission_handlers (func still requires to be implemented) */
+bool IVelocity_controller::set_velocity_command(const vel_command_t& command){return false;}
+
 #endif /* IVELOCITY_CONTROLLER_HPP_ */

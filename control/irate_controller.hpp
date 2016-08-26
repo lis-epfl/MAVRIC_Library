@@ -73,4 +73,8 @@ public:
     inline virtual bool set_rate_command(const rate_command_t& command) = 0;
 };
 
+
+/* implementation to avoid warning in mission_handlers (func still requires to be implemented) */
+bool IRate_controller::set_rate_command(const rate_command_t& command){return false;}
+
 #endif /* IRATE_CONTROLLER_HPP_ */
