@@ -72,8 +72,4 @@ public:
     inline virtual bool set_position_command(const pos_command_t& command) = 0;
 };
 
-
-/* implementation to avoid warning in mission_handlers (func still requires to be implemented) */
-bool IPosition_controller::set_position_command(const pos_command_t& command){return false;};
-
 #endif /* IPOSITION_CONTROLLER_HPP_ */

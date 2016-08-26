@@ -73,8 +73,4 @@ public:
     inline virtual bool set_attitude_command(const att_command_t& command) = 0;
 };
 
-
-/* implementation to avoid warning in mission_handlers (func still requires to be implemented) */
-bool IAttitude_controller::set_attitude_command(const att_command_t& command){return false;};
-
 #endif /* IATTITUDE_CONTROLLER_HPP_ */

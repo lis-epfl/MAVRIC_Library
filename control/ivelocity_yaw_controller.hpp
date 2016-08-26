@@ -73,8 +73,4 @@ public:
     inline virtual bool set_velocity_yaw_command(const vel_yaw_command_t& command) = 0;
 };
 
-
-/* implementation to avoid warning in mission_handlers (func still requires to be implemented) */
-bool IVelocity_yaw_controller::set_velocity_yaw_command(const vel_yaw_command_t& command){return false;}
-
 #endif /* IVELOCITY_CONTROLLER_YAW_HPP_ */

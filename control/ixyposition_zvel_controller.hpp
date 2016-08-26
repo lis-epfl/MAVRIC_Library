@@ -74,8 +74,4 @@ public:
     virtual bool set_xyposition_zvel_command(const xypos_zvel_command_t& command) = 0;
 };
 
-
-/* implementation to avoid warning in mission_handlers (func still requires to be implemented) */
-bool IXyposition_zvel_controller::set_xyposition_zvel_command(const xypos_zvel_command_t& command){return false;}
-
 #endif /* IXYPOSITION__ZVEL_CONTROLLER_HPP_ */

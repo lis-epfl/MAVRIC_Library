@@ -72,8 +72,4 @@ public:
     inline virtual bool set_navigation_command(const nav_command_t& command) = 0;
 };
 
-
-/* implementation to avoid warning in mission_handlers (func still requires to be implemented) */
-bool INavigation_controller::set_navigation_command(const nav_command_t& command) {return false;};
-
 #endif /* INAVIGATION_CONTROLLER_HPP_ */
