@@ -40,15 +40,12 @@
  *
  ******************************************************************************/
 
-
+ 
 #ifndef MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
 #define MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
 
 #include "communication/mavlink_waypoint_handler.hpp"
-
-extern "C"
-{
-}
+#include "mission/mission_handler_navigating.hpp"
 
 template <class T>
 Mission_handler_critical_navigating<T>::Mission_handler_critical_navigating(T& controller,
@@ -56,7 +53,7 @@ Mission_handler_critical_navigating<T>::Mission_handler_critical_navigating(T& c
                                                                             Navigation& navigation,
                                                                             const Mavlink_stream& mavlink_stream,
                                                                             Mavlink_waypoint_handler& waypoint_handler):
-            Mission_handler_navigating(controller, ins, navigation, mavlink_stream, waypoint_handler)
+            Mission_handler_navigating<T>(controller, ins, navigation, mavlink_stream, waypoint_handler)
 {
 }
 

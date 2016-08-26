@@ -185,7 +185,7 @@ void Navigation::set_speed_command(float rel_pos[])
     Mission_handler* handler = mission_handler_registry_.get_mission_handler(goal_);
     if (handler != NULL)
     {
-        handler->modify_control_command(controls_nav);
+        //handler->modify_control_command(controls_nav);
     }
 }
 
@@ -408,7 +408,7 @@ void Navigation::set_dubin_velocity(dubin_t* dubin)
     Mission_handler* handler = mission_handler_registry_.get_mission_handler(goal_);
     if (handler != NULL)
     {
-        handler->modify_control_command(controls_nav);
+        //handler->modify_control_command(controls_nav);
     }
 }
 

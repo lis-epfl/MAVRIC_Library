@@ -83,6 +83,8 @@ public:
 };
 
 
+#include "mission/mission_handler_critical_landing.hxx"
+
 
 
 

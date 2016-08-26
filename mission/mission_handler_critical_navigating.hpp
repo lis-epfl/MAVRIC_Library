@@ -83,6 +83,6 @@ public:
     virtual bool can_handle(const Waypoint& wpt) const;
 };
 
-#include "mission/mission_handler_navigating.hxx"
+#include "mission/mission_handler_critical_navigating.hxx"
 
 #endif // MISSION_HANDLER_CRITICAL_NAVIGATING__

@@ -285,7 +285,7 @@ Navigation::conf_t Navigation::default_config()
     conf.vertical_vel_gain                           = 1.0f;
     conf.takeoff_altitude                            = -10.0f;
     //conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
-    conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
+    conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
     return conf;
 };
 
@@ -300,7 +300,7 @@ Navigation::conf_t Navigation::default_wing_config()
     conf.minimal_radius                              = 45.0f;
     // conf.heading_acceptance                          = PI/6.0f;  //TODO should this be adapted for the wing
     conf.takeoff_altitude                            = -60.0f;
-    conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
+    conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
     return conf;
 };
 

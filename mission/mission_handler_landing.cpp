@@ -41,7 +41,8 @@
 
 
 #include "mission/mission_handler_landing.hpp"
-
+#include "control/inavigation_controller.hpp"
+ #include "control/ixyposition_zvel_controller.hpp"
 extern "C"
 {
 
@@ -53,21 +54,21 @@ extern "C"
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-template <class T2>
-bool Mission_handler_landing<INavigation_controller>::set_desc_to_small_alt_control_command(Mission_planner& mission_planner)
+template <>
+bool Mission_handler_landing<INavigation_controller, IXyposition_zvel_controller>::set_desc_to_small_alt_control_command(Mission_planner& mission_planner)
 {
 	INavigation_controller::nav_command_t cmd;
 	cmd.pos = waypoint_.local_pos();
 	cmd.pos[Z] = navigation_.takeoff_altitude/2.0f;
-	desc_to_small_alt_controller_.set_navigation_command(cmd);
+    return desc_to_small_alt_controller_.set_navigation_command(cmd);
 }
 
-template <class T1>
-bool Mission_handler_landing<IXyposition_zvel_controllerIXyposition_zvel_controller>::set_desc_to_ground_control_command(Mission_planner& mission_planner)
+template <>
+bool Mission_handler_landing<INavigation_controller,IXyposition_zvel_controller>::set_desc_to_ground_control_command(Mission_planner& mission_planner)
 {
 	IXyposition_zvel_controller::xypos_zvel_command_t cmd;
 	cmd.pos_x = waypoint_.local_pos()[X];
 	cmd.pos_y = waypoint_.local_pos()[Y];
 	cmd.vel_z = 0.3f;
-    controller_.set_xyposition_zvel_command(cmd);
+    return desc_to_ground_controller_.set_xyposition_zvel_command(cmd);
 }

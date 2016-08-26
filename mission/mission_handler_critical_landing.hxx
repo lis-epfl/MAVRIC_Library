@@ -44,13 +44,15 @@
 #ifndef MISSION_HANDLER_CRITICAL_LANDING_HXX__
 #define MISSION_HANDLER_CRITICAL_LANDING_HXX__
 
+#include "mission/mission_handler_landing.hpp"
+
 template <class T1, class T2>
 Mission_handler_critical_landing<T1, T2>::Mission_handler_critical_landing( T1& desc_to_small_alt_controller,
                                                                             T2& desc_to_ground_controller,
                                                                             const INS& ins,
                                                                             Navigation& navigation,
                                                                             State& state):
-            Mission_handler_landing(desc_to_small_alt_controller, desc_to_ground_controller, ins, navigation, state)
+            Mission_handler_landing<T1, T2>(desc_to_small_alt_controller, desc_to_ground_controller, ins, navigation, state)
 {
 }
 

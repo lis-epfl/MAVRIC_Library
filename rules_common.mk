@@ -64,7 +64,7 @@ LIB_SRCS += control/manual_control.cpp
 LIB_SRCS += control/manual_control_telemetry.cpp
 LIB_SRCS += control/pid_controller.cpp
 LIB_SRCS += control/stabilisation.cpp
-LIB_SRCS += control/stabilisation_wing.cpp
+#LIB_SRCS += control/stabilisation_wing.cpp
 LIB_SRCS += control/torque_controller.cpp
 LIB_SRCS += control/torque_controller_wing.cpp
 LIB_SRCS += control/torque_controller_quadcopter_diag.cpp
@@ -102,7 +102,6 @@ LIB_SRCS += hal/common/serial.cpp
 LIB_SRCS += hal/common/dbg.cpp
 
 LIB_SRCS += mission/mission_planner.cpp
-LIB_SRCS += mission/mission_handler.cpp
 LIB_SRCS += mission/mission_handler_critical_landing.cpp
 LIB_SRCS += mission/mission_handler_critical_navigating.cpp
 LIB_SRCS += mission/mission_handler_hold_position.cpp

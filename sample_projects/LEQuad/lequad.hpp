@@ -61,18 +61,9 @@
 #include "control/position_controller.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
-<<<<<<< HEAD
-#include "control/inavigation_controller.hpp"
-#include "control/ixyposition_zvel_controller.hpp"
-#include "control/manual_control.hpp"
-#include "control/servos_mix_quadcopter_diag.hpp"
-#include "control/servos_mix_quadcopter_diag_default_config.hpp"
-=======
 #include "control/rate_controller.hpp"
 #include "control/torque_controller_quadcopter_diag.hpp"
 #include "control/manual_control.hpp"
-#include "control/navigation.hpp"
->>>>>>> dev/cascade_controller
 #include "control/stabilisation.hpp"
 
 #include "control/vector_field_waypoint.hpp"
@@ -248,11 +239,10 @@ protected:
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
+    Navigation navigation;                                      ///< The structure to perform GPS navigation
+    Cascade_controller cascade_controller_;
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
-
-    Navigation navigation;                                      ///< The structure to perform GPS navigation
-
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
     Mission_handler_hold_position<INavigation_controller> hold_position_handler;
     Mission_handler_landing<INavigation_controller, IXyposition_zvel_controller> landing_handler;
@@ -264,7 +254,6 @@ protected:
     Mission_planner mission_planner;                            ///< Controls the mission plan
 
 
-    Cascade_controller cascade_controller_;
 
     State_machine state_machine;                                ///< The structure for the state machine
 
