@@ -71,7 +71,7 @@ public:
      *
      * \return success  whether command was accepted
      */
-    inline virtual bool set_xyposition_zvel_command(xypos_zvel_command_t& command) = 0;
+    virtual bool set_xyposition_zvel_command(const xypos_zvel_command_t& command) = 0;
 };
 
 #endif /* IXYPOSITION__ZVEL_CONTROLLER_HPP_ */

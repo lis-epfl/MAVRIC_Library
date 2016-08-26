@@ -93,7 +93,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     position_estimation(state, barometer, sonar, gps, ahrs),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication_.mavlink_stream(), config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication_.message_handler(), mavlink_communication_.mavlink_stream(), config.waypoint_handler_config),
-    cascade_controller_({ahrs, position_estimation, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}, config.cascade_controller_config),
+    cascade_controller_({position_estimation, ahrs, {ahrs, position_estimation, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}, config.cascade_controller_config),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
@@ -536,37 +536,14 @@ bool LEQuad::main_task(void)
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
-                controls = controls_nav;
-                controls.control_mode = VELOCITY_COMMAND_MODE;
-
-                // if no waypoints are set, we do position hold therefore the yaw mode is absolute
-                if ((((state.nav_plan_active || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN)) && (navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (navigation.internal_state_ == Navigation::NAV_STOP_THERE))
-              	   || ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
-            	{
-                    controls.yaw_mode = YAW_RELATIVE;
-                }
-                else
-                {
-                    controls.yaw_mode = YAW_ABSOLUTE;
-                }
-                break;
-
             case Mav_mode::POSITION_HOLD:
                 controls = controls_nav;
-                controls.control_mode = VELOCITY_COMMAND_MODE;
-
-                if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
-                {
-                    controls.yaw_mode = YAW_RELATIVE;
-                }
-                else
-                {
-                    controls.yaw_mode = YAW_ABSOLUTE;
-                }
-                break;
-
             case Mav_mode::VELOCITY:
-                manual_control.get_velocity_vector(&controls);
+
+                if(state.mav_mode().ctrl_mode() == Mav_mode::VELOCITY)
+                {
+                    manual_control.get_velocity_vector(&controls);
+                }
                 Cascade_controller::vel_command_t vel_command;
                 vel_command.vel = {controls.tvel[0], controls.tvel[1], controls.tvel[2]};
                 cascade_controller_.set_velocity_command(vel_command);
@@ -621,23 +598,6 @@ bool LEQuad::main_task(void)
 }
 
 
-  // // Attitude controller
-  // ret &= attitude_controller_init(&attitude_controller,
-  //                                 config_.attitude_controller_config,
-  //                                 &ahrs,
-  //                                 &command.attitude,
-  //                                 &command.rate,
-  //                                 &command.torque);
-  //
-  // // Velocity controller
-  // ret &= velocity_controller_copter_init(&velocity_controller,
-  //                                        &ahrs,
-  //                                        &position_estimation,
-  //                                        &command.velocity,
-  //                                        &command.attitude,
-  //                                        &command.thrust
-  //                                        config_.velocity_controller_copter_config);
-  //
   // // Vector field
   // ret &= vector_field_waypoint_init(&vector_field_waypoint,
   //                                   {},

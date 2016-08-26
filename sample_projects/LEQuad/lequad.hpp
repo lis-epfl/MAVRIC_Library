@@ -58,13 +58,15 @@
 #include "communication/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
+#include "control/position_controller.hpp"
+#include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/rate_controller.hpp"
 #include "control/torque_controller_quadcopter_diag.hpp"
 #include "control/manual_control.hpp"
 #include "control/navigation.hpp"
 #include "control/stabilisation.hpp"
-#include "control/velocity_controller_copter.hpp"
+
 #include "control/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
@@ -94,7 +96,7 @@ extern "C"
 #include "util/print_util.h"
 }
 
-typedef Velocity_controller_copter<Attitude_controller<Rate_controller<Torque_controller_quadcopter_diag> > > Cascade_controller;
+typedef Position_controller<Velocity_controller_copter<Attitude_controller<Rate_controller<Torque_controller_quadcopter_diag> > > >Cascade_controller;
 
 /**
  * \brief MAV class
