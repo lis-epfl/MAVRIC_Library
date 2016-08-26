@@ -30,46 +30,25 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ivelocity_controller.hpp
+ * \file torque_controller.cpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
  * \author Basil Huber
  *
- * \brief Interface for velocity controller with yaw aligned with velocity vector
+ * \brief Links between torque commands and servos PWM command for quadcopters
+ * in diagonal configuration
  *
  ******************************************************************************/
 
+#include "control/torque_controller.hpp"
 
-#ifndef IVELOCITY_CONTROLLER_HPP_
-#define IVELOCITY_CONTROLLER_HPP_
-
-#include "util/coord_conventions.hpp"
-#include "control/control_command.h"
-
-class IVelocity_controller
+Torque_controller::Torque_controller()
 {
-public:
-    /*
-     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
-     */
-    struct vel_command_t : base_command_t
-    {
-        local_velocity_t    vel;        ///< desired velocity in local frame
-    };
-
-    /**
-     * \brief   Update controller;
-     */
-    virtual void update() = 0;
-
-    /**
-     * \brief           sets the velocity command (desired velocity)
-     *
-     * \param command   velocity command indicating desired velocity in local frame
-     *
-     * \return success  whether command was accepted
-     */
-    inline virtual bool set_velocity_command(const vel_command_t& command) = 0;
-};
-
-#endif /* IVELOCITY_CONTROLLER_HPP_ */
+    /* set initial torque command */
+    torq_command_t initial_torque_command;
+    initial_torque_command.torq = {0.0f, 0.0f, 0.0f};
+    initial_torque_command.thrust = {-1.0f};
+    set_torque_command(initial_torque_command);
+}

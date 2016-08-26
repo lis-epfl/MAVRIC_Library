@@ -30,46 +30,76 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ivelocity_controller.hpp
+ * \file torque_controller_quadcopter_cross.cpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
  * \author Basil Huber
  *
- * \brief Interface for velocity controller with yaw aligned with velocity vector
+ * \brief Links between torque commands and servos PWM command for quadcopters
+ * in cross configuration
  *
  ******************************************************************************/
 
+#include "control/torque_controller_quadcopter_cross.hpp"
 
-#ifndef IVELOCITY_CONTROLLER_HPP_
-#define IVELOCITY_CONTROLLER_HPP_
 
-#include "util/coord_conventions.hpp"
-#include "control/control_command.h"
-
-class IVelocity_controller
+Torque_controller_quadcopter_cross::Torque_controller_quadcopter_cross(args_t args, const conf_t& config) : 
+    motor_front_dir_(config.motor_front_dir),
+    motor_left_dir_(config.motor_left_dir),
+    motor_right_dir_(config.motor_front_dir),
+    motor_rear_dir_(config.motor_rear_dir),
+    min_thrust_(config.min_thrust),
+    max_thrust_(config.max_thrust),
+    motor_front_(args.motor_front),
+    motor_left_(args.motor_left),
+    motor_right_(args.motor_right),
+    motor_rear_(args.motor_rear)
 {
-public:
-    /*
-     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
-     */
-    struct vel_command_t : base_command_t
+
+}
+
+void Torque_controller_quadcopter_cross::update()
+{
+    float motor[4];
+
+    // Front Right motor
+    motor[0] =  torq_command_.thrust +
+                torq_command_.torq[1] +
+                motor_front_dir_ * torq_command_.torq[2];
+
+    // Front Left motor
+    motor[1] =  torq_command_.thrust +
+                (- torq_command_.torq[0]) +
+                motor_right_dir_ * torq_command_.torq[2];
+
+    // Rear Right motor
+    motor[2]  = torq_command_.thrust +
+                (- torq_command_.torq[1]) +
+                torq_command_.torq[1] +
+                motor_rear_dir_ * torq_command_.torq[2];
+
+    // Rear Left motor
+    motor[3]  = torq_command_.thrust +
+                torq_command_.torq[0] +
+                motor_left_dir_ * torq_command_.torq[2];
+
+    // Clip values
+    for (int32_t i = 0; i < 4; i++)
     {
-        local_velocity_t    vel;        ///< desired velocity in local frame
-    };
+        if (motor[i] < min_thrust_)
+        {
+            motor[i] = min_thrust_;
+        }
+        else if (motor[i] > max_thrust_)
+        {
+            motor[i] = max_thrust_;
+        }
+    }
 
-    /**
-     * \brief   Update controller;
-     */
-    virtual void update() = 0;
-
-    /**
-     * \brief           sets the velocity command (desired velocity)
-     *
-     * \param command   velocity command indicating desired velocity in local frame
-     *
-     * \return success  whether command was accepted
-     */
-    inline virtual bool set_velocity_command(const vel_command_t& command) = 0;
-};
-
-#endif /* IVELOCITY_CONTROLLER_HPP_ */
+    motor_front_.write(motor[0]);
+    motor_right_.write(motor[1]);
+    motor_rear_.write(motor[2]);
+    motor_left_.write(motor[3]);
+}

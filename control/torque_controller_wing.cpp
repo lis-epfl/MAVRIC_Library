@@ -30,46 +30,64 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ivelocity_controller.hpp
+ * \file torque_controller_wing.cpp
  *
  * \author MAV'RIC Team
+ * \author Simon Pyroth
  * \author Basil Huber
  *
- * \brief Interface for velocity controller with yaw aligned with velocity vector
+ * \brief Links between regulation output and PWM commands for a wing aircraft
  *
  ******************************************************************************/
 
 
-#ifndef IVELOCITY_CONTROLLER_HPP_
-#define IVELOCITY_CONTROLLER_HPP_
+#include "control/torque_controller_wing.hpp"
 
-#include "util/coord_conventions.hpp"
-#include "control/control_command.h"
+Torque_controller_wing::Torque_controller_wing(args_t& args, const conf_t& config) :
+    config_(config),
+    servo_left_(args.servo_left),
+    servo_right_(args.servo_right),
+    motor_(args.motor)
+    {}
 
-class IVelocity_controller
+
+void Torque_controller_wing::update()
 {
-public:
-    /*
-     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
-     */
-    struct vel_command_t : base_command_t
+    // Calculate value to be sent to the motors
+    float tmp_right_servo   = config_.servo_right_dir * ( (torq_command_.torq[1] + config_.trim_pitch) + (torq_command_.torq[0] + config_.trim_roll) );
+    float tmp_left_servo    = config_.servo_left_dir  * ( (torq_command_.torq[1] + config_.trim_pitch) - (torq_command_.torq[0] + config_.trim_roll) );
+    float tmp_motor         = torq_command_.thrust;
+
+    // Clip values
+    if (tmp_right_servo < config_.min_amplitude)
     {
-        local_velocity_t    vel;        ///< desired velocity in local frame
-    };
+        tmp_right_servo = config_.min_amplitude;
+    }
+    else if (tmp_right_servo > config_.max_amplitude)
+    {
+        tmp_right_servo = config_.max_amplitude;
+    }
 
-    /**
-     * \brief   Update controller;
-     */
-    virtual void update() = 0;
+    if (tmp_left_servo < config_.min_amplitude)
+    {
+        tmp_left_servo = config_.min_amplitude;
+    }
+    else if (tmp_left_servo > config_.max_amplitude)
+    {
+        tmp_left_servo = config_.max_amplitude;
+    }
 
-    /**
-     * \brief           sets the velocity command (desired velocity)
-     *
-     * \param command   velocity command indicating desired velocity in local frame
-     *
-     * \return success  whether command was accepted
-     */
-    inline virtual bool set_velocity_command(const vel_command_t& command) = 0;
-};
+    if (tmp_motor < config_.min_thrust)
+    {
+        tmp_motor = config_.min_thrust;
+    }
+    else if (tmp_motor > config_.max_thrust)
+    {
+        tmp_motor = config_.max_thrust;
+    }
 
-#endif /* IVELOCITY_CONTROLLER_HPP_ */
+    // Set the calculated values to each motors
+    servo_left_.write(tmp_left_servo);
+    servo_right_.write(tmp_right_servo);
+    motor_.write(tmp_motor);
+}

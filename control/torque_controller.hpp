@@ -30,41 +30,57 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_ywing_default_config.h
+ * \file torque_controller.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * \author Basil Huber
  *
- * \brief Default configuration for Ywing servo mix
+ * \brief Abstract class that links between torque commands and servos PWM command for quadcopters
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
+#ifndef TORQUE_CONTROLLER_HPP_
+#define TORQUE_CONTROLLER_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "drivers/servo.hpp"
+#include "util/constants.hpp"
+
+#include "control/itorque_controller.hpp"
+#include "control/base_cascade_controller.hpp"
 
 
-#include "servos_mix_ywing.h"
-
-
-servo_mix_ywing_conf_t servo_mix_ywing_default_config =
+class Torque_controller : public Base_cascade_controller, public ITorque_controller
 {
-    .flap_top_dir   = FLAP_INVERTED,
-    .flap_right_dir = FLAP_INVERTED,
-    .flap_left_dir  = FLAP_INVERTED,
-    .min_thrust     = -0.9f,
-    .max_thrust     = 1.0f,
-    .min_deflection = -1.0f,
-    .max_deflection = 1.0f,
+public:
+
+    Torque_controller();
+
+    /*
+     * \brief   Write motor commands to servo structure based on torque command
+     */
+    virtual void update()=0;
+
+    /*
+     * \brief   Set torque command and set controller cascade to "torque mode" 
+     * \details Sets the torq_command_ and sets cascade_command_ to point to torq_command, signaling that this is the command mode
+     *          This function should NOT be called from higher level controllers if they provide a command, use update_cascade instead
+     * \param torq_command  torque command to be set and used for motor commands
+     */
+    inline bool set_torque_command(const torq_command_t& torq_command){torq_command_ = torq_command; cascade_command_ = &torq_command_; return true;};
+
+protected:
+    /*
+     * \brief   Write motor commands to servo structure based on given torque command
+     * \details Sets the internal torq_command_ to the provided one, without modifiying cascade_command_
+     *          This function should be called from higher level controllers if they provide a command
+     * \param torq_command  torque command to be set and used for motor commands
+     */
+    inline void update_cascade(const torq_command_t& torq_command){set_torque_command(torq_command); update();};
+
+    torq_command_t torq_command_;               ///< torque command (desired torque and thrust)
 };
 
-
-#ifdef __cplusplus
-}
 #endif
-
-#endif // SERVOS_MIX_YWING_DEFAULT_CONFIG_H_

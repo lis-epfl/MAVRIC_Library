@@ -30,35 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_default_config.hpp
+ * \file ivelocity_yaw_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Basil Huber
  *
- * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
+ * \brief Interface for velocity controller taking also a yaw command
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
-#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
+#ifndef IVELOCITY_CONTROLLER_YAW_HPP_
+#define IVELOCITY_CONTROLLER_YAW_HPP_
 
-#include "control/servos_mix_quadcopter_diag.hpp"
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-
-static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
+class IVelocity_yaw_controller
 {
-    servos_mix_quadcopter_diag_conf_t conf  = {};
+public:
+    /*
+     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
+     */
+    struct vel_yaw_command_t : base_command_t
+    {
+        local_velocity_t    vel;        ///< desired velocity in local frame
+        float               yaw;        ///< desired absolute yaw in local frame
+    };
 
-    conf.motor_front_right_dir              = CCW;
-    conf.motor_front_left_dir               = CW;
-    conf.motor_rear_right_dir               = CW;
-    conf.motor_rear_left_dir                = CCW;
-    conf.min_thrust                         = -0.9f;
-    conf.max_thrust                         = 1.0f;
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
 
-    return conf;
+    /**
+     * \brief           sets the velocity yaw command (desired velocity and desired yaw)
+     *
+     * \param command   velocity command indicating desired velocity and yaw in local frame
+     *
+     * \return success  whether command was accepted
+     */
+    inline virtual bool set_velocity_yaw_command(const vel_yaw_command_t& command) = 0;
 };
 
-
-#endif /* SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_ */
+#endif /* IVELOCITY_CONTROLLER_YAW_HPP_ */

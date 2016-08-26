@@ -58,16 +58,23 @@
 #include "communication/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
+#include "control/position_controller.hpp"
+#include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
+<<<<<<< HEAD
 #include "control/inavigation_controller.hpp"
 #include "control/ixyposition_zvel_controller.hpp"
 #include "control/manual_control.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
+=======
+#include "control/rate_controller.hpp"
+#include "control/torque_controller_quadcopter_diag.hpp"
+#include "control/manual_control.hpp"
+#include "control/navigation.hpp"
+>>>>>>> dev/cascade_controller
 #include "control/stabilisation.hpp"
-#include "control/stabilisation_copter.hpp"
-#include "control/stabilisation_copter_default_config.hpp"
-#include "control/velocity_controller_copter.hpp"
+
 #include "control/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
@@ -107,7 +114,7 @@ extern "C"
 #include "util/print_util.h"
 }
 
-
+typedef Position_controller<Velocity_controller_copter<Attitude_controller<Rate_controller<Torque_controller_quadcopter_diag> > > >Cascade_controller;
 
 /**
  * \brief MAV class
@@ -130,12 +137,9 @@ public:
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         Position_estimation::conf_t position_estimation_config;
-        stabilisation_copter_conf_t stabilisation_copter_config;
-        servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        Attitude_controller::conf_t attitude_controller_config;
-        Velocity_controller_copter::conf_t velocity_controller_copter_config;
+        Cascade_controller::conf_t cascade_controller_config;
     };
 
     /**
@@ -237,8 +241,6 @@ protected:
     Scheduler scheduler;
     Mavlink_communication mavlink_communication_;
 
-    servos_mix_quadcotper_diag_t servo_mix;
-
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
 
@@ -246,8 +248,6 @@ protected:
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
-
-    stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
 
@@ -263,6 +263,8 @@ protected:
     Mission_handler_critical_navigating<INavigation_controller> critical_navigating_handler;
     Mission_planner mission_planner;                            ///< Controls the mission plan
 
+
+    Cascade_controller cascade_controller_;
 
     State_machine state_machine;                                ///< The structure for the state machine
 
@@ -303,17 +305,11 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.position_estimation_config = Position_estimation::default_config();
 
-    conf.stabilisation_copter_config = stabilisation_copter_default_config();
-
-    conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
-
     conf.manual_control_config = Manual_control::default_config();
 
     conf.remote_config = remote_default_config();
 
-    conf.attitude_controller_config = Attitude_controller::default_config();
-
-    conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
+    conf.cascade_controller_config = Cascade_controller::default_config();
 
     /* Mavlink communication config */
     Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);

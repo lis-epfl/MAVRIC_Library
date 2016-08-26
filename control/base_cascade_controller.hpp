@@ -30,44 +30,27 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_wing_default_config.hpp
+ * \file base_cascade_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Simon Pyroth
+ * \author Basil Huber
  *
- * \brief Default configuration for the servo_mix for the MAVRIC wing
+ * \brief Abstract Base class for cascade style controller hierarchy. Only the lowest level should inherit from this class!
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
-#define SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
+#ifndef BASE_CASC_CONTROLLER_HPP_
+#define BASE_CASC_CONTROLLER_HPP_
 
+#include "control/control_command.h"
 
-#include "control/servos_mix_wing.hpp"
-#include "util/constants.hpp"
-
-
-static inline servos_mix_wing_conf_t servos_mix_wing_default_config()
+class Base_cascade_controller
 {
-	servos_mix_wing_conf_t conf;
+protected:
+    Base_cascade_controller() : cascade_command_(NULL){};
 
-	conf.servo_right = 2;
-	conf.servo_left = 1;
-	conf.motor = 0;
-
-	conf.servo_right_dir = FLAP_INVERTED;
-	conf.servo_left_dir = FLAP_NORMAL;
-
-	conf.min_amplitude = -1.0f;
-	conf.max_amplitude = 1.0f;
-	conf.min_thrust = -0.9f;
-	conf.max_thrust = 1.0f;
-
-	conf.trim_roll = 0.252273f;
-	conf.trim_pitch = 0.0090908f;
-
-	return conf;
+    base_command_t const*  cascade_command_;
 };
 
-#endif // SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
+#endif /* BASE_CASC_CONTROLLER_HPP_ */
