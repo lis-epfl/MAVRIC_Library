@@ -41,6 +41,8 @@
 
 
 #include "mission/mission_handler_landing.hpp"
+#include "control/inavigation_controller.hpp"
+#include "control/ixyposition_zvel_controller.hpp"
 
 extern "C"
 {

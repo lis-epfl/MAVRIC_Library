@@ -56,7 +56,7 @@ bool Mission_handler_hold_position<INavigation_controller>::set_control_command(
 {
 	INavigation_controller::nav_command_t cmd;
 	cmd.pos = waypoint_.local_pos();
-	controller_.set_navigation_command(cmd);
+	return controller_.set_navigation_command(cmd);
 }
 
 //------------------------------------------------------------------------------
