@@ -115,6 +115,18 @@ bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf
 
 
 /**
+ * \brief   Applies configuration without reseting the controller
+ * \details integrator.accumulator and differentiator.previous are ignored
+ *
+ * \param   controller      A PID controller structure
+ * \param   config          Configuration
+ *
+ * \return  success
+ */
+bool pid_controller_apply_config(pid_controller_t* controller, const pid_controller_conf_t* config);
+
+
+/**
  * \brief   Init as passing through controller
  *
  * \param   controller      A PID controller structure
