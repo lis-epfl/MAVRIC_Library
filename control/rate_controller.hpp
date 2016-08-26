@@ -89,7 +89,7 @@ public:
      * \param   args                containing constructor arguments for rate controller and TTorque_controller
      * \param   config              Configuration     
      */
-    Rate_controller(args_t args, conf_t config = default_config());
+    Rate_controller(args_t args, const conf_t& config = default_config());
 
     virtual void update();
 

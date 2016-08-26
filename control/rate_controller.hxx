@@ -56,7 +56,7 @@
 //------------------------------------------------------------------------------
 
 template<class TTorque_controller>
-Rate_controller<TTorque_controller>::Rate_controller(args_t args, conf_t config) : 
+Rate_controller<TTorque_controller>::Rate_controller(args_t args, const conf_t& config) :
     TTorque_controller(args.torque_controller_args, config.torque_controller_config),
     ahrs_(args.ahrs)
 {

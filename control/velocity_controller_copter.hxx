@@ -55,7 +55,7 @@ extern "C"
 }
 
 template<class TAttitude_controller>
-Velocity_controller_copter<TAttitude_controller>::Velocity_controller_copter( args_t args, conf_t config) :
+Velocity_controller_copter<TAttitude_controller>::Velocity_controller_copter( args_t args, const conf_t& config) :
     TAttitude_controller(args.attitude_controller_args, config.attitude_controller_config),
     ahrs_(args.ahrs),
     ins_(args.ins),

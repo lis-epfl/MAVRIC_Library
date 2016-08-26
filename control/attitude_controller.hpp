@@ -90,7 +90,7 @@ public:
      * \param   args                Constructor arguments
      * \param   config              Configuration     
      */
-    Attitude_controller(args_t args, conf_t config = default_config());
+    Attitude_controller(args_t args, const conf_t& config = default_config());
 
     virtual void update();
 

@@ -44,10 +44,6 @@
 
 #include "control/torque_controller_quadcopter_diag.hpp"
 
-#include "util/print_util.h"
-
-
-
 Torque_controller_quadcopter_diag::Torque_controller_quadcopter_diag(args_t& args, const conf_t& config) : 
     motor_rear_left_dir_(config.motor_rear_left_dir),
     motor_front_left_dir_(config.motor_front_left_dir),
@@ -60,16 +56,11 @@ Torque_controller_quadcopter_diag::Torque_controller_quadcopter_diag(args_t& arg
     motor_front_right_(args.motor_front_right),
     motor_rear_right_(args.motor_rear_right)
 {
-
 }
 
 void Torque_controller_quadcopter_diag::update()
 {
     float motor[4];
-
-    // print_util_dbg_print("thrust: ");
-    // print_util_dbg_putfloat(torq_command_.thrust,3);
-    // print_util_dbg_print("\n");
 
     // Front Right motor
     motor[0] =  torq_command_.thrust +
@@ -96,7 +87,7 @@ void Torque_controller_quadcopter_diag::update()
                 motor_rear_left_dir_ * torq_command_.torq[2];
 
     // Clip values
-    for (int32_t i = 0; i < 4; i++)
+    for (int8_t i = 0; i < 4; i++)
     {
         if (motor[i] < min_thrust_)
         {
@@ -107,6 +98,8 @@ void Torque_controller_quadcopter_diag::update()
             motor[i] = max_thrust_;
         }
     }
+
+
 
     motor_front_right_.write(motor[0]);
     motor_front_left_.write(motor[1]);

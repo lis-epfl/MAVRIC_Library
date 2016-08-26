@@ -90,7 +90,7 @@ public:
      * \param   args                Constructor arguments
      * \param   config              Configuration
      */
-    Velocity_controller_copter( args_t args, conf_t config = default_config());
+    Velocity_controller_copter( args_t args, const conf_t& config = default_config());
 
     /**
      * \brief   Main update function
@@ -198,6 +198,8 @@ typename Velocity_controller_copter<TAttitude_controller>::conf_t Velocity_contr
     conf.pid_config[Z].differentiator.previous = 0.0f;
     conf.pid_config[Z].differentiator.clip     = 0.04f;
     conf.pid_config[Z].soft_zone_width         = 0.2f;
+
+    conf.attitude_controller_config = TAttitude_controller::default_config();
 
     return conf;
 }

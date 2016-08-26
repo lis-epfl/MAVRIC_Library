@@ -56,7 +56,7 @@
 //------------------------------------------------------------------------------
 
 template<class TRate_controller>
-Attitude_controller<TRate_controller>::Attitude_controller(args_t args, conf_t config) : 
+Attitude_controller<TRate_controller>::Attitude_controller(args_t args, const conf_t& config) :
     TRate_controller(args.rate_controller_args, config.rate_controller_config),
     ahrs_(args.ahrs)
 {
