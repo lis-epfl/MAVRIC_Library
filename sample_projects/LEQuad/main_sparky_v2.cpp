@@ -40,6 +40,8 @@
 
 #include "boards/sparky_v2.hpp"
 
+#include "control/manual_control.hpp"
+
 #include "drivers/mpu_9250.hpp"
 #include "drivers/spektrum_satellite.hpp"
 
@@ -125,63 +127,75 @@ int main(int argc, char** argv)
     Dynamic_model_quad_diag     sim_model(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
     Simulation                  sim(sim_model);
 
-    // Simulated battery
+    // // Simulated battery
     Adc_dummy   sim_adc_battery(11.1f);
     Battery     sim_battery(sim_adc_battery);
 
-    // Simulated IMU
-    Imu     sim_imu( sim.accelerometer(),
-                     sim.gyroscope(),
-                     sim.magnetometer() );
+    // // Simulated IMU
+    // Imu     sim_imu( sim.accelerometer(),
+    //                  sim.gyroscope(),
+    //                  sim.magnetometer() );
 
-    // set the flag to simulation
-    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad( sim_imu,
-                         sim.barometer(),
-                         sim.gps(),
-                         sim.sonar(),
-                         board.serial_,                // mavlink serial
-                         satellite_dummy,
-                         board.state_display_sparky_v2_,
-                         file_dummy,
-                         sim_battery,
-                         sim_servo_0,
-                         sim_servo_1,
-                         sim_servo_2,
-                         sim_servo_3 ,
-                         sim_servo_4,
-                         sim_servo_5,
-                         sim_servo_6,
-                         sim_servo_7 ,
-                         file_dummy,
-                         file_dummy,
-                         mav_config );
+    // // set the flag to simulation
+    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    // LEQuad mav = LEQuad( sim_imu,
+    //                      sim.barometer(),
+    //                      sim.gps(),
+    //                      sim.sonar(),
+    //                      board.serial_,                // mavlink serial
+    //                      satellite_dummy,
+    //                      board.state_display_sparky_v2_,
+    //                      file_dummy,
+    //                      sim_battery,
+    //                      sim_servo_0,
+    //                      sim_servo_1,
+    //                      sim_servo_2,
+    //                      sim_servo_3 ,
+    //                      sim_servo_4,
+    //                      sim_servo_5,
+    //                      sim_servo_6,
+    //                      sim_servo_7 ,
+    //                      file_dummy,
+    //                      file_dummy,
+    //                      mav_config );
 
     // -------------------------------------------------------------------------
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    // LEQuad mav = LEQuad(board.imu,
-    //                     board.bmp085,
-    //                     board.gps_ublox,
-    //                     board.sonar_i2cxl,
-    //                     board.uart0,
-    //                     board.spektrum_satellite,
-    //                     board.state_display_megafly_rev4_,
-    //                     board.file_flash,
-    //                     board.battery,
-    //                     board.servo_0,
-    //                     board.servo_1,
-    //                     board.servo_2,
-    //                     board.servo_3,
-    //                     board.servo_4,
-    //                     board.servo_5,
-    //                     board.servo_6,
-    //                     board.servo_7,
-    //                     file_dummy,
-    //                     file_dummy,
-    //                     mav_config );
+    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+
+    //use joystick by default
+    mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_JOYSTICK;
+    mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_JOYSTICK;
+
+    LEQuad mav = LEQuad(board.imu_,
+                        sim.barometer(),
+                        sim.gps(),
+                        sim.sonar(),
+                        // board.bmp085,
+                        // board.gps_ublox,
+                        // board.sonar_i2cxl,
+                        board.serial_1_,                // mavlink serial
+                        // board.serial_,                // mavlink serial
+                        satellite_dummy,
+                        // board.spektrum_satellite,
+                        board.state_display_sparky_v2_,
+                        file_dummy,
+                        // board.file_flash,
+                        sim_battery,
+    //                  board.battery,
+                        board.servo_0_,
+                        board.servo_1_,
+                        board.servo_2_,
+                        board.servo_3_,
+                        board.servo_4_,
+                        board.servo_5_,
+                        board.servo_6_,
+                        board.servo_7_,
+                        file_dummy,
+                        file_dummy,
+                        mav_config );
 
 
 

@@ -39,16 +39,15 @@
  *
  ******************************************************************************/
 
-#include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-
-
 #include "boards/sparky_v2.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
 #include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
+    
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
 }
 
 
@@ -86,6 +85,7 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     pwm_3_(config.pwm_config[3]),
     pwm_4_(config.pwm_config[4]),
     pwm_5_(config.pwm_config[5]),
+    serial_1_(config.serial_1_config),
     serial_(config.serial_usb_config),
     servo_0_(pwm_0_, config.servo_config[0]),
     servo_1_(pwm_1_, config.servo_config[1]),
@@ -131,6 +131,13 @@ bool Sparky_v2::init(void)
     // Init SERIAL
     // -------------------------------------------------------------------------
     ret &= serial_.init();
+    time_keeper_delay_ms(500);  // This delay is required to let the host computer initialize the usb serial interface
+    init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init SERIAL
+    // -------------------------------------------------------------------------
+    ret &= serial_1_.init();
     time_keeper_delay_ms(500);  // This delay is required to let the host computer initialize the usb serial interface
     init_success &= ret;
 
