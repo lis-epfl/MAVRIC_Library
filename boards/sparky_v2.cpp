@@ -118,54 +118,6 @@ bool Sparky_v2::init(void)
     time_keeper_init();
 
     // -------------------------------------------------------------------------
-    // Init LEDs
-    // -------------------------------------------------------------------------
-    ret = led_err_gpio_.init();
-    ret = led_stat_gpio_.init();
-    ret = led_rf_gpio_.init();
-    led_err_.on();
-    led_stat_.on();
-    led_rf_.on();
-
-    // -------------------------------------------------------------------------
-    // Init SERIAL
-    // -------------------------------------------------------------------------
-    ret &= serial_.init();
-    time_keeper_delay_ms(500);  // This delay is required to let the host computer initialize the usb serial interface
-    init_success &= ret;
-
-    // -------------------------------------------------------------------------
-    // Init SERIAL
-    // -------------------------------------------------------------------------
-    ret &= serial_1_.init();
-    time_keeper_delay_ms(500);  // This delay is required to let the host computer initialize the usb serial interface
-    init_success &= ret;
-
-    // -------------------------------------------------------------------------
-    // Init stream for USB debug stream TODO: remove
-    // p_dbg_serial        = &serial_;
-    // dbg_stream_.get     = NULL;
-    // dbg_stream_.put     = &serial2stream;
-    // dbg_stream_.flush   = NULL;
-    // dbg_stream_.buffer_empty = NULL;
-    // dbg_stream_.data    = NULL;
-    // print_util_dbg_print_init(&dbg_stream_);
-    // -------------------------------------------------------------------------
-
-
-    // print_util_dbg_sep('%');
-    // p_dbg_serial->flush();
-    // print_util_dbg_sep('-');
-    // p_dbg_serial->flush();
-    // print_util_dbg_print("[SPARKY_V2] ...\r\n");
-    // p_dbg_serial->flush();
-    // print_util_dbg_sep('-');
-    // p_dbg_serial->flush();
-
-    // print_util_dbg_init_msg("[SERIAL]", ret);
-    // p_dbg_serial->flush();
-
-    // -------------------------------------------------------------------------
     // Init Servos
     // -------------------------------------------------------------------------
 #if CALIBRATE_ESC == 0
@@ -272,6 +224,54 @@ bool Sparky_v2::init(void)
     // print_util_dbg_init_msg("[PWM7]", false);
 
 #endif
+
+    // -------------------------------------------------------------------------
+    // Init LEDs
+    // -------------------------------------------------------------------------
+    ret = led_err_gpio_.init();
+    ret = led_stat_gpio_.init();
+    ret = led_rf_gpio_.init();
+    led_err_.on();
+    led_stat_.on();
+    led_rf_.on();
+
+    // -------------------------------------------------------------------------
+    // Init SERIAL
+    // -------------------------------------------------------------------------
+    ret &= serial_.init();
+    time_keeper_delay_ms(500);  // This delay is required to let the host computer initialize the usb serial interface
+    init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init SERIAL
+    // -------------------------------------------------------------------------
+    ret &= serial_1_.init();
+    time_keeper_delay_ms(500);  // This delay is required to let the host computer initialize the usb serial interface
+    init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init stream for USB debug stream TODO: remove
+    // p_dbg_serial        = &serial_;
+    // dbg_stream_.get     = NULL;
+    // dbg_stream_.put     = &serial2stream;
+    // dbg_stream_.flush   = NULL;
+    // dbg_stream_.buffer_empty = NULL;
+    // dbg_stream_.data    = NULL;
+    // print_util_dbg_print_init(&dbg_stream_);
+    // -------------------------------------------------------------------------
+
+
+    // print_util_dbg_sep('%');
+    // p_dbg_serial->flush();
+    // print_util_dbg_sep('-');
+    // p_dbg_serial->flush();
+    // print_util_dbg_print("[SPARKY_V2] ...\r\n");
+    // p_dbg_serial->flush();
+    // print_util_dbg_sep('-');
+    // p_dbg_serial->flush();
+
+    // print_util_dbg_init_msg("[SERIAL]", ret);
+    // p_dbg_serial->flush();
 
     // -------------------------------------------------------------------------
     // Init SPIs
