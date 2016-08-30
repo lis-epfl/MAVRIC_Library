@@ -84,13 +84,13 @@ int main(int argc, char** argv)
     // board_config.imu_config.gyroscope.bias[1] = -0.0061096f;
     // board_config.imu_config.gyroscope.bias[2] = -0.00312137f;
 
-    // board_config.imu_config.magnetometer.bias[0] = +0.520405f;
-    // board_config.imu_config.magnetometer.bias[1] = -0.55305f;
-    // board_config.imu_config.magnetometer.bias[2] = -0.489245f;
+    board_config.imu_config.magnetometer.bias[0] = 0.62785f;
+    board_config.imu_config.magnetometer.bias[1] = 0.487535f;
+    board_config.imu_config.magnetometer.bias[2] = 0.545637f;
 
-    // board_config.imu_config.magnetic_north[0] = +0.268271f;
-    // board_config.imu_config.magnetic_north[1] = +0.0f;
-    // board_config.imu_config.magnetic_north[2] = +0.485027f;
+    board_config.imu_config.magnetic_north[0] = +0.689735f;
+    board_config.imu_config.magnetic_north[1] = +0.0f;
+    board_config.imu_config.magnetic_north[2] = 0.300356f;
 
     Sparky_v2 board(board_config);
 
