@@ -242,16 +242,18 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     // PWM config
     // -------------------------------------------------------------------------
+    // According to sparkyV2 documentation, when using LED port we should used TIM8 for
+    // pin 5 and 6 on CONN7 but due to complicated advanced setting, TIM3 is used instead
+    
     conf.pwm_config[0].gpio_config.port     = GPIO_STM32_PORT_C;
     conf.pwm_config[0].gpio_config.pin      = GPIO_STM32_PIN_9;
     conf.pwm_config[0].gpio_config.dir      = GPIO_OUTPUT;
     conf.pwm_config[0].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    conf.pwm_config[0].gpio_config.alt_fct  = GPIO_STM32_AF_3;
-    conf.pwm_config[0].timer                = TIM8;
-    conf.pwm_config[0].rcc_timer            = RCC_TIM8;
+    conf.pwm_config[0].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[0].timer                = TIM3;
+    conf.pwm_config[0].rcc_timer            = RCC_TIM3;
     conf.pwm_config[0].channel              = Pwm_stm32::PWM_STM32_CHANNEL_4;
-    // max timer clock freq of TIM9 is not 84 but 168 MHz
-    conf.pwm_config[0].prescaler            = 168; //since APB1 clock is main_clk/2
+    conf.pwm_config[0].prescaler            = 84; //since APB1 clock is main_clk/2
     conf.pwm_config[0].period               = 20000; //50Hz
     conf.pwm_config[0].pulse_us             = 5000;
 
@@ -259,12 +261,11 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.pwm_config[1].gpio_config.pin      = GPIO_STM32_PIN_8;
     conf.pwm_config[1].gpio_config.dir      = GPIO_OUTPUT;
     conf.pwm_config[1].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    conf.pwm_config[1].gpio_config.alt_fct  = GPIO_STM32_AF_3;
-    conf.pwm_config[1].timer                = TIM8;
-    conf.pwm_config[1].rcc_timer            = RCC_TIM8;
+    conf.pwm_config[1].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[1].timer                = TIM3;
+    conf.pwm_config[1].rcc_timer            = RCC_TIM3;
     conf.pwm_config[1].channel              = Pwm_stm32::PWM_STM32_CHANNEL_3;
-    // max timer clock freq of TIM9 is not 84 but 168 MHz
-    conf.pwm_config[1].prescaler            = 168;
+    conf.pwm_config[1].prescaler            = 84;
     conf.pwm_config[1].period               = 20000; //50Hz
     conf.pwm_config[1].pulse_us             = 5000;
 
