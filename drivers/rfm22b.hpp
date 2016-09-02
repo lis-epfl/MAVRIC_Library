@@ -168,7 +168,18 @@
     bool set_normal_carrier_freq(void);
     bool set_datarate(void);
     bool rfm22b_init(void);
-    bool to_tx_mode(void);
+    // bool to_tx_mode(void);
+    bool set_carrier_frequency(unsigned int frequency);
+    bool set_modulation_type(void);
+    bool set_modulation_data_source(void);
+    bool set_data_clock_configuration(void);
+    bool set_transmission_power(uint8_t power);
+    bool set_gpio_function(void);
+    bool set_transmit_header(uint32_t header);
+    bool clear_tx_fifo(void);
+    bool clear_rx_fifo(void);
+    bool send(uint8_t *data, int length);
+    bool receive(uint8_t *data, int length);
 
     // rfm22b register adresses
     static const uint8_t DEVICE_TYPE_REG 	= 0x00;
@@ -221,6 +232,7 @@
     static const uint8_t HEADER_EN_2		= 0x44;		// Header 2 Enable
     static const uint8_t HEADER_EN_1		= 0x45;		// Header 1 Enable
     static const uint8_t HEADER_EN_0		= 0x46;		// Header 0 Enable
+    static const uint8_t RECEIVE_PKT_LEN    = 0x4B;     // Receive Packet Length
     static const uint8_t TX_POWER			= 0x6D;
     static const uint8_t TX_DATA_RATE_1		= 0x6E;
     static const uint8_t TX_DATA_RATE_0		= 0x6F;
@@ -309,6 +321,11 @@
  private:
  	Spi& 	spi_;	///< SPI peripheral
  	Gpio&	nss_;	///< Slave Select GPIO
+
+
+    bool set_packet_transmit_length(uint8_t length);
+    bool enable_tx_mode(void);
+    bool enable_rx_mode(void);
 
  	/**
      * \brief   Select Slave

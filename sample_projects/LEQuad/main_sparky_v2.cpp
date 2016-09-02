@@ -198,8 +198,17 @@ int main(int argc, char** argv)
     Rfm22b rfm22b(board.spi_3_, board.nss_2_gpio_);
     bool bo = rfm22b.init();
 
+    char output[64] = "Hello World!";
+    // bo &= rfm22b.send((uint8_t*)output, 64);
+
+    char input[64] = {0};
+    // bo &= rfm22b.receive((uint8_t*)input,64);
+
     while (1)
     {
+        bo &= rfm22b.send((uint8_t*)output, 64);
+        // bo &= rfm22b.receive((uint8_t*)input,64);
+
 
         // Write mavlink message
         // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
@@ -215,13 +224,16 @@ int main(int argc, char** argv)
         time_keeper_delay_ms(500);
 
 
-        // const char* sep = "\t";
-        // uint64_t delay = 25;
+        const char* sep = " ";
+        uint64_t delay = 25;
 
-        // console.write(read);
-        // time_keeper_delay_ms(delay);
-        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-        // time_keeper_delay_ms(delay);
+        for (int i = 0; i < 64; i++)
+        {
+            console.write(input[i]);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
         // console.write(valy);
         // time_keeper_delay_ms(delay);
         // board.serial_.write((const uint8_t*)sep, sizeof(sep));
@@ -229,8 +241,8 @@ int main(int argc, char** argv)
         // console.write(valz);
         // time_keeper_delay_ms(delay);
 
-        // const char* newline = "\r\n";
-        // board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        const char* newline = "\r\n";
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
 
         if (bo)
         {
