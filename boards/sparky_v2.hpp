@@ -323,9 +323,18 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // Servo config
     // -------------------------------------------------------------------------
     conf.servo_config[0] = servo_default_config_brush_motor();
+    // with a 2S battery we need to divide the duty cycle by 2 not to over-heat
+    conf.servo_config[0].pulse_center_us    = 62.5;  
+    conf.servo_config[0].pulse_magnitude_us = 62.5;  // duty cycle: 0 to 100%
     conf.servo_config[1] = servo_default_config_brush_motor();
+    conf.servo_config[1].pulse_center_us    = 62.5;  
+    conf.servo_config[1].pulse_magnitude_us = 62.5;  // duty cycle: 0 to 100%
     conf.servo_config[2] = servo_default_config_brush_motor();
+    conf.servo_config[2].pulse_center_us    = 62.5;  
+    conf.servo_config[2].pulse_magnitude_us = 62.5;  // duty cycle: 0 to 100%
     conf.servo_config[3] = servo_default_config_brush_motor();
+    conf.servo_config[3].pulse_center_us    = 62.5;  
+    conf.servo_config[3].pulse_magnitude_us = 62.5;  // duty cycle: 0 to 100%
     conf.servo_config[4] = servo_default_config_esc();
     conf.servo_config[5] = servo_default_config_esc();
     conf.servo_config[6] = servo_default_config_esc();
