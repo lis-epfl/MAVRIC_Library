@@ -53,6 +53,15 @@ class LEQuad_dronedome: public LEQuad
 {
 public:
     /**
+     * \brief   Default configuration
+     *
+     * \param   sysid       System id (default value = 1)
+     *
+     * \return  Config structure
+     */
+    static inline LEQuad::conf_t default_config(uint8_t sysid = 1);
+
+    /**
      * \brief   Constructor
      */
     LEQuad_dronedome( Imu& imu,
@@ -61,7 +70,7 @@ public:
                       Sonar& sonar,
                       Serial& serial_mavlink,
                       Satellite& satellite,
-                      Led& led,
+                      State_display& state_display,
                       File& file_flash,
                       Battery& battery,
                       Servo& servo_0,
@@ -74,12 +83,12 @@ public:
                       Servo& servo_7,
                       File& file1,
                       File& file2,
-                      LEQuad::conf_t config = LEQuad::default_config() ):
-          LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, led, file_flash,
+                      LEQuad::conf_t config = LEQuad_dronedome::default_config() ):
+          LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, state_display, file_flash,
                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                      file1, file2, config),
-          gps_mocap_(mavlink_communication.message_handler()),
-          ahrs_ekf_mocap_(mavlink_communication.message_handler(), ahrs_ekf)
+          gps_mocap_(mavlink_communication_.message_handler()),
+          ahrs_ekf_mocap_(mavlink_communication_.message_handler(), ahrs_ekf)
       {
       }
 
@@ -103,5 +112,24 @@ private:
     Ahrs_ekf_mocap ahrs_ekf_mocap_;
 };
 
+LEQuad::conf_t LEQuad_dronedome::default_config(uint8_t sysid)
+{
+    conf_t conf                                                = {};
+
+    conf = LEQuad::default_config(sysid);
+
+    //adapt gain for the drone dome
+    for (int i = 0; i < 3; ++i)
+    {
+        conf.position_estimation_config.kp_pos_gps[i] = 100.0f;
+        conf.position_estimation_config.kp_vel_gps[i] = 100.0f;
+    }
+    conf.position_estimation_config.kp_alt_baro = 0.0f;
+    conf.position_estimation_config.kp_vel_baro = 0.0f;
+    conf.position_estimation_config.kp_alt_sonar = 0.0f;
+    conf.position_estimation_config.kp_vel_sonar = 0.0f;
+
+    return conf;
+}
 
 #endif /* LEQUAD_DRONEDOME_HPP_ */
