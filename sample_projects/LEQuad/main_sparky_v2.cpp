@@ -64,6 +64,8 @@ extern "C"
 }
 
 #define MAVLINK_SYS_ID 2
+#define SEND
+#define PKT_SIZE       8
 
 int main(int argc, char** argv)
 {
@@ -198,48 +200,105 @@ int main(int argc, char** argv)
     Rfm22b rfm22b(board.spi_3_, board.nss_2_gpio_);
     bool bo = rfm22b.init();
 
-    char output[64] = "Hello World!";
-    // bo &= rfm22b.send((uint8_t*)output, 64);
+    char output[PKT_SIZE] = "Salut";
+    char input[PKT_SIZE] = {0};
+    int length = PKT_SIZE;
+    uint8_t rssi = 0;
 
-    char input[64] = {0};
-    // bo &= rfm22b.receive((uint8_t*)input,64);
+    uint8_t interrupt_1 = 0;
+    uint8_t interrupt_2 = 0;
 
-    while (1)
+    int32_t timeout = 0;
+    uint8_t rx_header[4] = {0};
+    uint8_t tx_header[4] = {0};
+
+    const char* sep  = " ";
+    const char* sep2 = "\t";
+    uint64_t delay = 25;
+
+    #if defined (SEND)
+
+    while (1) // Send
     {
-        bo &= rfm22b.send((uint8_t*)output, 64);
-        // bo &= rfm22b.receive((uint8_t*)input,64);
+        uint8_t device_status = 0;
+
+        // Write data to TX FIFO and send it
+        bo &= rfm22b.send((uint8_t*)output, length);
+
+        // Get Device Status
+        bo &= rfm22b.read_reg(Rfm22b::DEVICE_STATUS, &device_status);
+
+        // Read Interrupt Status 1
+        bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_1, &interrupt_1);
+
+        // Read Interrupt Status 2
+        bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_2, &interrupt_2);
+
+        // Get Transmit Header
+        bo &= rfm22b.get_transmit_header(tx_header);
+
+        uint8_t battery = 0;
+        bo &= rfm22b.get_battery_level(&battery);
 
 
-        // Write mavlink message
-        // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
-        //                             50,     // uint8_t component_id,
-        //                             &msg,   // mavlink_message_t* msg,
-        //                             0,      // uint8_t type,
-        //                             0,      // uint8_t autopilot,
-        //                             0,      // uint8_t base_mode,
-        //                             0,      // uint32_t custom_mode,
-        //                             0);     //uint8_t system_status)
-        // mavlink_stream.send(&msg);
+        console.write(battery);
+        time_keeper_delay_ms(delay);
+        board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        time_keeper_delay_ms(delay);
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
 
-        time_keeper_delay_ms(500);
-
-
-        const char* sep = " ";
-        uint64_t delay = 25;
-
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < length; i++)
         {
-            console.write(input[i]);
+            console.write(output[i]);
             time_keeper_delay_ms(delay);
             board.serial_.write((const uint8_t*)sep, sizeof(sep));
             time_keeper_delay_ms(delay);
         }
-        // console.write(valy);
-        // time_keeper_delay_ms(delay);
-        // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-        // time_keeper_delay_ms(delay);
-        // console.write(valz);
-        // time_keeper_delay_ms(delay);
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < 8; i++)
+        {
+            console.write((device_status >> (7-i)) & 1);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < 8; i++)
+        {
+            console.write((interrupt_1 >> (7-i)) & 1);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < 8; i++)
+        {
+            console.write((interrupt_2 >> (7-i)) & 1);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < 4; i++)
+        {
+            console.write(tx_header[i]);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
 
         const char* newline = "\r\n";
         board.serial_.write((const uint8_t*)newline, sizeof(newline));
@@ -253,7 +312,119 @@ int main(int argc, char** argv)
             board.led_err_.toggle();
         }
 
+        bo = true;
+        length = PKT_SIZE;
+
+        time_keeper_delay_ms(100);
     }
+
+    #else
+
+    while (1) // Receive
+    {
+        uint8_t device_status = 0;
+
+        // Receive data and read RX FIFO
+        bo &= rfm22b.receive((uint8_t*)input, &length);
+
+        // Get Device Status
+        bo &= rfm22b.read_reg(Rfm22b::DEVICE_STATUS, &device_status);
+
+        // Read Interrupt Status 1
+        bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_1, &interrupt_1);
+
+        // Read Interrupt Status 2
+        bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_2, &interrupt_2);
+
+        // Read RSSI
+        bo &= rfm22b.get_rssi(&rssi);
+
+        // Get Received Header
+        bo &= rfm22b.get_received_header(rx_header);
+
+        if ((device_status >> 5) & 1)
+        {
+            length = 0;
+        }
+
+        for (int i = 0; i < length; i++)
+        {
+            console.write(input[i]);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < 8; i++)
+        {
+            console.write((device_status >> (7-i)) & 1);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < 8; i++)
+        {
+            console.write((interrupt_1 >> (7-i)) & 1);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < 8; i++)
+        {
+            console.write((interrupt_2 >> (7-i)) & 1);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < 4; i++)
+        {
+            console.write(rx_header[i]);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        console.write(rssi);
+        time_keeper_delay_ms(delay);
+        board.serial_.write((const uint8_t*)sep, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        const char* newline = "\r\n";
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+
+        if (bo)
+        {
+            board.led_stat_.toggle();
+        }
+        else
+        {
+            board.led_err_.toggle();
+        }
+
+        bo = true;
+        length = PKT_SIZE;
+
+        time_keeper_delay_ms(100);
+    }
+    #endif
 
     return 0;
 }

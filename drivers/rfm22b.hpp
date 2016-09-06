@@ -175,11 +175,25 @@
     bool set_data_clock_configuration(void);
     bool set_transmission_power(uint8_t power);
     bool set_gpio_function(void);
-    bool set_transmit_header(uint32_t header);
+    bool set_transmit_header(void);
     bool clear_tx_fifo(void);
     bool clear_rx_fifo(void);
     bool send(uint8_t *data, int length);
-    bool receive(uint8_t *data, int length);
+    bool receive(uint8_t *data, int* length);
+    bool get_rssi(uint8_t* rssi);
+    bool set_preamble_detection(uint8_t n_nibbles);
+    bool set_header_length(uint8_t length);
+    bool set_header_check(void);
+    bool set_check_header(void);
+    bool get_received_header(uint8_t* rx_header);
+    bool set_syncword_length(uint8_t length);
+    bool get_transmit_header(uint8_t* tx_header);
+    bool header_enable(void);
+    bool interrput_enable(uint8_t in1en, uint8_t in2en);
+    bool set_rssi_offset(uint8_t offset);
+    bool set_rssi_threshold(uint8_t threshold);
+    bool get_battery_level(uint8_t* battery_level);
+    bool set_lbd_threshold(uint8_t threshold);
 
     // rfm22b register adresses
     static const uint8_t DEVICE_TYPE_REG 	= 0x00;
@@ -201,10 +215,13 @@
     static const uint8_t ADC_SENS_AMP_OFST	= 0x10;		// ADC Sensor Amplifer Offset
     static const uint8_t TEMP_SENS_CNTL		= 0x12;		// Temperature Sensor Control
     static const uint8_t TEMP_VAL_OFST		= 0x13;		// Temperature Value Offset
+    static const uint8_t LBD_THRESHOLD      = 0x1A;     // Low Battery Detection Threshold
+    static const uint8_t BATT_V_LEVEL       = 0x1B;     // Battery Voltage Level
     static const uint8_t IF_FILTER_BW		= 0x1C;		// IF Filter Bandwidth
     static const uint8_t AFC_LOOP_GS_OVRRD	= 0x1D;		// AFC Loop Gearshift Override
     static const uint8_t CLK_REC_GS_OVRRD	= 0x1F;		// CLK Recovery Gearshift Override
     static const uint8_t CLK_REC_OVRSMP_RT	= 0x20;		// Clock Recovery Oversampling Ratio
+    static const uint8_t RSSI_REG           = 0x26;     // Received Signal Strength Indicator
     static const uint8_t RSSI_THRESH_CLR_CH	= 0x27;		// RSSI Threshold for Clear Channel Indicator
     static const uint8_t OOK_COUNTER_VAL_1	= 0x2C;
     static const uint8_t OOK_COUNTER_VAL_2	= 0x2D;
@@ -232,6 +249,10 @@
     static const uint8_t HEADER_EN_2		= 0x44;		// Header 2 Enable
     static const uint8_t HEADER_EN_1		= 0x45;		// Header 1 Enable
     static const uint8_t HEADER_EN_0		= 0x46;		// Header 0 Enable
+    static const uint8_t RECEIVED_HEADER_3  = 0x47;
+    static const uint8_t RECEIVED_HEADER_2  = 0x48;
+    static const uint8_t RECEIVED_HEADER_1  = 0x49;
+    static const uint8_t RECEIVED_HEADER_0  = 0x4A;
     static const uint8_t RECEIVE_PKT_LEN    = 0x4B;     // Receive Packet Length
     static const uint8_t TX_POWER			= 0x6D;
     static const uint8_t TX_DATA_RATE_1		= 0x6E;
@@ -263,8 +284,8 @@
     static const uint8_t OP_CNTL1_MODE_WT_EN			= 0x20;
     static const uint8_t OP_CNTL1_MODE_LBD_EN		 	= 0x40;
     static const uint8_t OP_CNTL1_MODE_PPL_ON 			= 0x02;
-    static const uint8_t OP_CNTL1_MODE_TX_ON 			= 0x04;
-    static const uint8_t OP_CNTL1_MODE_RX_ON 			= 0x08;
+    static const uint8_t OP_CNTL1_MODE_RX_ON 			= 0x04;
+    static const uint8_t OP_CNTL1_MODE_TX_ON 			= 0x08;
     static const uint8_t OP_CNTL1_SWRESET				= 0x80;
 
     // Operating and Function Control 2 bits
