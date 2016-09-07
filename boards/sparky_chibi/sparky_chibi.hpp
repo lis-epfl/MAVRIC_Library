@@ -204,34 +204,48 @@ public:
     Barometer_MS5611        barometer_;
 
 private:
+    /**
+     * /brief   Callback function that set PWM8 pin to high
+     *
+     * \detail  This is needed because PWM12 is not supported by CHibiOS, so we use PWM4 instead
+     */
     static void pwmp8cb(PWMDriver *pwmp)
     {
       (void)pwmp;
       palSetPad(GPIOB, GPIOB_PIN15_PWM8);
     }
 
+    /**
+     * /brief   Callback function that set PWM8 pin to low
+     *
+     * \detail  This is needed because PWM12 is not supported by CHibiOS, so we use PWM4 instead
+     */
     static void pwmp9cb(PWMDriver *pwmp)
     {
       (void)pwmp;
       palSetPad(GPIOB, GPIOB_PIN14_PWM9);
     }
 
+    /**
+     * /brief   Callback function that set PWM9 pin to high
+     *
+     * \detail  This is needed because PWM12 is not supported by CHibiOS, so we use PWM1 instead
+     */
     static void pwmc9cb(PWMDriver *pwmp)
     {
       (void)pwmp;
       palClearPad(GPIOB, GPIOB_PIN14_PWM9);
-
-      palClearPad(GPIOD, GPIOD_PIN14_LED5);
-
     }
 
+    /**
+     * /brief   Callback function that set PWM9 pin to high
+     *
+     * \detail  This is needed because PWM12 is not supported by CHibiOS, so we use PWM1 instead
+     */
     static void pwmc8cb(PWMDriver *pwmp)
     {
       (void)pwmp;
       palClearPad(GPIOB, GPIOB_PIN15_PWM8);
-
-    //   palClearPad(GPIOD, GPIOD_PIN14_LED5);
-
     }
 
     // byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove

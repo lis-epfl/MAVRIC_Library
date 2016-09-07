@@ -53,6 +53,7 @@ int main(void)
     // -------------------------------------------------------------------------
     Sparky_chibi::conf_t board_config = Sparky_chibi::default_config();
 
+    // LEDs on STM32F4DISCOVERY
     board_config.gpio_led_err =
     {
         .port  = GPIOD,
@@ -112,27 +113,27 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    // LEQuad mav = LEQuad( sim_imu,
-    //                      sim.barometer(),
-    //                      sim.gps(),
-    //                      sim.sonar(),
-    //                      serial_dummy,                // mavlink serial
-    //                      satellite_dummy,
-    //                      board.state_display_,
-    //                      file_dummy,
-    //                      sim_battery,
-    //                      sim_servo_0,
-    //                      sim_servo_1,
-    //                      sim_servo_2,
-    //                      sim_servo_3 ,
-    //                      sim_servo_4,
-    //                      sim_servo_5,
-    //                      sim_servo_6,
-    //                      sim_servo_7 ,
-    //                      file_dummy,
-    //                      file_dummy,
-    //                      mav_config );
+    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    LEQuad mav = LEQuad( sim_imu,
+                         sim.barometer(),
+                         sim.gps(),
+                         sim.sonar(),
+                         serial_dummy,                // mavlink serial
+                         satellite_dummy,
+                         board.state_display_,
+                         file_dummy,
+                         sim_battery,
+                         sim_servo_0,
+                         sim_servo_1,
+                         sim_servo_2,
+                         sim_servo_3 ,
+                         sim_servo_4,
+                         sim_servo_5,
+                         sim_servo_6,
+                         sim_servo_7 ,
+                         file_dummy,
+                         file_dummy,
+                         mav_config );
 
 
     // -------------------------------------------------------------------------
