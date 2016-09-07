@@ -273,13 +273,9 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     // -------------------------------------------------------------------------
     // PWM config
     // -------------------------------------------------------------------------
-    for (size_t i = 0; i < 6; i++)
+    for (size_t i = 0; i < PWM_COUNT; i++)
     {
         conf.servo[i] = servo_default_config_esc();
-    }
-    for (size_t i = 6; i < PWM_COUNT; i++)
-    {
-        conf.servo[i] = servo_default_config_brush_motor();
     }
 
     // -------------------------------------------------------------------------
