@@ -175,7 +175,7 @@
     bool set_data_clock_configuration(void);
     bool set_transmission_power(uint8_t power);
     bool set_gpio_function(void);
-    bool set_transmit_header(void);
+    bool set_transmit_header(uint8_t* txhd);
     bool clear_tx_fifo(void);
     bool clear_rx_fifo(void);
     bool send(uint8_t *data, int length);
@@ -184,7 +184,7 @@
     bool set_preamble_detection(uint8_t n_nibbles);
     bool set_header_length(uint8_t length);
     bool set_header_check(void);
-    bool set_check_header(void);
+    bool set_check_header(uint8_t* chhd);
     bool get_received_header(uint8_t* rx_header);
     bool set_syncword_length(uint8_t length);
     bool get_transmit_header(uint8_t* tx_header);
@@ -192,8 +192,11 @@
     bool interrput_enable(uint8_t in1en, uint8_t in2en);
     bool set_rssi_offset(uint8_t offset);
     bool set_rssi_threshold(uint8_t threshold);
-    bool get_battery_level(uint8_t* battery_level);
+    bool get_battery_level(float* battery_level);
     bool set_lbd_threshold(uint8_t threshold);
+    bool enable_low_battery_detection(bool enable = true);
+    bool set_preamble_length(uint16_t length);
+    bool set_syncword(uint8_t* syncword);
 
     // rfm22b register adresses
     static const uint8_t DEVICE_TYPE_REG 	= 0x00;

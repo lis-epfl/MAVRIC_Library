@@ -281,35 +281,40 @@ bool Rfm22b::init()
     success &= set_data_clock_configuration();
 
     // Set TX power
-    success &= set_transmission_power(20);
+    success &= set_transmission_power(20);//20;
 
     // Configure GPIOS
     success &= set_gpio_function();
 
-    // Set the transmission header
-    success &= set_transmit_header();
+    success &= interrput_enable(0xFF,0xFF);//0x77,0xF0);
 
-    success &= set_header_length(0x04);
+    // Preamble Configuration
+    success &= set_preamble_length(300);
+    success &= set_preamble_detection(1);//5);
 
+    // Syncword Configuration
+    //
+    uint8_t syncword[4] = {0x2D, 0x82, 0xEA, 0x1F};
+    success &= set_syncword_length(0x00);//0);
+    success &= set_syncword(syncword);
+
+    // Header Configuration
+    //
+    uint8_t transmit_header[4] = {0xAB, 0xBC, 0xCD, 0xDE};
+
+    success &= set_transmit_header(transmit_header);
+    success &= set_check_header(transmit_header);
+    success &= set_header_length(0x00);
     success &= set_header_check();
-
-    success &= set_preamble_detection(5);//1);
-
-    success &= set_check_header();
-
-    success &= set_syncword_length(0);//0);
-
     success &= header_enable();
 
-    success &= interrput_enable(0,0);//0x77,0xF0);
+    // Low Battery Detection Configuration
+    success &= enable_low_battery_detection();
+    success &= set_lbd_threshold(0x1F);
 
+    // // RSSI Configuration
     // success &= set_rssi_offset(10);
-
     // success &= set_rssi_threshold(0x60);//0x1E);
-
-    // char output[64] = "Hello World!";
-
-    // success &= send((uint8_t*)output, 64);
 
 	return success;
 }
@@ -915,14 +920,9 @@ bool Rfm22b::set_gpio_function(void)
 	return ret;
 }
 
-bool Rfm22b::set_transmit_header(void)
+bool Rfm22b::set_transmit_header(uint8_t* txhd)
 {
-	bool ret = true;
-
-	uint8_t hdr[4] = {0xAB, 0xBC, 0xCD, 0xDE};
-
-	ret &= write_reg(TRANSMIT_HEADER_3, hdr, 4);
-	return ret;
+	return write_reg(TRANSMIT_HEADER_3, txhd, 4);
 }
 
 bool Rfm22b::send(uint8_t *data, int length)
@@ -949,7 +949,7 @@ bool Rfm22b::send(uint8_t *data, int length)
 	// Loop until packet has been sent (device has left TX mode)
 	do
 	{
-		if (timeout++ > 2000)
+		if (timeout++ > 10000)
 		{
 			return false;
 		}
@@ -970,11 +970,11 @@ bool Rfm22b::clear_tx_fifo(void)
 	ret &= read_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
 
 	// Clear ffclrtx bit
-	op_func_cntl_2 &= ~1;
+	op_func_cntl_2 &= ~0x01;
 
-	uint8_t clear_tx_fifo = 1;
+	uint8_t clear_tx_fifo = 0x01;
 	ret &= write_reg(OP_FUNC_CNTL_2, &clear_tx_fifo);
-	clear_tx_fifo = 0;
+	clear_tx_fifo = 0x00;
 	ret &= write_reg(OP_FUNC_CNTL_2, &clear_tx_fifo);
 
 	return ret;
@@ -990,11 +990,11 @@ bool Rfm22b::clear_rx_fifo(void)
 	ret &= read_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
 
 	// Clear ffclrrx bit
-	op_func_cntl_2 &= ~2;
+	op_func_cntl_2 &= ~0x02;
 
-	uint8_t clear_rx_fifo = 2;
+	uint8_t clear_rx_fifo = 0x02;
 	ret &= write_reg(OP_FUNC_CNTL_2, &clear_rx_fifo);
-	clear_rx_fifo = 0;
+	clear_rx_fifo = 0x00;
 	ret &= write_reg(OP_FUNC_CNTL_2, &clear_rx_fifo);
 
 	return ret;
@@ -1009,8 +1009,15 @@ bool Rfm22b::enable_tx_mode(void)
 {
 	bool ret = true;
 
-	uint8_t enable_tx_cmd = OP_CNTL1_MODE_TX_ON | OP_CNTL1_MODE_IDLE_READY;
-	ret &= write_reg(OP_FUNC_CNTL_1, &enable_tx_cmd);
+	uint8_t op_func_cntl_1 = 0;
+
+	// Read Operating an Function Control 1 register
+	ret &= read_reg(OP_FUNC_CNTL_1, &op_func_cntl_1);
+
+	op_func_cntl_1 |= OP_CNTL1_MODE_TX_ON;
+
+	// Write new value to register
+	ret &= write_reg(OP_FUNC_CNTL_1, &op_func_cntl_1);
 
 	return ret;
 }
@@ -1019,8 +1026,15 @@ bool Rfm22b::enable_rx_mode(void)
 {
 	bool ret = true;
 
-	uint8_t enable_rx_cmd = OP_CNTL1_MODE_RX_ON | OP_CNTL1_MODE_IDLE_READY;
-	ret &= write_reg(OP_FUNC_CNTL_1, &enable_rx_cmd);
+	uint8_t op_func_cntl_1 = 0;
+
+	// Read Operating an Function Control 1 register
+	ret &= read_reg(OP_FUNC_CNTL_1, &op_func_cntl_1);
+
+	op_func_cntl_1 |= OP_CNTL1_MODE_RX_ON;
+
+	// Write new value to register
+	ret &= write_reg(OP_FUNC_CNTL_1, &op_func_cntl_1);
 
 	return ret;
 }
@@ -1039,7 +1053,7 @@ bool Rfm22b::receive(uint8_t *data, int* length)
 	// Loop until packet has been sent (device has left RX mode)
 	do
 	{
-		if (timeout++ > 5000)
+		if (timeout++ > 10000)
 		{
 			// *length = 0;
 			// ret = false;
@@ -1048,18 +1062,25 @@ bool Rfm22b::receive(uint8_t *data, int* length)
 		}
 
 		ret &= read_reg(OP_FUNC_CNTL_1, &omfc);
+		// ret &= read_reg(INTERRUPT_STAT_1, &omfc);
 
 	} while ((omfc & OP_CNTL1_MODE_RX_ON) == OP_CNTL1_MODE_RX_ON);
+	// } while (!((omfc >> 1)& 1));
 
 	uint8_t rx_len = 0;
 	ret &= read_reg(RECEIVE_PKT_LEN, &rx_len);
 
-	if (rx_len > *length)
+	if (rx_len > 64)
 	{
-		rx_len = *length;
+		rx_len = 64;
 	}
 
-	ret &= read_reg(FIFO_ACCESS_REG, data, rx_len);
+
+	// ret &= read_reg(INTERRUPT_STAT_1, &omfc);
+	// if ((omfc >> 1) & 1)
+	// {
+		ret &= read_reg(FIFO_ACCESS_REG, data, rx_len);
+	// }
 
 	*length = rx_len;
 
@@ -1074,12 +1095,16 @@ bool Rfm22b::set_preamble_detection(uint8_t n_nibble)
 {
 	bool ret = true;
 	uint8_t preamble_det_cntl = 0;
+
+	// Read Preamble Detection Control register
 	ret &= read_reg(PREAMBLE_DET_CNTL, &preamble_det_cntl);
 
 	// Clearing preath bits
 	preamble_det_cntl &= 0x07;
+
 	preamble_det_cntl |= n_nibble << 3;
 
+	// Write new value to register
 	ret &= write_reg(PREAMBLE_DET_CNTL, &preamble_det_cntl);
 
 	return ret;
@@ -1122,21 +1147,22 @@ bool Rfm22b::set_header_check(void)
 	return ret;
 }
 
-bool Rfm22b::set_check_header(void)
+bool Rfm22b::set_check_header(uint8_t* chhd)
 {
-	bool ret = true;
-	uint8_t chhd[4] = {0xAB, 0xBC, 0xCD, 0xDE};
-
-	ret &= write_reg(CHECK_HEADER_3, chhd, 4);
-	return ret;
+	return write_reg(CHECK_HEADER_3, chhd, 4);
 }
 
 bool Rfm22b::get_received_header(uint8_t* rx_header)
 {
 	bool ret = true;
 
-	uint8_t received_header[4] = {0};
-	ret &= read_reg(RECEIVED_HEADER_3, received_header, 4);
+	uint8_t rxhd[4] = {0};
+	ret &= read_reg(RECEIVED_HEADER_3, rxhd, 4);
+
+	*rx_header 		= rxhd[0];
+	*(rx_header+1) 	= rxhd[1];
+	*(rx_header+2) 	= rxhd[2];
+	*(rx_header+3) 	= rxhd[3];
 
 	return ret;
 }
@@ -1170,10 +1196,10 @@ bool Rfm22b::get_transmit_header(uint8_t* tx_header)
 	uint8_t txhd[4] = {0};
 
 	ret &= read_reg(TRANSMIT_HEADER_3, txhd, 4);
-	*tx_header = txhd[0];
-	*(tx_header+1) = txhd[1];
-	*(tx_header+2) = txhd[2];
-	*(tx_header+3) = txhd[3];
+	*tx_header 		= txhd[0];
+	*(tx_header+1) 	= txhd[1];
+	*(tx_header+2) 	= txhd[2];
+	*(tx_header+3) 	= txhd[3];
 
 	return ret;
 }
@@ -1212,7 +1238,7 @@ bool Rfm22b::set_rssi_offset(uint8_t offset)
 
 	// Clearing rssi_off bits
 	preamble_det_cntl &= ~0x07;
-	preamble_det_cntl |= offset;
+	preamble_det_cntl |= offset & 0x07;
 
 	ret &= write_reg(PREAMBLE_DET_CNTL, &preamble_det_cntl);
 
@@ -1224,9 +1250,17 @@ bool Rfm22b::set_rssi_threshold(uint8_t threshold)
 	return write_reg(RSSI_THRESH_CLR_CH, &threshold);
 }
 
-bool Rfm22b::get_battery_level(uint8_t* battery_level)
+bool Rfm22b::get_battery_level(float* battery_level)
 {
-	return read_reg(BATT_V_LEVEL, battery_level);
+	bool ret = true;
+
+	uint8_t batt_lvl = 0;
+
+	ret &= read_reg(BATT_V_LEVEL, &batt_lvl);
+
+	*battery_level = 1.7f + 50E-3 * (float)batt_lvl;
+
+	return ret;
 }
 
 bool Rfm22b::set_lbd_threshold(uint8_t threshold)
@@ -1241,10 +1275,62 @@ bool Rfm22b::set_lbd_threshold(uint8_t threshold)
 	// Clearing lbdt bits
 	lbd_threshold &= ~0x1F;
 
-	lbd_threshold |= threshold;
+	lbd_threshold |= threshold & 0x1F;
 
 	// Write new value to register
 	ret &= write_reg(LBD_THRESHOLD, &lbd_threshold);
 
 	return ret;
+}
+
+bool Rfm22b::enable_low_battery_detection(bool enable)
+{
+	bool ret = true;
+	uint8_t op_func_cntl_1 = 0;
+
+	// Read Operating and Function Control 1 register
+	ret &= read_reg(OP_FUNC_CNTL_1, &op_func_cntl_1);
+
+	if (enable)
+	{
+		// Set enlbd bit
+		op_func_cntl_1 |= 0x40;
+	}
+	else
+	{
+		// Clear enlbd bit
+		op_func_cntl_1 &= ~0x40;
+	}
+
+	// Write new value to register
+	ret &= write_reg(OP_FUNC_CNTL_1, &op_func_cntl_1);
+
+	return ret;
+}
+
+bool Rfm22b::set_preamble_length(uint16_t length)
+{
+	bool ret = true;
+
+	// Seperate length into two bytes
+	uint8_t length_1 = (length & 0x100) >> 8;
+	uint8_t length_0 = length & 0xFF;
+
+	uint8_t header_cntl2 	= 0;
+
+	// Read Header Control 2 register
+	ret &= read_reg(HEADER_CNTL_2, &header_cntl2);
+
+	header_cntl2 |= length_1;
+
+	// Write new values to registers
+	ret &= write_reg(HEADER_CNTL_2, &header_cntl2);
+	ret &= write_reg(PREAMBLE_LEN_REG, &length_0);
+
+	return ret;
+}
+
+bool Rfm22b::set_syncword(uint8_t* syncword)
+{
+	return write_reg(SYNC_WORD_3, syncword, 4);
 }
