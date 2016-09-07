@@ -204,10 +204,40 @@ public:
     Barometer_MS5611        barometer_;
 
 private:
+    static void pwmp8cb(PWMDriver *pwmp)
+    {
+      (void)pwmp;
+      palSetPad(GPIOB, GPIOB_PIN15_PWM8);
+    }
 
+    static void pwmp9cb(PWMDriver *pwmp)
+    {
+      (void)pwmp;
+      palSetPad(GPIOB, GPIOB_PIN14_PWM9);
+    }
+
+    static void pwmc9cb(PWMDriver *pwmp)
+    {
+      (void)pwmp;
+      palClearPad(GPIOB, GPIOB_PIN14_PWM9);
+
+      palClearPad(GPIOD, GPIOD_PIN14_LED5);
+
+    }
+
+    static void pwmc8cb(PWMDriver *pwmp)
+    {
+      (void)pwmp;
+      palClearPad(GPIOB, GPIOB_PIN15_PWM8);
+
+    //   palClearPad(GPIOD, GPIOD_PIN14_LED5);
+
+    }
 
     // byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
 };
+
+
 
 
 /**
@@ -247,28 +277,35 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     {
         conf.pwm[i] = Pwm_chibios::default_config();
     }
-    // TODO : Check the PWM config bellow
-    // TODO : Configure the GPIOs accordingly in boards/sparky_chibi/board.h
-    // conf.pwm[0].driver  = &PWMD3;
-    // conf.pwm[0].channel = Pwm_chibios::CHANNEL_3;
-    // conf.pwm[1].driver  = &PWMD3;
-    // conf.pwm[1].channel = Pwm_chibios::CHANNEL_4;
-    // conf.pwm[2].driver  = &PWMD9;
-    // conf.pwm[2].channel = Pwm_chibios::CHANNEL_2;
-    // conf.pwm[3].driver  = &PWMD2;
-    // conf.pwm[3].channel = Pwm_chibios::CHANNEL_3;
-    // conf.pwm[4].driver  = &PWMD5;
-    // conf.pwm[4].channel = Pwm_chibios::CHANNEL_2;
-    // conf.pwm[5].driver  = &PWMD5;
-    // conf.pwm[5].channel = Pwm_chibios::CHANNEL_1;
-    // conf.pwm[6].driver  = &PWMD8;// TODO
-    // conf.pwm[6].channel = Pwm_chibios::CHANNEL_2;
-    // conf.pwm[7].driver  = &PWMD8;
-    // conf.pwm[7].channel = Pwm_chibios::CHANNEL_3;
-    // conf.pwm[8].driver  = &PWMD8;
-    // conf.pwm[8].channel = Pwm_chibios::CHANNEL_3;
-    // conf.pwm[9].driver  = &PWMD8;
-    // conf.pwm[9].channel = Pwm_chibios::CHANNEL_4;
+    // PWM12 is not directly supported by ChibiOS so we cannot use it for PWM8 and PWM9,
+    // so we use
+    // - PWM4 with callbacks pwmp8cb and pwmc8cb to toggle the pin GPIOB_PIN15_PWM8
+    // - PWM1 with callbacks pwmp9cb and pwmc9cb to toggle the pin GPIOB_PIN14_PWM9
+    conf.pwm[0].driver  = &PWMD3;
+    conf.pwm[0].channel = Pwm_chibios::CHANNEL_3;
+    conf.pwm[1].driver  = &PWMD3;
+    conf.pwm[1].channel = Pwm_chibios::CHANNEL_4;
+    conf.pwm[2].driver  = &PWMD9;
+    conf.pwm[2].channel = Pwm_chibios::CHANNEL_2;
+    conf.pwm[3].driver  = &PWMD2;
+    conf.pwm[3].channel = Pwm_chibios::CHANNEL_3;
+    conf.pwm[4].driver  = &PWMD5;
+    conf.pwm[4].channel = Pwm_chibios::CHANNEL_2;
+    conf.pwm[5].driver  = &PWMD5;
+    conf.pwm[5].channel = Pwm_chibios::CHANNEL_1;
+    conf.pwm[6].driver  = &PWMD8;
+    conf.pwm[6].channel = Pwm_chibios::CHANNEL_4;
+    conf.pwm[7].driver  = &PWMD8;
+    conf.pwm[7].channel = Pwm_chibios::CHANNEL_3;
+    conf.pwm[8].driver  = &PWMD4;
+    conf.pwm[8].channel = Pwm_chibios::CHANNEL_1;
+    conf.pwm[8].config.callback = pwmp8cb;
+    conf.pwm[8].config.channels[Pwm_chibios::CHANNEL_1].callback = &pwmc8cb;
+    conf.pwm[9].driver  = &PWMD1;
+    conf.pwm[9].channel = Pwm_chibios::CHANNEL_1;
+    conf.pwm[9].config.callback = pwmp9cb;
+    conf.pwm[9].config.channels[Pwm_chibios::CHANNEL_1].callback = &pwmc9cb;
+
 
     // -------------------------------------------------------------------------
     // PWM config

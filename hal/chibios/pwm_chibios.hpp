@@ -144,9 +144,9 @@ Pwm_chibios::conf_t Pwm_chibios::default_config(void)
         NULL,
         {
             {PWM_OUTPUT_ACTIVE_HIGH, NULL},
-            {PWM_OUTPUT_DISABLED, NULL},
-            {PWM_OUTPUT_DISABLED, NULL},
-            {PWM_OUTPUT_DISABLED, NULL}
+            {PWM_OUTPUT_ACTIVE_HIGH, NULL},
+            {PWM_OUTPUT_ACTIVE_HIGH, NULL},
+            {PWM_OUTPUT_ACTIVE_HIGH, NULL}
         },
         0,
         0

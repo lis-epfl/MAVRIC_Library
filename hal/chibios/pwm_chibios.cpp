@@ -51,8 +51,10 @@ Pwm_chibios::Pwm_chibios(conf_t config):
 
 bool Pwm_chibios::init(void)
 {
+    pwmStop(driver_);
     pwmStart(driver_, &config_);
     pwmEnablePeriodicNotification(driver_);
+    pwmEnableChannelNotification(driver_, channel_);
     return true;
 }
 
@@ -60,7 +62,6 @@ bool Pwm_chibios::init(void)
 bool Pwm_chibios::set_pulse_width_us(uint16_t pulse_us)
 {
     pwmEnableChannel(driver_, channel_, pulse_us);
-    pwmEnableChannelNotification(driver_, channel_);
     return true;
 }
 
@@ -68,7 +69,5 @@ bool Pwm_chibios::set_pulse_width_us(uint16_t pulse_us)
 bool Pwm_chibios::set_period_us(uint16_t period_us)
 {
     pwmChangePeriodI(driver_, period_us);
-    pwmEnablePeriodicNotification(driver_);
-
     return true;
 }

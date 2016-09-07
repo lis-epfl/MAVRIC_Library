@@ -52,6 +52,18 @@ int main(void)
     // Create board
     // -------------------------------------------------------------------------
     Sparky_chibi::conf_t board_config = Sparky_chibi::default_config();
+
+    board_config.gpio_led_err =
+    {
+        .port  = GPIOD,
+        .pin   = GPIOD_PIN12_LED4
+    };
+    board_config.gpio_led_stat =
+    {
+        .port  = GPIOD,
+        .pin   = GPIOD_PIN13_LED3
+    };
+
     Sparky_chibi board(board_config);
 
     // Board initialisation
@@ -100,27 +112,27 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad( sim_imu,
-                         sim.barometer(),
-                         sim.gps(),
-                         sim.sonar(),
-                         serial_dummy,                // mavlink serial
-                         satellite_dummy,
-                         board.state_display_,
-                         file_dummy,
-                         sim_battery,
-                         sim_servo_0,
-                         sim_servo_1,
-                         sim_servo_2,
-                         sim_servo_3 ,
-                         sim_servo_4,
-                         sim_servo_5,
-                         sim_servo_6,
-                         sim_servo_7 ,
-                         file_dummy,
-                         file_dummy,
-                         mav_config );
+    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    // LEQuad mav = LEQuad( sim_imu,
+    //                      sim.barometer(),
+    //                      sim.gps(),
+    //                      sim.sonar(),
+    //                      serial_dummy,                // mavlink serial
+    //                      satellite_dummy,
+    //                      board.state_display_,
+    //                      file_dummy,
+    //                      sim_battery,
+    //                      sim_servo_0,
+    //                      sim_servo_1,
+    //                      sim_servo_2,
+    //                      sim_servo_3 ,
+    //                      sim_servo_4,
+    //                      sim_servo_5,
+    //                      sim_servo_6,
+    //                      sim_servo_7 ,
+    //                      file_dummy,
+    //                      file_dummy,
+    //                      mav_config );
 
 
     // -------------------------------------------------------------------------
@@ -137,7 +149,6 @@ int main(void)
     // pwm1.set_period_us(2000);
     // pwm1.set_pulse_width_us(100);
 
-    Servo& servo = board.servo_[0];
 
 
     /**
@@ -167,10 +178,10 @@ int main(void)
     // usbStart(serusbcfg.usbp, &usbcfg);
     // usbConnectBus(serusbcfg.usbp);
 
-    usbDisconnectBus(&USBD1);
-    time_keeper_delay_ms(1500);
-    usbStart(&USBD1, &usbcfg);
-    usbConnectBus(&USBD1);
+    // usbDisconnectBus(&USBD1);
+    // time_keeper_delay_ms(1500);
+    // usbStart(&USBD1, &usbcfg);
+    // usbConnectBus(&USBD1);
 
 
     time_keeper_delay_ms(1500);
@@ -179,6 +190,7 @@ int main(void)
     while (true)
     {
         disp.update();
+        time_keeper_delay_ms(50);
         // time_keeper_delay_ms(1);
         // while (true) {
             // msg_t msg = usbTransmit(&USBD1, USBD2_DATA_REQUEST_EP,
@@ -188,32 +200,34 @@ int main(void)
             //     time_keeper_delay_ms(500);
             // }
 
-        time_keeper_delay_ms(50);
 
         // pwm1.set_pulse_width_us(1000);
         // pwm1.set_period_us(20000);
-        servo.write(-1.0f);
+        // servo.write(-1.0f);
 
 
-        time_keeper_delay_ms(50);
+        for (size_t i = 0; i < 10; i++)
+        {
+            Servo& servo = board.servo_[i];
+            servo.write(-1.0f);
+        }
+        time_keeper_delay_ms(20);
+        for (size_t i = 0; i < 10; i++)
+        {
+            Servo& servo = board.servo_[i];
+            servo.write(0.0f);
+        }
+        time_keeper_delay_ms(20);
+        for (size_t i = 0; i < 10; i++)
+        {
+            Servo& servo = board.servo_[i];
+            servo.write(1.0f);
+        }
 
-        // pwm1.set_pulse_width_us(2000);
-        // pwm1.set_period_us(20000);
-        servo.write(-0.5f);
 
-        time_keeper_delay_ms(50);
-
-        // pwm1.set_pulse_width_us(100);
-        // pwm1.set_period_us(500);
-        servo.write(0.5f);
-
-        time_keeper_delay_ms(50);
-
-        // pwm1.set_pulse_width_us(500);
-        servo.write(1.0f);
-        // pwm1.set_period_us(500);
         // }
         // chnWrite(&SDU1, (uint8_t *)"Hello World!\r\n", 14);
+
 
         // // Reset sensor
         // txbuf[0] = COMMAND_RESET;
