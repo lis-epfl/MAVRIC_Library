@@ -79,7 +79,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">LEQuad_dronedome Class Reference</div>  </div>
 </div><!--header-->
@@ -108,15 +109,46 @@ Collaboration diagram for LEQuad_dronedome:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3f76a746327f749741411915d0209a1"></a><!-- doxytag: member="LEQuad_dronedome::LEQuad_dronedome" ref="ab3f76a746327f749741411915d0209a1" args="(Imu &amp;imu, Barometer &amp;barometer, Gps &amp;gps, Sonar &amp;sonar, Serial &amp;serial_mavlink, Satellite &amp;satellite, Led &amp;led, File &amp;file_flash, Battery &amp;battery, Servo &amp;servo_0, Servo &amp;servo_1, Servo &amp;servo_2, Servo &amp;servo_3, Servo &amp;servo_4, Servo &amp;servo_5, Servo &amp;servo_6, Servo &amp;servo_7, File &amp;file1, File &amp;file2, LEQuad::conf_t config=LEQuad::default_config())" -->
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLEQuad__dronedome.html#ab3f76a746327f749741411915d0209a1">LEQuad_dronedome</a> (<a class="el" href="classImu.html">Imu</a> &amp;<a class="el" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2">imu</a>, <a class="el" href="classBarometer.html">Barometer</a> &amp;<a class="el" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a">barometer</a>, <a class="el" href="classGps.html">Gps</a> &amp;<a class="el" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704">gps</a>, <a class="el" href="classSonar.html">Sonar</a> &amp;<a class="el" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d">sonar</a>, <a class="el" href="classSerial.html">Serial</a> &amp;<a class="el" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42">serial_mavlink</a>, <a class="el" href="classSatellite.html">Satellite</a> &amp;<a class="el" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535">satellite</a>, <a class="el" href="classLed.html">Led</a> &amp;led, <a class="el" href="classFile.html">File</a> &amp;<a class="el" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5">file_flash</a>, <a class="el" href="classBattery.html">Battery</a> &amp;<a class="el" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885">battery</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df">servo_0</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49">servo_1</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463">servo_2</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291">servo_3</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060">servo_4</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4">servo_5</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7">servo_6</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3">servo_7</a>, <a class="el" href="classFile.html">File</a> &amp;file1, <a class="el" href="classFile.html">File</a> &amp;file2, <a class="el" href="structLEQuad_1_1conf__t.html">LEQuad::conf_t</a> config=<a class="el" href="classLEQuad.html#a1112f833422ec062edab301433a40c76">LEQuad::default_config</a>())</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a83f8b00518b8a1f5e7f00668e431ef5d"></a><!-- doxytag: member="LEQuad_dronedome::LEQuad_dronedome" ref="a83f8b00518b8a1f5e7f00668e431ef5d" args="(Imu &amp;imu, Barometer &amp;barometer, Gps &amp;gps, Sonar &amp;sonar, Serial &amp;serial_mavlink, Satellite &amp;satellite, State_display &amp;state_display, File &amp;file_flash, Battery &amp;battery, Servo &amp;servo_0, Servo &amp;servo_1, Servo &amp;servo_2, Servo &amp;servo_3, Servo &amp;servo_4, Servo &amp;servo_5, Servo &amp;servo_6, Servo &amp;servo_7, File &amp;file1, File &amp;file2, LEQuad::conf_t config=LEQuad_dronedome::default_config())" -->
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLEQuad__dronedome.html#a83f8b00518b8a1f5e7f00668e431ef5d">LEQuad_dronedome</a> (<a class="el" href="classImu.html">Imu</a> &amp;<a class="el" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2">imu</a>, <a class="el" href="classBarometer.html">Barometer</a> &amp;<a class="el" href="classLEQuad.html#abd0a931d4efb860cf55498856440ca1a">barometer</a>, <a class="el" href="classGps.html">Gps</a> &amp;<a class="el" href="classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704">gps</a>, <a class="el" href="classSonar.html">Sonar</a> &amp;<a class="el" href="classLEQuad.html#a3b5b911d9a9ce0e44d61c52c68ba6d2d">sonar</a>, <a class="el" href="classSerial.html">Serial</a> &amp;<a class="el" href="classLEQuad.html#ac681527770ee9dc7f2a98594204b3a42">serial_mavlink</a>, <a class="el" href="classSatellite.html">Satellite</a> &amp;<a class="el" href="classLEQuad.html#afa95e2b08b81081d1ff45eb1c818e535">satellite</a>, <a class="el" href="classState__display.html">State_display</a> &amp;state_display, <a class="el" href="classFile.html">File</a> &amp;<a class="el" href="classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5">file_flash</a>, <a class="el" href="classBattery.html">Battery</a> &amp;<a class="el" href="classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885">battery</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#ac1d44059cbf259a74ee7bfe64a5973df">servo_0</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a7db47f6468c433cc7b03641ed2424b49">servo_1</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a84b1a445d42ae6aaf4b7e6d4b9684463">servo_2</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#abd9225ecba6bb2976e573db8acb1b291">servo_3</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a7604f86734976330548d3ba2c9353060">servo_4</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a4b64c62b5914e8115b32fa5999dec1b4">servo_5</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#aad0d8adce0b4eca5f8c9131cad516eb7">servo_6</a>, <a class="el" href="classServo.html">Servo</a> &amp;<a class="el" href="classLEQuad.html#a16c282996f4e2266d3f60c06996e00d3">servo_7</a>, <a class="el" href="classFile.html">File</a> &amp;file1, <a class="el" href="classFile.html">File</a> &amp;file2, <a class="el" href="structLEQuad_1_1conf__t.html">LEQuad::conf_t</a> config=<a class="el" href="classLEQuad__dronedome.html#a5797832bf183c3fab6240ebf9783e5f3">LEQuad_dronedome::default_config</a>())</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2b7273daa5932a4f886050176a736f00"></a><!-- doxytag: member="LEQuad_dronedome::init" ref="a2b7273daa5932a4f886050176a736f00" args="()" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structLEQuad_1_1conf__t.html">LEQuad::conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLEQuad__dronedome.html#a5797832bf183c3fab6240ebf9783e5f3">default_config</a> (uint8_t sysid=1)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration.  <a href="#a5797832bf183c3fab6240ebf9783e5f3"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Central data for indoor use. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a5797832bf183c3fab6240ebf9783e5f3"></a><!-- doxytag: member="LEQuad_dronedome::default_config" ref="a5797832bf183c3fab6240ebf9783e5f3" args="(uint8_t sysid=1)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structLEQuad_1_1conf__t.html">LEQuad::conf_t</a> <a class="el" href="classLEQuad__dronedome.html#a5797832bf183c3fab6240ebf9783e5f3">LEQuad_dronedome::default_config</a> </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>sysid</em> = <code>1</code></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Default configuration. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sysid</td><td>System id (default value = 1)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Config structure </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classLEQuad.html#a1112f833422ec062edab301433a40c76">LEQuad</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/sample_projects/LEQuad/<a class="el" href="lequad__dronedome_8hpp_source.html">lequad_dronedome.hpp</a></li>
 </ul>
 </div><!-- contents -->
@@ -137,7 +169,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 6 2016 13:11:54 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
