@@ -33,6 +33,7 @@
  * \file joystick.cpp
  *
  * \author MAV'RIC Team
+ * \author Basil Huber
  *
  * \brief This file is to decode the set manual command message from MAVLink
  *
@@ -53,66 +54,66 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool joystick_init(joystick_t* joystick)
+Joystick::Joystick(conf_t config)
 {
-    bool init_success = true;
-
     //joystick channels init
-    joystick->channels.x = 0.0f;
-    joystick->channels.y = 0.0f;
-    joystick->channels.z = -1.0f;
-    joystick->channels.r = 0.0f;
+    channels_.x = 0.0f;
+    channels_.y = 0.0f;
+    channels_.z = -1.0f;
+    channels_.r = 0.0f;
 
     //joystick buttons init
-    joystick->buttons.button_mask = 0;
+    buttons_.button_mask = 0;
 
-    joystick->mav_mode_desired = Mav_mode(0);
-    joystick->arm_action = ARM_ACTION_NONE;
+    mav_mode_desired_ = Mav_mode(0);
+    arm_action_ = ARM_ACTION_NONE;
 
-    return init_success;
+    /* apply config */
+    throttle_mode_ = config.throttle_mode;
+    scale_attitude_ = config.scale_attitude;
+    scale_velocity_ = config.scale_velocity;
 }
 
 
-float joystick_get_throttle(const joystick_t* joystick)
+float Joystick::throttle() const
 {
-    return joystick->channels.z;
+    return channels_.z;
 }
 
 
-float joystick_get_roll(const joystick_t* joystick)
+float Joystick::roll() const
 {
-    return joystick->channels.y;
+    return channels_.y;
 }
 
 
-
-float joystick_get_pitch(const joystick_t* joystick)
+float Joystick::pitch() const
 {
-    return joystick->channels.x;
+    return channels_.x;
 }
 
 
-float joystick_get_yaw(const joystick_t* joystick)
+float Joystick::yaw() const
 {
-    return joystick->channels.r;
+    return channels_.r;
 }
 
-Mav_mode joystick_get_mode(joystick_t* joystick, const Mav_mode current_mode)
+Mav_mode Joystick::get_mode(const Mav_mode current_mode)
 {
     // new mode equals desired_mode, execept for HIL which is taken from current_mode
-    Mav_mode new_mode = joystick->mav_mode_desired;
+    Mav_mode new_mode = mav_mode_desired_;
     new_mode.set_hil_flag(current_mode.is_hil());
 
     // set armed flag depending on arm_action
-    if (joystick->arm_action == ARM_ACTION_ARMING)
+    if (arm_action_ == ARM_ACTION_ARMING)
     {
         new_mode.set_armed_flag(true);
-        joystick->arm_action = ARM_ACTION_NONE;
+        arm_action_ = ARM_ACTION_NONE;
     }
-    else if (joystick->arm_action == ARM_ACTION_DISARMING)
+    else if (arm_action_ == ARM_ACTION_DISARMING)
     {
         new_mode.set_armed_flag(false);
-        joystick->arm_action = ARM_ACTION_NONE;
+        arm_action_ = ARM_ACTION_NONE;
     }
     else
     {
@@ -121,16 +122,23 @@ Mav_mode joystick_get_mode(joystick_t* joystick, const Mav_mode current_mode)
     return new_mode;
 }
 
-void joystick_get_velocity_vector(const joystick_t* joystick, control_command_t* controls)
+void Joystick::get_velocity_vector(control_command_t* controls) const
 {
-    controls->tvel[X] = -10.0f  * joystick->channels.x  * MAX_JOYSTICK_RANGE;
-    controls->tvel[Y] =  10.0f  * joystick->channels.y  * MAX_JOYSTICK_RANGE;
-    controls->tvel[Z] = -1.5f   * joystick->channels.z;
+    controls->tvel[X] =   channels_.x  * scale_velocity_.x;
+    controls->tvel[Y] =   channels_.y  * scale_velocity_.x;
 
-    controls->rpy[YAW] = joystick->channels.r * MAX_JOYSTICK_RANGE;
+    controls->rpy[YAW] =  channels_.r * scale_velocity_.r;
+
+    if(throttle_mode_ == throttle_mode_t::ZERO_CENTER)
+    {
+        controls->tvel[Z] = channels_.z * scale_velocity_.z;
+    }else
+    {
+        controls->tvel[Z] = (2 * channels_.z - 1) * scale_velocity_.z;
+    }
 }
 
-void joystick_get_rate_command_wing(joystick_t* joystick, control_command_t* controls)
+void Joystick::get_rate_command_wing(control_command_t* controls) const
 {
     /*  We want to obtain same results as with full manual control.
         So, we want the output of the regulator to go from -1 to +1 on each axis
@@ -140,51 +148,42 @@ void joystick_get_rate_command_wing(joystick_t* joystick, control_command_t* con
         ==> scaler = 1/Kp
     */
 
-    controls->rpy[ROLL] = 15.4f * joystick_get_roll(joystick);
-    controls->rpy[PITCH] = 18.2f * joystick_get_pitch(joystick);
-    controls->rpy[YAW] = joystick_get_yaw(joystick);
-    controls->thrust = joystick_get_throttle(joystick);
+    controls->rpy[ROLL] = 15.4f * roll();
+    controls->rpy[PITCH] = 18.2f * pitch();
+    controls->rpy[YAW] = yaw();
+    controls->thrust = throttle();
 }
 
-void joystick_get_angle_command_wing(joystick_t* joystick, control_command_t* controls)
+
+void Joystick::get_control_command(control_command_t* controls) const
 {
-    controls->rpy[ROLL] = asinf(joystick_get_roll(joystick));
-    controls->rpy[PITCH] = asinf(joystick_get_pitch(joystick));
-    controls->rpy[YAW] = asinf(joystick_get_yaw(joystick));
-    controls->thrust = joystick_get_throttle(joystick);
+    controls->rpy[ROLL]     = channels_.y * scale_attitude_.y;
+    controls->rpy[PITCH]    = channels_.x * scale_attitude_.x;
+    controls->rpy[YAW]      = channels_.r * scale_attitude_.r;
+    if(throttle_mode_ == throttle_mode_t::ZERO_CENTER)
+    {
+        controls->thrust        = channels_.z * scale_attitude_.z;
+    }else
+    {
+        controls->thrust        = (2*channels_.z - 1) * scale_attitude_.z;
+    }
 }
 
-void joystick_get_velocity_wing(const joystick_t* joystick, const float ki_yaw, control_command_t* controls)
-{
-    controls->tvel[X] = 10.0f * (1.0f + joystick->channels.z * MAX_JOYSTICK_RANGE);
-    controls->tvel[Y] = 0.0f;
-    controls->tvel[Z] = -6.0f * joystick->channels.x * MAX_JOYSTICK_RANGE;
-    controls->rpy[YAW] += ki_yaw * 0.2f * joystick->channels.y * MAX_JOYSTICK_RANGE; // Turn rate
-}
 
-
-void joystick_get_control_command(const joystick_t* joystick, control_command_t* controls)
-{
-    controls->rpy[ROLL]     = joystick->channels.y * MAX_JOYSTICK_RANGE;
-    controls->rpy[PITCH]    = joystick->channels.x * MAX_JOYSTICK_RANGE;
-    controls->rpy[YAW]      = joystick->channels.r * MAX_JOYSTICK_RANGE;
-    controls->thrust        = joystick->channels.z;
-}
-
-void joystick_button_update(joystick_t* joystick, uint16_t buttons)
+void Joystick::button_update(uint16_t buttons)
 {
     // check if ARMING button pressed and not pressed at last update
-    if((buttons & 0x0001) == 0x0001 && (joystick->buttons.button_mask & 0x0001) != 0x0001)
+    if((buttons & 0x0001) == 0x0001 && (buttons_.button_mask & 0x0001) != 0x0001)
     {
-        if (joystick->mav_mode_desired.is_armed())
+        if (mav_mode_desired_.is_armed())
         {
-            joystick->mav_mode_desired.set_armed_flag(false);
-            joystick->arm_action = ARM_ACTION_DISARMING;
+            mav_mode_desired_.set_armed_flag(false);
+            arm_action_ = ARM_ACTION_DISARMING;
         }
         else
         {
-            joystick->mav_mode_desired.set_armed_flag(true);
-            joystick->arm_action = ARM_ACTION_ARMING;
+            mav_mode_desired_.set_armed_flag(true);
+            arm_action_ = ARM_ACTION_ARMING;
         }
     }
 
@@ -192,52 +191,52 @@ void joystick_button_update(joystick_t* joystick, uint16_t buttons)
     // ATTIUDE -> VELOCITY -> POSITION_HOLD -> GPS_NAV
     if((buttons & 0x0004) == 0x0004)        // check if ATTITUDE button pressed
     {
-        joystick->mav_mode_desired.set_ctrl_mode(Mav_mode::ATTITUDE);
+        mav_mode_desired_.set_ctrl_mode(Mav_mode::ATTITUDE);
     }
     else if((buttons & 0x0010) == 0x0010)   // check if VELOCITY button pressed
     {
-        joystick->mav_mode_desired.set_ctrl_mode(Mav_mode::VELOCITY);
+        mav_mode_desired_.set_ctrl_mode(Mav_mode::VELOCITY);
     }
     else if((buttons & 0x0002) == 0x0002)   // check if POSITION_HOLD button pressed
     {
-        joystick->mav_mode_desired.set_ctrl_mode(Mav_mode::POSITION_HOLD);
+        mav_mode_desired_.set_ctrl_mode(Mav_mode::POSITION_HOLD);
     }
     else if((buttons & 0x0020) == 0x0020)   // check if GPS_NAV button pressed
     {
-        joystick->mav_mode_desired.set_ctrl_mode(Mav_mode::GPS_NAV);
+        mav_mode_desired_.set_ctrl_mode(Mav_mode::GPS_NAV);
     }
 
-    joystick->buttons.button_mask = buttons;
+    buttons_.button_mask = buttons;
 }
 
 
-void joystick_get_torque_command(const joystick_t* joystick, torque_command_t* command, float scale)
+void Joystick::get_torque_command(torque_command_t* command, float scale) const
 {
-    command->xyz[ROLL]  = scale * joystick_get_roll(joystick);
-    command->xyz[PITCH] = scale * joystick_get_pitch(joystick);
-    command->xyz[YAW]   = scale * joystick_get_yaw(joystick);
+    command->xyz[ROLL]  = scale * roll();
+    command->xyz[PITCH] = scale * pitch();
+    command->xyz[YAW]   = scale * yaw();
 }
 
 
-void joystick_get_rate_command(const joystick_t* joystick, rate_command_t* command, float scale)
+void Joystick::get_rate_command(rate_command_t* command, float scale) const
 {
-    command->xyz[ROLL]  = scale * joystick_get_roll(joystick);
-    command->xyz[PITCH] = scale * joystick_get_pitch(joystick);
-    command->xyz[YAW]   = scale * joystick_get_yaw(joystick);
+    command->xyz[ROLL]  = scale * roll();
+    command->xyz[PITCH] = scale * pitch();
+    command->xyz[YAW]   = scale * yaw();
 }
 
 
-void joystick_get_thrust_command(const joystick_t* joystick, thrust_command_t* command)
+void Joystick::get_thrust_command(thrust_command_t* command) const
 {
-    command->thrust = joystick_get_throttle(joystick);
+    command->thrust = throttle();
 }
 
 
-void joystick_get_attitude_command(const joystick_t* joystick, const float ki_yaw, attitude_command_t* command, float scale)
+void Joystick::get_attitude_command(const float ki_yaw, attitude_command_t* command, float scale) const
 {
-    command->rpy[ROLL]  = scale * joystick_get_roll(joystick);
-    command->rpy[PITCH] = scale * joystick_get_pitch(joystick);
-    command->rpy[YAW]   += ki_yaw * scale * joystick_get_yaw(joystick);
+    command->rpy[ROLL]  = scale * roll();
+    command->rpy[PITCH] = scale * pitch();
+    command->rpy[YAW]   += ki_yaw * scale * yaw();
 
     aero_attitude_t attitude;
     attitude.rpy[ROLL]  = command->rpy[ROLL];
@@ -247,20 +246,38 @@ void joystick_get_attitude_command(const joystick_t* joystick, const float ki_ya
 }
 
 
-void joystick_get_velocity_command(const joystick_t* joystick, velocity_command_t* command, float scale)
+void Joystick::get_velocity_command(velocity_command_t* command, float scale) const
 {
-    command->xyz[X] = -10.0f * scale * joystick_get_pitch(joystick);
-    command->xyz[Y] =  10.0f * scale * joystick_get_roll(joystick);
-    command->xyz[Z] = -1.5f  * scale * joystick_get_throttle(joystick);
+    command->xyz[X] = -10.0f * scale * pitch();
+    command->xyz[Y] =  10.0f * scale * roll();
+    command->xyz[Z] = -1.5f  * scale * throttle();
     command->mode = VELOCITY_COMMAND_MODE_SEMI_LOCAL;
 }
 
 
-void joystick_get_attitude_command_absolute_yaw(const joystick_t* joystick, attitude_command_t* command, float scale)
+void Joystick::get_angle_command_wing(control_command_t* controls) const
 {
-    command->rpy[ROLL]  = scale * joystick_get_roll(joystick);
-    command->rpy[PITCH] = scale * joystick_get_pitch(joystick);
-    command->rpy[YAW]   = scale * joystick_get_yaw(joystick);
+    controls->rpy[ROLL] = asinf(roll());   // arcsin()
+    controls->rpy[PITCH] = asinf(pitch()); // arcsin()
+    controls->rpy[YAW] = asinf(yaw());     // arcsin()
+    controls->thrust = throttle();
+}
+
+
+void Joystick::get_velocity_wing(const float ki_yaw, control_command_t* controls) const
+{
+    controls->tvel[X] = 10.0f * (1.0f + channels_.z * MAX_JOYSTICK_RANGE);
+    controls->tvel[Y] = 0.0f;
+    controls->tvel[Z] = -6.0f * channels_.x * MAX_JOYSTICK_RANGE;
+    controls->rpy[YAW] += ki_yaw * 0.2f * channels_.y * MAX_JOYSTICK_RANGE; // Turn rate
+}
+
+
+void Joystick::get_attitude_command_absolute_yaw(attitude_command_t* command, float scale) const
+{
+    command->rpy[ROLL]  = scale * roll();
+    command->rpy[PITCH] = scale * pitch();
+    command->rpy[YAW]   = scale * yaw();
 
     aero_attitude_t attitude;
     attitude.rpy[ROLL]  = command->rpy[ROLL];
@@ -270,12 +287,12 @@ void joystick_get_attitude_command_absolute_yaw(const joystick_t* joystick, atti
 }
 
 
-void joystick_get_attitude_command_vtol(const joystick_t* joystick, const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch)
+void Joystick::get_attitude_command_vtol(const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch) const
 {
     // Get Roll Pitch and Yaw from joystick
-    command->rpy[ROLL]  = scale * joystick_get_roll(joystick);
-    command->rpy[PITCH] = scale * joystick_get_pitch(joystick) + reference_pitch;
-    command->rpy[YAW]   += ki_yaw * scale * joystick_get_yaw(joystick);
+    command->rpy[ROLL]  = scale * roll();
+    command->rpy[PITCH] = scale * pitch() + reference_pitch;
+    command->rpy[YAW]   += ki_yaw * scale * yaw();
 
     // Apply yaw and pitch first
     aero_attitude_t attitude;

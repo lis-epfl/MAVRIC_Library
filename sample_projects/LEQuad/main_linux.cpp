@@ -42,6 +42,7 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 
 #include "hal/dummy/i2c_dummy.hpp"
+#include "simulation/dynamic_model_telemetry.hpp"
 
 extern "C"
 {
@@ -51,7 +52,7 @@ extern "C"
 
 int main(int argc, char** argv)
 {
-    uint8_t sysid = 0;
+    uint8_t sysid = 1;
     bool init_success = true;
 
     // -------------------------------------------------------------------------
@@ -112,6 +113,12 @@ int main(int argc, char** argv)
                         file_log,
                         file_stat,
                         mav_config);
+
+    // -------------------------------------------------------------------------
+    // Add simulation telemetry
+    // -------------------------------------------------------------------------
+    mav.mavlink_communication().add_msg_send(MAVLINK_MSG_ID_HIL_STATE_QUATERNION,  1000000, (Mavlink_communication::send_msg_function_t)&dynamic_model_telemetry_send_state_quaternion, &board.dynamic_model);
+
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
 
