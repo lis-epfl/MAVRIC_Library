@@ -40,21 +40,23 @@
 
 #include "boards/sparky_v2.hpp"
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drivers/mpu_9250.hpp"
+#include "drivers/spektrum_satellite.hpp"
+
 #include "hal/common/time_keeper.hpp"
-
-#include "hal/stm32/spi_stm32.hpp"
-
 #include "hal/dummy/serial_dummy.hpp"
 #include "hal/dummy/i2c_dummy.hpp"
 #include "hal/dummy/file_dummy.hpp"
 #include "hal/dummy/adc_dummy.hpp"
 #include "hal/dummy/pwm_dummy.hpp"
+#include "hal/stm32/spi_stm32.hpp"
+
+#include "sample_projects/LEQuad/lequad.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
 
-#include "drivers/spektrum_satellite.hpp"
+#include "util/string_util.hpp"
 
 #include "drivers/lsm330dlc.hpp"
 #include "drivers/hmc5883l.hpp"
@@ -68,9 +70,6 @@ extern "C"
 
 #define MAVLINK_SYS_ID 2
 
-uint8_t test_i2c(uint32_t i2c_);
-
-
 int main(int argc, char** argv)
 {
     bool init_success = true;
@@ -79,7 +78,26 @@ int main(int argc, char** argv)
     // Create board
     // -------------------------------------------------------------------------
     sparky_v2_conf_t board_config = sparky_v2_default_config();
+
+    // board_config.imu_config.accelerometer.bias[0] = -0.0327504f;
+    // board_config.imu_config.accelerometer.bias[1] = -0.00344232f;
+    // board_config.imu_config.accelerometer.bias[2] = +0.00931478f;
+
+    // board_config.imu_config.gyroscope.bias[0] = -0.0135339f;
+    // board_config.imu_config.gyroscope.bias[1] = -0.0061096f;
+    // board_config.imu_config.gyroscope.bias[2] = -0.00312137f;
+
+    // board_config.imu_config.magnetometer.bias[0] = +0.520405f;
+    // board_config.imu_config.magnetometer.bias[1] = -0.55305f;
+    // board_config.imu_config.magnetometer.bias[2] = -0.489245f;
+
+    // board_config.imu_config.magnetic_north[0] = +0.268271f;
+    // board_config.imu_config.magnetic_north[1] = +0.0f;
+    // board_config.imu_config.magnetic_north[2] = +0.485027f;
+
     Sparky_v2 board(board_config);
+
+
 
     // Board initialisation
     init_success &= board.init();
@@ -122,226 +140,111 @@ int main(int argc, char** argv)
                      sim.magnetometer() );
 
     // set the flag to simulation
-    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    // LEQuad mav = LEQuad( sim_imu,
-    //                      sim.barometer(),
-    //                      sim.gps(),
-    //                      sim.sonar(),
-    //                      board.serial_,                // mavlink serial
-    //                      satellite_dummy,
-    //                      board.state_display_sparky_v2_,
-    //                      file_dummy,
-    //                      sim_battery,
-    //                      sim_servo_0,
-    //                      sim_servo_1,
-    //                      sim_servo_2,
-    //                      sim_servo_3 ,
-    //                      sim_servo_4,
-    //                      sim_servo_5,
-    //                      sim_servo_6,
-    //                      sim_servo_7 ,
-    //                      file_dummy,
-    //                      file_dummy,
-    //                      mav_config );
+    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    LEQuad mav = LEQuad( sim_imu,
+                         sim.barometer(),
+                         sim.gps(),
+                         sim.sonar(),
+                         board.serial_,                // mavlink serial
+                         satellite_dummy,
+                         board.state_display_sparky_v2_,
+                         file_dummy,
+                         sim_battery,
+                         sim_servo_0,
+                         sim_servo_1,
+                         sim_servo_2,
+                         sim_servo_3 ,
+                         sim_servo_4,
+                         sim_servo_5,
+                         sim_servo_6,
+                         sim_servo_7 ,
+                         file_dummy,
+                         file_dummy,
+                         mav_config );
 
     // -------------------------------------------------------------------------
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad( sim_imu,                        // TODO
-                        //  sim.barometer(),
-                         board.barometer_,
-                         sim.gps(),                      // TODO
-                         sim.sonar(),                    // TODO
-                         board.serial_,
-                         satellite_dummy,                // TODO
-                         board.state_display_sparky_v2_,
-                         file_dummy,                     // TODO
-                         sim_battery,                    // TODO
-                         board.servo_0_,
-                         board.servo_2_,
-                         board.servo_1_,
-                         board.servo_3_ ,
-                         board.servo_4_,
-                         board.servo_5_,
-                         board.servo_6_,
-                         board.servo_7_ ,
-                         file_dummy,                    // TODO
-                         file_dummy,                    // TODO
-                         mav_config );
-
-
-    // Lsm330dlc lsm_dummy(i2c_dummy);
-    // Hmc5883l hmc_dummy(i2c_dummy);
-    // Imu imu_dummy(lsm_dummy, lsm_dummy, hmc_dummy);
-    // Sonar_i2cxl sonar_dummy(i2c_dummy);
-    // Gps_ublox gps_dummy(serial_dummy);
-    //
     // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    // LEQuad mav = LEQuad( imu_dummy,
-    //                     //  sim.barometer(),
-    //                      board.barometer_,
-    //                      gps_dummy,                      // TODO
-    //                      sonar_dummy,                    // TODO
-    //                      board.serial_,
-    //                      satellite_dummy,                // TODO
-    //                      board.state_display_sparky_v2_,
-    //                      file_dummy,                     // TODO
-    //                      sim_battery,                    // TODO
-    //                      board.servo_0_,
-    //                      board.servo_2_,
-    //                      board.servo_1_,
-    //                      board.servo_3_ ,
-    //                      board.servo_4_,
-    //                      board.servo_5_,
-    //                      board.servo_6_,
-    //                      board.servo_7_ ,
-    //                      file_dummy,                    // TODO
-    //                      file_dummy,                    // TODO
-    //                      mav_config );
+    // LEQuad mav = LEQuad(board.imu,
+    //                     board.bmp085,
+    //                     board.gps_ublox,
+    //                     board.sonar_i2cxl,
+    //                     board.uart0,
+    //                     board.spektrum_satellite,
+    //                     board.state_display_megafly_rev4_,
+    //                     board.file_flash,
+    //                     board.battery,
+    //                     board.servo_0,
+    //                     board.servo_1,
+    //                     board.servo_2,
+    //                     board.servo_3,
+    //                     board.servo_4,
+    //                     board.servo_5,
+    //                     board.servo_6,
+    //                     board.servo_7,
+    //                     file_dummy,
+    //                     file_dummy,
+    //                     mav_config );
 
 
 
     // -------------------------------------------------------------------------
     // Main loop
     // -------------------------------------------------------------------------
-    // mav.loop();
+    mav.loop();
+
+    // board.led_err_.off();
+    // board.led_stat_.off();
+    // board.led_rf_.off();
 
     // Console<Serial> console(board.serial_);
 
-    // mavlink_message_t msg;
-    //
-    // uint32_t loop_count = 0;
-    time_keeper_delay_ms(500);
-    while(1)
-    {
-        time_keeper_delay_ms(100);
+    // while (1)
+    // {
 
-        board.state_display_sparky_v2_.update();
+        // Write mavlink message
+        // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
+        //                             50,     // uint8_t component_id,
+        //                             &msg,   // mavlink_message_t* msg,
+        //                             0,      // uint8_t type,
+        //                             0,      // uint8_t autopilot,
+        //                             0,      // uint8_t base_mode,
+        //                             0,      // uint32_t custom_mode,
+        //                             0);     //uint8_t system_status)
+        // mavlink_stream.send(&msg);
 
-        uint32_t buf = 0xaabbccdd;
-        board.serial_.write((uint8_t*)&buf, 4);
-
-        uint32_t i2c_ = I2C1;
-
-        uint8_t address = (uint8_t)Barometer_MS5611::address_t::ADDR_CSBLOW;
-        uint8_t buffer = Barometer_MS5611::COMMAND_RESET;
-
-        // board.i2c_1_.write(&buffer, 1, address);
-
-        // Wait until not busy
-        while (i2c_busy(i2c_))
-        {
-            ;
-        }
-
-        // Send start
-        i2c_nack_current(i2c_);
-        i2c_disable_ack(i2c_);
-        i2c_clear_stop(i2c_);
-        i2c_peripheral_enable(i2c_);
-        i2c_send_start(i2c_);
-        while (i2c_start_generated(i2c_) == 0)
-        {
-            ;
-        }
-
-        // Wait for master mode selected
-        while (!((I2C_SR1(i2c_) & I2C_SR1_SB)
-                & (I2C_SR2(i2c_) & (I2C_SR2_MSL | I2C_SR2_BUSY))))
-        {
-            ;
-        };
-
-        // Send address
-        i2c_send_7bit_address(i2c_, address, I2C_WRITE);
-        while (!i2c_address_sent(i2c_))
-        {
-            if (i2c_nack_received(i2c_))
-            {
-                i2c_send_stop(i2c_);
-
-                return false;
-            }
-        }
-
-        // Clean ADDR condition sequence
-        volatile uint16_t SR2 = I2C_SR2(i2c_);
-        (void) SR2;
-
-        // Send data
-        i2c_send_data(i2c_, buffer);
-
-        while (!i2c_byte_transfer_finished(i2c_))
-        {
-            if (i2c_nack_received(i2c_))
-            {
-                i2c_send_stop(i2c_);
-                return false;
-            }
-        }
-
-        // Send stop
-        i2c_send_stop(i2c_);
+    //     time_keeper_delay_ms(500);
 
 
+    //     const char* sep = "\t";
+    //     uint64_t delay = 25;
 
+    //     console.write(valx);
+    //     time_keeper_delay_ms(delay);
+    //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
+    //     time_keeper_delay_ms(delay);
+    //     console.write(valy);
+    //     time_keeper_delay_ms(delay);
+    //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
+    //     time_keeper_delay_ms(delay);
+    //     console.write(valz);
+    //     time_keeper_delay_ms(delay);
 
+    //     const char* newline = "\r\n";
+    //     board.serial_.write((const uint8_t*)newline, sizeof(newline));
 
-
-
-    //
-    //     float t = time_keeper_get_s();
-    //     // bool res = board.barometer_.update();
-    //     bool res = board.barometer_.init();
-    //     float dt = time_keeper_get_s() - t;
-    //
-    //     loop_count += 1;
-    //     if (loop_count % 1 == 0)
+    //     if (bo)
     //     {
-    //         mavlink_msg_heartbeat_pack( 2,
-    //                                     0,      // uint8_t component_id,
-    //                                     &msg,   // mavlink_message_t* msg,
-    //         						    0,      // uint8_t type,
-    //                                     0,      // uint8_t autopilot,
-    //                                     res,      // uint8_t base_mode,
-    //                                     board.barometer_.altitude_gf(), // uint32_t custom_mode,
-    //                                     board.barometer_.vertical_speed_lf()); //uint8_t system_status)
-    //         mav.mavlink_communication.mavlink_stream().send(&msg);
-    //
-    //         float alt  = board.barometer_.altitude_gf();
-    //         float temp = board.barometer_.temperature();
-    //
-    //         mavlink_msg_debug_vect_pack( 2,                     // uint8_t system_id,
-    //                                      0,                     // uint8_t component_id,
-    //                                      &msg,                  // mavlink_message_t* msg,
-    //         						     "ms5611",              // const char *name,
-    //                                      time_keeper_get_us(),  // uint64_t time_usec,
-    //                                      alt,                  // float x,
-    //                                      temp,                  // float y,
-    //                                      dt );                 // float z)
-    //         mav.mavlink_communication.mavlink_stream().send(&msg);
-    //
-    //
-    //         // console << "temp " << temp;
-    //         // console << " state " << state;
-    //         // console << " \r\n";
-    //         // // console.write(board.barometer_.altitude_gf());
-    //         // // console.write(board.barometer_.vertical_speed_lf());
-    //         // // console.writeln(" \r\n");
-    //         // console.flush();
-    //
-    //         // board.serial_.write(&state, 1);
+    //         board.led_stat_.toggle();
     //     }
-    }
+    //     else
+    //     {
+    //         board.led_err_.toggle();
+    //     }
 
-    return 0;
-}
-
-uint8_t test_i2c(uint32_t i2c_)
-{
-
+    // }
 
     return 0;
 }

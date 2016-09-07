@@ -30,42 +30,33 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_telemetry.hpp
+ * \file dynamic_model_telemetry.hpp
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Basil Huber
  *
  * \brief This module takes care of sending periodic telemetric messages for
- * the joystick controller
+ * the dynamic model
  *
  ******************************************************************************/
 
-#ifndef JOYSTICK_TELEMETRY_HPP_
-#define JOYSTICK_TELEMETRY_HPP_
+
+#ifndef DYNAMIC_MODEL_TELEMETRY_HPP_
+#define DYNAMIC_MODEL_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
-#include "communication/mavlink_message_handler.hpp"
-#include "control/joystick.hpp"
+#include "simulation/dynamic_model.hpp"
 
 
 /**
- * \brief   Initialisation of the joystick telemetry module
+ * \brief   Function to send the MAVLink HIL_STATE_QUATERNION message sending the groundtruth of the simulation
  *
- * \param   joystick            The pointer to the joystick parsing structure
- * \param   message_handler     The pointer to the MAVLink communication structure
+ * \details true airspeed and indicated airspeed currently equal ground speed
  *
- * \return  True if the init succeed, false otherwise
- */
-bool joystick_telemetry_init(Joystick* joystick, Mavlink_message_handler* message_handler);
-
-/**
- * \brief   Parse received MAVLink message in structure
- *
- * \param   joystick                The pointer to the joystick parsing structure
+ * \param   dynamic_model           Dynamic model of the simulation
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void joystick_telemetry_send_manual_ctrl_msg(const Joystick* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void dynamic_model_telemetry_send_state_quaternion(const Dynamic_model* model, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-
-#endif /* JOYSTICK_TELEMETRY_HPP_ */
+#endif /* DYNAMIC_MODEL_TELEMETRY_HPP_ */

@@ -167,7 +167,17 @@ public:
      */
     void loop(void);
 
-// protected:
+
+    /**
+     * \brief   Returns non-const reference to MAVLINK Communication
+     * \details This is used to add simulation telemetry from the main function
+     *
+     * \return  MAVLINK Communication module
+     */
+     inline Mavlink_communication& mavlink_communication(){return communication;};
+
+
+protected:
 
     virtual bool init_main_task(void);
     virtual bool init_state(void);

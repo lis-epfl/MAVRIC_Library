@@ -84,11 +84,11 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     servo_7(servo_7),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(communication.stream(), battery, config.state_config),
-    scheduler(Scheduler::default_config()),
+    scheduler(config.scheduler_config),
     communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
-    position_estimation(state, barometer, sonar, gps, ahrs),
+    position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
     navigation(controls_nav, ahrs.qe, position_estimation, state, config.navigation_config),
     waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, communication.handler(), communication.stream(), config.waypoint_handler_config),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
@@ -177,7 +177,6 @@ bool LEQuad::init_state(void)
     // Data logging
     ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_,   "mav_state");
     ret &= data_logging_stat.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
-    ret &= data_logging_continuous.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
 
     // Task
     ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);

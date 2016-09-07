@@ -169,11 +169,11 @@ void manual_control_telemetry_send(const Manual_control* manual_control, const M
                                             mavlink_stream->compid(),
                                             msg,
                                             mavlink_stream->sysid(),
-                                            manual_control->joystick.channels.x * 1000,
-                                            manual_control->joystick.channels.y * 1000,
-                                            manual_control->joystick.channels.z * 1000,
-                                            manual_control->joystick.channels.r * 1000,
-                                            manual_control->joystick.buttons.button_mask);
+                                            manual_control->joystick.channels_.x * 1000,
+                                            manual_control->joystick.channels_.y * 1000,
+                                            manual_control->joystick.channels_.z * 1000,
+                                            manual_control->joystick.channels_.r * 1000,
+                                            manual_control->joystick.buttons_.button_mask);
             break;
     }
 }
