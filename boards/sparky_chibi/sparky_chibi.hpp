@@ -287,14 +287,34 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     // -------------------------------------------------------------------------
     // PWM config
     // -------------------------------------------------------------------------
-    for (size_t i = 0; i < PWM_COUNT; i++)
-    {
-        conf.pwm[i] = Pwm_chibios::default_config();
-    }
     // PWM12 is not directly supported by ChibiOS so we cannot use it for PWM8 and PWM9,
     // so we use
     // - PWM4 with callbacks pwmp8cb and pwmc8cb to toggle the pin GPIOB_PIN15_PWM8
     // - PWM1 with callbacks pwmp9cb and pwmc9cb to toggle the pin GPIOB_PIN14_PWM9
+    //
+    // Configuration of PWMs on the servo connectors:
+    // ID Pin  Timer Channel
+    // ---------------------
+    // 0  PB0  TIM3  CH3
+    // 1  PB1  TIM3  CH4
+    // 2  PA3  TIM9  CH2
+    // 3  PA2  TIM2  CH3
+    // 4  PA1  TIM5  CH2
+    // 5  PA0  TIM5  CH1
+    //
+    // Configuration of PWMs on the servo connectors:
+    // ID Pin  Timer Channel
+    // ---------------------
+    // 6  PC9  TIM8  CH4
+    // 7  PC8  TIM8  CH3
+    // 8  PB15 TIM4  CH1 with callbacks
+    // 9  PB14 TIM1  CH1 with callbacks
+
+    for (size_t i = 0; i < PWM_COUNT; i++)
+    {
+        conf.pwm[i] = Pwm_chibios::default_config();
+    }
+
     conf.pwm[0].driver  = &PWMD3;
     conf.pwm[0].channel = Pwm_chibios::CHANNEL_3;
     conf.pwm[1].driver  = &PWMD3;
@@ -322,7 +342,7 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
 
 
     // -------------------------------------------------------------------------
-    // PWM config
+    // Servos config
     // -------------------------------------------------------------------------
     for (size_t i = 0; i < PWM_COUNT; i++)
     {
