@@ -298,7 +298,7 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     // 0  PB0  TIM3  CH3
     // 1  PB1  TIM3  CH4
     // 2  PA3  TIM9  CH2
-    // 3  PA2  TIM2  CH3
+    // 3  PA2  TIM9  CH1
     // 4  PA1  TIM5  CH2
     // 5  PA0  TIM5  CH1
     //
@@ -321,8 +321,8 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     conf.pwm[1].channel = Pwm_chibios::CHANNEL_4;
     conf.pwm[2].driver  = &PWMD9;
     conf.pwm[2].channel = Pwm_chibios::CHANNEL_2;
-    conf.pwm[3].driver  = &PWMD2;
-    conf.pwm[3].channel = Pwm_chibios::CHANNEL_3;
+    conf.pwm[3].driver  = &PWMD9;
+    conf.pwm[3].channel = Pwm_chibios::CHANNEL_1;
     conf.pwm[4].driver  = &PWMD5;
     conf.pwm[4].channel = Pwm_chibios::CHANNEL_2;
     conf.pwm[5].driver  = &PWMD5;

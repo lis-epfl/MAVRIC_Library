@@ -124,6 +124,9 @@ bool Sparky_chibi::init(void)
     // Enabling interrupts, initialization done.
     osalSysEnable();
 
+    // Kernel initialization, the main() function becomes a thread and the RTOS is active.
+    // chSysInit();
+
     // Init time keeper
     time_keeper_init();
 

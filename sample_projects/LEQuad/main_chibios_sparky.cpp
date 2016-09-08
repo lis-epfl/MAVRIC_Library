@@ -35,7 +35,7 @@
 #include "drivers/gps_ublox.hpp"
 #include "drivers/sonar_i2cxl.hpp"
 
-#include "hal/chibios/usbcfg.h"
+// #include "hal/chibios/usbcfg.h"
 
 extern "C"
 {
@@ -43,6 +43,98 @@ extern "C"
 }
 
 #define MAVLINK_SYS_ID 2
+
+
+
+char txbuf[] = "Hello World ! \n \r";
+char txbuf2[] = "ByeBye! \n \r";
+bool flag = false;
+
+
+/*
+ * This callback is invoked when a transmission buffer has been completely
+ * read by the driver.
+ */
+static void txend1(UARTDriver *uartp) {
+
+  (void)uartp;
+}
+
+/*
+ * This callback is invoked when a transmission has physically completed.
+ */
+static void txend2(UARTDriver *uartp) {
+
+  (void)uartp;
+
+  uartStopSendI(uartp);
+  uartStartSendI(uartp, sizeof(txbuf),txbuf);
+
+  // palSetPad(GPIOD, GPIOD_LED5);
+  // chSysLockFromISR();
+  // chVTResetI(&vt5);
+  // chVTSetI(&vt5, MS2ST(200), led5off, NULL);
+  // chSysUnlockFromISR();
+}
+
+/*
+ * This callback is invoked on a receive error, the errors mask is passed
+ * as parameter.
+ */
+static void rxerr(UARTDriver *uartp, uartflags_t e) {
+
+  (void)uartp;
+  (void)e;
+}
+
+/*
+ * This callback is invoked when a character is received but the application
+ * was not ready to receive it, the character is passed as parameter.
+ */
+static void rxchar(UARTDriver *uartp, uint16_t c) {
+
+  (void)uartp;
+  (void)c;
+  // /* Flashing the LED each time a character is received.*/
+  // palSetPad(GPIOD, GPIOD_LED4);
+  // chSysLockFromISR();
+  // chVTResetI(&vt4);
+  // chVTSetI(&vt4, MS2ST(200), led4off, NULL);
+  // chSysUnlockFromISR();
+}
+
+/*
+ * This callback is invoked when a receive buffer has been completely written.
+ */
+static void rxend(UARTDriver *uartp) {
+
+  (void)uartp;
+  //
+  // /* Flashing the LED each time a character is received.*/
+  // palSetPad(GPIOD, GPIOD_LED3);
+  // chSysLockFromISR();
+  // chVTResetI(&vt3);
+  // chVTSetI(&vt3, MS2ST(200), led3off, NULL);
+  // chSysUnlockFromISR();
+}
+
+/*
+ * UART driver configuration structure.
+ */
+static UARTConfig uart_cfg_1 = {
+  txend1,
+  txend2,
+  rxend,
+  rxchar,
+  rxerr,
+  38400,
+  0,
+  USART_CR2_LINEN,
+  0
+};
+
+#include "hal/chibios/serial_chibios.hpp"
+
 
 int main(void)
 {
@@ -141,26 +233,18 @@ int main(void)
     // -------------------------------------------------------------------------
     // mav.loop();
 
-
     State_display& disp = board.state_display_;
-    I2c_chibios& i2c = board.i2c1_;
-
-    // Pwm_chibios& pwm1 = board.pwm_[0];
-    // pwm1.set_pulse_width_us(100);
-    // pwm1.set_period_us(2000);
-    // pwm1.set_pulse_width_us(100);
-
-
+    // I2c_chibios& i2c = board.i2c1_;
 
     /**
     * Prepares the barometer
     */
-    static uint8_t rxbuf[6];
-    static uint8_t txbuf[4];
+    static uint8_t rxbuf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    static uint8_t txbuf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-    const uint8_t ms5611_addr       = 0x77;
-    const uint8_t COMMAND_RESET     = 0x1E;  ///< Reset sensor
-    const uint8_t COMMAND_GET_CALIBRATION          = 0xA2;  ///< Get 16bytes factory configuration from PROM
+    // const uint8_t ms5611_addr       = 0x77;
+    // const uint8_t COMMAND_RESET     = 0x1E;  ///< Reset sensor
+    // const uint8_t COMMAND_GET_CALIBRATION          = 0xA2;  ///< Get 16bytes factory configuration from PROM
 
 
     /*
@@ -187,11 +271,87 @@ int main(void)
 
     time_keeper_delay_ms(1500);
 
+    // static SerialConfig uartCfg =
+    // {
+    //     9600, // bit rate
+    // };
+    //
+    // palSetPadMode(GPIOB, 10, PAL_MODE_ALTERNATE(7)); // used function : USART3_TX
+    // palSetPadMode(GPIOB, 11, PAL_MODE_ALTERNATE(7)); // used function : USART3_RX
+    // sdStart(&SD3, &uartCfg); // starts the serial driver with uartCfg as a config
+    // char data[] = "Hello World ! \n \r";
+    // char data2[] = "ByeBye World ! \n \r";
+
+    /*
+     * Activates the UART driver 2, PA2(TX) and PA3(RX) are routed to USART2.
+     */
+    // uartStart(&UARTD2, &uart_cfg_1);
+    // palSetPadMode(GPIOA, 2, PAL_MODE_ALTERNATE(7));
+    // palSetPadMode(GPIOA, 3, PAL_MODE_ALTERNATE(7));
+    //
+    // uartStopReceive(&UARTD2);
+    // uartStopSend(&UARTD2);
+    // // uartStartReceive(&UARTD2, 16, buffer);
+
+
+    Serial_chibios serial({Serial_chibios::SERIAL_1, &UARTD1, 38400});
+    serial.init();
 
     while (true)
     {
         disp.update();
-        time_keeper_delay_ms(50);
+        time_keeper_delay_ms(100);
+
+        serial.write(txbuf, sizeof(txbuf));
+        serial.write(txbuf, sizeof(txbuf));
+        serial.write(txbuf, sizeof(txbuf));
+        serial.write(txbuf, sizeof(txbuf));
+        // uartStopSend(&UARTD2);
+        // uartStartSendI(&UARTD2, sizeof(txbuf), txbuf);
+        //
+        for (size_t i = 0; i < 10; i++)
+        {
+            Servo& servo = board.servo_[i];
+            servo.write(1.0f);
+        }
+        serial.write(txbuf, sizeof(txbuf));
+        serial.write(txbuf, sizeof(txbuf));
+        serial.write(txbuf, sizeof(txbuf));
+        serial.write(txbuf, sizeof(txbuf));
+        // uartStopSend(&UARTD2);
+        // uartStartSendI(&UARTD2, sizeof(txbuf), txbuf);
+        //
+        for (size_t i = 0; i < 10; i++)
+        {
+            Servo& servo = board.servo_[i];
+            servo.write(0.0f);
+        }
+
+        // uartStopSend(&UARTD2);
+        // uartStartSend(&UARTD2, sizeof(data2), data2);
+        // for (size_t i = 0; i < 10; i++)
+        // {
+        //     Servo& servo = board.servo_[i];
+        //     servo.write(-1.0f);
+        // }
+
+        // chnWrite(&SD3, (uint8_t *) data, strlen(data));
+        // // sdAsynchronousWrite(&SD3, (uint8_t *) data, strlen(data));
+        // for (size_t i = 0; i < 10; i++)
+        // {
+        //     Servo& servo = board.servo_[i];
+        //     servo.write(1.0f);
+        // }
+        // chnWrite(&SD3, (uint8_t *) data2, strlen(data));
+        // // sdAsynchronousWrite(&SD3, (uint8_t *) data2, strlen(data));
+        // for (size_t i = 0; i < 10; i++)
+        // {
+        //     Servo& servo = board.servo_[i];
+        //     servo.write(-1.0f);
+        // }
+
+
+
         // time_keeper_delay_ms(1);
         // while (true) {
             // msg_t msg = usbTransmit(&USBD1, USBD2_DATA_REQUEST_EP,
@@ -207,23 +367,23 @@ int main(void)
         // servo.write(-1.0f);
 
 
-        for (size_t i = 0; i < 10; i++)
-        {
-            Servo& servo = board.servo_[i];
-            servo.write(-1.0f);
-        }
-        time_keeper_delay_ms(20);
-        for (size_t i = 0; i < 10; i++)
-        {
-            Servo& servo = board.servo_[i];
-            servo.write(0.0f);
-        }
-        time_keeper_delay_ms(20);
-        for (size_t i = 0; i < 10; i++)
-        {
-            Servo& servo = board.servo_[i];
-            servo.write(1.0f);
-        }
+        // for (size_t i = 0; i < 10; i++)
+        // {
+        //     Servo& servo = board.servo_[i];
+        //     servo.write(-1.0f);
+        // }
+        // time_keeper_delay_ms(20);
+        // for (size_t i = 0; i < 10; i++)
+        // {
+        //     Servo& servo = board.servo_[i];
+        //     servo.write(0.0f);
+        // }
+        // time_keeper_delay_ms(20);
+        // for (size_t i = 0; i < 10; i++)
+        // {
+        //     Servo& servo = board.servo_[i];
+        //     servo.write(1.0f);
+        // }
 
 
         // }
@@ -243,6 +403,19 @@ int main(void)
         //     txbuf[0] = COMMAND_GET_CALIBRATION + i * 2;
         //     i2c.transfer(txbuf, 1, rxbuf, 2, ms5611_addr);
         // }
+
+
+        // while (true)
+        // {
+        //     if (SDU1.config->usbp->state == USB_ACTIVE)
+        //     {
+        //         static uint8_t buf[] = "0123456789abcdef\n";
+        //
+        //         chnRead(&SDU1, buf, sizeof buf - 1);
+        //         chnWrite(&SDU1, buf, sizeof buf - 1);
+        //     }
+        // }
+
     }
 
      return 0;
