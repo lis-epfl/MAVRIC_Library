@@ -55,6 +55,7 @@
 
 #include "hal/chibios/gpio_chibios.hpp"
 #include "hal/chibios/i2c_chibios.hpp"
+#include "hal/chibios/serial_chibios.hpp"
 #include "hal/chibios/pwm_chibios.hpp"
 
 extern "C"
@@ -111,7 +112,7 @@ class Sparky_chibi
 {
 public:
 
-    static const uint8_t PWM_COUNT = 10;
+    static const uint8_t PWM_COUNT    = 10;
 
     /**
      * \brief   Configuration structure
@@ -121,6 +122,7 @@ public:
         Gpio_chibios::conf_t      gpio_led_err;
         Gpio_chibios::conf_t      gpio_led_stat;
         Gpio_chibios::conf_t      gpio_led_rf;
+        Serial_chibios::conf_t    serial;
         Pwm_chibios::conf_t       pwm[PWM_COUNT];
         servo_conf_t              servo[PWM_COUNT];
         I2c_chibios::conf_t       i2c1;
@@ -193,7 +195,7 @@ public:
     Led_gpio                led_err_;
     Led_gpio                led_stat_;
     Led_gpio                led_rf_;
-
+    Serial_chibios          serial_;
     Pwm_chibios             pwm_[PWM_COUNT];
     Servo                   servo_[PWM_COUNT];
 
@@ -285,6 +287,16 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     };
 
     // -------------------------------------------------------------------------
+    // Serial config
+    // -------------------------------------------------------------------------
+    conf.serial =
+    {
+        .id         = Serial_chibios::SERIAL_1,
+        .device     = &UARTD1,
+        .baudrate   = 38400
+    };
+
+    // -------------------------------------------------------------------------
     // PWM config
     // -------------------------------------------------------------------------
     // PWM12 is not directly supported by ChibiOS so we cannot use it for PWM8 and PWM9,
@@ -369,117 +381,6 @@ Sparky_chibi::conf_t Sparky_chibi::default_config()
     // -------------------------------------------------------------------------
     conf.barometer = Barometer_MS5611::default_config();
 
-    // // -------------------------------------------------------------------------
-    // // GPIO config
-    // // -------------------------------------------------------------------------
-    // // Error Led
-    // conf.led_err_gpio_config.port    = GPIO_STM32_PORT_B;
-    // conf.led_err_gpio_config.pin     = GPIO_STM32_PIN_4;
-    // conf.led_err_gpio_config.dir     = GPIO_OUTPUT;
-    // conf.led_err_gpio_config.pull    = GPIO_PULL_UPDOWN_NONE;
-    //
-    // // Status Led
-    // conf.led_stat_gpio_config.port   = GPIO_STM32_PORT_B;
-    // conf.led_stat_gpio_config.pin    = GPIO_STM32_PIN_5;
-    // conf.led_stat_gpio_config.dir    = GPIO_OUTPUT;
-    // conf.led_stat_gpio_config.pull   = GPIO_PULL_UPDOWN_NONE;
-    //
-    // // Rf Led
-    // conf.led_rf_gpio_config.port     = GPIO_STM32_PORT_B;
-    // conf.led_rf_gpio_config.pin      = GPIO_STM32_PIN_6;
-    // conf.led_rf_gpio_config.dir      = GPIO_OUTPUT;
-    // conf.led_rf_gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    //
-    //
-    //
-    // // -------------------------------------------------------------------------
-    // // PWM config
-    // // -------------------------------------------------------------------------
-    // conf.pwm_config[0].gpio_config.port     = GPIO_STM32_PORT_B;
-    // conf.pwm_config[0].gpio_config.pin      = GPIO_STM32_PIN_0;
-    // conf.pwm_config[0].gpio_config.dir      = GPIO_OUTPUT;
-    // conf.pwm_config[0].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    // conf.pwm_config[0].gpio_config.alt_fct  = GPIO_STM32_AF_2;
-    // conf.pwm_config[0].timer                = TIM3;
-    // conf.pwm_config[0].rcc_timer            = RCC_TIM3;
-    // conf.pwm_config[0].channel              = Pwm_stm32::PWM_STM32_CHANNEL_3;
-    // conf.pwm_config[0].prescaler            = 84; //since APB1 clock is main_clk/2
-    // conf.pwm_config[0].period               = 20000; //50Hz
-    // conf.pwm_config[0].pulse_us             = 5000;
-    //
-    // conf.pwm_config[1].gpio_config.port     = GPIO_STM32_PORT_B;
-    // conf.pwm_config[1].gpio_config.pin      = GPIO_STM32_PIN_1;
-    // conf.pwm_config[1].gpio_config.dir      = GPIO_OUTPUT;
-    // conf.pwm_config[1].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    // conf.pwm_config[1].gpio_config.alt_fct  = GPIO_STM32_AF_2;
-    // conf.pwm_config[1].timer                = TIM3;
-    // conf.pwm_config[1].rcc_timer            = RCC_TIM3;
-    // conf.pwm_config[1].channel              = Pwm_stm32::PWM_STM32_CHANNEL_4;
-    // conf.pwm_config[1].prescaler            = 84;
-    // conf.pwm_config[1].period               = 20000; //50Hz
-    // conf.pwm_config[1].pulse_us             = 5000;
-    //
-    // conf.pwm_config[2].gpio_config.port     = GPIO_STM32_PORT_A;
-    // conf.pwm_config[2].gpio_config.pin      = GPIO_STM32_PIN_3;
-    // conf.pwm_config[2].gpio_config.dir      = GPIO_OUTPUT;
-    // conf.pwm_config[2].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    // conf.pwm_config[2].gpio_config.alt_fct  = GPIO_STM32_AF_3;
-    // conf.pwm_config[2].timer                = TIM9;
-    // conf.pwm_config[2].rcc_timer            = RCC_TIM9;
-    // conf.pwm_config[2].channel              = Pwm_stm32::PWM_STM32_CHANNEL_2;
-    // // max timer clock freq of TIM9 is not 84 but 168 MHz
-    // conf.pwm_config[2].prescaler            = 168;
-    // conf.pwm_config[2].period               = 20000; //50Hz
-    // conf.pwm_config[2].pulse_us             = 5000;
-    //
-    // conf.pwm_config[3].gpio_config.port     = GPIO_STM32_PORT_A;
-    // conf.pwm_config[3].gpio_config.pin      = GPIO_STM32_PIN_2;
-    // conf.pwm_config[3].gpio_config.dir      = GPIO_OUTPUT;
-    // conf.pwm_config[3].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    // conf.pwm_config[3].gpio_config.alt_fct  = GPIO_STM32_AF_1;
-    // conf.pwm_config[3].timer                = TIM2;
-    // conf.pwm_config[3].rcc_timer            = RCC_TIM2;
-    // conf.pwm_config[3].channel              = Pwm_stm32::PWM_STM32_CHANNEL_3;
-    // conf.pwm_config[3].prescaler            = 84;
-    // conf.pwm_config[3].period               = 20000; //50Hz
-    // conf.pwm_config[3].pulse_us             = 5000;
-    //
-    // conf.pwm_config[4].gpio_config.port     = GPIO_STM32_PORT_A;
-    // conf.pwm_config[4].gpio_config.pin      = GPIO_STM32_PIN_1;
-    // conf.pwm_config[4].gpio_config.dir      = GPIO_OUTPUT;
-    // conf.pwm_config[4].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    // conf.pwm_config[4].gpio_config.alt_fct  = GPIO_STM32_AF_2;
-    // conf.pwm_config[4].timer                = TIM5;
-    // conf.pwm_config[4].rcc_timer            = RCC_TIM5;
-    // conf.pwm_config[4].channel              = Pwm_stm32::PWM_STM32_CHANNEL_2;
-    // conf.pwm_config[4].prescaler            = 84;
-    // conf.pwm_config[4].period               = 20000; //50Hz
-    // conf.pwm_config[4].pulse_us             = 5000;
-    //
-    // conf.pwm_config[5].gpio_config.port     = GPIO_STM32_PORT_A;
-    // conf.pwm_config[5].gpio_config.pin      = GPIO_STM32_PIN_0;
-    // conf.pwm_config[5].gpio_config.dir      = GPIO_OUTPUT;
-    // conf.pwm_config[5].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    // conf.pwm_config[5].gpio_config.alt_fct  = GPIO_STM32_AF_2;
-    // conf.pwm_config[5].timer                = TIM5;
-    // conf.pwm_config[5].rcc_timer            = RCC_TIM5;
-    // conf.pwm_config[5].channel              = Pwm_stm32::PWM_STM32_CHANNEL_1;
-    // conf.pwm_config[5].prescaler            = 84;
-    // conf.pwm_config[5].period               = 20000; //50Hz
-    // conf.pwm_config[5].pulse_us             = 5000;
-    //
-    // // -------------------------------------------------------------------------
-    // // Servo config
-    // // -------------------------------------------------------------------------
-    // conf.servo_config[0] = servo_default_config_esc();
-    // conf.servo_config[1] = servo_default_config_esc();
-    // conf.servo_config[2] = servo_default_config_esc();
-    // conf.servo_config[3] = servo_default_config_esc();
-    // conf.servo_config[4] = servo_default_config_esc();
-    // conf.servo_config[5] = servo_default_config_esc();
-    // conf.servo_config[6] = servo_default_config_esc();
-    // conf.servo_config[7] = servo_default_config_esc();
-    //
     // // -------------------------------------------------------------------------
     // // USB config
     // // -------------------------------------------------------------------------

@@ -78,6 +78,7 @@ Sparky_chibi::Sparky_chibi(conf_t config):
     led_err_(gpio_led_err_, false),
     led_stat_(gpio_led_stat_, false),
     led_rf_(gpio_led_rf_, false),
+    serial_(config.serial),
     pwm_({config.pwm[0], config.pwm[1], config.pwm[2], config.pwm[3], config.pwm[4], config.pwm[5],
           config.pwm[6], config.pwm[7], config.pwm[8], config.pwm[9]}),
     servo_({{pwm_[0], config.servo[0]}, {pwm_[1], config.servo[1]}, {pwm_[2], config.servo[2]},
@@ -145,6 +146,16 @@ bool Sparky_chibi::init(void)
     ret = i2c1_.init();
     init_success &= ret;
     time_keeper_delay_ms(10);
+
+    // -------------------------------------------------------------------------
+    // Init Serials
+    // -------------------------------------------------------------------------
+    serial_.init();
+    // for (size_t i = 0; i < SERIAL_COUNT; i++)
+    // {
+    //     ret = serial_[i].init();
+    //     init_success &= ret;
+    // }
 
     // -------------------------------------------------------------------------
     // Init PWMs
