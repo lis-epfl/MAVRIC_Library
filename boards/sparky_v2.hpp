@@ -244,7 +244,7 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     // According to sparkyV2 documentation, when using LED port we should used TIM8 for
     // pin 5 and 6 on CONN7 but due to complicated advanced setting, TIM3 is used instead
-    
+
     conf.pwm_config[0].gpio_config.port     = GPIO_STM32_PORT_B;
     conf.pwm_config[0].gpio_config.pin      = GPIO_STM32_PIN_14;
     conf.pwm_config[0].gpio_config.dir      = GPIO_OUTPUT;
@@ -322,23 +322,27 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     // Servo config
     // -------------------------------------------------------------------------
-    conf.servo_config[0] = servo_default_config_brush_motor();
-    // with a 2S battery we need to divide the duty cycle by 2 not to over-heat
-    conf.servo_config[0].pulse_center_us    = 62;  
-    conf.servo_config[0].pulse_magnitude_us = 62;  // duty cycle: 0 to 100%
-    conf.servo_config[1] = servo_default_config_brush_motor();
-    conf.servo_config[1].pulse_center_us    = 62;  
-    conf.servo_config[1].pulse_magnitude_us = 62;  // duty cycle: 0 to 100%
-    conf.servo_config[2] = servo_default_config_brush_motor();
-    conf.servo_config[2].pulse_center_us    = 62;  
-    conf.servo_config[2].pulse_magnitude_us = 62;  // duty cycle: 0 to 100%
-    conf.servo_config[3] = servo_default_config_brush_motor();
-    conf.servo_config[3].pulse_center_us    = 62;  
-    conf.servo_config[3].pulse_magnitude_us = 62;  // duty cycle: 0 to 100%
-    conf.servo_config[4] = servo_default_config_esc();
-    conf.servo_config[5] = servo_default_config_esc();
-    conf.servo_config[6] = servo_default_config_esc();
-    conf.servo_config[7] = servo_default_config_esc();
+    // conf.servo_config[0] = servo_default_config_brush_motor();
+    // // with a 2S battery we need to divide the duty cycle by 2 not to over-heat
+    // conf.servo_config[0].pulse_center_us    = 62;
+    // conf.servo_config[0].pulse_magnitude_us = 62;  // duty cycle: 0 to 100%
+    // conf.servo_config[1] = servo_default_config_brush_motor();
+    // conf.servo_config[1].pulse_center_us    = 62;
+    // conf.servo_config[1].pulse_magnitude_us = 62;  // duty cycle: 0 to 100%
+    // conf.servo_config[2] = servo_default_config_brush_motor();
+    // conf.servo_config[2].pulse_center_us    = 62;
+    // conf.servo_config[2].pulse_magnitude_us = 62;  // duty cycle: 0 to 100%
+    // conf.servo_config[3] = servo_default_config_brush_motor();
+    // conf.servo_config[3].pulse_center_us    = 62;
+    // conf.servo_config[3].pulse_magnitude_us = 62;  // duty cycle: 0 to 100%
+    // conf.servo_config[4] = servo_default_config_esc();
+    // conf.servo_config[5] = servo_default_config_esc();
+    // conf.servo_config[6] = servo_default_config_esc();
+    // conf.servo_config[7] = servo_default_config_esc();
+    for (size_t i = 0; i < 8; i++)
+    {
+        conf.servo_config[i] = servo_default_config_esc();
+    }
 
     // -------------------------------------------------------------------------
     // Serial 1 config
