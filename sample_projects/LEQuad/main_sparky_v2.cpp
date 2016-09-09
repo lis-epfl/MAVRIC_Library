@@ -139,7 +139,8 @@ int main(int argc, char** argv)
     LEQuad mav = LEQuad( sim_imu,
                          sim.barometer(),
                          sim.gps(),
-                         sim.sonar(),
+                         board.sonar_i2cxl_,
+                         // sim.sonar(),
                          board.serial_,                // mavlink serial
                          satellite_dummy,
                          board.state_display_sparky_v2_,

@@ -87,6 +87,9 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     pwm_4_(config.pwm_config[4]),
     pwm_5_(config.pwm_config[5]),
     serial_(config.serial_usb_config),
+    i2c_1_(config.i2c_1_config),
+    i2c_2_(config.i2c_2_config),
+    sonar_i2cxl_(i2c_1_),
     servo_0_(pwm_0_, config.servo_config[0]),
     servo_1_(pwm_1_, config.servo_config[1]),
     servo_2_(pwm_2_, config.servo_config[2]),
@@ -267,6 +270,21 @@ bool Sparky_v2::init(void)
 #endif
 
     // -------------------------------------------------------------------------
+    // Init I2C_1
+    // -------------------------------------------------------------------------
+    ret = i2c_1_.init();
+    // print_util_dbg_init_msg("[I2C_1]", ret);
+    // p_dbg_serial->flush();
+    init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init I2C_2
+    // -------------------------------------------------------------------------
+    ret = i2c_2_.init();
+    // print_util_dbg_init_msg("[I2C_2]", ret);
+    // p_dbg_serial->flush();
+    init_success &= ret;// -------------------------------------------------------------------------
+    
     // Init SPIs
     // -------------------------------------------------------------------------
     ret = spi_1_.init();
@@ -279,6 +297,15 @@ bool Sparky_v2::init(void)
     ret = mpu_9250_.init();
     init_success &= ret;
 
+    time_keeper_delay_ms(50);
+
+    // -------------------------------------------------------------------------
+    // Init sonar
+    // -------------------------------------------------------------------------
+    ret = sonar_i2cxl_.init();
+    // print_util_dbg_init_msg("[SONAR]", ret);
+    init_success &= ret;
+    // p_dbg_serial->flush();
     time_keeper_delay_ms(50);
 
 
