@@ -79,32 +79,6 @@ extern "C"
 #define CALIBRATE_ESC 0
 
 
-/**
- * \brief   Configuration structure
- */
-typedef struct
-{
-    gpio_stm32_conf_t           dsm_receiver_gpio_config;   ///< DSM reveiver GPIO configuration
-    gpio_stm32_conf_t           dsm_power_gpio_config;      ///< DSM power GPIO configuration
-    gpio_stm32_conf_t           led_err_gpio_config;        ///< Error led GPIO configuration
-    gpio_stm32_conf_t           led_stat_gpio_config;       ///< Status led GPIO configuration
-    gpio_stm32_conf_t           led_rf_gpio_config;         ///< Rf led GPIO configuration
-    gpio_stm32_conf_t           nss_gpio_config[3];         ///< Slave Select configuration
-    imu_conf_t                  imu_config;                 ///< IMU configuration
-    Pwm_stm32::config_t         pwm_config[8];              ///< PWM configuration
-    serial_stm32_conf_t         serial_1_config;            ///< Serial configuration
-    Serial_usb_stm32::conf_t    serial_usb_config;          ///< Serial USB configuration
-    servo_conf_t                servo_config[8];            ///< Servo configuration
-    spi_stm32_conf_t            spi_config[2];              ///< SPI configuration
-} sparky_v2_conf_t;
-
-
-/**
- * \brief   Default configuration for the board
- *
- * \return  Config structure
- */
-static inline sparky_v2_conf_t sparky_v2_default_config();
 
 
 /**
@@ -114,12 +88,42 @@ static inline sparky_v2_conf_t sparky_v2_default_config();
 class Sparky_v2
 {
 public:
+
+    static const uint8_t PWM_COUNT = 10;
+
+    /**
+     * \brief   Configuration structure
+     */
+    struct conf_t
+    {
+        gpio_stm32_conf_t           dsm_receiver_gpio_config;   ///< DSM reveiver GPIO configuration
+        gpio_stm32_conf_t           dsm_power_gpio_config;      ///< DSM power GPIO configuration
+        gpio_stm32_conf_t           led_err_gpio_config;        ///< Error led GPIO configuration
+        gpio_stm32_conf_t           led_stat_gpio_config;       ///< Status led GPIO configuration
+        gpio_stm32_conf_t           led_rf_gpio_config;         ///< Rf led GPIO configuration
+        gpio_stm32_conf_t           nss_gpio_config[3];         ///< Slave Select configuration
+        imu_conf_t                  imu_config;                 ///< IMU configuration
+        Pwm_stm32::config_t         pwm_config[PWM_COUNT];      ///< PWM configuration
+        serial_stm32_conf_t         serial_1_config;            ///< Serial configuration
+        Serial_usb_stm32::conf_t    serial_usb_config;          ///< Serial USB configuration
+        servo_conf_t                servo_config[PWM_COUNT];    ///< Servo configuration
+        spi_stm32_conf_t            spi_config[2];              ///< SPI configuration
+    };
+
+    /**
+     * \brief   Default configuration for the board
+     *
+     * \return  Config structure
+     */
+    static inline conf_t default_config();
+
+
     /**
      * \brief           Constructor
      *
      * \param   config  Board configuration
      */
-    Sparky_v2(sparky_v2_conf_t config = sparky_v2_default_config());
+    Sparky_v2(conf_t config = default_config());
 
 
     /**
@@ -138,24 +142,10 @@ public:
     Led_gpio                led_err_;
     Led_gpio                led_stat_;
     Led_gpio                led_rf_;
-    Pwm_stm32               pwm_0_;
-    Pwm_stm32               pwm_1_;
-    Pwm_stm32               pwm_2_;
-    Pwm_stm32               pwm_3_;
-    Pwm_stm32               pwm_4_;
-    Pwm_stm32               pwm_5_;
-    Pwm_dummy               pwm_6_;
-    Pwm_dummy               pwm_7_;
     Serial_stm32            serial_1_;
     Serial_usb_stm32        serial_;
-    Servo                   servo_0_;
-    Servo                   servo_1_;
-    Servo                   servo_2_;
-    Servo                   servo_3_;
-    Servo                   servo_4_;
-    Servo                   servo_5_;
-    Servo                   servo_6_;
-    Servo                   servo_7_;
+    Pwm_stm32               pwm_[PWM_COUNT];
+    Servo                   servo_[PWM_COUNT];
     Spi_stm32               spi_1_;
     Spi_stm32               spi_3_;
     Gpio_stm32              nss_1_gpio_;
@@ -175,9 +165,9 @@ private:
  *
  * \return  Config structure
  */
-static inline sparky_v2_conf_t sparky_v2_default_config()
+Sparky_v2::conf_t Sparky_v2::default_config()
 {
-    sparky_v2_conf_t conf = {};
+    conf_t conf = {};
 
     // -------------------------------------------------------------------------
     // GPIO config
@@ -244,54 +234,51 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // -------------------------------------------------------------------------
     // According to sparkyV2 documentation, when using LED port we should used TIM8 for
     // pin 5 and 6 on CONN7 but due to complicated advanced setting, TIM3 is used instead
-
     conf.pwm_config[0].gpio_config.port     = GPIO_STM32_PORT_B;
-    conf.pwm_config[0].gpio_config.pin      = GPIO_STM32_PIN_14;
+    conf.pwm_config[0].gpio_config.pin      = GPIO_STM32_PIN_0;
     conf.pwm_config[0].gpio_config.dir      = GPIO_OUTPUT;
     conf.pwm_config[0].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    conf.pwm_config[0].gpio_config.alt_fct  = GPIO_STM32_AF_9;
-    conf.pwm_config[0].timer                = TIM12;
-    conf.pwm_config[0].rcc_timer            = RCC_TIM12;
-    conf.pwm_config[0].channel              = Pwm_stm32::PWM_STM32_CHANNEL_1;
-    // max timer clock freq of TIM12 is 84MHz
+    conf.pwm_config[0].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[0].timer                = TIM3;
+    conf.pwm_config[0].rcc_timer            = RCC_TIM3;
+    conf.pwm_config[0].channel              = Pwm_stm32::PWM_STM32_CHANNEL_3;
     conf.pwm_config[0].prescaler            = 84;
     conf.pwm_config[0].period               = 20000; //50Hz
     conf.pwm_config[0].pulse_us             = 5000;
 
     conf.pwm_config[1].gpio_config.port     = GPIO_STM32_PORT_B;
-    conf.pwm_config[1].gpio_config.pin      = GPIO_STM32_PIN_15;
+    conf.pwm_config[1].gpio_config.pin      = GPIO_STM32_PIN_1;
     conf.pwm_config[1].gpio_config.dir      = GPIO_OUTPUT;
     conf.pwm_config[1].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    conf.pwm_config[1].gpio_config.alt_fct  = GPIO_STM32_AF_9;
-    conf.pwm_config[1].timer                = TIM12;
-    conf.pwm_config[1].rcc_timer            = RCC_TIM12;
-    conf.pwm_config[1].channel              = Pwm_stm32::PWM_STM32_CHANNEL_2;
-    // max timer clock freq of TIM12 is 84MHz
+    conf.pwm_config[1].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[1].timer                = TIM3;
+    conf.pwm_config[1].rcc_timer            = RCC_TIM3;
+    conf.pwm_config[1].channel              = Pwm_stm32::PWM_STM32_CHANNEL_4;
     conf.pwm_config[1].prescaler            = 84;
     conf.pwm_config[1].period               = 20000; //50Hz
     conf.pwm_config[1].pulse_us             = 5000;
 
-    conf.pwm_config[2].gpio_config.port     = GPIO_STM32_PORT_C;
-    conf.pwm_config[2].gpio_config.pin      = GPIO_STM32_PIN_8;
+    conf.pwm_config[2].gpio_config.port     = GPIO_STM32_PORT_A;
+    conf.pwm_config[2].gpio_config.pin      = GPIO_STM32_PIN_3;
     conf.pwm_config[2].gpio_config.dir      = GPIO_OUTPUT;
     conf.pwm_config[2].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    conf.pwm_config[2].gpio_config.alt_fct  = GPIO_STM32_AF_2;
-    conf.pwm_config[2].timer                = TIM3;
-    conf.pwm_config[2].rcc_timer            = RCC_TIM3;
-    conf.pwm_config[2].channel              = Pwm_stm32::PWM_STM32_CHANNEL_3;
-    conf.pwm_config[2].prescaler            = 84;
+    conf.pwm_config[2].gpio_config.alt_fct  = GPIO_STM32_AF_3;
+    conf.pwm_config[2].timer                = TIM9;
+    conf.pwm_config[2].rcc_timer            = RCC_TIM9;
+    conf.pwm_config[2].channel              = Pwm_stm32::PWM_STM32_CHANNEL_2;
+    conf.pwm_config[2].prescaler            = 168;
     conf.pwm_config[2].period               = 20000; //50Hz
     conf.pwm_config[2].pulse_us             = 5000;
 
-    conf.pwm_config[3].gpio_config.port     = GPIO_STM32_PORT_C;
-    conf.pwm_config[3].gpio_config.pin      = GPIO_STM32_PIN_9;
+    conf.pwm_config[3].gpio_config.port     = GPIO_STM32_PORT_A;
+    conf.pwm_config[3].gpio_config.pin      = GPIO_STM32_PIN_2;
     conf.pwm_config[3].gpio_config.dir      = GPIO_OUTPUT;
     conf.pwm_config[3].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
-    conf.pwm_config[3].gpio_config.alt_fct  = GPIO_STM32_AF_2;
-    conf.pwm_config[3].timer                = TIM3;
-    conf.pwm_config[3].rcc_timer            = RCC_TIM3;
-    conf.pwm_config[3].channel              = Pwm_stm32::PWM_STM32_CHANNEL_4;
-    conf.pwm_config[3].prescaler            = 84; //since APB1 clock is main_clk/2
+    conf.pwm_config[3].gpio_config.alt_fct  = GPIO_STM32_AF_3;
+    conf.pwm_config[3].timer                = TIM9;
+    conf.pwm_config[3].rcc_timer            = RCC_TIM9;
+    conf.pwm_config[3].channel              = Pwm_stm32::PWM_STM32_CHANNEL_1;
+    conf.pwm_config[3].prescaler            = 168;
     conf.pwm_config[3].period               = 20000; //50Hz
     conf.pwm_config[3].pulse_us             = 5000;
 
@@ -318,6 +305,57 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     conf.pwm_config[5].prescaler            = 84;
     conf.pwm_config[5].period               = 20000; //50Hz
     conf.pwm_config[5].pulse_us             = 5000;
+
+    conf.pwm_config[9].gpio_config.port     = GPIO_STM32_PORT_C;
+    conf.pwm_config[9].gpio_config.pin      = GPIO_STM32_PIN_9;
+    conf.pwm_config[9].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[9].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[9].gpio_config.alt_fct  = GPIO_STM32_AF_2;
+    conf.pwm_config[9].timer                = TIM8;
+    conf.pwm_config[9].rcc_timer            = RCC_TIM8;
+    conf.pwm_config[9].channel              = Pwm_stm32::PWM_STM32_CHANNEL_4;
+    conf.pwm_config[9].prescaler            = 84; //since APB1 clock is main_clk/2
+    conf.pwm_config[9].period               = 20000; //50Hz
+    conf.pwm_config[9].pulse_us             = 5000;
+
+    conf.pwm_config[8].gpio_config.port     = GPIO_STM32_PORT_C;
+    conf.pwm_config[8].gpio_config.pin      = GPIO_STM32_PIN_8;
+    conf.pwm_config[8].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[8].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[8].gpio_config.alt_fct  = GPIO_STM32_AF_3;
+    conf.pwm_config[8].timer                = TIM8;
+    conf.pwm_config[8].rcc_timer            = RCC_TIM8;
+    conf.pwm_config[8].channel              = Pwm_stm32::PWM_STM32_CHANNEL_3;
+    conf.pwm_config[8].prescaler            = 84;
+    conf.pwm_config[8].period               = 20000; //50Hz
+    conf.pwm_config[8].pulse_us             = 5000;
+
+    conf.pwm_config[7].gpio_config.port     = GPIO_STM32_PORT_B;
+    conf.pwm_config[7].gpio_config.pin      = GPIO_STM32_PIN_15;
+    conf.pwm_config[7].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[7].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[7].gpio_config.alt_fct  = GPIO_STM32_AF_9;
+    conf.pwm_config[7].timer                = TIM12;
+    conf.pwm_config[7].rcc_timer            = RCC_TIM12;
+    conf.pwm_config[7].channel              = Pwm_stm32::PWM_STM32_CHANNEL_2;
+    // max timer clock freq of TIM12 is 84MHz
+    conf.pwm_config[7].prescaler            = 84;
+    conf.pwm_config[7].period               = 20000; //50Hz
+    conf.pwm_config[7].pulse_us             = 5000;
+
+    conf.pwm_config[6].gpio_config.port     = GPIO_STM32_PORT_B;
+    conf.pwm_config[6].gpio_config.pin      = GPIO_STM32_PIN_14;
+    conf.pwm_config[6].gpio_config.dir      = GPIO_OUTPUT;
+    conf.pwm_config[6].gpio_config.pull     = GPIO_PULL_UPDOWN_NONE;
+    conf.pwm_config[6].gpio_config.alt_fct  = GPIO_STM32_AF_9;
+    conf.pwm_config[6].timer                = TIM12;
+    conf.pwm_config[6].rcc_timer            = RCC_TIM12;
+    conf.pwm_config[6].channel              = Pwm_stm32::PWM_STM32_CHANNEL_1;
+    // max timer clock freq of TIM12 is 84MHz
+    conf.pwm_config[6].prescaler            = 84;
+    conf.pwm_config[6].period               = 20000; //50Hz
+    conf.pwm_config[6].pulse_us             = 5000;
+
 
     // -------------------------------------------------------------------------
     // Servo config

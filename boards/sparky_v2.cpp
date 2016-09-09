@@ -45,7 +45,7 @@
 extern "C"
 {
 #include "util/print_util.h"
-    
+
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 }
@@ -72,29 +72,36 @@ static void clock_setup(void)
 }
 
 
-Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
+Sparky_v2::Sparky_v2(conf_t config):
     led_err_gpio_(config.led_err_gpio_config),
     led_stat_gpio_(config.led_stat_gpio_config),
     led_rf_gpio_(config.led_rf_gpio_config),
     led_err_(led_err_gpio_, false),
     led_stat_(led_stat_gpio_, false),
     led_rf_(led_rf_gpio_, false),
-    pwm_0_(config.pwm_config[0]),
-    pwm_1_(config.pwm_config[1]),
-    pwm_2_(config.pwm_config[2]),
-    pwm_3_(config.pwm_config[3]),
-    pwm_4_(config.pwm_config[4]),
-    pwm_5_(config.pwm_config[5]),
     serial_1_(config.serial_1_config),
     serial_(config.serial_usb_config),
-    servo_0_(pwm_0_, config.servo_config[0]),
-    servo_1_(pwm_1_, config.servo_config[1]),
-    servo_2_(pwm_2_, config.servo_config[2]),
-    servo_3_(pwm_3_, config.servo_config[3]),
-    servo_4_(pwm_4_, config.servo_config[4]),
-    servo_5_(pwm_5_, config.servo_config[5]),
-    servo_6_(pwm_6_, config.servo_config[6]),
-    servo_7_(pwm_7_, config.servo_config[7]),
+    pwm_({config.pwm_config[0],
+          config.pwm_config[1],
+          config.pwm_config[2],
+          config.pwm_config[3],
+          config.pwm_config[4],
+          config.pwm_config[5],
+          config.pwm_config[6],
+          config.pwm_config[7],
+          config.pwm_config[8],
+          config.pwm_config[9]}),
+    servo_({{pwm_[0], config.servo_config[0]},
+            {pwm_[1], config.servo_config[1]},
+            {pwm_[2], config.servo_config[2]},
+            {pwm_[3], config.servo_config[3]},
+            {pwm_[4], config.servo_config[4]},
+            {pwm_[5], config.servo_config[5]},
+            {pwm_[6], config.servo_config[6]},
+            {pwm_[7], config.servo_config[7]},
+            {pwm_[8], config.servo_config[8]},
+            {pwm_[9], config.servo_config[9]}
+            }),
     spi_1_(config.spi_config[0]),
     spi_3_(config.spi_config[1]),
     nss_1_gpio_(config.nss_gpio_config[0]),
@@ -121,108 +128,24 @@ bool Sparky_v2::init(void)
     // Init Servos
     // -------------------------------------------------------------------------
 #if CALIBRATE_ESC == 0
-    // Do not calibrate esc
-    ret = pwm_0_.init();
-    // print_util_dbg_init_msg("[PWM0]", ret);
-    init_success &= ret;
-    servo_0_.failsafe();
-    // p_dbg_serial->flush();
-    ret = pwm_1_.init();
-    // print_util_dbg_init_msg("[PWM1]", ret);
-    init_success &= ret;
-    servo_1_.failsafe();
-    // p_dbg_serial->flush();
-    ret = pwm_2_.init();
-    // print_util_dbg_init_msg("[PWM2]", ret);
-    init_success &= ret;
-    servo_2_.failsafe();
-    // p_dbg_serial->flush();
-    ret = pwm_3_.init();
-    // print_util_dbg_init_msg("[PWM3]", ret);
-    init_success &= ret;
-    servo_3_.failsafe();
-    // p_dbg_serial->flush();
-    ret = pwm_4_.init();
-    // print_util_dbg_init_msg("[PWM4]", ret);
-    init_success &= ret;
-    servo_4_.failsafe();
-    // p_dbg_serial->flush();
-    ret = pwm_5_.init();
-    // print_util_dbg_init_msg("[PWM5]", ret);
-    init_success &= ret;
-    servo_5_.failsafe();
-    // p_dbg_serial->flush();
-    init_success &= ret;
-    ret = pwm_6_.init();
-    // print_util_dbg_init_msg("[PWM6]", ret);
-    init_success &= ret;
-    servo_6_.failsafe();
-    // p_dbg_serial->flush();
-    ret = pwm_7_.init();
-    // print_util_dbg_init_msg("[PWM7]", ret);
-    init_success &= ret;
-    servo_7_.failsafe();
-    // p_dbg_serial->flush();
+    for (size_t i = 0; i < PWM_COUNT; i++)
+    {
+        pwm_[i].init();
+        servo_[i].failsafe();
+    }
 #elif CALIBRATE_ESC == 1 // Calibrate the esc
-
-    ret = pwm_0_.init();
-    // print_util_dbg_init_msg("[PWM0]", ret);
-    init_success &= ret;
-    ret = pwm_1_.init();
-    // print_util_dbg_init_msg("[PWM1]", ret);
-    init_success &= ret;
-    ret = pwm_2_.init();
-    // print_util_dbg_init_msg("[PWM2]", ret);
-    init_success &= ret;
-    ret = pwm_3_.init();
-    // print_util_dbg_init_msg("[PWM3]", ret);
-    init_success &= ret;
-    ret = pwm_4_.init();
-    // print_util_dbg_init_msg("[PWM4]", ret);
-    init_success &= ret;
-    ret = pwm_5_.init();
-    // print_util_dbg_init_msg("[PWM5]", ret);
-    init_success &= ret;
-    ret = pwm_6_.init();
-    // print_util_dbg_init_msg("[PWM6]", ret);
-    init_success &= ret;
-    ret = pwm_7_.init();
-    // print_util_dbg_init_msg("[PWM7]", ret);
-    init_success &= ret;
-
-    servo_0_.set_servo_max();
-    servo_1_.set_servo_max();
-    servo_2_.set_servo_max();
-    servo_3_.set_servo_max();
-    servo_4_.set_servo_max();
-    servo_5_.set_servo_max();
-    servo_6_.set_servo_max();
-    servo_7_.set_servo_max();
-
+    for (size_t i = 0; i < PWM_COUNT; i++)
+    {
+        pwm_[i].init();
+        servo_[i].set_servo_max();
+    }
     time_keeper_delay_ms(3000);
-
-    servo_0_.failsafe();
-    servo_1_.failsafe();
-    servo_2_.failsafe();
-    servo_3_.failsafe();
-    servo_4_.failsafe();
-    servo_5_.failsafe();
-    servo_6_.failsafe();
-    servo_7_.failsafe();
-
+    for (size_t i = 0; i < PWM_COUNT; i++)
+    {
+        servo_[i].failsafe();
+    }
     time_keeper_delay_ms(50);
-
 #else
-
-    // print_util_dbg_init_msg("[PWM0]", false);
-    // print_util_dbg_init_msg("[PWM1]", false);
-    // print_util_dbg_init_msg("[PWM2]", false);
-    // print_util_dbg_init_msg("[PWM3]", false);
-    // print_util_dbg_init_msg("[PWM4]", false);
-    // print_util_dbg_init_msg("[PWM5]", false);
-    // print_util_dbg_init_msg("[PWM6]", false);
-    // print_util_dbg_init_msg("[PWM7]", false);
-
 #endif
 
     // -------------------------------------------------------------------------

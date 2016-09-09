@@ -75,7 +75,7 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
-    sparky_v2_conf_t board_config = sparky_v2_default_config();
+    Sparky_v2::conf_t board_config = Sparky_v2::default_config();
 
     // board_config.imu_config.accelerometer.bias[0] = -0.0327504f;
     // board_config.imu_config.accelerometer.bias[1] = -0.00344232f;
@@ -185,8 +185,8 @@ int main(int argc, char** argv)
                         // board.bmp085,
                         // board.gps_ublox,
                         // board.sonar_i2cxl,
-                        board.serial_1_,                // mavlink serial
-                        // board.serial_,                // mavlink serial
+                        // board.serial_1_,                // mavlink serial
+                        board.serial_,                // mavlink serial
                         satellite_dummy,
                         // board.spektrum_satellite,
                         board.state_display_sparky_v2_,
@@ -194,14 +194,14 @@ int main(int argc, char** argv)
                         // board.file_flash,
                         sim_battery,
     //                  board.battery,
-                        board.servo_0_,
-                        board.servo_1_,
-                        board.servo_2_,
-                        board.servo_3_,
-                        board.servo_4_,
-                        board.servo_5_,
-                        board.servo_6_,
-                        board.servo_7_,
+                        board.servo_[0],
+                        board.servo_[1],
+                        board.servo_[2],
+                        board.servo_[3],
+                        board.servo_[4],
+                        board.servo_[5],
+                        board.servo_[6],
+                        board.servo_[7],
                         file_dummy,
                         file_dummy,
                         mav_config );
