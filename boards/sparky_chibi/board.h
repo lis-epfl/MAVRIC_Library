@@ -89,8 +89,8 @@
 #define GPIOB_PIN5                  5U
 #define GPIOB_PIN6                  6U
 #define GPIOB_PIN7                  7U
-#define GPIOB_PIN8_SCL                   8U
-#define GPIOB_PIN9_SDA                   9U
+#define GPIOB_PIN8_SCL              8U
+#define GPIOB_PIN9_SDA              9U
 #define GPIOB_CLK_IN                10U
 #define GPIOB_PIN11                 11U
 #define GPIOB_PIN12                 12U
@@ -108,9 +108,9 @@
 #define GPIOC_MCLK                  7U
 #define GPIOC_PIN8_PWM7             8U
 #define GPIOC_PIN9_PWM6             9U
-#define GPIOC_SCLK                  10U
-#define GPIOC_PIN11                 11U
-#define GPIOC_SDIN                  12U
+#define GPIOC_PIN10_SPI3_SCLK       10U
+#define GPIOC_PIN11_SPI3_MISO       11U
+#define GPIOC_PIN12_SPI3_MOSI       12U
 #define GPIOC_PIN13                 13U
 #define GPIOC_PIN14                 14U
 #define GPIOC_PIN15                 15U
@@ -546,9 +546,9 @@
                                      PIN_MODE_ALTERNATE(GPIOC_MCLK) |       \
                                      PIN_MODE_ALTERNATE(GPIOC_PIN8_PWM7) |           \
                                      PIN_MODE_ALTERNATE(GPIOC_PIN9_PWM6) |           \
-                                     PIN_MODE_ALTERNATE(GPIOC_SCLK) |       \
-                                     PIN_MODE_INPUT(GPIOC_PIN11) |          \
-                                     PIN_MODE_ALTERNATE(GPIOC_SDIN) |       \
+                                     PIN_MODE_ALTERNATE(GPIOC_PIN10_SPI3_SCLK) |       \
+                                     PIN_MODE_ALTERNATE(GPIOC_PIN11_SPI3_MISO) |          \
+                                     PIN_MODE_ALTERNATE(GPIOC_PIN12_SPI3_MOSI) |       \
                                      PIN_MODE_INPUT(GPIOC_PIN13) |          \
                                      PIN_MODE_INPUT(GPIOC_PIN14) |          \
                                      PIN_MODE_INPUT(GPIOC_PIN15))
@@ -562,9 +562,9 @@
                                      PIN_OTYPE_PUSHPULL(GPIOC_MCLK) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN8_PWM7) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN9_PWM6) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_SCLK) |       \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN11) |      \
-                                     PIN_OTYPE_PUSHPULL(GPIOC_SDIN) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN10_SPI3_SCLK) |       \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN11_SPI3_MISO) |      \
+                                     PIN_OTYPE_PUSHPULL(GPIOC_PIN12_SPI3_MOSI) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN13) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN14) |      \
                                      PIN_OTYPE_PUSHPULL(GPIOC_PIN15))
@@ -578,9 +578,9 @@
                                      PIN_OSPEED_HIGH(GPIOC_MCLK) |          \
                                      PIN_OSPEED_HIGH(GPIOC_PIN8_PWM7) |          \
                                      PIN_OSPEED_HIGH(GPIOC_PIN9_PWM6) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_SCLK) |          \
-                                     PIN_OSPEED_HIGH(GPIOC_PIN11) |         \
-                                     PIN_OSPEED_HIGH(GPIOC_SDIN) |          \
+                                     PIN_OSPEED_HIGH(GPIOC_PIN10_SPI3_SCLK) |          \
+                                     PIN_OSPEED_HIGH(GPIOC_PIN11_SPI3_MISO) |         \
+                                     PIN_OSPEED_HIGH(GPIOC_PIN12_SPI3_MOSI) |          \
                                      PIN_OSPEED_HIGH(GPIOC_PIN13) |         \
                                      PIN_OSPEED_HIGH(GPIOC_PIN14) |         \
                                      PIN_OSPEED_HIGH(GPIOC_PIN15))
@@ -594,9 +594,9 @@
                                      PIN_PUPDR_FLOATING(GPIOC_MCLK) |       \
                                      PIN_PUPDR_FLOATING(GPIOC_PIN8_PWM7) |         \
                                      PIN_PUPDR_FLOATING(GPIOC_PIN9_PWM6) |         \
-                                     PIN_PUPDR_FLOATING(GPIOC_SCLK) |       \
-                                     PIN_PUPDR_PULLUP(GPIOC_PIN11) |        \
-                                     PIN_PUPDR_FLOATING(GPIOC_SDIN) |       \
+                                     PIN_PUPDR_FLOATING(GPIOC_PIN10_SPI3_SCLK) |       \
+                                     PIN_PUPDR_PULLUP(GPIOC_PIN11_SPI3_MISO) |        \
+                                     PIN_PUPDR_FLOATING(GPIOC_PIN12_SPI3_MOSI) |       \
                                      PIN_PUPDR_PULLUP(GPIOC_PIN13) |        \
                                      PIN_PUPDR_PULLUP(GPIOC_PIN14) |        \
                                      PIN_PUPDR_PULLUP(GPIOC_PIN15))
@@ -610,9 +610,9 @@
                                      PIN_ODR_HIGH(GPIOC_MCLK) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN8_PWM7) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN9_PWM6) |             \
-                                     PIN_ODR_HIGH(GPIOC_SCLK) |             \
-                                     PIN_ODR_HIGH(GPIOC_PIN11) |            \
-                                     PIN_ODR_HIGH(GPIOC_SDIN) |             \
+                                     PIN_ODR_HIGH(GPIOC_PIN10_SPI3_SCLK) |             \
+                                     PIN_ODR_HIGH(GPIOC_PIN11_SPI3_MISO) |            \
+                                     PIN_ODR_HIGH(GPIOC_PIN12_SPI3_MOSI) |             \
                                      PIN_ODR_HIGH(GPIOC_PIN13) |            \
                                      PIN_ODR_HIGH(GPIOC_PIN14) |            \
                                      PIN_ODR_HIGH(GPIOC_PIN15))
@@ -626,9 +626,9 @@
                                      PIN_AFIO_AF(GPIOC_MCLK, 6U))
 #define VAL_GPIOC_AFRH              (PIN_AFIO_AF(GPIOC_PIN8_PWM7, 3U) |          \
                                      PIN_AFIO_AF(GPIOC_PIN9_PWM6, 3U) |          \
-                                     PIN_AFIO_AF(GPIOC_SCLK, 6U) |          \
-                                     PIN_AFIO_AF(GPIOC_PIN11, 0U) |         \
-                                     PIN_AFIO_AF(GPIOC_SDIN, 6U) |          \
+                                     PIN_AFIO_AF(GPIOC_PIN10_SPI3_SCLK, 6U) |          \
+                                     PIN_AFIO_AF(GPIOC_PIN11_SPI3_MISO, 6U) |         \
+                                     PIN_AFIO_AF(GPIOC_PIN12_SPI3_MOSI, 6U) |          \
                                      PIN_AFIO_AF(GPIOC_PIN13, 0U) |         \
                                      PIN_AFIO_AF(GPIOC_PIN14, 0U) |         \
                                      PIN_AFIO_AF(GPIOC_PIN15, 0U))

@@ -57,6 +57,7 @@
 #include "hal/chibios/i2c_chibios.hpp"
 #include "hal/chibios/serial_chibios.hpp"
 #include "hal/chibios/pwm_chibios.hpp"
+#include "hal/chibios/spi_chibios.hpp"
 
 extern "C"
 {

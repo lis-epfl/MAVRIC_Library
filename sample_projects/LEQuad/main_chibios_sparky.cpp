@@ -146,7 +146,7 @@ int main(void)
     /**
     * Prepares the barometer
     */
-    // static uint8_t rxbuf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    static uint8_t rxbuf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     static uint8_t txbuf[10] = "Hello!\r\n";
 
     // const uint8_t ms5611_addr       = 0x77;
@@ -210,6 +210,19 @@ int main(void)
     Serial_chibios& serial = serial1;
     // --------------------------------------------------------------------------------------------
 
+
+    Spi_chibios spi({
+                        &SPID3,
+                        {
+                            NULL,
+                            GPIOB,
+                            12,
+                            SPI_CR1_BR_2 | SPI_CR1_BR_1,
+                            0
+                        }
+                    });
+    // spi.init();
+
     while (true)
     {
         disp.update();
@@ -233,6 +246,8 @@ int main(void)
             Servo& servo = board.servo_[i];
             servo.write(-1.0f);
         }
+
+        // spi.transfer(txbuf, rxbuf, 10);
 
         // uartStopSend(&UARTD2);
         // uartStartSend(&UARTD2, sizeof(data2), data2);
