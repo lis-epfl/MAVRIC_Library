@@ -52,7 +52,9 @@ I2c_chibios::I2c_chibios(conf_t config):
 
 bool I2c_chibios::init(void)
 {
+    i2cAcquireBus(driver_);
     i2cStart(driver_, &config_);
+    i2cReleaseBus(driver_);
     return true;
 }
 
@@ -69,6 +71,7 @@ bool I2c_chibios::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address
     msg_t status = MSG_OK;
 
     i2cAcquireBus(driver_);
+    i2cStart(driver_, &config_);
     uint8_t rxbuf[1] = {0};
     status = i2cMasterTransmitTimeout(driver_, address, buffer, nbytes, rxbuf, 0, timeout_);
     i2cReleaseBus(driver_);
@@ -82,6 +85,7 @@ bool I2c_chibios::read(uint8_t* buffer, uint32_t nbytes, uint32_t address)
     msg_t status = MSG_OK;
 
     i2cAcquireBus(driver_);
+    i2cStart(driver_, &config_);
     status = i2cMasterReceiveTimeout(driver_, address, buffer, nbytes, timeout_);
     i2cReleaseBus(driver_);
 
@@ -94,6 +98,7 @@ bool I2c_chibios::transfer(uint8_t* out_buffer, uint32_t ntxbytes, uint8_t* in_b
     msg_t status = MSG_OK;
 
     i2cAcquireBus(driver_);
+    i2cStart(driver_, &config_);
     status = i2cMasterTransmitTimeout(driver_, address, out_buffer, ntxbytes, in_buffer, nrxbytes, timeout_);
     i2cReleaseBus(driver_);
 

@@ -67,7 +67,7 @@ public:
 
 
     /**
-     * \brief   Initialises the peripheral
+     * \brief   Constructor
      *
      * \param   config      Device configuration
      */
