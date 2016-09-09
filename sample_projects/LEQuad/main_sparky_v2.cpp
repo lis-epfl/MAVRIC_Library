@@ -185,8 +185,8 @@ int main(int argc, char** argv)
                         // board.bmp085,
                         // board.gps_ublox,
                         // board.sonar_i2cxl,
-                        // board.serial_1_,                // mavlink serial
-                        board.serial_,                // mavlink serial
+                        board.serial_1_,                // mavlink serial
+                        // board.serial_,                // mavlink serial
                         satellite_dummy,
                         // board.spektrum_satellite,
                         board.state_display_sparky_v2_,
