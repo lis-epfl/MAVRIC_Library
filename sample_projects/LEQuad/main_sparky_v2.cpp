@@ -40,6 +40,8 @@
 
 #include "boards/sparky_v2.hpp"
 
+#include "control/manual_control.hpp"
+
 #include "drivers/mpu_9250.hpp"
 #include "drivers/spektrum_satellite.hpp"
 
@@ -52,6 +54,7 @@
 #include "hal/stm32/spi_stm32.hpp"
 
 #include "sample_projects/LEQuad/lequad.hpp"
+#include "sample_projects/LEQuad/lequad_dronedome.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
@@ -77,7 +80,7 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
-    sparky_v2_conf_t board_config = sparky_v2_default_config();
+    Sparky_v2::conf_t board_config = Sparky_v2::default_config();
 
     // board_config.imu_config.accelerometer.bias[0] = -0.0327504f;
     // board_config.imu_config.accelerometer.bias[1] = -0.00344232f;
@@ -87,13 +90,13 @@ int main(int argc, char** argv)
     // board_config.imu_config.gyroscope.bias[1] = -0.0061096f;
     // board_config.imu_config.gyroscope.bias[2] = -0.00312137f;
 
-    // board_config.imu_config.magnetometer.bias[0] = +0.520405f;
-    // board_config.imu_config.magnetometer.bias[1] = -0.55305f;
-    // board_config.imu_config.magnetometer.bias[2] = -0.489245f;
+    board_config.imu_config.magnetometer.bias[0] = 0.62785f;
+    board_config.imu_config.magnetometer.bias[1] = 0.487535f;
+    board_config.imu_config.magnetometer.bias[2] = 0.545637f;
 
-    // board_config.imu_config.magnetic_north[0] = +0.268271f;
-    // board_config.imu_config.magnetic_north[1] = +0.0f;
-    // board_config.imu_config.magnetic_north[2] = +0.485027f;
+    board_config.imu_config.magnetic_north[0] = +0.689735f;
+    board_config.imu_config.magnetic_north[1] = +0.0f;
+    board_config.imu_config.magnetic_north[2] = 0.300356f;
 
     Sparky_v2 board(board_config);
 
@@ -130,65 +133,85 @@ int main(int argc, char** argv)
     Dynamic_model_quad_diag     sim_model(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
     Simulation                  sim(sim_model);
 
-    // Simulated battery
+    // // Simulated battery
     Adc_dummy   sim_adc_battery(11.1f);
     Battery     sim_battery(sim_adc_battery);
 
-    // Simulated IMU
-    Imu     sim_imu( sim.accelerometer(),
-                     sim.gyroscope(),
-                     sim.magnetometer() );
+    // // Simulated IMU
+    // Imu     sim_imu( sim.accelerometer(),
+    //                  sim.gyroscope(),
+    //                  sim.magnetometer() );
 
-    // set the flag to simulation
-    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad( sim_imu,
-                         sim.barometer(),
-                         sim.gps(),
-                         sim.sonar(),
-                         board.serial_,                // mavlink serial
-                         satellite_dummy,
-                         board.state_display_sparky_v2_,
-                         file_dummy,
-                         sim_battery,
-                         sim_servo_0,
-                         sim_servo_1,
-                         sim_servo_2,
-                         sim_servo_3 ,
-                         sim_servo_4,
-                         sim_servo_5,
-                         sim_servo_6,
-                         sim_servo_7 ,
-                         file_dummy,
-                         file_dummy,
-                         mav_config );
+    // // set the flag to simulation
+    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    // LEQuad mav = LEQuad( sim_imu,
+    //                      sim.barometer(),
+    //                      sim.gps(),
+    //                      sim.sonar(),
+    //                      board.serial_,                // mavlink serial
+    //                      satellite_dummy,
+    //                      board.state_display_sparky_v2_,
+    //                      file_dummy,
+    //                      sim_battery,
+    //                      sim_servo_0,
+    //                      sim_servo_1,
+    //                      sim_servo_2,
+    //                      sim_servo_3 ,
+    //                      sim_servo_4,
+    //                      sim_servo_5,
+    //                      sim_servo_6,
+    //                      sim_servo_7 ,
+    //                      file_dummy,
+    //                      file_dummy,
+    //                      mav_config );
 
     // -------------------------------------------------------------------------
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    // LEQuad mav = LEQuad(board.imu,
-    //                     board.bmp085,
-    //                     board.gps_ublox,
-    //                     board.sonar_i2cxl,
-    //                     board.uart0,
-    //                     board.spektrum_satellite,
-    //                     board.state_display_megafly_rev4_,
-    //                     board.file_flash,
-    //                     board.battery,
-    //                     board.servo_0,
-    //                     board.servo_1,
-    //                     board.servo_2,
-    //                     board.servo_3,
-    //                     board.servo_4,
-    //                     board.servo_5,
-    //                     board.servo_6,
-    //                     board.servo_7,
-    //                     file_dummy,
-    //                     file_dummy,
-    //                     mav_config );
+    LEQuad::conf_t mav_config = LEQuad_dronedome::default_config(MAVLINK_SYS_ID);
 
+    //use joystick by default
+    mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_JOYSTICK;
+    mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_JOYSTICK;
 
+    //adapt servo mix gains
+    mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].p_gain      = 0.035f;
+    mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].integrator.gain      = 0.025f;
+    mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].p_gain      = 0.035f;
+    mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator.gain      = 0.025f;
+
+    mav_config.stabilisation_copter_config.thrust_hover_point      = 0.0f;
+
+    LEQuad_dronedome mav = LEQuad_dronedome(board.imu_,
+                        sim.barometer(),
+                        sim.gps(),
+                        sim.sonar(),
+                        // board.bmp085,
+                        // board.gps_ublox,
+                        // board.sonar_i2cxl,
+                        board.serial_1_,                // mavlink serial
+                        // board.serial_,                // mavlink serial
+                        satellite_dummy,
+                        // board.spektrum_satellite,
+                        board.state_display_sparky_v2_,
+                        file_dummy,
+                        // board.file_flash,
+                        sim_battery,
+    //                  board.battery,
+                        board.servo_[0],
+                        board.servo_[1],
+                        board.servo_[2],
+                        board.servo_[3],
+                        board.servo_[4],
+                        board.servo_[5],
+                        board.servo_[6],
+                        board.servo_[7],
+                        file_dummy,
+                        file_dummy,
+                        mav_config );
+
+    mav.init();
 
     // -------------------------------------------------------------------------
     // Main loop
