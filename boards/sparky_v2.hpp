@@ -46,16 +46,16 @@
 #include "hal/dummy/pwm_dummy.hpp"
 
 #include "hal/stm32/gpio_stm32.hpp"
-#include "hal/stm32/i2c_stm32.hpp"
 #include "hal/stm32/pwm_stm32.hpp"
 #include "hal/stm32/serial_stm32.hpp"
 #include "hal/stm32/serial_usb_stm32.hpp"
 #include "hal/stm32/spi_stm32.hpp"
+#include "hal/stm32/i2c_stm32.hpp"
 
 #include "drivers/mpu_9250.hpp"
 #include "drivers/servo.hpp"
-#include "drivers/sonar_i2cxl.hpp"
 #include "drivers/state_display_sparky_v2.hpp"
+#include "drivers/barometer_ms5611.hpp"
 
 #include "hal/dummy/serial_dummy.hpp"
 #include "hal/dummy/gpio_dummy.hpp"
@@ -95,8 +95,6 @@ typedef struct
     imu_conf_t                  imu_config;                 ///< IMU configuration
     Pwm_stm32::config_t         pwm_config[8];              ///< PWM configuration
     Serial_usb_stm32::conf_t    serial_usb_config;          ///< Serial USB configuration
-    i2c_stm32_conf_t            i2c_1_config;               ///< I2C1 configuration
-    i2c_stm32_conf_t            i2c_2_config;               ///< I2C2 configuration
     servo_conf_t                servo_config[8];            ///< Servo configuration
     spi_stm32_conf_t            spi_config[2];              ///< SPI configuration
 } sparky_v2_conf_t;
@@ -150,9 +148,6 @@ public:
     Pwm_dummy               pwm_6_;
     Pwm_dummy               pwm_7_;
     Serial_usb_stm32        serial_;
-    I2c_stm32               i2c_1_;
-    I2c_stm32               i2c_2_;
-    Sonar_i2cxl             sonar_i2cxl_;
     Servo                   servo_0_;
     Servo                   servo_1_;
     Servo                   servo_2_;
@@ -336,40 +331,6 @@ static inline sparky_v2_conf_t sparky_v2_default_config()
     // USB config
     // -------------------------------------------------------------------------
     conf.serial_usb_config = Serial_usb_stm32::default_config();
-
-    // -------------------------------------------------------------------------
-    // I2C config
-    // -------------------------------------------------------------------------
-    conf.i2c_1_config                       = i2c_stm32_default_config();
-    conf.i2c_1_config.i2c_device_config     = STM32_I2C1;
-    conf.i2c_1_config.rcc_i2c_config        = RCC_I2C1;
-    conf.i2c_1_config.rcc_sda_port_config   = RCC_GPIOB;
-    conf.i2c_1_config.sda_config.port       = GPIO_STM32_PORT_B;
-    conf.i2c_1_config.sda_config.pin        = GPIO_STM32_PIN_9;
-    conf.i2c_1_config.sda_config.alt_fct    = GPIO_STM32_AF_4;
-    conf.i2c_1_config.rcc_clk_port_config   = RCC_GPIOB;
-    conf.i2c_1_config.clk_config.port       = GPIO_STM32_PORT_B;
-    conf.i2c_1_config.clk_config.pin        = GPIO_STM32_PIN_8;
-    conf.i2c_1_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
-    conf.i2c_1_config.clk_speed             = 100000;
-    conf.i2c_1_config.tenbit_config         = false; // 10 bits address is not supported
-
-    // -------------------------------------------------------------------------
-    // I2C config
-    // -------------------------------------------------------------------------
-    conf.i2c_2_config                       = i2c_stm32_default_config();
-    conf.i2c_2_config.i2c_device_config     = STM32_I2C2;
-    conf.i2c_2_config.rcc_i2c_config        = RCC_I2C2;
-    conf.i2c_2_config.rcc_sda_port_config   = RCC_GPIOB;
-    conf.i2c_2_config.sda_config.port       = GPIO_STM32_PORT_B;
-    conf.i2c_2_config.sda_config.pin        = GPIO_STM32_PIN_11;
-    conf.i2c_2_config.sda_config.alt_fct    = GPIO_STM32_AF_4;
-    conf.i2c_2_config.rcc_clk_port_config   = RCC_GPIOB;
-    conf.i2c_2_config.clk_config.port       = GPIO_STM32_PORT_B;
-    conf.i2c_2_config.clk_config.pin        = GPIO_STM32_PIN_10;
-    conf.i2c_2_config.clk_config.alt_fct    = GPIO_STM32_AF_4;
-    conf.i2c_2_config.clk_speed             = 100000;
-    conf.i2c_2_config.tenbit_config         = false; // 10 bits address is not supported
 
     // -------------------------------------------------------------------------
     // SPI config

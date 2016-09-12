@@ -87,9 +87,6 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     pwm_4_(config.pwm_config[4]),
     pwm_5_(config.pwm_config[5]),
     serial_(config.serial_usb_config),
-    i2c_1_(config.i2c_1_config),
-    i2c_2_(config.i2c_2_config),
-    sonar_i2cxl_(i2c_1_),
     servo_0_(pwm_0_, config.servo_config[0]),
     servo_1_(pwm_1_, config.servo_config[1]),
     servo_2_(pwm_2_, config.servo_config[2]),
@@ -126,7 +123,7 @@ bool Sparky_v2::init(void)
     ret = led_err_gpio_.init();
     ret = led_stat_gpio_.init();
     ret = led_rf_gpio_.init();
-    led_err_.off();
+    led_err_.on();
     led_stat_.on();
     led_rf_.on();
 
@@ -270,87 +267,6 @@ bool Sparky_v2::init(void)
 #endif
 
     // -------------------------------------------------------------------------
-    // Init I2C_1
-    // -------------------------------------------------------------------------
-    ret = i2c_1_.init();
-    // print_util_dbg_init_msg("[I2C_1]", ret);
-    // p_dbg_serial->flush();
-    init_success &= ret;
-
-    uint8_t command = 0x1E;
-    uint8_t address = 0x77;
-    uint8_t buffer[12] = {0,0,0,0,0,0,0,0,0,0,0,0};
-    ret = i2c_1_.probe(0x77);
-    time_keeper_delay_ms(50);
-    ret &= i2c_1_.write(&command, 1, (uint8_t)address);
-    time_keeper_delay_ms(200);
-    ret &= i2c_1_.probe(0x77);
-    time_keeper_delay_ms(50);
-    command = 0xA2;
-    ret &= i2c_1_.write(&command, 1, (uint8_t)address);
-    ret &= i2c_1_.read(buffer, 12, (uint8_t)address);
-
-    if ((ret == false) || 
-        ((buffer[0] == 0) && 
-        (buffer[1] == 0) && 
-        (buffer[2] == 0) && 
-        (buffer[3] == 0) && 
-        (buffer[4] == 0) && 
-        (buffer[5] == 0)))
-    {
-        led_err_.on();
-    }
-
-    command = 0x50;
-    ret &= i2c_1_.write(&command, 1, (uint8_t)address);
-    
-    time_keeper_delay_ms(500);
-    
-    command = 0x00;
-    ret &= i2c_1_.write(&command, 1, (uint8_t)address);
-    ret &= i2c_1_.read(buffer, 3, (uint8_t)address);
-    time_keeper_delay_ms(50);
-
-    if ((ret == false) || 
-        ((buffer[0] == 0) && 
-        (buffer[1] == 0) && 
-        (buffer[2] == 0)) )
-    {
-        led_err_.on();
-    }
-
-    command = 0x40;
-    ret &= i2c_1_.write(&command, 1, (uint8_t)address);
-    
-    time_keeper_delay_ms(500);
-    
-    command = 0x00;
-    ret &= i2c_1_.write(&command, 1, (uint8_t)address);
-    ret &= i2c_1_.read(buffer, 3, (uint8_t)address);
-    time_keeper_delay_ms(50);
-
-    if ((ret == false) || 
-        ((buffer[0] == 0) && 
-        (buffer[1] == 0) && 
-        (buffer[2] == 0)) )
-    {
-        led_err_.on();
-    }
-
-    while(1)
-    {
-        time_keeper_delay_ms(500);
-        led_stat_.toggle();
-    }
-
-    // -------------------------------------------------------------------------
-    // Init I2C_2
-    // -------------------------------------------------------------------------
-    ret = i2c_2_.init();
-    // print_util_dbg_init_msg("[I2C_2]", ret);
-    // p_dbg_serial->flush();
-    init_success &= ret;// -------------------------------------------------------------------------
-    
     // Init SPIs
     // -------------------------------------------------------------------------
     ret = spi_1_.init();
@@ -363,15 +279,6 @@ bool Sparky_v2::init(void)
     ret = mpu_9250_.init();
     init_success &= ret;
 
-    time_keeper_delay_ms(50);
-
-    // -------------------------------------------------------------------------
-    // Init sonar
-    // -------------------------------------------------------------------------
-    ret = sonar_i2cxl_.init();
-    // print_util_dbg_init_msg("[SONAR]", ret);
-    init_success &= ret;
-    // p_dbg_serial->flush();
     time_keeper_delay_ms(50);
 
 
