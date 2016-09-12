@@ -148,7 +148,7 @@ public:
 
 private:
     i2c_stm32_conf_t        config_;        ///< Configuration
-    uint32_t                i2c_;           ///< I2C device
+    i2c_stm32_devices_t     i2c_;           ///< I2C device
     uint16_t                i2c_timeout_;   ///< I2C timeout
 
     /**
@@ -215,14 +215,5 @@ static inline  i2c_stm32_conf_t i2c_stm32_default_config()
     return conf;
 }
 
-
-uint8_t i2c_busy(uint32_t i2c);
-uint8_t i2c_start_generated(uint32_t i2c);
-uint8_t i2c_address_sent(uint32_t i2c);
-uint8_t i2c_address_received(uint32_t i2c);
-uint8_t i2c_byte_transfer_finished(uint32_t i2c);
-uint8_t i2c_nack_received(uint32_t i2c);
-uint8_t i2c_data_received(uint32_t i2c);
-void i2c_set_speed(uint32_t i2c, uint8_t fastmode);
 
 #endif /* I2C_STM32_HPP_ */
