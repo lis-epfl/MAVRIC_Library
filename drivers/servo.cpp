@@ -57,6 +57,7 @@ bool Servo::init(void)
     pwm_.set_pulse_width_us(0);
     pwm_.set_period_us(1000000.0f / config_.repeat_freq);
     failsafe(true);
+    return true;
 }
 
 

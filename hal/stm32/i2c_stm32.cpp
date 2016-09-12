@@ -82,7 +82,7 @@ bool I2c_stm32::check_event(uint32_t i2c_event)
 
 bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
 {
-    
+
     i2c_send_start(i2c_);
     //wait till not received
     uint16_t timeout = i2c_timeout_;
@@ -91,7 +91,7 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
          if(--timeout == 0)
         {
             return false;
-        } 
+        }
     }
 
     //enable ack
@@ -100,7 +100,7 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
         I2C_CR1(i2c_) |= I2C_CR1_ACK;
     }
 
-    
+
     //send write/read bit
     if (direction_is_transmit)
     {
@@ -114,7 +114,7 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
              if(--timeout == 0)
             {
                 return false;
-            } 
+            }
         }
     }
     else
@@ -129,10 +129,10 @@ bool I2c_stm32::start(uint8_t address, bool direction_is_transmit, bool ack)
              if(--timeout == 0)
             {
                 return false;
-            } 
+            }
         }
     }
-    
+
     //Read status register to clear flag
     I2C_SR2(i2c_);
 
@@ -148,7 +148,7 @@ bool I2c_stm32::stop(void)
         if(--timeout == 0)
         {
             return false;
-        }     
+        }
     }
 
     I2C_CR1(i2c_) |= I2C_CR1_STOP;
@@ -167,7 +167,7 @@ uint8_t I2c_stm32::read_ack(void)
     while(!(check_event(DATA_RECEIVED)))
     {
         if(--timeout == 0)
-        {    
+        {
             return 0;
         }
     }
@@ -189,7 +189,7 @@ uint8_t I2c_stm32::read_nack(void)
     while(!(check_event(DATA_RECEIVED)))
     {
         if(--timeout == 0)
-        {    
+        {
             return 0;
         }
     }
@@ -218,21 +218,21 @@ bool I2c_stm32::init(void)
     rcc_periph_clock_enable(config_.rcc_i2c_config);
     rcc_periph_clock_enable(config_.rcc_clk_port_config);
     rcc_periph_clock_enable(config_.rcc_sda_port_config);
-    
+
     /* Setup GPIO pins for I2C transmit. */
     gpio_set_af(config_.clk_config.port, config_.clk_config.alt_fct, config_.clk_config.pin);
     gpio_set_af(config_.sda_config.port, config_.sda_config.alt_fct, config_.sda_config.pin);
     gpio_set_output_options(config_.clk_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.clk_config.pin);
     gpio_set_output_options(config_.sda_config.port, GPIO_OTYPE_OD, GPIO_OSPEED_25MHZ, config_.sda_config.pin);
-    gpio_mode_setup(config_.clk_config.port, 
+    gpio_mode_setup(config_.clk_config.port,
                     GPIO_MODE_AF,
                     GPIO_PUPD_PULLUP,
                     config_.clk_config.pin);
-    gpio_mode_setup(config_.sda_config.port, 
+    gpio_mode_setup(config_.sda_config.port,
                     GPIO_MODE_AF,
                     GPIO_PUPD_PULLUP,
                     config_.sda_config.pin);
-    
+
     //set-up I2C
     i2c_peripheral_disable(i2c_);
 
@@ -249,7 +249,7 @@ bool I2c_stm32::init(void)
 
         //configure speed in fast mode
         result = (uint16_t)(42000000/(100000<<1));
-        
+
         if (result < 0x04)
         {
             result = 0x04;
@@ -266,9 +266,9 @@ bool I2c_stm32::init(void)
         {
             //set min value allowed
             result |= (uint16_t)0x0001;
-        }        
+        }
     }
-    
+
     //set speed value to fast mode
     I2C_CCR(i2c_) = (uint16_t)(result );
 
@@ -283,12 +283,12 @@ bool I2c_stm32::init(void)
     I2C_CR1(i2c_) |= uint16_t(0x0000|0x0000);
 
     //configure ORA1
-    I2C_OAR1(i2c_) = (0x4000 | 0x0000); 
+    I2C_OAR1(i2c_) = (0x4000 | 0x0000);
 
     //enable I2C1
     i2c_peripheral_enable(i2c_);
 
-    return init_success;   
+    return init_success;
 }
 
 
@@ -300,7 +300,7 @@ bool I2c_stm32::probe(uint32_t address)
     success &= start(address, true, true);
     //TODO Pb with stop
     // success &= stop();
-    
+
     return success;
 }
 
@@ -321,7 +321,7 @@ bool I2c_stm32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
             if(--timeout == 0)
             {
                 return false;
-            }    
+            }
         }
 
         //send i2c data
@@ -329,7 +329,7 @@ bool I2c_stm32::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
     }
 
     success &= stop();
-    
+
     return success;
 }
 
