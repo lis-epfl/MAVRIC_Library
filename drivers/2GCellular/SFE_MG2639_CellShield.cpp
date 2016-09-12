@@ -44,7 +44,7 @@
 
 #include "../2GCellular/SFE_MG2639_CellShield.h"
 
-#include "util/MG2639_AT.h"
+#include "MG2639_AT.h"
 #include <Arduino.h>
 
 #define BAUD_COUNT 7 // Number of possible baud rates the MG2639 can be set to

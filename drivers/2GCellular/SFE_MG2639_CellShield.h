@@ -24,9 +24,9 @@ Distributed as-is; no warranty is given.
 
 #include <SoftwareSerial.h> // SoftwareSerial used to communicate with shield
 #include <inttypes.h>
-#include "util/MG2639_SMS.h"	// SMS (text messaging) functions (send, read, etc.)
-#include "util/MG2639_GPRS.h" // GPRS functions (TCP connect, send, etc.)
-#include "util/MG2639_Phone.h" // Phone call functions (answer, dial, hangup, etc.)
+#include "MG2639_SMS.h"	// SMS (text messaging) functions (send, read, etc.)
+#include "MG2639_GPRS.h" // GPRS functions (TCP connect, send, etc.)
+#include "MG2639_Phone.h" // Phone call functions (answer, dial, hangup, etc.)
 
 ////////////////////////
 // Memory Allocations //
