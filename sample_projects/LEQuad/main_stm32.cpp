@@ -71,8 +71,8 @@ int main(int argc, char** argv)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using simulated sensors
-    LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
-    LEQuad mav = LEQuad(board.imu,
+    LEQuad_dronedome::conf_t mav_config = LEQuad_dronedome::default_config(sysid);
+    LEQuad_dronedome mav = LEQuad_dronedome(board.imu,
                         board.sim.barometer(),
                         board.sim.gps(),
                         board.sonar_i2cxl,

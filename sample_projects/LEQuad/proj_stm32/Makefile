@@ -193,7 +193,8 @@ flash: $(PROJ_NAME).bin
 	@st-flash write $(PROJ_NAME).bin 0x8000000
 
 dfu: $(PROJ_NAME).bin
-	@dfu-util --device 0x483:0xdf11 -a 0 -s 0x8000000:leave -D $(PROJ_NAME).bin
+	# @dfu-util --device 0x483:0xdf11 -a 0 -s 0x8000000:leave -D $(PROJ_NAME).bin
+	@dfu-util --device 0x483:0xdf11 -a 0 -s 0x8000000 -D $(PROJ_NAME).bin
 
 .PHONY: clean rebuild
 clean:
