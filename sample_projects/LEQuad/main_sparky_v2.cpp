@@ -64,8 +64,14 @@ extern "C"
 }
 
 #define MAVLINK_SYS_ID 2
-#define SEND
-#define PKT_SIZE       8
+#define PKT_SIZE       1
+
+
+// #define SEND
+
+#define TEST
+
+
 
 int main(int argc, char** argv)
 {
@@ -192,25 +198,19 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // mav.loop();
 
+    time_keeper_delay_ms(5000);
+
     board.led_err_.off();
     board.led_stat_.off();
     board.led_rf_.off();
 
     Console<Serial> console(board.serial_);
-    Rfm22b rfm22b(board.spi_3_, board.nss_2_gpio_);
+    Rfm22b rfm22b(board.spi_3_, board.nss_2_gpio_, board.serial_);
     bool bo = rfm22b.init();
 
-    char outputa[PKT_SIZE] = "Salut";
-    char outputb[PKT_SIZE] = "Hello";
-    char outputc[PKT_SIZE] = "Yopla";
-    char outputd[PKT_SIZE] = "Pouet";
-    char outpute[PKT_SIZE] = "Clock";
-    char outputf[PKT_SIZE] = "Droit";
-    char outputg[PKT_SIZE] = "Bleue";
-    char input[PKT_SIZE] = {0};
-    int length = PKT_SIZE;
     uint8_t rssi = 0;
 
+    uint8_t device_status = 0;
     uint8_t interrupt_1 = 0;
     uint8_t interrupt_2 = 0;
 
@@ -220,312 +220,317 @@ int main(int argc, char** argv)
 
     const char* sep  = " ";
     const char* sep2 = "\t";
+    const char* newline = "\r\n";
     uint64_t delay = 5;//25;
 
     int msg_select = 0;
+    float battery = 0.0f;
 
     uint64_t counter = 0;
 
-    #if defined (SEND)
+    int success = 1;
+    uint64_t time = 0;
 
-    while (1) // Send
+    uint8_t tx_len = PKT_SIZE;
+    uint8_t rx_len = 0;//PKT_SIZE;
+    uint8_t tx_msg[PKT_SIZE] = {0};
+    uint8_t rx_msg[64] = {0};
+
+#ifdef TEST
+    #ifdef SEND
+    while (1)
     {
-        uint8_t device_status = 0;
+        bo &= rfm22b.clear_tx_fifo();
 
-        // Write data to TX FIFO and send it
-        // bo &= rfm22b.send((uint8_t*)output, length);
-
-        if (msg_select == 0)
+        if (tx_len > 64)
         {
-            bo &= rfm22b.send((uint8_t*)outputa, length);
-        }
-        else if (msg_select == 1)
-        {
-            bo &= rfm22b.send((uint8_t*)outputb, length);
-        }
-        else if (msg_select == 2)
-        {
-            bo &= rfm22b.send((uint8_t*)outputc, length);
-        }
-        else if (msg_select == 3)
-        {
-            bo &= rfm22b.send((uint8_t*)outputd, length);
-        }
-        else if (msg_select == 4)
-        {
-            bo &= rfm22b.send((uint8_t*)outpute, length);
-        }
-        else if (msg_select == 5)
-        {
-            bo &= rfm22b.send((uint8_t*)outputf, length);
-        }
-        else if (msg_select == 6)
-        {
-            bo &= rfm22b.send((uint8_t*)outputg, length);
-        }
-        else
-        {
-            bo = false;
+            tx_len = 64;
         }
 
-        // Get Device Status
-        bo &= rfm22b.read_reg(Rfm22b::DEVICE_STATUS, &device_status);
+        bo &= rfm22b.set_packet_transmit_length(tx_len);
 
-        // Read Interrupt Status 1
-        bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_1, &interrupt_1);
+        // Put message into FIFO
+        bo &= rfm22b.write_reg(Rfm22b::FIFO_ACCESS_REG, tx_msg, tx_len);
 
-        // Read Interrupt Status 2
-        bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_2, &interrupt_2);
+        bo &= rfm22b.tx_mode_enable();
 
-        // Get Transmit Header
-        bo &= rfm22b.get_transmit_header(tx_header);
-
-        // Get battery voltage
-        float battery = 0.0f;
-        bo &= rfm22b.get_battery_level(&battery);
-
-        for (int i = 0; i < 8; i++)
+        while (1)
         {
-            console.write((device_status >> (7-i)) & 1);
+            bo &= rfm22b.read_reg(Rfm22b::DEVICE_STATUS, &device_status);   
+            bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_1, &interrupt_1);
+            bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_2, &interrupt_2);
+
+            for (int i = 0; i < 8; i++)
+            {
+                console.write((device_status >> (7-i)) & 1);
+                time_keeper_delay_ms(delay);
+                board.serial_.write((const uint8_t*)sep, sizeof(sep));
+                time_keeper_delay_ms(delay);
+            }
+
+            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+            time_keeper_delay_ms(delay);
+
+            for (int i = 0; i < 8; i++)
+            {
+                console.write((interrupt_1 >> (7-i)) & 1);
+                time_keeper_delay_ms(delay);
+                board.serial_.write((const uint8_t*)sep, sizeof(sep));
+                time_keeper_delay_ms(delay);
+            }
+
+            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+            time_keeper_delay_ms(delay);
+
+            for (int i = 0; i < 8; i++)
+            {
+                console.write((interrupt_2 >> (7-i)) & 1);
+                time_keeper_delay_ms(delay);
+                board.serial_.write((const uint8_t*)sep, sizeof(sep));
+                time_keeper_delay_ms(delay);
+            }
+
+            console.write('S');
             time_keeper_delay_ms(delay);
             board.serial_.write((const uint8_t*)sep, sizeof(sep));
             time_keeper_delay_ms(delay);
-        }
-
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        for (int i = 0; i < 8; i++)
-        {
-            console.write((interrupt_1 >> (7-i)) & 1);
-            time_keeper_delay_ms(delay);
             board.serial_.write((const uint8_t*)sep, sizeof(sep));
             time_keeper_delay_ms(delay);
-        }
 
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        for (int i = 0; i < 8; i++)
-        {
-            console.write((interrupt_2 >> (7-i)) & 1);
+            board.serial_.write((const uint8_t*)newline, sizeof(newline));
             time_keeper_delay_ms(delay);
-            board.serial_.write((const uint8_t*)sep, sizeof(sep));
-            time_keeper_delay_ms(delay);
-        }
 
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
+            if ((interrupt_1 >> 2)&1)
+            {
+                break;
+            }
 
-        for (int i = 0; i < 4; i++)
-        {
-            console.write(tx_header[i]);
-            time_keeper_delay_ms(delay);
-            board.serial_.write((const uint8_t*)sep, sizeof(sep));
-            time_keeper_delay_ms(delay);
-        }
-
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        console.write(battery);
-        time_keeper_delay_ms(delay);
-
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        for (int i = 0; i < length; i++)
-        {
-            if (msg_select == 0)
+            if (bo)
             {
-                console.write(outputa[i]);
-            }
-            else if (msg_select == 1)
-            {
-                console.write(outputb[i]);
-            }
-            else if (msg_select == 2)
-            {
-                console.write(outputc[i]);
-            }
-            else if (msg_select == 3)
-            {
-                console.write(outputd[i]);
-            }
-            else if (msg_select == 4)
-            {
-                console.write(outpute[i]);
-            }
-            else if (msg_select == 5)
-            {
-                console.write(outputf[i]);
-            }
-            else if (msg_select == 6)
-            {
-                console.write(outputg[i]);
+                board.led_stat_.on();
+                board.led_err_.off();
             }
             else
             {
-                bo = false;
+                board.led_err_.on();
+                board.led_stat_.off();
             }
-            // console.write(output[i]);
+
+            time_keeper_delay_ms(1);
+        }
+
+        board.led_rf_.on();
+
+        for (int i = 0; i < tx_len; i++)
+        {
+            console.write(tx_msg[i]);
             time_keeper_delay_ms(delay);
             board.serial_.write((const uint8_t*)sep, sizeof(sep));
             time_keeper_delay_ms(delay);
+            tx_msg[i]++;
         }
-
-        const char* newline = "\r\n";
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+        console.write(success);
         board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(500);
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
 
-        if (bo)
-        {
-            board.led_stat_.toggle();
-        }
-        else
-        {
-            board.led_err_.toggle();
-        }
-
-        bo = true;
-        length = PKT_SIZE;
-        msg_select = ++msg_select % 7;
-
-        time_keeper_delay_ms(100);
+        board.led_rf_.off();
     }
 
     #else
-
-    while (1) // Receive
+    while (1)
     {
-        uint8_t device_status = 0;
+        bo &= rfm22b.clear_rx_fifo();
+        bo &= rfm22b.rx_mode_enable();
 
-        // Receive data and read RX FIFO
-        bo &= rfm22b.receive((uint8_t*)input, &length);
-
-        // Get Device Status
-        bo &= rfm22b.read_reg(Rfm22b::DEVICE_STATUS, &device_status);
-
-        // Read Interrupt Status 1
-        bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_1, &interrupt_1);
-
-        // Read Interrupt Status 2
-        bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_2, &interrupt_2);
-
-        // Read RSSI
-        bo &= rfm22b.get_rssi(&rssi);
-
-        // Get Received Header
-        bo &= rfm22b.get_received_header(rx_header);
-
-        // Get battery voltage
-        float battery = 0.0f;
-        bo &= rfm22b.get_battery_level(&battery);
-
-        if ((device_status >> 5) & 1 || (device_status >> 4) & 1)
+        while (1)
         {
-            length = 0;
-        }
+            bo &= rfm22b.read_reg(Rfm22b::DEVICE_STATUS, &device_status); 
+            bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_1, &interrupt_1);
+            bo &= rfm22b.read_reg(Rfm22b::INTERRUPT_STAT_2, &interrupt_2);
 
-        console.write(counter);
-        time_keeper_delay_ms(delay);
+            for (int i = 0; i < 8; i++)
+            {
+                console.write((device_status >> (7-i)) & 1);
+                time_keeper_delay_ms(delay);
+                board.serial_.write((const uint8_t*)sep, sizeof(sep));
+                time_keeper_delay_ms(delay);
+            }
 
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+            time_keeper_delay_ms(delay);
 
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
+            for (int i = 0; i < 8; i++)
+            {
+                console.write((interrupt_1 >> (7-i)) & 1);
+                time_keeper_delay_ms(delay);
+                board.serial_.write((const uint8_t*)sep, sizeof(sep));
+                time_keeper_delay_ms(delay);
+            }
 
-        for (int i = 0; i < 8; i++)
-        {
-            console.write((device_status >> (7-i)) & 1);
+            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+            time_keeper_delay_ms(delay);
+
+            for (int i = 0; i < 8; i++)
+            {
+                console.write((interrupt_2 >> (7-i)) & 1);
+                time_keeper_delay_ms(delay);
+                board.serial_.write((const uint8_t*)sep, sizeof(sep));
+                time_keeper_delay_ms(delay);
+            }
+
+            console.write('R');
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
             time_keeper_delay_ms(delay);
             board.serial_.write((const uint8_t*)sep, sizeof(sep));
             time_keeper_delay_ms(delay);
+
+            board.serial_.write((const uint8_t*)newline, sizeof(newline));
+            time_keeper_delay_ms(delay);
+
+            if ((interrupt_1 >> 1)&1)
+            {
+                // Get received packet length
+                bo &= rfm22b.read_reg(Rfm22b::RECEIVE_PKT_LEN, &rx_len);
+                bo &= rfm22b.read_reg(Rfm22b::FIFO_ACCESS_REG, rx_msg, rx_len);
+                break;
+            }
+
+            if (bo)
+            {
+                board.led_stat_.on();
+                board.led_err_.off();
+            }
+            else
+            {
+                board.led_err_.on();
+                board.led_stat_.off();
+            }
+
+            time_keeper_delay_ms(1);
         }
+        board.led_rf_.on();
 
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        for (int i = 0; i < 8; i++)
-        {
-            console.write((interrupt_1 >> (7-i)) & 1);
-            time_keeper_delay_ms(delay);
-            board.serial_.write((const uint8_t*)sep, sizeof(sep));
-            time_keeper_delay_ms(delay);
-        }
-
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        for (int i = 0; i < 8; i++)
-        {
-            console.write((interrupt_2 >> (7-i)) & 1);
-            time_keeper_delay_ms(delay);
-            board.serial_.write((const uint8_t*)sep, sizeof(sep));
-            time_keeper_delay_ms(delay);
-        }
-
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        for (int i = 0; i < 4; i++)
-        {
-            console.write(rx_header[i]);
-            time_keeper_delay_ms(delay);
-            board.serial_.write((const uint8_t*)sep, sizeof(sep));
-            time_keeper_delay_ms(delay);
-        }
-
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        console.write(rssi);
-        time_keeper_delay_ms(delay);
-
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        console.write(battery);
-        time_keeper_delay_ms(delay);
-
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_ms(delay);
-
-        // console.write(length);
-        // time_keeper_delay_ms(delay);
-
-        // board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        // time_keeper_delay_ms(delay);
-
-        for (int i = 0; i < length; i++)
-        {
-            console.write(input[i]);
-            time_keeper_delay_ms(delay);
-            board.serial_.write((const uint8_t*)sep, sizeof(sep));
-            time_keeper_delay_ms(delay);
-        }
-
-        const char* newline = "\r\n";
         board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
 
-        if (bo)
+        for (int i = 0; i < rx_len; i++)
         {
-            board.led_stat_.on();
-            board.led_err_.off();
-        }
-        else
-        {
-            board.led_err_.on();
-            board.led_stat_.off();
+            console.write(rx_msg[i]);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
         }
 
-        bo = true;
-        length = PKT_SIZE;
-        counter++;
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+        console.write(success);
+        time_keeper_delay_ms(500);
 
-        time_keeper_delay_ms(100);
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
+
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
+
+        board.led_rf_.off();
     }
     #endif
+#else
 
+    #ifdef SEND
+    while (1)
+    {
+        success = rfm22b.write_test(tx_msg, tx_len);
+        console.write(success);
+        time_keeper_delay_ms(delay);
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        console.write(tx_len);
+        time_keeper_delay_ms(delay);
+
+        if (success != 1)
+        {
+            board.serial_.write((const uint8_t*)newline, sizeof(newline));
+            time_keeper_delay_ms(500);
+            continue;
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+
+        board.led_rf_.on();
+
+        for (int i = 0; i < tx_len; i++)
+        {
+            console.write(tx_msg[i]);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+            if (success == 1)
+            {
+                tx_msg[i]++;
+            }
+        }
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(500);
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
+
+        board.led_rf_.off();
+
+    }
+
+    #else
+    while (1)
+    {
+        success = rfm22b.read_test(rx_msg, &rx_len);
+
+        console.write(success);
+        time_keeper_delay_ms(delay);
+
+        if (success != 1)
+        {
+            board.serial_.write((const uint8_t*)newline, sizeof(newline));
+            time_keeper_delay_us(200);
+            continue;
+        }
+        board.led_rf_.on();
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(delay);
+
+        for (int i = 0; i < rx_len; i++)
+        {
+            console.write(rx_msg[i]);
+            time_keeper_delay_ms(delay);
+            board.serial_.write((const uint8_t*)sep, sizeof(sep));
+            time_keeper_delay_ms(delay);
+        }
+
+        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
+        time_keeper_delay_ms(500);
+
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
+
+        board.serial_.write((const uint8_t*)newline, sizeof(newline));
+        time_keeper_delay_ms(delay);
+
+        board.led_rf_.off();
+    }
+    #endif
+#endif
     return 0;
 }

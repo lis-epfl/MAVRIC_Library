@@ -43,6 +43,8 @@
 #include "hal/common/serial.hpp"
 #include "hal/common/spi.hpp"
 
+ #include "hal/common/console.hpp"
+
  class Rfm22b : public Serial
  {
  public:
@@ -61,7 +63,7 @@
      * \param   config          Device configuration
      * \param	spi
      */
-    Rfm22b(Spi& spi, Gpio& nss_gpio);//, const conf_t config);
+    Rfm22b(Spi& spi, Gpio& nss_gpio, Serial& serial);//, const conf_t config);
  	/**
      * \brief   Hardware initialization
      *
@@ -179,7 +181,7 @@
     bool clear_tx_fifo(void);
     bool clear_rx_fifo(void);
     bool send(uint8_t *data, int length);
-    bool receive(uint8_t *data, int* length);
+    bool receive_bis(uint8_t *data, int* length);
     bool get_rssi(uint8_t* rssi);
     bool set_preamble_detection(uint8_t n_nibbles);
     bool set_header_length(uint8_t length);
@@ -197,6 +199,13 @@
     bool enable_low_battery_detection(bool enable = true);
     bool set_preamble_length(uint16_t length);
     bool set_syncword(uint8_t* syncword);
+    int transmit(uint8_t* tx_buffer, uint8_t tx_len);
+    int receive(uint8_t* rx_buffer, uint8_t* rx_len);
+    int read_test(uint8_t* message, uint8_t* rx_len);
+    int write_test(uint8_t* message, uint8_t tx_len);
+    bool set_packet_transmit_length(uint8_t length);
+    bool tx_mode_enable(bool enable = true);
+    bool rx_mode_enable(bool enable = true);
 
     // rfm22b register adresses
     static const uint8_t DEVICE_TYPE_REG 	= 0x00;
@@ -345,11 +354,8 @@
  private:
  	Spi& 	spi_;	///< SPI peripheral
  	Gpio&	nss_;	///< Slave Select GPIO
-
-
-    bool set_packet_transmit_length(uint8_t length);
-    bool enable_tx_mode(void);
-    bool enable_rx_mode(void);
+    Serial& serial_;
+    Console<Serial> console;
 
  	/**
      * \brief   Select Slave
