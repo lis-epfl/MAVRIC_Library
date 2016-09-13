@@ -41,12 +41,9 @@
 
 
 #include "hal/avr32/fat_fs_mounting.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
 #include "hal/common/time_keeper.hpp"
-}
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

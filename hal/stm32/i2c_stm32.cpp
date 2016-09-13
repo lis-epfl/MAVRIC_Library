@@ -40,10 +40,10 @@
  ******************************************************************************/
 
 #include "hal/stm32/i2c_stm32.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.hpp"
 #include <libopencm3/stm32/i2c.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>

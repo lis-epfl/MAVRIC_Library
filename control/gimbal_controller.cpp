@@ -41,10 +41,8 @@
 
 
 #include "control/gimbal_controller.hpp"
-extern "C"
-{
 #include "util/print_util.hpp"
-}
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION

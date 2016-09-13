@@ -39,11 +39,8 @@
  ******************************************************************************/
 
 #include "hal/linux/file_linux.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
+
 
 using namespace std;
 

@@ -89,11 +89,11 @@
 #include "sensing/qfilter_default_config.hpp"
 
 #include "util/coord_conventions.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "sensing/altitude.h"
-#include "util/print_util.hpp"
 }
 
 

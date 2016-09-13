@@ -43,10 +43,10 @@
 #include "sensing/position_estimation.hpp"
 #include "drivers/barometer.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.hpp"
 #include "util/maths.h"
 }
 

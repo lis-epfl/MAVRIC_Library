@@ -42,12 +42,12 @@
 
 
 #include "drivers/barometer_bmp085.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "util/maths.h"
-#include "hal/common/time_keeper.hpp"
-#include "util/print_util.hpp"
 }
 
 enum

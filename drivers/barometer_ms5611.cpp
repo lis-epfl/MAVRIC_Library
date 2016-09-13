@@ -43,11 +43,11 @@
 
 #include "drivers/barometer_ms5611.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "util/maths.h"
-#include "util/print_util.hpp"
 }
 
 //------------------------------------------------------------------------------

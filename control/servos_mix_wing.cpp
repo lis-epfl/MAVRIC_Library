@@ -42,11 +42,8 @@
 
 #include "control/servos_mix_wing.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
+
 
 bool servos_mix_wing_init(servos_mix_wing_t* mix,
                             const servos_mix_wing_conf_t config,

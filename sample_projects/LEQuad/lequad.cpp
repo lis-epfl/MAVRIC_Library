@@ -55,13 +55,10 @@
 #include "control/manual_control_telemetry.hpp"
 
 #include "runtime/scheduler_telemetry.hpp"
+
 #include "hal/common/time_keeper.hpp"
 
-extern "C"
-{
 #include "util/print_util.hpp"
-}
-
 
 
 LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, State_display& state_display, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):

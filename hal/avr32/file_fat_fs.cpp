@@ -42,11 +42,8 @@
 #include <cstdbool>
 
 #include "hal/avr32/file_fat_fs.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION

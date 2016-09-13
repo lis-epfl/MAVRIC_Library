@@ -44,11 +44,7 @@
 #include "hal/common/time_keeper.hpp"
 #include "control/dubin.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

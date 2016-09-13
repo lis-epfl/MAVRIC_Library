@@ -39,15 +39,14 @@
  ******************************************************************************/
 
 #include "boards/mavrinux.hpp"
+
 #include "sample_projects/LEQuad/lequad.hpp"
 
 #include "hal/dummy/i2c_dummy.hpp"
+
 #include "simulation/dynamic_model_telemetry.hpp"
 
-extern "C"
-{
 #include "util/print_util.hpp"
-}
 
 
 int main(int argc, char** argv)

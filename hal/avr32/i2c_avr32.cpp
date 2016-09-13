@@ -40,10 +40,10 @@
 
 #include "hal/avr32/i2c_avr32.hpp"
 #include "hal/avr32/atmel_status_codes.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.hpp"
 #include "libs/asf/avr32/drivers/gpio/gpio.h"
 #include "libs/asf/common/services/clock/sysclk.h"
 }
