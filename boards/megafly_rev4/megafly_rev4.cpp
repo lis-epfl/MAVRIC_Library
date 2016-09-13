@@ -40,11 +40,10 @@
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.hpp"
-
 #include "libs/asf/common/services/clock/sysclk.h"
 #include "libs/asf/common/services/sleepmgr/sleepmgr.h"
 #include "libs/asf/avr32/services/delay/delay.h"
