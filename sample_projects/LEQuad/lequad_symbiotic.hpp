@@ -54,6 +54,7 @@
 
 
 typedef LEQuad Base_class;
+//typedef LEQuad_dronedome Base_class;
 
 
 class LEQuad_symbiotic: public Base_class
