@@ -30,13 +30,12 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file barometer_bmp085.cpp
+ * \file barometer_ms5611.cpp
  *
  * \author MAV'RIC Team
- * \author Felix Schill
  * \author Julien Lecoeur
  *
- * \brief   Driver for the BMP085 barometer
+ * \brief   Driver for the MS5611 barometer
  *
  ******************************************************************************/
 
