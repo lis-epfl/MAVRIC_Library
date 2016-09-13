@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file quick_trig.c
+ * \file quick_trig.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -43,8 +43,11 @@
 #include "util/quick_trig.hpp"
 
 #include <cmath>
-#include "util/maths.h"
 
+extern "C"
+{
+#include "util/maths.h"
+}
 
 const float acos_x_min = 0.0f;
 const float acos_x_max = 1.0f;
