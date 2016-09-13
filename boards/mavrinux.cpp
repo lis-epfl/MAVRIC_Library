@@ -41,12 +41,7 @@
 #include "boards/mavrinux.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "drivers/airspeed_analog.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-
-}
 
 
 static Serial_linux_io* p_uart_usb;
