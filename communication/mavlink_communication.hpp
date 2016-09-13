@@ -100,7 +100,7 @@ public:
 
 
     /*
-     * \brief   Returns periodi telemetry
+     * \brief   Returns periodic telemetry
      */
     Periodic_telemetry& telemetry();
     Periodic_telemetry* p_telemetry();
