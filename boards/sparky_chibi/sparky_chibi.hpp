@@ -33,7 +33,7 @@
  * \file    sparky_chibi.hpp
  *
  * \author  MAV'RIC Team
- * \author  Jean-Francois Burnier
+ * \author  Julien Lecoeur
  *
  * \brief   Autopilot for Sparky board based on STM32
  *
