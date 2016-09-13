@@ -176,12 +176,11 @@ int main(int argc, char** argv)
     mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_JOYSTICK;
 
     //adapt servo mix gains
-    mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].p_gain      = 0.035f;
-    mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].integrator.gain      = 0.025f;
-    mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].p_gain      = 0.035f;
-    mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator.gain      = 0.025f;
-
-    mav_config.stabilisation_copter_config.thrust_hover_point      = 0.0f;
+    // mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].p_gain      = 0.035f;
+    // mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].integrator.gain      = 0.025f;
+    // mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].p_gain      = 0.035f;
+    // mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator.gain      = 0.025f;
+    // mav_config.stabilisation_copter_config.thrust_hover_point      = 0.0f;
 
     LEQuad_dronedome mav = LEQuad_dronedome(board.imu_,
                         sim.barometer(),
