@@ -47,11 +47,8 @@
 #include <cstdbool>
 
 #include "communication/mavlink_stream.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
+
 
 typedef enum MAV_STATE mav_state_t;
 
