@@ -261,11 +261,11 @@ public:
     /**
      * \brief   Constructor
      *
-     * \param   config                  Configuration
-     * \param   scheduler               Pointer to MAVLink scheduler
      * \param   file                    Pointer to file storage
      * \param   state                   Pointer to the state structure
      * \param   message_handler         Pointer to MAVLink message handler
+     * \param   mavlink_stream          Pointer to MAVLink stream
+     * \param   config                  Configuration
      *
      * \return  True if the init succeed, false otherwise
      */
