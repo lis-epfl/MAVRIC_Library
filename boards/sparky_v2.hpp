@@ -234,8 +234,26 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     // -------------------------------------------------------------------------
     // PWM config
     // -------------------------------------------------------------------------
-    // According to sparkyV2 documentation, when using LED port we should used TIM8 for
-    // pin 5 and 6 on CONN7 but due to complicated advanced setting, TIM3 is used instead
+    // Warning the PWM configuration is different from the one on the Sparky_V2 datasheet
+    //
+    // Configuration of PWMs on the servo connectors:
+    // ID Pin  Timer Channel
+    // ---------------------
+    // 0  PB0  TIM3  CH3
+    // 1  PB1  TIM3  CH4
+    // 2  PA3  TIM9  CH2
+    // 3  PA2  TIM9  CH1
+    // 4  PA1  TIM5  CH2
+    // 5  PA0  TIM5  CH1
+    //
+    // Configuration of PWMs on the servo connectors:
+    // ID Pin  Timer Channel
+    // ---------------------
+    // 6  PC9  TIM8  CH4
+    // 7  PC8  TIM8  CH3
+    // 8  PB15 TIM12 CH2
+    // 9  PB14 TIM12 CH1
+
     conf.pwm_config[0].gpio_config.port     = GPIO_STM32_PORT_B;
     conf.pwm_config[0].gpio_config.pin      = GPIO_STM32_PIN_0;
     conf.pwm_config[0].gpio_config.dir      = GPIO_OUTPUT;
@@ -244,8 +262,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[0].timer                = TIM3;
     conf.pwm_config[0].rcc_timer            = RCC_TIM3;
     conf.pwm_config[0].channel              = Pwm_stm32::PWM_STM32_CHANNEL_3;
-    conf.pwm_config[0].prescaler            = 84;
-    conf.pwm_config[0].period               = 20000; //50Hz
+    conf.pwm_config[0].prescaler            = 84;    // max timer clock freq of TIM3 is 84MHz
+    conf.pwm_config[0].period               = 20000; // 50Hz
     conf.pwm_config[0].pulse_us             = 5000;
 
     conf.pwm_config[1].gpio_config.port     = GPIO_STM32_PORT_B;
@@ -256,8 +274,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[1].timer                = TIM3;
     conf.pwm_config[1].rcc_timer            = RCC_TIM3;
     conf.pwm_config[1].channel              = Pwm_stm32::PWM_STM32_CHANNEL_4;
-    conf.pwm_config[1].prescaler            = 84;
-    conf.pwm_config[1].period               = 20000; //50Hz
+    conf.pwm_config[1].prescaler            = 84;    // max timer clock freq of TIM3 is 84MHz
+    conf.pwm_config[1].period               = 20000; // 50Hz
     conf.pwm_config[1].pulse_us             = 5000;
 
     conf.pwm_config[2].gpio_config.port     = GPIO_STM32_PORT_A;
@@ -268,8 +286,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[2].timer                = TIM9;
     conf.pwm_config[2].rcc_timer            = RCC_TIM9;
     conf.pwm_config[2].channel              = Pwm_stm32::PWM_STM32_CHANNEL_2;
-    conf.pwm_config[2].prescaler            = 168;
-    conf.pwm_config[2].period               = 20000; //50Hz
+    conf.pwm_config[2].prescaler            = 168;   // max timer clock freq of TIM9 is 168MHz
+    conf.pwm_config[2].period               = 20000; // 50Hz
     conf.pwm_config[2].pulse_us             = 5000;
 
     conf.pwm_config[3].gpio_config.port     = GPIO_STM32_PORT_A;
@@ -280,8 +298,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[3].timer                = TIM9;
     conf.pwm_config[3].rcc_timer            = RCC_TIM9;
     conf.pwm_config[3].channel              = Pwm_stm32::PWM_STM32_CHANNEL_1;
-    conf.pwm_config[3].prescaler            = 168;
-    conf.pwm_config[3].period               = 20000; //50Hz
+    conf.pwm_config[3].prescaler            = 168;   // max timer clock freq of TIM9 is 168MHz
+    conf.pwm_config[3].period               = 20000; // 50Hz
     conf.pwm_config[3].pulse_us             = 5000;
 
     conf.pwm_config[4].gpio_config.port     = GPIO_STM32_PORT_A;
@@ -292,8 +310,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[4].timer                = TIM5;
     conf.pwm_config[4].rcc_timer            = RCC_TIM5;
     conf.pwm_config[4].channel              = Pwm_stm32::PWM_STM32_CHANNEL_2;
-    conf.pwm_config[4].prescaler            = 84;
-    conf.pwm_config[4].period               = 20000; //50Hz
+    conf.pwm_config[4].prescaler            = 84;    // max timer clock freq of TIM5 is 84MHz
+    conf.pwm_config[4].period               = 20000; // 50Hz
     conf.pwm_config[4].pulse_us             = 5000;
 
     conf.pwm_config[5].gpio_config.port     = GPIO_STM32_PORT_A;
@@ -304,8 +322,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[5].timer                = TIM5;
     conf.pwm_config[5].rcc_timer            = RCC_TIM5;
     conf.pwm_config[5].channel              = Pwm_stm32::PWM_STM32_CHANNEL_1;
-    conf.pwm_config[5].prescaler            = 84;
-    conf.pwm_config[5].period               = 20000; //50Hz
+    conf.pwm_config[5].prescaler            = 84;    // max timer clock freq of TIM5 is 84MHz
+    conf.pwm_config[5].period               = 20000; // 50Hz
     conf.pwm_config[5].pulse_us             = 5000;
 
     conf.pwm_config[9].gpio_config.port     = GPIO_STM32_PORT_C;
@@ -316,8 +334,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[9].timer                = TIM8;
     conf.pwm_config[9].rcc_timer            = RCC_TIM8;
     conf.pwm_config[9].channel              = Pwm_stm32::PWM_STM32_CHANNEL_4;
-    conf.pwm_config[9].prescaler            = 84; //since APB1 clock is main_clk/2
-    conf.pwm_config[9].period               = 20000; //50Hz
+    conf.pwm_config[9].prescaler            = 84;    // max timer clock freq of TIM8 is 84MHz
+    conf.pwm_config[9].period               = 20000; // 50Hz
     conf.pwm_config[9].pulse_us             = 5000;
 
     conf.pwm_config[8].gpio_config.port     = GPIO_STM32_PORT_C;
@@ -328,8 +346,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[8].timer                = TIM8;
     conf.pwm_config[8].rcc_timer            = RCC_TIM8;
     conf.pwm_config[8].channel              = Pwm_stm32::PWM_STM32_CHANNEL_3;
-    conf.pwm_config[8].prescaler            = 84;
-    conf.pwm_config[8].period               = 20000; //50Hz
+    conf.pwm_config[8].prescaler            = 84;    // max timer clock freq of TIM8 is 84MHz
+    conf.pwm_config[8].period               = 20000; // 50Hz
     conf.pwm_config[8].pulse_us             = 5000;
 
     conf.pwm_config[7].gpio_config.port     = GPIO_STM32_PORT_B;
@@ -340,9 +358,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[7].timer                = TIM12;
     conf.pwm_config[7].rcc_timer            = RCC_TIM12;
     conf.pwm_config[7].channel              = Pwm_stm32::PWM_STM32_CHANNEL_2;
-    // max timer clock freq of TIM12 is 84MHz
-    conf.pwm_config[7].prescaler            = 84;
-    conf.pwm_config[7].period               = 20000; //50Hz
+    conf.pwm_config[7].prescaler            = 84;    // max timer clock freq of TIM12 is 84MHz
+    conf.pwm_config[7].period               = 20000; // 50Hz
     conf.pwm_config[7].pulse_us             = 5000;
 
     conf.pwm_config[6].gpio_config.port     = GPIO_STM32_PORT_B;
@@ -353,9 +370,8 @@ Sparky_v2::conf_t Sparky_v2::default_config()
     conf.pwm_config[6].timer                = TIM12;
     conf.pwm_config[6].rcc_timer            = RCC_TIM12;
     conf.pwm_config[6].channel              = Pwm_stm32::PWM_STM32_CHANNEL_1;
-    // max timer clock freq of TIM12 is 84MHz
-    conf.pwm_config[6].prescaler            = 84;
-    conf.pwm_config[6].period               = 20000; //50Hz
+    conf.pwm_config[6].prescaler            = 84;    // max timer clock freq of TIM12 is 84MHz
+    conf.pwm_config[6].period               = 20000; // 50Hz
     conf.pwm_config[6].pulse_us             = 5000;
 
 
