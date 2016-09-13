@@ -41,10 +41,8 @@
 
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_communication.hpp"
-extern "C"
-{
 #include "util/print_util.hpp"
-}
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
