@@ -100,6 +100,7 @@ public:
      * \param   ntxbytes    Number of bytes to write
      * \param   in_buffer   Data buffer (input)
      * \param   nrxbytes    Number of bytes to read
+     * @param   address     Slave adress
      *
      * \return  true        Success
      * \return  false       Failed
