@@ -59,23 +59,7 @@ typedef struct
 } data_logging_entry_t;
 
 
-/**
- * \brief       Configuration of the data_logging element
- */
-typedef struct
-{
-    uint16_t max_logs;                          ///< The max number of logged files with the same name on the SD card
-    bool debug;                                 ///< Indicates if debug messages should be printed for each param change
-    uint32_t log_data;                          ///< The initial state of writing a file
-    bool continuous_write;                      ///< A flag to tell whether we write continuously to the file or not
-} data_logging_conf_t;
 
-/**
- * \brief   Default configuration for the data_logging
- *
- * \return  Config structure
- */
-static inline data_logging_conf_t data_logging_default_config();
 
 
 /**
@@ -88,10 +72,36 @@ class Data_logging
 {
 public:
     /**
+     * \brief       Configuration of the data_logging element
+     */
+    typedef struct
+    {
+        uint16_t max_logs;                          ///< The max number of logged files with the same name on the SD card
+        bool debug;                                 ///< Indicates if debug messages should be printed for each param change
+        uint32_t log_data;                          ///< The initial state of writing a file
+        bool continuous_write;                      ///< A flag to tell whether we write continuously to the file or not
+    } conf_t;
+
+    /**
+     * \brief   Default configuration for the data_logging
+     *
+     * \return  Config structure
+     */
+    static conf_t default_config()
+    {
+        conf_t conf    = {};
+
+        conf.max_logs               = 500;
+        conf.debug                  = true;
+        conf.log_data               = 0;     // 1: log data, 0: no log data
+        conf.continuous_write       = false;
+        return conf;
+    };
+
+    /**
      * \brief   Data logging constructor
      */
-    Data_logging(File& file, State& state, data_logging_conf_t config = data_logging_default_config());
-
+    Data_logging(File& file, State& state, conf_t config = default_config());
 
     /**
      * \brief   Initialise the data logging module
@@ -273,7 +283,7 @@ private:
      */
     bool checksum_control(void);
 
-    data_logging_conf_t config_;                ///< configuration of the data_logging module
+    conf_t config_;                ///< configuration of the data_logging module
 
     bool debug_;                                 ///< Indicates if debug messages should be printed for each param change
     uint32_t data_logging_count_;               ///< Number of data logging parameter effectively in the array
@@ -312,7 +322,7 @@ public:
     /**
      * \brief   Data logging constructor
      */
-    Data_logging_T(File& file, State& state, data_logging_conf_t config = data_logging_default_config()):
+    Data_logging_T(File& file, State& state, conf_t config = default_config()):
         Data_logging(file, state, config)
     {}
 
@@ -340,18 +350,6 @@ protected:
 
 private:
     data_logging_entry_t list_[N];            ///< Data logging array, needs memory allocation
-};
-
-
-static inline data_logging_conf_t data_logging_default_config()
-{
-    data_logging_conf_t conf    = {};
-
-    conf.max_logs               = 500;
-    conf.debug                  = true;
-    conf.log_data               = 0;     // 1: log data, 0: no log data
-    conf.continuous_write       = false;
-    return conf;
 };
 
 

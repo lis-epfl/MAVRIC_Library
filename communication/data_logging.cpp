@@ -521,7 +521,7 @@ bool Data_logging::checksum_control(void)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Data_logging::Data_logging(File& file, State& state, data_logging_conf_t config):
+Data_logging::Data_logging(File& file, State& state, conf_t config):
     config_(config),
     data_logging_count_(0),
     log_data_(config_.log_data),

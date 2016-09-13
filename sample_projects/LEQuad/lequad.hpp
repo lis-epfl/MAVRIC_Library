@@ -117,8 +117,8 @@ public:
      struct conf_t
     {
         State::conf_t state_config;
-        data_logging_conf_t data_logging_continuous_config;
-        data_logging_conf_t data_logging_stat_config;
+        Data_logging::conf_t data_logging_continuous_config;
+        Data_logging::conf_t data_logging_stat_config;
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
         Navigation::conf_t navigation_config;
@@ -272,11 +272,11 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.state_config = State::default_config();
 
-    conf.data_logging_continuous_config                  = data_logging_default_config();
+    conf.data_logging_continuous_config                  = Data_logging::default_config();
     conf.data_logging_continuous_config.continuous_write = true;
     conf.data_logging_continuous_config.log_data         = 0;
 
-    conf.data_logging_stat_config                  = data_logging_default_config();
+    conf.data_logging_stat_config                  = Data_logging::default_config();
     conf.data_logging_stat_config.continuous_write = false;
     conf.data_logging_stat_config.log_data         = 0;
 
