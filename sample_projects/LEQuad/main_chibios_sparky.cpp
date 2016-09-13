@@ -53,16 +53,16 @@ int main(void)
     Sparky_chibi::conf_t board_config = Sparky_chibi::default_config();
 
     // LEDs on STM32F4DISCOVERY
-    board_config.gpio_led_err =
-    {
-        .port  = GPIOD,
-        .pin   = GPIOD_PIN12_LED4
-    };
-    board_config.gpio_led_stat =
-    {
-        .port  = GPIOD,
-        .pin   = GPIOD_PIN13_LED3
-    };
+    // board_config.gpio_led_err =
+    // {
+    //     .port  = GPIOD,
+    //     .pin   = GPIOD_PIN12_LED4
+    // };
+    // board_config.gpio_led_stat =
+    // {
+    //     .port  = GPIOD,
+    //     .pin   = GPIOD_PIN13_LED3
+    // };
 
     Sparky_chibi board(board_config);
 
