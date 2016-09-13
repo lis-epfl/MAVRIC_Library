@@ -42,7 +42,7 @@
 
 extern "C"
 {
-#include "hal.h"
+#include "libs/ChibiOS/os/hal/include/hal.h"
 }
 
 
