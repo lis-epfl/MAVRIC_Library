@@ -50,6 +50,9 @@ class Gpio_chibios: public Gpio
 {
 public:
 
+    /**
+     * \brief GPIO configuration
+     */
     struct conf_t
     {
         ioportid_t      port;
@@ -128,7 +131,7 @@ public:
 
 
 private:
-    ioportid_t      port_;
-    ioportmask_t    pin_;
-    bool            level_;
+    ioportid_t      port_;   ///< GPIO port
+    ioportmask_t    pin_;    ///< GPIO pin
+    bool            level_;  ///< GPIO level (high or low)
 };
