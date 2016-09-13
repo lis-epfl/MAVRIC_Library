@@ -46,12 +46,12 @@
 
 #include "hal/avr32/pwm_avr32.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include <math.h>
 #include "libs/asf/avr32/drivers/gpio/gpio.h"
-#include "util/print_util.hpp"
 }
 
 //------------------------------------------------------------------------------

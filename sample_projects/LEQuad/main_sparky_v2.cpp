@@ -42,7 +42,11 @@
 
 #include "control/manual_control.hpp"
 
+#include "drivers/gps_ublox.hpp"
+#include "drivers/hmc5883l.hpp"
+#include "drivers/lsm330dlc.hpp"
 #include "drivers/mpu_9250.hpp"
+#include "drivers/sonar_i2cxl.hpp"
 #include "drivers/spektrum_satellite.hpp"
 
 #include "hal/common/time_keeper.hpp"
@@ -60,16 +64,8 @@
 #include "simulation/simulation.hpp"
 
 #include "util/string_util.hpp"
-
-#include "drivers/lsm330dlc.hpp"
-#include "drivers/hmc5883l.hpp"
-#include "drivers/gps_ublox.hpp"
-#include "drivers/sonar_i2cxl.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
+
 
 #define MAVLINK_SYS_ID 2
 

@@ -33,7 +33,7 @@
  * \file time_keeper.cpp
  *
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Julien Lecoeur
  *
  * \brief This file is used to interact with the clock of the microcontroller
  *
@@ -46,7 +46,7 @@
 
 extern "C"
 {
-#include "hal.h"
+#include "libs/ChibiOS/hal/include/hal.h"
 }
 
 

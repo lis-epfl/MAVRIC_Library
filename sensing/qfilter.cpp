@@ -44,10 +44,10 @@
 #include "sensing/qfilter.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.hpp"
 #include <math.h>
 #include "util/maths.h"
 }

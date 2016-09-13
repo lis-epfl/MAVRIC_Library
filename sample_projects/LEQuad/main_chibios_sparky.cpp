@@ -37,7 +37,7 @@
 
 extern "C"
 {
-    #include "hal_usb.h"
+    #include "libs/ChibiOS/hal/include/hal_usb.h"
 }
 
 #define MAVLINK_SYS_ID 2

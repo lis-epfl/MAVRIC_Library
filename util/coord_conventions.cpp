@@ -42,14 +42,14 @@
 
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
+#include "util/quick_trig.hpp"
 
 #include <cmath>
 
 extern "C"
 {
 #include "util/maths.h"
-#include "util/print_util.hpp"
-#include "util/quick_trig.hpp"
 }
 
 // Definitions constants as double for precise conversion

@@ -40,11 +40,8 @@
  ******************************************************************************/
 
 #include "simulation/flow_sim.hpp"
-
-extern "C"
-{
 #include "util/quick_trig.hpp"
-}
+
 
 Flow_sim::Flow_sim(Dynamic_model& dynamic_model, raytracing::World& world, float orientation_azimuth):
     dynamic_model_(dynamic_model),

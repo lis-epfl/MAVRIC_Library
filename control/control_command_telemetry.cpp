@@ -42,11 +42,7 @@
 
 #include "control/control_command_telemetry.hpp"
 #include "hal/common/time_keeper.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
 
 
 void control_command_telemetry_send(const command_t* command, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)

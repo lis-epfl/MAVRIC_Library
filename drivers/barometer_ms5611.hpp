@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file bmp085.hpp
+ * \file barometer_ms5611.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef BMP085_HPP_
-#define BMP085_HPP_
+#ifndef MS5611_HPP_
+#define MS5611_HPP_
 
 #include <cstdint>
 #include <cstdbool>
@@ -50,7 +50,7 @@
 #include "hal/common/i2c.hpp"
 
 /**
- * \brief   Driver for the BMP085 barometer
+ * \brief   Driver for the MS5611 barometer
  */
 class Barometer_MS5611: public Barometer
 {
@@ -195,9 +195,9 @@ private:
     state_t     state_;                 ///< Sensor state
 
     calibration_data_t  calib_;          ///< Calibration data read from sensors PROM
-    uint8_t             i2c_address;
+    uint8_t             i2c_address;     ///< i2c Address of the sensor
 
-    uint32_t time_sampling_start_ms_;
+    uint32_t time_sampling_start_ms_;   ///< sampling starting time
 
     float       last_state_update_us_;  ///< Time of the last state update
     float       last_update_us_;        ///< Time of the last update

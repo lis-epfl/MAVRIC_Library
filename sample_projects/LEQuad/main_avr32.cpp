@@ -39,7 +39,8 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/lequad.hpp"
-
+#include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
+ 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
 // #include "hal/dummy/file_dummy.hpp"
@@ -53,13 +54,12 @@
 // #include "hal/dummy/pwm_dummy.hpp"
 #include "hal/common/time_keeper.hpp"
 
+#include "util/print_util.hpp"
+
 extern "C"
 {
-#include "util/print_util.hpp"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
-
-#include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 }
 
 // #include "hal/common/dbg.hpp"

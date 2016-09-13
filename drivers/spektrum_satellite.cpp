@@ -43,11 +43,8 @@
 
 #include "drivers/spektrum_satellite.hpp"
 #include "hal/common/time_keeper.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
+
 
 Spektrum_satellite* spek_sat;
 

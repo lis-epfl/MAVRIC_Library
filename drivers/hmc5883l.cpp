@@ -45,11 +45,7 @@
 
 #include "drivers/hmc5883l.hpp"
 #include "hal/common/time_keeper.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
-}
 
 
 const uint8_t CONF_REG_A              = 0x00;                   ///< Configuration Register A

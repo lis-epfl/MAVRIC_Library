@@ -14,7 +14,7 @@
     limitations under the License.
 */
 
-#include "hal.h"
+#include "libs/ChibiOS/hal/include/hal.h"
 
 /* Virtual serial port over USB.*/
 SerialUSBDriver SDU1;

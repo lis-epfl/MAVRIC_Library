@@ -44,12 +44,9 @@
 #include "hal/common/time_keeper.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
 #include "util/print_util.hpp"
 #include "util/quick_trig.hpp"
-}
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

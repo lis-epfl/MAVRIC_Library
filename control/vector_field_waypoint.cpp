@@ -43,13 +43,12 @@
 #include "control/vector_field_waypoint.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "cstdint"
 #include "util/vectors.h"
-
-#include "util/print_util.hpp"
 }
 
 //------------------------------------------------------------------------------
