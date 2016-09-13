@@ -33,7 +33,7 @@
  * \file    sparky_v2.cpp
  *
  * \author  MAV'RIC Team
- * \author  Jean-Francois Burnier
+ * \author  Julien Lecoeur
  *
  * \brief   Autopilot for Sparky V2.0 board based on STM32
  *
