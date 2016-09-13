@@ -81,11 +81,11 @@ public:
     /**
      * \brief   Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
      *
-     * \param   config                  Configuration
-     * \param   scheduler               Pointer to MAVLink scheduler
      * \param   file                    Pointer to file storage
      * \param   state                   Pointer to the state structure
      * \param   message_handler         Pointer to MAVLink message handler
+     * \param   mavlink_stream          Pointer to MAVLink stream
+     * \param   config                  Configuration
      *
      * \return  True if the init succeed, false otherwise
      */
@@ -162,7 +162,7 @@ protected:
     /**
      * \brief       Get maximum number of parameters
      *
-     * \details     To be overriden by child class
+     * \details     Abstract method to be implemented in child classes
      *
      * \return      Maximum number of parameters
      */
@@ -261,11 +261,11 @@ public:
     /**
      * \brief   Constructor
      *
-     * \param   config                  Configuration
-     * \param   scheduler               Pointer to MAVLink scheduler
      * \param   file                    Pointer to file storage
      * \param   state                   Pointer to the state structure
      * \param   message_handler         Pointer to MAVLink message handler
+     * \param   mavlink_stream          Pointer to MAVLink stream
+     * \param   config                  Configuration
      *
      * \return  True if the init succeed, false otherwise
      */

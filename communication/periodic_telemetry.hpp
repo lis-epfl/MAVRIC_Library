@@ -102,13 +102,13 @@ public:
     /**
      * \brief   Add new telemetry message to the scheduler
      *
+     * \param   task_id                 Unique task identifier
      * \param   repeat_period           Repeat period (us)
-     * \param   run_mode                Run mode
-     * \param   timing_mode             Timing mode
-     * \param   priority                Priority
      * \param   function                Function pointer to be called
      * \param   module_structure        Argument to be passed to the function
-     * \param   task_id                 Unique task identifier
+     * \param   priority                Priority
+     * \param   timing_mode             Timing mode
+     * \param   run_mode                Run mode
      *
      * \return  True if the message was correctly added, false otherwise
      */
