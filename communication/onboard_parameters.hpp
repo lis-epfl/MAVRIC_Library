@@ -55,7 +55,7 @@
  * \brief       Onboard parameters base class
  *
  * \details     This class is abstract and does not contains the task list,
- *              use the child class Onboard_parameters_tpl
+ *              use the child class Onboard_parameters_T
  */
 class Onboard_parameters
 {
@@ -255,7 +255,7 @@ private:
  * \tparam N    Maximum number of parameters
  */
 template<uint32_t N>
-class Onboard_parameters_tpl: public Onboard_parameters
+class Onboard_parameters_T: public Onboard_parameters
 {
 public:
     /**
@@ -269,7 +269,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Onboard_parameters_tpl(File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config):
+    Onboard_parameters_T(File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config):
         Onboard_parameters(file, state, message_handler, mavlink_stream, config)
     {}
 

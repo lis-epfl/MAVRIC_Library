@@ -39,7 +39,6 @@ $(info Mavric git hash  = $(MAVRIC_GIT_HASH))
 LIB_SRCS += communication/data_logging.cpp
 LIB_SRCS += communication/data_logging_telemetry.cpp
 LIB_SRCS += communication/hud_telemetry.cpp
-LIB_SRCS += communication/mavlink_communication.cpp
 LIB_SRCS += communication/mavlink_message_handler.cpp
 LIB_SRCS += communication/mavlink_stream.cpp
 LIB_SRCS += communication/mavlink_waypoint_handler.cpp

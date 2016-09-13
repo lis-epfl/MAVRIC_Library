@@ -62,7 +62,7 @@ typedef enum MAV_RESULT mav_result_t;
  * \brief       Message handler base class
  *
  * \details     This class is abstract and does not contains the lists of handlers,
- *              use the child class Mavlink_message_handler_tpl
+ *              use the child class Mavlink_message_handler_T
  */
 class Mavlink_message_handler
 {
@@ -288,7 +288,7 @@ private:
  * \tparam  P   Maximum number of command callbacks
  */
 template<uint32_t N, uint32_t P>
-class Mavlink_message_handler_tpl: public Mavlink_message_handler
+class Mavlink_message_handler_T: public Mavlink_message_handler
 {
 public:
 
@@ -299,7 +299,7 @@ public:
      * \param   mavlink_stream      mavlink stream
      *
      */
-    Mavlink_message_handler_tpl(Mavlink_stream& mavlink_stream, const conf_t& config):
+    Mavlink_message_handler_T(Mavlink_stream& mavlink_stream, const conf_t& config):
         Mavlink_message_handler(mavlink_stream, config)
     {}
 

@@ -176,8 +176,8 @@ public:
 
 private:
     conf_t            config_;            ///< Configuration
-    Buffer_tpl<1024>  tx_buffer_;         ///< Transmission buffer
-    Buffer_tpl<1024>  rx_buffer_;         ///< Reception buffer
+    Buffer_T<1024>  tx_buffer_;         ///< Transmission buffer
+    Buffer_T<1024>  rx_buffer_;         ///< Reception buffer
     bool              is_sending_;        ///< Flag telling if we are currently sending a buffer
 
     /**

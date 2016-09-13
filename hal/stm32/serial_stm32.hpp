@@ -259,8 +259,8 @@ public:
 private:
     serial_stm32_conf_t         config_;            ///< Configuration
 
-    Buffer_tpl<1024>            tx_buffer_;         ///< Transmission buffer
-    Buffer_tpl<1024>            rx_buffer_;         ///< Reception buffer
+    Buffer_T<1024>            tx_buffer_;         ///< Transmission buffer
+    Buffer_T<1024>            rx_buffer_;         ///< Reception buffer
 
     /**
      * \brief       Callback function to be called after an interrupt

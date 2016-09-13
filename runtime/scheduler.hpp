@@ -52,7 +52,7 @@
  * \brief   Scheduler base class
  *
  * \details This class is abstract and does not contains the task list,
- *          use the child class Scheduler_tpl
+ *          use the child class Scheduler_T
  */
 class Scheduler
 {
@@ -211,13 +211,13 @@ private:
  * \tparam  N   Maximum number of tasks
  */
 template<uint32_t N = 10>
-class Scheduler_tpl: public Scheduler
+class Scheduler_T: public Scheduler
 {
 public:
     /**
      * \brief       Constructor
      */
-    Scheduler_tpl(const Scheduler::conf_t config = default_config()):
+    Scheduler_T(const Scheduler::conf_t config = default_config()):
         Scheduler(config)
     {;}
 

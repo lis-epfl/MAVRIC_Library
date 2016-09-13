@@ -54,7 +54,8 @@
  * \brief   Handles various aspect of mavlink protocol with periodic telemetry, message callback,
  *          and onboard parameters
  */
-class Mavlink_communication
+template<uint32_t N_TELEM, uint32_t N_MSG_CB, uint32_t N_CMD_CB, uint32_t N_PARAM>
+class Mavlink_communication_T
 {
 public:
 
@@ -76,7 +77,21 @@ public:
      *
      * \return  Config structure
      */
-    static inline conf_t default_config(uint8_t sysid = 1);
+    static inline conf_t default_config(uint8_t sysid = 1)
+    {
+        conf_t conf                       = {};
+
+        conf.mavlink_stream_config        = {};
+        conf.mavlink_stream_config.sysid  = sysid;
+        conf.mavlink_stream_config.compid = 50;
+        conf.mavlink_stream_config.debug  = false,
+
+        conf.telemetry_config             = Periodic_telemetry::default_config();
+        conf.message_handler_config       = Mavlink_message_handler::default_config();
+        conf.onboard_parameters_config    = Onboard_parameters::default_config();
+
+        return conf;
+    };
 
     /**
      * \brief   Initialisation of the module MAVLink communication
@@ -88,7 +103,30 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Mavlink_communication(Serial& serial, State& state, File& file_storage, const conf_t& config = default_config());
+    Mavlink_communication_T(Serial& serial, State& state, File& file_storage, const conf_t& config = default_config()):
+        mavlink_stream_(serial, config.mavlink_stream_config),
+        telemetry_(mavlink_stream_, config.telemetry_config),
+        handler_(mavlink_stream_, config.message_handler_config),
+        parameters_(file_storage, state, handler_, mavlink_stream_, config.onboard_parameters_config)
+    {
+        bool init_success = true;
+
+        // Add callback to activate / disactivate streams
+        Mavlink_message_handler::msg_callback_t callback;
+
+        callback.message_id     = MAVLINK_MSG_ID_REQUEST_DATA_STREAM; // 66
+        callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
+        callback.compid_filter  = MAV_COMP_ID_ALL;
+        callback.function       = (Mavlink_message_handler::msg_callback_func_t)       &Periodic_telemetry::toggle_telemetry_stream;
+        callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)  &telemetry_;
+
+        init_success &= handler_.add_msg_callback(&callback);
+
+        if(!init_success)
+        {
+            print_util_dbg_print("[MAVLINK COMMUNICATION] constructor error\r\n");
+        }
+    }
 
     /**
      * \brief   Returns sysid of the underlying mavlink_stream
@@ -96,35 +134,56 @@ public:
      *
      * \return  sysid of the underlying mavlink_stream
      */
-     uint32_t sysid();
+    uint32_t sysid()
+    {
+        return mavlink_stream_.sysid();
+    }
 
 
     /*
      * \brief   Returns periodic telemetry
      */
-    Periodic_telemetry& telemetry();
-    Periodic_telemetry* p_telemetry();
-
+    Periodic_telemetry& telemetry()
+    {
+        return telemetry_;
+    }
+    Periodic_telemetry* p_telemetry()
+    {
+        return &telemetry_;
+    }
 
     /*
      * \brief   Returns message_handler
      */
-    Mavlink_message_handler& handler();
-    Mavlink_message_handler* p_handler();
-
+    Mavlink_message_handler& handler()
+    {
+        return handler_;
+    }
+    Mavlink_message_handler* p_handler()
+    {
+        return &handler_;
+    }
 
     /*
      * \brief   Returns mavlink_stream
      */
-    Mavlink_stream& stream();
-    Mavlink_stream* p_stream();
+    Mavlink_stream& stream()
+    {
+        return mavlink_stream_;
+    }
+    Mavlink_stream* p_stream()
+    {
+        return &mavlink_stream_;
+    }
 
 
     /*
      * \brief   Returns onboard_parameters struct
      */
-    Onboard_parameters& parameters();
-    Onboard_parameters* p_parameters();
+    Onboard_parameters& parameters()
+    {
+        return parameters_;
+    }
 
 
     /**
@@ -132,7 +191,23 @@ public:
      *
      * \return  Success
      */
-    bool update(void);
+    bool update(void)
+    {
+        // Receive new message
+        Mavlink_stream::msg_received_t rec;
+        while (mavlink_stream_.receive(&rec))
+        {
+                handler_.receive(&rec);
+        }
+
+        // Send messages
+        telemetry_.update();
+
+        // Send one onboard param, if necessary
+        parameters_.send_first_scheduled_parameter();
+
+        return true;
+    }
 
 
     /**
@@ -142,30 +217,16 @@ public:
      *
      * \return  Success
      */
-    static bool update_task(Mavlink_communication* mavlink_communication);
+    static bool update_task(Mavlink_communication_T* mavlink_communication)
+    {
+        return mavlink_communication->update();
+    }
 
 private:
-    Mavlink_stream                      mavlink_stream_;       ///<    Mavlink interface using streams
-    Periodic_telemetry_tpl<30>          telemetry_;            ///<    Periodic telemetry
-    Mavlink_message_handler_tpl<20, 20> handler_;              ///<    Message handler
-    Onboard_parameters_tpl<120>         parameters_;           ///<    Onboard parameters
-};
-
-
-Mavlink_communication::conf_t Mavlink_communication::default_config(uint8_t sysid)
-{
-    conf_t conf                       = {};
-
-    conf.mavlink_stream_config        = {};
-    conf.mavlink_stream_config.sysid  = sysid;
-    conf.mavlink_stream_config.compid = 50;
-    conf.mavlink_stream_config.debug  = false,
-
-    conf.telemetry_config             = Periodic_telemetry::default_config();
-    conf.message_handler_config       = Mavlink_message_handler::default_config();
-    conf.onboard_parameters_config    = Onboard_parameters::default_config();
-
-    return conf;
+    Mavlink_stream                                  mavlink_stream_;       ///<    Mavlink interface using streams
+    Periodic_telemetry_T<N_TELEM>                   telemetry_;            ///<    Periodic telemetry
+    Mavlink_message_handler_T<N_MSG_CB, N_CMD_CB>   handler_;              ///<    Message handler
+    Onboard_parameters_T<N_PARAM>                   parameters_;           ///<    Onboard parameters
 };
 
 

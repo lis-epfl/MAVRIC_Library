@@ -82,7 +82,7 @@ static inline data_logging_conf_t data_logging_default_config();
  * \brief   Log data in files
  *
  * \details This class is abstract and does not contains the task list,
- *          use the child class Data_logging_tpl
+ *          use the child class Data_logging_T
  */
 class Data_logging
 {
@@ -306,13 +306,13 @@ private:
  * \tparam  N   Maximum number of variables to log
  */
 template<uint32_t N>
-class Data_logging_tpl: public Data_logging
+class Data_logging_T: public Data_logging
 {
 public:
     /**
      * \brief   Data logging constructor
      */
-    Data_logging_tpl(File& file, State& state, data_logging_conf_t config = data_logging_default_config()):
+    Data_logging_T(File& file, State& state, data_logging_conf_t config = data_logging_default_config()):
         Data_logging(file, state, config)
     {}
 

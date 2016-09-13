@@ -193,6 +193,8 @@ public:
         conf.acc_range              = ACC_2G;
         conf.gyro_filter            = GYRO_LOWPASS_184_HZ;
         conf.gyro_range             = GYRO_500_DEG;
+        // conf.gyro_range             = GYRO_1000_DEG;
+        // conf.gyro_range             = GYRO_250_DEG;
         conf.default_sample_rate    = 500; // in Hz
 
         return conf;

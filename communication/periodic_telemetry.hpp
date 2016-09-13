@@ -195,7 +195,7 @@ private:
 
 
 template<uint32_t N = 10>
-class Periodic_telemetry_tpl: public Periodic_telemetry
+class Periodic_telemetry_T: public Periodic_telemetry
 {
 public:
 
@@ -205,7 +205,7 @@ public:
      * \param   mavlink_stream      Stream to which messages will be written
      * \param   config              Configuration structure
      */
-    Periodic_telemetry_tpl(Mavlink_stream& mavlink_stream, conf_t config):
+    Periodic_telemetry_T(Mavlink_stream& mavlink_stream, conf_t config):
         Periodic_telemetry(mavlink_stream, config),
         scheduler_(config.scheduler_config)
     {};
@@ -245,7 +245,7 @@ protected:
     }
 
 private:
-    Scheduler_tpl<N>     scheduler_;          ///<    Task set for scheduling of down messages
+    Scheduler_T<N>     scheduler_;          ///<    Task set for scheduling of down messages
     telemetry_entry_t    list_[N];            ///<    List of message callbacks
 };
 

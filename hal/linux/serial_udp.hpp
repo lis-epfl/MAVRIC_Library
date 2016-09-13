@@ -157,7 +157,7 @@ public:
 private:
     serial_udp_conf_t   config_;
 
-    Buffer_tpl<1024>    tx_buffer_;
+    Buffer_T<1024>    tx_buffer_;
     Buffer              rx_buffer_;
 
     int                 socket_;

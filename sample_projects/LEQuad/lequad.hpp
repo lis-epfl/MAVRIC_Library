@@ -104,6 +104,13 @@ extern "C"
 class LEQuad
 {
 public:
+    static const uint32_t N_TELEM  = 30;
+    static const uint32_t N_MSG_CB = 20;
+    static const uint32_t N_CMD_CB = 20;
+    static const uint32_t N_PARAM  = 120;
+    typedef Mavlink_communication_T<N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM> Mavlink_communication;
+
+
     /**
      * \brief   Configuration structure
      */
@@ -223,7 +230,7 @@ protected:
 
     State state;                                                ///< The structure with all state information
 
-    Scheduler_tpl<20>       scheduler;
+    Scheduler_T<20>       scheduler;
     Mavlink_communication   communication;
 
     servos_mix_quadcotper_diag_t servo_mix;
@@ -246,8 +253,8 @@ protected:
     hud_telemetry_t hud;                                        ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    Data_logging_tpl<10>    data_logging_continuous;
-    Data_logging_tpl<10>    data_logging_stat;
+    Data_logging_T<10>    data_logging_continuous;
+    Data_logging_T<10>    data_logging_stat;
 
     command_t                       command;
     // attitude_controller_t           attitude_controller;
