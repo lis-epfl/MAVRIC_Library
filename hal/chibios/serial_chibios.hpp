@@ -45,7 +45,7 @@
 
 extern "C"
 {
-#include "libs/ChibiOS/hal/include/hal.h"
+#include "libs/ChibiOS/os/hal/include/hal.h"
 }
 
 #include "util/buffer.hpp"
