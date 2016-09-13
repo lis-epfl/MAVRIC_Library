@@ -91,14 +91,15 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     position_estimation(state, barometer, sonar, gps, ahrs),
     mission_handler_registry(),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication_.mavlink_stream(), mission_handler_registry, config.navigation_config),
+    position_controller_(position_estimation, ahrs, config.position_controller_config),
     waypoint_handler(position_estimation, navigation, state, mavlink_communication_.message_handler(), mavlink_communication_.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
-    hold_position_handler(TEMPORARY_NAVIGATION_CONTROLLER_PLACEHOLDER, position_estimation, navigation),
-    landing_handler(TEMPORARY_NAVIGATION_CONTROLLER_PLACEHOLDER, TEMPORARY_XY_POS_Z_VEL_CONTROLLER_PLACEHOLDER, position_estimation, navigation, state),
-    navigating_handler(TEMPORARY_NAVIGATION_CONTROLLER_PLACEHOLDER, position_estimation, navigation, mavlink_communication_.mavlink_stream(), waypoint_handler),
+    hold_position_handler(position_controller_, position_estimation, navigation),
+    landing_handler(position_controller_, position_controller_, position_estimation, navigation, state),
+    navigating_handler(position_controller_, position_estimation, navigation, mavlink_communication_.mavlink_stream(), waypoint_handler),
     on_ground_handler(navigation),
-    takeoff_handler(TEMPORARY_NAVIGATION_CONTROLLER_PLACEHOLDER, position_estimation, navigation, state),
-    critical_landing_handler(TEMPORARY_NAVIGATION_CONTROLLER_PLACEHOLDER, TEMPORARY_XY_POS_Z_VEL_CONTROLLER_PLACEHOLDER, position_estimation, navigation, state),
-    critical_navigating_handler(TEMPORARY_NAVIGATION_CONTROLLER_PLACEHOLDER, position_estimation, navigation, mavlink_communication_.mavlink_stream(), waypoint_handler),
+    takeoff_handler(position_controller_, position_estimation, navigation, state),
+    critical_landing_handler(position_controller_, position_controller_, position_estimation, navigation, state),
+    critical_navigating_handler(position_controller_, position_estimation, navigation, mavlink_communication_.mavlink_stream(), waypoint_handler),
     mission_planner(position_estimation, navigation, ahrs, state, manual_control, mavlink_communication_.message_handler(), mavlink_communication_.mavlink_stream(), waypoint_handler, mission_handler_registry),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
@@ -560,7 +561,8 @@ bool LEQuad::main_task(void)
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
-                controls = controls_nav;
+                position_controller_.update();
+                controls = position_controller_.velocity_command();
                 controls.control_mode = VELOCITY_COMMAND_MODE;
 
                 // if no waypoints are set, we do position hold therefore the yaw mode is absolute
@@ -576,7 +578,8 @@ bool LEQuad::main_task(void)
                 break;
 
             case Mav_mode::POSITION_HOLD:
-                controls = controls_nav;
+                position_controller_.update();
+                controls = position_controller_.velocity_command();
                 controls.control_mode = VELOCITY_COMMAND_MODE;
 
                 if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (mission_planner.critical_behavior() == Mission_planner::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))

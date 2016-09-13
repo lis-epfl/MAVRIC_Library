@@ -41,7 +41,7 @@
 
 
 #include "mission/mission_handler_navigating.hpp"
-
+#include "control/inavigation_controller.hpp"
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ bool Mission_handler_navigating<INavigation_controller>::set_control_command(Mis
 {
     INavigation_controller::nav_command_t cmd;
 	cmd.pos = waypoint_.local_pos();
-	controller_.set_navigation_command(cmd);
+	return controller_.set_navigation_command(cmd);
 }
 
 //------------------------------------------------------------------------------

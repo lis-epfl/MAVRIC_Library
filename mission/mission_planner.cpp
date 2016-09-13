@@ -538,11 +538,13 @@ void Mission_planner::state_machine()
                                                 ins_.position_lf()[Z]);
                 // Insert so we can say to go back to doing last mission item afterwords
                 insert_ad_hoc_waypoint(inserted_waypoint_);
+
+                hold_position_set_ = true;
             }
 
             if (current_mission_handler_ != NULL)
             {
-                current_mission_handler_->handle(*this);
+                current_mission_handler_->update(*this);
             }
             // DONT CHECK IF FINISHED POSITION HOLD
         }

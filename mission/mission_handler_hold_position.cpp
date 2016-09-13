@@ -41,7 +41,7 @@
 
 
 #include "mission/mission_handler_hold_position.hpp"
-
+#include "control/inavigation_controller.hpp"
 extern "C"
 {
 

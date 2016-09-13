@@ -62,6 +62,7 @@
 #include "control/inavigation_controller.hpp"
 #include "control/ixyposition_zvel_controller.hpp"
 #include "control/manual_control.hpp"
+#include "control/position_controller.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
 #include "control/stabilisation.hpp"
@@ -136,6 +137,7 @@ public:
         remote_conf_t remote_config;
         Attitude_controller::conf_t attitude_controller_config;
         Velocity_controller_copter::conf_t velocity_controller_copter_config;
+        Position_controller::conf_t position_controller_config;
     };
 
     /**
@@ -252,6 +254,8 @@ protected:
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
 
     Navigation navigation;                                      ///< The structure to perform GPS navigation
+    Position_controller position_controller_;
+
 
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
     Mission_handler_hold_position<INavigation_controller> hold_position_handler;
@@ -314,6 +318,8 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.attitude_controller_config = Attitude_controller::default_config();
 
     conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
+
+    conf.position_controller_config = Position_controller::default_config();
 
     /* Mavlink communication config */
     Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);
