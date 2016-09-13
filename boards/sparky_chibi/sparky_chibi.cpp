@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file    sparky_v2.cpp
+ * \file    sparky_chibi.cpp
  *
  * \author  MAV'RIC Team
  * \author  Julien Lecoeur
@@ -46,7 +46,7 @@
 
 extern "C"
 {
-#include "hal.h"
+#include "libs/ChibiOS/os/hal/include/hal.h"
 }
 
 
@@ -150,7 +150,8 @@ bool Sparky_chibi::init(void)
     // -------------------------------------------------------------------------
     // Init Serials
     // -------------------------------------------------------------------------
-    serial_.init();
+    ret = serial_.init();
+    init_success &= ret;
     // for (size_t i = 0; i < SERIAL_COUNT; i++)
     // {
     //     ret = serial_[i].init();
