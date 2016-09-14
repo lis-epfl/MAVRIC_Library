@@ -114,6 +114,9 @@ int main(int argc, char** argv)
                         file_stat,
                         mav_config);
 
+    // initialize MAV
+    init_success &= mav.init();
+
     // -------------------------------------------------------------------------
     // Add simulation telemetry
     // -------------------------------------------------------------------------
