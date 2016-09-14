@@ -90,9 +90,23 @@ public:
           gps_mocap_(mavlink_communication_.message_handler()),
           ahrs_ekf_mocap_(mavlink_communication_.message_handler(), ahrs_ekf)
       {
-          gps_mocap_.init();
-          ahrs_ekf_mocap_.init();
+
       }
+
+    /*
+     * \brief   Initializes LEQuad
+     * \details  Calls all init functions (init_*());
+     *
+     * \return  success
+     */
+    virtual bool init(void)
+    {
+        bool success = true;
+        success &= LEQuad::init();
+        success &= gps_mocap_.init();
+        success &= ahrs_ekf_mocap_.init();
+        return success;
+    }
 
 private:
     Gps_mocap gps_mocap_;
