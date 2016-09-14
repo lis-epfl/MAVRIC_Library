@@ -174,6 +174,14 @@ public:
                   File& file2,
                   const conf_t& config = default_config());
 
+    /*
+     * \brief   Initializes LEQuad
+     * \details  Calls all init functions (init_*());
+     *
+     * \return  success
+     */
+    virtual bool init(void);
+
     /**
      *  \brief    Main update function (infinite loop)
      *  \details  Performs last operations before flight, then loops on scheduler updates

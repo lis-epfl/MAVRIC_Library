@@ -84,11 +84,11 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     servo_7(servo_7),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(mavlink_communication_.mavlink_stream(), battery, config.state_config),
-    scheduler(Scheduler::default_config()),
+    scheduler(config.scheduler_config),
     mavlink_communication_(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
-    position_estimation(state, barometer, sonar, gps, ahrs),
+    position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
     mission_handler_registry(),
     navigation(controls_nav, ahrs.qe, position_estimation, state, mavlink_communication_.mavlink_stream(), mission_handler_registry, config.navigation_config),
     position_controller_(position_estimation, ahrs, config.position_controller_config),
@@ -106,27 +106,33 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(mavlink_communication_.sysid()),
     config_(config)
+{}
+
+
+bool LEQuad::init(void)
 {
+    bool success = true;
+
     // Init main task first
-    init_main_task();
+    success &= init_main_task();
 
     // Init all modules
-    init_state();
-    init_communication();
-    init_data_logging();
-    init_gps();
-    init_imu();
-    init_barometer();
-    init_sonar();
-    init_attitude_estimation();
-    init_position_estimation();
-    init_stabilisers();
-    init_navigation();
-    init_hud();
-    init_servos();
-    init_ground_control();
+    success &= init_state();
+    success &= init_communication();
+    success &= init_data_logging();
+    success &= init_gps();
+    success &= init_imu();
+    success &= init_barometer();
+    success &= init_sonar();
+    success &= init_attitude_estimation();
+    success &= init_position_estimation();
+    success &= init_stabilisers();
+    success &= init_navigation();
+    success &= init_hud();
+    success &= init_servos();
+    success &= init_ground_control();
+    return success;
 }
-
 
 void LEQuad::loop(void)
 {

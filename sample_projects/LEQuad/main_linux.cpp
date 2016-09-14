@@ -52,7 +52,7 @@ extern "C"
 
 int main(int argc, char** argv)
 {
-    uint8_t sysid = 0;
+    uint8_t sysid = 1;
     bool init_success = true;
 
     // -------------------------------------------------------------------------
@@ -113,6 +113,9 @@ int main(int argc, char** argv)
                         file_log,
                         file_stat,
                         mav_config);
+
+    // initialize MAV
+    init_success &= mav.init();
 
     // -------------------------------------------------------------------------
     // Add simulation telemetry
