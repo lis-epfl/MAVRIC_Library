@@ -55,7 +55,8 @@ Position_controller::Position_controller(INS& ins, ahrs_t& ahrs, conf_t config) 
     cruise_pid_config_(config.cruise_pid_config),
     hover_pid_config_(config.hover_pid_config),
     max_climb_rate_(config.max_climb_rate),
-    min_cruise_dist_(config.min_cruise_dist)
+    min_cruise_dist_(config.min_cruise_dist),
+    kp_yaw_(config.kp_yaw)
 {
     pid_controller_init(&pid_controller_, &hover_pid_config_);
 
@@ -149,9 +150,8 @@ void Position_controller::calc_velocity_command(const pos_command_t& pos_command
     
     // calculate heading towards goal
     float rel_heading;
-    float kp_yaw                                      = 0.2f;
     rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - coord_conventions_get_yaw(ahrs_.qe));
-    velocity_command_.rpy[YAW] = kp_yaw * rel_heading;
+    velocity_command_.rpy[YAW] = kp_yaw_ * rel_heading;
 }
 
 

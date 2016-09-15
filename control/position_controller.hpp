@@ -62,6 +62,7 @@ public:
         float max_climb_rate;
         float max_rel_yaw;
         float min_cruise_dist;
+        float kp_yaw;
     };
 
     enum class ctrl_mode_t
@@ -137,6 +138,7 @@ private:
     pid_controller_conf_t hover_pid_config_;         //< configuration of hover pid position controller
     float max_climb_rate_;                           //< maximal climb rate (velocity is scaled so that output velocity in Z <= max_climb_rate)
     float min_cruise_dist_;                          //< minimal distance to target above which the vehicle changes to cruise mode
+    float kp_yaw_;
 
 };
 
@@ -145,6 +147,7 @@ typename Position_controller::conf_t Position_controller::default_config()
     conf_t conf;
     conf.max_climb_rate     = 1.0f;
     conf.min_cruise_dist    = 2.0f;            // TODO: Choose meaning full min_cruise_dist
+    conf.kp_yaw             = 0.2f;
 
     /* config of the cruise pid controller */
     conf.cruise_pid_config.p_gain                   = 0.7f;
