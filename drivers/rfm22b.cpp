@@ -1603,7 +1603,7 @@ void Rfm22b::irq_handler(void)
 
 	uint8_t interrupt_1 = 0;
     read_reg(INTERRUPT_STAT_1, &interrupt_1);
-    if (!((interrupt_1 >> 1) & 1))
+    if (!((interrupt_1 >> 1) & 1)) // Valid Packet Received Mask
     {
        	// Enable interruption
     	isr_enable();
@@ -1661,7 +1661,7 @@ bool Rfm22b::receive(void)
 {
 	bool ret = true;
 	uint8_t interrupt_1 = 0;
-	
+
 	led_irq_.toggle();
     ret &= read_reg(RECEIVE_PKT_LEN, &rx_len_);
 
