@@ -148,10 +148,13 @@ void Position_controller::calc_velocity_command(const pos_command_t& pos_command
     velocity_command_.tvel[Y] = goal_dir_sg[Y] * v_desired;
     velocity_command_.tvel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir_sg[Z] * v_desired;
     
-    // calculate heading towards goal
-    float rel_heading;
-    rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - coord_conventions_get_yaw(ahrs_.qe));
-    velocity_command_.rpy[YAW] = kp_yaw_ * rel_heading;
+    // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
+    if(cruise_mode_)
+    {
+        float rel_heading;
+        rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - coord_conventions_get_yaw(ahrs_.qe));
+        velocity_command_.rpy[YAW] = kp_yaw_ * rel_heading;    
+    }
 }
 
 
