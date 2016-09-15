@@ -204,6 +204,8 @@ bool Waypoint::heading(float& heading) const
     case MAV_CMD_NAV_LAND:          // 21
     case MAV_CMD_NAV_TAKEOFF:       // 22
     case MAV_CMD_OVERRIDE_GOTO:     // 252
+    case MAV_CMD_NAV_SPLINE_WAYPOINT: // 82
+    case MAV_CMD_NAV_PATHPLANNING:    // 81
         heading = param4_;
         return true;
         
