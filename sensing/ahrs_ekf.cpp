@@ -422,7 +422,7 @@ bool Ahrs_ekf::update(void)
 
         update_step_acc();
 
-        update_step_mag();
+        // update_step_mag();
     }
     else
     {
