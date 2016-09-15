@@ -30,31 +30,46 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file iposition_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief Interface for position controller
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef IPOSITION_CONTROLLER_HPP_
+#define IPOSITION_CONTROLLER_HPP_
 
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+class IPosition_controller
 {
-    INS::origin_ = origin;
+public:
+    /*
+     * \brief   structure representing a position command; contains desired position in local frame
+     */
+    struct pos_command_t : base_command_t
+    {
+        local_position_t    pos;        ///< desired position in local frame
+    };
+
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
+
+    /**
+     * \brief           sets the position command (desired position)
+     *
+     * \param command   position command indicating target location in local frame
+     *
+     * \return success  whether command was accepted
+     */
+    inline virtual bool set_position_command(const pos_command_t& command) = 0;
 };
 
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+#endif /* IPOSITION_CONTROLLER_HPP_ */

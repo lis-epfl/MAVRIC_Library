@@ -94,6 +94,9 @@ int main(int argc, char** argv)
                         dummy_file_stat,
                         mav_config );
 
+    // initialize MAV
+    init_success &= mav.init();
+
     // -------------------------------------------------------------------------
     // Create simulation
     // -------------------------------------------------------------------------

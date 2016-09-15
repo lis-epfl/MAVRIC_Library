@@ -30,31 +30,64 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file mission_handler_critical_landing.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief The MAVLink mission planner handler for the critical landing state
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef MISSION_HANDLER_CRITICAL_LANDING__
+#define MISSION_HANDLER_CRITICAL_LANDING__
 
+#include "mission/mission_handler_landing.hpp"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+/*
+ * The handler class takes in a template parameter that allows control inputs.
+ */
+template <class T1, class T2>
+class Mission_handler_critical_landing : public Mission_handler_landing<T1, T2>
 {
-    INS::origin_ = origin;
+public:
+
+
+    /**
+     * \brief   Initialize the landing mission planner handler
+     *
+     * \param   desc_to_small_alt_controller    The reference to the controller used during the descent to small altitudes phase
+     * \param   desc_to_ground_controller       The reference to the controller used during the descent to ground phase
+     * \param   ins                             The reference to the ins
+     * \param   navigation                      The reference to the navigation structure
+     * \param   state                           The reference to the state structure
+     */
+     Mission_handler_critical_landing(  T1& desc_to_small_alt_controller,
+                                        T2& desc_to_ground_controller,
+                                        const INS& ins,
+                                        Navigation& navigation,
+                                        State& state);
+
+    /**
+     * \brief   Checks if the waypoint is a landing waypoint
+     *  
+     * \details     Checks if the inputted waypoint is a:
+     *                  MAV_CMD_NAV_CRITICAL_LAND
+     *
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Can handle
+     */
+    virtual bool can_handle(const Waypoint& wpt) const;
 };
 
 
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+#include "mission/mission_handler_critical_landing.hxx"
+
+
+
+
+
+
+#endif // MISSION_HANDLER_CRITICAL_LANDING__

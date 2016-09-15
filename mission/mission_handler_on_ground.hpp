@@ -30,31 +30,88 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file mission_handler_on_ground.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief The MAVLink mission planner handler for the on ground state
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef MISSION_HANDLER_ON_GROUND__
+#define MISSION_HANDLER_ON_GROUND__
 
+#include "mission/mission_handler.hpp"
+#include "mission/navigation.hpp"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
+/*
+ * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ */
 
-
-INS::INS(global_position_t origin)
+class Mission_handler_on_ground : public Mission_handler
 {
-    INS::origin_ = origin;
+public:
+
+
+    /**
+     * \brief   Initialize the on ground mission planner handler
+     *
+     * \param   navigation              The reference to the navigation class
+     */
+     Mission_handler_on_ground(Navigation& navigation);
+
+
+    /**
+     * \brief   Checks if the waypoint is on the ground
+     *  
+     * \details     DOES NOT CURRENTLY CHECK IF WE ARE ON GROUND
+     *
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Can handle
+     */
+    virtual bool can_handle(const Waypoint& wpt) const;
+
+    /**
+     * \brief   Does nothing
+     *  
+     * \details     Does nothing
+     *
+     * \param   mission_planner     The mission planner class
+     * \param   wpt                 The waypoint class
+     *
+     * \return  True
+     */
+    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+
+    /**
+     * \brief   Returns 0
+     *  
+     * \details     Returns 0
+     *
+     * \param   mission_planner     The mission planner class
+     *
+     * \return  0
+     */
+    virtual int update(Mission_planner& mission_planner);
+
+    /**
+     * \brief   Returns that the mission state is in STANDBY
+     *
+     * \return  Mission handler's mission state
+     */
+    virtual Mission_planner::internal_state_t handler_mission_state() const;
+
+protected:
+    Navigation& navigation_;                                    ///< The reference to the navigation structure
 };
 
 
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+
+
+
+
+
+#endif // MISSION_HANDLER_ON_GROUND__

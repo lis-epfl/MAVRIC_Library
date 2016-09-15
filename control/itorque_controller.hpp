@@ -30,31 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file itorque_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief Interface for torque controller
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef ITORQUE_CONTROLLER_HPP_
+#define ITORQUE_CONTROLLER_HPP_
 
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+class ITorque_controller
 {
-    INS::origin_ = origin;
+public:
+    /*
+     * \brief   structure representing a torq command; contains desired torq for each axis and thrust in body frame
+     */
+    struct torq_command_t : base_command_t
+    {
+        std::array<float,3>  torq;       ///< desired torq for each axis in body frame
+        float                thrust;     ///< desired thrust
+    };
+
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
+
+    /**
+     * \brief           sets the torque command (desired torque and thrust)
+     *
+     * \param command   torque command indicating desired torque and thrust in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool set_torque_command(const torq_command_t& command) = 0;
 };
 
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+#endif /* ITORQUE_CONTROLLER_HPP_ */

@@ -30,31 +30,36 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file mission_handler_hold_position.cpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief The MAVLink mission planner handler for the hold position state
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
-
-
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+#include "mission/mission_handler_hold_position.hpp"
+#include "control/inavigation_controller.hpp"
+extern "C"
 {
-    INS::origin_ = origin;
-};
 
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
 }
+
+//------------------------------------------------------------------------------
+// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+template <>
+bool Mission_handler_hold_position<INavigation_controller>::set_control_command(Mission_planner& mission_planner)
+{
+	INavigation_controller::nav_command_t cmd;
+	cmd.pos = waypoint_.local_pos();
+	return controller_.set_navigation_command(cmd);
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+

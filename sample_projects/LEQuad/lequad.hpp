@@ -59,8 +59,10 @@
 
 #include "control/altitude_controller.hpp"
 #include "control/attitude_controller.hpp"
+#include "control/inavigation_controller.hpp"
+#include "control/ixyposition_zvel_controller.hpp"
 #include "control/manual_control.hpp"
-#include "control/navigation.hpp"
+#include "control/position_controller.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_quadcopter_diag_default_config.hpp"
 #include "control/stabilisation.hpp"
@@ -77,6 +79,16 @@
 
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"
+
+#include "mission/mission_planner.hpp"
+#include "mission/mission_handler_critical_landing.hpp"
+#include "mission/mission_handler_critical_navigating.hpp"
+#include "mission/mission_handler_hold_position.hpp"
+#include "mission/mission_handler_landing.hpp"
+#include "mission/mission_handler_navigating.hpp"
+#include "mission/mission_handler_on_ground.hpp"
+#include "mission/mission_handler_takeoff.hpp"
+#include "mission/navigation.hpp"
 
 #include "simulation/simulation.hpp"
 
@@ -132,6 +144,7 @@ public:
         remote_conf_t remote_config;
         Attitude_controller::conf_t attitude_controller_config;
         Velocity_controller_copter::conf_t velocity_controller_copter_config;
+        Position_controller::conf_t position_controller_config;
     };
 
     /**
@@ -167,6 +180,14 @@ public:
                   File& file1,
                   File& file2,
                   const conf_t& config = default_config());
+
+    /*
+     * \brief   Initializes LEQuad
+     * \details  Calls all init functions (init_*());
+     *
+     * \return  success
+     */
+    virtual bool init(void);
 
     /**
      *  \brief    Main update function (infinite loop)
@@ -245,8 +266,22 @@ protected:
 
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
+    Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
+
     Navigation navigation;                                      ///< The structure to perform GPS navigation
-    Mavlink_waypoint_handler waypoint_handler;
+    Position_controller position_controller_;
+
+
+    Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
+    Mission_handler_hold_position<INavigation_controller> hold_position_handler;
+    Mission_handler_landing<INavigation_controller, IXyposition_zvel_controller> landing_handler;
+    Mission_handler_navigating<INavigation_controller> navigating_handler;
+    Mission_handler_on_ground on_ground_handler;
+    Mission_handler_takeoff<INavigation_controller> takeoff_handler;
+    Mission_handler_critical_landing<INavigation_controller, IXyposition_zvel_controller> critical_landing_handler;
+    Mission_handler_critical_navigating<INavigation_controller> critical_navigating_handler;
+    Mission_planner mission_planner;                            ///< Controls the mission plan
+
 
     State_machine state_machine;                                ///< The structure for the state machine
 
@@ -303,6 +338,8 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.attitude_controller_config = Attitude_controller::default_config();
 
     conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
+
+    conf.position_controller_config = Position_controller::default_config();
 
     /* Mavlink communication config */
     Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);

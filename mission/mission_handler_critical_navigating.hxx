@@ -30,31 +30,45 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file mission_handler_critical_navigating.hxx
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief   The MAVLink mission planner handler functions for the critical 
+ *          navigating state
  *
  ******************************************************************************/
 
+ 
+#ifndef MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
+#define MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
 
-#include "sensing/ins.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
+#include "mission/mission_handler_navigating.hpp"
 
-
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+template <class T>
+Mission_handler_critical_navigating<T>::Mission_handler_critical_navigating(T& controller,
+                                                                            const INS& ins,
+                                                                            Navigation& navigation,
+                                                                            const Mavlink_stream& mavlink_stream,
+                                                                            Mavlink_waypoint_handler& waypoint_handler):
+            Mission_handler_navigating<T>(controller, ins, navigation, mavlink_stream, waypoint_handler)
 {
-    INS::origin_ = origin;
-};
-
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
 }
+
+template <class T>
+bool Mission_handler_critical_navigating<T>::can_handle(const Waypoint& wpt) const
+{
+    bool handleable = false;
+
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_CRITICAL_WAYPOINT)
+    {
+        handleable = true;
+    }
+
+    return handleable;
+}
+
+#endif // MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__

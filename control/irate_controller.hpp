@@ -30,31 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file irate_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief Interface for rate controller
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef IRATE_CONTROLLER_HPP_
+#define IRATE_CONTROLLER_HPP_
 
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+class IRate_controller
 {
-    INS::origin_ = origin;
+public:
+    /*
+     * \brief   structure representing a rate command; contains desired angular velocity and thrust in body frame
+     */
+    struct rate_command_t : base_command_t
+    {
+        std::array<float,3>  rates;       ///< desired rates (angular velocity) in body frame
+        float                thrust;     ///< desired thrust
+    };
+
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
+
+    /**
+     * \brief           sets the rate command (desired angular velocity and thrust)
+     *
+     * \param command   rate command indicating desired angular velocity and thrust in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    inline virtual bool set_rate_command(const rate_command_t& command) = 0;
 };
 
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+#endif /* IRATE_CONTROLLER_HPP_ */

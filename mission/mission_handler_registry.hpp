@@ -30,31 +30,73 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file mission_handler_registry.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief The mission handler registry is responsible for registering and
+ *        obtaining mission handlers based on an inputted waypoint
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef MISSION_HANDLER_REGISTRY__
+#define MISSION_HANDLER_REGISTRY__
 
+class Mission_handler;
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
+#include "mission/waypoint.hpp"
 
+#define MAX_REGISTERED_MISSION_HANDLERS 20
 
-INS::INS(global_position_t origin)
+/*
+ * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ */
+
+class Mission_handler_registry
 {
-    INS::origin_ = origin;
+public:
+    Mission_handler_registry();
+
+    /**
+     * \brief   Registers the inputted handler to the array of known
+     *          mission handlers. Performs a check to see if that
+     *          object is already within the array.
+     *
+     * \param   handler     The new mission handler
+     *
+     * \return  Success
+     */
+    bool register_mission_handler(Mission_handler& handler);
+
+    /**
+     * \brief   Attempts to get the mission handler form the registry.
+     *
+     * \details If there is a mission handler that can take the waypoint,
+     *          then the registry will return the first mission handler
+     *          that can take it. If no mission handler can take the
+     *          waypoint, then the mission handler will return NULL.
+     *
+     * \param   waypoint    The waypoint to be handled
+     *
+     * \return  The first acceptable mission handler or NULL
+     */
+    Mission_handler* get_mission_handler(const Waypoint& waypoint);
+
+private:
+    /**
+     * Array of registered mission handlers. Other classes will
+     * register a mission handler through the function
+     * Mission_planner::register_mission_handler(Mission_handler*).
+     */
+    Mission_handler* registered_mission_handlers_[MAX_REGISTERED_MISSION_HANDLERS];
+    uint8_t registered_mission_handler_count_;                  ///< The number of mission handler in the array
 };
 
 
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+
+
+
+
+#endif // MISSION_HANDLER_REGISTRY__

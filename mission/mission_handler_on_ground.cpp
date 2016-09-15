@@ -30,31 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file mission_handler_on_ground.cpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief The MAVLink mission planner handler for the on ground state
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#include "mission/mission_handler_on_ground.hpp"
 
-
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+extern "C"
 {
-    INS::origin_ = origin;
-};
+
+}
 
 
-const global_position_t& INS::origin(void)
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Mission_handler_on_ground::Mission_handler_on_ground(Navigation& navigation):
+            Mission_handler(),
+            navigation_(navigation)
 {
-    return origin_;
+
+}
+
+bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
+{
+    // TODO: Check if actually on ground
+    return wpt.command() == MAV_CMD_NAV_ON_GROUND;
+}
+
+bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+{
+    navigation_.set_waiting_at_waypoint(true);
+    return true;
+}
+
+int Mission_handler_on_ground::update(Mission_planner& mission_planner)
+{
+    return 0;
+}
+
+Mission_planner::internal_state_t Mission_handler_on_ground::handler_mission_state() const
+{
+    return Mission_planner::STANDBY;
 }

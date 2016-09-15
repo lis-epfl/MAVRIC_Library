@@ -86,34 +86,50 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
-    navigation(controls_nav, ahrs.qe, position_estimation, state, config.navigation_config),
-    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, communication.handler(), communication.stream(), config.waypoint_handler_config),
+    mission_handler_registry(),
+    navigation(controls_nav, ahrs.qe, position_estimation, state, communication.stream(), mission_handler_registry, config.navigation_config),
+    position_controller_(position_estimation, ahrs, config.position_controller_config),
+    waypoint_handler(position_estimation, navigation, state, communication.handler(), communication.stream(), mission_handler_registry, config.waypoint_handler_config),
+    hold_position_handler(position_controller_, position_estimation, navigation),
+    landing_handler(position_controller_, position_controller_, position_estimation, navigation, state),
+    navigating_handler(position_controller_, position_estimation, navigation, communication.stream(), waypoint_handler),
+    on_ground_handler(navigation),
+    takeoff_handler(position_controller_, position_estimation, navigation, state),
+    critical_landing_handler(position_controller_, position_controller_, position_estimation, navigation, state),
+    critical_navigating_handler(position_controller_, position_estimation, navigation, communication.stream(), waypoint_handler),
+    mission_planner(position_estimation, navigation, ahrs, state, manual_control, communication.handler(), communication.stream(), waypoint_handler, mission_handler_registry),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(communication.sysid()),
     config_(config)
+{}
+
+
+bool LEQuad::init(void)
 {
+    bool success = true;
+
     // Init main task first
-    init_main_task();
+    success &= init_main_task();
 
     // Init all modules
-    init_state();
-    init_communication();
-    init_data_logging();
-    init_gps();
-    init_imu();
-    init_barometer();
-    init_sonar();
-    init_attitude_estimation();
-    init_position_estimation();
-    init_stabilisers();
-    init_navigation();
-    init_hud();
-    init_servos();
-    init_ground_control();
+    success &= init_state();
+    success &= init_communication();
+    success &= init_data_logging();
+    success &= init_gps();
+    success &= init_imu();
+    success &= init_barometer();
+    success &= init_sonar();
+    success &= init_attitude_estimation();
+    success &= init_position_estimation();
+    success &= init_stabilisers();
+    success &= init_navigation();
+    success &= init_hud();
+    success &= init_servos();
+    success &= init_ground_control();
+    return success;
 }
-
 
 void LEQuad::loop(void)
 {
@@ -437,13 +453,22 @@ bool LEQuad::init_navigation(void)
 {
     bool ret = true;
 
+    // Initialize
+    ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
+    ret &= mission_handler_registry.register_mission_handler(landing_handler);
+    ret &= mission_handler_registry.register_mission_handler(navigating_handler);
+    ret &= mission_handler_registry.register_mission_handler(on_ground_handler);
+    ret &= mission_handler_registry.register_mission_handler(takeoff_handler);
+    ret &= mission_handler_registry.register_mission_handler(critical_landing_handler);
+    ret &= mission_handler_registry.register_mission_handler(critical_navigating_handler); 
+    ret &= waypoint_handler.init();
+    ret &= mission_planner.init();
+
     // Parameters
-    ret &= communication.parameters().add(&navigation.dist2vel_gain,                           "NAV_DIST2VEL"    );
     ret &= communication.parameters().add(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
     ret &= communication.parameters().add(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
     ret &= communication.parameters().add(&navigation.takeoff_altitude,                        "NAV_TAKEOFF_ALT" );
     ret &= communication.parameters().add(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
-    ret &= communication.parameters().add(&navigation.soft_zone_size,                          "NAV_SOFTZONE"    );
     ret &= communication.parameters().add(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
     ret &= communication.parameters().add(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
     ret &= communication.parameters().add(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
@@ -451,8 +476,8 @@ bool LEQuad::init_navigation(void)
     ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update, (Scheduler_task::task_argument_t)&waypoint_handler, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,          (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mission_planner::update,     (Scheduler_task::task_argument_t)&mission_planner,  Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -539,12 +564,13 @@ bool LEQuad::main_task(void)
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
-                controls = controls_nav;
+                position_controller_.update();
+                controls = position_controller_.velocity_command();
                 controls.control_mode = VELOCITY_COMMAND_MODE;
 
                 // if no waypoints are set, we do position hold therefore the yaw mode is absolute
-                if ((((state.nav_plan_active || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN)) && (navigation.internal_state_ == Navigation::NAV_NAVIGATING)) || (navigation.internal_state_ == Navigation::NAV_STOP_THERE))
-              	   || ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP)))
+                if ((((!navigation.waiting_at_waypoint() || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN)) && (mission_planner.internal_state() == Mission_planner::MISSION)) || (mission_planner.internal_state() == Mission_planner::MISSION))
+              	   || ((state.mav_state_ == MAV_STATE_CRITICAL) && (mission_planner.critical_behavior() == Mission_planner::FLY_TO_HOME_WP)))
             	{
                     controls.yaw_mode = YAW_RELATIVE;
                 }
@@ -555,10 +581,11 @@ bool LEQuad::main_task(void)
                 break;
 
             case Mav_mode::POSITION_HOLD:
-                controls = controls_nav;
+                position_controller_.update();
+                controls = position_controller_.velocity_command();
                 controls.control_mode = VELOCITY_COMMAND_MODE;
 
-                if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (navigation.critical_behavior == Navigation::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
+                if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (mission_planner.critical_behavior() == Mission_planner::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
                 {
                     controls.yaw_mode = YAW_RELATIVE;
                 }

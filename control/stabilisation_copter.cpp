@@ -40,7 +40,7 @@
  *
  ******************************************************************************/
 
-
+#include "mission/mission_handler.hpp"
 #include "control/stabilisation_copter.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"

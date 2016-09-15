@@ -30,31 +30,48 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file ixyposition_zvel_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief Interface for horizontal position and vertical velocity controller (used e.g. for landing)
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef IXYPOSITION__ZVEL_CONTROLLER_HPP_
+#define IXYPOSITION__ZVEL_CONTROLLER_HPP_
 
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+class IXyposition_zvel_controller
 {
-    INS::origin_ = origin;
+public:
+    /*
+     * \brief   structure representing a horizontal position & vertical velocity command; contains desired horizontal position and vertical velocity in local frame
+     */
+    struct xypos_zvel_command_t : base_command_t
+    {
+        float pos_x;    ///< desired position in x in local frame
+        float pos_y;    ///< desired position in y in local frame
+        float vel_z;    ///< desired velocity in z in local frame
+    };
+
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
+
+    /**
+     * \brief           sets the horizontal position & vertical velocity command
+     *
+     * \param command   xy position z velocity command indicating target location & velocity in local frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool set_xyposition_zvel_command(const xypos_zvel_command_t& command) = 0;
 };
 
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+#endif /* IXYPOSITION__ZVEL_CONTROLLER_HPP_ */

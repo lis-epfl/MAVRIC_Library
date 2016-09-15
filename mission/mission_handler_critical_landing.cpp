@@ -30,31 +30,32 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file mission_handler_landing.cpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief The MAVLink mission planner handler for the landing state
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#include "mission/mission_handler_critical_landing.hpp"
 
-
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+extern "C"
 {
-    INS::origin_ = origin;
-};
 
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
 }
+
+
+
+//------------------------------------------------------------------------------
+// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+

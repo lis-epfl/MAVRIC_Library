@@ -30,31 +30,44 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file mission_handler_critical_landing.hxx
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief   The MAVLink mission planner handler functions for the critical 
+ *          landing state
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef MISSION_HANDLER_CRITICAL_LANDING_HXX__
+#define MISSION_HANDLER_CRITICAL_LANDING_HXX__
 
+#include "mission/mission_handler_landing.hpp"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+template <class T1, class T2>
+Mission_handler_critical_landing<T1, T2>::Mission_handler_critical_landing( T1& desc_to_small_alt_controller,
+                                                                            T2& desc_to_ground_controller,
+                                                                            const INS& ins,
+                                                                            Navigation& navigation,
+                                                                            State& state):
+            Mission_handler_landing<T1, T2>(desc_to_small_alt_controller, desc_to_ground_controller, ins, navigation, state)
 {
-    INS::origin_ = origin;
-};
-
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
 }
+
+template <class T1, class T2>
+bool Mission_handler_critical_landing<T1, T2>::can_handle(const Waypoint& wpt) const
+{
+    bool handleable = false;
+
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_CRITICAL_LAND)
+    {
+        handleable = true;
+    }
+
+    return handleable;
+}
+
+#endif // MISSION_HANDLER_CRITICAL_LANDING_HXX__

@@ -30,31 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file iattitude_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief Interface for attitude controller
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef IATTITUDE_CONTROLLER_HPP_
+#define IATTITUDE_CONTROLLER_HPP_
 
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+class IAttitude_controller
 {
-    INS::origin_ = origin;
+public:
+    /*
+     * \brief   structure representing a attitude command; contains desired attitude and thrust in local frame
+     */
+    struct att_command_t : base_command_t
+    {
+        quat_t  att;        ///< desired attitude in local frame
+        float   thrust;     ///< desired thrust
+    };
+
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
+
+    /**
+     * \brief           sets the attitude command (desired attitude and thrust)
+     *
+     * \param command   attitude command indicating desired attitude and thrust in local frame
+     *
+     * \return success  whether command was accepted
+     */
+    inline virtual bool set_attitude_command(const att_command_t& command) = 0;
 };
 
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+#endif /* IATTITUDE_CONTROLLER_HPP_ */

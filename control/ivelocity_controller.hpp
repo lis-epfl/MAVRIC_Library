@@ -30,31 +30,46 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file ivelocity_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \brief Interface for position controller
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#ifndef IVELOCITY_CONTROLLER_HPP_
+#define IVELOCITY_CONTROLLER_HPP_
 
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-// It is a static member (meaning it is shared by all instances of that class),
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+class IVelocity_controller
 {
-    INS::origin_ = origin;
+public:
+    /*
+     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
+     */
+    struct vel_command_t : base_command_t
+    {
+        local_velocity_t    vel;        ///< desired velocity in local frame
+    };
+
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
+
+    /**
+     * \brief           sets the velocity command (desired velocity)
+     *
+     * \param command   velocity command indicating desired velocity in local frame
+     *
+     * \return success  whether command was accepted
+     */
+    inline virtual bool set_velocity_command(const pos_command_t& command) = 0;
 };
 
-
-const global_position_t& INS::origin(void)
-{
-    return origin_;
-}
+#endif /* IVELOCITY_CONTROLLER_HPP_ */
