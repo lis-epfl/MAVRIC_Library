@@ -48,52 +48,52 @@ extern "C"
 }
 
 ///< Define which configuration of the imu to use, depending on the autopilot ID
-#if MAVLINK_SYS_ID == 1
-#include "MAVcalib/MAV001_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 2
-#include "MAVcalib/MAV002_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 3
-#include "MAVcalib/MAV003_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 4
-#include "MAVcalib/MAV004_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 5
-#include "MAVcalib/MAV005_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 6
-#include "MAVcalib/MAV006_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 7
-#include "MAVcalib/MAV007_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 8
-#include "MAVcalib/MAV008_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 9
-#include "MAVcalib/MAV009_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 10
-#include "MAVcalib/MAV010_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 42
-#include "MAVcalib/MAV042_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 51
-#include "MAVcalib/MAV051_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 101
-#include "MAVcalib/MAV101_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 102
-#include "MAVcalib/MAV102_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 128
-#include "MAVcalib/MAV128_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 150
-#include "MAVcalib/MAV150_imu_config.h"
-#elif MAVLINK_SYS_ID == 201
-#include "MAVcalib/MAV201_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 202
-#include "MAVcalib/MAV202_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 203
-#include "MAVcalib/MAV203_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 204
-#include "MAVcalib/MAV204_imu_config.hpp"
-#elif MAVLINK_SYS_ID == 205
-#include "MAVcalib/MAV205_imu_config.h"
-#elif MAVLINK_SYS_ID == 206
-#include "MAVcalib/MAV206_imu_config.h"
-#else
-#warning "Unknown IMU calibration for the board with ID MAVLINK_SYS_ID, falling back to imu_default_config"
+// #if MAVLINK_SYS_ID == 1
+// #include "MAVcalib/MAV001_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 2
+// #include "MAVcalib/MAV002_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 3
+// #include "MAVcalib/MAV003_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 4
+// #include "MAVcalib/MAV004_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 5
+// #include "MAVcalib/MAV005_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 6
+// #include "MAVcalib/MAV006_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 7
+// #include "MAVcalib/MAV007_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 8
+// #include "MAVcalib/MAV008_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 9
+// #include "MAVcalib/MAV009_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 10
+// #include "MAVcalib/MAV010_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 42
+// #include "MAVcalib/MAV042_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 51
+// #include "MAVcalib/MAV051_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 101
+// #include "MAVcalib/MAV101_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 102
+// #include "MAVcalib/MAV102_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 128
+// #include "MAVcalib/MAV128_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 150
+// #include "MAVcalib/MAV150_imu_config.h"
+// #elif MAVLINK_SYS_ID == 201
+// #include "MAVcalib/MAV201_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 202
+// #include "MAVcalib/MAV202_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 203
+// #include "MAVcalib/MAV203_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 204
+// #include "MAVcalib/MAV204_imu_config.hpp"
+// #elif MAVLINK_SYS_ID == 205
+// #include "MAVcalib/MAV205_imu_config.h"
+// #elif MAVLINK_SYS_ID == 206
+// #include "MAVcalib/MAV206_imu_config.h"
+// #else
+// #warning "Unknown IMU calibration for the board with ID MAVLINK_SYS_ID, falling back to imu_default_config"
 #include "sensing/imu.hpp"
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
