@@ -64,12 +64,12 @@ extern "C"
 void Mavlink_waypoint_handler::send_count(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_mission_request_list_t packet;
-
     mavlink_msg_mission_request_list_decode(msg, &packet);
 
     // Check if this message is for this system and subsystem
     if (((uint8_t)packet.target_system == (uint8_t)sysid)
-            && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
+            && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER
+                || (uint8_t)packet.target_component == 50)) // target_component = 50 is sent by dronekit
     {
         mavlink_message_t _msg;
         mavlink_msg_mission_count_pack(sysid,
@@ -108,7 +108,8 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
 
         // Check if this message is for this system and subsystem
         if (((uint8_t)packet.target_system == (uint8_t)sysid)
-                && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
+                && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER
+                || (uint8_t)packet.target_component == 50)) // target_component = 50 is sent by dronekit
         {
             waypoint_handler->sending_waypoint_num_ = packet.seq;
             if (waypoint_handler->sending_waypoint_num_ < waypoint_handler->waypoint_count_)
