@@ -101,6 +101,6 @@ static inline imu_conf_t imu_config(void)
 {
     return megafly_rev4_default_config().imu_config;
 }
-#endif
+// #endif
 
 #endif /* IMU_CONFIG_HPP_ */
