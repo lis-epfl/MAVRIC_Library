@@ -61,7 +61,7 @@ Position_controller::Position_controller(INS& ins, ahrs_t& ahrs, conf_t config) 
     pid_controller_init(&pid_controller_, &hover_pid_config_);
 
     pos_command_t pos_command;
-    pos_command.pos = {0.0f, 0.0f, 0.0f};
+    pos_command.pos = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
     set_position_command(pos_command);
 }
 
@@ -81,7 +81,7 @@ bool Position_controller::set_position_command(const pos_command_t& pos_command)
 
 bool Position_controller::set_xyposition_zvel_command(const xypos_zvel_command_t& command)
 {
-    position_command_.pos = {command.pos_x, command.pos_y, 0};
+    position_command_.pos = std::array<float,3>{{command.pos_x, command.pos_y, 0}};
     zvel_command_ = command.vel_z;
     /* set ctrl_mode to use position in xy and velocity in z as input */
     ctrl_mode_ = ctrl_mode_t::POS_XY_VEL_Z;
