@@ -50,12 +50,12 @@
 #include "mission/mission_handler_on_ground.hpp"
 #include "mission/mission_handler_navigating.hpp"
 #include "mission/mission_handler_hold_position.hpp"
+#include "util/print_util.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
 #include "util/maths.h"
-#include "util/constants.hpp"
 }
 
 
@@ -135,7 +135,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
                                          mission_planner->mavlink_stream_.compid(),
                                          &msg,
                                          mission_planner->waypoint_handler_.current_waypoint_index());
-        mission_planner->mavlink_stream_.send(&msg);      
+        mission_planner->mavlink_stream_.send(&msg);
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -517,7 +517,7 @@ void Mission_planner::state_machine()
             }
         }
     }
-    else 
+    else
     {
         require_takeoff_ = true;
 
@@ -958,14 +958,14 @@ bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
     {
         print_util_dbg_print("Cannot setup mission handler\r\n");
     }
-    
+
     return ret;
 }
 
 bool Mission_planner::insert_ad_hoc_waypoint(Waypoint wpt)
 {
     bool ret = true;
-    
+
     // Copy waypoint state in case of failure
     Waypoint old = inserted_waypoint_;
     inserted_waypoint_ = wpt;
