@@ -42,18 +42,31 @@
  #include "drivers/rfm22b.hpp"
 
  #include "hal/common/time_keeper.hpp"
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/exti.h>
+#include "hal/stm32/gpio_stm32.hpp"
+
 
 #include "util/string_util.hpp"
 
+static Rfm22b* handlers_ = 0;
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Rfm22b::Rfm22b(Spi& spi, Gpio& nss_gpio, Serial& serial)://, const conf_t config):
+Rfm22b::Rfm22b(Spi& spi, Gpio& nss_gpio, Gpio& nirq_gpio, Serial& serial, Led_gpio& led_irq)://, const conf_t config):
+nirq_(nirq_gpio),
+counter_var(0),
+rx_success_(false),
 spi_(spi),
 nss_(nss_gpio),
+// nirq_(nirq_gpio),
+rx_len_(0),
+// rx_success_(false),
 serial_(serial),
-console(serial)
+console(serial),
+led_irq_(led_irq),
+irq_callback(0)
 {}
 
 // bool Rfm22b::init()
@@ -260,6 +273,9 @@ bool Rfm22b::init()
     success &= nss_.init();
     unselect_slave();
 
+    // Initializing nIRQ GPIO
+    success &= nirq_.init();
+
     // Reseting device
     success &= reset();
 
@@ -274,7 +290,7 @@ bool Rfm22b::init()
 	success &= device_version_answer == DEVICE_VERSION ? true : false;
 
     // Set carrier frequency
-    success &= set_carrier_frequency(433E6);//869.5E6);
+    success &= set_carrier_frequency(433E6);
 
     // Set modulation Type
     success &= set_modulation_type();
@@ -291,7 +307,7 @@ bool Rfm22b::init()
     // Configure GPIOS
     success &= set_gpio_function();
 
-    success &= interrput_enable(0xFF,0xFF);//0x77,0xF0);
+    success &= interrput_enable(0x00,0x00);//0x77,0xF0);
 
     // Preamble Configuration
     success &= set_preamble_length(10);//40);
@@ -321,14 +337,23 @@ bool Rfm22b::init()
     // success &= set_rssi_offset(10);
     // success &= set_rssi_threshold(0x60);//0x1E);
 
+    success &= set_datarate(40); //0x1999 = 100kbps // 0x0A3D = 40kbps
+    rx_mulit_packet_en();
+
+    nvic_enable_irq(NVIC_EXTI2_IRQ);
+    exti_select_source(EXTI2, GPIO_STM32_PORT_D);
+    exti_set_trigger(EXTI2, EXTI_TRIGGER_FALLING);
+
+    handlers_ = this;
+    success &= prepare_receive();
+
 	return success;
 }
 
 bool Rfm22b::attach(serial_interrupt_callback_t func)
 {
-	bool ret = true;
-
-	return ret;
+	irq_callback = func;
+	return true;
 }
 
 void Rfm22b::flush(void)
@@ -375,7 +400,7 @@ bool Rfm22b::write_reg(uint8_t reg, uint8_t* out_data, uint32_t nbytes)
 
 uint32_t Rfm22b::readable(void)
 {
-	return 0;
+	return rx_len_;
 }
 
 uint32_t Rfm22b::writeable(void)
@@ -412,21 +437,22 @@ int Rfm22b::read_test(uint8_t* message, uint8_t* rx_len)
 	bool ret = true;
 	int success = 1;
 
-	// uint8_t message[64] 	= {0};
-	uint8_t acknowledge[12] = "acknowledge";
-	// uint8_t rx_len 			= 0;
+	// // uint8_t message[64] 	= {0};
+	// uint8_t acknowledge[12] = "acknowledge";
+	// // uint8_t rx_len 			= 0;
 
-	success = receive(message, rx_len);
-	if (success != 1)
-	{
-		return success;
-	}
+	// success = receive(message, rx_len);
+	// if (success != 1)
+	// {
+	// 	return success;
+	// }
 
-	success = transmit(acknowledge, 11);
-	if (success != 1)
-	{
-		return success;
-	}
+ //    time_keeper_delay_us(200);
+	// success = transmit(acknowledge, 11);
+	// if (success != 1)
+	// {
+	// 	return success;
+	// }
 
 	return success;
 }
@@ -434,42 +460,22 @@ int Rfm22b::read_test(uint8_t* message, uint8_t* rx_len)
 bool Rfm22b::write(const uint8_t* bytes, const uint32_t size)
 {
 	bool ret = true;
-	// int success = 0;
 
-	// uint8_t message[64] 	= "Hello World!";
-	// uint8_t acknowledge[12] = "acknowledge";
-	// uint8_t ack_msg[12] 	= {0};
-	// uint8_t rx_len 			= 0;
+	// disable interruption while transmitting
+	isr_enable(false);
 
-	// success = transmit(message, 12);
-	// if (success != 1)
-	// {
-	// 	return false;
-	// }
+	rx_mode_enable(false);
+	// time_keeper_delay_us(200);
+	ret &= transmit((uint8_t*)bytes, size);
+	if (!ret)
+	{
+		isr_enable();
+		// Transmission error
+		return false;
+	}
 
-	// success = receive(ack_msg, &rx_len);
-	// if (success != 1)
-	// {
-	// 	return false;
-	// }
-
-	// for (int i = 0; i < 12; i++)
-	// {
-	// 	if (acknowledge[i] != ack_msg[i])
-	// 	{
-	// 		success = -3;
-	// 		break;
-	// 	}
-	// }
-
-	// if (success == 1)
-	// {
-	// 	return true;
-	// }
-	// else
-	// {
-	// 	return false;
-	// }
+	// Going back to RX mode
+	ret &= prepare_receive();
 
 	return ret;
 
@@ -480,38 +486,43 @@ int Rfm22b::write_test(uint8_t* message, uint8_t tx_len)
 	bool ret = true;
 	int success = 1;
 
-	// uint8_t message[64] 	= "Hello";
-	uint8_t acknowledge[12] = "acknowledge";
-	uint8_t ack_msg[12] 	= {0};
-	uint8_t rx_len 			= 0;
+	// // uint8_t message[64] 	= "Hello";
+	// uint8_t acknowledge[12] = "acknowledge";
+	// uint8_t ack_msg[12] 	= {0};
+	// uint8_t rx_len 			= 0;
 
-	success = transmit(message, tx_len);
-	if (success != 1)
-	{
-		return success;
-	}
+	// success = transmit(message, tx_len, 10000);
+	// if (success != 1)
+	// {
+	// 	return success;
+	// }
 
-    // const char* newline = "\r\n";
-    // console.write(' ');
-    // time_keeper_delay_ms(5);
-    // serial_.write((const uint8_t*)newline, sizeof(newline));
-    // time_keeper_delay_ms(5);
+ //    const char* newline = "\r\n";
+ //    const char* sep  = " ";
+ //    // console.write(' ');
+ //    // time_keeper_delay_ms(5);
+ //    // serial_.write((const uint8_t*)newline, sizeof(newline));
+ //    // time_keeper_delay_ms(5);
 
+ //    time_keeper_delay_us(200);
+	// success = receive(ack_msg, &rx_len, 30000);
+	// if (success != 1)
+	// {
+	// 	return success;
+	// }
 
-	success = receive(ack_msg, &rx_len);
-	if (success != 1)
-	{
-		return success;
-	}
-
-	for (int i = 0; i < 12; i++)
-	{
-		if (acknowledge[i] != ack_msg[i])
-		{
-			success = -5;
-			break;
-		}
-	}
+	// for (int i = 0; i < 12; i++)
+	// {
+	// 	// console.write(ack_msg[i]);
+ //  //   	time_keeper_delay_ms(5);
+	// 	// serial_.write((const uint8_t*)sep, sizeof(sep));
+ //  //   	time_keeper_delay_ms(5);
+	// 	if (acknowledge[i] != ack_msg[i])
+	// 	{
+	// 		success = -5;
+	// 		break;
+	// 	}
+	// }
 
 	return success;
 }
@@ -1477,242 +1488,200 @@ bool Rfm22b::set_syncword(uint8_t* syncword)
 	return write_reg(SYNC_WORD_3, syncword, 4);
 }
 
+bool Rfm22b::set_datarate(uint8_t dr_tx_kbps)
+{
+	// Warning, do not go below 30kbps -> different setting (0x7AF)
+	bool ret = true;
+
+	uint16_t datarate = dr_tx_kbps*(2 << 15)/1000;
+
+	uint8_t datarate_1 = (datarate >> 8) & 0xFF;
+	uint8_t datarate_0 = datarate & 0xFF;
+
+	ret &= write_reg(TX_DATA_RATE_1, &datarate_1);
+	ret &= write_reg(TX_DATA_RATE_0, &datarate_0);
+
+	return ret;
+}
+
 int Rfm22b::transmit(uint8_t* tx_buffer, uint8_t tx_len)
 {
 	bool ret = true;
-	uint32_t timeout = 0;
-
-	const char* sep  = " ";
-    const char* sep2 = "\t";
-    const char* newline = "\r\n";
-    uint64_t delay = 5;//25;
-
-	clear_tx_fifo(); // Might have to be done outside
-	// clear_rx_fifo(); // Merge those two?
-
-    uint8_t device_status = 0;
 	uint8_t interrupt_1 = 0;
-	uint8_t interrupt_2 = 0;
 
-	// Caping length
-	if (tx_len > 64)
-	{
-		tx_len = 64;
-	}
+	ret &= interrput_enable(0x84,0x00);
+    ret &= clear_tx_fifo();
 
-	ret &= set_packet_transmit_length(tx_len);
+    // Caping length to 64 bytes
+    if (tx_len > 64)
+    {
+        tx_len = 64;
+    }
 
-	// // Reading Interrupt
-	ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-	ret &= read_reg(INTERRUPT_STAT_2, &interrupt_2);
+   	ret &= set_packet_transmit_length(tx_len);
 
-	// Put message into FIFO
-	ret &= write_reg(FIFO_ACCESS_REG, tx_buffer, tx_len);
+	// Reading Interrupt
+    ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
 
-	// // Check if TX overflow
-	ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-	if ((interrupt_1 >> 7) & 1)
-	{
-		return -1;
-	}
+    // Put message into FIFO
+    ret &= write_reg(FIFO_ACCESS_REG, tx_buffer, tx_len);
 
-	tx_mode_enable();
+    // Check if TX overflow
+    ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
+    if ((interrupt_1 >> 7) & 1)
+    {
+        return false;
+    }
 
-	do
-	{
-		if (timeout++ > 10000)
-		{
-			tx_mode_enable(false);
-			return -2;
-		}
-		ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-	} while (!((interrupt_1 >> 2) & 1));
+    tx_mode_enable();
 
-	// while (1)
- //    {
- //        ret &= read_reg(DEVICE_STATUS, &device_status);   
- //        ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
- //        ret &= read_reg(INTERRUPT_STAT_2, &interrupt_2);
+    while (1)
+        {
+            if (!nirq_.read())
+            {
+                ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
+                if ((interrupt_1 >> 2) & 1)
+                {
+                	// Packet sent
+                    break;
+                }
+            }
+        }
 
- //        for (int i = 0; i < 8; i++)
- //        {
- //            console.write((device_status >> (7-i)) & 1);
- //            time_keeper_delay_ms(delay);
- //            serial_.write((const uint8_t*)sep, sizeof(sep));
- //            time_keeper_delay_ms(delay);
- //        }
-
- //        serial_.write((const uint8_t*)sep2, sizeof(sep));
- //        time_keeper_delay_ms(delay);
-
- //        for (int i = 0; i < 8; i++)
- //        {
- //            console.write((interrupt_1 >> (7-i)) & 1);
- //            time_keeper_delay_ms(delay);
- //            serial_.write((const uint8_t*)sep, sizeof(sep));
- //            time_keeper_delay_ms(delay);
- //        }
-
- //        serial_.write((const uint8_t*)sep2, sizeof(sep));
- //        time_keeper_delay_ms(delay);
-
- //        for (int i = 0; i < 8; i++)
- //        {
- //            console.write((interrupt_2 >> (7-i)) & 1);
- //            time_keeper_delay_ms(delay);
- //            serial_.write((const uint8_t*)sep, sizeof(sep));
- //            time_keeper_delay_ms(delay);
- //        }
-
- //        console.write('S');
- //        time_keeper_delay_ms(delay);
- //        serial_.write((const uint8_t*)sep, sizeof(sep));
- //        time_keeper_delay_ms(delay);
- //        serial_.write((const uint8_t*)sep, sizeof(sep));
- //        time_keeper_delay_ms(delay);
-
- //        serial_.write((const uint8_t*)newline, sizeof(newline));
- //        time_keeper_delay_ms(delay);
-
- //        if ((interrupt_1 >> 2)&1)
- //        {
- //            break;
- //        }
-
- //        time_keeper_delay_ms(1);
- //    }
-
-	if (ret)
-	{
-		return 1;
-	}
-	else
-	{
-		return -6;
-	}
-	// return ret;
+	return ret;
 }
 
-int Rfm22b::receive(uint8_t* rx_buffer, uint8_t* rx_len)
+int Rfm22b::prepare_receive(void)
 {
 	bool ret = true;
-	uint32_t timeout = 0;
+	
+	// Going back to RX mode
+	ret &= interrput_enable(0x93,0x00);
 
-	const char* sep  = " ";
-    const char* sep2 = "\t";
-    const char* newline = "\r\n";
-    uint64_t delay = 5;//25;
+    ret &= clear_rx_fifo();
 
-	clear_rx_fifo(); // Might have to be done outside
-	// clear_tx_fifo();
+    uint8_t interrupt_1 = 0;
 
-    uint8_t device_status = 0;
+    // Reading Interrupt
+    ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
+
+    rx_mode_enable();
+
+    // enable interruption while receiving
+	isr_enable();
+
+	return ret;
+}
+
+// bool Rfm22b::config_datarate(void)
+// {
+// 	bool ret = true;
+
+// 	// uint8_t if_filter_bw = 0x81;
+// 	// ret &= write_reg(IF_FILTER_BW, &if_filter_bw);
+
+// 	// uint8_t afc_loop_gs_ovrrd = 0x40;
+// 	// ret &= write_test(AFC_LOOP_GS_OVRRD, &afc_loop_gs_ovrrd);
+
+// 	// uint8_t afc_timing_control = 
+// 	return ret;
+// }
+
+__attribute__((interrupt))
+void exti2_isr(void)
+{
+    handlers_->irq_handler();
+}
+
+void Rfm22b::irq_handler(void)
+{
+
+	// Disable interruption
+    isr_enable(false);
+
+	exti_reset_request(EXTI2);
+
 	uint8_t interrupt_1 = 0;
-	uint8_t interrupt_2 = 0;
+    read_reg(INTERRUPT_STAT_1, &interrupt_1);
+    if (!((interrupt_1 >> 1) & 1))
+    {
+       	// Enable interruption
+    	isr_enable();
 
-	// // Reading Interrupt
-	ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-	ret &= read_reg(INTERRUPT_STAT_2, &interrupt_2);
+    	// Nothing valid received
+    	return;
+    }
 
-	rx_mode_enable();
+	receive();
 
-	do
+    return;
+}
+
+void Rfm22b::isr_enable(bool enable)
+{
+	if (enable)
 	{
-		if (timeout++ > 10000)
-		{
-			rx_mode_enable(false);
-			return -3;
-		}
-		ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-		// ret &= read_reg(OP_FUNC_CNTL_1, &interrupt_1);
-        // time_keeper_delay_ms(1000);
-	} while (!((interrupt_1 >> 1) & 1));
-	// } while ((interrupt_1 & OP_CNTL1_MODE_RX_ON) == OP_CNTL1_MODE_RX_ON);
-
-	// Get received packet length
-	ret &= read_reg(RECEIVE_PKT_LEN, rx_len);
-
-	// Caping length (multi packet not supported yet)
-	if (*rx_len > 64)
-	{
-		*rx_len = 64;
-	}
-
-	// Copying message from FIFO to rx buffer
-	ret &= read_reg(FIFO_ACCESS_REG, rx_buffer, *rx_len);
-
-	// Check if RX underflow
-	ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-	if ((interrupt_1 >> 7) & 1)
-	{
-		return -4;
-	}
-
-   //  while (1)
-   //  {
-   //      ret &= read_reg(DEVICE_STATUS, &device_status); 
-   //      ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-   //      ret &= read_reg(INTERRUPT_STAT_2, &interrupt_2);
-
-   //      for (int i = 0; i < 8; i++)
-   //      {
-   //          console.write((device_status >> (7-i)) & 1);
-   //          time_keeper_delay_ms(delay);
-   //          serial_.write((const uint8_t*)sep, sizeof(sep));
-   //          time_keeper_delay_ms(delay);
-   //      }
-
-   //      serial_.write((const uint8_t*)sep2, sizeof(sep));
-   //      time_keeper_delay_ms(delay);
-
-   //      for (int i = 0; i < 8; i++)
-   //      {
-   //          console.write((interrupt_1 >> (7-i)) & 1);
-   //          time_keeper_delay_ms(delay);
-   //          serial_.write((const uint8_t*)sep, sizeof(sep));
-   //          time_keeper_delay_ms(delay);
-   //      }
-
-   //      serial_.write((const uint8_t*)sep2, sizeof(sep));
-   //      time_keeper_delay_ms(delay);
-
-   //      for (int i = 0; i < 8; i++)
-   //      {
-   //          console.write((interrupt_2 >> (7-i)) & 1);
-   //          time_keeper_delay_ms(delay);
-   //          serial_.write((const uint8_t*)sep, sizeof(sep));
-   //          time_keeper_delay_ms(delay);
-   //      }
-
-   //      console.write('R');
-   //      time_keeper_delay_ms(delay);
-   //      serial_.write((const uint8_t*)sep2, sizeof(sep));
-   //      time_keeper_delay_ms(delay);
-   //      serial_.write((const uint8_t*)sep, sizeof(sep));
-   //      time_keeper_delay_ms(delay);
-
-   //      serial_.write((const uint8_t*)newline, sizeof(newline));
-   //      time_keeper_delay_ms(delay);
-
-   //      if ((interrupt_1 >> 1)&1)
-   //      {
-   //      	// Get received packet length
-			// ret &= read_reg(RECEIVE_PKT_LEN, rx_len);
-   //          ret &= read_reg(FIFO_ACCESS_REG, rx_buffer, *rx_len);
-   //          break;
-   //      }
-
-   //      time_keeper_delay_ms(1);
-   //  }
-
-	if (ret)
-	{
-		return 1;
+		exti_enable_request(EXTI2);
 	}
 	else
 	{
-		return -7;
+		exti_disable_request(EXTI2);
 	}
 
-	// return ret;
+	return;
+}
+
+bool Rfm22b::rx_mulit_packet_en(bool enable)
+{
+	bool ret = true;
+
+	uint8_t op_func_cntl_2 = 0;
+
+	// Read Operating and Function Control register
+	ret &= read_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
+
+	if (enable)
+	{
+		// Set rxmpk bit
+		op_func_cntl_2 |= 0x10;
+	}
+	else
+	{
+		// Clear rxmpk bit
+		op_func_cntl_2 &= ~0x10;
+	}
+
+	// Write new value to register
+	ret &= write_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
+
+	return ret;
+}
+
+bool Rfm22b::receive(void)
+{
+	bool ret = true;
+	uint8_t interrupt_1 = 0;
+	
+	led_irq_.toggle();
+    ret &= read_reg(RECEIVE_PKT_LEN, &rx_len_);
+
+        // Caping length (multi packet not supported yet)
+        if (rx_len_ > 64)
+        {
+            rx_len_ = 64;
+        }
+
+    // Copying message from FIFO to rx buffer
+    ret &= read_reg(FIFO_ACCESS_REG, rx_buffer_, rx_len_);
+
+    // Check if RX underflow
+    ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
+    if ((interrupt_1 >> 7) & 1)
+    {
+        ret = false;
+    }
+
+    rx_success_ = ret;
+    prepare_receive();
+	return true;
 }

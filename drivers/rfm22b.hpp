@@ -44,6 +44,8 @@
 #include "hal/common/spi.hpp"
 
  #include "hal/common/console.hpp"
+#include "hal/common/led_gpio.hpp"
+
 
  class Rfm22b : public Serial
  {
@@ -63,7 +65,7 @@
      * \param   config          Device configuration
      * \param	spi
      */
-    Rfm22b(Spi& spi, Gpio& nss_gpio, Serial& serial);//, const conf_t config);
+    Rfm22b(Spi& spi, Gpio& nss_gpio, Gpio& nirq_gpio, Serial& serial, Led_gpio& led_irq);//, const conf_t config);
  	/**
      * \brief   Hardware initialization
      *
@@ -200,12 +202,17 @@
     bool set_preamble_length(uint16_t length);
     bool set_syncword(uint8_t* syncword);
     int transmit(uint8_t* tx_buffer, uint8_t tx_len);
-    int receive(uint8_t* rx_buffer, uint8_t* rx_len);
+    int prepare_receive(void);
     int read_test(uint8_t* message, uint8_t* rx_len);
     int write_test(uint8_t* message, uint8_t tx_len);
     bool set_packet_transmit_length(uint8_t length);
     bool tx_mode_enable(bool enable = true);
     bool rx_mode_enable(bool enable = true);
+    bool set_datarate(uint8_t dr_tx_kbps);
+    void irq_handler(void);
+    void isr_enable(bool enable = true);
+    bool rx_mulit_packet_en(bool enable = true);
+    bool receive(void);
 
     // rfm22b register adresses
     static const uint8_t DEVICE_TYPE_REG 	= 0x00;
@@ -350,12 +357,32 @@
     static const uint8_t TX_POWER_LNA_SW		= 0x08;
 
 
+    Gpio&   nirq_;  ///< Interrupt GPIO (active low)
+    uint32_t counter_var; ///< Received message length in bytes
+    bool    rx_success_;
+    uint8_t*        rx_buffer_;         ///< Reception buffer
+    
+
+
 
  private:
  	Spi& 	spi_;	///< SPI peripheral
  	Gpio&	nss_;	///< Slave Select GPIO
+    // Gpio&   nirq_;  ///< Interrupt GPIO (active low)
+    uint8_t rx_len_; ///< Received message length in bytes
+    // bool    rx_success_;
+    uint8_t*        tx_buffer_;         ///< Transmission buffer
+    // uint8_t*        rx_buffer_;         ///< Reception buffer
     Serial& serial_;
     Console<Serial> console;
+    Led_gpio&   led_irq_;
+
+    /**
+     * \brief       Callback function to be called after an interrupt
+     *
+     * \details     By default NULL, can be modified via the 'attach' method
+     */
+    serial_interrupt_callback_t irq_callback;
 
  	/**
      * \brief   Select Slave
