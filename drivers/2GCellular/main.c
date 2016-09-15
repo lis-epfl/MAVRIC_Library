@@ -33,6 +33,8 @@ Distributed as-is; no warranty is given.
 # define DEBUG_WRITE(x) do {} while (0)
 #endif
 
+#define MAX_PACKET_SIZE 100
+#define MIN_PACKET_SIZE 2 // MAVLINK heartbeat is 19 byte
 
 IPAddress myIP; // IP address to store local IP
 
@@ -41,9 +43,9 @@ IPAddress myIP; // IP address to store local IP
 IPAddress serverIP(128, 178, 46, 22);
 // Or define the domain of the server and use DNS to look up
 // the IP for you:
-const char server[] = "lispc1.epfl.ch";
-unsigned long timeSend = 0;
-int sent = 0;
+//const char server[] = "lispc1.epfl.ch";
+//unsigned long timeSend = 0;
+//int sent = 0;
 
 void setup()
 {
@@ -93,9 +95,9 @@ void setup()
 
   // gprs.localIP() gets and returns the local IP address
   // assigned to the MG2639 during this session.
-  myIP = gprs.localIP();
-  DEBUG_PRINT(F("My IP address is: "));
-  DEBUG_PRINTLN(myIP);
+ // myIP = gprs.localIP();
+ // DEBUG_PRINT(F("My IP address is: "));
+ // DEBUG_PRINTLN(myIP);
 
   // gprsHostByName(char * domain, IPAddress * ipRet) looks
   // up the DNS value of a domain name. The pertinent return
@@ -109,8 +111,8 @@ void setup()
 //    while (1)
 //      ;
  //  }
-  DEBUG_PRINT(F("Server IP is: "));
-  DEBUG_PRINTLN(serverIP);
+//  DEBUG_PRINT(F("Server IP is: "));
+//  DEBUG_PRINTLN(serverIP);
 
   // gprs.connect(IPAddress remoteIP, port) establishes a TCP
   // connection to the desired host on the desired port.
@@ -143,78 +145,104 @@ void setup()
   //gprs.print("GET / HTTP/1.1\nHost: example.com\n\n");
 }
 void UDPWrite(){
-  uint8_t textToSend[] = "and";
-  byte buffer[100];
-  int length = 98; // Max payload of one packet
-  if(Serial.available()<98){
+
+
+  byte buffer[MAX_PACKET_SIZE];
+
+  //This will not be needed when buffer is MAVRIC buffer
+  int length = 0;
+  if(Serial.available()<MAX_PACKET_SIZE-1 && Serial.available()>MIN_PACKET_SIZE ){
       length = Serial.available();
   }
+  // Delete till this
 
   if(length!=0){
-    Serial.readBytes(buffer, length);
+    Serial.readBytes(buffer, length); //Read the messages from the buffer and write into GPRS
     int UDPWrite = gprs.writeUDP(buffer, length);
     if(UDPWrite == -1){
       DEBUG_PRINT("Error in UDP Write:");
     }else{
-
-      DEBUG_PRINT("UDP Write Success");
-     // timeSend = micros();
-      //sent = 1;
+      DEBUG_PRINT("UDP Write Success: ");
+      DEBUG_PRINTLN(length);
     }
   }
 }
-int checkCommand(){
+int checkCommand(int* length){
   uint8_t textCheck[] = "ZIPRECVU:";
-  //Two blank messages will be sent after + before U
-  uint8_t read = gprs.readUDP();
-    int i;
-    for(i=0;i<9;i++){
+  uint8_t read = gprs.readUDP(); // Reads a single character from gprs
+  int i=0;
+  PACKETREAD:
+  while(i<9){
+      //Many blank characters are being sent by the cellular module
+      if(read==255){//If blank read the next
         read = gprs.readUDP();
-       // Serial.write(read);//See the excess
-        if(read==textCheck[i]){
+      }
 
-          continue;
-        }
-        else{
-          if(read == 255){
-            i-=1;// Reset the count
-            continue;
+      //Keep validating each character
+      if(read==textCheck[i]){
+        read = gprs.readUDP();
+        i++;
+        continue;
+      }
+      else{
+          //Read the next byte and check- Many time Junk pops-up
+          //TODO: The else part should be improved after integration
+          while(read == 255){
+            read = gprs.readUDP();
+            if(read==textCheck[i]){
+              read = gprs.readUDP();
+              i++;
+              goto PACKETREAD;
+            }
           }
-          DEBUG_PRINT("Wrong message");
+         // DEBUG_PRINT("Retry Expecting:");
+        //  DEBUG_WRITE(textCheck[i]);
+        //  DEBUG_PRINT("Retry Received:");
+        //  DEBUG_WRITE(read);
+
+          DEBUG_PRINT("\n - Wrong message");
+          while (gprs.available()) {
+            read = gprs.readUDP();
+            Serial.write(read);//See the excess
+          }
           i=10;// bad message
           break;
         }
+
       }
       if(i==9){
-        //ignore till next ','
+        //After ZIPRECVU:,  ignore till next ','
         while(read!=','){
           read = gprs.readUDP();
         }
-        //Read next char
-       // Serial.println("lecnt calc");
        int len = 0;
        do{
-          read = gprs.readUDP(); // Reads the next char and gets its integer number
-          if(read!=','){
+          read = gprs.readUDP(); // Reads the numbers as ascii
+          if(read!=','){// Loop till next ','
             if(read!=255){
               len = 10 * len + (read - '0');
             }
             continue;
           }
           else{
-            break;
+            break;// Stop reading when ',' appears
           }
        } while(1);
-       // DEBUG_PRINT(len);
-        return len;
+       //Set the length in the parameter variable and return success
+       *length = len;
+        return 1;
       }
+      //Set length as 0 and return failure
+      *length = 0;
       return 0;
 }
 
+
+//This function is not required after integration
 char c2h(char c)
 {  return "0123456789ABCDEF"[0x0F & (unsigned char)c];
 }
-
+//This function is not required after integration
 void serialPrintByte(uint8_t val){
   Serial.print(c2h(val>>4));
   Serial.println(c2h(val));
@@ -226,40 +254,38 @@ void loop()
   // sent back from the server. If it's 0 there is no data
   // available.
   uint8_t read;
-  //Serial.println(gprs.available());
   while (gprs.available()) {
-    //DEBUG_PRINT("Loop...");
     read = gprs.readUDP();
     if(read == '+'){
+
       int len = 0;
-      len = checkCommand();
-      while(1){
+      int valid = checkCommand(&len); // On reading + expect the command ZIPRECVU:xx,length, packet
+      //When the function returns valid, the buffer's conent should be the first character(FE) of the mavlink packet. Eliminate all junks before that
+      while(valid){
         read = gprs.readUDP();
         if(read==254){
           break;// 254 (or) FE is the srart of the mavlink message
         }
        }
+       DEBUG_PRINT("Packet Length:");
+       DEBUG_PRINTLN(len);
+       //Read the packet till its end
       for(int i=0;i<len;i++){
         Serial.print(read,HEX);
         Serial.print(" ");
         serialPrintByte(read);
         read = gprs.readUDP();
-
-
-        //Serial.print(i);
       }
-      DEBUG_PRINT("\n");
-      Serial.print("\n");
-    // DEBUG_PRINTLN(Serial.available());
-     //  UDPWrite();
+      DEBUG_PRINTLN("end of receiving");
     }
     else{
       // DEBUG_PRINT("Excess: ");
     //   Serial.write(read);//See the excess
     }
   }
+
+  //Remove after integration
   if (Serial.available()){
-    DEBUG_PRINT("Available");
     UDPWrite();
   }
 
