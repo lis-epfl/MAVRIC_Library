@@ -1,4 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classBuffer__tpl.html#ac3079cb00ac66e37bb14429f19ec2f6c" title="Returns the number of available bytes in the buffer." alt="" coords="215,5,348,35"/>
-<area shape="rect" id="node5" href="$classBuffer__tpl.html#a05dbe8802c953c8116321ffa26b72e58" title="Get the oldest element in the buffer." alt="" coords="229,59,333,88"/>
+<area shape="rect" id="node3" href="$classBuffer__T.html#aed2c412fb34f1890fce4cc884c583625" title="Returns the number of available bytes in the buffer." alt="" coords="215,5,343,35"/>
+<area shape="rect" id="node5" href="$classBuffer__T.html#a6c1d3989f4fe7a9f1960fd473d2c398f" title="Get the oldest element in the buffer." alt="" coords="229,59,328,88"/>
 </map>

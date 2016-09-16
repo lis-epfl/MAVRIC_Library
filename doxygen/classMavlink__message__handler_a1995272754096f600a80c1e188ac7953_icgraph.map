@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="281,5,489,35"/>
+<area shape="rect" id="node3" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="280,5,504,35"/>
+<area shape="rect" id="node5" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="552,5,808,35"/>
 </map>

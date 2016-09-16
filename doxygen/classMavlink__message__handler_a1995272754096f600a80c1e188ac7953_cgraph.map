@@ -1,9 +1,11 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16" title="Dummy command callback for debug purpose." alt="" coords="280,5,563,35"/>
-<area shape="rect" id="node5" href="$classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream." alt="" coords="345,59,497,88"/>
-<area shape="rect" id="node7" href="$classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream." alt="" coords="340,112,503,141"/>
-<area shape="rect" id="node9" href="$classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="347,165,496,195"/>
-<area shape="rect" id="node15" href="$classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d" title="Dummy message callback for debug purpose." alt="" coords="280,219,563,248"/>
-<area shape="rect" id="node11" href="$classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="611,139,725,168"/>
-<area shape="rect" id="node13" href="$classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="623,192,713,221"/>
+<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16" title="Dummy command callback for debug purpose." alt="" coords="283,5,565,35"/>
+<area shape="rect" id="node5" href="$classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream." alt="" coords="348,59,500,88"/>
+<area shape="rect" id="node7" href="$classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45" title="Get list of command callbacks." alt="" coords="280,112,568,141"/>
+<area shape="rect" id="node9" href="$classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream." alt="" coords="343,165,505,195"/>
+<area shape="rect" id="node11" href="$classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="349,219,499,248"/>
+<area shape="rect" id="node17" href="$classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d" title="Dummy message callback for debug purpose." alt="" coords="283,272,565,301"/>
+<area shape="rect" id="node19" href="$classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="280,325,568,355"/>
+<area shape="rect" id="node13" href="$classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="616,192,731,221"/>
+<area shape="rect" id="node15" href="$classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="628,245,719,275"/>
 </map>

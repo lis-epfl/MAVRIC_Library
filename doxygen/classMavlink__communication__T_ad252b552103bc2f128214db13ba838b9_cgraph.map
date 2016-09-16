@@ -1,0 +1,22 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="309,392,533,421"/>
+<area shape="rect" id="node5" href="$classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764" title="Mavlink parsing of message; the message is not available in this module afterwards." alt="" coords="669,59,832,88"/>
+<area shape="rect" id="node11" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="637,299,864,328"/>
+<area shape="rect" id="node31" href="$classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function." alt="" coords="663,485,839,515"/>
+<area shape="rect" id="node39" href="$classOnboard__parameters.html#a93c99b0746cfcb6f8922e06a24325b31" title="Searches through the list of parameters, and send only the first scheduled parameter." alt="" coords="581,565,920,595"/>
+<area shape="rect" id="node7" href="$classSerial.html#a7defcc73aba6631c903b58641362aa5f" title="Test if there are bytes available to read." alt="" coords="1056,5,1168,35"/>
+<area shape="rect" id="node9" href="$classSerial.html#a863184953fb46582053208c076e75656" title="Read bytes from the serial line." alt="" coords="1068,59,1156,88"/>
+<area shape="rect" id="node13" href="$classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16" title="Dummy command callback for debug purpose." alt="" coords="971,112,1253,141"/>
+<area shape="rect" id="node15" href="$classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream." alt="" coords="1036,165,1188,195"/>
+<area shape="rect" id="node17" href="$classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45" title="Get list of command callbacks." alt="" coords="968,219,1256,248"/>
+<area shape="rect" id="node19" href="$classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream." alt="" coords="1031,272,1193,301"/>
+<area shape="rect" id="node21" href="$classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="1037,325,1187,355"/>
+<area shape="rect" id="node27" href="$classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d" title="Dummy message callback for debug purpose." alt="" coords="971,379,1253,408"/>
+<area shape="rect" id="node29" href="$classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="968,432,1256,461"/>
+<area shape="rect" id="node23" href="$classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="1307,299,1421,328"/>
+<area shape="rect" id="node25" href="$classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="1319,352,1409,381"/>
+<area shape="rect" id="node33" href="$classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="1015,485,1209,515"/>
+<area shape="rect" id="node35" href="$classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790" title="Run update (check for tasks ready for execution and execute them)" alt="" coords="1049,539,1175,568"/>
+<area shape="rect" id="node37" href="$classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="1304,539,1424,568"/>
+<area shape="rect" id="node41" href="$classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d" title="Get pointer to the list of parameters." alt="" coords="1004,592,1220,621"/>
+</map>

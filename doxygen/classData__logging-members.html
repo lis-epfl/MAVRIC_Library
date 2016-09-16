@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -96,8 +97,11 @@ This is the complete list of members for <a class="el" href="classData__logging.
   <tr bgcolor="#f0f0f0"><td><b>add_field</b>(const float *val, const char *param_name, uint32_t precision) (defined in <a class="el" href="classData__logging.html">Data_logging</a>)</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>add_field</b>(const double *val, const char *param_name, uint32_t precision) (defined in <a class="el" href="classData__logging.html">Data_logging</a>)</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>add_field</b>(const bool *val, const char *param_name) (defined in <a class="el" href="classData__logging.html">Data_logging</a>)</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classData__logging.html#a6a31693af23d1281dd30ad8a54582358">create_new_log_file</a>(const char *file_name_, bool continuous_write_, uint32_t sysid)</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classData__logging.html#a31806e00fbeafe81844dc75f0e49273a">Data_logging</a>(File &amp;file, State &amp;state, data_logging_conf_t config=data_logging_default_config())</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classData__logging.html#aab519927c1b4a2ef2dac643b7615794f">create_new_log_file</a>(const char *file_name_, uint32_t sysid)</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classData__logging.html#a88d78ab5d8a4f6cd8962d5f734439685">Data_logging</a>(File &amp;file, State &amp;state, conf_t config=default_config())</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classData__logging.html#aa74dc620ec8688d7b3c2e1c3cf1aa15f">default_config</a>()</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td><code> [inline, static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classData__logging.html#ad09987371f50a7d0c8df8b2325ec313c">list</a>()=0</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td><code> [protected, pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classData__logging.html#a0d781dd515d76409890086f08af49ce7">max_count</a>(void)=0</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td><code> [protected, pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072">start</a>(void)</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253">stop</a>(void)</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff">update</a>()</td><td><a class="el" href="classData__logging.html">Data_logging</a></td><td></td></tr>
@@ -119,7 +123,7 @@ This is the complete list of members for <a class="el" href="classData__logging.
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

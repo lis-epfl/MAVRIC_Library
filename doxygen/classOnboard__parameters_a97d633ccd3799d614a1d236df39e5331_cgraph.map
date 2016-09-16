@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="327,59,617,88"/>
+<area shape="rect" id="node9" href="$classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="327,112,617,141"/>
+<area shape="rect" id="node5" href="$classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="668,5,1001,35"/>
+<area shape="rect" id="node7" href="$classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="691,59,979,88"/>
+<area shape="rect" id="node11" href="$classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b" title="Get maximum number of command callbacks." alt="" coords="668,112,1001,141"/>
+<area shape="rect" id="node13" href="$classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45" title="Get list of command callbacks." alt="" coords="691,165,979,195"/>
+</map>

@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -113,12 +114,12 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if there is space available to write bytes.  <a href="#a146d3babc7503f2ba0e4e5aca36aa22b"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial__dummy.html#adf31399db74dfb64d228da605cfe0272">flush</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends instantaneously all outgoing bytes.  <a href="#adf31399db74dfb64d228da605cfe0272"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial__dummy.html#a3877a82dbfd8137619e6c13cfe2f5aba">attach</a> (serial_interrupt_callback_t func)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a function to call after a receive interrupt is generated.  <a href="#a3877a82dbfd8137619e6c13cfe2f5aba"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial__dummy.html#a9112c3254db72f53e94049bdb3f93a05">write</a> (const uint8_t *bytes, const uint32_t size=1)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Write bytes on the serial line.  <a href="#a9112c3254db72f53e94049bdb3f93a05"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial__dummy.html#ac95129bd560937c4a878bf1cbff157de">read</a> (uint8_t *bytes, const uint32_t size=1)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read bytes from the serial line.  <a href="#ac95129bd560937c4a878bf1cbff157de"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial__dummy.html#a0dba21ef8cdde171598a82d59c04c644">attach</a> (serial_interrupt_callback_t __attribute__((unused)) func)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Attach a function to call after a receive interrupt is generated.  <a href="#a0dba21ef8cdde171598a82d59c04c644"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial__dummy.html#afa8783a3cc0d7cd7ecc820ae9efd4391">write</a> (const uint8_t __attribute__((unused))*bytes, const uint32_t __attribute__((unused)) size=1)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Write bytes on the serial line.  <a href="#afa8783a3cc0d7cd7ecc820ae9efd4391"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial__dummy.html#ac11899d59440870c91288f8d4a25724a">read</a> (uint8_t __attribute__((unused))*bytes, const uint32_t __attribute__((unused)) size=1)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read bytes from the serial line.  <a href="#ac11899d59440870c91288f8d4a25724a"></a><br/></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ab5275617a36c03f30cd7cabd2f03f597"></a><!-- doxytag: member="Serial_dummy::Serial_dummy" ref="ab5275617a36c03f30cd7cabd2f03f597" args="(void)" -->
@@ -147,16 +148,16 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a3877a82dbfd8137619e6c13cfe2f5aba"></a><!-- doxytag: member="Serial_dummy::attach" ref="a3877a82dbfd8137619e6c13cfe2f5aba" args="(serial_interrupt_callback_t func)" -->
+<a class="anchor" id="a0dba21ef8cdde171598a82d59c04c644"></a><!-- doxytag: member="Serial_dummy::attach" ref="a0dba21ef8cdde171598a82d59c04c644" args="(serial_interrupt_callback_t __attribute__((unused)) func)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSerial__dummy.html#a3877a82dbfd8137619e6c13cfe2f5aba">Serial_dummy::attach</a> </td>
+          <td class="memname">bool <a class="el" href="classSerial__dummy.html#a0dba21ef8cdde171598a82d59c04c644">Serial_dummy::attach</a> </td>
           <td>(</td>
-          <td class="paramtype">serial_interrupt_callback_t&#160;</td>
+          <td class="paramtype">serial_interrupt_callback_t __attribute__((unused))&#160;</td>
           <td class="paramname"><em>func</em></td><td>)</td>
-          <td><code> [inline, virtual]</code></td>
+          <td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -173,8 +174,6 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true Success </dd>
 <dd>
 false Failed </dd></dl>
-
-<p>Implements <a class="el" href="classSerial.html#a6828a2d281fc081b0f87dc41782610f8">Serial</a>.</p>
 
 </div>
 </div>
@@ -224,26 +223,26 @@ false Error </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="ac95129bd560937c4a878bf1cbff157de"></a><!-- doxytag: member="Serial_dummy::read" ref="ac95129bd560937c4a878bf1cbff157de" args="(uint8_t *bytes, const uint32_t size=1)" -->
+<a class="anchor" id="ac11899d59440870c91288f8d4a25724a"></a><!-- doxytag: member="Serial_dummy::read" ref="ac11899d59440870c91288f8d4a25724a" args="(uint8_t __attribute__((unused))*bytes, const uint32_t __attribute__((unused)) size=1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSerial__dummy.html#ac95129bd560937c4a878bf1cbff157de">Serial_dummy::read</a> </td>
+          <td class="memname">bool <a class="el" href="classSerial__dummy.html#ac11899d59440870c91288f8d4a25724a">Serial_dummy::read</a> </td>
           <td>(</td>
-          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramtype">uint8_t __attribute__((unused))*&#160;</td>
           <td class="paramname"><em>bytes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint32_t&#160;</td>
+          <td class="paramtype">const uint32_t __attribute__((unused))&#160;</td>
           <td class="paramname"><em>size</em> = <code>1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td><code> [inline, virtual]</code></td>
+          <td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -260,8 +259,6 @@ false Error </dd></dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true Data successfully read </dd>
 <dd>
 false Data not read </dd></dl>
-
-<p>Implements <a class="el" href="classSerial.html#a863184953fb46582053208c076e75656">Serial</a>.</p>
 
 </div>
 </div>
@@ -287,26 +284,26 @@ false Data not read </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a9112c3254db72f53e94049bdb3f93a05"></a><!-- doxytag: member="Serial_dummy::write" ref="a9112c3254db72f53e94049bdb3f93a05" args="(const uint8_t *bytes, const uint32_t size=1)" -->
+<a class="anchor" id="afa8783a3cc0d7cd7ecc820ae9efd4391"></a><!-- doxytag: member="Serial_dummy::write" ref="afa8783a3cc0d7cd7ecc820ae9efd4391" args="(const uint8_t __attribute__((unused))*bytes, const uint32_t __attribute__((unused)) size=1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classSerial__dummy.html#a9112c3254db72f53e94049bdb3f93a05">Serial_dummy::write</a> </td>
+          <td class="memname">bool <a class="el" href="classSerial__dummy.html#afa8783a3cc0d7cd7ecc820ae9efd4391">Serial_dummy::write</a> </td>
           <td>(</td>
-          <td class="paramtype">const uint8_t *&#160;</td>
+          <td class="paramtype">const uint8_t __attribute__((unused))*&#160;</td>
           <td class="paramname"><em>bytes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint32_t&#160;</td>
+          <td class="paramtype">const uint32_t __attribute__((unused))&#160;</td>
           <td class="paramname"><em>size</em> = <code>1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td><code> [inline, virtual]</code></td>
+          <td></td><td><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -323,8 +320,6 @@ false Data not read </dd></dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true Data successfully written </dd>
 <dd>
 false Data not written </dd></dl>
-
-<p>Implements <a class="el" href="classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044">Serial</a>.</p>
 
 </div>
 </div>
@@ -371,7 +366,7 @@ false Data not written </dd></dl>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:17 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

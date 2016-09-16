@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -83,14 +84,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classSerial__dummy.html">Serial_dummy</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#a3877a82dbfd8137619e6c13cfe2f5aba">attach</a>(serial_interrupt_callback_t func)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#a0dba21ef8cdde171598a82d59c04c644">attach</a>(serial_interrupt_callback_t __attribute__((unused)) func)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classSerial.html#a6828a2d281fc081b0f87dc41782610f8">Serial::attach</a>(serial_interrupt_callback_t func)=0</td><td><a class="el" href="classSerial.html">Serial</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#adf31399db74dfb64d228da605cfe0272">flush</a>(void)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#af848c912584d1d271d5b8827614e850c">init</a>(void)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSerial.html#a33d8e661405102e5e5a22e435731d5ea">newline</a>()</td><td><a class="el" href="classSerial.html">Serial</a></td><td><code> [virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#ac95129bd560937c4a878bf1cbff157de">read</a>(uint8_t *bytes, const uint32_t size=1)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#ac11899d59440870c91288f8d4a25724a">read</a>(uint8_t __attribute__((unused))*bytes, const uint32_t __attribute__((unused)) size=1)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classSerial.html#a863184953fb46582053208c076e75656">Serial::read</a>(uint8_t *bytes, const uint32_t size=1)=0</td><td><a class="el" href="classSerial.html">Serial</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#a275cb85f1a8a1b00992ee712aebf78de">readable</a>(void)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#ab5275617a36c03f30cd7cabd2f03f597">Serial_dummy</a>(void)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#a9112c3254db72f53e94049bdb3f93a05">write</a>(const uint8_t *bytes, const uint32_t size=1)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#afa8783a3cc0d7cd7ecc820ae9efd4391">write</a>(const uint8_t __attribute__((unused))*bytes, const uint32_t __attribute__((unused)) size=1)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044">Serial::write</a>(const uint8_t *bytes, const uint32_t size=1)=0</td><td><a class="el" href="classSerial.html">Serial</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classSerial__dummy.html#a146d3babc7503f2ba0e4e5aca36aa22b">writeable</a>(void)</td><td><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
@@ -110,7 +114,7 @@ This is the complete list of members for <a class="el" href="classSerial__dummy.
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:17 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__message__handler__T.html" title="Message handler." alt="" coords="5,312,248,467"/>
+<area shape="rect" id="node5" href="$classMavlink__message__handler__T.html" title="{Mavlink_message_handler_T\&lt; N_MSG_CB, N_CMD_CB \&gt;\n||+ Mavlink_message_handler_T()\l# msg_callback_max_count()\l# cmd_callback_max_count()\l# msg_callback_list()\l# cmd_callback_list()\l}" alt="" coords="272,312,643,467"/>
+</map>

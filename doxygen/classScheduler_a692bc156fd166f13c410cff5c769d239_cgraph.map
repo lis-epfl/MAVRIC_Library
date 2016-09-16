@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classScheduler__task.html#a70f6839a9a39df993c5afeb7bc7f0451" title="Suspends a task." alt="" coords="252,5,420,35"/>
+<area shape="rect" id="node3" href="$classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="276,5,396,35"/>
+<area shape="rect" id="node5" href="$classScheduler__task.html#a70f6839a9a39df993c5afeb7bc7f0451" title="Suspends a task." alt="" coords="252,59,420,88"/>
 </map>

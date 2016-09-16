@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -169,49 +170,59 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00108"></a>00108     };
 <a name="l00109"></a>00109 
 <a name="l00110"></a>00110 
-<a name="l00111"></a>00111     <a class="code" href="classScheduler__task.html" title="Task entry.">Scheduler_task</a>(uint32_t <a class="code" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed" title="Period between two calls (us)">repeat_period</a>, <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">Scheduler_task::run_mode_t</a> <a class="code" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e" title="Run mode.">run_mode</a>, <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed" title="Task timing mode.">Scheduler_task::timing_mode_t</a> <a class="code" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9" title="Timing mode.">timing_mode</a>, <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569" title="Task priority.">Scheduler_task::priority_t</a> <a class="code" href="classScheduler__task.html#a18d367aa93373dff25f6715dd8698c5f" title="Priority.">priority</a>, <a class="code" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057" title="Prototype of a task function.">Scheduler_task::task_function_t</a> call_function, <a class="code" href="classScheduler__task.html#a28462679852aacf669176cd93005842a" title="Generic argument to be passed to a task function.">Scheduler_task::task_argument_t</a> function_argument, int32_t <a class="code" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7" title="Unique task identifier.">task_id</a>);
-<a name="l00112"></a>00112 
-<a name="l00118"></a>00118     <span class="keywordtype">void</span> <a class="code" href="classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef" title="Modifies the run mode of an existing task.">set_run_mode</a>(<a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">run_mode_t</a> mode);
-<a name="l00119"></a>00119 
-<a name="l00120"></a>00120 
-<a name="l00125"></a>00125     <span class="keywordtype">void</span> <a class="code" href="classScheduler__task.html#adc0e604f86fd585d32b94bb845d0eb8c" title="Run a task immediately.">run_now</a>();
-<a name="l00126"></a>00126 
-<a name="l00127"></a>00127 
-<a name="l00133"></a>00133     <span class="keywordtype">void</span> <a class="code" href="classScheduler__task.html#a70f6839a9a39df993c5afeb7bc7f0451" title="Suspends a task.">suspend</a>(uint32_t <a class="code" href="classScheduler__task.html#a30ad03dc090ad6e4ba3e250bfa888ebd" title="Delay between expected execution and actual execution.">delay</a>);
-<a name="l00134"></a>00134 
+<a name="l00114"></a>00114     <a class="code" href="classScheduler__task.html#af8cfd1985c6793db9f01fe606b8aa5c3" title="Default Constructor.">Scheduler_task</a>(<span class="keywordtype">void</span>);
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116 
+<a name="l00128"></a>00128     <a class="code" href="classScheduler__task.html#af8cfd1985c6793db9f01fe606b8aa5c3" title="Default Constructor.">Scheduler_task</a>( uint32_t <a class="code" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed" title="Period between two calls (us)">repeat_period</a>,
+<a name="l00129"></a>00129                     <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">Scheduler_task::run_mode_t</a> <a class="code" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e" title="Run mode.">run_mode</a>,
+<a name="l00130"></a>00130                     <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed" title="Task timing mode.">Scheduler_task::timing_mode_t</a> <a class="code" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9" title="Timing mode.">timing_mode</a>,
+<a name="l00131"></a>00131                     <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569" title="Task priority.">Scheduler_task::priority_t</a> <a class="code" href="classScheduler__task.html#a18d367aa93373dff25f6715dd8698c5f" title="Priority.">priority</a>,
+<a name="l00132"></a>00132                     <a class="code" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057" title="Prototype of a task function.">Scheduler_task::task_function_t</a> call_function,
+<a name="l00133"></a>00133                     <a class="code" href="classScheduler__task.html#a28462679852aacf669176cd93005842a" title="Generic argument to be passed to a task function.">Scheduler_task::task_argument_t</a> function_argument,
+<a name="l00134"></a>00134                     int32_t <a class="code" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7" title="Unique task identifier.">task_id</a>);
 <a name="l00135"></a>00135 
-<a name="l00141"></a>00141     <span class="keywordtype">void</span> <a class="code" href="classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5" title="Modifies the period of execution of an existing task.">change_period</a>(uint32_t <a class="code" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed" title="Period between two calls (us)">repeat_period</a>);
-<a name="l00142"></a>00142 
+<a name="l00136"></a>00136 
+<a name="l00142"></a>00142     <span class="keywordtype">void</span> <a class="code" href="classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef" title="Modifies the run mode of an existing task.">set_run_mode</a>(<a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">run_mode_t</a> mode);
 <a name="l00143"></a>00143 
-<a name="l00149"></a>00149     int32_t <a class="code" href="classScheduler__task.html#ad61e4f6787ec2333183eab8bc8137cb9" title="Returns the ID of the task.">get_id</a>();
+<a name="l00144"></a>00144 
+<a name="l00149"></a>00149     <span class="keywordtype">void</span> <a class="code" href="classScheduler__task.html#adc0e604f86fd585d32b94bb845d0eb8c" title="Run a task immediately.">run_now</a>();
 <a name="l00150"></a>00150 
-<a name="l00156"></a>00156     <span class="keywordtype">bool</span> <a class="code" href="classScheduler__task.html#a2633590be51e2cfc5ac68ccadc954d39" title="Executes tasks and updates statistics.">execute</a>();
-<a name="l00157"></a>00157 
-<a name="l00163"></a>00163     <span class="keywordtype">bool</span> <a class="code" href="classScheduler__task.html#a318a64cf7c3c47422164ccc3d9e5f931" title="Checks if the task is due.">is_due</a>();
-<a name="l00164"></a>00164 
-<a name="l00165"></a><a class="code" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7">00165</a>     int32_t             <a class="code" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7" title="Unique task identifier.">task_id</a>;                
-<a name="l00166"></a><a class="code" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e">00166</a>     <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">run_mode_t</a>          <a class="code" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e" title="Run mode.">run_mode</a>;               
-<a name="l00167"></a><a class="code" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9">00167</a>     <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed" title="Task timing mode.">timing_mode_t</a>       <a class="code" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9" title="Timing mode.">timing_mode</a>;            
-<a name="l00168"></a><a class="code" href="classScheduler__task.html#a18d367aa93373dff25f6715dd8698c5f">00168</a>     <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569" title="Task priority.">priority_t</a>          <a class="code" href="classScheduler__task.html#a18d367aa93373dff25f6715dd8698c5f" title="Priority.">priority</a>;               
-<a name="l00169"></a><a class="code" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed">00169</a>     uint32_t            <a class="code" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed" title="Period between two calls (us)">repeat_period</a>;          
-<a name="l00170"></a><a class="code" href="classScheduler__task.html#ad1ed6dd2f1dd137b05a81b808fd97e0e">00170</a>     uint32_t            <a class="code" href="classScheduler__task.html#ad1ed6dd2f1dd137b05a81b808fd97e0e" title="Next execution time.">next_run</a>;               
-<a name="l00171"></a>00171 
-<a name="l00172"></a><a class="code" href="classScheduler__task.html#ae3aa1ab7017ce5fc34daa575b3cb981d">00172</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#ae3aa1ab7017ce5fc34daa575b3cb981d" title="Execution time.">execution_time</a>;         
-<a name="l00173"></a><a class="code" href="classScheduler__task.html#ac3989dd6ba81591cf3bcf53e8c3c2859">00173</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#ac3989dd6ba81591cf3bcf53e8c3c2859" title="Average execution time.">execution_time_avg</a>;     
-<a name="l00174"></a><a class="code" href="classScheduler__task.html#acd6d06e40b1c62a3df131b24fa758747">00174</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#acd6d06e40b1c62a3df131b24fa758747" title="Variance of execution time.">execution_time_var</a>;     
-<a name="l00175"></a><a class="code" href="classScheduler__task.html#af3d081a1808a323f7306e6a0e6e73f07">00175</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#af3d081a1808a323f7306e6a0e6e73f07" title="Maximum execution time.">execution_time_max</a>;     
-<a name="l00176"></a><a class="code" href="classScheduler__task.html#a30ad03dc090ad6e4ba3e250bfa888ebd">00176</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#a30ad03dc090ad6e4ba3e250bfa888ebd" title="Delay between expected execution and actual execution.">delay</a>;                  
-<a name="l00177"></a><a class="code" href="classScheduler__task.html#a1dd82d19ac5d3c7e53138b0929449f40">00177</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#a1dd82d19ac5d3c7e53138b0929449f40" title="Average delay.">delay_avg</a>;              
-<a name="l00178"></a><a class="code" href="classScheduler__task.html#a0a591f0c0bd21dd2115eda6bef9b26b6">00178</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#a0a591f0c0bd21dd2115eda6bef9b26b6" title="Variance of delay.">delay_var</a>;              
-<a name="l00179"></a><a class="code" href="classScheduler__task.html#a76b248f6fc6c0956e640f6c939372c29">00179</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#a76b248f6fc6c0956e640f6c939372c29" title="Maximum delay.">delay_max</a>;              
-<a name="l00180"></a><a class="code" href="classScheduler__task.html#a8c1f95c5d9bef0da1e99d35332be8736">00180</a>     uint32_t            <a class="code" href="classScheduler__task.html#a8c1f95c5d9bef0da1e99d35332be8736" title="Number of Real-time violations, this is incremented each time an execution is skipped.">rt_violations</a>;          
+<a name="l00151"></a>00151 
+<a name="l00157"></a>00157     <span class="keywordtype">void</span> <a class="code" href="classScheduler__task.html#a70f6839a9a39df993c5afeb7bc7f0451" title="Suspends a task.">suspend</a>(uint32_t <a class="code" href="classScheduler__task.html#a30ad03dc090ad6e4ba3e250bfa888ebd" title="Delay between expected execution and actual execution.">delay</a>);
+<a name="l00158"></a>00158 
+<a name="l00159"></a>00159 
+<a name="l00165"></a>00165     <span class="keywordtype">void</span> <a class="code" href="classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5" title="Modifies the period of execution of an existing task.">change_period</a>(uint32_t <a class="code" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed" title="Period between two calls (us)">repeat_period</a>);
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167 
+<a name="l00173"></a>00173     int32_t <a class="code" href="classScheduler__task.html#ad61e4f6787ec2333183eab8bc8137cb9" title="Returns the ID of the task.">get_id</a>();
+<a name="l00174"></a>00174 
+<a name="l00180"></a>00180     <span class="keywordtype">bool</span> <a class="code" href="classScheduler__task.html#a2633590be51e2cfc5ac68ccadc954d39" title="Executes tasks and updates statistics.">execute</a>();
 <a name="l00181"></a>00181 
-<a name="l00182"></a>00182 <span class="keyword">private</span>:
-<a name="l00183"></a>00183     <a class="code" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057" title="Prototype of a task function.">task_function_t</a>     call_function;          
-<a name="l00184"></a>00184     <a class="code" href="classScheduler__task.html#a28462679852aacf669176cd93005842a" title="Generic argument to be passed to a task function.">task_argument_t</a>     function_argument;      
-<a name="l00185"></a>00185 };
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187 <span class="preprocessor">#endif </span><span class="comment">/* SCHEDULER_TASK_HPP_ */</span>
+<a name="l00187"></a>00187     <span class="keywordtype">bool</span> <a class="code" href="classScheduler__task.html#a318a64cf7c3c47422164ccc3d9e5f931" title="Checks if the task is due.">is_due</a>();
+<a name="l00188"></a>00188 
+<a name="l00189"></a><a class="code" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7">00189</a>     int32_t             <a class="code" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7" title="Unique task identifier.">task_id</a>;                
+<a name="l00190"></a><a class="code" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e">00190</a>     <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">run_mode_t</a>          <a class="code" href="classScheduler__task.html#aa03e0fa095d4da7a75a0ed3a0bfcd20e" title="Run mode.">run_mode</a>;               
+<a name="l00191"></a><a class="code" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9">00191</a>     <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed" title="Task timing mode.">timing_mode_t</a>       <a class="code" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9" title="Timing mode.">timing_mode</a>;            
+<a name="l00192"></a><a class="code" href="classScheduler__task.html#a18d367aa93373dff25f6715dd8698c5f">00192</a>     <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569" title="Task priority.">priority_t</a>          <a class="code" href="classScheduler__task.html#a18d367aa93373dff25f6715dd8698c5f" title="Priority.">priority</a>;               
+<a name="l00193"></a><a class="code" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed">00193</a>     uint32_t            <a class="code" href="classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed" title="Period between two calls (us)">repeat_period</a>;          
+<a name="l00194"></a><a class="code" href="classScheduler__task.html#ad1ed6dd2f1dd137b05a81b808fd97e0e">00194</a>     uint32_t            <a class="code" href="classScheduler__task.html#ad1ed6dd2f1dd137b05a81b808fd97e0e" title="Next execution time.">next_run</a>;               
+<a name="l00195"></a>00195 
+<a name="l00196"></a><a class="code" href="classScheduler__task.html#ae3aa1ab7017ce5fc34daa575b3cb981d">00196</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#ae3aa1ab7017ce5fc34daa575b3cb981d" title="Execution time.">execution_time</a>;         
+<a name="l00197"></a><a class="code" href="classScheduler__task.html#ac3989dd6ba81591cf3bcf53e8c3c2859">00197</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#ac3989dd6ba81591cf3bcf53e8c3c2859" title="Average execution time.">execution_time_avg</a>;     
+<a name="l00198"></a><a class="code" href="classScheduler__task.html#acd6d06e40b1c62a3df131b24fa758747">00198</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#acd6d06e40b1c62a3df131b24fa758747" title="Variance of execution time.">execution_time_var</a>;     
+<a name="l00199"></a><a class="code" href="classScheduler__task.html#af3d081a1808a323f7306e6a0e6e73f07">00199</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#af3d081a1808a323f7306e6a0e6e73f07" title="Maximum execution time.">execution_time_max</a>;     
+<a name="l00200"></a><a class="code" href="classScheduler__task.html#a30ad03dc090ad6e4ba3e250bfa888ebd">00200</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#a30ad03dc090ad6e4ba3e250bfa888ebd" title="Delay between expected execution and actual execution.">delay</a>;                  
+<a name="l00201"></a><a class="code" href="classScheduler__task.html#a1dd82d19ac5d3c7e53138b0929449f40">00201</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#a1dd82d19ac5d3c7e53138b0929449f40" title="Average delay.">delay_avg</a>;              
+<a name="l00202"></a><a class="code" href="classScheduler__task.html#a0a591f0c0bd21dd2115eda6bef9b26b6">00202</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#a0a591f0c0bd21dd2115eda6bef9b26b6" title="Variance of delay.">delay_var</a>;              
+<a name="l00203"></a><a class="code" href="classScheduler__task.html#a76b248f6fc6c0956e640f6c939372c29">00203</a>     <span class="keywordtype">float</span>               <a class="code" href="classScheduler__task.html#a76b248f6fc6c0956e640f6c939372c29" title="Maximum delay.">delay_max</a>;              
+<a name="l00204"></a><a class="code" href="classScheduler__task.html#a8c1f95c5d9bef0da1e99d35332be8736">00204</a>     uint32_t            <a class="code" href="classScheduler__task.html#a8c1f95c5d9bef0da1e99d35332be8736" title="Number of Real-time violations, this is incremented each time an execution is skipped.">rt_violations</a>;          
+<a name="l00205"></a>00205 
+<a name="l00206"></a>00206 <span class="keyword">private</span>:
+<a name="l00207"></a>00207     <a class="code" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057" title="Prototype of a task function.">task_function_t</a>     call_function;          
+<a name="l00208"></a>00208     <a class="code" href="classScheduler__task.html#a28462679852aacf669176cd93005842a" title="Generic argument to be passed to a task function.">task_argument_t</a>     function_argument;      
+<a name="l00209"></a>00209 };
+<a name="l00210"></a>00210 
+<a name="l00211"></a>00211 <span class="preprocessor">#endif </span><span class="comment">/* SCHEDULER_TASK_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -230,7 +241,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:00 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

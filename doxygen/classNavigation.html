@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -136,8 +137,8 @@ Public Types</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The auto-landing enum.  <a href="classNavigation.html#ad3c50bdf8fc3a032d75c8fa15fdd5729">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavigation.html#a5dc7f44df595781bb3e725249c823f44">Navigation</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> &amp;controls_nav, const <a class="el" href="structquat__t.html">quat_t</a> &amp;<a class="el" href="classNavigation.html#adec383e734cabf3b54eac22ea5d7a050">qe</a>, const <a class="el" href="classINS.html">INS</a> &amp;ins, <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="structNavigation_1_1conf__t.html">conf_t</a> nav_config=<a class="el" href="classNavigation.html#ae543077183979429089096e96040a537">default_config</a>())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a5dc7f44df595781bb3e725249c823f44"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavigation.html#aa478814cb3d76104f7ddbe1fe3d7bb96">Navigation</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> &amp;controls_nav, const <a class="el" href="structquat__t.html">quat_t</a> &amp;<a class="el" href="classNavigation.html#adec383e734cabf3b54eac22ea5d7a050">qe</a>, const <a class="el" href="classINS.html">INS</a> &amp;ins, <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="structNavigation_1_1conf__t.html">conf_t</a> nav_config=<a class="el" href="classNavigation.html#ae543077183979429089096e96040a537">default_config</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#aa478814cb3d76104f7ddbe1fe3d7bb96"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNavigation.html#ade9f978504febc6325012ae8bf5ff19f">update</a> (<a class="el" href="classNavigation.html">Navigation</a> *navigation)</td></tr>
@@ -278,12 +279,12 @@ const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td><td cla
 </div>
 </div>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a5dc7f44df595781bb3e725249c823f44"></a><!-- doxytag: member="Navigation::Navigation" ref="a5dc7f44df595781bb3e725249c823f44" args="(control_command_t &amp;controls_nav, const quat_t &amp;qe, const INS &amp;ins, State &amp;state, Mavlink_stream &amp;mavlink_stream, conf_t nav_config=default_config())" -->
+<a class="anchor" id="aa478814cb3d76104f7ddbe1fe3d7bb96"></a><!-- doxytag: member="Navigation::Navigation" ref="aa478814cb3d76104f7ddbe1fe3d7bb96" args="(control_command_t &amp;controls_nav, const quat_t &amp;qe, const INS &amp;ins, State &amp;state, conf_t nav_config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNavigation.html#a5dc7f44df595781bb3e725249c823f44">Navigation::Navigation</a> </td>
+          <td class="memname"><a class="el" href="classNavigation.html#aa478814cb3d76104f7ddbe1fe3d7bb96">Navigation::Navigation</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> &amp;&#160;</td>
           <td class="paramname"><em>controls_nav</em>, </td>
@@ -309,12 +310,6 @@ const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td><td cla
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#160;</td>
-          <td class="paramname"><em>mavlink_stream</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype"><a class="el" href="structNavigation_1_1conf__t.html">conf_t</a>&#160;</td>
           <td class="paramname"><em>nav_config</em> = <code><a class="el" href="classNavigation.html#ae543077183979429089096e96040a537">default_config</a>()</code>&#160;</td>
         </tr>
@@ -334,7 +329,6 @@ const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td><td cla
     <tr><td class="paramname">qe</td><td>Reference to the attitude quaternion structure </td></tr>
     <tr><td class="paramname">ins</td><td>Reference to the Inertial navigation system </td></tr>
     <tr><td class="paramname">state</td><td>Reference to the state structure </td></tr>
-    <tr><td class="paramname">mavlink_stream</td><td>Reference to the MAVLink_stream structure </td></tr>
     <tr><td class="paramname">nav_config</td><td>Reference to the config structure </td></tr>
   </table>
   </dd>
@@ -451,7 +445,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

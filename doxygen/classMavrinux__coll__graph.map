@@ -11,7 +11,7 @@
 <area shape="rect" id="node16" href="$classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="899,358,1043,530"/>
 <area shape="rect" id="node18" href="$classState__display__mavrinux.html" title="{State_display_mavrinux\n||+ State_display_mavrinux()\l+ update()\l}" alt="" coords="1067,393,1248,495"/>
 <area shape="rect" id="node20" href="$classState__display.html" title="Interface class for state display." alt="" coords="1107,66,1208,203"/>
-<area shape="rect" id="node22" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="1272,323,1419,565"/>
+<area shape="rect" id="node22" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="1272,315,1419,573"/>
 <area shape="rect" id="node27" href="$classFile__linux.html" title="File objects on linux platforms." alt="" coords="1443,315,1539,573"/>
 <area shape="rect" id="node29" href="$classFile.html" title="Base class for file objects." alt="" coords="1448,5,1533,264"/>
 <area shape="rect" id="node31" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1563,367,1645,521"/>

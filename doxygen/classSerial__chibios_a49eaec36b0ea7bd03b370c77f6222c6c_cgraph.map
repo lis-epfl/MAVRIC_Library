@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSerial__chibios.html#aa23cdaec8e0237983e0bd6f5e602b6ec" title="Default TX interrupt&#45;handling function." alt="" coords="192,32,384,61"/>
+<area shape="rect" id="node9" href="$classBuffer__T.html#aaa477d75c14cc187d2314b0e04382227" title="Tests whether the buffer is empty." alt="" coords="231,85,345,115"/>
+<area shape="rect" id="node5" href="$classBuffer__T.html#aed2c412fb34f1890fce4cc884c583625" title="Returns the number of available bytes in the buffer." alt="" coords="433,5,561,35"/>
+<area shape="rect" id="node7" href="$classBuffer__T.html#a6c1d3989f4fe7a9f1960fd473d2c398f" title="Get the oldest element in the buffer." alt="" coords="448,59,547,88"/>
+</map>

@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -125,129 +126,158 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor">#ifndef DATA_LOGGING_HPP__</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define DATA_LOGGING_HPP__</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;communication/mavlink_communication.hpp&quot;</span>
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;communication/state.hpp&quot;</span>
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;hal/common/file.hpp&quot;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;hal/common/console.hpp&quot;</span>
-<a name="l00050"></a>00050 
-<a name="l00054"></a><a class="code" href="structdata__logging__entry__t.html">00054</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00055"></a>00055 {
-<a name="l00056"></a><a class="code" href="structdata__logging__entry__t.html#a2d6430cb7d4f07295c2fce08b8aa0741">00056</a>     <span class="keyword">const</span> <span class="keywordtype">double</span>* <a class="code" href="structdata__logging__entry__t.html#a2d6430cb7d4f07295c2fce08b8aa0741" title="Pointer to the parameter value.">param</a>;                                              
-<a name="l00057"></a><a class="code" href="structdata__logging__entry__t.html#af3bd8c8635809afd7e588898b28225cc">00057</a>     <span class="keywordtype">char</span> param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];  
-<a name="l00058"></a><a class="code" href="structdata__logging__entry__t.html#a8ddadf69538bd965cdb0b12d97633270">00058</a>     mavlink_message_type_t <a class="code" href="structdata__logging__entry__t.html#a8ddadf69538bd965cdb0b12d97633270" title="Parameter type.">data_type</a>;                           
-<a name="l00059"></a><a class="code" href="structdata__logging__entry__t.html#a4e815bc58ce18b671a18309f8748c1bc">00059</a>     uint8_t <a class="code" href="structdata__logging__entry__t.html#a4e815bc58ce18b671a18309f8748c1bc" title="Number of digit after the zero.">precision</a>;                                          
-<a name="l00060"></a>00060 } <a class="code" href="structdata__logging__entry__t.html" title="Structure of data logging parameter.">data_logging_entry_t</a>;
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;communication/state.hpp&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;hal/common/file.hpp&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;hal/common/console.hpp&quot;</span>
+<a name="l00049"></a>00049 
+<a name="l00053"></a><a class="code" href="structdata__logging__entry__t.html">00053</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00054"></a>00054 {
+<a name="l00055"></a><a class="code" href="structdata__logging__entry__t.html#a2d6430cb7d4f07295c2fce08b8aa0741">00055</a>     <span class="keyword">const</span> <span class="keywordtype">double</span>* <a class="code" href="structdata__logging__entry__t.html#a2d6430cb7d4f07295c2fce08b8aa0741" title="Pointer to the parameter value.">param</a>;                                              
+<a name="l00056"></a><a class="code" href="structdata__logging__entry__t.html#af3bd8c8635809afd7e588898b28225cc">00056</a>     <span class="keywordtype">char</span> param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];  
+<a name="l00057"></a><a class="code" href="structdata__logging__entry__t.html#a8ddadf69538bd965cdb0b12d97633270">00057</a>     mavlink_message_type_t <a class="code" href="structdata__logging__entry__t.html#a8ddadf69538bd965cdb0b12d97633270" title="Parameter type.">data_type</a>;                           
+<a name="l00058"></a><a class="code" href="structdata__logging__entry__t.html#a4e815bc58ce18b671a18309f8748c1bc">00058</a>     uint8_t <a class="code" href="structdata__logging__entry__t.html#a4e815bc58ce18b671a18309f8748c1bc" title="Number of digit after the zero.">precision</a>;                                          
+<a name="l00059"></a>00059 } <a class="code" href="structdata__logging__entry__t.html" title="Structure of data logging parameter.">data_logging_entry_t</a>;
+<a name="l00060"></a>00060 
 <a name="l00061"></a>00061 
 <a name="l00062"></a>00062 
-<a name="l00066"></a><a class="code" href="structdata__logging__conf__t.html">00066</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00067"></a>00067 {
-<a name="l00068"></a><a class="code" href="structdata__logging__conf__t.html#a03ed2a95586585cd1d06fd24159126c3">00068</a>     uint32_t <a class="code" href="structdata__logging__conf__t.html#a03ed2a95586585cd1d06fd24159126c3" title="Maximum number of parameters.">max_data_logging_count</a>;            
-<a name="l00069"></a><a class="code" href="structdata__logging__conf__t.html#adb98b78579d888f049df5f8ba3e54398">00069</a>     uint16_t <a class="code" href="structdata__logging__conf__t.html#adb98b78579d888f049df5f8ba3e54398" title="The max number of logged files with the same name on the SD card.">max_logs</a>;                          
-<a name="l00070"></a><a class="code" href="structdata__logging__conf__t.html#adabb45e91cc3bdc349195914ea4efd5b">00070</a>     <span class="keywordtype">bool</span> <a class="code" href="structdata__logging__conf__t.html#adabb45e91cc3bdc349195914ea4efd5b" title="Indicates if debug messages should be printed for each param change.">debug</a>;                                 
-<a name="l00071"></a><a class="code" href="structdata__logging__conf__t.html#ade06ebd3d21bff7536c26cef05a601fa">00071</a>     uint32_t <a class="code" href="structdata__logging__conf__t.html#ade06ebd3d21bff7536c26cef05a601fa" title="The initial state of writing a file.">log_data</a>;                          
-<a name="l00072"></a>00072 } <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a>;
-<a name="l00073"></a>00073 
-<a name="l00079"></a>00079 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_default_config();
-<a name="l00080"></a>00080 
-<a name="l00087"></a><a class="code" href="classData__logging.html">00087</a> <span class="keyword">class </span><a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>
-<a name="l00088"></a>00088 {
-<a name="l00089"></a>00089 <span class="keyword">public</span>:
-<a name="l00093"></a>00093     <a class="code" href="classData__logging.html#a31806e00fbeafe81844dc75f0e49273a" title="Data logging constructor.">Data_logging</a>(<a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file, <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state, <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> config = data_logging_default_config());
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095 
-<a name="l00105"></a>00105     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#a6a31693af23d1281dd30ad8a54582358" title="Initialise the data logging module.">create_new_log_file</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* file_name_, <span class="keywordtype">bool</span> continuous_write_, uint32_t sysid);
-<a name="l00106"></a>00106 
-<a name="l00114"></a>00114     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card.">update</a>();
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064 
+<a name="l00071"></a><a class="code" href="classData__logging.html">00071</a> <span class="keyword">class </span><a class="code" href="classData__logging.html" title="Log data in files.">Data_logging</a>
+<a name="l00072"></a>00072 {
+<a name="l00073"></a>00073 <span class="keyword">public</span>:
+<a name="l00077"></a><a class="code" href="structData__logging_1_1conf__t.html">00077</a>     <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00078"></a>00078     {
+<a name="l00079"></a><a class="code" href="structData__logging_1_1conf__t.html#a6544500724fa99be52bfc470e6c9aa15">00079</a>         uint16_t <a class="code" href="structData__logging_1_1conf__t.html#a6544500724fa99be52bfc470e6c9aa15" title="The max number of logged files with the same name on the SD card.">max_logs</a>;                          
+<a name="l00080"></a><a class="code" href="structData__logging_1_1conf__t.html#a4142b6c0c1d534c1c3684361743ac552">00080</a>         <span class="keywordtype">bool</span> <a class="code" href="structData__logging_1_1conf__t.html#a4142b6c0c1d534c1c3684361743ac552" title="Indicates if debug messages should be printed for each param change.">debug</a>;                                 
+<a name="l00081"></a><a class="code" href="structData__logging_1_1conf__t.html#a1c656085606d2d466dcf6d3da1baa9e1">00081</a>         uint32_t <a class="code" href="structData__logging_1_1conf__t.html#a1c656085606d2d466dcf6d3da1baa9e1" title="The initial state of writing a file.">log_data</a>;                          
+<a name="l00082"></a><a class="code" href="structData__logging_1_1conf__t.html#ab29d6a4cc417af488e6ab1b2918c64c0">00082</a>         <span class="keywordtype">bool</span> <a class="code" href="structData__logging_1_1conf__t.html#ab29d6a4cc417af488e6ab1b2918c64c0" title="A flag to tell whether we write continuously to the file or not.">continuous_write</a>;                      
+<a name="l00083"></a>00083     } <a class="code" href="structData__logging_1_1conf__t.html" title="Configuration of the data_logging element.">conf_t</a>;
+<a name="l00084"></a>00084 
+<a name="l00090"></a><a class="code" href="classData__logging.html#aa74dc620ec8688d7b3c2e1c3cf1aa15f">00090</a>     <span class="keyword">static</span> <a class="code" href="structData__logging_1_1conf__t.html" title="Configuration of the data_logging element.">conf_t</a> <a class="code" href="classData__logging.html#aa74dc620ec8688d7b3c2e1c3cf1aa15f" title="Default configuration for the data_logging.">default_config</a>()
+<a name="l00091"></a>00091     {
+<a name="l00092"></a>00092         <a class="code" href="structData__logging_1_1conf__t.html" title="Configuration of the data_logging element.">conf_t</a> conf    = {};
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094         conf.<a class="code" href="structData__logging_1_1conf__t.html#a6544500724fa99be52bfc470e6c9aa15" title="The max number of logged files with the same name on the SD card.">max_logs</a>               = 500;
+<a name="l00095"></a>00095         conf.<a class="code" href="structData__logging_1_1conf__t.html#a4142b6c0c1d534c1c3684361743ac552" title="Indicates if debug messages should be printed for each param change.">debug</a>                  = <span class="keyword">true</span>;
+<a name="l00096"></a>00096         conf.<a class="code" href="structData__logging_1_1conf__t.html#a1c656085606d2d466dcf6d3da1baa9e1" title="The initial state of writing a file.">log_data</a>               = 0;     <span class="comment">// 1: log data, 0: no log data</span>
+<a name="l00097"></a>00097         conf.<a class="code" href="structData__logging_1_1conf__t.html#ab29d6a4cc417af488e6ab1b2918c64c0" title="A flag to tell whether we write continuously to the file or not.">continuous_write</a>       = <span class="keyword">false</span>;
+<a name="l00098"></a>00098         <span class="keywordflow">return</span> conf;
+<a name="l00099"></a>00099     };
+<a name="l00100"></a>00100 
+<a name="l00104"></a>00104     <a class="code" href="classData__logging.html#a88d78ab5d8a4f6cd8962d5f734439685" title="Data logging constructor.">Data_logging</a>(<a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file, <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state, conf_t config = <a class="code" href="classData__logging.html#aa74dc620ec8688d7b3c2e1c3cf1aa15f" title="Default configuration for the data_logging.">default_config</a>());
+<a name="l00105"></a>00105 
+<a name="l00114"></a>00114     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#aab519927c1b4a2ef2dac643b7615794f" title="Initialise the data logging module.">create_new_log_file</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* file_name_, uint32_t sysid);
 <a name="l00115"></a>00115 
-<a name="l00116"></a>00116 
-<a name="l00124"></a>00124     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data.">start</a>(<span class="keywordtype">void</span>);
+<a name="l00123"></a>00123     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card.">update</a>();
+<a name="l00124"></a>00124 
 <a name="l00125"></a>00125 
-<a name="l00126"></a>00126 
-<a name="l00134"></a>00134     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data.">stop</a>(<span class="keywordtype">void</span>);
+<a name="l00133"></a>00133     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data.">start</a>(<span class="keywordtype">void</span>);
+<a name="l00134"></a>00134 
 <a name="l00135"></a>00135 
-<a name="l00136"></a>00136 
-<a name="l00148"></a>00148     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00149"></a>00149     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#aa594e9fb26bee4042f0478b08755d58e" title="Registers parameter to log on the SD card (integer version)">add_field</a>(<span class="keyword">const</span> T* val, <span class="keyword">const</span> <span class="keywordtype">char</span>* param_name);
-<a name="l00150"></a>00150 
-<a name="l00151"></a>00151 
-<a name="l00164"></a>00164     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
-<a name="l00165"></a>00165     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#aa594e9fb26bee4042f0478b08755d58e" title="Registers parameter to log on the SD card (integer version)">add_field</a>(<span class="keyword">const</span> T* val, <span class="keyword">const</span> <span class="keywordtype">char</span>* param_name, uint32_t precision);
-<a name="l00166"></a>00166 
-<a name="l00167"></a>00167 
-<a name="l00168"></a>00168 <span class="keyword">private</span>:
-<a name="l00174"></a>00174     <span class="keywordtype">void</span> add_header_name(<span class="keywordtype">void</span>);
+<a name="l00143"></a>00143     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data.">stop</a>(<span class="keywordtype">void</span>);
+<a name="l00144"></a>00144 
+<a name="l00145"></a>00145 
+<a name="l00157"></a>00157     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00158"></a>00158     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#aa594e9fb26bee4042f0478b08755d58e" title="Registers parameter to log on the SD card (integer version)">add_field</a>(<span class="keyword">const</span> T* val, <span class="keyword">const</span> <span class="keywordtype">char</span>* param_name);
+<a name="l00159"></a>00159 
+<a name="l00160"></a>00160 
+<a name="l00173"></a>00173     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00174"></a>00174     <span class="keywordtype">bool</span> <a class="code" href="classData__logging.html#aa594e9fb26bee4042f0478b08755d58e" title="Registers parameter to log on the SD card (integer version)">add_field</a>(<span class="keyword">const</span> T* val, <span class="keyword">const</span> <span class="keywordtype">char</span>* param_name, uint32_t precision);
 <a name="l00175"></a>00175 
 <a name="l00176"></a>00176 
-<a name="l00183"></a>00183     <span class="keywordtype">void</span> write_separator(uint16_t param_num);
-<a name="l00184"></a>00184 
-<a name="l00185"></a>00185 
-<a name="l00191"></a>00191     <span class="keywordtype">void</span> log_parameters(<span class="keywordtype">void</span>);
-<a name="l00192"></a>00192 
-<a name="l00193"></a>00193 
-<a name="l00199"></a>00199     <span class="keywordtype">void</span> seek(<span class="keywordtype">void</span>);
+<a name="l00177"></a>00177 <span class="keyword">protected</span>:
+<a name="l00178"></a>00178 
+<a name="l00186"></a>00186     <span class="keyword">virtual</span> uint32_t <a class="code" href="classData__logging.html#a0d781dd515d76409890086f08af49ce7" title="Get maximum number of variables to log.">max_count</a>(<span class="keywordtype">void</span>) = 0;
+<a name="l00187"></a>00187 
+<a name="l00188"></a>00188 
+<a name="l00196"></a>00196     <span class="keyword">virtual</span> <a class="code" href="structdata__logging__entry__t.html" title="Structure of data logging parameter.">data_logging_entry_t</a>* <a class="code" href="classData__logging.html#ad09987371f50a7d0c8df8b2325ec313c" title="Get list of variables to log.">list</a>() = 0;
+<a name="l00197"></a>00197 
+<a name="l00198"></a>00198 
+<a name="l00199"></a>00199 <span class="keyword">private</span>:
 <a name="l00200"></a>00200 
-<a name="l00201"></a>00201 
-<a name="l00214"></a>00214     <span class="keywordtype">bool</span> filename_append_extension(<span class="keywordtype">char</span>* output, <span class="keywordtype">char</span>* filename, uint32_t length);
-<a name="l00215"></a>00215 
-<a name="l00216"></a>00216 
-<a name="l00230"></a>00230     <span class="keywordtype">bool</span> filename_append_int(<span class="keywordtype">char</span>* output, <span class="keywordtype">char</span>* filename, uint32_t num, uint32_t length);
-<a name="l00231"></a>00231 
-<a name="l00232"></a>00232 
-<a name="l00240"></a>00240     <span class="keywordtype">bool</span> open_new_log_file(<span class="keywordtype">void</span>);
-<a name="l00241"></a>00241 
-<a name="l00242"></a>00242 
-<a name="l00250"></a>00250     <span class="keywordtype">bool</span> checksum_control(<span class="keywordtype">void</span>);
-<a name="l00251"></a>00251 
-<a name="l00252"></a>00252     <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> config_;                
-<a name="l00253"></a>00253 
-<a name="l00254"></a>00254     <span class="keywordtype">bool</span> debug_;                                 
-<a name="l00255"></a>00255     uint32_t data_logging_count_;               
-<a name="l00256"></a>00256     <a class="code" href="structdata__logging__entry__t.html" title="Structure of data logging parameter.">data_logging_entry_t</a>* data_log_;            
-<a name="l00257"></a>00257 
-<a name="l00258"></a>00258 
-<a name="l00259"></a>00259     <span class="keywordtype">int</span> buffer_name_size_;                       
-<a name="l00260"></a>00260 
-<a name="l00261"></a>00261     <span class="keywordtype">char</span>* file_name_;                            
-<a name="l00262"></a>00262     <span class="keywordtype">char</span>* name_n_extension_;                     
-<a name="l00263"></a>00263 
-<a name="l00264"></a>00264     <span class="keywordtype">bool</span> file_init_;                             
-<a name="l00265"></a>00265     <span class="keywordtype">bool</span> file_opened_;                           
-<a name="l00266"></a>00266     <span class="keywordtype">bool</span> sys_status_;                            
-<a name="l00267"></a>00267 
-<a name="l00268"></a>00268     <span class="keywordtype">bool</span> continuous_write_;                      
-<a name="l00269"></a>00269     uint32_t log_data_;                          
-<a name="l00270"></a>00270 
-<a name="l00271"></a>00271     uint32_t logging_time_;                      
-<a name="l00272"></a>00272 
-<a name="l00273"></a>00273     <span class="keywordtype">double</span> cksum_a_;                             
-<a name="l00274"></a>00274     <span class="keywordtype">double</span> cksum_b_;                             
+<a name="l00201"></a>00201     <span class="keyword">static</span> <span class="keyword">const</span> uint8_t MAX_FILENAME_LENGTH = 255;    
+<a name="l00202"></a>00202 
+<a name="l00208"></a>00208     <span class="keywordtype">void</span> add_header_name(<span class="keywordtype">void</span>);
+<a name="l00209"></a>00209 
+<a name="l00210"></a>00210 
+<a name="l00217"></a>00217     <span class="keywordtype">void</span> write_separator(uint16_t param_num);
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219 
+<a name="l00225"></a>00225     <span class="keywordtype">void</span> log_parameters(<span class="keywordtype">void</span>);
+<a name="l00226"></a>00226 
+<a name="l00227"></a>00227 
+<a name="l00233"></a>00233     <span class="keywordtype">void</span> seek(<span class="keywordtype">void</span>);
+<a name="l00234"></a>00234 
+<a name="l00235"></a>00235 
+<a name="l00248"></a>00248     <span class="keywordtype">bool</span> filename_append_extension(<span class="keywordtype">char</span>* output, <span class="keywordtype">char</span>* filename, uint32_t length);
+<a name="l00249"></a>00249 
+<a name="l00250"></a>00250 
+<a name="l00264"></a>00264     <span class="keywordtype">bool</span> filename_append_int(<span class="keywordtype">char</span>* output, <span class="keywordtype">char</span>* filename, uint32_t num, uint32_t length);
+<a name="l00265"></a>00265 
+<a name="l00266"></a>00266 
+<a name="l00274"></a>00274     <span class="keywordtype">bool</span> open_new_log_file(<span class="keywordtype">void</span>);
 <a name="l00275"></a>00275 
-<a name="l00276"></a>00276     uint32_t sys_id_;                            
-<a name="l00277"></a>00277 
-<a name="l00278"></a>00278     <a class="code" href="classConsole.html">Console&lt;File&gt;</a> console_;                      
-<a name="l00279"></a>00279 
-<a name="l00280"></a>00280     <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state_;                              
-<a name="l00281"></a>00281 };
-<a name="l00282"></a>00282 
-<a name="l00283"></a>00283 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> data_logging_default_config()
-<a name="l00284"></a>00284 {
-<a name="l00285"></a>00285     <a class="code" href="structdata__logging__conf__t.html" title="Configuration of the data_logging element.">data_logging_conf_t</a> conf    = {};
-<a name="l00286"></a>00286 
-<a name="l00287"></a>00287     conf.<a class="code" href="structdata__logging__conf__t.html#a03ed2a95586585cd1d06fd24159126c3" title="Maximum number of parameters.">max_data_logging_count</a> = 50;
-<a name="l00288"></a>00288     conf.<a class="code" href="structdata__logging__conf__t.html#adb98b78579d888f049df5f8ba3e54398" title="The max number of logged files with the same name on the SD card.">max_logs</a>               = 500;
-<a name="l00289"></a>00289     conf.<a class="code" href="structdata__logging__conf__t.html#adabb45e91cc3bdc349195914ea4efd5b" title="Indicates if debug messages should be printed for each param change.">debug</a>                  = <span class="keyword">true</span>;
-<a name="l00290"></a>00290     conf.<a class="code" href="structdata__logging__conf__t.html#ade06ebd3d21bff7536c26cef05a601fa" title="The initial state of writing a file.">log_data</a>               = 0;  <span class="comment">// 1: log data, 0: no log data</span>
-<a name="l00291"></a>00291 
-<a name="l00292"></a>00292     <span class="keywordflow">return</span> conf;
-<a name="l00293"></a>00293 };
-<a name="l00294"></a>00294 
-<a name="l00295"></a>00295 
-<a name="l00296"></a>00296 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> task_data_logging_update(<a class="code" href="classData__logging.html" title="The class of the log of the data.">Data_logging</a>* data_logging)
-<a name="l00297"></a>00297 {
-<a name="l00298"></a>00298     <span class="keywordflow">return</span> data_logging-&gt;<a class="code" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card.">update</a>();
-<a name="l00299"></a>00299 }
-<a name="l00300"></a>00300 
-<a name="l00301"></a>00301 <span class="preprocessor">#endif </span><span class="comment">/* DATA_LOGGING_HPP__ */</span>
+<a name="l00276"></a>00276 
+<a name="l00284"></a>00284     <span class="keywordtype">bool</span> checksum_control(<span class="keywordtype">void</span>);
+<a name="l00285"></a>00285 
+<a name="l00286"></a>00286     conf_t config_;                
+<a name="l00287"></a>00287 
+<a name="l00288"></a>00288     <span class="keywordtype">bool</span> debug_;                                 
+<a name="l00289"></a>00289     uint32_t data_logging_count_;               
+<a name="l00290"></a>00290 
+<a name="l00291"></a>00291     <span class="keywordtype">char</span> file_name_[MAX_FILENAME_LENGTH];                        
+<a name="l00292"></a>00292     <span class="keywordtype">char</span> name_n_extension_[MAX_FILENAME_LENGTH];                 
+<a name="l00293"></a>00293 
+<a name="l00294"></a>00294     <span class="keywordtype">bool</span> file_init_;                             
+<a name="l00295"></a>00295     <span class="keywordtype">bool</span> file_opened_;                           
+<a name="l00296"></a>00296     <span class="keywordtype">bool</span> sys_status_;                            
+<a name="l00297"></a>00297 
+<a name="l00298"></a>00298     uint32_t log_data_;                          
+<a name="l00299"></a>00299 
+<a name="l00300"></a>00300     uint32_t logging_time_;                      
+<a name="l00301"></a>00301 
+<a name="l00302"></a>00302     <span class="keywordtype">double</span> cksum_a_;                             
+<a name="l00303"></a>00303     <span class="keywordtype">double</span> cksum_b_;                             
+<a name="l00304"></a>00304 
+<a name="l00305"></a>00305     uint32_t sys_id_;                            
+<a name="l00306"></a>00306 
+<a name="l00307"></a>00307     <a class="code" href="classConsole.html">Console&lt;File&gt;</a> console_;                      
+<a name="l00308"></a>00308 
+<a name="l00309"></a>00309     <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state_;                              
+<a name="l00310"></a>00310 };
+<a name="l00311"></a>00311 
+<a name="l00312"></a>00312 
+<a name="l00318"></a>00318 <span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>32_t N&gt;
+<a name="l00319"></a><a class="code" href="classData__logging__T.html">00319</a> <span class="keyword">class </span><a class="code" href="classData__logging__T.html" title="Log data in files.">Data_logging_T</a>: <span class="keyword">public</span> <a class="code" href="classData__logging.html" title="Log data in files.">Data_logging</a>
+<a name="l00320"></a>00320 {
+<a name="l00321"></a>00321 <span class="keyword">public</span>:
+<a name="l00325"></a><a class="code" href="classData__logging__T.html#a104a66b01f7d1b1bc382e41e2fe8badc">00325</a>     <a class="code" href="classData__logging__T.html#a104a66b01f7d1b1bc382e41e2fe8badc" title="Data logging constructor.">Data_logging_T</a>(<a class="code" href="classFile.html" title="Base class for file objects.">File</a>&amp; file, <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state, <a class="code" href="structData__logging_1_1conf__t.html" title="Configuration of the data_logging element.">conf_t</a> config = <a class="code" href="classData__logging.html#aa74dc620ec8688d7b3c2e1c3cf1aa15f" title="Default configuration for the data_logging.">default_config</a>()):
+<a name="l00326"></a>00326         <a class="code" href="classData__logging.html" title="Log data in files.">Data_logging</a>(file, state, config)
+<a name="l00327"></a>00327     {}
+<a name="l00328"></a>00328 
+<a name="l00329"></a>00329 <span class="keyword">protected</span>:
+<a name="l00330"></a>00330 
+<a name="l00336"></a><a class="code" href="classData__logging__T.html#aa86586408d44fc8278a0472e4f3aaf4f">00336</a>     uint32_t <a class="code" href="classData__logging__T.html#aa86586408d44fc8278a0472e4f3aaf4f" title="Get maximum number of variables to log.">max_count</a>(<span class="keywordtype">void</span>)
+<a name="l00337"></a>00337     {
+<a name="l00338"></a>00338         <span class="keywordflow">return</span> N;
+<a name="l00339"></a>00339     }
+<a name="l00340"></a>00340 
+<a name="l00346"></a><a class="code" href="classData__logging__T.html#a17d4ced71918c8a9fb62b0c10bd1fc37">00346</a>     <a class="code" href="structdata__logging__entry__t.html" title="Structure of data logging parameter.">data_logging_entry_t</a>* <a class="code" href="classData__logging__T.html#a17d4ced71918c8a9fb62b0c10bd1fc37" title="Get list of variables to log.">list</a>()
+<a name="l00347"></a>00347     {
+<a name="l00348"></a>00348         <span class="keywordflow">return</span> list_;
+<a name="l00349"></a>00349     }
+<a name="l00350"></a>00350 
+<a name="l00351"></a>00351 <span class="keyword">private</span>:
+<a name="l00352"></a>00352     <a class="code" href="structdata__logging__entry__t.html" title="Structure of data logging parameter.">data_logging_entry_t</a> list_[N];            
+<a name="l00353"></a>00353 };
+<a name="l00354"></a>00354 
+<a name="l00355"></a>00355 
+<a name="l00356"></a>00356 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> task_data_logging_update(<a class="code" href="classData__logging.html" title="Log data in files.">Data_logging</a>* data_logging)
+<a name="l00357"></a>00357 {
+<a name="l00358"></a>00358     <span class="keywordflow">return</span> data_logging-&gt;<a class="code" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card.">update</a>();
+<a name="l00359"></a>00359 }
+<a name="l00360"></a>00360 
+<a name="l00361"></a>00361 <span class="preprocessor">#endif </span><span class="comment">/* DATA_LOGGING_HPP__ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -266,7 +296,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:15 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:00 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

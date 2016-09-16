@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -94,14 +95,14 @@ Inheritance diagram for Barometer_sim:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBarometer__sim__inherit__graph.png" border="0" usemap="#Barometer__sim_inherit__map" alt="Inheritance graph"/></div>
 <map name="Barometer__sim_inherit__map" id="Barometer__sim_inherit__map">
-<area shape="rect" id="node2" href="classBarometer.html" title="Interface class for barometers." alt="" coords="5,6,179,386"/></map>
+<area shape="rect" id="node2" href="classBarometer.html" title="Interface class for barometers." alt="" coords="5,6,179,282"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Barometer_sim:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBarometer__sim__coll__graph.png" border="0" usemap="#Barometer__sim_coll__map" alt="Collaboration graph"/></div>
 <map name="Barometer__sim_coll__map" id="Barometer__sim_coll__map">
-<area shape="rect" id="node2" href="classBarometer.html" title="Interface class for barometers." alt="" coords="5,6,179,386"/></map>
+<area shape="rect" id="node2" href="classBarometer.html" title="Interface class for barometers." alt="" coords="5,6,179,282"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classBarometer__sim-members.html">List of all members.</a></p>
@@ -114,6 +115,16 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the sensor.  <a href="#af778998af10812d8ae8bd8e688bdc7ff"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__sim.html#a4075bc813d0616b6d52f53f9cf97c037">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function  Reads new values from sensor.  <a href="#a4075bc813d0616b6d52f53f9cf97c037"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__sim.html#aa5d7e0035b8063274fb077d341201f07">last_update_us</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the last update time in microseconds.  <a href="#aa5d7e0035b8063274fb077d341201f07"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__sim.html#a02399571d03470f623d29ca97755edc9">pressure</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the pressure.  <a href="#a02399571d03470f623d29ca97755edc9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__sim.html#aaa88190e8ef8a6d9b8ddf9f06c6f03fb">altitude_gf</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the altitude in meters above sea level.  <a href="#aaa88190e8ef8a6d9b8ddf9f06c6f03fb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__sim.html#a2f6ef944062a2ddf455bcee9a9386e90">vertical_speed_lf</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the vertical speed in meters/second.  <a href="#a2f6ef944062a2ddf455bcee9a9386e90"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__sim.html#a70fb6c0fdde48cbf3d5b0ada1041112b">temperature</a> (void) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get sensor temperature.  <a href="#a70fb6c0fdde48cbf3d5b0ada1041112b"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classSimulation.html" title="Simulated dynamics of a quadcopter in diag configuration.">Simulation</a> for barometers. </p>
@@ -144,6 +155,29 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="aaa88190e8ef8a6d9b8ddf9f06c6f03fb"></a><!-- doxytag: member="Barometer_sim::altitude_gf" ref="aaa88190e8ef8a6d9b8ddf9f06c6f03fb" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classBarometer__sim.html#aaa88190e8ef8a6d9b8ddf9f06c6f03fb">Barometer_sim::altitude_gf</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get the altitude in meters above sea level. </p>
+<p>Global frame: (&gt;0 means upward)</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
+
+<p>Implements <a class="el" href="classBarometer.html#ab3c38d1f210a0cfaae0246c25b315f45">Barometer</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="af778998af10812d8ae8bd8e688bdc7ff"></a><!-- doxytag: member="Barometer_sim::init" ref="af778998af10812d8ae8bd8e688bdc7ff" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
@@ -163,6 +197,72 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
 
 <p>Implements <a class="el" href="classBarometer.html#ab974654bfaace814da10856ca87526b3">Barometer</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa5d7e0035b8063274fb077d341201f07"></a><!-- doxytag: member="Barometer_sim::last_update_us" ref="aa5d7e0035b8063274fb077d341201f07" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t <a class="el" href="classBarometer__sim.html#aa5d7e0035b8063274fb077d341201f07">Barometer_sim::last_update_us</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get the last update time in microseconds. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
+
+<p>Implements <a class="el" href="classBarometer.html#a0c9353d8be366f2f5eec9550ba837af3">Barometer</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a02399571d03470f623d29ca97755edc9"></a><!-- doxytag: member="Barometer_sim::pressure" ref="a02399571d03470f623d29ca97755edc9" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classBarometer__sim.html#a02399571d03470f623d29ca97755edc9">Barometer_sim::pressure</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Return the pressure. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
+
+<p>Implements <a class="el" href="classBarometer.html#a811cffa4af95a25948ab5244118bd981">Barometer</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a70fb6c0fdde48cbf3d5b0ada1041112b"></a><!-- doxytag: member="Barometer_sim::temperature" ref="a70fb6c0fdde48cbf3d5b0ada1041112b" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classBarometer__sim.html#a70fb6c0fdde48cbf3d5b0ada1041112b">Barometer_sim::temperature</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get sensor temperature. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
+
+<p>Implements <a class="el" href="classBarometer.html#a6e087f5af86788588039474cc8c1d389">Barometer</a>.</p>
 
 </div>
 </div>
@@ -197,6 +297,29 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="a2f6ef944062a2ddf455bcee9a9386e90"></a><!-- doxytag: member="Barometer_sim::vertical_speed_lf" ref="a2f6ef944062a2ddf455bcee9a9386e90" args="(void) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classBarometer__sim.html#a2f6ef944062a2ddf455bcee9a9386e90">Barometer_sim::vertical_speed_lf</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get the vertical speed in meters/second. </p>
+<p>NED frame: (&gt;0 means downward)</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
+
+<p>Implements <a class="el" href="classBarometer.html#a198bd738afc5212b93dabdeaa4e63080">Barometer</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/simulation/<a class="el" href="barometer__sim_8hpp_source.html">barometer_sim.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/simulation/barometer_sim.cpp</li>
@@ -219,7 +342,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

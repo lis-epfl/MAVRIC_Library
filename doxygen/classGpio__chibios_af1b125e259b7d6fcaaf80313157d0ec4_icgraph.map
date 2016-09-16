@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classGpio__chibios.html#abc7709891034a1c971e0d397596901df" title="Hardware initialization." alt="" coords="215,5,337,35"/>
+<area shape="rect" id="node7" href="$classGpio__chibios.html#a8a2bf51948de204bed3cfb07752657d5" title="Toggle the gpio value." alt="" coords="207,59,345,88"/>
+<area shape="rect" id="node9" href="$classGpio__chibios.html#a5c27badf9e88137fa26680944d5a0dcb" title="Write to the gpio pin." alt="" coords="209,112,343,141"/>
+<area shape="rect" id="node5" href="$classSparky__chibi.html#a11ac79dbd29abeed3bcb800a726ee56f" title="Hardware initialisation." alt="" coords="395,5,517,35"/>
+</map>

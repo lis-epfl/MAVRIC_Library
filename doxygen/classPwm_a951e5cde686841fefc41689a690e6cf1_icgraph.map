@@ -1,3 +1,9 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a" title="Constructor." alt="" coords="195,5,293,35"/>
+<area shape="rect" id="node3" href="$classServo.html#a123e40a24a68699291a192a2b096b15e" title="Initializes the servo." alt="" coords="380,5,460,35"/>
+<area shape="rect" id="node7" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="195,99,301,128"/>
+<area shape="rect" id="node5" href="$classSparky__chibi.html#a11ac79dbd29abeed3bcb800a726ee56f" title="Hardware initialisation." alt="" coords="539,5,661,35"/>
+<area shape="rect" id="node9" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="369,59,471,88"/>
+<area shape="rect" id="node11" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="357,112,483,141"/>
+<area shape="rect" id="node13" href="$classSparky__v2.html#a3a0b29e6eb7bfdf74e914453d138e61d" title="Hardware initialisation." alt="" coords="365,165,475,195"/>
+<area shape="rect" id="node16" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="349,219,491,248"/>
 </map>

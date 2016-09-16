@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -79,26 +80,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Data_logging Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="Data_logging" -->
-<p>The class of the log of the data.  
+<p>Log data in files.  
  <a href="classData__logging.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="data__logging_8hpp_source.html">data_logging.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Data_logging:</div>
+<div class="dyncontent">
+<div class="center"><img src="classData__logging__inherit__graph.png" border="0" usemap="#Data__logging_inherit__map" alt="Inheritance graph"/></div>
+<map name="Data__logging_inherit__map" id="Data__logging_inherit__map">
+<area shape="rect" id="node3" href="classData__logging__T.html" title="Log data in files." alt="" coords="5,347,152,467"/><area shape="rect" id="node5" href="classData__logging__T.html" title="{Data_logging_T\&lt; 10 \&gt;\n||+ Data_logging_T()\l# max_count()\l# list()\l}" alt="" coords="176,347,325,467"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classData__logging-members.html">List of all members.</a></p>
 <table class="memberdecls">
+<tr><td colspan="2"><h2><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structData__logging_1_1conf__t.html">conf_t</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration of the data_logging element.  <a href="structData__logging_1_1conf__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a31806e00fbeafe81844dc75f0e49273a"></a><!-- doxytag: member="Data_logging::Data_logging" ref="a31806e00fbeafe81844dc75f0e49273a" args="(File &amp;file, State &amp;state, data_logging_conf_t config=data_logging_default_config())" -->
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a31806e00fbeafe81844dc75f0e49273a">Data_logging</a> (<a class="el" href="classFile.html">File</a> &amp;file, <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="structdata__logging__conf__t.html">data_logging_conf_t</a> config=data_logging_default_config())</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a88d78ab5d8a4f6cd8962d5f734439685"></a><!-- doxytag: member="Data_logging::Data_logging" ref="a88d78ab5d8a4f6cd8962d5f734439685" args="(File &amp;file, State &amp;state, conf_t config=default_config())" -->
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a88d78ab5d8a4f6cd8962d5f734439685">Data_logging</a> (<a class="el" href="classFile.html">File</a> &amp;file, <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="structData__logging_1_1conf__t.html">conf_t</a> config=<a class="el" href="classData__logging.html#aa74dc620ec8688d7b3c2e1c3cf1aa15f">default_config</a>())</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Data logging constructor. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a6a31693af23d1281dd30ad8a54582358">create_new_log_file</a> (const char *file_name_, bool continuous_write_, uint32_t sysid)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the data logging module.  <a href="#a6a31693af23d1281dd30ad8a54582358"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#aab519927c1b4a2ef2dac643b7615794f">create_new_log_file</a> (const char *file_name_, uint32_t sysid)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the data logging module.  <a href="#aab519927c1b4a2ef2dac643b7615794f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff">update</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The task to log the data to the SD card.  <a href="#a75a2133aee0ce0794119f57e911ca9ff"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072">start</a> (void)</td></tr>
@@ -144,10 +159,20 @@ template&lt;&gt; </td></tr>
 <tr><td class="memTemplParams" colspan="2"><a class="anchor" id="ae40f1e61c126bf9555c69463266e5e04"></a><!-- doxytag: member="Data_logging::add_field" ref="ae40f1e61c126bf9555c69463266e5e04" args="(const bool *val, const char *param_name)" -->
 template&lt;&gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_field</b> (const bool *val, const char *param_name)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structData__logging_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#aa74dc620ec8688d7b3c2e1c3cf1aa15f">default_config</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration for the data_logging.  <a href="#aa74dc620ec8688d7b3c2e1c3cf1aa15f"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#a0d781dd515d76409890086f08af49ce7">max_count</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get maximum number of variables to log.  <a href="#a0d781dd515d76409890086f08af49ce7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structdata__logging__entry__t.html">data_logging_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classData__logging.html#ad09987371f50a7d0c8df8b2325ec313c">list</a> ()=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of variables to log.  <a href="#ad09987371f50a7d0c8df8b2325ec313c"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>The class of the log of the data. </p>
-<p>data_logging_set is implemented as pointer because its memory will be allocated during initialisation </p>
+<div class="textblock"><p>Log data in files. </p>
+<p>This class is abstract and does not contains the task list, use the child class <a class="el" href="classData__logging__T.html" title="Log data in files.">Data_logging_T</a> </p>
 </div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="aa594e9fb26bee4042f0478b08755d58e"></a><!-- doxytag: member="Data_logging::add_field" ref="aa594e9fb26bee4042f0478b08755d58e" args="(const T *val, const char *param_name)" -->
 <div class="memitem">
@@ -248,21 +273,15 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a6a31693af23d1281dd30ad8a54582358"></a><!-- doxytag: member="Data_logging::create_new_log_file" ref="a6a31693af23d1281dd30ad8a54582358" args="(const char *file_name_, bool continuous_write_, uint32_t sysid)" -->
+<a class="anchor" id="aab519927c1b4a2ef2dac643b7615794f"></a><!-- doxytag: member="Data_logging::create_new_log_file" ref="aab519927c1b4a2ef2dac643b7615794f" args="(const char *file_name_, uint32_t sysid)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classData__logging.html#a6a31693af23d1281dd30ad8a54582358">Data_logging::create_new_log_file</a> </td>
+          <td class="memname">bool <a class="el" href="classData__logging.html#aab519927c1b4a2ef2dac643b7615794f">Data_logging::create_new_log_file</a> </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>file_name_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>continuous_write_</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -283,7 +302,6 @@ template&lt;typename T &gt; </div>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">file_name</td><td>The pointer to name of the file to create </td></tr>
-    <tr><td class="paramname">continuous_write</td><td>Boolean to state whether writing should be continous or not </td></tr>
     <tr><td class="paramname">sysid</td><td>The system identification number of the MAV</td></tr>
   </table>
   </dd>
@@ -293,11 +311,75 @@ template&lt;typename T &gt; </div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classData__logging_a6a31693af23d1281dd30ad8a54582358_icgraph.png" border="0" usemap="#classData__logging_a6a31693af23d1281dd30ad8a54582358_icgraph" alt=""/></div>
-<map name="classData__logging_a6a31693af23d1281dd30ad8a54582358_icgraph" id="classData__logging_a6a31693af23d1281dd30ad8a54582358_icgraph">
+<div class="center"><img src="classData__logging_aab519927c1b4a2ef2dac643b7615794f_icgraph.png" border="0" usemap="#classData__logging_aab519927c1b4a2ef2dac643b7615794f_icgraph" alt=""/></div>
+<map name="classData__logging_aab519927c1b4a2ef2dac643b7615794f_icgraph" id="classData__logging_aab519927c1b4a2ef2dac643b7615794f_icgraph">
 <area shape="rect" id="node3" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="275,5,376,35"/></map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="aa74dc620ec8688d7b3c2e1c3cf1aa15f"></a><!-- doxytag: member="Data_logging::default_config" ref="aa74dc620ec8688d7b3c2e1c3cf1aa15f" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structData__logging_1_1conf__t.html">conf_t</a> <a class="el" href="classData__logging.html#aa74dc620ec8688d7b3c2e1c3cf1aa15f">Data_logging::default_config</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Default configuration for the data_logging. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Config structure </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ad09987371f50a7d0c8df8b2325ec313c"></a><!-- doxytag: member="Data_logging::list" ref="ad09987371f50a7d0c8df8b2325ec313c" args="()=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structdata__logging__entry__t.html">data_logging_entry_t</a>* <a class="el" href="classData__logging.html#ad09987371f50a7d0c8df8b2325ec313c">Data_logging::list</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get list of variables to log. </p>
+<p>Abstract method to be implemented in child classes</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>list </dd></dl>
+
+<p>Implemented in <a class="el" href="classData__logging__T.html#a17d4ced71918c8a9fb62b0c10bd1fc37">Data_logging_T&lt; N &gt;</a>, and <a class="el" href="classData__logging__T.html#a17d4ced71918c8a9fb62b0c10bd1fc37">Data_logging_T&lt; 10 &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0d781dd515d76409890086f08af49ce7"></a><!-- doxytag: member="Data_logging::max_count" ref="a0d781dd515d76409890086f08af49ce7" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint32_t <a class="el" href="classData__logging.html#a0d781dd515d76409890086f08af49ce7">Data_logging::max_count</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get maximum number of variables to log. </p>
+<p>Abstract method to be implemented in child classes</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Maximum number of variables to log </dd></dl>
+
+<p>Implemented in <a class="el" href="classData__logging__T.html#aa86586408d44fc8278a0472e4f3aaf4f">Data_logging_T&lt; N &gt;</a>, and <a class="el" href="classData__logging__T.html#aa86586408d44fc8278a0472e4f3aaf4f">Data_logging_T&lt; 10 &gt;</a>.</p>
 
 </div>
 </div>
@@ -418,7 +500,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

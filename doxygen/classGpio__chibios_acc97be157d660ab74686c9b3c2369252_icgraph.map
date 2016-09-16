@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classGpio__chibios.html#a8a2bf51948de204bed3cfb07752657d5" title="Toggle the gpio value." alt="" coords="209,5,348,35"/>
+<area shape="rect" id="node5" href="$classGpio__chibios.html#a5c27badf9e88137fa26680944d5a0dcb" title="Write to the gpio pin." alt="" coords="212,59,345,88"/>
+</map>

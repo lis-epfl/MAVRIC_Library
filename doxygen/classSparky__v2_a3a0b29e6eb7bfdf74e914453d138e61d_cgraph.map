@@ -1,25 +1,26 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classGpio__stm32.html#a600901251c5001bddc1eb57382bc2547" title="Hardware initialization." alt="" coords="181,5,299,35"/>
-<area shape="rect" id="node7" href="$classLed__gpio.html#abc58a2b9cd24c787242af30901398eea" title="Switch led on." alt="" coords="192,59,288,88"/>
-<area shape="rect" id="node13" href="$classSerial__usb__stm32.html#ae12e6dafec7c302f66e9683dbebbb5d8" title="Hardware initialization." alt="" coords="165,112,315,141"/>
-<area shape="rect" id="node15" href="$classPwm__stm32.html#a63106f42ef20f512965b96ddc8cb0b0f" title="Initialize the hardware line for servos." alt="" coords="180,165,300,195"/>
-<area shape="rect" id="node17" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="389,271,496,300"/>
-<area shape="rect" id="node23" href="$classPwm__dummy.html#ac5c7ca8683a55254bfb0dab284ed5947" title="Initialize the hardware line for servos." alt="" coords="177,323,303,352"/>
-<area shape="rect" id="node25" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="164,219,316,248"/>
-<area shape="rect" id="node30" href="$classSpi__stm32.html#a0b9aa2fa7e5f4144f337201994819d48" title="Hardware initialization." alt="" coords="185,376,295,405"/>
-<area shape="rect" id="node32" href="$classMpu__9250.html#acd1834359fd1732eecc9138390da8007" title="Initialise the sensor." alt="" coords="187,429,293,459"/>
-<area shape="rect" id="node5" href="$classGpio__stm32.html#a3af5f0fc7d3cba3fef4e2ab6ece12527" title="Configures the GPIO." alt="" coords="367,5,519,35"/>
-<area shape="rect" id="node9" href="$classGpio.html#a9d4dbb47485315e99f4418d8335cb1c5" title="Write 1 to the gpio." alt="" coords="389,112,496,141"/>
-<area shape="rect" id="node11" href="$classGpio.html#aa6544871d2c18d439abbe245cc4c4034" title="Write 0 to the gpio." alt="" coords="392,59,493,88"/>
-<area shape="rect" id="node19" href="$classServo.html#ad88911ece9b3822f8cc7499fe2b0a12a" title="Set PWM line according to the servo value." alt="" coords="571,271,741,300"/>
-<area shape="rect" id="node21" href="$classPwm.html#ad37f30f6859c8c9e988a5e4d0ddbdb90" title="Set pulse width." alt="" coords="793,271,967,300"/>
-<area shape="rect" id="node27" href="$classServo.html#afc97bfc58e00c9c586d67f53ef4764ad" title="Sets the servos to a given value." alt="" coords="397,217,488,247"/>
-<area shape="rect" id="node34" href="$classGpio.html#a96d2bc4210f864c99d01f049cd264d1d" title="Hardware initialization." alt="" coords="405,480,480,509"/>
-<area shape="rect" id="node36" href="$classMpu__9250.html#a544ddfb9e35097d5a2945c0db5daa72a" title="Reset acc and gyro." alt="" coords="581,507,731,536"/>
-<area shape="rect" id="node38" href="$classMpu__9250.html#aa7dbee20933c2a5f7115c8c5acd7b08f" title="Write register of mpu 9250." alt="" coords="809,429,951,459"/>
-<area shape="rect" id="node42" href="$classMpu__9250.html#a103a2cda23033b6608a93e0cede20a51" title="Read register of mpu 9250." alt="" coords="811,376,949,405"/>
-<area shape="rect" id="node46" href="$classMpu__9250.html#a43997cd5931037d0bf258ebfbf5168fa" title="Reset magnetometer." alt="" coords="368,376,517,405"/>
-<area shape="rect" id="node52" href="$classMpu__9250.html#a64b5a7c3859c0903af94192cb4561dfd" title="Read register from magnetometer." alt="" coords="571,429,741,459"/>
-<area shape="rect" id="node40" href="$classSpi.html#aba844173351a71c52e478ab7b40127fb" title="Write and Read data to/from the SPI bus." alt="" coords="1016,403,1109,432"/>
-<area shape="rect" id="node48" href="$classMpu__9250.html#afc21741a1ab9f831644d97ef3c7c0a41" title="Write values in register of ak8963." alt="" coords="569,376,743,405"/>
+<area shape="rect" id="node3" href="$classPwm__stm32.html#a63106f42ef20f512965b96ddc8cb0b0f" title="Initialize the hardware line for servos." alt="" coords="180,5,300,35"/>
+<area shape="rect" id="node5" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="187,59,293,88"/>
+<area shape="rect" id="node13" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="164,112,316,141"/>
+<area shape="rect" id="node18" href="$classGpio__stm32.html#a600901251c5001bddc1eb57382bc2547" title="Hardware initialization." alt="" coords="181,165,299,195"/>
+<area shape="rect" id="node22" href="$classLed__gpio.html#abc58a2b9cd24c787242af30901398eea" title="Switch led on." alt="" coords="192,219,288,248"/>
+<area shape="rect" id="node28" href="$classSerial__usb__stm32.html#ae12e6dafec7c302f66e9683dbebbb5d8" title="Hardware initialization." alt="" coords="165,272,315,301"/>
+<area shape="rect" id="node30" href="$classSerial__stm32.html#a99c0c3150c2263da08c36cbc7b6ee756" title="Hardware initialization." alt="" coords="179,325,301,355"/>
+<area shape="rect" id="node32" href="$classSpi__stm32.html#a0b9aa2fa7e5f4144f337201994819d48" title="Hardware initialization." alt="" coords="185,379,295,408"/>
+<area shape="rect" id="node34" href="$classMpu__9250.html#acd1834359fd1732eecc9138390da8007" title="Initialise the sensor." alt="" coords="187,432,293,461"/>
+<area shape="rect" id="node7" href="$classPwm.html#a951e5cde686841fefc41689a690e6cf1" title="Set pulse period." alt="" coords="372,8,513,37"/>
+<area shape="rect" id="node9" href="$classServo.html#ad88911ece9b3822f8cc7499fe2b0a12a" title="Set PWM line according to the servo value." alt="" coords="571,87,741,116"/>
+<area shape="rect" id="node11" href="$classPwm.html#ad37f30f6859c8c9e988a5e4d0ddbdb90" title="Set pulse width." alt="" coords="793,87,967,116"/>
+<area shape="rect" id="node15" href="$classServo.html#afc97bfc58e00c9c586d67f53ef4764ad" title="Sets the servos to a given value." alt="" coords="397,112,488,141"/>
+<area shape="rect" id="node20" href="$classGpio__stm32.html#a3af5f0fc7d3cba3fef4e2ab6ece12527" title="Configures the GPIO." alt="" coords="367,165,519,195"/>
+<area shape="rect" id="node24" href="$classGpio.html#a9d4dbb47485315e99f4418d8335cb1c5" title="Write 1 to the gpio." alt="" coords="389,219,496,248"/>
+<area shape="rect" id="node26" href="$classGpio.html#aa6544871d2c18d439abbe245cc4c4034" title="Write 0 to the gpio." alt="" coords="392,272,493,301"/>
+<area shape="rect" id="node36" href="$classGpio.html#a96d2bc4210f864c99d01f049cd264d1d" title="Hardware initialization." alt="" coords="405,327,480,356"/>
+<area shape="rect" id="node38" href="$classMpu__9250.html#a544ddfb9e35097d5a2945c0db5daa72a" title="Reset acc and gyro." alt="" coords="581,588,731,617"/>
+<area shape="rect" id="node40" href="$classMpu__9250.html#aa7dbee20933c2a5f7115c8c5acd7b08f" title="Write register of mpu 9250." alt="" coords="809,484,951,513"/>
+<area shape="rect" id="node44" href="$classMpu__9250.html#a103a2cda23033b6608a93e0cede20a51" title="Read register of mpu 9250." alt="" coords="811,431,949,460"/>
+<area shape="rect" id="node48" href="$classMpu__9250.html#a43997cd5931037d0bf258ebfbf5168fa" title="Reset magnetometer." alt="" coords="368,431,517,460"/>
+<area shape="rect" id="node54" href="$classMpu__9250.html#a64b5a7c3859c0903af94192cb4561dfd" title="Read register from magnetometer." alt="" coords="571,484,741,513"/>
+<area shape="rect" id="node42" href="$classSpi.html#aba844173351a71c52e478ab7b40127fb" title="Write and Read data to/from the SPI bus." alt="" coords="1016,457,1109,487"/>
+<area shape="rect" id="node50" href="$classMpu__9250.html#afc21741a1ab9f831644d97ef3c7c0a41" title="Write values in register of ak8963." alt="" coords="569,431,743,460"/>
 </map>

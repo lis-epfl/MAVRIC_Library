@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classBuffer__tpl.html#a814223c9436d3a6d799850cd38c39267" title="Returns the number of free bytes in the buffer." alt="" coords="195,5,333,35"/>
-<area shape="rect" id="node5" href="$classBuffer__tpl.html#a3e6e6b58528f9e82dde45f3d43d2186c" title="Stores data in the buffer, until the buffer is full." alt="" coords="212,59,316,88"/>
-<area shape="rect" id="node7" href="$classBuffer__tpl.html#ac3079cb00ac66e37bb14429f19ec2f6c" title="Returns the number of available bytes in the buffer." alt="" coords="197,112,331,141"/>
+<area shape="rect" id="node3" href="$classBuffer__T.html#a9ea9abd094aeace2034c4eef2be4b31d" title="Returns the number of free bytes in the buffer." alt="" coords="196,5,327,35"/>
+<area shape="rect" id="node5" href="$classBuffer__T.html#ac0db434b9f24e58711d56fd5dcfaf2d4" title="Stores data in the buffer, until the buffer is full." alt="" coords="212,59,311,88"/>
+<area shape="rect" id="node7" href="$classBuffer__T.html#aed2c412fb34f1890fce4cc884c583625" title="Returns the number of available bytes in the buffer." alt="" coords="197,112,325,141"/>
 </map>

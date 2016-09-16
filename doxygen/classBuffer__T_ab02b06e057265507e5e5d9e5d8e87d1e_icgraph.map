@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="217,5,356,35"/>
+<area shape="rect" id="node7" href="$classSerial__usb__stm32.html#a0e9f0cfd59054bc3eef06f0f32a74f53" title="Sends instantaneously all outgoing bytes." alt="" coords="205,59,368,88"/>
+<area shape="rect" id="node5" href="$classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="417,5,588,35"/>
+<area shape="rect" id="node9" href="$classSerial__usb__stm32.html#ab7d1d23330bf4ec251a5aa81d25f6806" title="Write bytes on the serial line." alt="" coords="421,59,584,88"/>
+</map>

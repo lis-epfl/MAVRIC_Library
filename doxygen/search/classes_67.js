@@ -6,6 +6,7 @@ var searchData=
   ['gpio',['Gpio',['../classGpio.html',1,'']]],
   ['gpio_5favr32',['Gpio_avr32',['../classGpio__avr32.html',1,'']]],
   ['gpio_5favr32_5fconf_5ft',['gpio_avr32_conf_t',['../structgpio__avr32__conf__t.html',1,'']]],
+  ['gpio_5fchibios',['Gpio_chibios',['../classGpio__chibios.html',1,'']]],
   ['gpio_5fdummy',['Gpio_dummy',['../classGpio__dummy.html',1,'']]],
   ['gpio_5fdummy_5fconf_5ft',['gpio_dummy_conf_t',['../structgpio__dummy__conf__t.html',1,'']]],
   ['gpio_5fstm32',['Gpio_stm32',['../classGpio__stm32.html',1,'']]],

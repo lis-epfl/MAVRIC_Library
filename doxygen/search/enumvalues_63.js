@@ -1,5 +1,9 @@
 var searchData=
 [
+  ['channel_5f1',['CHANNEL_1',['../classPwm__chibios.html#af96ca679c110b0063071d85b5d67606aa7ca146d19d00a7848ef736a8615461d4',1,'Pwm_chibios']]],
+  ['channel_5f2',['CHANNEL_2',['../classPwm__chibios.html#af96ca679c110b0063071d85b5d67606aa088b1a54908e12056ea90c1921c7e937',1,'Pwm_chibios']]],
+  ['channel_5f3',['CHANNEL_3',['../classPwm__chibios.html#af96ca679c110b0063071d85b5d67606aad49c215f7d6177ced862ec5e438ca228',1,'Pwm_chibios']]],
+  ['channel_5f4',['CHANNEL_4',['../classPwm__chibios.html#af96ca679c110b0063071d85b5d67606aac20207daa0024d6a1faac7995cf65a77',1,'Pwm_chibios']]],
   ['climb_5fto_5fsafe_5falt',['CLIMB_TO_SAFE_ALT',['../classNavigation.html#ad0adfd57f80c0bc89edcf6b45909998da54119a4d73fee57c9463ed32e31798f7',1,'Navigation']]],
   ['critical_5fland',['CRITICAL_LAND',['../classNavigation.html#ad0adfd57f80c0bc89edcf6b45909998da9cd192b0d45998f8a4a622464f095075',1,'Navigation']]],
   ['cust_5fbattery_5flow',['CUST_BATTERY_LOW',['../classMav__mode.html#ae904da6f307e5bf109859ed1d5bf274da0117423f165909a81c06912d487dc74e',1,'Mav_mode']]],

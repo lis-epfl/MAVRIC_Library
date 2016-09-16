@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -83,23 +84,31 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Scheduler Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="Scheduler" -->
-<p><a class="el" href="classScheduler.html" title="Scheduler.">Scheduler</a>.  
+<p><a class="el" href="classScheduler.html" title="Scheduler base class.">Scheduler</a> base class.  
  <a href="classScheduler.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="scheduler_8hpp_source.html">scheduler.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Scheduler:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler__inherit__graph.png" border="0" usemap="#Scheduler_inherit__map" alt="Inheritance graph"/></div>
+<map name="Scheduler_inherit__map" id="Scheduler_inherit__map">
+<area shape="rect" id="node3" href="classScheduler__T.html" title="Scheduler." alt="" coords="5,382,141,519"/><area shape="rect" id="node5" href="classScheduler__T.html" title="{Scheduler_T\&lt; 20 \&gt;\n||+ Scheduler_T()\l# max_task_count()\l# tasks()\l# tasks()\l}" alt="" coords="165,382,301,519"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classScheduler-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structScheduler_1_1conf__t.html">conf_t</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScheduler.html" title="Scheduler.">Scheduler</a> configuration.  <a href="structScheduler_1_1conf__t.html#details">More...</a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScheduler.html" title="Scheduler base class.">Scheduler</a> configuration.  <a href="structScheduler_1_1conf__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93">strategy_t</a> { <a class="el" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93a16ad807367312df2f9b6b74c4395014b">ROUND_ROBIN</a>, 
@@ -116,10 +125,14 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort tasks by decreasing priority, then by increasing repeat period.  <a href="#a65d37b2e1af43239d990163e98428a74"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Run update (check for tasks ready for execution and execute them)  <a href="#ad1af97cfd75325ea9d88e4ab2f12e790"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#ac20f015b1a9877f65fb7c3db7b373bdc">get_task_by_id</a> (uint16_t task_id) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a task according to its idea.  <a href="#ac20f015b1a9877f65fb7c3db7b373bdc"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a905bb3b1e829437ca931025f814b3b19">get_task_by_index</a> (uint16_t task_index) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a task according to its index.  <a href="#a905bb3b1e829437ca931025f814b3b19"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a4127de73d7febc64303fb8cccaf522d1">get_task_by_id</a> (uint16_t task_id) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a task according to its idea.  <a href="#a4127de73d7febc64303fb8cccaf522d1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd806a91e8b38bac4ce8dffb38e70988"></a><!-- doxytag: member="Scheduler::get_task_by_id" ref="acd806a91e8b38bac4ce8dffb38e70988" args="(uint16_t task_id)" -->
+<a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_task_by_id</b> (uint16_t task_id)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#aae95dd0d6efd04e0ead6d7916d0cd18a">get_task_by_index</a> (uint16_t task_index) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a task according to its index.  <a href="#aae95dd0d6efd04e0ead6d7916d0cd18a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d7edf5cdf44c61fcad593a66fd77722"></a><!-- doxytag: member="Scheduler::get_task_by_index" ref="a5d7edf5cdf44c61fcad593a66fd77722" args="(uint16_t task_index)" -->
+<a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_task_by_index</b> (uint16_t task_index)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a692bc156fd166f13c410cff5c769d239">suspend_all_tasks</a> (uint32_t delay)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Suspends all tasks.  <a href="#a692bc156fd166f13c410cff5c769d239"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42bdc07e8914f6309be98e38e216c1bd"></a><!-- doxytag: member="Scheduler::run_all_tasks_now" ref="a42bdc07e8914f6309be98e38e216c1bd" args="(void)" -->
@@ -137,9 +150,18 @@ Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a342480159f74c755d5287cb3c112f95c"></a><!-- doxytag: member="Scheduler::TIMEBASE" ref="a342480159f74c755d5287cb3c112f95c" args="" -->
 static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a342480159f74c755d5287cb3c112f95c">TIMEBASE</a> = 1000000</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">&lt; time base for the scheduler <br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a26c76e721291762e9389da0eae352517">max_task_count</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get maximum number of tasks.  <a href="#a26c76e721291762e9389da0eae352517"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classScheduler.html#a317529117f23358269ce3d8db1cab912">tasks</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get pointer to the task list.  <a href="#a317529117f23358269ce3d8db1cab912"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acbd16ce391400136cdb68dc7afd0783d"></a><!-- doxytag: member="Scheduler::tasks" ref="acbd16ce391400136cdb68dc7afd0783d" args="(void) const =0" -->
+virtual const <a class="el" href="classScheduler__task.html">Scheduler_task</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>tasks</b> (void) const =0</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classScheduler.html" title="Scheduler.">Scheduler</a>. </p>
+<div class="textblock"><p><a class="el" href="classScheduler.html" title="Scheduler base class.">Scheduler</a> base class. </p>
+<p>This class is abstract and does not contains the task list, use the child class <a class="el" href="classScheduler__T.html" title="Scheduler.">Scheduler_T</a> </p>
 </div><hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="a33c91e878162f3c20cfc799922fe1c93"></a><!-- doxytag: member="Scheduler::strategy_t" ref="a33c91e878162f3c20cfc799922fe1c93" args="" -->
 <div class="memitem">
@@ -264,11 +286,20 @@ static const uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a clas
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the task was successfully added, False if not </dd></dl>
 
 <p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_cgraph.png" border="0" usemap="#classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_cgraph" alt=""/></div>
+<map name="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_cgraph" id="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_cgraph">
+<area shape="rect" id="node3" href="classScheduler.html#a26c76e721291762e9389da0eae352517" title="Get maximum number of tasks." alt="" coords="195,5,379,35"/><area shape="rect" id="node5" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="227,59,347,88"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_icgraph.png" border="0" usemap="#classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_icgraph" alt=""/></div>
 <map name="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_icgraph" id="classScheduler_acfc1ac23c05eebd7f7bac3bdc015e1fb_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#aa42f2579b6792230c41a2e5a9d5afd13" title="Adding new message to the MAVLink scheduler." alt="" coords="201,5,460,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#a601e8ce683683f2dd9a70c9abdbc4cb6" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="195,59,467,88"/></map>
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f" title="Add new telemetry message to the scheduler." alt="" coords="196,5,353,35"/></map>
 </div>
 </p>
 
@@ -294,12 +325,12 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="ac20f015b1a9877f65fb7c3db7b373bdc"></a><!-- doxytag: member="Scheduler::get_task_by_id" ref="ac20f015b1a9877f65fb7c3db7b373bdc" args="(uint16_t task_id) const " -->
+<a class="anchor" id="a4127de73d7febc64303fb8cccaf522d1"></a><!-- doxytag: member="Scheduler::get_task_by_id" ref="a4127de73d7febc64303fb8cccaf522d1" args="(uint16_t task_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classScheduler__task.html">Scheduler_task</a> * <a class="el" href="classScheduler.html#ac20f015b1a9877f65fb7c3db7b373bdc">Scheduler::get_task_by_id</a> </td>
+          <td class="memname">const <a class="el" href="classScheduler__task.html">Scheduler_task</a> * <a class="el" href="classScheduler.html#a4127de73d7febc64303fb8cccaf522d1">Scheduler::get_task_by_id</a> </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>task_id</em></td><td>)</td>
@@ -318,14 +349,32 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the target task </dd></dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler_a4127de73d7febc64303fb8cccaf522d1_cgraph.png" border="0" usemap="#classScheduler_a4127de73d7febc64303fb8cccaf522d1_cgraph" alt=""/></div>
+<map name="classScheduler_a4127de73d7febc64303fb8cccaf522d1_cgraph" id="classScheduler_a4127de73d7febc64303fb8cccaf522d1_cgraph">
+<area shape="rect" id="node3" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="229,5,349,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler_a4127de73d7febc64303fb8cccaf522d1_icgraph.png" border="0" usemap="#classScheduler_a4127de73d7febc64303fb8cccaf522d1_icgraph" alt=""/></div>
+<map name="classScheduler_a4127de73d7febc64303fb8cccaf522d1_icgraph" id="classScheduler_a4127de73d7febc64303fb8cccaf522d1_icgraph">
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#a6a836cbe1f379b50ec28597779301b3c" title="Toggle mavlink telemetry stream." alt="" coords="231,5,511,35"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="561,5,900,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
-<a class="anchor" id="a905bb3b1e829437ca931025f814b3b19"></a><!-- doxytag: member="Scheduler::get_task_by_index" ref="a905bb3b1e829437ca931025f814b3b19" args="(uint16_t task_index) const " -->
+<a class="anchor" id="aae95dd0d6efd04e0ead6d7916d0cd18a"></a><!-- doxytag: member="Scheduler::get_task_by_index" ref="aae95dd0d6efd04e0ead6d7916d0cd18a" args="(uint16_t task_index) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classScheduler__task.html">Scheduler_task</a> * <a class="el" href="classScheduler.html#a905bb3b1e829437ca931025f814b3b19">Scheduler::get_task_by_index</a> </td>
+          <td class="memname">const <a class="el" href="classScheduler__task.html">Scheduler_task</a> * <a class="el" href="classScheduler.html#aae95dd0d6efd04e0ead6d7916d0cd18a">Scheduler::get_task_by_index</a> </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>task_index</em></td><td>)</td>
@@ -343,6 +392,47 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the target task </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler_aae95dd0d6efd04e0ead6d7916d0cd18a_cgraph.png" border="0" usemap="#classScheduler_aae95dd0d6efd04e0ead6d7916d0cd18a_cgraph" alt=""/></div>
+<map name="classScheduler_aae95dd0d6efd04e0ead6d7916d0cd18a_cgraph" id="classScheduler_aae95dd0d6efd04e0ead6d7916d0cd18a_cgraph">
+<area shape="rect" id="node3" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="251,5,371,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a26c76e721291762e9389da0eae352517"></a><!-- doxytag: member="Scheduler::max_task_count" ref="a26c76e721291762e9389da0eae352517" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint32_t <a class="el" href="classScheduler.html#a26c76e721291762e9389da0eae352517">Scheduler::max_task_count</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get maximum number of tasks. </p>
+<p>To be overriden by child class</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Maximum number of tasks </dd></dl>
+
+<p>Implemented in <a class="el" href="classScheduler__T.html#af0258e5335d46de2d100189f3a53933c">Scheduler_T&lt; N &gt;</a>, and <a class="el" href="classScheduler__T.html#af0258e5335d46de2d100189f3a53933c">Scheduler_T&lt; 20 &gt;</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler_a26c76e721291762e9389da0eae352517_icgraph.png" border="0" usemap="#classScheduler_a26c76e721291762e9389da0eae352517_icgraph" alt=""/></div>
+<map name="classScheduler_a26c76e721291762e9389da0eae352517_icgraph" id="classScheduler_a26c76e721291762e9389da0eae352517_icgraph">
+<area shape="rect" id="node3" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot." alt="" coords="237,5,379,35"/><area shape="rect" id="node5" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f" title="Add new telemetry message to the scheduler." alt="" coords="428,5,585,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -365,11 +455,20 @@ Here is the caller graph for this function:</div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the task was successfully sorted, False if not </dd></dl>
 
 <p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler_a65d37b2e1af43239d990163e98428a74_cgraph.png" border="0" usemap="#classScheduler_a65d37b2e1af43239d990163e98428a74_cgraph" alt=""/></div>
+<map name="classScheduler_a65d37b2e1af43239d990163e98428a74_cgraph" id="classScheduler_a65d37b2e1af43239d990163e98428a74_cgraph">
+<area shape="rect" id="node3" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="203,5,323,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classScheduler_a65d37b2e1af43239d990163e98428a74_icgraph.png" border="0" usemap="#classScheduler_a65d37b2e1af43239d990163e98428a74_icgraph" alt=""/></div>
 <map name="classScheduler_a65d37b2e1af43239d990163e98428a74_icgraph" id="classScheduler_a65d37b2e1af43239d990163e98428a74_icgraph">
-<area shape="rect" id="node3" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="203,5,304,35"/></map>
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf" title="Sort telemetry items by decreasing priority, then by increasing repeat period." alt="" coords="203,5,363,35"/><area shape="rect" id="node5" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="411,32,512,61"/></map>
 </div>
 </p>
 
@@ -403,16 +502,39 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classScheduler_a692bc156fd166f13c410cff5c769d239_cgraph.png" border="0" usemap="#classScheduler_a692bc156fd166f13c410cff5c769d239_cgraph" alt=""/></div>
 <map name="classScheduler_a692bc156fd166f13c410cff5c769d239_cgraph" id="classScheduler_a692bc156fd166f13c410cff5c769d239_cgraph">
-<area shape="rect" id="node3" href="classScheduler__task.html#a70f6839a9a39df993c5afeb7bc7f0451" title="Suspends a task." alt="" coords="252,5,420,35"/></map>
+<area shape="rect" id="node3" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="276,5,396,35"/><area shape="rect" id="node5" href="classScheduler__task.html#a70f6839a9a39df993c5afeb7bc7f0451" title="Suspends a task." alt="" coords="252,59,420,88"/></map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="a317529117f23358269ce3d8db1cab912"></a><!-- doxytag: member="Scheduler::tasks" ref="a317529117f23358269ce3d8db1cab912" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classScheduler__task.html">Scheduler_task</a>* <a class="el" href="classScheduler.html#a317529117f23358269ce3d8db1cab912">Scheduler::tasks</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get pointer to the task list. </p>
+<p>Abstract method to be implemented in child classes</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>task list </dd></dl>
+
+<p>Implemented in <a class="el" href="classScheduler__T.html#acb60b894ce910b03ffa8b0ace64b5c27">Scheduler_T&lt; N &gt;</a>, and <a class="el" href="classScheduler__T.html#acb60b894ce910b03ffa8b0ace64b5c27">Scheduler_T&lt; 20 &gt;</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classScheduler_a692bc156fd166f13c410cff5c769d239_icgraph.png" border="0" usemap="#classScheduler_a692bc156fd166f13c410cff5c769d239_icgraph" alt=""/></div>
-<map name="classScheduler_a692bc156fd166f13c410cff5c769d239_icgraph" id="classScheduler_a692bc156fd166f13c410cff5c769d239_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#a304c01fa583d512d30d9ad41530fdc3d" title="Suspending sending of messages." alt="" coords="252,5,548,35"/></map>
+<div class="center"><img src="classScheduler_a317529117f23358269ce3d8db1cab912_icgraph.png" border="0" usemap="#classScheduler_a317529117f23358269ce3d8db1cab912_icgraph" alt=""/></div>
+<map name="classScheduler_a317529117f23358269ce3d8db1cab912_icgraph" id="classScheduler_a317529117f23358269ce3d8db1cab912_icgraph">
+<area shape="rect" id="node3" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot." alt="" coords="201,29,343,59"/><area shape="rect" id="node7" href="classScheduler.html#a65d37b2e1af43239d990163e98428a74" title="Sort tasks by decreasing priority, then by increasing repeat period." alt="" coords="197,108,347,137"/><area shape="rect" id="node14" href="classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790" title="Run update (check for tasks ready for execution and execute them)" alt="" coords="209,161,335,191"/><area shape="rect" id="node23" href="classScheduler.html#a4127de73d7febc64303fb8cccaf522d1" title="Find a task according to its idea." alt="" coords="184,215,360,244"/><area shape="rect" id="node29" href="classScheduler.html#aae95dd0d6efd04e0ead6d7916d0cd18a" title="Find a task according to its index." alt="" coords="173,268,371,297"/><area shape="rect" id="node31" href="classScheduler.html#a692bc156fd166f13c410cff5c769d239" title="Suspends all tasks." alt="" coords="175,321,369,351"/><area shape="rect" id="node33" href="classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd" title="Run all tasks immediately." alt="" coords="175,375,369,404"/><area shape="rect" id="node5" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f" title="Add new telemetry message to the scheduler." alt="" coords="481,5,639,35"/><area shape="rect" id="node9" href="classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf" title="Sort telemetry items by decreasing priority, then by increasing repeat period." alt="" coords="480,59,640,88"/><area shape="rect" id="node11" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="869,111,971,140"/><area shape="rect" id="node16" href="classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function." alt="" coords="472,213,648,243"/><area shape="rect" id="node18" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="808,213,1032,243"/><area shape="rect" id="node20" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1139,213,1395,243"/><area shape="rect" id="node25" href="classPeriodic__telemetry.html#a6a836cbe1f379b50ec28597779301b3c" title="Toggle mavlink telemetry stream." alt="" coords="420,320,700,349"/><area shape="rect" id="node27" href="classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="751,320,1089,349"/></map>
 </div>
 </p>
 
@@ -437,11 +559,20 @@ Here is the caller graph for this function:</div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Number of realtime violations </dd></dl>
 
 <p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_cgraph.png" border="0" usemap="#classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_cgraph" alt=""/></div>
+<map name="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_cgraph" id="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_cgraph">
+<area shape="rect" id="node3" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="181,5,301,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_icgraph.png" border="0" usemap="#classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_icgraph" alt=""/></div>
 <map name="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_icgraph" id="classScheduler_ad1af97cfd75325ea9d88e4ab2f12e790_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="183,5,391,35"/><area shape="rect" id="node5" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="236,59,337,88"/></map>
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function." alt="" coords="183,5,359,35"/><area shape="rect" id="node9" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="220,59,321,88"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="408,5,632,35"/><area shape="rect" id="node7" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="680,5,936,35"/></map>
 </div>
 </p>
 
@@ -469,7 +600,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:17 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

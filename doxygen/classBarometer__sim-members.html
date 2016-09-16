@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -84,25 +85,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 This is the complete list of members for <a class="el" href="classBarometer__sim.html">Barometer_sim</a>, including all inherited members.<table>
   <tr class="memlist"><td><a class="el" href="classBarometer.html#af01c889a2b36d3f1e2b9b094dd91f17a">altitude_bias_gf_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a0794b40c677b9b3c95bcbb503d8529b4">altitude_filtered</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer.html#a8e5b1fc3eeb41f802c1252bb02fa8305">altitude_from_pressure</a>(float pressure, float altitude_bias=0)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [static]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#ada747a30c4ba82b650f99a3d65e7788f">altitude_gf</a>(void) const </td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a2be30f7d4220e5bd0f109b8dda038351">altitude_gf_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer__sim.html#aaa88190e8ef8a6d9b8ddf9f06c6f03fb">altitude_gf</a>(void) const </td><td><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>Barometer</b>() (defined in <a class="el" href="classBarometer.html">Barometer</a>)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__sim.html#a8cb0b945413cb2c0be355240648dd56a">Barometer_sim</a>(Dynamic_model &amp;dynamic_model)</td><td><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4">calibrate_bias</a>(float current_altitude_gf)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359">has_been_calibrated</a>() const </td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer.html#abdf5e59e29258d4a9d71db2f5be41daa">has_been_calibrated_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__sim.html#af778998af10812d8ae8bd8e688bdc7ff">init</a>(void)</td><td><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td><code> [virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a603c5461ba2f920de58bdf31533d605e">last_update_us</a>(void) const </td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a63c4bcc303bc908beafd88c443012985">last_update_us_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#afe42185560d85096d656e6029cbd357f">pressure</a>(void) const </td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a2c17c3b17977b5c5568ac5fb23c83653">pressure_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a7830b73985c67bf74271efc8428970e6">speed_lf_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#ac4ade496a58afa9317ed9921a41edf95">temperature</a>(void) const </td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a0dad3c62fa72b419e53b8e7215b45054">temperature_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer__sim.html#aa5d7e0035b8063274fb077d341201f07">last_update_us</a>(void) const </td><td><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer__sim.html#a02399571d03470f623d29ca97755edc9">pressure</a>(void) const </td><td><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer__sim.html#a70fb6c0fdde48cbf3d5b0ada1041112b">temperature</a>(void) const </td><td><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__sim.html#a4075bc813d0616b6d52f53f9cf97c037">update</a>(void)</td><td><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td><code> [virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#ac46c1624fc97af9797dd2b2f2ae4f9cd">vertical_speed_lf</a>(void) const </td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer__sim.html#a2f6ef944062a2ddf455bcee9a9386e90">vertical_speed_lf</a>(void) const </td><td><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td><code> [virtual]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -121,7 +116,7 @@ This is the complete list of members for <a class="el" href="classBarometer__sim
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

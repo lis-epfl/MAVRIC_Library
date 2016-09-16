@@ -1,5 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classPwm__avr32.html" title="{Pwm_avr32\n||+ Pwm_avr32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="5,174,163,311"/>
-<area shape="rect" id="node5" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="187,183,344,303"/>
-<area shape="rect" id="node7" href="$classPwm__stm32.html" title="{Pwm_stm32\n||+ Pwm_stm32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="368,174,525,311"/>
+<area shape="rect" id="node3" href="$classPwm__avr32.html" title="{Pwm_avr32\n||+ Pwm_avr32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="5,182,163,319"/>
+<area shape="rect" id="node5" href="$classPwm__chibios.html" title="Wrapper class for PWM using ChibiOS/HAL." alt="" coords="187,173,344,328"/>
+<area shape="rect" id="node7" href="$classPwm__dummy.html" title="{Pwm_dummy\n||+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="368,191,525,311"/>
+<area shape="rect" id="node9" href="$classPwm__stm32.html" title="{Pwm_stm32\n||+ Pwm_stm32()\l+ init()\l+ set_pulse_width_us()\l+ set_period_us()\l}" alt="" coords="549,182,707,319"/>
 </map>

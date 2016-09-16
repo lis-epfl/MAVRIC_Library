@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="341,5,536,35"/>
+<area shape="rect" id="node5" href="$classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd" title="Run all tasks immediately." alt="" coords="341,112,536,141"/>
+<area shape="rect" id="node11" href="$classScheduler.html#a4127de73d7febc64303fb8cccaf522d1" title="Find a task according to its idea." alt="" coords="351,59,527,88"/>
+<area shape="rect" id="node14" href="$classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef" title="Modifies the run mode of an existing task." alt="" coords="589,192,792,221"/>
+<area shape="rect" id="node16" href="$classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5" title="Modifies the period of execution of an existing task." alt="" coords="337,165,540,195"/>
+<area shape="rect" id="node7" href="$classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="631,65,751,95"/>
+<area shape="rect" id="node9" href="$classScheduler__task.html#adc0e604f86fd585d32b94bb845d0eb8c" title="Run a task immediately." alt="" coords="607,125,775,155"/>
+</map>

@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSpektrum__satellite.html#adb6188c9e279d061ea4b524201975c33" title="Takes care of incoming data." alt="" coords="153,5,383,35"/>
+<area shape="rect" id="node5" href="$classSerial__avr32.html#a060ce69893b3b60a854c13ad9e7c3307" title="Read bytes from the serial line." alt="" coords="205,59,331,88"/>
+<area shape="rect" id="node7" href="$classSerial__usb__avr32.html#ac592ddce67456e1a4ff593fc3559ab20" title="Sends instantaneously all outgoing bytes." alt="" coords="189,112,347,141"/>
+<area shape="rect" id="node9" href="$classSerial__usb__avr32.html#a136aeea78c5070fc8b7c846aa20f305f" title="Write bytes on the serial line." alt="" coords="189,165,347,195"/>
+<area shape="rect" id="node11" href="$classSerial__usb__avr32.html#abc619ad16623fb467f9f33a29776a2c4" title="Read bytes from the serial line." alt="" coords="191,219,345,248"/>
+<area shape="rect" id="node13" href="$classSerial__chibios.html#a27ceb20285e3c1e93df506496ee5e373" title="Read bytes from the serial line." alt="" coords="200,272,336,301"/>
+<area shape="rect" id="node15" href="$classSerial__chibios.html#aa23cdaec8e0237983e0bd6f5e602b6ec" title="Default TX interrupt&#45;handling function." alt="" coords="172,325,364,355"/>
+<area shape="rect" id="node19" href="$classSerial__udp.html#ad009bc0295aa5f2034f5c5d44696e0a1" title="Sends instantaneously all outgoing bytes." alt="" coords="209,379,327,408"/>
+<area shape="rect" id="node23" href="$classSerial__udp.html#a6371af0a085b26e42b4afa3bcfc79e20" title="Read bytes from the serial line." alt="" coords="211,432,325,461"/>
+<area shape="rect" id="node25" href="$classSerial__stm32.html#a38437caf66eb83e0815aeb5871ac67a3" title="Read bytes from the serial line." alt="" coords="203,485,333,515"/>
+<area shape="rect" id="node27" href="$classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="184,539,352,568"/>
+<area shape="rect" id="node29" href="$classSerial__usb__stm32.html#a0e9f0cfd59054bc3eef06f0f32a74f53" title="Sends instantaneously all outgoing bytes." alt="" coords="187,592,349,621"/>
+<area shape="rect" id="node33" href="$classSerial__usb__stm32.html#ab4e52c4a8171a45233b5ed3edf366ce7" title="Read bytes from the serial line." alt="" coords="189,645,347,675"/>
+<area shape="rect" id="node17" href="$classSerial__chibios.html#a49eaec36b0ea7bd03b370c77f6222c6c" title="Sends instantaneously all outgoing bytes." alt="" coords="444,325,583,355"/>
+<area shape="rect" id="node21" href="$classSerial__udp.html#ac568375e1a82264e735fd8c6b8465b85" title="Write a byte on the serial line." alt="" coords="455,379,572,408"/>
+<area shape="rect" id="node31" href="$classSerial__usb__stm32.html#ab7d1d23330bf4ec251a5aa81d25f6806" title="Write bytes on the serial line." alt="" coords="432,592,595,621"/>
+</map>

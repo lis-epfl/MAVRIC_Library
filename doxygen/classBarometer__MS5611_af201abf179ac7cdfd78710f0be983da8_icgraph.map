@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSparky__chibi.html#a11ac79dbd29abeed3bcb800a726ee56f" title="Hardware initialisation." alt="" coords="247,5,369,35"/>
+<area shape="rect" id="node5" href="$classBarometer__MS5611.html#a0674c51bec727bc276be6614bbe41801" title="Main update function &#160;Reads new values from sensor." alt="" coords="216,59,400,88"/>
+</map>

@@ -7,5 +7,6 @@
 <area shape="rect" id="node9" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="588,112,689,141"/>
 <area shape="rect" id="node11" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="576,165,701,195"/>
 <area shape="rect" id="node13" href="$classSparky__v2.html#a3a0b29e6eb7bfdf74e914453d138e61d" title="Hardware initialisation." alt="" coords="584,219,693,248"/>
-<area shape="rect" id="node22" href="$classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a" title="Constructor." alt="" coords="589,59,688,88"/>
+<area shape="rect" id="node22" href="$classServo.html#a123e40a24a68699291a192a2b096b15e" title="Initializes the servo." alt="" coords="599,59,679,88"/>
+<area shape="rect" id="node24" href="$classSparky__chibi.html#a11ac79dbd29abeed3bcb800a726ee56f" title="Hardware initialisation." alt="" coords="757,59,880,88"/>
 </map>

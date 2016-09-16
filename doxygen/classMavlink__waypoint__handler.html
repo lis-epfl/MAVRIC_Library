@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -120,8 +121,8 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a first waypoint if a flight plan is set.  <a href="#a7cd9b0900f4aa77c8ce3f1d3dc7c5640"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#ac05cdec6fc03627312b32ab260f60f73">hold_init</a> (local_position_t local_pos)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the position hold mode.  <a href="#ac05cdec6fc03627312b32ab260f60f73"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefe41b70a4df4ac22a038a4537e84bbc"></a><!-- doxytag: member="Mavlink_waypoint_handler::waypoint_count" ref="aefe41b70a4df4ac22a038a4537e84bbc" args="() const " -->
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>waypoint_count</b> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#aefe41b70a4df4ac22a038a4537e84bbc">waypoint_count</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of waypoints.  <a href="#aefe41b70a4df4ac22a038a4537e84bbc"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84">update</a> (<a class="el" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a> *waypoint_handler)</td></tr>
@@ -233,8 +234,9 @@ const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#1
     <tr><td class="paramname">ahrs</td><td>The pointer to the attitude estimation structure </td></tr>
     <tr><td class="paramname">state</td><td>The pointer to the state structure </td></tr>
     <tr><td class="paramname">manual_control</td><td>The pointer to the manual control structure </td></tr>
-    <tr><td class="paramname">mavlink_communication</td><td>The pointer to the MAVLink communication structure </td></tr>
-    <tr><td class="paramname">mavlink_stream</td><td>The pointer to the MAVLink stream structure</td></tr>
+    <tr><td class="paramname">message_handler</td><td>The pointer to the MAVLink message_handler structure </td></tr>
+    <tr><td class="paramname">mavlink_stream</td><td>The pointer to the MAVLink stream structure </td></tr>
+    <tr><td class="paramname">config</td><td>The configuration of the mavlink_waypoint handler structure</td></tr>
   </table>
   </dd>
 </dl>
@@ -245,7 +247,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__waypoint__handler_a398d34a4dec2d2c34fbca65998fbd579_cgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a398d34a4dec2d2c34fbca65998fbd579_cgraph" alt=""/></div>
 <map name="classMavlink__waypoint__handler_a398d34a4dec2d2c34fbca65998fbd579_cgraph" id="classMavlink__waypoint__handler_a398d34a4dec2d2c34fbca65998fbd579_cgraph">
-<area shape="rect" id="node3" href="classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="399,5,689,35"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="399,59,689,88"/><area shape="rect" id="node7" href="classMavlink__waypoint__handler.html#a6e65a0cfc44b105f003a62c4790348ab" title="Initialize a home waypoint at (0,0,0) at start up." alt="" coords="391,112,697,141"/><area shape="rect" id="node9" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="415,165,673,195"/><area shape="rect" id="node11" href="classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="753,59,865,88"/><area shape="rect" id="node13" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="747,112,872,141"/><area shape="rect" id="node15" href="classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="748,165,871,195"/><area shape="rect" id="node17" href="classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="753,219,865,248"/><area shape="rect" id="node19" href="classINS.html#a1d62705e3a33594ccdf182680ce52647" title="Position of origin in global coordinates." alt="" coords="768,272,851,301"/></map>
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="399,59,689,88"/><area shape="rect" id="node9" href="classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="399,152,689,181"/><area shape="rect" id="node15" href="classMavlink__waypoint__handler.html#a6e65a0cfc44b105f003a62c4790348ab" title="Initialize a home waypoint at (0,0,0) at start up." alt="" coords="391,205,697,235"/><area shape="rect" id="node17" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="415,285,673,315"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="748,5,1081,35"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="771,59,1059,88"/><area shape="rect" id="node11" href="classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b" title="Get maximum number of command callbacks." alt="" coords="748,112,1081,141"/><area shape="rect" id="node13" href="classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45" title="Get list of command callbacks." alt="" coords="771,165,1059,195"/><area shape="rect" id="node19" href="classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="859,219,971,248"/><area shape="rect" id="node21" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="852,272,977,301"/><area shape="rect" id="node23" href="classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="853,325,976,355"/><area shape="rect" id="node25" href="classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="859,379,971,408"/><area shape="rect" id="node27" href="classINS.html#a1d62705e3a33594ccdf182680ce52647" title="Position of origin in global coordinates." alt="" coords="873,432,956,461"/></map>
 </div>
 </p>
 
@@ -396,6 +398,25 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="aefe41b70a4df4ac22a038a4537e84bbc"></a><!-- doxytag: member="Mavlink_waypoint_handler::waypoint_count" ref="aefe41b70a4df4ac22a038a4537e84bbc" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t <a class="el" href="classMavlink__waypoint__handler.html#aefe41b70a4df4ac22a038a4537e84bbc">Mavlink_waypoint_handler::waypoint_count</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns the number of waypoints. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>number of waypoints </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/communication/<a class="el" href="mavlink__waypoint__handler_8hpp_source.html">mavlink_waypoint_handler.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/communication/mavlink_waypoint_handler.cpp</li>
@@ -418,7 +439,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,4 +1,5 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classSpi__avr32.html" title="Implementation of spi peripheral for avr32." alt="" coords="5,209,104,364"/>
-<area shape="rect" id="node5" href="$classSpi__stm32.html" title="Implementation of spi peripheral for stm32." alt="" coords="128,192,256,381"/>
+<area shape="rect" id="node5" href="$classSpi__chibios.html" title="SPI peripherals driver using CHibios/HAL." alt="" coords="128,209,237,364"/>
+<area shape="rect" id="node7" href="$classSpi__stm32.html" title="Implementation of spi peripheral for stm32." alt="" coords="261,192,389,381"/>
 </map>

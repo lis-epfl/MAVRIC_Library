@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -131,37 +132,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00049"></a>00049 
 <a name="l00050"></a>00050 
 <a name="l00057"></a>00057 <span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>32_t S = 256, <span class="keyword">typename</span> T = u<span class="keywordtype">int</span>8_t&gt;
-<a name="l00058"></a><a class="code" href="classBuffer__tpl.html">00058</a> <span class="keyword">class </span><a class="code" href="classBuffer__tpl.html" title="Circular buffer.">Buffer_tpl</a>
+<a name="l00058"></a><a class="code" href="classBuffer__T.html">00058</a> <span class="keyword">class </span><a class="code" href="classBuffer__T.html" title="Circular buffer.">Buffer_T</a>
 <a name="l00059"></a>00059 {
 <a name="l00060"></a>00060 <span class="keyword">public</span>:
-<a name="l00064"></a>00064     <a class="code" href="classBuffer__tpl.html#a5dd15ace97f59be37f1f6918eb70d426" title="Constructor.">Buffer_tpl</a>(<span class="keywordtype">void</span>);
+<a name="l00064"></a>00064     <a class="code" href="classBuffer__T.html#a54234fbcf8708651efeb0b5103f884ba" title="Constructor.">Buffer_T</a>(<span class="keywordtype">void</span>);
 <a name="l00065"></a>00065 
 <a name="l00066"></a>00066 
-<a name="l00074"></a>00074     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__tpl.html#a526cfc106b641c84b9fe378a95366250" title="Stores data in the buffer even of it overwrites existing data.">put_lossy</a>(<span class="keyword">const</span> T&amp; data);
+<a name="l00074"></a>00074     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__T.html#a88378087609442dc301bcdfef4bb8f34" title="Stores data in the buffer even of it overwrites existing data.">put_lossy</a>(<span class="keyword">const</span> T&amp; data);
 <a name="l00075"></a>00075 
 <a name="l00076"></a>00076 
-<a name="l00084"></a>00084     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__tpl.html#a3e6e6b58528f9e82dde45f3d43d2186c" title="Stores data in the buffer, until the buffer is full.">put</a>(<span class="keyword">const</span> T&amp; data);
+<a name="l00084"></a>00084     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__T.html#ac0db434b9f24e58711d56fd5dcfaf2d4" title="Stores data in the buffer, until the buffer is full.">put</a>(<span class="keyword">const</span> T&amp; data);
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086 
 <a name="l00094"></a>00094     <span class="keywordtype">bool</span> <span class="keyword">get</span>(T&amp; data);
 <a name="l00095"></a>00095 
 <a name="l00096"></a>00096 
-<a name="l00105"></a>00105     <span class="keywordtype">void</span> <a class="code" href="classBuffer__tpl.html#a69c24683f731a8251ce53e191f6ca09a" title="Clear the buffer.">clear</a>(<span class="keywordtype">void</span>);
+<a name="l00105"></a>00105     <span class="keywordtype">void</span> <a class="code" href="classBuffer__T.html#ae0b53ec2377ca2c3032283b1ddbc003a" title="Clear the buffer.">clear</a>(<span class="keywordtype">void</span>);
 <a name="l00106"></a>00106 
 <a name="l00107"></a>00107 
-<a name="l00113"></a>00113     uint32_t <a class="code" href="classBuffer__tpl.html#ac3079cb00ac66e37bb14429f19ec2f6c" title="Returns the number of available bytes in the buffer.">readable</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00113"></a>00113     uint32_t <a class="code" href="classBuffer__T.html#aed2c412fb34f1890fce4cc884c583625" title="Returns the number of available bytes in the buffer.">readable</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00114"></a>00114 
 <a name="l00115"></a>00115 
-<a name="l00121"></a>00121     uint32_t <a class="code" href="classBuffer__tpl.html#a814223c9436d3a6d799850cd38c39267" title="Returns the number of free bytes in the buffer.">writeable</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00121"></a>00121     uint32_t <a class="code" href="classBuffer__T.html#a9ea9abd094aeace2034c4eef2be4b31d" title="Returns the number of free bytes in the buffer.">writeable</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00122"></a>00122 
 <a name="l00123"></a>00123 
-<a name="l00129"></a>00129     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__tpl.html#a57211bac33f215dd9e1fd5b69f763d06" title="Tests whether the buffer is full.">full</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00129"></a>00129     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__T.html#a015a62a50cd6931d44e4d6b3176fcc94" title="Tests whether the buffer is full.">full</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00130"></a>00130 
 <a name="l00131"></a>00131 
-<a name="l00137"></a>00137     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__tpl.html#a8f0ba93f400f92c3327c891800d97c22" title="Tests whether the buffer is empty.">empty</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00137"></a>00137     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__T.html#aaa477d75c14cc187d2314b0e04382227" title="Tests whether the buffer is empty.">empty</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00138"></a>00138 
 <a name="l00139"></a>00139 
-<a name="l00148"></a>00148     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__tpl.html#a2623ac57d3c66d6a7ddaa33cbd2212be" title="Get value of i-th element in buffer, but does not modify anything.">get_element</a>(uint32_t index, T&amp; elem) <span class="keyword">const</span>;
+<a name="l00148"></a>00148     <span class="keywordtype">bool</span> <a class="code" href="classBuffer__T.html#ab02b06e057265507e5e5d9e5d8e87d1e" title="Get value of i-th element in buffer, but does not modify anything.">get_element</a>(uint32_t index, T&amp; elem) <span class="keyword">const</span>;
 <a name="l00149"></a>00149 
 <a name="l00150"></a>00150 
 <a name="l00151"></a>00151 <span class="keyword">private</span>:
@@ -171,7 +172,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00155"></a>00155 };
 <a name="l00156"></a>00156 
 <a name="l00157"></a>00157 
-<a name="l00164"></a>00164 <span class="keyword">typedef</span> <a class="code" href="classBuffer__tpl.html">Buffer_tpl&lt;256, uint8_t&gt;</a> <a class="code" href="classBuffer__tpl.html">Buffer</a>;
+<a name="l00164"></a>00164 <span class="keyword">typedef</span> <a class="code" href="classBuffer__T.html">Buffer_T&lt;256, uint8_t&gt;</a> <a class="code" href="classBuffer__T.html">Buffer</a>;
 <a name="l00165"></a>00165 
 <a name="l00166"></a>00166 
 <a name="l00167"></a>00167 <span class="preprocessor">#include &quot;buffer.hxx&quot;</span>
@@ -195,7 +196,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

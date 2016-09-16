@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -115,36 +116,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="structattitude__error__estimator__t.html">attitude_error_estimator_t</a></td><td class="indexvalue">Quaternion attitude error estimator data structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structaudio__t.html">audio_t</a></td><td class="indexvalue">Structure of the acoustic data </td></tr>
   <tr><td class="indexkey"><a class="el" href="classBarometer.html">Barometer</a></td><td class="indexvalue">Interface class for barometers </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td class="indexvalue">Driver for the BMP085 barometer </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td class="indexvalue">Driver for the MS5611 barometer </td></tr>
   <tr><td class="indexkey"><a class="el" href="classBarometer__sim.html">Barometer_sim</a></td><td class="indexvalue"><a class="el" href="classSimulation.html" title="Simulated dynamics of a quadcopter in diag configuration.">Simulation</a> for barometers </td></tr>
   <tr><td class="indexkey"><a class="el" href="classBattery.html">Battery</a></td><td class="indexvalue"><a class="el" href="classBattery.html" title="Battery voltage monitor.">Battery</a> voltage monitor </td></tr>
   <tr><td class="indexkey"><a class="el" href="structbattery__conf__t.html">battery_conf_t</a></td><td class="indexvalue">Configuration for <a class="el" href="classBattery.html" title="Battery voltage monitor.">Battery</a> </td></tr>
-  <tr><td class="indexkey"><a class="el" href="classBmp085.html">Bmp085</a></td><td class="indexvalue">Driver for the BMP085 barometer </td></tr>
-  <tr><td class="indexkey"><a class="el" href="classBuffer__tpl.html">Buffer_tpl&lt; S, T &gt;</a></td><td class="indexvalue">Circular buffer </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classBuffer__T.html">Buffer_T&lt; S, T &gt;</a></td><td class="indexvalue">Circular buffer </td></tr>
   <tr><td class="indexkey"><a class="el" href="unionJoystick_1_1button__t.html">Joystick::button_t</a></td><td class="indexvalue">The union structure for the bit mask of the joystick buttons </td></tr>
   <tr><td class="indexkey"><a class="el" href="structbyte__stream__t.html">byte_stream_t</a></td><td class="indexvalue">Byte stream </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structBarometer__MS5611_1_1calibration__data__t.html">Barometer_MS5611::calibration_data_t</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structJoystick_1_1channels__t.html">Joystick::channels_t</a></td><td class="indexvalue"><a class="el" href="classJoystick.html">Joystick</a> Channels </td></tr>
   <tr><td class="indexkey"><a class="el" href="structMavlink__message__handler_1_1cmd__callback__t.html">Mavlink_message_handler::cmd_callback_t</a></td><td class="indexvalue">Command callback </td></tr>
   <tr><td class="indexkey"><a class="el" href="structcommand__t.html">command_t</a></td><td class="indexvalue">Global command structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structOnboard__parameters_1_1conf__t.html">Onboard_parameters::conf_t</a></td><td class="indexvalue">Configuration for the module onboard parameters </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structMavlink__communication__T_1_1conf__t.html">Mavlink_communication_T&lt; N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM &gt;::conf_t</a></td><td class="indexvalue">Configuration of the module Mavlink Communication </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structJoystick_1_1conf__t.html">Joystick::conf_t</a></td><td class="indexvalue">Configuration for joystick </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structPeriodic__telemetry_1_1conf__t.html">Periodic_telemetry::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structSerial__usb__stm32_1_1conf__t.html">Serial_usb_stm32::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a></td><td class="indexvalue"><a class="el" href="classScheduler.html" title="Scheduler.">Scheduler</a> configuration </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a></td><td class="indexvalue"><a class="el" href="classScheduler.html" title="Scheduler base class.">Scheduler</a> configuration </td></tr>
   <tr><td class="indexkey"><a class="el" href="structLEQuad_1_1conf__t.html">LEQuad::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structAhrs__ekf_1_1conf__t.html">Ahrs_ekf::conf_t</a></td><td class="indexvalue">The AHRS EKF config structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structManual__control_1_1conf__t.html">Manual_control::conf_t</a></td><td class="indexvalue">Configuration for manual control </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structAhrs__ekf_1_1conf__t.html">Ahrs_ekf::conf_t</a></td><td class="indexvalue">The AHRS EKF config structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structAhrs__ekf__mocap_1_1conf__t.html">Ahrs_ekf_mocap::conf_t</a></td><td class="indexvalue">The AHRS EKF MOCAP config structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structNavigation_1_1conf__t.html">Navigation::conf_t</a></td><td class="indexvalue">The navigation configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structINS__kf_1_1conf__t.html">INS_kf::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structPosition__estimation_1_1conf__t.html">Position_estimation::conf_t</a></td><td class="indexvalue">The position estimator structure </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structMavlink__communication_1_1conf__t.html">Mavlink_communication::conf_t</a></td><td class="indexvalue">Configuration of the module Mavlink Communication </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structState_1_1conf__t.html">State::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structMavlink__message__handler_1_1conf__t.html">Mavlink_message_handler::conf_t</a></td><td class="indexvalue">Structure used to hold parameters during initialisation </td></tr>
   <tr><td class="indexkey"><a class="el" href="structMpu__9250_1_1conf__t.html">Mpu_9250::conf_t</a></td><td class="indexvalue">Configuration structure for mpu 9250 </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structAttitude__controller_1_1conf__t.html">Attitude_controller::conf_t</a></td><td class="indexvalue">Attitude controller configuration </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structSparky__chibi_1_1conf__t.html">Sparky_chibi::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structState_1_1conf__t.html">State::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structSparky__v2_1_1conf__t.html">Sparky_v2::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structMavlink__message__handler_1_1conf__t.html">Mavlink_message_handler::conf_t</a></td><td class="indexvalue">Structure used to hold parameters during initialisation </td></tr>
   <tr><td class="indexkey"><a class="el" href="structMavlink__stream_1_1conf__t.html">Mavlink_stream::conf_t</a></td><td class="indexvalue">Configuration structure for the module MAVLink stream </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structData__logging_1_1conf__t.html">Data_logging::conf_t</a></td><td class="indexvalue">Configuration of the data_logging element </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structAttitude__controller_1_1conf__t.html">Attitude_controller::conf_t</a></td><td class="indexvalue">Attitude controller configuration </td></tr>
   <tr><td class="indexkey"><a class="el" href="structVelocity__controller__copter_1_1conf__t.html">Velocity_controller_copter::conf_t</a></td><td class="indexvalue">Controller configuration </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structBarometer__MS5611_1_1conf__t.html">Barometer_MS5611::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structMavlink__waypoint__handler_1_1conf__t.html">Mavlink_waypoint_handler::conf_t</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structGps__mocap_1_1conf__t.html">Gps_mocap::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structOnboard__parameters_1_1conf__t.html">Onboard_parameters::conf_t</a></td><td class="indexvalue">Configuration for the module onboard parameters </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structJoystick_1_1conf__t.html">Joystick::conf_t</a></td><td class="indexvalue">Configuration for joystick </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structGpio__chibios_1_1conf__t.html">Gpio_chibios::conf_t</a></td><td class="indexvalue">GPIO configuration </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structI2c__chibios_1_1conf__t.html">I2c_chibios::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structPwm__chibios_1_1conf__t.html">Pwm_chibios::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structSerial__chibios_1_1conf__t.html">Serial_chibios::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structSpi__chibios_1_1conf__t.html">Spi_chibios::conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structPwm__stm32_1_1config__t.html">Pwm_stm32::config_t</a></td><td class="indexvalue">STM32_PWM configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="classConsole.html">Console&lt; Writeable &gt;</a></td><td class="indexvalue">Class template to write to any write-able module in human-readable format </td></tr>
   <tr><td class="indexkey"><a class="el" href="structcontrol__command__t.html">control_command_t</a></td><td class="indexvalue">The control command typedef </td></tr>
@@ -158,9 +171,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="structcurvace__t.html">curvace_t</a></td><td class="indexvalue">Curvace data structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="classraytracing_1_1Cylinder.html">raytracing::Cylinder</a></td><td class="indexvalue"><a class="el" href="classraytracing_1_1Cylinder.html" title="Cylinder.">Cylinder</a> </td></tr>
   <tr><td class="indexkey"><a class="el" href="structdaler__dc__motor__ctrl__t.html">daler_dc_motor_ctrl_t</a></td><td class="indexvalue">Structure of the i2cxl_sonar module </td></tr>
-  <tr><td class="indexkey"><a class="el" href="classData__logging.html">Data_logging</a></td><td class="indexvalue">The class of the log of the data </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structdata__logging__conf__t.html">data_logging_conf_t</a></td><td class="indexvalue">Configuration of the data_logging element </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classData__logging.html">Data_logging</a></td><td class="indexvalue">Log data in files </td></tr>
   <tr><td class="indexkey"><a class="el" href="structdata__logging__entry__t.html">data_logging_entry_t</a></td><td class="indexvalue">Structure of data logging parameter </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classData__logging__T.html">Data_logging_T&lt; N &gt;</a></td><td class="indexvalue">Log data in files </td></tr>
   <tr><td class="indexkey"><a class="el" href="structdate__time__t.html">date_time_t</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structderotation__matrix__t.html">derotation_matrix_t</a></td><td class="indexvalue">Link between gyro rates and rotational optic flow </td></tr>
   <tr><td class="indexkey"><a class="el" href="structdifferentiator__t.html">differentiator_t</a></td><td class="indexvalue">Derivative part of PID </td></tr>
@@ -187,6 +200,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="classGpio.html">Gpio</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classGpio__avr32.html">Gpio_avr32</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structgpio__avr32__conf__t.html">gpio_avr32_conf_t</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classGpio__chibios.html">Gpio_chibios</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classGpio__dummy.html">Gpio_dummy</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structgpio__dummy__conf__t.html">gpio_dummy_conf_t</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classGpio__stm32.html">Gpio_stm32</a></td><td class="indexvalue"></td></tr>
@@ -205,6 +219,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="classI2c.html">I2c</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classI2c__avr32.html">I2c_avr32</a></td><td class="indexvalue">I2C peripheral driver for AVR32 </td></tr>
   <tr><td class="indexkey"><a class="el" href="structi2c__avr32__conf__t.html">i2c_avr32_conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classI2c__chibios.html">I2c_chibios</a></td><td class="indexvalue">I2C peripheral driver using ChibiOS/HAL </td></tr>
   <tr><td class="indexkey"><a class="el" href="classI2c__dummy.html">I2c_dummy</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structi2c__dummy__conf__t.html">i2c_dummy_conf_t</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classI2c__stm32.html">I2c_stm32</a></td><td class="indexvalue">I2C peripheral driver for STM32 </td></tr>
@@ -234,8 +249,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="classManual__control.html">Manual_control</a></td><td class="indexvalue">The manual control structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="classMat.html">Mat&lt; N, P, T &gt;</a></td><td class="indexvalue">Templated matrix class </td></tr>
   <tr><td class="indexkey"><a class="el" href="classMav__mode.html">Mav_mode</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classMavlink__communication.html">Mavlink_communication</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a></td><td class="indexvalue">Main message handler structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classMavlink__communication__T.html">Mavlink_communication_T&lt; N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM &gt;</a></td><td class="indexvalue">Handles various aspect of mavlink protocol with periodic telemetry, message callback, and onboard parameters </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a></td><td class="indexvalue">Message handler base class </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classMavlink__message__handler__T.html">Mavlink_message_handler_T&lt; N, P &gt;</a></td><td class="indexvalue">Message handler </td></tr>
   <tr><td class="indexkey"><a class="el" href="classMavlink__stream.html">Mavlink_stream</a></td><td class="indexvalue">Main structure for the MAVLink stream module </td></tr>
   <tr><td class="indexkey"><a class="el" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classMavlink__waypoint__handler__swarm.html">Mavlink_waypoint_handler_swarm</a></td><td class="indexvalue"></td></tr>
@@ -258,8 +274,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="structnvram__data__t.html">nvram_data_t</a></td><td class="indexvalue">TODO: Modify the name of this structure to make it sized as the free flash memory to store these parameters </td></tr>
   <tr><td class="indexkey"><a class="el" href="classraytracing_1_1Object.html">raytracing::Object</a></td><td class="indexvalue"><a class="el" href="classraytracing_1_1Object.html" title="Object interface.">Object</a> interface </td></tr>
   <tr><td class="indexkey"><a class="el" href="structof__vector__t.html">of_vector_t</a></td><td class="indexvalue">Optic flaw vector </td></tr>
-  <tr><td class="indexkey"><a class="el" href="classOnboard__parameters.html">Onboard_parameters</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classOnboard__parameters.html">Onboard_parameters</a></td><td class="indexvalue">Onboard parameters base class </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classOnboard__parameters__T.html">Onboard_parameters_T&lt; N &gt;</a></td><td class="indexvalue">Onboard parameters </td></tr>
   <tr><td class="indexkey"><a class="el" href="classmat_1_1op.html">mat::op</a></td><td class="indexvalue">Perform operations on matrices </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structOnboard__parameters_1_1param__entry__t.html">Onboard_parameters::param_entry_t</a></td><td class="indexvalue">Structure of onboard parameter </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classPeriodic__telemetry.html">Periodic_telemetry</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classPeriodic__telemetry__T.html">Periodic_telemetry_T&lt; N &gt;</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="structpid__controller__conf__t.html">pid_controller_conf_t</a></td><td class="indexvalue">Configuration for PID controller </td></tr>
   <tr><td class="indexkey"><a class="el" href="structpid__controller__t.html">pid_controller_t</a></td><td class="indexvalue">PID controller </td></tr>
   <tr><td class="indexkey"><a class="el" href="classraytracing_1_1Plane.html">raytracing::Plane</a></td><td class="indexvalue"><a class="el" href="classraytracing_1_1Plane.html" title="Plane.">Plane</a> </td></tr>
@@ -267,6 +287,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classPwm.html">Pwm</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classPwm__avr32.html">Pwm_avr32</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="classPwm__chibios.html">Pwm_chibios</a></td><td class="indexvalue">Wrapper class for PWM using ChibiOS/HAL </td></tr>
   <tr><td class="indexkey"><a class="el" href="classPwm__dummy.html">Pwm_dummy</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classPwm__stm32.html">Pwm_stm32</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classPx4flow__i2c.html">Px4flow_i2c</a></td><td class="indexvalue"></td></tr>
@@ -281,13 +302,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="structremote__mode__t.html">remote_mode_t</a></td><td class="indexvalue">The structure of the remote mode </td></tr>
   <tr><td class="indexkey"><a class="el" href="structremote__t.html">remote_t</a></td><td class="indexvalue">The configuration structure of the remote </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSatellite.html">Satellite</a></td><td class="indexvalue"></td></tr>
-  <tr><td class="indexkey"><a class="el" href="classScheduler.html">Scheduler</a></td><td class="indexvalue"><a class="el" href="classScheduler.html" title="Scheduler.">Scheduler</a> </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classScheduler.html">Scheduler</a></td><td class="indexvalue"><a class="el" href="classScheduler.html" title="Scheduler base class.">Scheduler</a> base class </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classScheduler__T.html">Scheduler_T&lt; N &gt;</a></td><td class="indexvalue"><a class="el" href="classScheduler.html" title="Scheduler base class.">Scheduler</a> </td></tr>
   <tr><td class="indexkey"><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td class="indexvalue">Task entry </td></tr>
   <tr><td class="indexkey"><a class="el" href="structsd__spi__t.html">sd_spi_t</a></td><td class="indexvalue">Define the SD SPI structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSerial.html">Serial</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSerial__avr32.html">Serial_avr32</a></td><td class="indexvalue">Implementation of serial peripheral for avr32 </td></tr>
   <tr><td class="indexkey"><a class="el" href="structserial__avr32__conf__t.html">serial_avr32_conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structserial__avr32__gpio__map__t.html">serial_avr32_gpio_map_t</a></td><td class="indexvalue"><a class="el" href="classGpio.html">Gpio</a> map </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSerial__chibios.html">Serial_chibios</a></td><td class="indexvalue">Implementation of serial peripheral for avr32 </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSerial__dummy.html">Serial_dummy</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classSerial__linux__io.html">Serial_linux_io</a></td><td class="indexvalue">Implementation of serial peripheral for avr32 </td></tr>
   <tr><td class="indexkey"><a class="el" href="structserial__linux__io__conf__t.html">serial_linux_io_conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
@@ -318,8 +341,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="structsonar__i2cxl__conf__t.html">sonar_i2cxl_conf_t</a></td><td class="indexvalue">Configuration structure for <a class="el" href="classSonar__i2cxl.html">Sonar_i2cxl</a> </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSonar__sim.html">Sonar_sim</a></td><td class="indexvalue"><a class="el" href="classSimulation.html" title="Simulated dynamics of a quadcopter in diag configuration.">Simulation</a> for sonars </td></tr>
   <tr><td class="indexkey"><a class="el" href="structsonar__sim__conf__t.html">sonar_sim_conf_t</a></td><td class="indexvalue">Configuration structure for <a class="el" href="classSonar__sim.html" title="Simulation for sonars.">Sonar_sim</a> </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSparky__chibi.html">Sparky_chibi</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSparky__v2.html">Sparky_v2</a></td><td class="indexvalue">Boardsupport for the Sparky board </td></tr>
-  <tr><td class="indexkey"><a class="el" href="structsparky__v2__conf__t.html">sparky_v2_conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSpektrum__satellite.html">Spektrum_satellite</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classraytracing_1_1Sphere.html">raytracing::Sphere</a></td><td class="indexvalue"><a class="el" href="classraytracing_1_1Sphere.html" title="Sphere.">Sphere</a> </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSpi.html">Spi</a></td><td class="indexvalue"></td></tr>
@@ -327,6 +350,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="structspi__avr32__conf__t.html">spi_avr32_conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structspi__avr32__gpio__map__t.html">spi_avr32_gpio_map_t</a></td><td class="indexvalue"><a class="el" href="classGpio.html">Gpio</a> map </td></tr>
   <tr><td class="indexkey"><a class="el" href="structspi__buffer__t.html">spi_buffer_t</a></td><td class="indexvalue">The SPI buffer structure definition </td></tr>
+  <tr><td class="indexkey"><a class="el" href="classSpi__chibios.html">Spi_chibios</a></td><td class="indexvalue">SPI peripherals driver using CHibios/HAL </td></tr>
   <tr><td class="indexkey"><a class="el" href="classSpi__stm32.html">Spi_stm32</a></td><td class="indexvalue">Implementation of spi peripheral for stm32 </td></tr>
   <tr><td class="indexkey"><a class="el" href="structspi__stm32__conf__t.html">spi_stm32_conf_t</a></td><td class="indexvalue">Configuration structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structstabilisation__copter__conf__t.html">stabilisation_copter_conf_t</a></td><td class="indexvalue">Structure containing the configuration data </td></tr>
@@ -345,6 +369,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <tr><td class="indexkey"><a class="el" href="classState__display__megafly__rev4.html">State_display_megafly_rev4</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classState__display__sparky__v2.html">State_display_sparky_v2</a></td><td class="indexvalue"></td></tr>
   <tr><td class="indexkey"><a class="el" href="classState__machine.html">State_machine</a></td><td class="indexvalue">Defines the state machine structure </td></tr>
+  <tr><td class="indexkey"><a class="el" href="structPeriodic__telemetry_1_1telemetry__entry__t.html">Periodic_telemetry::telemetry_entry_t</a></td><td class="indexvalue">MAVLink message handler structure </td></tr>
   <tr><td class="indexkey"><a class="el" href="structthrust3D__command__t.html">thrust3D_command_t</a></td><td class="indexvalue">Thrust command type for vehicles with multi-lifting devices </td></tr>
   <tr><td class="indexkey"><a class="el" href="structthrust__command__t.html">thrust_command_t</a></td><td class="indexvalue">Thrust command type </td></tr>
   <tr><td class="indexkey"><a class="el" href="structtLED__DESCRIPTOR.html">tLED_DESCRIPTOR</a></td><td class="indexvalue">Structure describing LED hardware connections </td></tr>
@@ -411,7 +436,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:17 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:02 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

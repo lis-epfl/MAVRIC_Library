@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -177,25 +178,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>task_id
 : <a class="el" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7">Scheduler_task</a>
 </li>
+<li>tasks()
+: <a class="el" href="classScheduler.html#a317529117f23358269ce3d8db1cab912">Scheduler</a>
+, <a class="el" href="classScheduler__T.html#acb60b894ce910b03ffa8b0ace64b5c27">Scheduler_T&lt; N &gt;</a>
+</li>
+<li>telemetry
+: <a class="el" href="structMavlink__communication__T_1_1conf__t.html#a860e97706c54c514a72808794d3ed107">Mavlink_communication_T&lt; N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM &gt;::conf_t</a>
+</li>
 <li>telemetry_down_stream
 : <a class="el" href="structaudio__t.html#a76cc0afbf7732f7471c0d82418534e31">audio_t</a>
 </li>
+<li>telemetry_function_t
+: <a class="el" href="classPeriodic__telemetry.html#ab1bf3e1cc481736d50669f9dc939c2f7">Periodic_telemetry</a>
+</li>
+<li>telemetry_module_t
+: <a class="el" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b">Periodic_telemetry</a>
+</li>
 <li>temperature()
-: <a class="el" href="classAccelerometer__sim.html#a7a0231d87f1abc6799493ea1d24de46d">Accelerometer_sim</a>
-, <a class="el" href="classGyroscope__sim.html#a5e3b5d299757c135e52d10d4d486532d">Gyroscope_sim</a>
-, <a class="el" href="classMagnetometer__sim.html#a5bb70130a3bb488cb90a935c74c9495c">Magnetometer_sim</a>
-, <a class="el" href="structgyroscope__t.html#aba7959ef2e0ad2983dc80be17a2e9ab1">gyroscope_t</a>
-, <a class="el" href="classAccelerometer.html#a790335e89dccd1f4ef7c969b6fe936e3">Accelerometer</a>
-, <a class="el" href="classBarometer.html#ac4ade496a58afa9317ed9921a41edf95">Barometer</a>
+: <a class="el" href="classBarometer__MS5611.html#aad65bbe4723644f0f0f213bca6b50579">Barometer_MS5611</a>
 , <a class="el" href="classGyroscope.html#a7806b6b75b573e1e2089812c1dfd2fe5">Gyroscope</a>
 , <a class="el" href="classHmc5883l.html#a8f2a073ab73aa34a4e722c073453ef07">Hmc5883l</a>
 , <a class="el" href="classLsm330dlc.html#a30c7651e923de8110c6b90c363df024a">Lsm330dlc</a>
 , <a class="el" href="classMagnetometer.html#a25e1c2f30c05068b04bc295396f493e1">Magnetometer</a>
 , <a class="el" href="classMpu__6050.html#a9e74ce60f3a17e402bfd276a8576126e">Mpu_6050</a>
 , <a class="el" href="classMpu__9250.html#afe54c7c9ce067a8b5c9336cc43fa3609">Mpu_9250</a>
-</li>
-<li>temperature_
-: <a class="el" href="classBarometer.html#a0dad3c62fa72b419e53b8e7215b45054">Barometer</a>
+, <a class="el" href="classAccelerometer__sim.html#a7a0231d87f1abc6799493ea1d24de46d">Accelerometer_sim</a>
+, <a class="el" href="classBarometer__sim.html#a70fb6c0fdde48cbf3d5b0ada1041112b">Barometer_sim</a>
+, <a class="el" href="classGyroscope__sim.html#a5e3b5d299757c135e52d10d4d486532d">Gyroscope_sim</a>
+, <a class="el" href="classMagnetometer__sim.html#a5bb70130a3bb488cb90a935c74c9495c">Magnetometer_sim</a>
+, <a class="el" href="structgyroscope__t.html#aba7959ef2e0ad2983dc80be17a2e9ab1">gyroscope_t</a>
+, <a class="el" href="classAccelerometer.html#a790335e89dccd1f4ef7c969b6fe936e3">Accelerometer</a>
+, <a class="el" href="classBarometer.html#a6e087f5af86788588039474cc8c1d389">Barometer</a>
+, <a class="el" href="classBarometer__BMP085.html#aad2f82324ee2cd7f9625e2c79550994b">Barometer_BMP085</a>
 </li>
 <li>tenbit_config
 : <a class="el" href="structi2c__stm32__conf__t.html#abfadbc23b5c6967fa61ad9ce7fedb9b0">i2c_stm32_conf_t</a>
@@ -238,9 +252,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structstabiliser__t.html#afcb61161c816083a8e0fca872c6fd7f7">stabiliser_t</a>
 </li>
 <li>thrust_hover_point
-: <a class="el" href="structstabilisation__copter__t.html#a1ab4ae397fdca689e35e1293487d2e08">stabilisation_copter_t</a>
-, <a class="el" href="structstabilisation__copter__conf__t.html#aec1572d3c724bc14413ab7d7def643e6">stabilisation_copter_conf_t</a>
+: <a class="el" href="structstabilisation__copter__conf__t.html#aec1572d3c724bc14413ab7d7def643e6">stabilisation_copter_conf_t</a>
 , <a class="el" href="structVelocity__controller__copter_1_1conf__t.html#aed99dc178a1ea1a5e09f65a374367608">Velocity_controller_copter::conf_t</a>
+, <a class="el" href="structstabilisation__copter__t.html#a1ab4ae397fdca689e35e1293487d2e08">stabilisation_copter_t</a>
 </li>
 <li>time_gps
 : <a class="el" href="structgps__t.html#af12bf194d20a397f31976bf06602d45b">gps_t</a>
@@ -258,8 +272,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structubx__nav__solution__t.html#a8a9544fcb51eee89ba52e44d27425be1">ubx_nav_solution_t</a>
 </li>
 <li>time_ref
-: <a class="el" href="structubx__cfg__rate__t.html#a120ca692471a1748536ee86db55b028f">ubx_cfg_rate_t</a>
-, <a class="el" href="structubx__cfg__tp__t.html#a68ae1554a2b9dc4b161c694c4909fdf7">ubx_cfg_tp_t</a>
+: <a class="el" href="structubx__cfg__tp__t.html#a68ae1554a2b9dc4b161c694c4909fdf7">ubx_cfg_tp_t</a>
+, <a class="el" href="structubx__cfg__rate__t.html#a120ca692471a1748536ee86db55b028f">ubx_cfg_rate_t</a>
 </li>
 <li>time_s
 : <a class="el" href="structqfilter__t.html#a2c3a8057cd4df008ea3a5a26e3200845">qfilter_t</a>
@@ -280,8 +294,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structPwm__stm32_1_1config__t.html#aa41df55b498720270037a0f9d2483117">Pwm_stm32::config_t</a>
 </li>
 <li>timeref
-: <a class="el" href="structubx__cfg__nav__rate__t.html#a7c28d25350c51ee40ef5bb8758ba2970">ubx_cfg_nav_rate_t</a>
-, <a class="el" href="structubx__cfg__nav__rate__send__t.html#a255e62178d8ae8983514ac63995e08b4">ubx_cfg_nav_rate_send_t</a>
+: <a class="el" href="structubx__cfg__nav__rate__send__t.html#a255e62178d8ae8983514ac63995e08b4">ubx_cfg_nav_rate_send_t</a>
+, <a class="el" href="structubx__cfg__nav__rate__t.html#a7c28d25350c51ee40ef5bb8758ba2970">ubx_cfg_nav_rate_t</a>
 </li>
 <li>timing_mode
 : <a class="el" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9">Scheduler_task</a>
@@ -290,27 +304,31 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task</a>
 </li>
 <li>toggle()
-: <a class="el" href="classGpio__avr32.html#a71413b95cc6763c11d221681a91514d7">Gpio_avr32</a>
-, <a class="el" href="classLed.html#abbd7d3886b09f62466969cc20c6daccc">Led</a>
-, <a class="el" href="classLed__dummy.html#a54213cceb5eeba6bdf6ab05c464a0289">Led_dummy</a>
+: <a class="el" href="classLed__dummy.html#a54213cceb5eeba6bdf6ab05c464a0289">Led_dummy</a>
+, <a class="el" href="classGpio__stm32.html#a8b4c85ba139874c2a9b66a5d39094f20">Gpio_stm32</a>
 , <a class="el" href="classLed__avr32.html#aee36f76e3e1a99e286a082ffbc8fdc3b">Led_avr32</a>
 , <a class="el" href="classGpio.html#a268827d4b3812e001f3df005374c7007">Gpio</a>
-, <a class="el" href="classLed__gpio.html#a18ee7353611989c9a7000f559cf0e26c">Led_gpio</a>
 , <a class="el" href="classGpio__dummy.html#a678a9e683d4bdc8667367f597fbc32ff">Gpio_dummy</a>
-, <a class="el" href="classGpio__stm32.html#a8b4c85ba139874c2a9b66a5d39094f20">Gpio_stm32</a>
+, <a class="el" href="classLed__gpio.html#a18ee7353611989c9a7000f559cf0e26c">Led_gpio</a>
+, <a class="el" href="classGpio__avr32.html#a71413b95cc6763c11d221681a91514d7">Gpio_avr32</a>
+, <a class="el" href="classGpio__chibios.html#a8a2bf51948de204bed3cfb07752657d5">Gpio_chibios</a>
+, <a class="el" href="classLed.html#abbd7d3886b09f62466969cc20c6daccc">Led</a>
+</li>
+<li>toggle_telemetry_stream()
+: <a class="el" href="classPeriodic__telemetry.html#a6a836cbe1f379b50ec28597779301b3c">Periodic_telemetry</a>
 </li>
 <li>torque
 : <a class="el" href="structcommand__t.html#ad37d49bf12c3a50ffd93545adf044185">command_t</a>
 </li>
 <li>torque_command
-: <a class="el" href="structstabilisation__wing__t.html#a3ea7c437f57242367710c3dea6f68689">stabilisation_wing_t</a>
-, <a class="el" href="structservos__mix__quadcotper__diag__t.html#a4fd7dafe27c8353e38b35c1334c5100c">servos_mix_quadcotper_diag_t</a>
-, <a class="el" href="structservo__mix__ywing__t.html#a10627d24ea05a7b1330f6b81f72c4b03">servo_mix_ywing_t</a>
-, <a class="el" href="structstabilisation__copter__t.html#a0757dde99d823faa1050c87933d94505">stabilisation_copter_t</a>
-, <a class="el" href="structattitude__controller__p2__t.html#ae13d758cb3d4d484bd495b80b859c52d">attitude_controller_p2_t</a>
-, <a class="el" href="structservo__mix__birotor__t.html#a6f90c5fdaa6a4f43a0d1446433419c34">servo_mix_birotor_t</a>
-, <a class="el" href="structservos__mix__quadcotper__cross__t.html#a61da6189f0bd39a15d7ff247da76d53d">servos_mix_quadcotper_cross_t</a>
+: <a class="el" href="structattitude__controller__p2__t.html#ae13d758cb3d4d484bd495b80b859c52d">attitude_controller_p2_t</a>
 , <a class="el" href="structservos__mix__wing__t.html#a61e6d9913c905de0d4b249b2cc1f5085">servos_mix_wing_t</a>
+, <a class="el" href="structstabilisation__wing__t.html#a3ea7c437f57242367710c3dea6f68689">stabilisation_wing_t</a>
+, <a class="el" href="structservos__mix__quadcotper__cross__t.html#a61da6189f0bd39a15d7ff247da76d53d">servos_mix_quadcotper_cross_t</a>
+, <a class="el" href="structstabilisation__copter__t.html#a0757dde99d823faa1050c87933d94505">stabilisation_copter_t</a>
+, <a class="el" href="structservos__mix__quadcotper__diag__t.html#a4fd7dafe27c8353e38b35c1334c5100c">servos_mix_quadcotper_diag_t</a>
+, <a class="el" href="structservo__mix__birotor__t.html#a6f90c5fdaa6a4f43a0d1446433419c34">servo_mix_birotor_t</a>
+, <a class="el" href="structservo__mix__ywing__t.html#a10627d24ea05a7b1330f6b81f72c4b03">servo_mix_ywing_t</a>
 </li>
 <li>total_mass
 : <a class="el" href="structdynamic__model__quad__diag__conf__t.html#ad2c0a4ede711b350096bcbc6187113b5">dynamic_model_quad_diag_conf_t</a>
@@ -328,9 +346,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structspi__buffer__t.html#aacf1f53fc0f38ff833996149f6e4e601">spi_buffer_t</a>
 </li>
 <li>transfer()
-: <a class="el" href="classSpi__avr32.html#a9b77a081d6124525f087ad1c3a14be7d">Spi_avr32</a>
-, <a class="el" href="classSpi.html#aba844173351a71c52e478ab7b40127fb">Spi</a>
+: <a class="el" href="classSpi.html#aba844173351a71c52e478ab7b40127fb">Spi</a>
+, <a class="el" href="classSpi__chibios.html#a7a61f61c5ea55157ff6f07f74164860b">Spi_chibios</a>
+, <a class="el" href="classI2c.html#a5a8fb204c7af27e971b74112a1ee16f2">I2c</a>
+, <a class="el" href="classI2c__chibios.html#a0e9ee0058e9658f43af61b432ebed962">I2c_chibios</a>
 , <a class="el" href="classSpi__stm32.html#a286eb8438b982cd74c1b2267c697a556">Spi_stm32</a>
+, <a class="el" href="classSpi__avr32.html#a9b77a081d6124525f087ad1c3a14be7d">Spi_avr32</a>
 </li>
 <li>transmission_in_progress
 : <a class="el" href="structspi__buffer__t.html#ad0e4074a63e0751cfea8401265a28d02">spi_buffer_t</a>
@@ -353,6 +374,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>tvel
 : <a class="el" href="structcontrol__command__t.html#acf43b50d4812d42025952296574823cb">control_command_t</a>
+</li>
+<li>tx_irq_handler()
+: <a class="el" href="classSerial__chibios.html#aa23cdaec8e0237983e0bd6f5e602b6ec">Serial_chibios</a>
 </li>
 <li>tx_ready
 : <a class="el" href="structubx__cfg__prt__t.html#a1696f752e783b7bcb9515a09270e8952">ubx_cfg_prt_t</a>
@@ -381,7 +405,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:17 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:02 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classPwm.html#ad37f30f6859c8c9e988a5e4d0ddbdb90" title="Set pulse width." alt="" coords="511,28,684,57"/>
+<area shape="rect" id="node5" href="$classPwm.html#a951e5cde686841fefc41689a690e6cf1" title="Set pulse period." alt="" coords="305,26,447,56"/>
+<area shape="rect" id="node7" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="136,77,243,106"/>
+<area shape="rect" id="node10" href="$classServo.html#ad88911ece9b3822f8cc7499fe2b0a12a" title="Set PWM line according to the servo value." alt="" coords="291,80,461,109"/>
+</map>

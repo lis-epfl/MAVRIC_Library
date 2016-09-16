@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -82,16 +83,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Mavlink_message_handler Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="Mavlink_message_handler" -->
-<p>Main message handler structure.  
+<p>Message handler base class.  
  <a href="classMavlink__message__handler.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="mavlink__message__handler_8hpp_source.html">mavlink_message_handler.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Mavlink_message_handler:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__message__handler__inherit__graph.png" border="0" usemap="#Mavlink__message__handler_inherit__map" alt="Inheritance graph"/></div>
+<map name="Mavlink__message__handler_inherit__map" id="Mavlink__message__handler_inherit__map">
+<area shape="rect" id="node3" href="classMavlink__message__handler__T.html" title="Message handler." alt="" coords="5,312,248,467"/><area shape="rect" id="node5" href="classMavlink__message__handler__T.html" title="{Mavlink_message_handler_T\&lt; N_MSG_CB, N_CMD_CB \&gt;\n||+ Mavlink_message_handler_T()\l# msg_callback_max_count()\l# cmd_callback_max_count()\l# msg_callback_list()\l# cmd_callback_list()\l}" alt="" coords="272,312,643,467"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classMavlink__message__handler-members.html">List of all members.</a></p>
 <table class="memberdecls">
@@ -127,14 +136,26 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function, handles the incoming message according to the registered message and command callbacks.  <a href="#a1995272754096f600a80c1e188ac7953"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structMavlink__message__handler_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__message__handler.html#aeec4dbd15986df88727acb882fcb0742">default_config</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration.  <a href="#aeec4dbd15986df88727acb882fcb0742"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d">msg_default_dbg</a> (mavlink_message_t *msg)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy message callback for debug purpose.  <a href="#ab73889a37846fd1f3f39d8540ca7d03d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16">cmd_default_dbg</a> (mavlink_command_long_t *cmd)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Dummy command callback for debug purpose.  <a href="#a3593f720b33af6545dffb3d63bd82b16"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928">msg_callback_max_count</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get maximum number of message callbacks.  <a href="#a50e5155200109a40a5030781cbdb1928"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b">cmd_callback_max_count</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get maximum number of command callbacks.  <a href="#af88012defb1eec732945ae19c498850b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structMavlink__message__handler_1_1msg__callback__t.html">msg_callback_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc">msg_callback_list</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of message callbacks.  <a href="#aa76cb2bed5e2212176570c3011209abc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structMavlink__message__handler_1_1cmd__callback__t.html">cmd_callback_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45">cmd_callback_list</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of command callbacks.  <a href="#a1588d09f61e258dd8a7f5c1e8fb92e45"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Main message handler structure. </p>
-<p>msg_callback_set and cmd_callback_set are implemented as pointer because their memory will be allocated during initialisation </p>
+<div class="textblock"><p>Message handler base class. </p>
+<p>This class is abstract and does not contains the lists of handlers, use the child class <a class="el" href="classMavlink__message__handler__T.html" title="Message handler.">Mavlink_message_handler_T</a> </p>
 </div><hr/><h2>Member Typedef Documentation</h2>
 <a class="anchor" id="aeaf031bfd583498b1f6cb2aa79fc1ac0"></a><!-- doxytag: member="Mavlink_message_handler::handling_module_struct_t" ref="aeaf031bfd583498b1f6cb2aa79fc1ac0" args="" -->
 <div class="memitem">
@@ -232,11 +253,20 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the command callback was correctly added, false otherwise </dd></dl>
 
 <p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__message__handler_a01aac22ef067cbcb5d48a095b6ddd2c1_cgraph.png" border="0" usemap="#classMavlink__message__handler_a01aac22ef067cbcb5d48a095b6ddd2c1_cgraph" alt=""/></div>
+<map name="classMavlink__message__handler_a01aac22ef067cbcb5d48a095b6ddd2c1_cgraph" id="classMavlink__message__handler_a01aac22ef067cbcb5d48a095b6ddd2c1_cgraph">
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b" title="Get maximum number of command callbacks." alt="" coords="348,5,681,35"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45" title="Get list of command callbacks." alt="" coords="371,59,659,88"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__message__handler_a01aac22ef067cbcb5d48a095b6ddd2c1_icgraph.png" border="0" usemap="#classMavlink__message__handler_a01aac22ef067cbcb5d48a095b6ddd2c1_icgraph" alt=""/></div>
 <map name="classMavlink__message__handler_a01aac22ef067cbcb5d48a095b6ddd2c1_icgraph" id="classMavlink__message__handler_a01aac22ef067cbcb5d48a095b6ddd2c1_icgraph">
-<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="347,5,683,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#a601e8ce683683f2dd9a70c9abdbc4cb6" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="379,59,651,88"/></map>
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="347,5,683,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="379,59,651,88"/></map>
 </div>
 </p>
 
@@ -268,11 +298,84 @@ Here is the caller graph for this function:</div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the message callback was correctly added, false otherwise </dd></dl>
 
 <p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__message__handler_a8a8ff7d63f0b2ce0c9757dfc584ec38c_cgraph.png" border="0" usemap="#classMavlink__message__handler_a8a8ff7d63f0b2ce0c9757dfc584ec38c_cgraph" alt=""/></div>
+<map name="classMavlink__message__handler_a8a8ff7d63f0b2ce0c9757dfc584ec38c_cgraph" id="classMavlink__message__handler_a8a8ff7d63f0b2ce0c9757dfc584ec38c_cgraph">
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="348,5,681,35"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="371,59,659,88"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__message__handler_a8a8ff7d63f0b2ce0c9757dfc584ec38c_icgraph.png" border="0" usemap="#classMavlink__message__handler_a8a8ff7d63f0b2ce0c9757dfc584ec38c_icgraph" alt=""/></div>
 <map name="classMavlink__message__handler_a8a8ff7d63f0b2ce0c9757dfc584ec38c_icgraph" id="classMavlink__message__handler_a8a8ff7d63f0b2ce0c9757dfc584ec38c_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#afd98f83687a03493ef1cf2fb3e3e3a34" title="Initialisation of the module MAVLink communication." alt="" coords="360,5,669,35"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="347,59,683,88"/><area shape="rect" id="node7" href="classOnboard__parameters.html#a601e8ce683683f2dd9a70c9abdbc4cb6" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="379,112,651,141"/><area shape="rect" id="node9" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="456,165,573,195"/><area shape="rect" id="node13" href="classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="443,219,587,248"/><area shape="rect" id="node11" href="classLEQuad__dronedome.html#a83f8b00518b8a1f5e7f00668e431ef5d" title="Constructor." alt="" coords="731,192,997,221"/></map>
+<area shape="rect" id="node3" href="classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="348,5,687,35"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="349,59,685,88"/><area shape="rect" id="node7" href="classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="381,112,653,141"/><area shape="rect" id="node9" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="459,165,576,195"/><area shape="rect" id="node13" href="classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="445,219,589,248"/><area shape="rect" id="node11" href="classLEQuad__dronedome.html#a83f8b00518b8a1f5e7f00668e431ef5d" title="Constructor." alt="" coords="736,192,1003,221"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a1588d09f61e258dd8a7f5c1e8fb92e45"></a><!-- doxytag: member="Mavlink_message_handler::cmd_callback_list" ref="a1588d09f61e258dd8a7f5c1e8fb92e45" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structMavlink__message__handler_1_1cmd__callback__t.html">cmd_callback_t</a>* <a class="el" href="classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45">Mavlink_message_handler::cmd_callback_list</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get list of command callbacks. </p>
+<p>To be overriden by child class</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>list </dd></dl>
+
+<p>Implemented in <a class="el" href="classMavlink__message__handler__T.html#a5ee3dd219ee3ff9c0d6a8221beb45185">Mavlink_message_handler_T&lt; N, P &gt;</a>, and <a class="el" href="classMavlink__message__handler__T.html#a5ee3dd219ee3ff9c0d6a8221beb45185">Mavlink_message_handler_T&lt; N_MSG_CB, N_CMD_CB &gt;</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__message__handler_a1588d09f61e258dd8a7f5c1e8fb92e45_icgraph.png" border="0" usemap="#classMavlink__message__handler_a1588d09f61e258dd8a7f5c1e8fb92e45_icgraph" alt=""/></div>
+<map name="classMavlink__message__handler_a1588d09f61e258dd8a7f5c1e8fb92e45_icgraph" id="classMavlink__message__handler_a1588d09f61e258dd8a7f5c1e8fb92e45_icgraph">
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="343,59,633,88"/><area shape="rect" id="node9" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="375,112,601,141"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="683,5,1019,35"/><area shape="rect" id="node7" href="classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="715,59,987,88"/><area shape="rect" id="node11" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="739,112,963,141"/><area shape="rect" id="node13" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1067,112,1323,141"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="af88012defb1eec732945ae19c498850b"></a><!-- doxytag: member="Mavlink_message_handler::cmd_callback_max_count" ref="af88012defb1eec732945ae19c498850b" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint32_t <a class="el" href="classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b">Mavlink_message_handler::cmd_callback_max_count</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get maximum number of command callbacks. </p>
+<p>To be overriden by child class</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Maximum number of command callbacks </dd></dl>
+
+<p>Implemented in <a class="el" href="classMavlink__message__handler__T.html#a176b7fc7494ed5ee8209fcf0ad3371a7">Mavlink_message_handler_T&lt; N, P &gt;</a>, and <a class="el" href="classMavlink__message__handler__T.html#a176b7fc7494ed5ee8209fcf0ad3371a7">Mavlink_message_handler_T&lt; N_MSG_CB, N_CMD_CB &gt;</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__message__handler_af88012defb1eec732945ae19c498850b_icgraph.png" border="0" usemap="#classMavlink__message__handler_af88012defb1eec732945ae19c498850b_icgraph" alt=""/></div>
+<map name="classMavlink__message__handler_af88012defb1eec732945ae19c498850b_icgraph" id="classMavlink__message__handler_af88012defb1eec732945ae19c498850b_icgraph">
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="391,32,681,61"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="731,5,1067,35"/><area shape="rect" id="node7" href="classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="763,59,1035,88"/></map>
 </div>
 </p>
 
@@ -307,7 +410,91 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__message__handler_a3593f720b33af6545dffb3d63bd82b16_icgraph.png" border="0" usemap="#classMavlink__message__handler_a3593f720b33af6545dffb3d63bd82b16_icgraph" alt=""/></div>
 <map name="classMavlink__message__handler_a3593f720b33af6545dffb3d63bd82b16_icgraph" id="classMavlink__message__handler_a3593f720b33af6545dffb3d63bd82b16_icgraph">
-<area shape="rect" id="node3" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="336,5,563,35"/><area shape="rect" id="node5" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="612,5,820,35"/></map>
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="336,5,563,35"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="611,5,835,35"/><area shape="rect" id="node7" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="883,5,1139,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="aeec4dbd15986df88727acb882fcb0742"></a><!-- doxytag: member="Mavlink_message_handler::default_config" ref="aeec4dbd15986df88727acb882fcb0742" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structMavlink__message__handler_1_1conf__t.html">Mavlink_message_handler::conf_t</a> <a class="el" href="classMavlink__message__handler.html#aeec4dbd15986df88727acb882fcb0742">Mavlink_message_handler::default_config</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Default configuration. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Config </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa76cb2bed5e2212176570c3011209abc"></a><!-- doxytag: member="Mavlink_message_handler::msg_callback_list" ref="aa76cb2bed5e2212176570c3011209abc" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structMavlink__message__handler_1_1msg__callback__t.html">msg_callback_t</a>* <a class="el" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc">Mavlink_message_handler::msg_callback_list</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get list of message callbacks. </p>
+<p>To be overriden by child class</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>list </dd></dl>
+
+<p>Implemented in <a class="el" href="classMavlink__message__handler__T.html#a80c09f079f0b6e220ff0d4c34ecfd82f">Mavlink_message_handler_T&lt; N, P &gt;</a>, and <a class="el" href="classMavlink__message__handler__T.html#a80c09f079f0b6e220ff0d4c34ecfd82f">Mavlink_message_handler_T&lt; N_MSG_CB, N_CMD_CB &gt;</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__message__handler_aa76cb2bed5e2212176570c3011209abc_icgraph.png" border="0" usemap="#classMavlink__message__handler_aa76cb2bed5e2212176570c3011209abc_icgraph" alt=""/></div>
+<map name="classMavlink__message__handler_aa76cb2bed5e2212176570c3011209abc_icgraph" id="classMavlink__message__handler_aa76cb2bed5e2212176570c3011209abc_icgraph">
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="343,139,633,168"/><area shape="rect" id="node18" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="375,245,601,275"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="684,5,1023,35"/><area shape="rect" id="node7" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="685,59,1021,88"/><area shape="rect" id="node9" href="classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="717,112,989,141"/><area shape="rect" id="node11" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="795,165,912,195"/><area shape="rect" id="node15" href="classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="781,219,925,248"/><area shape="rect" id="node13" href="classLEQuad__dronedome.html#a83f8b00518b8a1f5e7f00668e431ef5d" title="Constructor." alt="" coords="1072,192,1339,221"/><area shape="rect" id="node20" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="741,272,965,301"/><area shape="rect" id="node22" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1077,272,1333,301"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a50e5155200109a40a5030781cbdb1928"></a><!-- doxytag: member="Mavlink_message_handler::msg_callback_max_count" ref="a50e5155200109a40a5030781cbdb1928" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint32_t <a class="el" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928">Mavlink_message_handler::msg_callback_max_count</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get maximum number of message callbacks. </p>
+<p>To be overriden by child class</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Maximum number of message callbacks </dd></dl>
+
+<p>Implemented in <a class="el" href="classMavlink__message__handler__T.html#a3a6cb7b4a52d5846ef7ff780b92bb714">Mavlink_message_handler_T&lt; N, P &gt;</a>, and <a class="el" href="classMavlink__message__handler__T.html#a3a6cb7b4a52d5846ef7ff780b92bb714">Mavlink_message_handler_T&lt; N_MSG_CB, N_CMD_CB &gt;</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__message__handler_a50e5155200109a40a5030781cbdb1928_icgraph.png" border="0" usemap="#classMavlink__message__handler_a50e5155200109a40a5030781cbdb1928_icgraph" alt=""/></div>
+<map name="classMavlink__message__handler_a50e5155200109a40a5030781cbdb1928_icgraph" id="classMavlink__message__handler_a50e5155200109a40a5030781cbdb1928_icgraph">
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="391,112,681,141"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="732,5,1071,35"/><area shape="rect" id="node7" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="733,59,1069,88"/><area shape="rect" id="node9" href="classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="765,112,1037,141"/><area shape="rect" id="node11" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="843,165,960,195"/><area shape="rect" id="node15" href="classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="829,219,973,248"/><area shape="rect" id="node13" href="classLEQuad__dronedome.html#a83f8b00518b8a1f5e7f00668e431ef5d" title="Constructor." alt="" coords="1120,192,1387,221"/></map>
 </div>
 </p>
 
@@ -342,7 +529,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__message__handler_ab73889a37846fd1f3f39d8540ca7d03d_icgraph.png" border="0" usemap="#classMavlink__message__handler_ab73889a37846fd1f3f39d8540ca7d03d_icgraph" alt=""/></div>
 <map name="classMavlink__message__handler_ab73889a37846fd1f3f39d8540ca7d03d_icgraph" id="classMavlink__message__handler_ab73889a37846fd1f3f39d8540ca7d03d_icgraph">
-<area shape="rect" id="node3" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="336,5,563,35"/><area shape="rect" id="node5" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="612,5,820,35"/></map>
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="336,5,563,35"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="611,5,835,35"/><area shape="rect" id="node7" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="883,5,1139,35"/></map>
 </div>
 </p>
 
@@ -376,7 +563,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__message__handler_a1995272754096f600a80c1e188ac7953_cgraph.png" border="0" usemap="#classMavlink__message__handler_a1995272754096f600a80c1e188ac7953_cgraph" alt=""/></div>
 <map name="classMavlink__message__handler_a1995272754096f600a80c1e188ac7953_cgraph" id="classMavlink__message__handler_a1995272754096f600a80c1e188ac7953_cgraph">
-<area shape="rect" id="node3" href="classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16" title="Dummy command callback for debug purpose." alt="" coords="280,5,563,35"/><area shape="rect" id="node5" href="classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream." alt="" coords="345,59,497,88"/><area shape="rect" id="node7" href="classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream." alt="" coords="340,112,503,141"/><area shape="rect" id="node9" href="classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="347,165,496,195"/><area shape="rect" id="node15" href="classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d" title="Dummy message callback for debug purpose." alt="" coords="280,219,563,248"/><area shape="rect" id="node11" href="classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="611,139,725,168"/><area shape="rect" id="node13" href="classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="623,192,713,221"/></map>
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16" title="Dummy command callback for debug purpose." alt="" coords="283,5,565,35"/><area shape="rect" id="node5" href="classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream." alt="" coords="348,59,500,88"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45" title="Get list of command callbacks." alt="" coords="280,112,568,141"/><area shape="rect" id="node9" href="classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream." alt="" coords="343,165,505,195"/><area shape="rect" id="node11" href="classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="349,219,499,248"/><area shape="rect" id="node17" href="classMavlink__message__handler.html#ab73889a37846fd1f3f39d8540ca7d03d" title="Dummy message callback for debug purpose." alt="" coords="283,272,565,301"/><area shape="rect" id="node19" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="280,325,568,355"/><area shape="rect" id="node13" href="classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="616,192,731,221"/><area shape="rect" id="node15" href="classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="628,245,719,275"/></map>
 </div>
 </p>
 
@@ -385,7 +572,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__message__handler_a1995272754096f600a80c1e188ac7953_icgraph.png" border="0" usemap="#classMavlink__message__handler_a1995272754096f600a80c1e188ac7953_icgraph" alt=""/></div>
 <map name="classMavlink__message__handler_a1995272754096f600a80c1e188ac7953_icgraph" id="classMavlink__message__handler_a1995272754096f600a80c1e188ac7953_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication.html#ab6186477bf1cafa40428c17cb427c21c" title="Run task scheduler update if the buffer is empty." alt="" coords="281,5,489,35"/></map>
+<area shape="rect" id="node3" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="280,5,504,35"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="552,5,808,35"/></map>
 </div>
 </p>
 
@@ -413,7 +600,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

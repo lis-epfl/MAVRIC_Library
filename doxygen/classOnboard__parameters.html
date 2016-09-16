@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -80,49 +81,72 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Onboard_parameters Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="Onboard_parameters" -->
+<p>Onboard parameters base class.  
+ <a href="classOnboard__parameters.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="onboard__parameters_8hpp_source.html">onboard_parameters.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Onboard_parameters:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOnboard__parameters__inherit__graph.png" border="0" usemap="#Onboard__parameters_inherit__map" alt="Inheritance graph"/></div>
+<map name="Onboard__parameters_inherit__map" id="Onboard__parameters_inherit__map">
+<area shape="rect" id="node3" href="classOnboard__parameters__T.html" title="Onboard parameters." alt="" coords="5,296,197,416"/><area shape="rect" id="node5" href="classOnboard__parameters__T.html" title="{Onboard_parameters_T\&lt; N_PARAM \&gt;\n||+ Onboard_parameters_T()\l# max_count()\l# parameters()\l}" alt="" coords="221,296,467,416"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+
 <p><a href="classOnboard__parameters-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOnboard__parameters_1_1conf__t.html">conf_t</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration for the module onboard parameters.  <a href="structOnboard__parameters_1_1conf__t.html#details">More...</a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>param_entry_t</b></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure of onboard parameter. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structOnboard__parameters_1_1param__entry__t.html">param_entry_t</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure of onboard parameter.  <a href="structOnboard__parameters_1_1param__entry__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a601e8ce683683f2dd9a70c9abdbc4cb6">Onboard_parameters</a> (<a class="el" href="classScheduler.html">Scheduler</a> &amp;scheduler, <a class="el" href="classFile.html">File</a> &amp;file, const <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> &amp;message_handler, const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, const <a class="el" href="structOnboard__parameters_1_1conf__t.html">conf_t</a> &amp;config)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0.  <a href="#a601e8ce683683f2dd9a70c9abdbc4cb6"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#aa0a3891ed5b2582145480caa628361a7">add_parameter_uint32</a> (uint32_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Register parameter in the internal parameter list that gets published to MAVlink.  <a href="#aa0a3891ed5b2582145480caa628361a7"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#af4e76391a928375fd5dee7b316904f75">add_parameter_int32</a> (int32_t *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Register parameter in the internal parameter list that gets published to MAVlink.  <a href="#af4e76391a928375fd5dee7b316904f75"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a096c010f86e1d288a4d551d371757876">add_parameter_float</a> (float *val, const char *param_name)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter in the internal parameter list that gets published to MAVlink.  <a href="#a096c010f86e1d288a4d551d371757876"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#aa7bfe2d22b1ebe61d7ba328415cc7709">read_parameters_from_storage</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read onboard parameters from the file storage.  <a href="#aa7bfe2d22b1ebe61d7ba328415cc7709"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a54c5735dc62ffeed8b41238d03296c99">write_parameters_to_storage</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Write onboard parameters to the file storage.  <a href="#a54c5735dc62ffeed8b41238d03296c99"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331">Onboard_parameters</a> (<a class="el" href="classFile.html">File</a> &amp;file, const <a class="el" href="classState.html">State</a> &amp;state, <a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> &amp;message_handler, const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, const <a class="el" href="structOnboard__parameters_1_1conf__t.html">conf_t</a> &amp;config)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0.  <a href="#a97d633ccd3799d614a1d236df39e5331"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a8f0055a6ff98040b5f28b9a9dfed1860">add</a> (uint32_t *val, const char *param_name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Register parameter in the internal parameter list that gets published to MAVlink.  <a href="#a8f0055a6ff98040b5f28b9a9dfed1860"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#afa07ca9b16ed15f97e3cf78c82e2f49d">add</a> (int32_t *val, const char *param_name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Register parameter in the internal parameter list that gets published to MAVlink.  <a href="#afa07ca9b16ed15f97e3cf78c82e2f49d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#ace1760ea319749db739dca18500cc5a5">add</a> (float *val, const char *param_name)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers parameter in the internal parameter list that gets published to MAVlink.  <a href="#ace1760ea319749db739dca18500cc5a5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a7f269933f48766f3d6ba32343a2eaf5f">read_from_storage</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read onboard parameters from the file storage.  <a href="#a7f269933f48766f3d6ba32343a2eaf5f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a67802790b17200b7eaf376641251666f">write_to_storage</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Write onboard parameters to the file storage.  <a href="#a67802790b17200b7eaf376641251666f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a93c99b0746cfcb6f8922e06a24325b31">send_first_scheduled_parameter</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Searches through the list of parameters, and send only the first scheduled parameter.  <a href="#a93c99b0746cfcb6f8922e06a24325b31"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structOnboard__parameters_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#ac9217d77a519ff41340bc99f9524e6bf">default_config</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration.  <a href="#ac9217d77a519ff41340bc99f9524e6bf"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#a494ab8249084ce9057eff0936ff692eb">max_count</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get maximum number of parameters.  <a href="#a494ab8249084ce9057eff0936ff692eb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structOnboard__parameters_1_1param__entry__t.html">param_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d">parameters</a> (void)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get pointer to the list of parameters.  <a href="#acfa1a8bf167caa28f86907cb6d8de33d"></a><br/></td></tr>
 </table>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a601e8ce683683f2dd9a70c9abdbc4cb6"></a><!-- doxytag: member="Onboard_parameters::Onboard_parameters" ref="a601e8ce683683f2dd9a70c9abdbc4cb6" args="(Scheduler &amp;scheduler, File &amp;file, const State &amp;state, Mavlink_message_handler &amp;message_handler, const Mavlink_stream &amp;mavlink_stream, const conf_t &amp;config)" -->
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>Onboard parameters base class. </p>
+<p>This class is abstract and does not contains the task list, use the child class <a class="el" href="classOnboard__parameters__T.html" title="Onboard parameters.">Onboard_parameters_T</a> </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a97d633ccd3799d614a1d236df39e5331"></a><!-- doxytag: member="Onboard_parameters::Onboard_parameters" ref="a97d633ccd3799d614a1d236df39e5331" args="(File &amp;file, const State &amp;state, Mavlink_message_handler &amp;message_handler, const Mavlink_stream &amp;mavlink_stream, const conf_t &amp;config)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classOnboard__parameters.html#a601e8ce683683f2dd9a70c9abdbc4cb6">Onboard_parameters::Onboard_parameters</a> </td>
+          <td class="memname"><a class="el" href="classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331">Onboard_parameters::Onboard_parameters</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classScheduler.html">Scheduler</a> &amp;&#160;</td>
-          <td class="paramname"><em>scheduler</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype"><a class="el" href="classFile.html">File</a> &amp;&#160;</td>
           <td class="paramname"><em>file</em>, </td>
         </tr>
@@ -162,11 +186,11 @@ Public Member Functions</h2></td></tr>
 <p>Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">config</td><td>Configuration </td></tr>
-    <tr><td class="paramname">scheduler</td><td>Pointer to MAVLink scheduler </td></tr>
     <tr><td class="paramname">file</td><td>Pointer to file storage </td></tr>
     <tr><td class="paramname">state</td><td>Pointer to the state structure </td></tr>
-    <tr><td class="paramname">message_handler</td><td>Pointer to MAVLink message handler</td></tr>
+    <tr><td class="paramname">message_handler</td><td>Pointer to MAVLink message handler </td></tr>
+    <tr><td class="paramname">mavlink_stream</td><td>Pointer to MAVLink stream </td></tr>
+    <tr><td class="paramname">config</td><td>Configuration</td></tr>
   </table>
   </dd>
 </dl>
@@ -175,95 +199,21 @@ Public Member Functions</h2></td></tr>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classOnboard__parameters_a601e8ce683683f2dd9a70c9abdbc4cb6_cgraph.png" border="0" usemap="#classOnboard__parameters_a601e8ce683683f2dd9a70c9abdbc4cb6_cgraph" alt=""/></div>
-<map name="classOnboard__parameters_a601e8ce683683f2dd9a70c9abdbc4cb6_cgraph" id="classOnboard__parameters_a601e8ce683683f2dd9a70c9abdbc4cb6_cgraph">
-<area shape="rect" id="node3" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot." alt="" coords="401,5,543,35"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="327,59,617,88"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="327,112,617,141"/></map>
+<div class="center"><img src="classOnboard__parameters_a97d633ccd3799d614a1d236df39e5331_cgraph.png" border="0" usemap="#classOnboard__parameters_a97d633ccd3799d614a1d236df39e5331_cgraph" alt=""/></div>
+<map name="classOnboard__parameters_a97d633ccd3799d614a1d236df39e5331_cgraph" id="classOnboard__parameters_a97d633ccd3799d614a1d236df39e5331_cgraph">
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="327,59,617,88"/><area shape="rect" id="node9" href="classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="327,112,617,141"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="668,5,1001,35"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="691,59,979,88"/><area shape="rect" id="node11" href="classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b" title="Get maximum number of command callbacks." alt="" coords="668,112,1001,141"/><area shape="rect" id="node13" href="classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45" title="Get list of command callbacks." alt="" coords="691,165,979,195"/></map>
 </div>
 </p>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a096c010f86e1d288a4d551d371757876"></a><!-- doxytag: member="Onboard_parameters::add_parameter_float" ref="a096c010f86e1d288a4d551d371757876" args="(float *val, const char *param_name)" -->
+<a class="anchor" id="a8f0055a6ff98040b5f28b9a9dfed1860"></a><!-- doxytag: member="Onboard_parameters::add" ref="a8f0055a6ff98040b5f28b9a9dfed1860" args="(uint32_t *val, const char *param_name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#a096c010f86e1d288a4d551d371757876">Onboard_parameters::add_parameter_float</a> </td>
-          <td>(</td>
-          <td class="paramtype">float *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Registers parameter in the internal parameter list that gets published to MAVlink. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">val</td><td>Floating point parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="af4e76391a928375fd5dee7b316904f75"></a><!-- doxytag: member="Onboard_parameters::add_parameter_int32" ref="af4e76391a928375fd5dee7b316904f75" args="(int32_t *val, const char *param_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#af4e76391a928375fd5dee7b316904f75">Onboard_parameters::add_parameter_int32</a> </td>
-          <td>(</td>
-          <td class="paramtype">int32_t *&#160;</td>
-          <td class="paramname"><em>val</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>param_name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Register parameter in the internal parameter list that gets published to MAVlink. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">val</td><td>Signed 32 - bits integer parameter value </td></tr>
-    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="aa0a3891ed5b2582145480caa628361a7"></a><!-- doxytag: member="Onboard_parameters::add_parameter_uint32" ref="aa0a3891ed5b2582145480caa628361a7" args="(uint32_t *val, const char *param_name)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#aa0a3891ed5b2582145480caa628361a7">Onboard_parameters::add_parameter_uint32</a> </td>
+          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#a8f0055a6ff98040b5f28b9a9dfed1860">Onboard_parameters::add</a> </td>
           <td>(</td>
           <td class="paramtype">uint32_t *&#160;</td>
           <td class="paramname"><em>val</em>, </td>
@@ -293,14 +243,199 @@ Here is the call graph for this function:</div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOnboard__parameters_a8f0055a6ff98040b5f28b9a9dfed1860_cgraph.png" border="0" usemap="#classOnboard__parameters_a8f0055a6ff98040b5f28b9a9dfed1860_cgraph" alt=""/></div>
+<map name="classOnboard__parameters_a8f0055a6ff98040b5f28b9a9dfed1860_cgraph" id="classOnboard__parameters_a8f0055a6ff98040b5f28b9a9dfed1860_cgraph">
+<area shape="rect" id="node3" href="classOnboard__parameters.html#a494ab8249084ce9057eff0936ff692eb" title="Get maximum number of parameters." alt="" coords="228,5,441,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d" title="Get pointer to the list of parameters." alt="" coords="227,59,443,88"/></map>
+</div>
+</p>
+
 </div>
 </div>
-<a class="anchor" id="aa7bfe2d22b1ebe61d7ba328415cc7709"></a><!-- doxytag: member="Onboard_parameters::read_parameters_from_storage" ref="aa7bfe2d22b1ebe61d7ba328415cc7709" args="()" -->
+<a class="anchor" id="afa07ca9b16ed15f97e3cf78c82e2f49d"></a><!-- doxytag: member="Onboard_parameters::add" ref="afa07ca9b16ed15f97e3cf78c82e2f49d" args="(int32_t *val, const char *param_name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#aa7bfe2d22b1ebe61d7ba328415cc7709">Onboard_parameters::read_parameters_from_storage</a> </td>
+          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#a8f0055a6ff98040b5f28b9a9dfed1860">Onboard_parameters::add</a> </td>
+          <td>(</td>
+          <td class="paramtype">int32_t *&#160;</td>
+          <td class="paramname"><em>val</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>param_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Register parameter in the internal parameter list that gets published to MAVlink. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">val</td><td>Signed 32 - bits integer parameter value </td></tr>
+    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOnboard__parameters_afa07ca9b16ed15f97e3cf78c82e2f49d_cgraph.png" border="0" usemap="#classOnboard__parameters_afa07ca9b16ed15f97e3cf78c82e2f49d_cgraph" alt=""/></div>
+<map name="classOnboard__parameters_afa07ca9b16ed15f97e3cf78c82e2f49d_cgraph" id="classOnboard__parameters_afa07ca9b16ed15f97e3cf78c82e2f49d_cgraph">
+<area shape="rect" id="node3" href="classOnboard__parameters.html#a494ab8249084ce9057eff0936ff692eb" title="Get maximum number of parameters." alt="" coords="228,5,441,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d" title="Get pointer to the list of parameters." alt="" coords="227,59,443,88"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ace1760ea319749db739dca18500cc5a5"></a><!-- doxytag: member="Onboard_parameters::add" ref="ace1760ea319749db739dca18500cc5a5" args="(float *val, const char *param_name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#a8f0055a6ff98040b5f28b9a9dfed1860">Onboard_parameters::add</a> </td>
+          <td>(</td>
+          <td class="paramtype">float *&#160;</td>
+          <td class="paramname"><em>val</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>param_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Registers parameter in the internal parameter list that gets published to MAVlink. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">val</td><td>Floating point parameter value </td></tr>
+    <tr><td class="paramname">param_name</td><td>Name of the parameter</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>True if the parameter was added, false otherwise </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOnboard__parameters_ace1760ea319749db739dca18500cc5a5_cgraph.png" border="0" usemap="#classOnboard__parameters_ace1760ea319749db739dca18500cc5a5_cgraph" alt=""/></div>
+<map name="classOnboard__parameters_ace1760ea319749db739dca18500cc5a5_cgraph" id="classOnboard__parameters_ace1760ea319749db739dca18500cc5a5_cgraph">
+<area shape="rect" id="node3" href="classOnboard__parameters.html#a494ab8249084ce9057eff0936ff692eb" title="Get maximum number of parameters." alt="" coords="228,5,441,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d" title="Get pointer to the list of parameters." alt="" coords="227,59,443,88"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ac9217d77a519ff41340bc99f9524e6bf"></a><!-- doxytag: member="Onboard_parameters::default_config" ref="ac9217d77a519ff41340bc99f9524e6bf" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structOnboard__parameters_1_1conf__t.html">Onboard_parameters::conf_t</a> <a class="el" href="classOnboard__parameters.html#ac9217d77a519ff41340bc99f9524e6bf">Onboard_parameters::default_config</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Default configuration. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Config </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a494ab8249084ce9057eff0936ff692eb"></a><!-- doxytag: member="Onboard_parameters::max_count" ref="a494ab8249084ce9057eff0936ff692eb" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual uint32_t <a class="el" href="classOnboard__parameters.html#a494ab8249084ce9057eff0936ff692eb">Onboard_parameters::max_count</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get maximum number of parameters. </p>
+<p>Abstract method to be implemented in child classes</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Maximum number of parameters </dd></dl>
+
+<p>Implemented in <a class="el" href="classOnboard__parameters__T.html#a81dbfc3f9c4d584872d80bf96328fbfb">Onboard_parameters_T&lt; N &gt;</a>, and <a class="el" href="classOnboard__parameters__T.html#a81dbfc3f9c4d584872d80bf96328fbfb">Onboard_parameters_T&lt; N_PARAM &gt;</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOnboard__parameters_a494ab8249084ce9057eff0936ff692eb_icgraph.png" border="0" usemap="#classOnboard__parameters_a494ab8249084ce9057eff0936ff692eb_icgraph" alt=""/></div>
+<map name="classOnboard__parameters_a494ab8249084ce9057eff0936ff692eb_icgraph" id="classOnboard__parameters_a494ab8249084ce9057eff0936ff692eb_icgraph">
+<area shape="rect" id="node3" href="classOnboard__parameters.html#a8f0055a6ff98040b5f28b9a9dfed1860" title="Register parameter in the internal parameter list that gets published to MAVlink." alt="" coords="271,5,441,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="acfa1a8bf167caa28f86907cb6d8de33d"></a><!-- doxytag: member="Onboard_parameters::parameters" ref="acfa1a8bf167caa28f86907cb6d8de33d" args="(void)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structOnboard__parameters_1_1param__entry__t.html">param_entry_t</a>* <a class="el" href="classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d">Onboard_parameters::parameters</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [protected, pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get pointer to the list of parameters. </p>
+<p>Abstract method to be implemented in child classes</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>task list </dd></dl>
+
+<p>Implemented in <a class="el" href="classOnboard__parameters__T.html#a030d09751206f1fce95788ee247020f6">Onboard_parameters_T&lt; N &gt;</a>, and <a class="el" href="classOnboard__parameters__T.html#a030d09751206f1fce95788ee247020f6">Onboard_parameters_T&lt; N_PARAM &gt;</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOnboard__parameters_acfa1a8bf167caa28f86907cb6d8de33d_icgraph.png" border="0" usemap="#classOnboard__parameters_acfa1a8bf167caa28f86907cb6d8de33d_icgraph" alt=""/></div>
+<map name="classOnboard__parameters_acfa1a8bf167caa28f86907cb6d8de33d_icgraph" id="classOnboard__parameters_acfa1a8bf167caa28f86907cb6d8de33d_icgraph">
+<area shape="rect" id="node3" href="classOnboard__parameters.html#a8f0055a6ff98040b5f28b9a9dfed1860" title="Register parameter in the internal parameter list that gets published to MAVlink." alt="" coords="353,5,524,35"/><area shape="rect" id="node5" href="classOnboard__parameters.html#a7f269933f48766f3d6ba32343a2eaf5f" title="Read onboard parameters from the file storage." alt="" coords="309,59,568,88"/><area shape="rect" id="node9" href="classOnboard__parameters.html#a67802790b17200b7eaf376641251666f" title="Write onboard parameters to the file storage." alt="" coords="316,112,561,141"/><area shape="rect" id="node12" href="classOnboard__parameters.html#a93c99b0746cfcb6f8922e06a24325b31" title="Searches through the list of parameters, and send only the first scheduled parameter." alt="" coords="269,165,608,195"/><area shape="rect" id="node7" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="717,85,819,115"/><area shape="rect" id="node14" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="656,165,880,195"/><area shape="rect" id="node16" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="928,165,1184,195"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a7f269933f48766f3d6ba32343a2eaf5f"></a><!-- doxytag: member="Onboard_parameters::read_from_storage" ref="a7f269933f48766f3d6ba32343a2eaf5f" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#a7f269933f48766f3d6ba32343a2eaf5f">Onboard_parameters::read_from_storage</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -315,29 +450,67 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classOnboard__parameters_aa7bfe2d22b1ebe61d7ba328415cc7709_cgraph.png" border="0" usemap="#classOnboard__parameters_aa7bfe2d22b1ebe61d7ba328415cc7709_cgraph" alt=""/></div>
-<map name="classOnboard__parameters_aa7bfe2d22b1ebe61d7ba328415cc7709_cgraph" id="classOnboard__parameters_aa7bfe2d22b1ebe61d7ba328415cc7709_cgraph">
-<area shape="rect" id="node3" href="classFile.html#a230c72c26d75daa2da7e1876b3cf2888" title="Get the file length." alt="" coords="385,5,471,35"/><area shape="rect" id="node5" href="classFile.html#a08f1d2f6938eaedb287ad8e9da16c130" title="Seek to a given offset within the file." alt="" coords="389,59,467,88"/><area shape="rect" id="node7" href="classFile.html#ab6655a4cff6737e360d6c91498c1ca22" title="Read from the file." alt="" coords="391,112,465,141"/></map>
+<div class="center"><img src="classOnboard__parameters_a7f269933f48766f3d6ba32343a2eaf5f_cgraph.png" border="0" usemap="#classOnboard__parameters_a7f269933f48766f3d6ba32343a2eaf5f_cgraph" alt=""/></div>
+<map name="classOnboard__parameters_a7f269933f48766f3d6ba32343a2eaf5f_cgraph" id="classOnboard__parameters_a7f269933f48766f3d6ba32343a2eaf5f_cgraph">
+<area shape="rect" id="node3" href="classFile.html#a230c72c26d75daa2da7e1876b3cf2888" title="Get the file length." alt="" coords="377,5,463,35"/><area shape="rect" id="node5" href="classFile.html#a08f1d2f6938eaedb287ad8e9da16c130" title="Seek to a given offset within the file." alt="" coords="381,59,459,88"/><area shape="rect" id="node7" href="classFile.html#ab6655a4cff6737e360d6c91498c1ca22" title="Read from the file." alt="" coords="383,112,457,141"/><area shape="rect" id="node9" href="classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d" title="Get pointer to the list of parameters." alt="" coords="312,165,528,195"/></map>
 </div>
 </p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classOnboard__parameters_aa7bfe2d22b1ebe61d7ba328415cc7709_icgraph.png" border="0" usemap="#classOnboard__parameters_aa7bfe2d22b1ebe61d7ba328415cc7709_icgraph" alt=""/></div>
-<map name="classOnboard__parameters_aa7bfe2d22b1ebe61d7ba328415cc7709_icgraph" id="classOnboard__parameters_aa7bfe2d22b1ebe61d7ba328415cc7709_icgraph">
-<area shape="rect" id="node3" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="384,5,485,35"/></map>
+<div class="center"><img src="classOnboard__parameters_a7f269933f48766f3d6ba32343a2eaf5f_icgraph.png" border="0" usemap="#classOnboard__parameters_a7f269933f48766f3d6ba32343a2eaf5f_icgraph" alt=""/></div>
+<map name="classOnboard__parameters_a7f269933f48766f3d6ba32343a2eaf5f_icgraph" id="classOnboard__parameters_a7f269933f48766f3d6ba32343a2eaf5f_icgraph">
+<area shape="rect" id="node3" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="312,5,413,35"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a54c5735dc62ffeed8b41238d03296c99"></a><!-- doxytag: member="Onboard_parameters::write_parameters_to_storage" ref="a54c5735dc62ffeed8b41238d03296c99" args="()" -->
+<a class="anchor" id="a93c99b0746cfcb6f8922e06a24325b31"></a><!-- doxytag: member="Onboard_parameters::send_first_scheduled_parameter" ref="a93c99b0746cfcb6f8922e06a24325b31" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#a54c5735dc62ffeed8b41238d03296c99">Onboard_parameters::write_parameters_to_storage</a> </td>
+          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#a93c99b0746cfcb6f8922e06a24325b31">Onboard_parameters::send_first_scheduled_parameter</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Searches through the list of parameters, and send only the first scheduled parameter. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOnboard__parameters_a93c99b0746cfcb6f8922e06a24325b31_cgraph.png" border="0" usemap="#classOnboard__parameters_a93c99b0746cfcb6f8922e06a24325b31_cgraph" alt=""/></div>
+<map name="classOnboard__parameters_a93c99b0746cfcb6f8922e06a24325b31_cgraph" id="classOnboard__parameters_a93c99b0746cfcb6f8922e06a24325b31_cgraph">
+<area shape="rect" id="node3" href="classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d" title="Get pointer to the list of parameters." alt="" coords="392,5,608,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classOnboard__parameters_a93c99b0746cfcb6f8922e06a24325b31_icgraph.png" border="0" usemap="#classOnboard__parameters_a93c99b0746cfcb6f8922e06a24325b31_icgraph" alt=""/></div>
+<map name="classOnboard__parameters_a93c99b0746cfcb6f8922e06a24325b31_icgraph" id="classOnboard__parameters_a93c99b0746cfcb6f8922e06a24325b31_icgraph">
+<area shape="rect" id="node3" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="392,5,616,35"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="664,5,920,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a67802790b17200b7eaf376641251666f"></a><!-- doxytag: member="Onboard_parameters::write_to_storage" ref="a67802790b17200b7eaf376641251666f" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classOnboard__parameters.html#a67802790b17200b7eaf376641251666f">Onboard_parameters::write_to_storage</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -352,18 +525,18 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classOnboard__parameters_a54c5735dc62ffeed8b41238d03296c99_cgraph.png" border="0" usemap="#classOnboard__parameters_a54c5735dc62ffeed8b41238d03296c99_cgraph" alt=""/></div>
-<map name="classOnboard__parameters_a54c5735dc62ffeed8b41238d03296c99_cgraph" id="classOnboard__parameters_a54c5735dc62ffeed8b41238d03296c99_cgraph">
-<area shape="rect" id="node3" href="classFile.html#a08f1d2f6938eaedb287ad8e9da16c130" title="Seek to a given offset within the file." alt="" coords="375,5,452,35"/><area shape="rect" id="node5" href="classFile.html#aa4e2675444fe53c5c9862118fe66662a" title="Write to the file." alt="" coords="375,59,452,88"/><area shape="rect" id="node7" href="classFile.html#a70d3f3645b0c3f2ec6d61955536ae737" title="flush buffer to file; Not implemented;" alt="" coords="375,112,452,141"/></map>
+<div class="center"><img src="classOnboard__parameters_a67802790b17200b7eaf376641251666f_cgraph.png" border="0" usemap="#classOnboard__parameters_a67802790b17200b7eaf376641251666f_cgraph" alt=""/></div>
+<map name="classOnboard__parameters_a67802790b17200b7eaf376641251666f_cgraph" id="classOnboard__parameters_a67802790b17200b7eaf376641251666f_cgraph">
+<area shape="rect" id="node3" href="classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d" title="Get pointer to the list of parameters." alt="" coords="301,5,517,35"/><area shape="rect" id="node5" href="classFile.html#a08f1d2f6938eaedb287ad8e9da16c130" title="Seek to a given offset within the file." alt="" coords="371,59,448,88"/><area shape="rect" id="node7" href="classFile.html#aa4e2675444fe53c5c9862118fe66662a" title="Write to the file." alt="" coords="371,112,448,141"/><area shape="rect" id="node9" href="classFile.html#a70d3f3645b0c3f2ec6d61955536ae737" title="flush buffer to file; Not implemented;" alt="" coords="371,165,448,195"/></map>
 </div>
 </p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classOnboard__parameters_a54c5735dc62ffeed8b41238d03296c99_icgraph.png" border="0" usemap="#classOnboard__parameters_a54c5735dc62ffeed8b41238d03296c99_icgraph" alt=""/></div>
-<map name="classOnboard__parameters_a54c5735dc62ffeed8b41238d03296c99_icgraph" id="classOnboard__parameters_a54c5735dc62ffeed8b41238d03296c99_icgraph">
-<area shape="rect" id="node3" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="373,5,475,35"/></map>
+<div class="center"><img src="classOnboard__parameters_a67802790b17200b7eaf376641251666f_icgraph.png" border="0" usemap="#classOnboard__parameters_a67802790b17200b7eaf376641251666f_icgraph" alt=""/></div>
+<map name="classOnboard__parameters_a67802790b17200b7eaf376641251666f_icgraph" id="classOnboard__parameters_a67802790b17200b7eaf376641251666f_icgraph">
+<area shape="rect" id="node3" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="301,5,403,35"/></map>
 </div>
 </p>
 
@@ -391,7 +564,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

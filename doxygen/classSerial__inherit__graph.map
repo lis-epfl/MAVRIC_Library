@@ -1,9 +1,10 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classSerial__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="5,279,120,486"/>
-<area shape="rect" id="node5" href="$classSerial__dummy.html" title="{Serial_dummy\n||+ Serial_dummy()\l+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l}" alt="" coords="144,279,269,486"/>
-<area shape="rect" id="node7" href="$classSerial__linux__io.html" title="Implementation of serial peripheral for avr32." alt="" coords="293,271,419,495"/>
-<area shape="rect" id="node9" href="$classSerial__stm32.html" title="Implementation of serial peripheral for avr32." alt="" coords="443,271,560,495"/>
-<area shape="rect" id="node11" href="$classSerial__udp.html" title="{Serial_udp\n||+ Serial_udp()\l+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l}" alt="" coords="584,279,685,486"/>
-<area shape="rect" id="node13" href="$classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="709,271,851,495"/>
-<area shape="rect" id="node15" href="$classSerial__usb__stm32.html" title="Implementation of serial peripheral for stm32." alt="" coords="875,262,1021,503"/>
+<area shape="rect" id="node5" href="$classSerial__chibios.html" title="Implementation of serial peripheral for avr32." alt="" coords="144,262,267,503"/>
+<area shape="rect" id="node7" href="$classSerial__dummy.html" title="{Serial_dummy\n||+ Serial_dummy()\l+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l}" alt="" coords="291,279,416,486"/>
+<area shape="rect" id="node9" href="$classSerial__linux__io.html" title="Implementation of serial peripheral for avr32." alt="" coords="440,271,565,495"/>
+<area shape="rect" id="node11" href="$classSerial__stm32.html" title="Implementation of serial peripheral for avr32." alt="" coords="589,271,707,495"/>
+<area shape="rect" id="node13" href="$classSerial__udp.html" title="{Serial_udp\n||+ Serial_udp()\l+ init()\l+ readable()\l+ writeable()\l+ flush()\l+ attach()\l+ write()\l+ read()\l}" alt="" coords="731,279,832,486"/>
+<area shape="rect" id="node15" href="$classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32." alt="" coords="856,271,997,495"/>
+<area shape="rect" id="node17" href="$classSerial__usb__stm32.html" title="Implementation of serial peripheral for stm32." alt="" coords="1021,262,1168,503"/>
 </map>

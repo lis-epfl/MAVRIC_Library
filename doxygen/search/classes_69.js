@@ -3,6 +3,7 @@ var searchData=
   ['i2c',['I2c',['../classI2c.html',1,'']]],
   ['i2c_5favr32',['I2c_avr32',['../classI2c__avr32.html',1,'']]],
   ['i2c_5favr32_5fconf_5ft',['i2c_avr32_conf_t',['../structi2c__avr32__conf__t.html',1,'']]],
+  ['i2c_5fchibios',['I2c_chibios',['../classI2c__chibios.html',1,'']]],
   ['i2c_5fdummy',['I2c_dummy',['../classI2c__dummy.html',1,'']]],
   ['i2c_5fdummy_5fconf_5ft',['i2c_dummy_conf_t',['../structi2c__dummy__conf__t.html',1,'']]],
   ['i2c_5fstm32',['I2c_stm32',['../classI2c__stm32.html',1,'']]],

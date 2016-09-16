@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="213,5,408,35"/>
+<area shape="rect" id="node5" href="$classScheduler.html#a65d37b2e1af43239d990163e98428a74" title="Sort tasks by decreasing priority, then by increasing repeat period." alt="" coords="236,59,385,88"/>
+<area shape="rect" id="node7" href="$classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="456,59,576,88"/>
+</map>

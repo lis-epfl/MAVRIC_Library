@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -133,7 +134,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00057"></a>00057     {};
 <a name="l00058"></a>00058 
 <a name="l00059"></a>00059 
-<a name="l00065"></a><a class="code" href="classFile__dummy.html#a56cb85751fb198bb774075e47330d3fb">00065</a>     <span class="keywordtype">bool</span> <a class="code" href="classFile__dummy.html#a56cb85751fb198bb774075e47330d3fb" title="Open the file.">open</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* path)
+<a name="l00065"></a><a class="code" href="classFile__dummy.html#a9903b94a9676bfb45c4485b71f495893">00065</a>     <span class="keywordtype">bool</span> <a class="code" href="classFile__dummy.html#a9903b94a9676bfb45c4485b71f495893" title="Open the file.">open</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> __attribute__((unused)) * path)
 <a name="l00066"></a>00066     {
 <a name="l00067"></a>00067         <span class="keywordflow">return</span> <span class="keyword">true</span>;
 <a name="l00068"></a>00068     };
@@ -144,7 +145,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00078"></a>00078         <span class="keywordflow">return</span> <span class="keyword">true</span>;
 <a name="l00079"></a>00079     };
 <a name="l00080"></a>00080 
-<a name="l00086"></a><a class="code" href="classFile__dummy.html#a2749280622890ec3cb67b69fe64c7810">00086</a>     int8_t <a class="code" href="classFile__dummy.html#a2749280622890ec3cb67b69fe64c7810" title="Indicates if the file exits.">exists</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* path)
+<a name="l00086"></a><a class="code" href="classFile__dummy.html#a2dcc5d6813f2807099981ef398ba6ddb">00086</a>     int8_t <a class="code" href="classFile__dummy.html#a2dcc5d6813f2807099981ef398ba6ddb" title="Indicates if the file exits.">exists</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> __attribute__((unused)) * path)
 <a name="l00087"></a>00087     {
 <a name="l00088"></a>00088         <span class="keywordflow">return</span> -1;
 <a name="l00089"></a>00089     }
@@ -155,19 +156,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00099"></a>00099     };
 <a name="l00100"></a>00100 
 <a name="l00101"></a>00101 
-<a name="l00110"></a><a class="code" href="classFile__dummy.html#aa1a9eca8ebb51ec46031b24f72305334">00110</a>     <span class="keywordtype">bool</span> <a class="code" href="classFile__dummy.html#aa1a9eca8ebb51ec46031b24f72305334" title="Read from the file.">read</a>(uint8_t* data, uint32_t size)
+<a name="l00110"></a><a class="code" href="classFile__dummy.html#aaa4be8f38d9396590a217038c0475fcd">00110</a>     <span class="keywordtype">bool</span> <a class="code" href="classFile__dummy.html#aaa4be8f38d9396590a217038c0475fcd" title="Read from the file.">read</a>(uint8_t __attribute__((unused)) * data, uint32_t __attribute__((unused)) size)
 <a name="l00111"></a>00111     {
 <a name="l00112"></a>00112         <span class="keywordflow">return</span> <span class="keyword">true</span>;
 <a name="l00113"></a>00113     };
 <a name="l00114"></a>00114 
 <a name="l00115"></a>00115 
-<a name="l00124"></a><a class="code" href="classFile__dummy.html#a49738d9dfb10c70817e5f48b66dfaf25">00124</a>     <span class="keywordtype">bool</span> <a class="code" href="classFile__dummy.html#a49738d9dfb10c70817e5f48b66dfaf25" title="Write to the file.">write</a>(<span class="keyword">const</span> uint8_t* data, uint32_t size)
+<a name="l00124"></a><a class="code" href="classFile__dummy.html#a737736640a23c0072ee968331db72ad1">00124</a>     <span class="keywordtype">bool</span> <a class="code" href="classFile__dummy.html#a737736640a23c0072ee968331db72ad1" title="Write to the file.">write</a>(<span class="keyword">const</span> uint8_t __attribute__((unused)) * data, uint32_t __attribute__((unused)) size)
 <a name="l00125"></a>00125     {
 <a name="l00126"></a>00126         <span class="keywordflow">return</span> <span class="keyword">true</span>;
 <a name="l00127"></a>00127     };
 <a name="l00128"></a>00128 
 <a name="l00129"></a>00129 
-<a name="l00143"></a><a class="code" href="classFile__dummy.html#a0c54bf4999f0401e21b41bf20aab4a39">00143</a>     <span class="keywordtype">bool</span> <a class="code" href="classFile__dummy.html#a0c54bf4999f0401e21b41bf20aab4a39" title="Seek to a given offset within the file.">seek</a>(int32_t <a class="code" href="classFile__dummy.html#aff3ff567298a40776031de474fdeb1df" title="Get current location in file.">offset</a>, file_seekfrom_t origin)
+<a name="l00143"></a><a class="code" href="classFile__dummy.html#a178e2186db52def29752bbd2b3053d2a">00143</a>     <span class="keywordtype">bool</span> <a class="code" href="classFile__dummy.html#a178e2186db52def29752bbd2b3053d2a" title="Seek to a given offset within the file.">seek</a>(int32_t __attribute__((unused)) <a class="code" href="classFile__dummy.html#aff3ff567298a40776031de474fdeb1df" title="Get current location in file.">offset</a>, file_seekfrom_t __attribute__((unused)) origin)
 <a name="l00144"></a>00144     {
 <a name="l00145"></a>00145         <span class="keywordflow">return</span> <span class="keyword">true</span>;
 <a name="l00146"></a>00146     };
@@ -209,7 +210,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:00 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

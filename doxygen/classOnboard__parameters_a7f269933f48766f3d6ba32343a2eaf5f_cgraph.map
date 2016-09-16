@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classFile.html#a230c72c26d75daa2da7e1876b3cf2888" title="Get the file length." alt="" coords="377,5,463,35"/>
+<area shape="rect" id="node5" href="$classFile.html#a08f1d2f6938eaedb287ad8e9da16c130" title="Seek to a given offset within the file." alt="" coords="381,59,459,88"/>
+<area shape="rect" id="node7" href="$classFile.html#ab6655a4cff6737e360d6c91498c1ca22" title="Read from the file." alt="" coords="383,112,457,141"/>
+<area shape="rect" id="node9" href="$classOnboard__parameters.html#acfa1a8bf167caa28f86907cb6d8de33d" title="Get pointer to the list of parameters." alt="" coords="312,165,528,195"/>
+</map>

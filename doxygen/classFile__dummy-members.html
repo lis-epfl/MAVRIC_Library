@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -84,17 +85,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 This is the complete list of members for <a class="el" href="classFile__dummy.html">File_dummy</a>, including all inherited members.<table>
   <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a4d5c4f22fa425d314c8dbd0386adb24a">close</a>()</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a2749280622890ec3cb67b69fe64c7810">exists</a>(const char *path)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a2dcc5d6813f2807099981ef398ba6ddb">exists</a>(const char __attribute__((unused))*path)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile.html#a0cb7be91dc2771ddeb2dd0ef8dca0722">File::exists</a>(const char *path)=0</td><td><a class="el" href="classFile.html">File</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a276ebac56da140011a18239514e8e9e0">File_dummy</a>(void)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a96a41902f6831cdc11e5d2d404c7c617">flush</a>()</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classFile__dummy.html#af78a867c64106da1f9ece6c5a9154eb4">is_open</a>()</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classFile__dummy.html#ad71b3725485a2aefdaacb68aed6eebbc">length</a>()</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classFile.html#a802599d2c56c6c5985dfeb1aa5aa45bc">newline</a>()</td><td><a class="el" href="classFile.html">File</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classFile__dummy.html#aff3ff567298a40776031de474fdeb1df">offset</a>()</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a56cb85751fb198bb774075e47330d3fb">open</a>(const char *path)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#aa1a9eca8ebb51ec46031b24f72305334">read</a>(uint8_t *data, uint32_t size)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a0c54bf4999f0401e21b41bf20aab4a39">seek</a>(int32_t offset, file_seekfrom_t origin)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a49738d9dfb10c70817e5f48b66dfaf25">write</a>(const uint8_t *data, uint32_t size)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline, virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a9903b94a9676bfb45c4485b71f495893">open</a>(const char __attribute__((unused))*path)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile.html#a5d85966a2c5d15deccc06b89e4df0e96">File::open</a>(const char *path)=0</td><td><a class="el" href="classFile.html">File</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#aaa4be8f38d9396590a217038c0475fcd">read</a>(uint8_t __attribute__((unused))*data, uint32_t __attribute__((unused)) size)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile.html#ab6655a4cff6737e360d6c91498c1ca22">File::read</a>(uint8_t *data, uint32_t size)=0</td><td><a class="el" href="classFile.html">File</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a178e2186db52def29752bbd2b3053d2a">seek</a>(int32_t __attribute__((unused)) offset, file_seekfrom_t __attribute__((unused)) origin)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile.html#a08f1d2f6938eaedb287ad8e9da16c130">File::seek</a>(int32_t offset, file_seekfrom_t origin)=0</td><td><a class="el" href="classFile.html">File</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile__dummy.html#a737736640a23c0072ee968331db72ad1">write</a>(const uint8_t __attribute__((unused))*data, uint32_t __attribute__((unused)) size)</td><td><a class="el" href="classFile__dummy.html">File_dummy</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFile.html#aa4e2675444fe53c5c9862118fe66662a">File::write</a>(const uint8_t *data, uint32_t size)=0</td><td><a class="el" href="classFile.html">File</a></td><td><code> [pure virtual]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -113,7 +119,7 @@ This is the complete list of members for <a class="el" href="classFile__dummy.ht
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Sep 7 2016 09:48:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 16 2016 15:34:01 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

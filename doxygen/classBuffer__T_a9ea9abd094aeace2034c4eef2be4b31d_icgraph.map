@@ -1,0 +1,15 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSerial__avr32.html#a9e2a47371c51afa2027c19dcca227458" title="Test if there is space available to write bytes." alt="" coords="203,5,357,35"/>
+<area shape="rect" id="node7" href="$classSerial__usb__avr32.html#ae97353f9dea6e27cdac78b13f2e6f86a" title="Test if there is space available to write bytes." alt="" coords="189,59,371,88"/>
+<area shape="rect" id="node11" href="$classSerial__chibios.html#ad7f6ade725193596cd5f5c3ea9f53517" title="Test if there is space available to write bytes." alt="" coords="199,112,361,141"/>
+<area shape="rect" id="node15" href="$classSerial__udp.html#a01a3379d58ea2790fb91e87944084f4f" title="Test if there are bytes available to read." alt="" coords="211,165,349,195"/>
+<area shape="rect" id="node19" href="$classSerial__udp.html#aca3d1d4746b26f1d6c741dba65ac56f5" title="Test if there is space available to write bytes." alt="" coords="209,219,351,248"/>
+<area shape="rect" id="node21" href="$classSerial__stm32.html#a874336f5eb3c470cdefe34405133089d" title="Test if there is space available to write bytes." alt="" coords="201,272,359,301"/>
+<area shape="rect" id="node25" href="$classSerial__usb__stm32.html#a88f33227c5ee2a67f9e6ad86f15b8db4" title="Test if there is space available to write bytes." alt="" coords="187,325,373,355"/>
+<area shape="rect" id="node5" href="$classSerial__avr32.html#a0ca8dc3ec639bdfaf8278f1a643c08eb" title="Write bytes on the serial line." alt="" coords="437,5,568,35"/>
+<area shape="rect" id="node9" href="$classSerial__usb__avr32.html#a136aeea78c5070fc8b7c846aa20f305f" title="Write bytes on the serial line." alt="" coords="424,59,581,88"/>
+<area shape="rect" id="node13" href="$classSerial__chibios.html#ae15d219436e157f3ce483fb45e35e870" title="Write bytes on the serial line." alt="" coords="433,112,572,141"/>
+<area shape="rect" id="node17" href="$classSerial__udp.html#a6371af0a085b26e42b4afa3bcfc79e20" title="Read bytes from the serial line." alt="" coords="445,165,560,195"/>
+<area shape="rect" id="node23" href="$classSerial__stm32.html#a54a8c5e1d9773cde753cee32da06d5e7" title="Write bytes on the serial line." alt="" coords="436,272,569,301"/>
+<area shape="rect" id="node27" href="$classSerial__usb__stm32.html#ab7d1d23330bf4ec251a5aa81d25f6806" title="Write bytes on the serial line." alt="" coords="421,325,584,355"/>
+</map>

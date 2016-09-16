@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classSerial__avr32.html#ac1c002f2d4b716faa1d8f68aa6a012c0" title="Sends instantaneously all outgoing bytes." alt="" coords="187,5,317,35"/>
+<area shape="rect" id="node5" href="$classSerial__usb__avr32.html#ac592ddce67456e1a4ff593fc3559ab20" title="Sends instantaneously all outgoing bytes." alt="" coords="173,59,331,88"/>
+<area shape="rect" id="node7" href="$classSerial__usb__avr32.html#a136aeea78c5070fc8b7c846aa20f305f" title="Write bytes on the serial line." alt="" coords="173,112,331,141"/>
+<area shape="rect" id="node9" href="$classSerial__chibios.html#a49eaec36b0ea7bd03b370c77f6222c6c" title="Sends instantaneously all outgoing bytes." alt="" coords="183,165,321,195"/>
+<area shape="rect" id="node11" href="$classSerial__stm32.html#a8f31f5d3bd8bf8465cf1ef641d77b2ee" title="Sends instantaneously all outgoing bytes." alt="" coords="185,219,319,248"/>
+<area shape="rect" id="node13" href="$classSerial__usb__stm32.html#a0e9f0cfd59054bc3eef06f0f32a74f53" title="Sends instantaneously all outgoing bytes." alt="" coords="171,272,333,301"/>
+<area shape="rect" id="node15" href="$classSerial__usb__stm32.html#ab7d1d23330bf4ec251a5aa81d25f6806" title="Write bytes on the serial line." alt="" coords="381,272,544,301"/>
+</map>
