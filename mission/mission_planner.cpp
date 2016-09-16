@@ -535,7 +535,7 @@ void Mission_planner::state_machine()
                                                 0.0f,
                                                 0.0f,
                                                 0.0f,
-                                                0.0f,
+                                                coord_conventions_get_yaw(ahrs_),
                                                 ins_.position_lf()[X],
                                                 ins_.position_lf()[Y],
                                                 ins_.position_lf()[Z]);
