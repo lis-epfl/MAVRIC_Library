@@ -305,11 +305,10 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
 
     /* Mavlink communication config */
-    Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);
-    mavlink_communication_config.message_handler_config.debug    = false;
-    mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug     = false;
-    conf.mavlink_communication_config = mavlink_communication_config;
+    conf.mavlink_communication_config                        = Mavlink_communication::default_config(sysid);
+    conf.mavlink_communication_config.handler.debug          = false;
+    conf.mavlink_communication_config.parameters.debug       = true;
+    conf.mavlink_communication_config.mavlink_stream.debug   = false;
 
     return conf;
 };

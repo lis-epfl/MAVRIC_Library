@@ -64,10 +64,10 @@ public:
      */
     struct conf_t
     {
-        Mavlink_stream::conf_t          mavlink_stream_config;          ///<    Configuration for the module MAVLink stream
-        Periodic_telemetry::conf_t      telemetry_config;               ///<    Configuration the the module periodic telemetry
-        Mavlink_message_handler::conf_t message_handler_config;         ///<    Configuration for the module message handler
-        Onboard_parameters::conf_t      onboard_parameters_config;      ///<    Configuration for the module onboard parameters
+        Mavlink_stream::conf_t          mavlink_stream;  ///<    Configuration for the module MAVLink stream
+        Periodic_telemetry::conf_t      telemetry;       ///<    Configuration the the module periodic telemetry
+        Mavlink_message_handler::conf_t handler;         ///<    Configuration for the module message handler
+        Onboard_parameters::conf_t      parameters;      ///<    Configuration for the module onboard parameters
     };
 
     /**
@@ -81,14 +81,14 @@ public:
     {
         conf_t conf                       = {};
 
-        conf.mavlink_stream_config        = {};
-        conf.mavlink_stream_config.sysid  = sysid;
-        conf.mavlink_stream_config.compid = 50;
-        conf.mavlink_stream_config.debug  = false,
+        conf.mavlink_stream        = {};
+        conf.mavlink_stream.sysid  = sysid;
+        conf.mavlink_stream.compid = 50;
+        conf.mavlink_stream.debug  = false,
 
-        conf.telemetry_config             = Periodic_telemetry::default_config();
-        conf.message_handler_config       = Mavlink_message_handler::default_config();
-        conf.onboard_parameters_config    = Onboard_parameters::default_config();
+        conf.telemetry     = Periodic_telemetry::default_config();
+        conf.handler       = Mavlink_message_handler::default_config();
+        conf.parameters    = Onboard_parameters::default_config();
 
         return conf;
     };
@@ -104,10 +104,10 @@ public:
      * \return  True if the init succeed, false otherwise
      */
     Mavlink_communication_T(Serial& serial, State& state, File& file_storage, const conf_t& config = default_config()):
-        mavlink_stream_(serial, config.mavlink_stream_config),
-        telemetry_(mavlink_stream_, config.telemetry_config),
-        handler_(mavlink_stream_, config.message_handler_config),
-        parameters_(file_storage, state, handler_, mavlink_stream_, config.onboard_parameters_config)
+        mavlink_stream_(serial, config.mavlink_stream),
+        telemetry_(mavlink_stream_, config.telemetry),
+        handler_(mavlink_stream_, config.handler),
+        parameters_(file_storage, state, handler_, mavlink_stream_, config.parameters)
     {
         bool init_success = true;
 
@@ -159,7 +159,7 @@ public:
     /*
      * \brief   Returns mavlink_stream
      */
-    Mavlink_stream& stream()
+    Mavlink_stream& mavlink_stream()
     {
         return mavlink_stream_;
     }
