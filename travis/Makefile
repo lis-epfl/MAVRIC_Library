@@ -21,7 +21,7 @@ LEQuad_stm32:
 	cd ../sample_projects/LEQuad/proj_stm32 && make clean && make && make clean
 
 LEQuad_chibios:
-	cd ../sample_projects/LEQuad/proj_sparky_chibios && make clean && make && make clean
+	cd ../sample_projects/LEQuad/untested/proj_sparky_chibios && make clean && make && make clean
 
 doc: doc_doxygen doc_daux
 

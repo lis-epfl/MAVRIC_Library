@@ -83,7 +83,7 @@ endif
 #
 
 # MAVRIC files
-MAVRIC_LIB=../../../
+MAVRIC_LIB=../../../../
 include $(MAVRIC_LIB)/rules_common.mk
 include $(MAVRIC_LIB)/rules_chibios.mk
 include $(MAVRIC_LIB)/rules_dummy.mk
@@ -92,7 +92,7 @@ include $(MAVRIC_LIB)/rules_dummy.mk
 PROJECT = $(PROJ_NAME)
 
 # Imported source files and paths
-CHIBIOS = ../../../libs/ChibiOS
+CHIBIOS = $(MAVRIC_LIB)/libs/ChibiOS
 # Startup files.
 include $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk/startup_stm32f4xx.mk
 # HAL-OSAL files (optional).
@@ -133,8 +133,8 @@ CSRC += $(STARTUPSRC) \
 # setting.
 CPPSRC += $(BOARDCPPSRC) \
 		  $(addprefix ${MAVRIC_LIB}/, $(LIB_SRCS)) \
-         ../main_chibios_sparky.cpp \
-		 ../lequad.cpp
+         ../../main_chibios_sparky.cpp \
+		 ../../lequad.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
 # NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
