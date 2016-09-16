@@ -165,7 +165,7 @@ bool LEQuad::init_state(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= state_telemetry_init(&state_machine, communication.p_handler());
+    ret &= state_telemetry_init(&state_machine, &communication.handler());
 
     // DOWN telemetry
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_HEARTBEAT,  1000000, (Periodic_telemetry::telemetry_function_t)&state_telemetry_send_heartbeat, &state);
@@ -206,8 +206,8 @@ bool LEQuad::init_data_logging(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= data_logging_telemetry_init(&data_logging_continuous, communication.p_handler());
-    ret &= data_logging_telemetry_init(&data_logging_stat, communication.p_handler());
+    ret &= data_logging_telemetry_init(&data_logging_continuous, &communication.handler());
+    ret &= data_logging_telemetry_init(&data_logging_stat, &communication.handler());
 
     // Task
     ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_continuous);
@@ -225,7 +225,7 @@ bool LEQuad::init_gps(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= gps_telemetry_init(&gps, communication.p_handler());
+    ret &= gps_telemetry_init(&gps, &communication.handler());
 
     // DOWN telemetry
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Periodic_telemetry::telemetry_function_t)&gps_telemetry_send_raw, &gps);
@@ -245,7 +245,7 @@ bool LEQuad::init_imu(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= imu_telemetry_init(&imu, communication.p_handler());
+    ret &= imu_telemetry_init(&imu, &communication.handler());
 
     // DOWN telemetry
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_IMU, 250000, (Periodic_telemetry::telemetry_function_t)&imu_telemetry_send_scaled, &imu);
@@ -325,7 +325,7 @@ bool LEQuad::init_position_estimation(void)
 {
     bool ret = true;
     // UP telemetry
-    ret &= position_estimation_telemetry_init(&position_estimation, communication.p_handler());
+    ret &= position_estimation_telemetry_init(&position_estimation, &communication.handler());
 
     // DOWN telemetry
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Periodic_telemetry::telemetry_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
@@ -505,7 +505,7 @@ bool LEQuad::init_ground_control(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= manual_control_telemetry_init(&manual_control, communication.p_handler());
+    ret &= manual_control_telemetry_init(&manual_control, &communication.handler());
 
     // DOWN telemetry
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_MANUAL_CONTROL, 500000, (Periodic_telemetry::telemetry_function_t)&manual_control_telemetry_send, &manual_control);

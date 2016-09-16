@@ -147,10 +147,6 @@ public:
     {
         return telemetry_;
     }
-    Periodic_telemetry* p_telemetry()
-    {
-        return &telemetry_;
-    }
 
     /*
      * \brief   Returns message_handler
@@ -158,10 +154,6 @@ public:
     Mavlink_message_handler& handler()
     {
         return handler_;
-    }
-    Mavlink_message_handler* p_handler()
-    {
-        return &handler_;
     }
 
     /*
@@ -171,11 +163,6 @@ public:
     {
         return mavlink_stream_;
     }
-    Mavlink_stream* p_stream()
-    {
-        return &mavlink_stream_;
-    }
-
 
     /*
      * \brief   Returns onboard_parameters struct
