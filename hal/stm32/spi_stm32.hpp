@@ -51,13 +51,13 @@ extern "C"
 }
 
 /**
- * @brief   Enumerate the possible SPIs
+ * \brief   Enum of the available SPIs
  */
 typedef enum
 {
-    STM32_SPI1             = SPI1,
-    STM32_SPI2             = SPI2,
-    STM32_SPI3             = SPI3,
+    STM32_SPI1  = SPI1,
+    STM32_SPI2  = SPI2,
+    STM32_SPI3  = SPI3,
 } spi_stm32_devices_t;
 
 
@@ -66,29 +66,29 @@ typedef enum
  */
 typedef enum
 {
-    STM32_SPI_OFF       = 0,
-    STM32_SPI_IN        = 1,
-    STM32_SPI_OUT       = 2,
-    STM32_SPI_IN_OUT    = 3,
+    STM32_SPI_MODE_CPOL0_CPHA0  = 0,
+    STM32_SPI_MODE_CPOL0_CPHA1  = 1,
+    STM32_SPI_MODE_CPOL1_CPHA0  = 2,
+    STM32_SPI_MODE_CPOL1_CPHA1  = 3,
 } spi_stm32_mode_t;
 
 /**
- * @brief   Configuration structure
+ * \brief   Configuration structure
  */
 typedef struct
 {
-    spi_stm32_devices_t     spi_device;
-    spi_stm32_mode_t        mode;
+    spi_stm32_devices_t     spi_device;         ///< Spi id
+    spi_stm32_mode_t        mode;               ///< Clock mode (pol and phase)
     uint8_t                 clk_div;            ///< fp clock division
+    bool                    ss_mode_hard;       ///< Slave Select Mode Hardware/Software
     gpio_stm32_conf_t       miso_gpio_config;   ///< Master Out Slave In config
     gpio_stm32_conf_t       mosi_gpio_config;   ///< Master In Slave Out config
-    gpio_stm32_conf_t       nss_gpio_config;    ///< Slave Select config
     gpio_stm32_conf_t       sck_gpio_config;    ///< Serial Clock config
 } spi_stm32_conf_t;
 
 
 /**
- * @brief   Implementation of spi peripheral for stm32
+ * \brief   Implementation of spi peripheral for stm32
  */
 class Spi_stm32: public Spi
 {
@@ -97,7 +97,7 @@ public:
     /**
      * \brief   Initialises the peripheral
      *
-     * \param   config      Device configuration
+     * \param   config          Device configuration
      */
     Spi_stm32(spi_stm32_conf_t spi_config);
 
@@ -115,7 +115,7 @@ public:
      * \brief   Write bytes on the spi line
      *
      * \param   byte        Outgoing bytes
-     * \param   size        Number of bytes to write
+     * \param   nbytes      Number of bytes to write
      *
      * \return  true        Data successfully written
      * \return  false       Data not written
@@ -126,9 +126,8 @@ public:
     /**
      * \brief   Read bytes from the spi line
      *
-     * \param   command     Reading command
      * \param   bytes       Incoming bytes
-     * \param   size        Number of bytes to read
+     * \param   nbytes      Number of bytes to read
      *
      * \return  true        Data successfully read
      * \return  false       Data not read
@@ -146,6 +145,16 @@ public:
      * \return  false       Failed
      */
     bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes);
+
+    /**
+     * \brief   Select slave
+     */
+    void select_slave(void);
+
+    /**
+     * \brief   Unselect slave
+     */
+    void unselect_slave(void);
 
 
 private:

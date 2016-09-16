@@ -52,7 +52,7 @@ extern "C"
 
 int main(int argc, char** argv)
 {
-    uint8_t sysid = 0;
+    uint8_t sysid = 1;
     bool init_success = true;
 
     // -------------------------------------------------------------------------

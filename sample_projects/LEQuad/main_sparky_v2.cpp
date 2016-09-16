@@ -40,21 +40,23 @@
 
 #include "boards/sparky_v2.hpp"
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drivers/mpu_9250.hpp"
+#include "drivers/spektrum_satellite.hpp"
+
 #include "hal/common/time_keeper.hpp"
-
-#include "hal/stm32/spi_stm32.hpp"
-
 #include "hal/dummy/serial_dummy.hpp"
 #include "hal/dummy/i2c_dummy.hpp"
 #include "hal/dummy/file_dummy.hpp"
 #include "hal/dummy/adc_dummy.hpp"
 #include "hal/dummy/pwm_dummy.hpp"
+#include "hal/stm32/spi_stm32.hpp"
+
+#include "sample_projects/LEQuad/lequad.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
 
-#include "drivers/spektrum_satellite.hpp"
+#include "util/string_util.hpp"
 
 extern "C"
 {
@@ -71,7 +73,26 @@ int main(int argc, char** argv)
     // Create board
     // -------------------------------------------------------------------------
     sparky_v2_conf_t board_config = sparky_v2_default_config();
+
+    // board_config.imu_config.accelerometer.bias[0] = -0.0327504f;
+    // board_config.imu_config.accelerometer.bias[1] = -0.00344232f;
+    // board_config.imu_config.accelerometer.bias[2] = +0.00931478f;
+
+    // board_config.imu_config.gyroscope.bias[0] = -0.0135339f;
+    // board_config.imu_config.gyroscope.bias[1] = -0.0061096f;
+    // board_config.imu_config.gyroscope.bias[2] = -0.00312137f;
+
+    // board_config.imu_config.magnetometer.bias[0] = +0.520405f;
+    // board_config.imu_config.magnetometer.bias[1] = -0.55305f;
+    // board_config.imu_config.magnetometer.bias[2] = -0.489245f;
+
+    // board_config.imu_config.magnetic_north[0] = +0.268271f;
+    // board_config.imu_config.magnetic_north[1] = +0.0f;
+    // board_config.imu_config.magnetic_north[2] = +0.485027f;
+
     Sparky_v2 board(board_config);
+
+
 
     // Board initialisation
     init_success &= board.init();
@@ -122,7 +143,7 @@ int main(int argc, char** argv)
                          board.serial_,                // mavlink serial
                          satellite_dummy,
                          board.state_display_sparky_v2_,
-                        file_dummy,
+                         file_dummy,
                          sim_battery,
                          sim_servo_0,
                          sim_servo_1,
@@ -168,6 +189,57 @@ int main(int argc, char** argv)
     // Main loop
     // -------------------------------------------------------------------------
     mav.loop();
+
+    // board.led_err_.off();
+    // board.led_stat_.off();
+    // board.led_rf_.off();
+
+    // Console<Serial> console(board.serial_);
+
+    // while (1)
+    // {
+
+        // Write mavlink message
+        // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
+        //                             50,     // uint8_t component_id,
+        //                             &msg,   // mavlink_message_t* msg,
+        //                             0,      // uint8_t type,
+        //                             0,      // uint8_t autopilot,
+        //                             0,      // uint8_t base_mode,
+        //                             0,      // uint32_t custom_mode,
+        //                             0);     //uint8_t system_status)
+        // mavlink_stream.send(&msg);
+
+    //     time_keeper_delay_ms(500);
+
+
+    //     const char* sep = "\t";
+    //     uint64_t delay = 25;
+
+    //     console.write(valx);
+    //     time_keeper_delay_ms(delay);
+    //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
+    //     time_keeper_delay_ms(delay);
+    //     console.write(valy);
+    //     time_keeper_delay_ms(delay);
+    //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
+    //     time_keeper_delay_ms(delay);
+    //     console.write(valz);
+    //     time_keeper_delay_ms(delay);
+
+    //     const char* newline = "\r\n";
+    //     board.serial_.write((const uint8_t*)newline, sizeof(newline));
+
+    //     if (bo)
+    //     {
+    //         board.led_stat_.toggle();
+    //     }
+    //     else
+    //     {
+    //         board.led_err_.toggle();
+    //     }
+
+    // }
 
     return 0;
 }

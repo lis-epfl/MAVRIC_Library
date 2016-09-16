@@ -96,8 +96,13 @@ Sparky_v2::Sparky_v2(sparky_v2_conf_t config):
     servo_6_(pwm_6_, config.servo_config[6]),
     servo_7_(pwm_7_, config.servo_config[7]),
     spi_1_(config.spi_config[0]),
-    spi_3_(config.spi_config[2]),
-    state_display_sparky_v2_(led_stat_, led_err_)
+    spi_3_(config.spi_config[1]),
+    nss_1_gpio_(config.nss_gpio_config[0]),
+    nss_2_gpio_(config.nss_gpio_config[1]),
+    nss_3_gpio_(config.nss_gpio_config[2]),
+    state_display_sparky_v2_(led_stat_, led_err_),
+    mpu_9250_(spi_1_, nss_1_gpio_),
+    imu_(mpu_9250_, mpu_9250_, mpu_9250_, config.imu_config)
 {}
 
 
@@ -267,6 +272,15 @@ bool Sparky_v2::init(void)
     ret = spi_1_.init();
     ret = spi_3_.init();
     init_success &= ret;
+
+    // -------------------------------------------------------------------------
+    // Init IMU
+    // -------------------------------------------------------------------------
+    ret = mpu_9250_.init();
+    init_success &= ret;
+
+    time_keeper_delay_ms(50);
+
 
     return init_success;
 }
