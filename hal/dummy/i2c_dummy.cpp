@@ -59,18 +59,28 @@ bool I2c_dummy::init(void)
 
 bool I2c_dummy::probe(uint32_t address)
 {
+    (void)address; // unused
+
     return config_.flag;
 }
 
 
 bool I2c_dummy::write(const uint8_t* buffer, uint32_t nbytes, uint32_t address)
 {
+    (void)buffer;  // unused
+    (void)nbytes;  // unused
+    (void)address; // unused
+
     return config_.flag;
 }
 
 
 bool I2c_dummy::read(uint8_t* buffer, uint32_t nbytes, uint32_t address)
 {
+    (void)buffer;  // unused
+    (void)nbytes;  // unused
+    (void)address; // unused
+    
     return config_.flag;
 }
 

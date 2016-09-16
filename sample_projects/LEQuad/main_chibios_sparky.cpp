@@ -112,28 +112,29 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad( sim_imu,
-                         sim.barometer(),
-                         sim.gps(),
-                         sim.sonar(),
-                         board.serial_,                // mavlink serial
-                         satellite_dummy,
-                         board.state_display_,
-                         file_dummy,
-                         sim_battery,
-                         sim_servo_0,
-                         sim_servo_1,
-                         sim_servo_2,
-                         sim_servo_3 ,
-                         sim_servo_4,
-                         sim_servo_5,
-                         sim_servo_6,
-                         sim_servo_7 ,
-                         file_dummy,
-                         file_dummy,
-                         mav_config );
-
+    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    // LEQuad mav = LEQuad( sim_imu,
+    //                      sim.barometer(),
+    //                      sim.gps(),
+    //                      sim.sonar(),
+    //                      board.serial_,                // mavlink serial
+    //                      satellite_dummy,
+    //                      board.state_display_,
+    //                      file_dummy,
+    //                      sim_battery,
+    //                      sim_servo_0,
+    //                      sim_servo_1,
+    //                      sim_servo_2,
+    //                      sim_servo_3 ,
+    //                      sim_servo_4,
+    //                      sim_servo_5,
+    //                      sim_servo_6,
+    //                      sim_servo_7 ,
+    //                      file_dummy,
+    //                      file_dummy,
+    //                      mav_config );
+    // Init mav
+    // mav.init();
 
     // -------------------------------------------------------------------------
     // Main loop
@@ -146,7 +147,6 @@ int main(void)
     /**
     * Prepares the barometer
     */
-    static uint8_t rxbuf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     static uint8_t txbuf[10] = "Hello!\r\n";
 
     // const uint8_t ms5611_addr       = 0x77;
