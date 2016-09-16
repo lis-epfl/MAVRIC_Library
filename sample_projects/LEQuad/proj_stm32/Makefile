@@ -64,8 +64,8 @@ SIZER 	:= arm-none-eabi-size
 # ------------------------------------------------------------------------------
 CFLAGS	+= -O0 -g -std=gnu99 -MMD -MP
 CFLAGS	+= -Wall
-# CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
-# CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
+CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
+CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
 CFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
 # Include files from MAVRIC library and source folder
@@ -77,7 +77,7 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 CXXFLAGS	+= -O0 -g -std=c++11 -MMD -MP
 CXXFLAGS	+= -Wall
-# CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
+CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
 CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
 
 # Include files from MAVRIC library and source folder

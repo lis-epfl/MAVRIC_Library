@@ -66,10 +66,12 @@ ASFLAGS += ${SRCS_INC}
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
 CC = avr32-gcc
-CFLAGS += -O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -Wall
-CFLAGS += -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes
-CFLAGS += -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MMD -MP
-# CFLAGS += -ffunction-sections
+CFLAGS += -O3 -mhard-float -fdata-sections -muse-rodata-section -g2
+CFLAGS += -mpart=uc3c1512c -c -std=gnu99
+CFLAGS += -mrelax -MMD -MP
+CFLAGS	+= -Wall
+CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
+CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
 CFLAGS += ${PREPROC_OPT}
 
 # Include files from MAVRIC library and source folder
@@ -82,11 +84,11 @@ CFLAGS += ${SRCS_INC}
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
 CXX = avr32-g++
-# CXXFLAGS  = -O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section
 CXXFLAGS += -O3 -std=c++0x -mhard-float -fdata-sections -muse-rodata-section
-CXXFLAGS += -g2 -Wall -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MMD -MP
-# CXXFLAGS += -D_DEFAULT_SOURCE
-# CXXFLAGS += -ffunction-sections
+CXXFLAGS += -g2 -mpart=uc3c1512c -c -Wpointer-arith -mrelax -MMD -MP
+CXXFLAGS += -Wall
+CXXFLAGS += -Wextra -Wshadow -Wredundant-decls  -Weffc++
+
 CXXFLAGS += ${PREPROC_OPT}
 
 # Include files from MAVRIC library and source folder
