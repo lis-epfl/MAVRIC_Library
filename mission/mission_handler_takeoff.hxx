@@ -129,7 +129,7 @@ int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
     switch(navigation_.navigation_strategy)
     {
     case Navigation::strategy_t::DIRECT_TO:
-       if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
+       if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
         {
             finished = true;
             navigation_.set_waiting_at_waypoint(true);
@@ -139,7 +139,7 @@ int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
     case Navigation::strategy_t::DUBIN:
         if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
         {
-            if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
+            if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
             {
                 finished = true;
                 navigation_.set_waiting_at_waypoint(true);
@@ -147,7 +147,7 @@ int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
         }
         else
         {
-            if (ins_.position_lf()[Z] <= 0.9f * navigation_.takeoff_altitude)
+            if (ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
             {
                 finished = true;
                 navigation_.set_waiting_at_waypoint(true);
