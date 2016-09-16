@@ -55,7 +55,7 @@
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void scheduler_telemetry_send_rt_stats(Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
@@ -65,6 +65,6 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void scheduler_telemetry_send_rt_stats_all(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void scheduler_telemetry_send_rt_stats_all(Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* SCHEDULER_TELEMETRY_HPP_ */

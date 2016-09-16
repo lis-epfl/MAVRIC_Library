@@ -39,15 +39,14 @@
  ******************************************************************************/
 
 #include "boards/mavrinux.hpp"
+
 #include "sample_projects/LEQuad/lequad.hpp"
 
 #include "hal/dummy/i2c_dummy.hpp"
+
 #include "simulation/dynamic_model_telemetry.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
+#include "util/print_util.hpp"
 
 
 int main(int argc, char** argv)
@@ -117,7 +116,7 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Add simulation telemetry
     // -------------------------------------------------------------------------
-    mav.mavlink_communication().add_msg_send(MAVLINK_MSG_ID_HIL_STATE_QUATERNION,  1000000, (Mavlink_communication::send_msg_function_t)&dynamic_model_telemetry_send_state_quaternion, &board.dynamic_model);
+    mav.mavlink_communication().telemetry().add(MAVLINK_MSG_ID_HIL_STATE_QUATERNION,  1000000, (Periodic_telemetry::telemetry_function_t)&dynamic_model_telemetry_send_state_quaternion, &board.dynamic_model);
 
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");

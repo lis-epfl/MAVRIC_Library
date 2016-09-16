@@ -89,11 +89,11 @@
 #include "sensing/qfilter_default_config.hpp"
 
 #include "util/coord_conventions.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "sensing/altitude.h"
-#include "util/print_util.h"
 }
 
 
@@ -104,14 +104,21 @@ extern "C"
 class LEQuad
 {
 public:
+    static const uint32_t N_TELEM  = 30;
+    static const uint32_t N_MSG_CB = 20;
+    static const uint32_t N_CMD_CB = 20;
+    static const uint32_t N_PARAM  = 120;
+    typedef Mavlink_communication_T<N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM> Mavlink_communication;
+
+
     /**
      * \brief   Configuration structure
      */
      struct conf_t
     {
         State::conf_t state_config;
-        data_logging_conf_t data_logging_continuous_config;
-        data_logging_conf_t data_logging_stat_config;
+        Data_logging::conf_t data_logging_continuous_config;
+        Data_logging::conf_t data_logging_stat_config;
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
         Navigation::conf_t navigation_config;
@@ -174,7 +181,7 @@ public:
      *
      * \return  MAVLINK Communication module
      */
-     inline Mavlink_communication& mavlink_communication(){return mavlink_communication_;};
+     inline Mavlink_communication& mavlink_communication(){return communication;};
 
 
 protected:
@@ -223,8 +230,8 @@ protected:
 
     State state;                                                ///< The structure with all state information
 
-    Scheduler scheduler;
-    Mavlink_communication mavlink_communication_;
+    Scheduler_T<20>       scheduler;
+    Mavlink_communication   communication;
 
     servos_mix_quadcotper_diag_t servo_mix;
 
@@ -246,8 +253,8 @@ protected:
     hud_telemetry_t hud;                                        ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    Data_logging    data_logging_continuous;
-    Data_logging    data_logging_stat;
+    Data_logging_T<10>    data_logging_continuous;
+    Data_logging_T<10>    data_logging_stat;
 
     command_t                       command;
     // attitude_controller_t           attitude_controller;
@@ -265,8 +272,13 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.state_config = State::default_config();
 
-    conf.data_logging_continuous_config = data_logging_default_config();
-    conf.data_logging_stat_config       = data_logging_default_config();
+    conf.data_logging_continuous_config                  = Data_logging::default_config();
+    conf.data_logging_continuous_config.continuous_write = true;
+    conf.data_logging_continuous_config.log_data         = 0;
+
+    conf.data_logging_stat_config                  = Data_logging::default_config();
+    conf.data_logging_stat_config.continuous_write = false;
+    conf.data_logging_stat_config.log_data         = 0;
 
     conf.scheduler_config = Scheduler::default_config();
 
@@ -293,11 +305,10 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
 
     /* Mavlink communication config */
-    Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);
-    mavlink_communication_config.message_handler_config.debug    = false;
-    mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug     = false;
-    conf.mavlink_communication_config = mavlink_communication_config;
+    conf.mavlink_communication_config                        = Mavlink_communication::default_config(sysid);
+    conf.mavlink_communication_config.handler.debug          = false;
+    conf.mavlink_communication_config.parameters.debug       = true;
+    conf.mavlink_communication_config.mavlink_stream.debug   = false;
 
     return conf;
 };

@@ -43,11 +43,8 @@
 
 #include "control/manual_control.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
