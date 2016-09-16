@@ -135,7 +135,7 @@ mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission
                                          mission_planner->mavlink_stream_.compid(),
                                          &msg,
                                          mission_planner->waypoint_handler_.current_waypoint_index());
-        mission_planner->mavlink_stream_.send(&msg);      
+        mission_planner->mavlink_stream_.send(&msg);
 
         result = MAV_RESULT_ACCEPTED;
     }
@@ -391,12 +391,15 @@ mav_result_t Mission_planner::set_auto_landing(Mission_planner* mission_planner,
 
 void Mission_planner::state_machine()
 {
+    // Reset hold position flag as we are not in hold position mode
+    if (state_.mav_mode().ctrl_mode() != Mav_mode::POSITION_HOLD)
+    {
+        hold_position_set_ = false;
+    }
+
     // If is auto, look to the waypoints
     if (state_.mav_mode().is_auto())
     {
-        // Reset hold position flag as we are now in auto mode
-        hold_position_set_ = false;
-
         // Require takeoff if we have switched out of auto, dont take off if on ground
         if (require_takeoff_ &&
            (internal_state_ != STANDBY ||
@@ -517,7 +520,7 @@ void Mission_planner::state_machine()
             }
         }
     }
-    else 
+    else
     {
         require_takeoff_ = true;
 
@@ -957,14 +960,14 @@ bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
     {
         print_util_dbg_print("Cannot setup mission handler\r\n");
     }
-    
+
     return ret;
 }
 
 bool Mission_planner::insert_ad_hoc_waypoint(Waypoint wpt)
 {
     bool ret = true;
-    
+
     // Copy waypoint state in case of failure
     Waypoint old = inserted_waypoint_;
     inserted_waypoint_ = wpt;
