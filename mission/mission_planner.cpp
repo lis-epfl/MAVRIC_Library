@@ -526,6 +526,23 @@ void Mission_planner::state_machine()
 
         if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
         {
+            // Take off if on ground and thrust is on
+            if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)
+            {
+                inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                                MAV_CMD_NAV_LOITER_UNLIM,
+                                                0,
+                                                0.0f,
+                                                0.0f,
+                                                0.0f,
+                                                coord_conventions_get_yaw(ahrs_.qe),
+                                                ins_.position_lf()[X],
+                                                ins_.position_lf()[Y],
+                                                navigation_.takeoff_altitude);
+                insert_ad_hoc_waypoint(inserted_waypoint_);
+                hold_position_set_ = true;
+            }
+
             // Set hold position if needed
             if (!hold_position_set_)
             {
@@ -535,7 +552,7 @@ void Mission_planner::state_machine()
                                                 0.0f,
                                                 0.0f,
                                                 0.0f,
-                                                coord_conventions_get_yaw(ahrs_),
+                                                coord_conventions_get_yaw(ahrs_.qe),
                                                 ins_.position_lf()[X],
                                                 ins_.position_lf()[Y],
                                                 ins_.position_lf()[Z]);
