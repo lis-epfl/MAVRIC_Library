@@ -64,14 +64,20 @@ extern "C"
 }
 
 #define MAVLINK_SYS_ID 2
-#define PKT_SIZE       4
+#define PKT_SIZE       4 // bytes to send
 
 
-// #define SEND
+#define SEND // define this for transmitter device
 
-// #define TEST0
-// #define TEST1
-// #define TEST2
+// #define TEST0 // test with all status printing
+#define TEST2   // test with failure printing
+
+// If no test defined than last test is done: using interrupts
+
+// README:  the tests won't work like so because TAULABS sets the transmit header directly when entering in
+//          TX mode, but in the tests, this should be done in the initialization of the device and also, for
+//          test0 and 2, comment set_rx_mode call in initialization and for the last test, uncomment prepare_
+//          receive.
 
 
 
@@ -214,7 +220,7 @@ int main(int argc, char** argv)
     Gpio_stm32  nirq_gpio(interrupt_gpio_conf);
 
     Console<Serial> console(board.serial_);
-    Rfm22b rfm22b(board.spi_3_, board.nss_2_gpio_, nirq_gpio, board.serial_, board.led_rf_);
+    Rfm22b rfm22b(board.spi_3_, board.nss_2_gpio_, nirq_gpio, board.led_rf_);
     bool bo = rfm22b.init();
 
     uint8_t rssi = 0;
@@ -249,6 +255,8 @@ int main(int argc, char** argv)
     #ifdef SEND
     while (1)
     {
+        bo &= rfm22b.interrput_enable(  Rfm22b::INT_EN1_IFFERR_MSK |
+                                        Rfm22b::INT_EN1_IPKSENT_MSK, 0x00);
         bo &= rfm22b.clear_tx_fifo();
 
         if (tx_len > 64)
@@ -354,6 +362,9 @@ int main(int argc, char** argv)
     #else
     while (1)
     {
+        bo &= rfm22b.interrput_enable(  Rfm22b::INT_EN1_IFFERR_MSK      |
+                                        Rfm22b::INT_EN1_IRXFFAFULL_MSK  |
+                                        Rfm22b::INT_EN1_IPKVALID_MSK, 0x00);
         bo &= rfm22b.clear_rx_fifo();
         bo &= rfm22b.rx_mode_enable();
 
@@ -451,171 +462,9 @@ int main(int argc, char** argv)
         board.led_rf_.off();
     }
     #endif
-#elif defined(TEST1)
 
-    #ifdef SEND
-    uint32_t tx_msg_cnt = 0;
-    uint32_t tx_msg_nack = 0;
-    uint32_t tx_msg_err  = 0;
-    while (1)
-    {
-        success = rfm22b.write_test(tx_msg, tx_len);
-        // console.write(success);
-        // time_keeper_delay_ms(delay);
-
-        // board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        // time_keeper_delay_ms(delay);
-
-        // for (int i = 0; i < tx_len; i++)
-        // {
-        //     // console.write(tx_msg[i]);
-        //     // time_keeper_delay_ms(delay);
-        //     // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-        //     // time_keeper_delay_ms(delay);
-        // }
-
-        if (success != 1)
-        {
-            if (success == -3)
-            {
-                tx_msg_nack++;
-            }
-            else
-            {
-                tx_msg_err++;
-            }
-            console.write(tx_msg_nack);
-            time_keeper_delay_us(25);
-            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-            time_keeper_delay_us(25);
-            console.write(tx_msg_err);
-            time_keeper_delay_us(25);
-            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-            time_keeper_delay_us(25);
-            console.write(tx_msg_cnt);
-            time_keeper_delay_us(25);
-            board.serial_.write((const uint8_t*)newline, sizeof(newline));
-            time_keeper_delay_us(25);
-            // board.serial_.write((const uint8_t*)newline, sizeof(newline));
-            // time_keeper_delay_ms(500);
-            continue;
-        }
-
-        // board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-
-        board.led_rf_.on();
-
-        for (int i = 0; i < tx_len; i++)
-        {
-            // console.write(tx_msg[i]);
-            // time_keeper_delay_ms(delay);
-            // board.serial_.write((const uint8_t*)sep, sizeof(sep));
-            // time_keeper_delay_ms(delay);
-            if (success == 1)
-            {
-                tx_msg[i]++;
-            }
-        }
-        tx_msg_cnt++;
-        console.write(tx_msg_nack);
-        time_keeper_delay_us(25);
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_us(25);
-        console.write(tx_msg_err);
-        time_keeper_delay_us(25);
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_us(25);
-        console.write(tx_msg_cnt);
-        time_keeper_delay_us(25);
-        board.serial_.write((const uint8_t*)newline, sizeof(newline));
-        time_keeper_delay_us(25);
-        // board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        // time_keeper_delay_ms(delay);
-        // board.serial_.write((const uint8_t*)newline, sizeof(newline));
-        // time_keeper_delay_ms(500);
-        // board.serial_.write((const uint8_t*)newline, sizeof(newline));
-        // time_keeper_delay_ms(delay);
-        // board.serial_.write((const uint8_t*)newline, sizeof(newline));
-        // time_keeper_delay_ms(delay);
-
-        board.led_rf_.off();
-
-    }
-
-    #else
-    uint32_t rx_msg_cnt = 0;
-    uint32_t rx_msg_err = 0;
-    uint8_t prev_msg = 255;
-    while (1)
-    {
-        success = rfm22b.read_test(rx_msg, &rx_len);
-            console.write(prev_msg);
-            time_keeper_delay_us(25);
-            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-            time_keeper_delay_us(25);
-            console.write(rx_msg[0]);
-            time_keeper_delay_us(25);
-            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-            time_keeper_delay_us(25);
-        // console.write(success);
-        // time_keeper_delay_ms(delay);
-
-        if (success != 1)
-        {
-            // board.serial_.write((const uint8_t*)newline, sizeof(newline));
-            // time_keeper_delay_us(200);
-            if (rx_msg[0] != (prev_msg + 1) || (rx_msg[0] == 0 && prev_msg != 255))
-            {
-                rx_msg_err++;
-            }
-            console.write(rx_msg_err);
-            time_keeper_delay_us(25);
-            board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-            time_keeper_delay_us(25);
-            console.write(rx_msg_cnt);
-            time_keeper_delay_us(25);
-            board.serial_.write((const uint8_t*)newline, sizeof(newline));
-            time_keeper_delay_us(25);
-
-            continue;
-        }
-        board.led_rf_.on();
-        prev_msg = rx_msg[0];
-        rx_msg_cnt++;
-        console.write(rx_msg_err);
-        time_keeper_delay_us(25);
-        board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        time_keeper_delay_us(25);
-        console.write(rx_msg_cnt);
-        time_keeper_delay_us(25);
-        board.serial_.write((const uint8_t*)newline, sizeof(newline));
-        time_keeper_delay_us(25);
-
-
-        // board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        // time_keeper_delay_ms(delay);
-
-        // for (int i = 0; i < rx_len; i++)
-        // {
-        //     console.write(rx_msg[i]);
-        //     time_keeper_delay_ms(delay);
-        //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
-        //     time_keeper_delay_ms(delay);
-        // }
-
-        // board.serial_.write((const uint8_t*)sep2, sizeof(sep));
-        // time_keeper_delay_ms(500);
-
-        // board.serial_.write((const uint8_t*)newline, sizeof(newline));
-        // time_keeper_delay_ms(delay);
-
-        // board.serial_.write((const uint8_t*)newline, sizeof(newline));
-        // time_keeper_delay_ms(delay);
-
-        board.led_rf_.off();
-    }
-    #endif
 #elif defined (TEST2)
+
     #ifdef SEND
     uint32_t tx_msg_cnt = 0;
     uint32_t irq_cnt    = 0;
@@ -623,7 +472,8 @@ int main(int argc, char** argv)
     uint64_t time_end = 0;
     while (1)
     {
-        bo &= rfm22b.interrput_enable(0x84,0x00);
+        bo &= rfm22b.interrput_enable(  Rfm22b::INT_EN1_IFFERR_MSK |
+                                        Rfm22b::INT_EN1_IPKSENT_MSK, 0x00);
         rfm22b.clear_tx_fifo();
 
         uint8_t device_status = 0;
@@ -712,7 +562,9 @@ int main(int argc, char** argv)
     time_start = time_keeper_get_us();
     while (1)
     {
-        bo &= rfm22b.interrput_enable(0x97,0x00);
+        bo &= rfm22b.interrput_enable(  Rfm22b::INT_EN1_IFFERR_MSK      |
+                                        Rfm22b::INT_EN1_IRXFFAFULL_MSK  |
+                                        Rfm22b::INT_EN1_IPKVALID_MSK, 0x00);
 
         rfm22b.clear_rx_fifo(); // Might have to be done outside
 

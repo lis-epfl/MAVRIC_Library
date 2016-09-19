@@ -38,246 +38,192 @@
  * \brief   This file is the driver for the rfm22b, a RF transceiver
  *
  ******************************************************************************/
- #include <cstddef>
- #include "drivers/rfm22b.hpp"
+#include <cstddef>
+#include "drivers/rfm22b.hpp"
 
- #include "hal/common/time_keeper.hpp"
-#include <libopencm3/cm3/nvic.h>
-#include <libopencm3/stm32/exti.h>
+#include "hal/common/time_keeper.hpp"
+
+// USED FOR INTERRUPTS BUT ONLY VALID FOR STM32 !!!
 #include "hal/stm32/gpio_stm32.hpp"
 
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/exti.h>
 
-#include "util/string_util.hpp"
 
 static Rfm22b* handlers_ = 0;
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Rfm22b::Rfm22b(Spi& spi, Gpio& nss_gpio, Gpio& nirq_gpio, Serial& serial, Led_gpio& led_irq)://, const conf_t config):
+Rfm22b::Rfm22b(Spi& spi, Gpio& nss_gpio, Gpio& nirq_gpio, Led_gpio& led_irq)://, const conf_t config):
 nirq_(nirq_gpio),
 counter_var(0),
 rx_success_(false),
 spi_(spi),
 nss_(nss_gpio),
-// nirq_(nirq_gpio),
+// nirq_(nirq_gpio), // this is while nirq is public
 rx_len_(0),
-// rx_success_(false),
-serial_(serial),
-console(serial),
+// rx_success_(false), // this is while rx_sucess_ is public
 led_irq_(led_irq),
+device_status_({0,0,0,0}),
+coordinator_(false),
+coordinator_id_(0),
+device_id_(0),
+ppm_send_mode_(false),
+ppm_recv_mode_(false),
+ppm_only_mode_(false),
+one_way_link_(false),
+datarate_(0),
+packet_time_(0),
+channels_({0}),
+max_packet_len_(0),
+destination_id_(0),
+frequency_step_size_(0),
+afc_correction_hz_(0),
+rssi_dBm_(0),
+trans_state_(TRANS_STATE_INITIALIZING),
 irq_callback(0)
 {}
-
-// bool Rfm22b::init()
-// {
-// 	bool success = true;
-
-// 	// Initializing Slave Select GPIO
-//     success &= nss_.init();
-//     unselect_slave();
-
-//     // Reading Device Type
-// 	uint8_t device_type_answer = 0x00;
-// 	success &= read_reg(DEVICE_TYPE_REG, &device_type_answer);
-// 	success &= device_type_answer == DEVICE_TYPE ? true : false;
-
-// 	// Reading Device Version
-// 	uint8_t device_version_answer = 0x00;
-// 	success &= read_reg(DEVICE_VERSION_REG, &device_version_answer);
-// 	success &= device_version_answer == DEVICE_VERSION ? true : false;
-
-// 	// Reading Interrupt Enable
-// 	uint8_t interen1 = 0x00;
-// 	uint8_t interen2 = 0x00;
-// 	success &= read_reg(INTERRUPT_EN_1, &interen1);
-// 	success &= read_reg(INTERRUPT_EN_2, &interen2);
-
-// 	// Reading Operating Function Control
-// 	uint8_t op_func_cntl_1 = 0x00;
-// 	uint8_t op_func_cntl_2 = 0x00;
-// 	success &= read_reg(OP_FUNC_CNTL_1, &op_func_cntl_1);
-// 	success &= read_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
-
-//  //    // Reset rfm22b
-//  //    success &= reset();
-
-//  //    for (uint8_t i = 0; i < 50; ++i)
-//  //    {
-//  //    	uint8_t read_buf1 = 0;
-//  //    	uint8_t read_buf2[2] = {0};
-//  //    	success &= read_reg(INTERRUPT_STAT_1, read_buf2, 2);
-
-//  //    	success &= read_reg(DEVICE_STATUS, &read_buf1);
-//  //    	success &= read_reg(EZMAC_STATUS, &read_buf1);
-
-//  //    	time_keeper_delay_ms(1);
-//  //    }
-
-//  //    uint8_t read_buf1 = 0;
-// 	// uint8_t read_buf2[2] = {0};
-// 	// success &= read_reg(INTERRUPT_STAT_1, read_buf2, 2);
-
-// 	// success &= read_reg(DEVICE_STATUS, &read_buf1);
-// 	// success &= read_reg(EZMAC_STATUS, &read_buf1);
-
-// 	// time_keeper_delay_ms(1);
-
-//  //    // Disable interrupts
-//  //    uint8_t dis_int = 0x00;
-//  //    success &= write_reg(INTERRUPT_EN_1, &dis_int);
-//  //    success &= write_reg(INTERRUPT_EN_2, &dis_int);
-
-//  //    // Test to see if device is responding
-// 	// uint8_t device_type_answer = 0x00;
-// 	// success &= read_reg(DEVICE_TYPE_REG, &device_type_answer);
-// 	// success &= device_type_answer == DEVICE_TYPE ? true : false;
-
-// 	// if (!success)
-// 	// {
-// 	// 	return success;
-// 	// }
-
-// 	// time_keeper_delay_ms(1);
-
-// 	// // Set Cristal Oscillator to get desired frequency
-// 	// uint8_t osc_load_cap = 0x7F;
-// 	// success &= write_reg(OSC_LOAD_CAP_REG, &osc_load_cap);
-
-// 	// // Disable low duty cycle mode
-// 	// uint8_t duty_cycle_mode = 0x00;
-// 	// success &= write_reg(OP_FUNC_CNTL_2, &duty_cycle_mode);
-
-// 	// // Set output clock to 1MHz
-// 	// uint8_t output_clock = CPU_OUTPUT_CLK_1MHZ;
-// 	// success &= write_reg(CPU_OUTPUT_CLK, &output_clock);
-
-// 	// // Set Ready Mode
-// 	// uint8_t set_mode = OP_CNTL1_MODE_IDLE_READY;
-// 	// success &= write_reg(OP_FUNC_CNTL_1, &set_mode);
-
-// 	// // Configure I/O ports
-// 	// uint8_t io_port_config 	= 0x00; // Default config
-// 	// uint8_t gpio0_config 	= 0xC0 | GPIOX_CONFIG_TX_STATE;
-// 	// uint8_t gpio1_config 	= 0xC0 | GPIOX_CONFIG_RX_STATE;
-// 	// uint8_t gpio2_config	= 0xC0 | GPIOX_CLR_CH_ASSESS;
-// 	// success &= write_reg(IO_PORT_CONFIG, &io_port_config);
-// 	// success &= write_reg(GPIO0_CONFIG_REG, &gpio0_config);
-// 	// success &= write_reg(GPIO1_CONFIG_REG, &gpio1_config);
-// 	// success &= write_reg(GPIO2_CONFIG_REG, &gpio2_config);
-
-// 	// time_keeper_delay_ms(1);
-
-// 	// // Set Data Source and Modulation Mode
-// 	// uint8_t fd_msb = 0;
-// 	// success &= read_reg(MOD_MODE_CNTL_2, &fd_msb);
-// 	// fd_msb  &= MOD_CNTL2_FD_MSB;
-// 	// uint8_t data_source = MOD_CNTL2_FIFO | MOD_CNTL2_GFSK | fd_msb;
-// 	// success &= write_reg(MOD_MODE_CNTL_2, &data_source);
-
-// 	// //Setups to read internal temperature sensor
-// 	// temp_sens_config();
-
-// 	// // Enabling TX/RX packet handling
-// 	// uint8_t data_access = ACCESS_TX_PACK_EN | ACCESS_RX_PACK_EN;
-// 	// success &= write_reg(DATA_ACCESS_CNTL, &data_access);
-
-
-// 	// // Set Preamble Length
-// 	// uint8_t preamble_length = 0x0C;
-// 	// success &= write_reg(PREAMBLE_LEN_REG, &preamble_length);
-
-// 	// // Set Preamble Detection Length
-// 	// uint8_t preamble_detection = 6 << 3;
-// 	// success &= write_reg(PREAMBLE_DET_CNTL, &preamble_detection);
-
-// 	// // Set header
-// 	// uint8_t header_control = 0xFF;
-// 	// success &= write_reg(HEADER_CNTL_1, &header_control);
-
-// 	// // Header enable
-// 	// uint8_t header_enable = 0xFF;
-// 	// success &= write_reg(0x46, &header_enable);
-// 	// success &= write_reg(0x45, &header_enable);
-// 	// success &= write_reg(0x44, &header_enable);
-// 	// success &= write_reg(0x43, &header_enable);
-
-// 	// // Header Length Syncword Length
-// 	// uint8_t hdlen_synclen = 0x40 | 0x06;
-// 	// success &= write_reg(HEADER_CNTL_2, &hdlen_synclen);
-
-// 	// time_keeper_delay_ms(1);
-
-// 	// // Set Syncword
-// 	// uint8_t sync_byte_1 = 0x2D;
-// 	// uint8_t sync_byte_2 = 0xD4;
-// 	// uint8_t sync_byte_3 = 0x4B;
-// 	// uint8_t sync_byte_4 = 0x59;
-// 	// success &= write_reg(SYNC_WORD_3, &sync_byte_1);
-// 	// success &= write_reg(SYNC_WORD_2, &sync_byte_2);
-// 	// success &= write_reg(SYNC_WORD_1, &sync_byte_3);
-// 	// success &= write_reg(SYNC_WORD_0, &sync_byte_4);
-
-// 	// // Set FIFO threshold
-// 	// uint8_t tx_fifo_thresh_h = 62;
-// 	// uint8_t tx_fifo_thresh_l = 32;
-// 	// uint8_t rx_fifo_thresh_h = 32;
-// 	// success &= write_reg(TX_FIFO_CNTL_1, &tx_fifo_thresh_h);
-// 	// success &= write_reg(TX_FIFO_CNTL_2, &tx_fifo_thresh_l);
-// 	// success &= write_reg(RX_FIFO_CNTL  , &rx_fifo_thresh_h);
-
-// 	// // Set Cristal Oscillator to get desired frequency
-// 	// osc_load_cap = 0x7F;
-// 	// success &= write_reg(OSC_LOAD_CAP_REG, &osc_load_cap);
-
-// 	// time_keeper_delay_ms(1);
-
-// 	// // Set Nominal Carrier Frequency
-// 	// set_normal_carrier_freq();
-
-// 	// // Set Data Rate
-// 	// set_datarate();
-
-// 	// // modulation mode control 1
-// 	// uint8_t mode_1 = 0x2C | MOD_CNTL1_WHITE_EN;
-// 	// success &= write_reg(MOD_MODE_CNTL_1, &mode_1);
-
-// 	// // modulation mode control 2
-// 	// uint8_t mode_2 = 0x23;
-// 	// success &= write_reg(MOD_MODE_CNTL_2, &mode_2);
-
-// 	// // frequency deviation
-// 	// uint8_t frequency_deviation = 0x30;
-// 	// success &= write_reg(FREQ_DEVIATION, &frequency_deviation);
-
-// 	// // ook counter val 1
-// 	// uint8_t ook_counter_val_1 = 0x00;
-// 	// success &= write_reg(OOK_COUNTER_VAL_1, &ook_counter_val_1);
-
-// 	// // ook counter val 2
-// 	// uint8_t ook_counter_val_2 = 0x00;
-// 	// success &= write_reg(OOK_COUNTER_VAL_2, &ook_counter_val_2);
-
-// 	// // Set Mode
-// 	// set_mode = OP_CNTL1_MODE_TX_ON;
-// 	// success &= write_reg(OP_FUNC_CNTL_1, &set_mode);
-
-// 	return success;
-// }
 
 bool Rfm22b::init()
 {
 	bool success = true;
 
-	// Initializing Slave Select GPIO
+	// Initialize Slave Select GPIO
     success &= nss_.init();
     unselect_slave();
 
-    // Initializing nIRQ GPIO
+    // Initialize nIRQ GPIO
     success &= nirq_.init();
+
+    success &= config_device(0, 0, 250, 0, false, false, false); // Could increase datarate
+
+    device_id_ = 0xE7E7E7E7;
+    if (device_id_ == 0)
+    {
+    	device_id_ = 1;
+    }
+
+    success &= exti_init();
+
+    //-->ecc library init missing
+
+
+    // TODO: make an enum for datarate ? Because 0,1,2,3,... is not really explicit
+    success &= config_device(3, 0, 250, 0, false, false, false); // not really need - try to remove this
+
+    success &= set_transmission_power(1); // Warning: Taulabs do not set the power...
+
+    success &= init_2(); // Sorry, I was not very inspired with names so, TODO: change name of function
+
+    // success &= set_transmit_header(); // UNCOMMENT FOR ALL TESTS
+
+    success &= set_rx_mode(); // COMMENT FOR ALL TESTS
+
+    // prepare_receive(); // UNCOMMENT FOR LAST TEST ONLY
+
+	return success;
+}
+
+bool Rfm22b::config_device(	int datarate,
+							uint8_t min_chan,
+							uint8_t max_chan,
+							uint32_t coordinator_id,
+							bool oneway,
+							bool ppm_mode,
+							bool ppm_only)
+{
+	bool ret = true;
+
+	coordinator_ = coordinator_id == 0;
+	ppm_mode = ppm_mode || ppm_only;
+
+	coordinator_id_ = coordinator_id;
+
+	ppm_send_mode_ = ppm_mode && coordinator_;
+	ppm_recv_mode_ = ppm_mode && !coordinator_;
+
+	// If datarate is so slow that we can only do PPM, force this
+	if (ppm_mode && (datarate <= 0))
+	{
+		ppm_only = true;
+	}
+
+	ppm_only_mode_ = ppm_only;
+
+	if (ppm_only)
+	{
+		one_way_link_ 	= true;
+		datarate_ 		= 0;
+	}
+	else
+	{
+		one_way_link_ 	= false;
+		datarate_ 		= datarate;
+	}
+
+	packet_time_ = (ppm_mode ? packet_time_ppm[datarate] : packet_time[datarate]);
+	if (!one_way_link_)
+	{
+		packet_time_ *= 2;  // double the time to allow a send and receive in each slice
+	}
+
+
+	// Find the first N channels that meet the min/max criteria out of the random channel list.
+	uint32_t crc = 0;
+	const uint8_t CRC_INC = 0x39;
+	if (coordinator_) {
+		crc = update_byte(device_id_, CRC_INC);
+	} else {
+		crc = update_byte(coordinator_id_, CRC_INC);
+	}
+
+	uint8_t num_found = 0;
+	while (num_found < num_channels[datarate])
+	{
+		// crc = PIOS_CRC_updateByte(crc, CRC_INC);
+		uint8_t chan = min_chan + (crc % (max_chan - min_chan));
+
+		if (chan < 250)
+		{
+			// skip any duplicates
+			for (int32_t i = 0; i < num_found; i++)
+			{
+				if (channels_[i] == chan)
+				{
+					continue;
+				}
+			}
+			channels_[num_found++] = chan;
+		}
+	}
+
+	// Calculate the maximum packet length from the datarate.
+	float bytes_per_period =
+	    (float)data_rate[datarate_] * (float)(packet_time_ - 2) / 9000; // not 9000.0f ?
+
+	max_packet_len_ = bytes_per_period - 6 - 4 -
+	    4 - 1; // TX preamble nibbles / 2, syncword length, header bytes, length byte
+	if (max_packet_len_ > 64) {
+		max_packet_len_ = 64;
+	}
+
+	return true;
+}
+
+bool Rfm22b::init_2()
+{
+	bool success = true;
 
     // Reseting device
     success &= reset();
+
+    // Read Status - Clear Interrupts
+    read_status();
+
+    // Disable all interrupts
+    success &= clear_bit_in_reg(INTERRUPT_EN_1, CLEAR_ALL);
+    success &= clear_bit_in_reg(INTERRUPT_EN_2, CLEAR_ALL);
 
     // Reading Device Type
 	uint8_t device_type_answer = 0x00;
@@ -289,8 +235,29 @@ bool Rfm22b::init()
 	success &= read_reg(DEVICE_VERSION_REG, &device_version_answer);
 	success &= device_version_answer == DEVICE_VERSION ? true : false;
 
-    // Set carrier frequency
-    success &= set_carrier_frequency(433E6);
+	time_keeper_delay_ms(1);
+
+	// Calibrate cristal oscillator to be exactly on frequency (different for every module ?)
+	success &= set_cristal_osci_load_cap();
+
+	// Disable low duty cycle mode
+	clear_bit_in_reg(OP_FUNC_CNTL_2, OP_CNTL2_LOW_DC_MSK);
+
+	// Set output clock to 1MHz
+	uint8_t output_clock = CPU_OUTPUT_CLK_1MHZ;
+	success &= write_reg(CPU_OUTPUT_CLK, &output_clock);
+
+	// Set Ready Mode
+	uint8_t set_mode = OP_CNTL1_MODE_IDLE_READY;
+	success &= write_reg(OP_FUNC_CNTL_1, &set_mode);
+
+	// Set I/O port configuration to default
+	success &= clear_bit_in_reg(IO_PORT_CONFIG, CLEAR_ALL);
+
+	// Configure GPIOS
+    success &= set_gpio_function();
+
+    time_keeper_delay_ms(1);
 
     // Set modulation Type
     success &= set_modulation_type();
@@ -298,54 +265,57 @@ bool Rfm22b::init()
     // Set modulation data source
     success &= set_modulation_data_source();
 
-    // Set data clock configuration
+    // No TX data clock
     success &= set_data_clock_configuration();
 
-    // Set TX power
-    success &= set_transmission_power(20);//20;
+    // Set RSSI threshold to -90 dBm
+    success &= set_rssi_threshold(-90);
 
-    // Configure GPIOS
-    success &= set_gpio_function();
+    time_keeper_delay_ms(1);
 
-    success &= interrput_enable(0x00,0x00);//0x77,0xF0);
+    // Enable TX and RX packet handlers and disable CRC
+    success &= set_bit_in_reg(DATA_ACCESS_CNTL, ACCESS_RX_PACK_EN_MSK | ACCESS_TX_PACK_EN_MSK);
+    success &= clear_bit_in_reg(DATA_ACCESS_CNTL, ACCESS_CRC_EN_MSK);
 
     // Preamble Configuration
-    success &= set_preamble_length(10);//40);
-    success &= set_preamble_detection(5);//5);
+    success &= set_preamble_length(12);
+    success &= set_preamble_detection(6);
 
-    // Syncword Configuration
-    //
-    uint8_t syncword[4] = {0x2D, 0x82, 0xEA, 0x1F};
-    success &= set_syncword_length(0x03);//0);
-    success &= set_syncword(syncword);
-
-    // Header Configuration
-    //
-    uint8_t transmit_header[4] = {0xAB, 0xBC, 0xCD, 0xDE};
-
-    success &= set_transmit_header(transmit_header);
-    success &= set_check_header(transmit_header);
-    success &= set_header_length(0x01);
+    // Set Header Control 1 register
     success &= set_header_check();
-    success &= header_enable();
+	success &= set_header_broadcast_address_check();
 
-    // Low Battery Detection Configuration
-    success &= enable_low_battery_detection();
-    success &= set_lbd_threshold(0x1F);
+	// Enable header if device is bound
+	success &= header_enable();
 
-    // // RSSI Configuration
-    // success &= set_rssi_offset(10);
-    // success &= set_rssi_threshold(0x60);//0x1E);
+	// Set Received Header Check
+    success &= set_check_header();
 
-    success &= set_datarate(40); //0x1999 = 100kbps // 0x0A3D = 40kbps
-    rx_mulit_packet_en();
+    // Set header and syncword length
+    success &= set_header_length(HDR_CNTL2_HD_3210);
+    success &= set_syncword_length(HDR_CNTL2_SYNC_3210);
 
-    nvic_enable_irq(NVIC_EXTI2_IRQ);
-    exti_select_source(EXTI2, GPIO_STM32_PORT_D);
-    exti_set_trigger(EXTI2, EXTI_TRIGGER_FALLING);
+    // Include packet length in package
+    success &= clear_bit_in_reg(HEADER_CNTL_2, HDR_CNTL2_FIXPKLEN_MSK);
 
-    handlers_ = this;
-    success &= prepare_receive();
+    time_keeper_delay_ms(1);
+
+    // Set syncword
+    success &= set_syncword();
+
+    // Set TX and RX FIFOs threshold
+    success &= set_fifos_threshold();
+
+    // Set the frequency calibration ??
+	success &= set_cristal_osci_load_cap();
+
+	time_keeper_delay_ms(1);
+
+	// Set nominal carrier frequency and frequency hopping step size
+	set_nominal_carrier_frequency(433000000, 0);
+
+	// Set datarate
+	set_datarate();
 
 	return success;
 }
@@ -400,6 +370,7 @@ bool Rfm22b::write_reg(uint8_t reg, uint8_t* out_data, uint32_t nbytes)
 
 uint32_t Rfm22b::readable(void)
 {
+	// This is temporary for tests to work
 	return rx_len_;
 }
 
@@ -411,50 +382,8 @@ uint32_t Rfm22b::writeable(void)
 bool Rfm22b::read(uint8_t* bytes, const uint32_t size)
 {
 	bool ret = true;
-	// int success = 0;
-
-	// uint8_t message[64] 	= {0};
-	// uint8_t acknowledge[12] = "acknowledge";
-	// uint8_t rx_len 			= 0;
-
-	// success = receive(message, &rx_len);
-	// if (success != 1)
-	// {
-	// 	return false;
-	// }
-
-	// success = transmit(acknowledge, 11);
-	// if (success != 1)
-	// {
-	// 	return false;
-	// }
 
 	return true;
-}
-
-int Rfm22b::read_test(uint8_t* message, uint8_t* rx_len)
-{
-	bool ret = true;
-	int success = 1;
-
-	// // uint8_t message[64] 	= {0};
-	// uint8_t acknowledge[12] = "acknowledge";
-	// // uint8_t rx_len 			= 0;
-
-	// success = receive(message, rx_len);
-	// if (success != 1)
-	// {
-	// 	return success;
-	// }
-
- //    time_keeper_delay_us(200);
-	// success = transmit(acknowledge, 11);
-	// if (success != 1)
-	// {
-	// 	return success;
-	// }
-
-	return success;
 }
 
 bool Rfm22b::write(const uint8_t* bytes, const uint32_t size)
@@ -481,52 +410,6 @@ bool Rfm22b::write(const uint8_t* bytes, const uint32_t size)
 
 }
 
-int Rfm22b::write_test(uint8_t* message, uint8_t tx_len)
-{
-	bool ret = true;
-	int success = 1;
-
-	// // uint8_t message[64] 	= "Hello";
-	// uint8_t acknowledge[12] = "acknowledge";
-	// uint8_t ack_msg[12] 	= {0};
-	// uint8_t rx_len 			= 0;
-
-	// success = transmit(message, tx_len, 10000);
-	// if (success != 1)
-	// {
-	// 	return success;
-	// }
-
- //    const char* newline = "\r\n";
- //    const char* sep  = " ";
- //    // console.write(' ');
- //    // time_keeper_delay_ms(5);
- //    // serial_.write((const uint8_t*)newline, sizeof(newline));
- //    // time_keeper_delay_ms(5);
-
- //    time_keeper_delay_us(200);
-	// success = receive(ack_msg, &rx_len, 30000);
-	// if (success != 1)
-	// {
-	// 	return success;
-	// }
-
-	// for (int i = 0; i < 12; i++)
-	// {
-	// 	// console.write(ack_msg[i]);
- //  //   	time_keeper_delay_ms(5);
-	// 	// serial_.write((const uint8_t*)sep, sizeof(sep));
- //  //   	time_keeper_delay_ms(5);
-	// 	if (acknowledge[i] != ack_msg[i])
-	// 	{
-	// 		success = -5;
-	// 		break;
-	// 	}
-	// }
-
-	return success;
-}
-
 void Rfm22b::select_slave(void)
 {
     nss_.set_low();
@@ -543,367 +426,90 @@ bool Rfm22b::reset(void)
 {
     bool ret = true;
 
-    uint8_t reset_command = OP_CNTL1_SWRESET |
-    						OP_CNTL1_MODE_IDLE_READY;
+    uint8_t reset_command = OP_CNTL1_SWRESET;
 
     // Write reset
     ret &= write_reg(OP_FUNC_CNTL_1, &reset_command);
 
     // Let the sensor reset
-    time_keeper_delay_ms(50);
+    for (uint8_t i = 0; i < 50; ++i) {
+		// Read the status registers
+		read_status();
+
+		// Is the chip ready?
+		if (device_status_.int_status_2.chip_ready) {
+			break;
+		}
+		time_keeper_delay_ms(1);
+	}
 
     return ret;
 }
 
-// bool Rfm22b::temp_sens_config(void)
-// {
-// 	bool ret = true;
-
-// 	// ADC used to sample the temperature sensor
-// 	uint8_t adc_config = ADC_SOURCE_SEL_TEMP_SENSOR;
-// 	ret &= write_reg(ADC_CONFIG, &adc_config);
-
-// 	// ADC offset
-// 	uint8_t adc_offset = 0x00;
-// 	ret &= write_reg(ADC_SENS_AMP_OFST, &adc_offset);
-
-// 	// Temperature sensor calibration
-// 	uint8_t temp_sens_calib = TEMP_SENS_CALIB_0;
-// 	ret &= write_reg(TEMP_SENS_CNTL, &temp_sens_calib);
-
-// 	// Temperature sensor offset
-// 	uint8_t temp_offset = 0x00;
-// 	ret &= write_reg(TEMP_VAL_OFST, &temp_offset);
-
-// 	// Start an ADC conversion
-// 	adc_config |= ADC_START;
-// 	ret &= write_reg(ADC_CONFIG, &adc_config);
-
-// 	// Set the RSSI threshold interrupt to about -90dBm
-// 	uint8_t rssi_thresh = (-90 + 122) * 2;
-// 	ret &= write_reg(RSSI_THRESH_CLR_CH, &rssi_thresh);
-
-// 	time_keeper_delay_ms(1);
-
-// 	return ret;
-// }
-
-// bool Rfm22b::set_normal_carrier_freq(void)
-// {
-// 	bool ret = true;
-
-// 	// holds the hbsel (1 or 2)
-// 	uint8_t hbsel;
-// 	uint32_t frequency_hz = 430000000; //Hz
-
-// 	if (frequency_hz < 480000000) {
-// 		hbsel = 0;
-// 	} else {
-// 		hbsel = 1;
-// 	}
-// 	float freq_mhz = (float)(frequency_hz) / 1000000.0f;
-// 	float xtal_freq_khz = 30000.0f;
-// 	float sfreq = freq_mhz / (10.0f * (xtal_freq_khz / 30000.0f) * (1 + hbsel));
-// 	uint32_t fb = (uint32_t) sfreq - 24 + (64 + 32 * hbsel);
-// 	uint32_t fc = (uint32_t) ((sfreq - (uint32_t) sfreq) * 64000.0f);
-// 	uint8_t fch = (fc >> 8) & 0xff;
-// 	uint8_t fcl = fc & 0xff;
-
-// 	// Set the frequency hopping step size, the step size is
-// 	// 10MHz / 250 channels = 40khz, and the step size is
-// 	// specified in 10khz increments.
-// 	uint8_t freq_hop_step_size = 4;
-// 	ret &= write_reg(FREQ_HOP_STEP_SIZE, &freq_hop_step_size);
-
-// 	// Frequency Hopping Channel
-// 	uint8_t freq_hop_ch_sel = 0x00;
-// 	ret &= write_reg(FREQ_HOP_CH_SEL, &freq_hop_ch_sel);
-
-// 	// No frequency Offset
-// 	uint8_t frequency_offset = 0x00;
-// 	ret &= write_reg(FREQ_OFFSET_1, &frequency_offset);
-// 	ret &= write_reg(FREQ_OFFSET_2, &frequency_offset);
-
-// 	// Set the carrier frequency
-// 	uint8_t freq_band_sel = fb & 0xFF;
-// 	uint8_t nrml_carr_freq_1 = fch;
-// 	uint8_t nrml_carr_freq_0 = fcl;
-// 	ret &= write_reg(FREQ_BAND_SEL, &freq_band_sel);
-// 	ret &= write_reg(NRML_CARR_FREQ_1, &nrml_carr_freq_1);
-// 	ret &= write_reg(NRML_CARR_FREQ_0, &nrml_carr_freq_0);
-
-// 	return ret;
-// }
-
-// bool Rfm22b::set_datarate(void)
-// {
-// 	bool ret = true;
-
-// 	// if filter bandwidth
-// 	uint8_t if_filter_bw = 0x01;
-// 	ret &= write_reg(0x1C, &if_filter_bw);
-
-// 	// afc loop gearshift override
-// 	uint8_t afc_loop_g_o = 0x40;
-// 	ret &= write_reg(0x1D, &afc_loop_g_o);
-
-// 	// afc timing control
-// 	uint8_t afc_timing_control = 0x0A;
-// 	ret &= write_reg(0x1E, &afc_timing_control);
-
-// 	// Clock Recovery Gearshift Override
-// 	uint8_t clk_rec_g_o = 0x03;
-// 	ret &= write_reg(0x1F, &clk_rec_g_o);
-
-// 	// Clock Recovery Oversampling Ratio
-// 	uint8_t clk_rec_ovrsamp_r = 0xA1;
-// 	ret &= write_reg(0x20, &clk_rec_ovrsamp_r);
-
-// 	// Clock Recorvery Offset 2
-// 	uint8_t clk_rec_offset_2 = 0x20;
-// 	ret &= write_reg(0x21, &clk_rec_offset_2);
-
-// 	// Clock Recorvery Offset 1
-// 	uint8_t clk_rec_offset_1 = 0x4E;
-// 	ret &= write_reg(0x22, &clk_rec_offset_1);
-
-// 	// Clock Recorvery Offset 0
-// 	uint8_t clk_rec_offset_0 = 0xA5;
-// 	ret &= write_reg(0x23, &clk_rec_offset_0);
-
-// 	// Clock Recovery Timing Loop Gain 1
-// 	uint8_t clk_rec_t_loop_gain_1 = 0x00;
-// 	ret &= write_reg(0x24, &clk_rec_t_loop_gain_1);
-
-// 	// Clock Recovery Timing Loop Gain 0
-// 	uint8_t clk_rec_t_loop_gain_0 = 0x34;
-// 	ret &= write_reg(0x25, &clk_rec_t_loop_gain_0);
-
-// 	// agc override 1
-// 	uint8_t agc_override_1 = 0x60;
-// 	ret &= write_reg(0x69, &agc_override_1);
-
-// 	// afc limiter
-// 	uint8_t afc_limiter = 0x1E;
-// 	ret &= write_reg(0x2A, &afc_limiter);
-
-// 	// tx data rate 1
-// 	uint8_t tx_data_rate_1 = 0x4E;
-// 	ret &= write_reg(0x6E, &tx_data_rate_1);
-
-// 	// tx data rate 0
-// 	uint8_t tx_data_rate_0 = 0xA5;
-// 	ret &= write_reg(0x6F, &tx_data_rate_0);
-
-// 	return ret;
-// }
-
-// bool Rfm22b::rfm22b_init(void)
-// {
-// 	bool ret = true;
-
-// 	// Disable interrupt
-// 	uint8_t dis_int = 0x00;
-// 	ret &= write_reg(INTERRUPT_EN_2, &dis_int);
-
-// 	// Set Ready Mode
-// 	uint8_t set_mode = OP_CNTL1_MODE_IDLE_READY;
-// 	ret &= write_reg(OP_FUNC_CNTL_1, &set_mode);
-
-// 	// Set Cristal Oscillator to get desired frequency
-// 	uint8_t osc_load_cap = 0x7F;
-// 	ret &= write_reg(OSC_LOAD_CAP_REG, &osc_load_cap);
-
-// 	// Set output clock to 2MHz
-// 	uint8_t output_clock = CPU_OUTPUT_CLK_2MHZ;
-// 	ret &= write_reg(CPU_OUTPUT_CLK, &output_clock);
-
-// 	// Configure I/O ports
-// 	uint8_t gpio0_config 	= 0xF4;	// GPIO0 is for RX data output
-// 	uint8_t gpio1_config 	= 0xEF;	// GPIO1 is TX/RX data CLK output
-// 	uint8_t gpio2_config	= 0x00;	// GPIO2 for MCLK output
-// 	uint8_t io_port_config 	= 0x00;	// Default config
-// 	ret &= write_reg(GPIO0_CONFIG_REG, &gpio0_config);
-// 	ret &= write_reg(GPIO1_CONFIG_REG, &gpio1_config);
-// 	ret &= write_reg(GPIO2_CONFIG_REG, &gpio2_config);
-// 	ret &= write_reg(IO_PORT_CONFIG, &io_port_config);
-
-// 	// No ADC
-// 	uint8_t adc_config = 0x70;
-// 	ret &= write_reg(ADC_CONFIG, &adc_config);
-
-// 	uint8_t adc_offset = 0x00;
-// 	ret &= write_reg(ADC_SENS_AMP_OFST, &adc_offset);
-
-// 	// No Temperature Sensor
-// 	uint8_t temp_sens_calib = 0x00;
-// 	ret &= write_reg(TEMP_SENS_CNTL, &temp_sens_calib);
-
-// 	// No Temperature Sensor
-// 	uint8_t temp_offset = 0x00;
-// 	ret &= write_reg(TEMP_VAL_OFST, &temp_offset);
-
-// 	// No Manchester, no whitening, data rate < 30Kbps
-// 	uint8_t	mod_mode_cntl_1 = 0x20;
-// 	ret &= write_reg(MOD_MODE_CNTL_1, &mod_mode_cntl_1);
-
-// 	// IF filter bandwidth
-// 	uint8_t if_filter_bw = 0x1D;
-// 	ret &= write_reg(IF_FILTER_BW, &if_filter_bw);
-
-// 	// AFC Loop Gearshift Override
-// 	uint8_t afc_loop_gs_ovrrd = 0x40;
-// 	ret &= write_reg(AFC_LOOP_GS_OVRRD, &afc_loop_gs_ovrrd);
-
-// 	// Clock Recovery
-// 	uint8_t clk_recovery[6] = {0xA1, 0x20, 0x4E, 0xA5, 0x00, 0x0A};
-// 	ret &= write_reg(CLK_REC_OVRSMP_RT, clk_recovery, 6);
-
-// 	// OOK Counter Value
-// 	uint8_t ook_cnt_val[2] = {0x00, 0x00};
-// 	ret &= write_reg(OOK_COUNTER_VAL_1, ook_cnt_val, 2);
-
-// 	// Slice Peak Hold
-// 	uint8_t slice_peak_hold = 0x00;
-// 	ret &= write_reg(SLICER_PEAK_HOLD, &slice_peak_hold);
-
-// 	// TX Data Rate
-// 	uint8_t tx_data_rate[2] = {0x27, 0x52};
-// 	ret &= write_reg(TX_DATA_RATE_1, tx_data_rate, 2);
-
-// 	// Data Access Control
-// 	uint8_t data_access_cntl = 0x8C;
-// 	ret &= write_reg(DATA_ACCESS_CNTL, &data_access_cntl);
-
-// 	// Header Control
-// 	uint8_t header_cntl[2] = {0xFF, 0x42};
-// 	ret &= write_reg(HEADER_CNTL_1, header_cntl, 2);
-
-// 	// Preamble Length
-// 	uint8_t preamble_len_reg = 64; // 32 byte, 64 nibble
-// 	ret &= write_reg(PREAMBLE_LEN_REG, &preamble_len_reg);
-
-// 	// Preamble Detection Control
-// 	uint8_t preamble_det_cntl = 0x20;
-// 	ret &= write_reg(PREAMBLE_DET_CNTL, &preamble_det_cntl);
-
-// 	// Sync word
-// 	uint8_t syncword[4] = {0x2D, 0xD4, 0x00, 0x00};
-// 	ret &= write_reg(SYNC_WORD_3, syncword, 4);
-
-// 	// Transmit Header
-// 	uint8_t transmit_header[4] = {0xab,0xbc,0xcd,0xde};
-// 	ret &= write_reg(TRANSMIT_HEADER_3, transmit_header, 4);
-
-// 	// Transmit Packet Length
-// 	uint8_t transmit_pkt_len = 17;
-// 	ret &= write_reg(TRANSMIT_PKT_LEN, &transmit_pkt_len);
-
-// 	// Check Header
-// 	uint8_t check_header[4] = {0xab,0xbc,0xcd,0xde};
-// 	ret &= write_reg(CHECK_HEADER_3, check_header, 4);
-
-// 	// Header Enable
-// 	uint8_t header_en[4] = {0xFF,0xFF,0xFF,0xFF};
-// 	ret &= write_reg(HEADER_EN_3, header_en, 4);
-
-// 	// register 0x56!!
-
-// 	// TX Power
-// 	uint8_t tx_power = 0x07;
-// 	ret &= write_reg(TX_POWER, &tx_power);
-
-// 	// No frequency hopping
-// 	uint8_t freq_hop[2] = {0x00, 0x00};
-// 	ret &= write_reg(FREQ_HOP_CH_SEL, freq_hop, 2);
-
-// 	// Modulation Mode
-// 	uint8_t mod_mode = 0x22;
-// 	ret &= write_reg(MOD_MODE_CNTL_2, &mod_mode);
-
-// 	// Frequency Deviation
-// 	uint8_t freq_dev = 0x48;
-// 	ret &= write_reg(FREQ_DEVIATION, &freq_dev);
-
-// 	// Frequency Offset
-// 	uint8_t freq_offset[2] = {0x00, 0x00};
-// 	ret &= write_reg(FREQ_OFFSET_1, freq_offset, 2);
-
-// 	// Frequency Band Selection
-// 	uint8_t freq_band_sel = 0x53;
-// 	ret &= write_reg(FREQ_BAND_SEL, &freq_band_sel);
-
-// 	// Normal Carrier Frequency
-// 	uint8_t nrml_carr_freq[2] = {0x64, 0x00};
-// 	ret &= write_reg(NRML_CARR_FREQ_1, nrml_carr_freq, 2);
-
-// 	// registers 0x5A, 0x58, 0x59 !!!
-
-// 	// registers 0x6A, 0x68 !!!
-
-// 	// Clk Recovery Gearshift Override
-// 	uint8_t clk_rec_gs_ovrrd = 0x03;
-// 	ret &= write_reg(CLK_REC_GS_OVRRD, &clk_rec_gs_ovrrd);
-
-// 	return ret;
-// }
-
-// bool Rfm22b::to_tx_mode(void)
-// {
-// 	bool ret = true;
-
-// 	unsigned char i;
-	
-
-// 	// Set Ready Mode
-// 	uint8_t set_mode = OP_CNTL1_MODE_IDLE_READY;
-// 	ret &= write_reg(OP_FUNC_CNTL_1, &set_mode);
-
-// 	cbi(PORTD, RXANT);
-// 	sbi(PORTD, TXANT);
-
-// 	time_keeper_delay_ms(50);
-	
-// 	uint8_t fifo_reset = OP_CNTL2_FIFOS_RESET;
-// 	ret &= write_reg(OP_FUNC_CNTL_2, &fifo_reset);
-
-	
-// 	write(0x08, 0x03);	// FIFO reset
-// 	write(0x08, 0x00);	// Clear FIFO
-	
-// 	write(0x34, 64);	// preamble = 64nibble
-// 	write(0x3E, 17);	// packet length = 17bytes
-// 	for (i=0; i<17; i++)
-// 	{
-// 		write(0x7F, tx_buf[i]);	// send payload to the FIFO
-// 	}
-
-// 	write(0x05, 0x04);	// enable packet sent interrupt
-// 	i = read(0x03);		// Read Interrupt status1 register
-// 	i = read(0x04);
-	
-// 	write(0x07, 9);	// Start TX
-	
-// 	while ((PIND & (1<<NIRQ)) != 0)
-// 		; 	// need to check interrupt here
-	
-// 	write(0x07, 0x01);	// to ready mode
-	
-// 	cbi(PORTD, RXANT);	// disable all interrupts
-// 	cbi(PORTD, TXANT);
-
-// 	return ret;
-// }
-
-bool Rfm22b::set_carrier_frequency(unsigned int frequency)
+bool Rfm22b::temp_sens_config(void)
 {
 	bool ret = true;
 
-	// If frequency is outside specified range than return false
-	if (frequency < 240E6 || frequency > 960E6)
+	// ADC used to sample the temperature sensor
+	uint8_t adc_config = ADC_SOURCE_SEL_TEMP_SENSOR;
+	ret &= write_reg(ADC_CONFIG, &adc_config);
+
+	// ADC offset
+	uint8_t adc_offset = 0x00;
+	ret &= write_reg(ADC_SENS_AMP_OFST, &adc_offset);
+
+	// Temperature sensor calibration
+	uint8_t temp_sens_calib = TEMP_SENS_CALIB_0;
+	ret &= write_reg(TEMP_SENS_CNTL, &temp_sens_calib);
+
+	// Temperature sensor offset
+	uint8_t temp_offset = 0x00;
+	ret &= write_reg(TEMP_VAL_OFST, &temp_offset);
+
+	// Start an ADC conversion
+	adc_config |= ADC_START;
+	ret &= write_reg(ADC_CONFIG, &adc_config);
+
+	return ret;
+}
+
+
+bool Rfm22b::set_nominal_carrier_frequency(uint32_t frequency_hz, uint8_t init_chan)
+{
+	bool ret = true;
+
+	uint8_t freq_hop_step_size = 4;
+	uint8_t hbsel;
+
+	if (frequency_hz < 480000000)
 	{
-		return false;
+		hbsel = 0;
 	}
+	else
+	{
+		hbsel = 1;
+	}
+
+	float freq_mhz 		= (float)(frequency_hz) / 1000000.0f;
+	float xtal_freq_khz = 30000.0f;
+	float sfreq 		= freq_mhz / (10.0f * (xtal_freq_khz / 30000.0f) * (1 + hbsel));
+
+	uint32_t fb = (uint32_t) sfreq - 24 + (64 + 32 * hbsel);
+	uint32_t fc = (uint32_t) ((sfreq - (uint32_t) sfreq) * 64000.0f);
+	uint8_t fch = (fc >> 8) & 0xff;
+	uint8_t fcl = fc & 0xff;
+
+	// Set frequency hopping step size
+	ret &= write_reg(FREQ_HOP_STEP_SIZE, &freq_hop_step_size);
+
+	frequency_step_size_ = 156.25f * hbsel;
+
+	// Set frequency hopping channel number
+	ret &= write_reg(FREQ_HOP_CH_SEL, &init_chan);
+
+	// No frequency offset
+	ret &= clear_bit_in_reg(FREQ_OFFSET_1, CLEAR_ALL);
+	ret &= clear_bit_in_reg(FREQ_OFFSET_2, CLEAR_ALL);
 
 	uint8_t fbs = 0;
 
@@ -913,27 +519,12 @@ bool Rfm22b::set_carrier_frequency(unsigned int frequency)
 	// Clearing fb, hbsel and sbsel bits
 	fbs &= 0x80;
 
-	// For high frequencies, hbsel should be 1
-	uint8_t hbsel = (frequency >= 480E6);
-
-	// Frequency Band
-	uint8_t fb = frequency/10E6/(hbsel+1)-24;
-
-	fbs |= (1 << 6) | (hbsel << 5) | fb;
-
-	// Fractional part of the frequency
-	// Warning: Assuming Freq Offset and Freq Hopping are 0
-	uint16_t fc = (frequency/(10E6F*(hbsel+1)) - fb - 24) * 64000;
-
-	// Convert fc into two 8 bits variables
-	uint8_t ncf1 = (fc >> 8);
-	uint8_t ncf0 = fc & 0xFF;
-
-
+	fbs |= fb & 0xff; // Taulabs forget to add hbsel here !!!!
+	// fbs |= hbsel << 5 | fb & 0xff; // Should be this, works without for low frequencies but is better to include it
 
 	ret &= write_reg(FREQ_BAND_SEL, &fbs);
-	ret &= write_reg(NRML_CARR_FREQ_1, &ncf1);
-	ret &= write_reg(NRML_CARR_FREQ_0, &ncf0);
+	ret &= write_reg(NRML_CARR_FREQ_1, &fch);
+	ret &= write_reg(NRML_CARR_FREQ_0, &fcl);
 
 	return ret;
 }
@@ -948,7 +539,7 @@ bool Rfm22b::set_modulation_type(void)
 	ret &= read_reg(MOD_MODE_CNTL_2, &mmc2);
 
 	// Clear the modtyp bits
-	mmc2 &= ~0x03;
+	mmc2 &= ~MOD_CNTL2_MODTYP_MSK;
 
 	// Set the desired modulation
 	mmc2 |= MOD_CNTL2_GFSK;
@@ -969,7 +560,7 @@ bool Rfm22b::set_modulation_data_source(void)
 	ret &= read_reg(MOD_MODE_CNTL_2, &mmc2);
 
 	// Clear the dtmod bits
-	mmc2 &= ~(0x03<<4);
+	mmc2 &= ~MOD_CNTL2_DTMOD_MSK;
 
 	// Set the desired data source
 	mmc2 |= MOD_CNTL2_FIFO;
@@ -990,10 +581,10 @@ bool Rfm22b::set_data_clock_configuration(void)
 	ret &= read_reg(MOD_MODE_CNTL_2, &mmc2);
 	
 	// Clear the trclk bits
-	mmc2 &= ~(0x03<<6);
+	mmc2 &= ~MOD_CNTL2_TRCLK_MSK;
 	
 	// Set the desired data source
-	mmc2 |= 0x00 << 6;
+	mmc2 |= 0x00 << 6; 				// here 0 but we could let user choose?
 
 	// Write new value to register
 	ret &= write_reg(MOD_MODE_CNTL_2, &mmc2);
@@ -1001,14 +592,9 @@ bool Rfm22b::set_data_clock_configuration(void)
 	return ret;
 }
 
-bool Rfm22b::set_transmission_power(uint8_t power)
+bool Rfm22b::set_transmission_power(uint8_t power_dBm)
 {
 	bool ret = true;
-
-	if (power > 20)
-	{
-		power = 20;
-	}
 
 	uint8_t tx_power_reg = 0;
 	
@@ -1016,12 +602,10 @@ bool Rfm22b::set_transmission_power(uint8_t power)
 	ret &= read_reg(TX_POWER, &tx_power_reg);
 
 	// Clear txpow bits
-	tx_power_reg &= ~(0x07);
+	tx_power_reg &= ~TX_POW_TXPOW_MSK;
 
-	uint8_t tx_pow = (power + 1) / 3;
-
-	// Set the desired tx power
-	tx_power_reg |= tx_pow;
+	// Convert and set the desired tx power
+	tx_power_reg |= (power_dBm+1) / 3 & TX_POW_TXPOW_MSK;
 
 	// Write new value to register
 	ret &= write_reg(TX_POWER, &tx_power_reg);
@@ -1035,64 +619,40 @@ bool Rfm22b::set_gpio_function(void)
 
 	uint8_t gpio0 = 0;
 	uint8_t gpio1 = 0;
+	uint8_t gpio2 = 0;
 
 	// Read GPIOx config registers
 	ret &= read_reg(GPIO0_CONFIG_REG, &gpio0);
 	ret &= read_reg(GPIO1_CONFIG_REG, &gpio1);
+	ret &= read_reg(GPIO2_CONFIG_REG, &gpio2);
 
 	// Clear GPIOx bits
-	gpio0 &= ~((1<<5)-1);
-	gpio1 &= ~((1<<5)-1);
+	gpio0 &= ~(GPIOX_PIN_FUNC_SEL_MSK | GPIOX_DRVG_CAPA_MSK);
+	gpio1 &= ~(GPIOX_PIN_FUNC_SEL_MSK | GPIOX_DRVG_CAPA_MSK);
+	gpio2 &= ~(GPIOX_PIN_FUNC_SEL_MSK | GPIOX_DRVG_CAPA_MSK);
 
 	// Set the GPIOx bits
-	gpio0 |= 0x12;
-	gpio1 |= 0x15;
+	gpio0 |= GPIOX_CONFIG_TX_STATE | GPIOX_DRVG_LVL_3;
+	gpio1 |= GPIOX_CONFIG_RX_STATE | GPIOX_DRVG_LVL_3;
+	gpio2 |= GPIOX_CLR_CH_ASSESS   | GPIOX_DRVG_LVL_3;
 
 	// Write new value to register
 	ret &= write_reg(GPIO0_CONFIG_REG, &gpio0);
 	ret &= write_reg(GPIO1_CONFIG_REG, &gpio1);
+	ret &= write_reg(GPIO2_CONFIG_REG, &gpio2);
 
 	return ret;
 }
 
-bool Rfm22b::set_transmit_header(uint8_t* txhd)
+bool Rfm22b::set_transmit_header(void)
 {
+	uint32_t id = get_destination_id();
+	uint8_t txhd[4] = 	{ 	id 		& 0xFF,
+						(id >> 8)  	& 0xFF,
+						(id >> 16) 	& 0xFF,
+						(id >> 24) 	& 0xFF};
+
 	return write_reg(TRANSMIT_HEADER_3, txhd, 4);
-}
-
-bool Rfm22b::send(uint8_t *data, int length)
-{
-	bool ret = true;
-	uint32_t timeout = 0;
-
-	// Clear TX FIFO
-	clear_tx_fifo();
-
-	// Truncate data if its too long
-	if (length > 64) {
-		length = 64;
-	}
-
-	ret &= set_packet_transmit_length(length);
-
-	ret &= write_reg(FIFO_ACCESS_REG, data, length);
-
-	ret &= tx_mode_enable();
-
-	uint8_t omfc = 0;
-
-	// Loop until packet has been sent (device has left TX mode)
-	do
-	{
-		if (timeout++ > 10000)
-		{
-			return false;
-		}
-
-		ret &= read_reg(OP_FUNC_CNTL_1, &omfc);
-	} while ( (omfc & OP_CNTL1_MODE_TX_ON) == OP_CNTL1_MODE_TX_ON);
-
-	return ret;
 }
 
 bool Rfm22b::clear_tx_fifo(void)
@@ -1104,13 +664,13 @@ bool Rfm22b::clear_tx_fifo(void)
 	// Read Operating and Function Control register
 	ret &= read_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
 
-	// Clear ffclrtx bit
-	op_func_cntl_2 &= ~0x01;
+	// Set ffclrtx bit
+	op_func_cntl_2 |= OP_CNTL2_FFCLRTX_MSK;
+	ret &= write_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
 
-	uint8_t clear_tx_fifo = 0x01;
-	ret &= write_reg(OP_FUNC_CNTL_2, &clear_tx_fifo);
-	clear_tx_fifo = 0x00;
-	ret &= write_reg(OP_FUNC_CNTL_2, &clear_tx_fifo);
+	// Clear ffclrtx bit
+	op_func_cntl_2 &= ~OP_CNTL2_FFCLRTX_MSK;
+	ret &= write_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
 
 	return ret;
 }
@@ -1124,13 +684,13 @@ bool Rfm22b::clear_rx_fifo(void)
 	// Read Operating and Function Control register
 	ret &= read_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
 
-	// Clear ffclrrx bit
-	op_func_cntl_2 &= ~0x02;
+	// Set ffclrrx bit
+	op_func_cntl_2 |= OP_CNTL2_FFCLRRX_MSK;
+	ret &= write_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
 
-	uint8_t clear_rx_fifo = 0x02;
-	ret &= write_reg(OP_FUNC_CNTL_2, &clear_rx_fifo);
-	clear_rx_fifo = 0x00;
-	ret &= write_reg(OP_FUNC_CNTL_2, &clear_rx_fifo);
+	// Clear ffclrrx bit
+	op_func_cntl_2 &= ~OP_CNTL2_FFCLRRX_MSK;
+	ret &= write_reg(OP_FUNC_CNTL_2, &op_func_cntl_2);
 
 	return ret;
 }
@@ -1152,12 +712,12 @@ bool Rfm22b::tx_mode_enable(bool enable)
 	if (enable)
 	{
 		// Set txon bit
-		op_func_cntl_1 |= OP_CNTL1_MODE_TX_ON;
+		op_func_cntl_1 |= OP_CNTL1_MODE_TX_EN_MSK;
 	}
 	else
 	{
 		// Clear txon bit
-		op_func_cntl_1 &= ~OP_CNTL1_MODE_TX_ON;
+		op_func_cntl_1 &= ~OP_CNTL1_MODE_TX_EN_MSK;
 	}
 
 	// Write new value to register
@@ -1178,12 +738,12 @@ bool Rfm22b::rx_mode_enable(bool enable)
 	if (enable)
 	{
 		// Set rxon bit
-		op_func_cntl_1 |= OP_CNTL1_MODE_RX_ON;
+		op_func_cntl_1 |= OP_CNTL1_MODE_RX_EN_MSK;
 	}
 	else
 	{
 		// Clear rxon bit
-		op_func_cntl_1 &= ~OP_CNTL1_MODE_RX_ON;
+		op_func_cntl_1 &= ~OP_CNTL1_MODE_RX_EN_MSK;
 	}
 
 	// Write new value to register
@@ -1192,58 +752,11 @@ bool Rfm22b::rx_mode_enable(bool enable)
 	return ret;
 }
 
-bool Rfm22b::receive_bis(uint8_t *data, int* length)
-{
-	bool ret = true;
-	uint32_t timeout = 0;
-
-	ret &= clear_rx_fifo();
-
-	ret &= rx_mode_enable();
-
-	uint8_t omfc = 0;
-
-	// Loop until packet has been sent (device has left RX mode)
-	do
-	{
-		if (timeout++ > 10000)
-		{
-			// *length = 0;
-			// ret = false;
-			return false;
-			// return true;
-		}
-
-		ret &= read_reg(OP_FUNC_CNTL_1, &omfc);
-		// ret &= read_reg(INTERRUPT_STAT_1, &omfc);
-
-	} while ((omfc & OP_CNTL1_MODE_RX_ON) == OP_CNTL1_MODE_RX_ON);
-	// } while (!((omfc >> 1)& 1));
-
-	uint8_t rx_len = 0;
-	ret &= read_reg(RECEIVE_PKT_LEN, &rx_len);
-
-	if (rx_len > 64)
-	{
-		rx_len = 64;
-	}
-
-
-	// ret &= read_reg(INTERRUPT_STAT_1, &omfc);
-	// if ((omfc >> 1) & 1)
-	// {
-		ret &= read_reg(FIFO_ACCESS_REG, data, rx_len);
-	// }
-
-	*length = rx_len;
-
-	return ret;
-}
-
 bool Rfm22b::get_rssi(uint8_t* rssi)
 {
 	return read_reg(RSSI_REG, rssi);
 }
+
 bool Rfm22b::set_preamble_detection(uint8_t n_nibble)
 {
 	bool ret = true;
@@ -1252,10 +765,11 @@ bool Rfm22b::set_preamble_detection(uint8_t n_nibble)
 	// Read Preamble Detection Control register
 	ret &= read_reg(PREAMBLE_DET_CNTL, &preamble_det_cntl);
 
-	// Clearing preath bits
-	preamble_det_cntl &= 0x07;
+	// Clear preath bits
+	preamble_det_cntl &= ~PREAM_DET_CNTL_PREATH_MSK;
 
-	preamble_det_cntl |= n_nibble << 3;
+	// Set preath bits
+	preamble_det_cntl |= (n_nibble << 3) & PREAM_DET_CNTL_PREATH_MSK;
 
 	// Write new value to register
 	ret &= write_reg(PREAMBLE_DET_CNTL, &preamble_det_cntl);
@@ -1273,9 +787,9 @@ bool Rfm22b::set_header_length(uint8_t length)
 	ret &= read_reg(HEADER_CNTL_2, &header_cntl2);
 
 	// Clearing hdlen bits
-	header_cntl2 &= ~0x30;
+	header_cntl2 &= ~HDR_CNTL2_HDLEN_MSK;
 
-	header_cntl2 |= length << 4;
+	header_cntl2 |= (length << 4) & HDR_CNTL2_HDLEN_MSK;
 
 	// Write new register value
 	ret &= write_reg(HEADER_CNTL_2, &header_cntl2);
@@ -1292,16 +806,40 @@ bool Rfm22b::set_header_check(void)
 	ret &= read_reg(HEADER_CNTL_1, &header_cntl1);
 
 	// Clearing hdch bits
-	header_cntl1 &= ~0x0F;
+	header_cntl1 &= ~HDR_CNTL1_HDCH_MSK;
 
-	header_cntl1 |= 0x0F;
+	header_cntl1 |= 0x0F & HDR_CNTL1_HDCH_MSK; // TODO: make the value choosable by user if useful
 	
 	ret &= write_reg(HEADER_CNTL_1, &header_cntl1);
 	return ret;
 }
 
-bool Rfm22b::set_check_header(uint8_t* chhd)
+bool Rfm22b::set_header_broadcast_address_check(void)
 {
+	bool ret = true;
+
+	uint8_t header_cntl1 = 0;
+
+	// Read Header Control 2 register
+	ret &= read_reg(HEADER_CNTL_1, &header_cntl1);
+
+	// Clearing hdch bits
+	header_cntl1 &= ~HDR_CNTL1_BCEN_MSK;
+
+	header_cntl1 |= 0xF0; // TODO: make the value choosable by user if useful
+	
+	ret &= write_reg(HEADER_CNTL_1, &header_cntl1);
+	return ret;
+}
+
+bool Rfm22b::set_check_header(void)
+{
+	uint32_t id = get_destination_id();
+	uint8_t chhd[4] = 	{ 	id 		& 0xFF, // causes warning, but how to fix them?
+						(id >> 8)  	& 0xFF,
+						(id >> 16) 	& 0xFF,
+						(id >> 24) 	& 0xFF};
+
 	return write_reg(CHECK_HEADER_3, chhd, 4);
 }
 
@@ -1312,7 +850,7 @@ bool Rfm22b::get_received_header(uint8_t* rx_header)
 	uint8_t rxhd[4] = {0};
 	ret &= read_reg(RECEIVED_HEADER_3, rxhd, 4);
 
-	*rx_header 		= rxhd[0];
+	*rx_header 		= rxhd[0]; // TODO: find a better way to do this...
 	*(rx_header+1) 	= rxhd[1];
 	*(rx_header+2) 	= rxhd[2];
 	*(rx_header+3) 	= rxhd[3];
@@ -1324,22 +862,19 @@ bool Rfm22b::set_syncword_length(uint8_t length)
 {
 	bool ret = true;
 
-	if (length > 3)
-	{
-		length = 3;
-	}
-
 	uint8_t header_cntl2 = 0;
 
 	// Read Header Control 2 register
 	ret &= read_reg(HEADER_CNTL_2, &header_cntl2);
 
-	// Clearing synclen bits
-	header_cntl2 &= ~0x06;
+	// Clear synclen bits
+	header_cntl2 &= ~HDR_CNTL2_SYNCLEN_MSK;
 
-	header_cntl2 |= length << 1;
+	// Set synclen bits
+	header_cntl2 |= (length << 1) & HDR_CNTL2_SYNCLEN_MSK;
 
 	ret &= write_reg(Rfm22b::HEADER_CNTL_2, &header_cntl2);
+
 	return ret;
 }
 
@@ -1349,7 +884,8 @@ bool Rfm22b::get_transmit_header(uint8_t* tx_header)
 	uint8_t txhd[4] = {0};
 
 	ret &= read_reg(TRANSMIT_HEADER_3, txhd, 4);
-	*tx_header 		= txhd[0];
+
+	*tx_header 		= txhd[0];	// TODO: find a better way to do this...
 	*(tx_header+1) 	= txhd[1];
 	*(tx_header+2) 	= txhd[2];
 	*(tx_header+3) 	= txhd[3];
@@ -1361,7 +897,9 @@ bool Rfm22b::header_enable(void)
 {
 	bool ret = true;
 
-	uint8_t hden[4] = {0xFF};
+	uint8_t header_mask = (get_destination_id() == 0xFFFFFFFF ? 0 : 0xFF);
+
+	uint8_t hden[4] = {header_mask};
 	ret &= write_reg(HEADER_EN_3, hden, 4);
 
 	return ret;
@@ -1381,25 +919,25 @@ bool Rfm22b::set_rssi_offset(uint8_t offset)
 {
 	bool ret = true;
 
-	if (offset > 7)
-	{
-		offset = 7;
-	}
-
 	uint8_t preamble_det_cntl = 0;
 	ret &= read_reg(PREAMBLE_DET_CNTL, &preamble_det_cntl);
 
-	// Clearing rssi_off bits
-	preamble_det_cntl &= ~0x07;
-	preamble_det_cntl |= offset & 0x07;
+	// Clear rssi_off bits
+	preamble_det_cntl &= ~PREAM_DET_CNTL_RSSI_OFF_MSK;
+
+	// Set rssi_off bits
+	preamble_det_cntl |= offset & PREAM_DET_CNTL_RSSI_OFF_MSK;
 
 	ret &= write_reg(PREAMBLE_DET_CNTL, &preamble_det_cntl);
 
 	return ret;
 }
 
-bool Rfm22b::set_rssi_threshold(uint8_t threshold)
+bool Rfm22b::set_rssi_threshold(uint8_t threshold_dBm)
 {
+	// Convert threshold
+	uint8_t threshold = (threshold_dBm + 122)*2;
+
 	return write_reg(RSSI_THRESH_CLR_CH, &threshold);
 }
 
@@ -1411,24 +949,29 @@ bool Rfm22b::get_battery_level(float* battery_level)
 
 	ret &= read_reg(BATT_V_LEVEL, &batt_lvl);
 
+	// Convert ADC value in Volt
 	*battery_level = 1.7f + 50E-3 * (float)batt_lvl;
 
 	return ret;
 }
 
-bool Rfm22b::set_lbd_threshold(uint8_t threshold)
+bool Rfm22b::set_lbd_threshold(float threshold_V)
 {
 	bool ret = true;
 
 	uint8_t lbd_threshold = 0;
 
+	// Unit conversion
+	uint8_t threshold = (threshold_V - 1.7f) / 50E-3;
+
 	// Read Low Battery Detection Threshold register
 	ret &= read_reg(LBD_THRESHOLD, &lbd_threshold);
 
-	// Clearing lbdt bits
-	lbd_threshold &= ~0x1F;
+	// Clear lbdt bits
+	lbd_threshold &= ~LBD_THRESH_LBDT_MSK;
 
-	lbd_threshold |= threshold & 0x1F;
+	// Set lbdt bits
+	lbd_threshold |= threshold & LBD_THRESH_LBDT_MSK;
 
 	// Write new value to register
 	ret &= write_reg(LBD_THRESHOLD, &lbd_threshold);
@@ -1447,12 +990,12 @@ bool Rfm22b::enable_low_battery_detection(bool enable)
 	if (enable)
 	{
 		// Set enlbd bit
-		op_func_cntl_1 |= 0x40;
+		op_func_cntl_1 |= OP_CNTL1_MODE_LBD_EN_MSK;
 	}
 	else
 	{
 		// Clear enlbd bit
-		op_func_cntl_1 &= ~0x40;
+		op_func_cntl_1 &= ~OP_CNTL1_MODE_LBD_EN_MSK;
 	}
 
 	// Write new value to register
@@ -1461,20 +1004,20 @@ bool Rfm22b::enable_low_battery_detection(bool enable)
 	return ret;
 }
 
-bool Rfm22b::set_preamble_length(uint16_t length)
+bool Rfm22b::set_preamble_length(uint16_t n_nibbles)
 {
 	bool ret = true;
 
 	// Seperate length into two bytes
-	uint8_t length_1 = (length & 0x100) >> 8;
-	uint8_t length_0 = length & 0xFF;
+	uint8_t length_1 = (n_nibbles & 0x100) >> 8;
+	uint8_t length_0 = n_nibbles & 0xFF;
 
 	uint8_t header_cntl2 	= 0;
 
 	// Read Header Control 2 register
 	ret &= read_reg(HEADER_CNTL_2, &header_cntl2);
 
-	header_cntl2 |= length_1;
+	header_cntl2 |= length_1 & HDR_CNTL2_PREALEN_MSK;
 
 	// Write new values to registers
 	ret &= write_reg(HEADER_CNTL_2, &header_cntl2);
@@ -1483,23 +1026,104 @@ bool Rfm22b::set_preamble_length(uint16_t length)
 	return ret;
 }
 
-bool Rfm22b::set_syncword(uint8_t* syncword)
+bool Rfm22b::set_syncword(void)
 {
+	uint8_t syncword[4] = {0x2D, 0xD4, 0x4B, 0x59}; // Let the user choose? Or store value somewhere else?
+
 	return write_reg(SYNC_WORD_3, syncword, 4);
 }
 
-bool Rfm22b::set_datarate(uint8_t dr_tx_kbps)
+bool Rfm22b::set_datarate(void)
 {
-	// Warning, do not go below 30kbps -> different setting (0x7AF)
+
 	bool ret = true;
 
-	uint16_t datarate = dr_tx_kbps*(2 << 15)/1000;
+	bool data_whitening = true;
 
-	uint8_t datarate_1 = (datarate >> 8) & 0xFF;
-	uint8_t datarate_0 = datarate & 0xFF;
+	// if filter bandwidth
+	uint8_t if_filter_bw = reg_1C[datarate_];
+	ret &= write_reg(IF_FILTER_BW, &if_filter_bw);
 
-	ret &= write_reg(TX_DATA_RATE_1, &datarate_1);
-	ret &= write_reg(TX_DATA_RATE_0, &datarate_0);
+	// afc loop gearshift override
+	uint8_t afc_loop_g_o = reg_1D[datarate_];
+	ret &= write_reg(AFC_LOOP_GS_OVRRD, &afc_loop_g_o);
+
+	// afc timing control
+	uint8_t afc_timing_control = reg_1E[datarate_];
+	ret &= write_reg(AFC_TIMING_CNTL, &afc_timing_control);
+
+	// Clock Recovery Gearshift Override
+	uint8_t clk_rec_g_o = reg_1F[datarate_];
+	ret &= write_reg(CLK_REC_GS_OVRRD, &clk_rec_g_o);
+
+	// Clock Recovery Oversampling Ratio
+	uint8_t clk_rec_ovrsamp_r = reg_20[datarate_];
+	ret &= write_reg(CLK_REC_OVRSMP_RT, &clk_rec_ovrsamp_r);
+
+	// Clock Recorvery Offset 2
+	uint8_t clk_rec_offset_2 = reg_21[datarate_];
+	ret &= write_reg(CLK_REC_OFST_2, &clk_rec_offset_2);
+
+	// Clock Recorvery Offset 1
+	uint8_t clk_rec_offset_1 = reg_22[datarate_];
+	ret &= write_reg(CLK_REC_OFST_1, &clk_rec_offset_1);
+
+	// Clock Recorvery Offset 0
+	uint8_t clk_rec_offset_0 = reg_23[datarate_];
+	ret &= write_reg(CLK_REC_OFST_0, &clk_rec_offset_0);
+
+	// Clock Recovery Timing Loop Gain 1
+	uint8_t clk_rec_t_loop_gain_1 = reg_24[datarate_];
+	ret &= write_reg(CLK_REC_TIM_LPG_1, &clk_rec_t_loop_gain_1);
+
+	// Clock Recovery Timing Loop Gain 0
+	uint8_t clk_rec_t_loop_gain_0 = reg_25[datarate_];
+	ret &= write_reg(CLK_REC_TIM_LPG_0, &clk_rec_t_loop_gain_0);
+
+	// agc override 1
+	uint8_t agc_override_1 = reg_69[datarate_];
+	ret &= write_reg(AGC_OVRRD_1, &agc_override_1);
+
+	// afc limiter
+	uint8_t afc_limiter = reg_2A[datarate_];
+	ret &= write_reg(AFC_LIMITER, &afc_limiter);
+
+	// tx data rate 1
+	uint8_t tx_data_rate_1 = reg_6E[datarate_];
+	ret &= write_reg(TX_DATA_RATE_1, &tx_data_rate_1);
+
+	// tx data rate 0
+	uint8_t tx_data_rate_0 = reg_6F[datarate_];
+	ret &= write_reg(TX_DATA_RATE_0, &tx_data_rate_0);
+
+	// modulation mode control 1
+	uint8_t mode_1 = reg_70[datarate_];
+	if (!data_whitening) {
+		mode_1 &= ~MOD_CNTL1_WHITE_EN;
+	} else {
+		mode_1 |= MOD_CNTL1_WHITE_EN;
+	}
+	ret &= write_reg(MOD_MODE_CNTL_1, &mode_1);
+
+	// modulation mode control 2
+	uint8_t mode_2 = reg_71[datarate_];
+	ret &= write_reg(MOD_MODE_CNTL_2, &mode_2);
+
+	// frequency deviation
+	uint8_t frequency_deviation = reg_72[datarate_];
+	ret &= write_reg(FREQ_DEVIATION, &frequency_deviation);
+
+	// cpuu ?? Warning: reserved bits !!!!!!
+	uint8_t cpuu = reg_58[datarate_];
+	ret &= write_reg(0x58, &cpuu);
+
+	// ook counter val 1
+	uint8_t ook_counter_val_1 = 0x00;
+	ret &= write_reg(OOK_COUNTER_VAL_1, &ook_counter_val_1);
+
+	// ook counter val 2
+	uint8_t ook_counter_val_2 = 0x00;
+	ret &= write_reg(OOK_COUNTER_VAL_2, &ook_counter_val_2);
 
 	return ret;
 }
@@ -1507,46 +1131,46 @@ bool Rfm22b::set_datarate(uint8_t dr_tx_kbps)
 int Rfm22b::transmit(uint8_t* tx_buffer, uint8_t tx_len)
 {
 	bool ret = true;
-	uint8_t interrupt_1 = 0;
+	// uint8_t interrupt_1 = 0;
 
-	ret &= interrput_enable(0x84,0x00);
-    ret &= clear_tx_fifo();
+	// ret &= interrput_enable(0x84,0x00);
+ //    ret &= clear_tx_fifo();
 
-    // Caping length to 64 bytes
-    if (tx_len > 64)
-    {
-        tx_len = 64;
-    }
+ //    // Caping length to 64 bytes
+ //    if (tx_len > 64)
+ //    {
+ //        tx_len = 64;
+ //    }
 
-   	ret &= set_packet_transmit_length(tx_len);
+ //   	ret &= set_packet_transmit_length(tx_len);
 
-	// Reading Interrupt
-    ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
+	// // Reading Interrupt
+ //    ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
 
-    // Put message into FIFO
-    ret &= write_reg(FIFO_ACCESS_REG, tx_buffer, tx_len);
+ //    // Put message into FIFO
+ //    ret &= write_reg(FIFO_ACCESS_REG, tx_buffer, tx_len);
 
-    // Check if TX overflow
-    ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-    if ((interrupt_1 >> 7) & 1)
-    {
-        return false;
-    }
+ //    // Check if TX overflow
+ //    ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
+ //    if ((interrupt_1 >> 7) & 1)
+ //    {
+ //        return false;
+ //    }
 
-    tx_mode_enable();
+ //    tx_mode_enable();
 
-    while (1)
-        {
-            if (!nirq_.read())
-            {
-                ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
-                if ((interrupt_1 >> 2) & 1)
-                {
-                	// Packet sent
-                    break;
-                }
-            }
-        }
+ //    while (1)
+ //        {
+ //            if (!nirq_.read())
+ //            {
+ //                ret &= read_reg(INTERRUPT_STAT_1, &interrupt_1);
+ //                if ((interrupt_1 >> 2) & 1)
+ //                {
+ //                	// Packet sent
+ //                    break;
+ //                }
+ //            }
+ //        }
 
 	return ret;
 }
@@ -1573,56 +1197,12 @@ int Rfm22b::prepare_receive(void)
 	return ret;
 }
 
-// bool Rfm22b::config_datarate(void)
-// {
-// 	bool ret = true;
-
-// 	// uint8_t if_filter_bw = 0x81;
-// 	// ret &= write_reg(IF_FILTER_BW, &if_filter_bw);
-
-// 	// uint8_t afc_loop_gs_ovrrd = 0x40;
-// 	// ret &= write_test(AFC_LOOP_GS_OVRRD, &afc_loop_gs_ovrrd);
-
-// 	// uint8_t afc_timing_control = 
-// 	return ret;
-// }
-
-__attribute__((interrupt))
-void exti2_isr(void)
-{
-    handlers_->irq_handler();
-}
-
-void Rfm22b::irq_handler(void)
-{
-
-	// Disable interruption
-    isr_enable(false);
-
-	exti_reset_request(EXTI2);
-
-	uint8_t interrupt_1 = 0;
-    read_reg(INTERRUPT_STAT_1, &interrupt_1);
-    if (!((interrupt_1 >> 1) & 1)) // Valid Packet Received Mask
-    {
-       	// Enable interruption
-    	isr_enable();
-
-    	// Nothing valid received
-    	return;
-    }
-
-	receive();
-
-    return;
-}
-
 void Rfm22b::isr_enable(bool enable)
 {
 	if (enable)
 	{
-		exti_enable_request(EXTI2);
-	}
+		exti_enable_request(EXTI2); // This is only valid for STM32 and for SPARKY board
+	}								// TODO: make this independent of board and architecture
 	else
 	{
 		exti_disable_request(EXTI2);
@@ -1643,12 +1223,12 @@ bool Rfm22b::rx_mulit_packet_en(bool enable)
 	if (enable)
 	{
 		// Set rxmpk bit
-		op_func_cntl_2 |= 0x10;
+		op_func_cntl_2 |= OP_CNTL2_RXMPK_MSK;
 	}
 	else
 	{
 		// Clear rxmpk bit
-		op_func_cntl_2 &= ~0x10;
+		op_func_cntl_2 &= ~OP_CNTL2_RXMPK_MSK;
 	}
 
 	// Write new value to register
@@ -1684,4 +1264,385 @@ bool Rfm22b::receive(void)
     rx_success_ = ret;
     prepare_receive();
 	return true;
+}
+
+bool Rfm22b::read_status(void)
+{
+	bool ret = true;
+
+	uint8_t dev_stat 	= 0;
+	uint8_t ezmac_stat 	= 0;
+	uint8_t int_stat[2] = {0};
+
+	// Read device status, Interrupt Status 1 & 2 and EzMAC Status
+	ret &= read_reg(DEVICE_STATUS, &dev_stat);
+	ret &= read_reg(INTERRUPT_STAT_1, int_stat, 2);
+	ret &= read_reg(EZMAC_STATUS, &dev_stat);
+
+	// Store status
+	device_status_.device_status_reg.raw 	= dev_stat;
+	device_status_.int_status_1.raw 		= int_stat[0];
+	device_status_.int_status_2.raw 		= int_stat[1];
+	device_status_.ezmac_status.raw			= ezmac_stat;
+
+	if (device_status_.int_status_2.poweron_reset)
+	{
+		return false;
+	}
+
+	return ret;
+}
+
+bool Rfm22b::set_cristal_osci_load_cap(void)
+{
+
+	// Set Cristal Oscillator to get desired frequency
+	uint8_t osc_load_cap = 0x7F; // 12.5pF // Let user choose??
+
+	return write_reg(OSC_LOAD_CAP_REG, &osc_load_cap);
+}
+
+bool Rfm22b::set_bit_in_reg(uint8_t reg, uint8_t mask)
+{
+	bool ret = true;
+
+	uint8_t register_val = 0;
+
+	// Read register
+	ret &= read_reg(reg, &register_val);
+
+	// Set bit(s) in register
+	register_val |= mask;
+
+	// Write new value to register
+	ret &= write_reg(reg, &register_val);
+
+	return ret;
+}
+
+bool Rfm22b::clear_bit_in_reg(uint8_t reg, uint8_t mask)
+{
+	bool ret = true;
+
+	uint8_t register_val = 0;
+
+	// Read register
+	ret &= read_reg(reg, &register_val);
+
+	// Clear bit(s) in register
+	register_val &= ~mask;
+
+	// Write new value to register
+	ret &= write_reg(reg, &register_val);
+	
+	return ret;
+}
+
+uint32_t Rfm22b::get_destination_id(void)
+{
+	if (coordinator_)
+	{
+		// Device is a coordinator
+		return device_id_;
+	}
+	else if (coordinator_id_)
+	{
+		// Device is not a coordinator but is bound to one
+		return coordinator_id_;
+	}
+	else
+	{
+		// Unbound device
+		return 0xFFFFFFFF;
+	}
+}
+
+bool Rfm22b::set_fifos_threshold(void)
+{
+	bool ret = true;
+
+	uint8_t tx_fifo_cntl1 = 0;
+	uint8_t tx_fifo_cntl2 = 0;
+	uint8_t rx_fifo_cntl  = 0;
+
+	// Read TX/RX FIFO control registers
+	ret &= read_reg(TX_FIFO_CNTL_1	, &tx_fifo_cntl1);
+	ret &= read_reg(TX_FIFO_CNTL_2	, &tx_fifo_cntl2);
+	ret &= read_reg(RX_FIFO_CNTL 	, &rx_fifo_cntl);
+
+	// Clear txfaethr, txafthr and rxafthr bits
+	tx_fifo_cntl1 &= ~TX_FIFO_CNTL1_TXAFTHR_MSK;
+	tx_fifo_cntl2 &= ~TX_FIFO_CNTL2_TXFAETHR_MSK;
+	rx_fifo_cntl  &= ~RX_FIFO_CNTL_RXAFTHR_MSK;
+
+	// Set txfaethr, txafthr and rxafthr bits with desired val
+	tx_fifo_cntl1 |= 62; // TODO: Store this values somewhere else
+	tx_fifo_cntl2 |= 32;
+	rx_fifo_cntl  |= 32;
+
+	// Write new values to registers
+	ret &= write_reg(TX_FIFO_CNTL_1	, &tx_fifo_cntl1);
+	ret &= write_reg(TX_FIFO_CNTL_2	, &tx_fifo_cntl2);
+	ret &= write_reg(RX_FIFO_CNTL 	, &rx_fifo_cntl);
+
+	return ret;
+}
+
+uint8_t Rfm22b::update_byte(uint8_t crc, const uint8_t data)
+{
+	return crc_table[crc ^ data];
+}
+
+bool Rfm22b::exti_init(void)
+{
+	bool ret = true;
+
+	nvic_enable_irq(NVIC_EXTI2_IRQ);				// TODO: make this architecture and board independent
+    exti_select_source(EXTI2, GPIO_STM32_PORT_D);
+    exti_set_trigger(EXTI2, EXTI_TRIGGER_FALLING);
+
+    handlers_ = this;
+
+    isr_enable(false);
+
+	return ret;
+}
+
+bool Rfm22b::set_rx_mode(void)
+{
+	bool ret = true;
+
+	// disable all interrupts
+	clear_bit_in_reg(INTERRUPT_EN_1, CLEAR_ALL);
+	clear_bit_in_reg(INTERRUPT_EN_2, CLEAR_ALL);
+
+	// Switch to TUNE mode
+	set_bit_in_reg(OP_FUNC_CNTL_1, OP_CNTL1_MODE_PPL_EN_MSK);
+
+	rx_buffer_wr_ = 0;
+
+	// tx_data_wr_ = 0; // Don't know what those are
+	// tx_data_rd_ = 0;
+
+	clear_rx_fifo();
+	clear_tx_fifo();
+
+	// Enable RX interrupts
+	set_bit_in_reg(INTERRUPT_EN_1,	INT_EN1_ICRCERROR_MSK	|
+									INT_EN1_IPKVALID_MSK 	|
+									INT_EN1_IRXFFAFULL_MSK	|
+									INT_EN1_IFFERR_MSK);
+
+	set_bit_in_reg(INTERRUPT_EN_2, 	INT_EN2_IPREAVAL_MSK	|
+									INT_EN2_ISWDET_MSK);
+
+	// Enable receiver
+	set_bit_in_reg(OP_FUNC_CNTL_1, 	OP_CNTL1_MODE_RX_EN_MSK 	|
+									OP_CNTL1_MODE_PPL_EN_MSK);
+
+	return ret;
+}
+
+bool Rfm22b::process_rx(void)
+{
+	bool ret = true;
+
+	// Read the device status registers
+	if (!read_status())
+	{
+		rx_failure();
+		return false; // int failure
+	}
+
+	// FIFO under/over flow error.  Restart RX mode.
+	if (device_status_.int_status_1.fifo_underoverflow_error ||
+		device_status_.int_status_1.crc_error)
+	{
+		rx_failure();
+		return false; // int failure
+	}
+
+	// Valid packet received
+	if (device_status_.int_status_1.valid_packet_received)
+	{
+
+		// Read the total length of the packet data
+		uint8_t len = 0;
+		ret &= read_reg(RECEIVE_PKT_LEN, &len);
+
+		// The received packet is going to be larger than the receive buffer
+		if (len > max_packet_len_)
+		{
+			rx_failure();
+			return false; // int failure
+		}
+
+		// There must still be data in the RX FIFO we need to get
+		if (rx_buffer_wr_ < len)
+		{
+			int32_t bytes_to_read = len - rx_buffer_wr_;
+
+			// Fetch the data from the RX FIFO
+			rx_buffer_wr_ += read_reg(FIFO_ACCESS_REG, rx_buffer_, bytes_to_read) == 0 ? bytes_to_read : 0;
+
+			// Taulabs does something more, they put the read data not at first element?
+			//
+			// PIOS_SPI_TransferByte(rfm22b_dev->spi_id, RFM22_fifo_access & 0x7F);
+			// rx_buffer_wr_ +=
+			    // (PIOS_SPI_TransferBlock(rfm22b_dev->spi_id, OUT_FF,
+			    //   (uint8_t *) & rx_buffer[rfm22b_dev->rx_buffer_wr],
+			    //   bytes_to_read, NULL) == 0) ? bytes_to_read : 0;
+		}
+
+		// Read the packet header (destination ID)
+		uint8_t received_header[4] = {0};
+		get_received_header(received_header);
+
+		rx_destination_id_  =  received_header[3];
+		rx_destination_id_ |= (received_header[2] << 8);
+		rx_destination_id_ |= (received_header[1] << 16);
+		rx_destination_id_ |= (received_header[0] << 24);
+
+		// Is there a length error?
+		if (rx_buffer_wr_ != len)
+		{
+			rx_failure();
+			return false; // int failure
+		}
+
+		// Increment the total byte received count.
+		// stats.rx_byte_count += rx_buffer_wr_;
+
+		// We're finished with Rx mode
+		trans_state_ = TRANS_STATE_TRANSITION;
+
+	}
+	else if (device_status_.int_status_1.rx_fifo_almost_full)
+	{
+		// RX FIFO almost full, it needs emptying
+		// read data from the rf chips FIFO buffer
+
+		// Read the total length of the packet data
+		uint8_t len = 0;
+		ret &= read_reg(RECEIVE_PKT_LEN, &len);
+
+		// The received packet is going to be larger than the specified length
+		if ((rx_buffer_wr_ + 32) > len)
+		{
+			rx_failure();
+			return false; // int failure
+		}
+
+		// The received packet is going to be larger than the receive buffer
+		if ((rx_buffer_wr_ + 32) > max_packet_len_)
+		{
+			rx_failure();
+			return false; // int failure
+		}
+
+		// Fetch the data from the RX FIFO
+		rx_buffer_wr_ += read_reg(FIFO_ACCESS_REG, rx_buffer_, 32) == 0 ? 32 : 0;
+
+		// Taulabs does something more, they put the read data not at first element?
+		//
+		// PIOS_SPI_TransferByte(rfm22b_dev->spi_id, RFM22_fifo_access & 0x7F);
+		// rfm22b_dev->rx_buffer_wr += (PIOS_SPI_TransferBlock(rfm22b_dev->spi_id, OUT_FF,
+		//       (uint8_t *) & rx_buffer[rfm22b_dev->rx_buffer_wr], RX_FIFO_HI_WATERMARK,
+		//       NULL) == 0) ? RX_FIFO_HI_WATERMARK : 0;
+
+		// Make sure that we're in RX mode.
+		trans_state_ = TRANS_STATE_RX_MODE;
+
+	}
+	else if (device_status_.int_status_2.valid_preamble_detected)
+	{
+		// Valid preamble detected
+
+		// Sync word detected
+		// packet_start_ticks_ = PIOS_Thread_Systime();
+		// if (rfm22b_dev->packet_start_ticks == 0) {
+		// 	rfm22b_dev->packet_start_ticks = 1;
+		// }
+
+		// We detected the preamble, now wait for sync.
+		trans_state_ = TRANS_STATE_RX_WAIT_SYNC;
+
+	}
+	else if (device_status_.int_status_2.sync_word_detected)
+	{
+
+		// read the 10-bit signed afc correction value
+		uint8_t afc_corr1 = 0;
+		uint8_t afc_corr0 = 0;
+
+		// bits 9 to 2
+		ret &= read_reg(AFC_CORRECTION, 	&afc_corr1);
+
+		// bits 1 & 0
+		ret &= read_reg(OOK_COUNTER_VAL_1, 	&afc_corr0);
+
+		uint16_t afc_correction = (uint16_t)(afc_corr1 << 8 | ((afc_corr0 >> 6) & 0b11)); 
+
+		// convert the afc value to Hz
+		int32_t afc_corr = (int32_t) (frequency_step_size_ * afc_correction + 0.5f);
+		afc_correction_hz_ =  (afc_corr < -127) ? -127 : ((afc_corr > 127) ? 127 : afc_corr);
+
+		// read rx signal strength .. 45 = -100dBm, 205 = -20dBm
+		uint8_t rssi = 0;
+		ret &= get_rssi(&rssi);
+
+		// convert to dBm
+		rssi_dBm_ = (int8_t) (rssi >> 1) - 122;
+
+		// Indicate that we're in RX mode.
+		trans_state_ = TRANS_STATE_RX_MODE;
+
+	}
+	else if ((trans_state_ == TRANS_STATE_RX_WAIT_SYNC) && !device_status_.int_status_2.valid_preamble_detected)
+	{
+		// Waiting for the preamble timed out.
+		rx_failure();
+		return false; // int failure
+	}
+
+	return ret;
+}
+
+bool Rfm22b::rx_failure(void)
+{
+	bool ret = true;
+
+	//TODO: do it...
+
+	return ret;
+}
+
+__attribute__((interrupt))
+void exti2_isr(void)
+{
+    handlers_->irq_handler();
+}
+
+void Rfm22b::irq_handler(void)
+{
+
+	// Disable interruption
+    isr_enable(false);
+
+	exti_reset_request(EXTI2);
+
+	uint8_t interrupt_1 = 0;
+    read_reg(INTERRUPT_STAT_1, &interrupt_1);
+    if (!((interrupt_1 >> 1) & 1)) // Valid Packet Received Mask
+    {
+       	// Enable interruption
+    	isr_enable();
+
+    	// Nothing valid received
+    	return;
+    }
+
+	receive();
+
+    return;
 }
