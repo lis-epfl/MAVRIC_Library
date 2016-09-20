@@ -110,6 +110,8 @@ int main(void)
                         file_log,
                         file_stat,
                         mav_config );
+    // initialize MAV
+    init_success &= mav.init();
 
     // // -------------------------------------------------------------------------
     // // Create simulation

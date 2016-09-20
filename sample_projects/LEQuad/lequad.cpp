@@ -93,27 +93,33 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(communication.sysid()),
     config_(config)
+{}
+
+
+bool LEQuad::init(void)
 {
+    bool success = true;
+
     // Init main task first
-    init_main_task();
+    success &= init_main_task();
 
     // Init all modules
-    init_state();
-    init_communication();
-    init_data_logging();
-    init_gps();
-    init_imu();
-    init_barometer();
-    init_sonar();
-    init_attitude_estimation();
-    init_position_estimation();
-    init_stabilisers();
-    init_navigation();
-    init_hud();
-    init_servos();
-    init_ground_control();
+    success &= init_state();
+    success &= init_communication();
+    success &= init_data_logging();
+    success &= init_gps();
+    success &= init_imu();
+    success &= init_barometer();
+    success &= init_sonar();
+    success &= init_attitude_estimation();
+    success &= init_position_estimation();
+    success &= init_stabilisers();
+    success &= init_navigation();
+    success &= init_hud();
+    success &= init_servos();
+    success &= init_ground_control();
+    return success;
 }
-
 
 void LEQuad::loop(void)
 {
