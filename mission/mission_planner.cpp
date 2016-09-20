@@ -530,7 +530,7 @@ void Mission_planner::state_machine()
             if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)
             {
                 inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                                MAV_CMD_NAV_LOITER_UNLIM,
+                                                MAV_CMD_NAV_TAKEOFF,
                                                 0,
                                                 0.0f,
                                                 0.0f,
@@ -540,6 +540,7 @@ void Mission_planner::state_machine()
                                                 ins_.position_lf()[Y],
                                                 navigation_.takeoff_altitude);
                 insert_ad_hoc_waypoint(inserted_waypoint_);
+                require_takeoff_ = false;
                 hold_position_set_ = true;
             }
 
@@ -892,6 +893,13 @@ bool Mission_planner::init()
 bool Mission_planner::update(Mission_planner* mission_planner)
 {
     Mav_mode mode_local = mission_planner->state_.mav_mode();
+
+    // Reset to standby if disarmed
+    if (!state_.is_armed() && mission_planner->internal_state() != STANDBY)
+    {
+        mission_planner->inserted_waypoint_ = Waypoint();
+        mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
+    }
 
     switch (mission_planner->state_.mav_state_)
     {
