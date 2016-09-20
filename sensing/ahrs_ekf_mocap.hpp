@@ -54,7 +54,7 @@
 
 #include "sensing/ahrs_ekf.hpp"
 #include "util/matrix.hpp"
-#include "communication/mavlink_communication.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 
 /**

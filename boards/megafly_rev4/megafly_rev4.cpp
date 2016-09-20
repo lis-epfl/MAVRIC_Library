@@ -40,11 +40,10 @@
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
-
 #include "libs/asf/common/services/clock/sysclk.h"
 #include "libs/asf/common/services/sleepmgr/sleepmgr.h"
 #include "libs/asf/avr32/services/delay/delay.h"
@@ -76,7 +75,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
     i2c1(config.i2c1_config),
     hmc5883l(i2c0),
     lsm330dlc(i2c0),
-    bmp085(i2c0),
+    barometer(i2c0),
     spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin),
     red_led(LED_AVR32_ID_2),
     green_led(LED_AVR32_ID_1),
@@ -344,7 +343,7 @@ bool Megafly_rev4::init(void)
     // -------------------------------------------------------------------------
     // Init barometer
     // -------------------------------------------------------------------------
-    ret = bmp085.init();
+    ret = barometer.init();
     print_util_dbg_init_msg("[BMP]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);

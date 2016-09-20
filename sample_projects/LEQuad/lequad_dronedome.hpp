@@ -87,12 +87,26 @@ public:
           LEQuad(imu, barometer, gps_mocap_, sonar, serial_mavlink, satellite, state_display, file_flash,
                      battery, servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                      file1, file2, config),
-          gps_mocap_(mavlink_communication_.message_handler()),
-          ahrs_ekf_mocap_(mavlink_communication_.message_handler(), ahrs_ekf)
+          gps_mocap_(communication.handler()),
+          ahrs_ekf_mocap_(communication.handler(), ahrs_ekf)
       {
-          gps_mocap_.init();
-          ahrs_ekf_mocap_.init();
+
       }
+
+    /*
+     * \brief   Initializes LEQuad
+     * \details  Calls all init functions (init_*());
+     *
+     * \return  success
+     */
+    virtual bool init(void)
+    {
+        bool success = true;
+        success &= LEQuad::init();
+        success &= gps_mocap_.init();
+        success &= ahrs_ekf_mocap_.init();
+        return success;
+    }
 
 private:
     Gps_mocap gps_mocap_;

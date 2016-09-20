@@ -217,7 +217,8 @@ bool World::intersect(const Ray& ray, Intersection& intersection, Object* object
 {
     bool success = false;
     Intersection inter_tmp;
-
+    (void)object;
+    
     intersection.set_distance(1000.0f);
 
     for (uint32_t i = 0; i < object_count_; i++)
@@ -229,6 +230,7 @@ bool World::intersect(const Ray& ray, Intersection& intersection, Object* object
             {
                 // This intersection is the best
                 intersection = inter_tmp;
+                object       = objects_[i];
             }
         }
     }
