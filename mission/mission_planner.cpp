@@ -495,6 +495,7 @@ void Mission_planner::state_machine()
                     }
 
                 case PAUSED: // After paused, continue to current mission item (don't advance)
+                case MANUAL_CTRL: // After manual control, continue to current mission item (don't advance)
                     {
                         // Reset but don't advance current waypoint
                         navigation_.set_start_wpt_time();
@@ -520,54 +521,69 @@ void Mission_planner::state_machine()
             }
         }
     }
-    else
+    else if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
+    {
+        // Require takeoff as the drone might never have entered the auto state
+        require_takeoff_ = true;
+
+        // Take off if on ground and thrust is on
+        if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)
+        {
+            inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_TAKEOFF,
+                                            0,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            coord_conventions_get_yaw(ahrs_.qe),
+                                            ins_.position_lf()[X],
+                                            ins_.position_lf()[Y],
+                                            navigation_.takeoff_altitude);
+            insert_ad_hoc_waypoint(inserted_waypoint_);
+            require_takeoff_ = false;
+            hold_position_set_ = true;
+        }
+
+        // Set hold position if needed
+        if (!hold_position_set_)
+        {
+            inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_LOITER_UNLIM,
+                                            0,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            coord_conventions_get_yaw(ahrs_.qe),
+                                            ins_.position_lf()[X],
+                                            ins_.position_lf()[Y],
+                                            ins_.position_lf()[Z]);
+            // Insert so we can say to go back to doing last mission item afterwards
+            insert_ad_hoc_waypoint(inserted_waypoint_);
+            hold_position_set_ = true;
+        }
+
+        if (current_mission_handler_ != NULL)
+        {
+            current_mission_handler_->handle(*this);
+        }
+        // DONT CHECK IF FINISHED POSITION HOLD
+    }
+    else // Not in auto or position hold (therefore we are in attitude or velocity)
     {
         require_takeoff_ = true;
 
-        if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
-        {
-            // Take off if on ground and thrust is on
-            if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)
-            {
-                inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                                MAV_CMD_NAV_TAKEOFF,
-                                                0,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                coord_conventions_get_yaw(ahrs_.qe),
-                                                ins_.position_lf()[X],
-                                                ins_.position_lf()[Y],
-                                                navigation_.takeoff_altitude);
-                insert_ad_hoc_waypoint(inserted_waypoint_);
-                require_takeoff_ = false;
-                hold_position_set_ = true;
-            }
-
-            // Set hold position if needed
-            if (!hold_position_set_)
-            {
-                inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                                MAV_CMD_NAV_LOITER_UNLIM,
-                                                0,
-                                                0.0f,
-                                                0.0f,
-                                                0.0f,
-                                                coord_conventions_get_yaw(ahrs_.qe),
-                                                ins_.position_lf()[X],
-                                                ins_.position_lf()[Y],
-                                                ins_.position_lf()[Z]);
-                // Insert so we can say to go back to doing last mission item afterwords
-                insert_ad_hoc_waypoint(inserted_waypoint_);
-                hold_position_set_ = true;
-            }
-
-            if (current_mission_handler_ != NULL)
-            {
-                current_mission_handler_->handle(*this);
-            }
-            // DONT CHECK IF FINISHED POSITION HOLD
-        }
+        inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                        MAV_CMD_NAV_MANUAL_CTRL,
+                                        1,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f,
+                                        0.0f);
+        // Insert so we can say to go back to doing last mission item afterwards
+        insert_ad_hoc_waypoint(inserted_waypoint_);
     }
 }
 
@@ -743,6 +759,9 @@ void Mission_planner::set_internal_state(internal_state_t new_internal_state)
         case PAUSED:
             print_util_dbg_print("PAUSED");
             break;
+        case MANUAL_CTRL:
+            print_util_dbg_print("MANUAL_CTRL");
+            break;
         }
         print_util_dbg_print(" to ");
         switch (new_internal_state)
@@ -761,6 +780,9 @@ void Mission_planner::set_internal_state(internal_state_t new_internal_state)
             break;
         case PAUSED:
             print_util_dbg_print("PAUSED");
+            break;
+        case MANUAL_CTRL:
+            print_util_dbg_print("MANUAL_CTRL");
             break;
         }
         print_util_dbg_print("\r\n");
@@ -895,7 +917,7 @@ bool Mission_planner::update(Mission_planner* mission_planner)
     Mav_mode mode_local = mission_planner->state_.mav_mode();
 
     // Reset to standby if disarmed
-    if (!state_.is_armed() && mission_planner->internal_state() != STANDBY)
+    if (!mission_planner->state_.is_armed() && mission_planner->internal_state() != STANDBY)
     {
         mission_planner->inserted_waypoint_ = Waypoint();
         mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);

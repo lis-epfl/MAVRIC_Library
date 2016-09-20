@@ -73,7 +73,7 @@ public:
         DUBIN = 1,
     };
 
-    
+
 
     /**
      * \brief The navigation configuration structure
@@ -284,8 +284,8 @@ Navigation::conf_t Navigation::default_config()
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;
     conf.takeoff_altitude                            = -10.0f;
-    //conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
-    conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
+    conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
+    //conf.navigation_strategy                         = Navigation::strategy_t::DUBIN;
     return conf;
 };
 
