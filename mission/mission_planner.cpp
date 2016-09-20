@@ -526,8 +526,8 @@ void Mission_planner::state_machine()
         // Require takeoff as the drone might never have entered the auto state
         require_takeoff_ = true;
 
-        // Take off if on ground and thrust is on
-        if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)
+        // Set hold position waypoint
+        if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f  && !hold_position_set_) // On ground and desired to take off
         {
             inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_TAKEOFF,
@@ -543,9 +543,7 @@ void Mission_planner::state_machine()
             require_takeoff_ = false;
             hold_position_set_ = true;
         }
-
-        // Set hold position if needed
-        if (!hold_position_set_)
+        else if (internal_state_ != STANDBY && !hold_position_set_) // In air and desired to hold
         {
             inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_LOITER_UNLIM,
@@ -572,18 +570,22 @@ void Mission_planner::state_machine()
     {
         require_takeoff_ = true;
 
-        inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                        MAV_CMD_NAV_MANUAL_CTRL,
-                                        1,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f);
-        // Insert so we can say to go back to doing last mission item afterwards
-        insert_ad_hoc_waypoint(inserted_waypoint_);
+        // Change only if thrust value is great enough
+        if (manual_control_.get_thrust() > -0.7f && current_mission_handler_->handler_mission_state() != MANUAL_CTRL)
+        {
+            inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                            MAV_CMD_NAV_MANUAL_CTRL,
+                                            1,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f,
+                                            0.0f);
+            // Insert so we can say to go back to doing last mission item afterwards
+            insert_ad_hoc_waypoint(inserted_waypoint_);
+        }
     }
 }
 
