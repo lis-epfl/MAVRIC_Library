@@ -4,6 +4,5 @@
 <area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="733,59,1069,88"/>
 <area shape="rect" id="node9" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="765,112,1037,141"/>
 <area shape="rect" id="node11" href="$classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="843,165,960,195"/>
-<area shape="rect" id="node15" href="$classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="829,219,973,248"/>
-<area shape="rect" id="node13" href="$classLEQuad__dronedome.html#a83f8b00518b8a1f5e7f00668e431ef5d" title="Constructor." alt="" coords="1120,192,1387,221"/>
+<area shape="rect" id="node13" href="$classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="829,219,973,248"/>
 </map>

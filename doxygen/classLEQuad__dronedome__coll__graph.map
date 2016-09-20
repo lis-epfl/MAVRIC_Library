@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classLEQuad.html" title="MAV class." alt="" coords="2768,1635,2979,2205"/>
+<area shape="rect" id="node2" href="$classLEQuad.html" title="MAV class." alt="" coords="2768,1635,2979,2223"/>
 <area shape="rect" id="node4" href="$classData__logging__T.html" title="{Data_logging_T\&lt; 10 \&gt;\n||+ Data_logging_T()\l# max_count()\l# list()\l}" alt="" coords="40,1319,189,1439"/>
 <area shape="rect" id="node6" href="$classData__logging.html" title="Log data in files." alt="" coords="5,691,205,984"/>
 <area shape="rect" id="node8" href="$classPosition__estimation.html" title="{Position_estimation\n|+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l+ kp_alt_sonar\l+ kp_vel_sonar\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ default_config()\l}" alt="" coords="901,1206,1117,1551"/>
