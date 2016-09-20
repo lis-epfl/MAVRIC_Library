@@ -43,11 +43,7 @@
 #include "drivers/gps_mocap.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
-#include "util/quick_trig.h"
-}
+#include "util/quick_trig.hpp"
 
 
 //------------------------------------------------------------------------------
@@ -117,7 +113,7 @@ bool Gps_mocap::init(void)
 }
 
 
-void Gps_mocap::callback(uint32_t sysid, mavlink_message_t* msg)
+void Gps_mocap::callback(uint32_t __attribute__((unused)) sysid, mavlink_message_t* msg)
 {
     mavlink_att_pos_mocap_t packet;
     mavlink_msg_att_pos_mocap_decode(msg, &packet);

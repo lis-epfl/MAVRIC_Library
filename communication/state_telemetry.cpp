@@ -45,11 +45,8 @@
 #include "communication/state.hpp"
 #include "util/version.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -122,7 +119,9 @@ mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_c
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_message_t* msg)
+void state_telemetry_heartbeat_received(State* state,
+                                        uint32_t __attribute__((unused)) sysid,
+                                        mavlink_message_t __attribute__((unused)) * msg)
 {
     state->first_connection_set = true;
 

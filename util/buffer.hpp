@@ -55,13 +55,13 @@
  * \tparam T    Type of buffered data (uint8_t by default)
  */
 template<uint32_t S = 256, typename T = uint8_t>
-class Buffer_tpl
+class Buffer_T
 {
 public:
     /**
      * \brief Constructor
      */
-    Buffer_tpl(void);
+    Buffer_T(void);
 
 
     /**
@@ -161,7 +161,7 @@ private:
  * \detail  This is to make the code more readable in most cases when templates
  *          are not needed. The default buffer has size 256 and type uint8_t.
  */
-typedef Buffer_tpl<256, uint8_t> Buffer;
+typedef Buffer_T<256, uint8_t> Buffer;
 
 
 #include "buffer.hxx"

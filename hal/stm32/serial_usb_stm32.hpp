@@ -79,7 +79,7 @@ public:
     /**
     * \brief   Default Configuration structure
     */
-    static conf_t default_config(void);
+    static inline conf_t default_config(void);
 
 
     /**
@@ -161,8 +161,8 @@ public:
 
 private:
     conf_t                      config_;        ///< Configuration
-    Buffer_tpl<1024>            tx_buffer_;     ///< Transmission buffer
-    Buffer_tpl<1024>            rx_buffer_;     ///< Reception buffer
+    Buffer_T<1024>            tx_buffer_;     ///< Transmission buffer
+    Buffer_T<1024>            rx_buffer_;     ///< Reception buffer
 
     static Serial_usb_stm32* instance_;         ///< Class instance, needed by IRQ handlers
     serial_interrupt_callback_t irq_callback;   ///< The callback function for when there is data to be read

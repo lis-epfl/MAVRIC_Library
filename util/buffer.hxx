@@ -45,14 +45,14 @@
 
 
 template<uint32_t S, typename T>
-Buffer_tpl<S, T>::Buffer_tpl(void):
+Buffer_T<S, T>::Buffer_T(void):
     head_(0),
     tail_(0)
 {}
 
 
 template<uint32_t S, typename T>
-bool Buffer_tpl<S, T>::put_lossy(const T& data)
+bool Buffer_T<S, T>::put_lossy(const T& data)
 {
     uint32_t tmp;
 
@@ -74,7 +74,7 @@ bool Buffer_tpl<S, T>::put_lossy(const T& data)
 
 
 template<uint32_t S, typename T>
-bool Buffer_tpl<S, T>::put(const T& data)
+bool Buffer_T<S, T>::put(const T& data)
 {
     uint32_t tmp;
     tmp = (head_ + 1) % (S + 1);
@@ -96,7 +96,7 @@ bool Buffer_tpl<S, T>::put(const T& data)
 
 
 template<uint32_t S, typename T>
-bool Buffer_tpl<S, T>::get(T& data)
+bool Buffer_T<S, T>::get(T& data)
 {
     bool ret = false;
 
@@ -112,7 +112,7 @@ bool Buffer_tpl<S, T>::get(T& data)
 
 
 template<uint32_t S, typename T>
-void Buffer_tpl<S, T>::clear(void)
+void Buffer_T<S, T>::clear(void)
 {
     head_ = 0;
     tail_ = 0;
@@ -120,34 +120,34 @@ void Buffer_tpl<S, T>::clear(void)
 
 
 template<uint32_t S, typename T>
-uint32_t Buffer_tpl<S, T>::readable(void) const
+uint32_t Buffer_T<S, T>::readable(void) const
 {
     return (S + 1 + head_ - tail_) % (S + 1);
 }
 
 
 template<uint32_t S, typename T>
-uint32_t Buffer_tpl<S, T>::writeable(void) const
+uint32_t Buffer_T<S, T>::writeable(void) const
 {
     return S - readable();
 }
 
 
 template<uint32_t S, typename T>
-bool Buffer_tpl<S, T>::full(void) const
+bool Buffer_T<S, T>::full(void) const
 {
     return (((head_ + 1) % (S + 1)) == tail_);
 }
 
 
 template<uint32_t S, typename T>
-bool Buffer_tpl<S, T>::empty(void) const
+bool Buffer_T<S, T>::empty(void) const
 {
     return (head_ == tail_);
 }
 
 template<uint32_t S, typename T>
-bool Buffer_tpl<S, T>::get_element(uint32_t index, T& elem) const
+bool Buffer_T<S, T>::get_element(uint32_t index, T& elem) const
 {
     if (index > S)
     {

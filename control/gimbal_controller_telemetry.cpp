@@ -43,14 +43,10 @@
 #include "control/gimbal_controller_telemetry.hpp"
 #include "control/gimbal_controller.hpp"
 #include "hal/common/time_keeper.hpp"
-
-extern "C"
-{
-#include "util/print_util.h"
-}
+#include "util/print_util.hpp"
 
 
-void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t sysid, mavlink_message_t* msg)
+void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t __attribute__((unused)) sysid, mavlink_message_t* msg)
 {
     mavlink_gimbal_command_t packet;
     mavlink_msg_gimbal_command_decode(msg, &packet);

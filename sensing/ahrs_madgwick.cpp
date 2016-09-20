@@ -52,11 +52,11 @@
 #include "sensing/ahrs_madgwick.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "util/maths.h"
-#include "util/print_util.h"
 #include "util/quaternions.h"
 }
 

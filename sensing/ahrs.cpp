@@ -41,7 +41,7 @@
 
 
 #include "sensing/ahrs.hpp"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 #include "util/constants.hpp"
 
 //------------------------------------------------------------------------------
