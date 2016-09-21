@@ -151,6 +151,8 @@ int Mission_handler_hold_position<T>::update(Mission_planner& mission_planner)
                 return 1;
             }
             break;
+        case MAV_CMD_OVERRIDE_GOTO:
+            return 1;
         }
     }
 
