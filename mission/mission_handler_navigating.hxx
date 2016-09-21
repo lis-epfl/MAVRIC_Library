@@ -140,7 +140,7 @@ int Mission_handler_navigating<T>::update(Mission_planner& mission_planner)
     }
     navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
-    // Add margin if necessary
+    // Check if radius is available
     float radius;
     if (!waypoint_.radius(radius))
     {

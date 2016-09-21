@@ -113,9 +113,9 @@ int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
     
 
     // Determine distance to the waypoint
-    float xy_radius_sqr = navigation_.takeoff_altitude*navigation_.takeoff_altitude*0.16f;
-
     local_position_t wpt_pos = waypoint_.local_pos();
+    float xy_radius_sqr = wpt_pos[Z]*wpt_pos[Z]*0.16f;
+
     float xy_dist2wp_sqr;
     float rel_pos[3];
     for (int i = 0; i < 2; i++)

@@ -70,7 +70,8 @@ public:
         PREMISSION,
         MISSION,
         POSTMISSION,
-        PAUSED
+        PAUSED,
+        MANUAL_CTRL
     };
 
     /**
@@ -163,7 +164,7 @@ public:
 
     /**
      * \brief   Inserts the inputted waypoint into the mission
-     * 
+     *
      * \details     This inserts a waypoint into the mission and sets
      *              the internal state to paused. If the insert fails,
      *              the function returns false and does not set the

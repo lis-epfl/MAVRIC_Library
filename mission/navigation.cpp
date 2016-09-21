@@ -557,6 +557,13 @@ bool Navigation::update(Navigation* navigation)
             {
                 navigation->run();
             }
+            else
+            {
+                navigation->controls_nav.tvel[X] = 0.0f;
+                navigation->controls_nav.tvel[Y] = 0.0f;
+                navigation->controls_nav.tvel[Z] = 10.0f;
+                //navigation->controls_nav.theading = 0.0f;
+            }
             break;
 
         case MAV_STATE_CRITICAL:
@@ -579,7 +586,7 @@ bool Navigation::update(Navigation* navigation)
             navigation->controls_nav.tvel[Z] = 0.0f;
             break;
     }
-    
+
     return true;
 }
 

@@ -85,6 +85,7 @@
 #include "mission/mission_handler_critical_navigating.hpp"
 #include "mission/mission_handler_hold_position.hpp"
 #include "mission/mission_handler_landing.hpp"
+#include "mission/mission_handler_manual.hpp"
 #include "mission/mission_handler_navigating.hpp"
 #include "mission/mission_handler_on_ground.hpp"
 #include "mission/mission_handler_takeoff.hpp"
@@ -270,6 +271,7 @@ protected:
     Mission_handler_landing<INavigation_controller, IXyposition_zvel_controller> landing_handler;
     Mission_handler_navigating<INavigation_controller> navigating_handler;
     Mission_handler_on_ground on_ground_handler;
+    Mission_handler_manual manual_ctrl_handler;
     Mission_handler_takeoff<INavigation_controller> takeoff_handler;
     Mission_handler_critical_landing<INavigation_controller, IXyposition_zvel_controller> critical_landing_handler;
     Mission_handler_critical_navigating<INavigation_controller> critical_navigating_handler;

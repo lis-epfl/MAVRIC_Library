@@ -110,6 +110,7 @@ LIB_SRCS += mission/mission_handler_critical_landing.cpp
 LIB_SRCS += mission/mission_handler_critical_navigating.cpp
 LIB_SRCS += mission/mission_handler_hold_position.cpp
 LIB_SRCS += mission/mission_handler_landing.cpp
+LIB_SRCS += mission/mission_handler_manual.cpp
 LIB_SRCS += mission/mission_handler_navigating.cpp
 LIB_SRCS += mission/mission_handler_on_ground.cpp
 LIB_SRCS += mission/mission_handler_registry.cpp
