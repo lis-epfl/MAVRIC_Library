@@ -241,16 +241,6 @@ protected:
 //     static void set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
 
     /**
-     * \brief   Set the next waypoint as current waypoint
-     *
-     * \param   mission_planner         The pointer to the structure of the mission planner
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t continue_to_next_waypoint(Mission_planner* mission_planner, mavlink_command_long_t* packet);
-
-    /**
      * \brief   Sends back whether the MAV is currently stopped at a waypoint or not
      *
      * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
@@ -263,21 +253,25 @@ protected:
     /**
      * \brief   Sets the current waypoint to num_of_waypoint
      *
-     * \param   mission_planner         The pointer to the mission planner class
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the number of the current waypoint
      */
-    static void set_current_waypoint(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
+    bool set_current_waypoint(uint16_t index);
+
 
     /**
      * \brief   Set the current waypoint to new_current
      *
      * \param   mission_planner         The pointer to the mission planner class
-     * \param   packet                  The pointer to the decoded MAVLink message long
+     * \param   sysid                   The system ID
+     * \param   msg                     The received MAVLink message structure with the number of the current waypoint
      *
-     * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_current_waypoint_from_parameter(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+    static void set_current_waypoint_from_parameter(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
+    
+
+    static mav_result_t mission_start(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+
 
     /**
      * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
@@ -300,14 +294,14 @@ protected:
     static mav_result_t set_auto_landing(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 
     /**
-     * \brief   Start/Stop the navigation
+     * \brief   Pauses the navigation or resumes/advances the navigation waypoint
      *
      * \param   navigating_handler      The pointer to the structure of the navigating handler
      * \param   packet                  The pointer to the structure of the MAVLink command message long
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t start_stop_navigation(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+    static mav_result_t set_override_goto(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 };
 
 

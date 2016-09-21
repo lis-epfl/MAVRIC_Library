@@ -104,125 +104,59 @@ extern "C"
 //     }
 // }
 
-mav_result_t Mission_planner::continue_to_next_waypoint(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+
+bool Mission_planner::set_current_waypoint(uint16_t index)
 {
-    mav_result_t result;
-    bool force_next = false;
-    uint32_t time_from_start_wpt = time_keeper_get_ms() - mission_planner->navigation_.start_wpt_time();
-    uint32_t time_wpt_limit = 5000;
-
-    if (packet->param3 == 1)
+    bool success = false;
+    if ((waypoint_handler_.set_current_waypoint_index(index)))
     {
-        // QGroundControl sends every message twice,
-        //  therefore we do this test to avoid continuing two times in a row towards next waypoint
-        if (time_from_start_wpt > time_wpt_limit) // 5 seconds
-        {
-            force_next = true;
-        }
-    }
-
-    if ((mission_planner->waypoint_handler_.waypoint_count() > 0) && (mission_planner->navigation_.waiting_at_waypoint() || force_next))
-    {
-        print_util_dbg_print("All vehicles: Navigating to next waypoint.\r\n");
-
-        mission_planner->navigation_.set_start_wpt_time();
-        mission_planner->navigation_.set_waiting_at_waypoint(false);
-        mission_planner->waypoint_handler_.advance_to_next_waypoint();
-        mission_planner->switch_mission_handler(mission_planner->waypoint_handler_.current_waypoint());
-
+        print_util_dbg_print("setting current wp\n");
+        /* send new index to ground station */
         mavlink_message_t msg;
-        mavlink_msg_mission_current_pack(mission_planner->mavlink_stream_.sysid(),
-                                         mission_planner->mavlink_stream_.compid(),
+        mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
+                                         mavlink_stream_.compid(),
                                          &msg,
-                                         mission_planner->waypoint_handler_.current_waypoint_index());
-        mission_planner->mavlink_stream_.send(&msg);
+                                         index);
+        mavlink_stream_.send(&msg);
 
-        result = MAV_RESULT_ACCEPTED;
-    }
-    else
-    {
-        result = MAV_RESULT_TEMPORARILY_REJECTED;
-
-        print_util_dbg_print("Not ready to switch to next waypoint. Either no waypoint loaded or flying towards one\r\n");
-    }
-
-    // To avoid a MAV_RESULT_TEMPORARILY_REJECTED for the second message and thus
-    //  a bad information to the user on the ground, if two messages are received
-    //  in a short time interval, we still show the result as MAV_RESULT_ACCEPTED
-    if (time_from_start_wpt < time_wpt_limit)
-    {
-        result = MAV_RESULT_ACCEPTED;
-    }
-
-    return result;
-}
-
-void Mission_planner::set_current_waypoint(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg)
-{
-    mavlink_mission_set_current_t packet;
-
-    mavlink_msg_mission_set_current_decode(msg, &packet);
-
-    // Check if this message is for this system and subsystem
-    if (((uint8_t)packet.target_system == (uint8_t)sysid)
-            && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
-    {
-        if (mission_planner->waypoint_handler_.set_current_waypoint_index(packet.seq))
+        if (state_.is_auto())
         {
-            mavlink_message_t _msg;
-            mavlink_msg_mission_current_pack(sysid,
-                                             mission_planner->mavlink_stream_.compid(),
-                                             &_msg,
-                                             packet.seq);
-            mission_planner->mavlink_stream_.send(&_msg);
+            print_util_dbg_print("changing right now\n");
+            navigation_.set_start_wpt_time();
+            navigation_.set_waiting_at_waypoint(false);
+            switch_mission_handler(waypoint_handler_.current_waypoint());
+        }
 
-            mission_planner->navigation_.set_start_wpt_time();
-            mission_planner->navigation_.set_waiting_at_waypoint(false);
-            mission_planner->switch_mission_handler(mission_planner->waypoint_handler_.current_waypoint());
-        }
-        else
-        {
-            mavlink_message_t _msg;
-            mavlink_msg_mission_ack_pack(mission_planner->mavlink_stream_.sysid(),
-                                         mission_planner->mavlink_stream_.compid(),
-                                         &_msg,
-                                         msg->sysid,
-                                         msg->compid,
-                                         MAV_CMD_ACK_ERR_ACCESS_DENIED);
-            mission_planner->mavlink_stream_.send(&_msg);
-        }
-    } //end of if this message is for this system and subsystem
+        success = true;
+    }
+    return success;
 }
 
-mav_result_t Mission_planner::set_current_waypoint_from_parameter(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+
+mav_result_t Mission_planner::mission_start(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
-    mav_result_t result;
-    uint16_t new_current = 0;
-
-    print_util_dbg_print("All MAVs: Return to first waypoint.\r\n");
-
-    if ((mission_planner->waypoint_handler_.set_current_waypoint_index(new_current)))
+    print_util_dbg_print("[MISSION_PLANNER]: mission_start: ");
+    bool success = false;
+    if(mission_planner->state_.is_auto())
     {
-        mavlink_message_t msg;
-        mavlink_msg_mission_current_pack(mission_planner->mavlink_stream_.sysid(),
-                                         mission_planner->mavlink_stream_.compid(),
-                                         &msg,
-                                         new_current);
-        mission_planner->mavlink_stream_.send(&msg);
-
-        mission_planner->navigation_.set_start_wpt_time();
-        mission_planner->navigation_.set_waiting_at_waypoint(false);
-        mission_planner->switch_mission_handler(mission_planner->waypoint_handler_.current_waypoint());
-
-        result = MAV_RESULT_ACCEPTED;
+        print_util_dbg_print("waypoint ");
+        print_util_dbg_print_num(packet->param1,10);
+        success = mission_planner->set_current_waypoint(packet->param1);    
     }
-    else
-    {
-        result = MAV_RESULT_DENIED;
-    }
-
-    return result;
+    print_util_dbg_print("\n");
+    return success ? MAV_RESULT_ACCEPTED : MAV_RESULT_DENIED;
 }
+
+
+void Mission_planner::set_current_waypoint_from_parameter(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg)
+{
+    print_util_dbg_print("set_current_waypoint_from_parameter:  seq");
+    uint8_t new_current = mavlink_msg_mission_set_current_get_seq(msg);
+    print_util_dbg_print_num(new_current,10);
+    print_util_dbg_print("\n");
+    mission_planner->set_current_waypoint(new_current);
+}
+
 
 mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
@@ -247,20 +181,25 @@ mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavli
     return result;
 }
 
-mav_result_t Mission_planner::start_stop_navigation(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::set_override_goto(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
+
+    if (!mission_planner->state_.is_auto())
+    {
+        return MAV_RESULT_TEMPORARILY_REJECTED;
+    }
 
     if (packet->param1 == MAV_GOTO_DO_HOLD)
     {
         if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
         {
-            Waypoint hold_wpt = Waypoint(   packet->param3,
+            Waypoint hold_wpt = Waypoint(   MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_OVERRIDE_GOTO,
                                             0,
                                             packet->param1,
                                             packet->param2,
-                                            packet->param3,
+                                            MAV_FRAME_LOCAL_NED,
                                             packet->param4,
                                             mission_planner->ins_.position_lf()[X],
                                             mission_planner->ins_.position_lf()[Y],
@@ -285,16 +224,24 @@ mav_result_t Mission_planner::start_stop_navigation(Mission_planner* mission_pla
 
             result = MAV_RESULT_ACCEPTED;
         }
+        else
+        {
+            result = MAV_RESULT_DENIED;
+        }
     }
     else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
     {
-        if (mission_planner->state_.is_auto())
+        uint16_t new_wp_index = mission_planner->waypoint_handler_.current_waypoint_index();
+        if(mission_planner->internal_state_ != PAUSED)
         {
-            mission_planner->waypoint_handler_.advance_to_next_waypoint();
-            mission_planner->switch_mission_handler(mission_planner->waypoint_handler_.current_waypoint());
+            new_wp_index++;
         }
-
+        mission_planner->set_current_waypoint(new_wp_index % mission_planner->waypoint_handler_.waypoint_count());
         result = MAV_RESULT_ACCEPTED;
+    }
+    else
+    {
+        result = MAV_RESULT_DENIED;
     }
 
     return result;
@@ -395,6 +342,12 @@ void Mission_planner::state_machine()
     if (state_.mav_mode().ctrl_mode() != Mav_mode::POSITION_HOLD)
     {
         hold_position_set_ = false;
+    }
+
+    // Require auto-takeoff if we are in standby
+    if (internal_state_ == STANDBY)
+    {
+        require_takeoff_ = true;
     }
 
     // If is auto, look to the waypoints
@@ -523,9 +476,6 @@ void Mission_planner::state_machine()
     }
     else if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
     {
-        // Require takeoff as the drone might never have entered the auto state
-        require_takeoff_ = true;
-
         // Set hold position waypoint
         if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f  && !hold_position_set_) // On ground and desired to take off
         {
@@ -851,20 +801,12 @@ bool Mission_planner::init()
     callback.message_id     = MAVLINK_MSG_ID_MISSION_SET_CURRENT; // 41
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_current_waypoint;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &set_current_waypoint_from_parameter;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_msg_callback(&callback);
 
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_current_waypoint_from_parameter;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
@@ -885,7 +827,7 @@ bool Mission_planner::init()
     callbackcmd.command_id = MAV_CMD_CONDITION_DISTANCE; // 114
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 190
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &is_arrived;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
@@ -894,15 +836,15 @@ bool Mission_planner::init()
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &start_stop_navigation;
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_override_goto;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     callbackcmd.command_id = MAV_CMD_MISSION_START; // 300
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
     callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &continue_to_next_waypoint;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 190
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &mission_start;
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
