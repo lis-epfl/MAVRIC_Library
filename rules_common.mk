@@ -131,6 +131,7 @@ LIB_SRCS += simulation/dynamic_model_telemetry.cpp
 LIB_SRCS += simulation/flow_sim.cpp
 LIB_SRCS += simulation/gps_sim.cpp
 LIB_SRCS += simulation/gyroscope_sim.cpp
+LIB_SRCS += simulation/ins_ahrs_groundtruth.cpp
 LIB_SRCS += simulation/magnetometer_sim.cpp
 LIB_SRCS += simulation/simulation.cpp
 LIB_SRCS += simulation/sonar_sim.cpp
