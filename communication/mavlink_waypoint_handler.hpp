@@ -51,8 +51,6 @@
 #include "mission/navigation.hpp"
 #include "mission/waypoint.hpp"
 
-class Mission_planner;
-
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
 /*
