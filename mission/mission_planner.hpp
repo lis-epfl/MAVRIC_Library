@@ -241,16 +241,6 @@ protected:
 //     static void set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
 
     /**
-     * \brief   Sends back whether the MAV is currently stopped at a waypoint or not
-     *
-     * \param   waypoint_handler        The pointer to the structure of the MAVLink waypoint handler
-     * \param   packet                  The pointer to the structure of the MAVLink command message long
-     *
-     * \return  The MAV_RESULT of the command
-     */
-    static mav_result_t is_arrived(Mission_planner* mission_planner, mavlink_command_long_t* packet);
-
-    /**
      * \brief   Sets the current waypoint to num_of_waypoint
      *
      * \param   sysid                   The system ID

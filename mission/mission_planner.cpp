@@ -157,30 +157,6 @@ void Mission_planner::set_current_waypoint_from_parameter(Mission_planner* missi
     mission_planner->set_current_waypoint(new_current);
 }
 
-
-mav_result_t Mission_planner::is_arrived(Mission_planner* mission_planner, mavlink_command_long_t* packet)
-{
-    mav_result_t result;
-
-    if (packet->param2 == 32)
-    {
-        if (mission_planner->navigation_.waiting_at_waypoint())
-        {
-            result = MAV_RESULT_ACCEPTED;
-        }
-        else
-        {
-            result = MAV_RESULT_TEMPORARILY_REJECTED;
-        }
-    }
-    else
-    {
-        result = MAV_RESULT_DENIED;
-    }
-
-    return result;
-}
-
 mav_result_t Mission_planner::set_override_goto(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
@@ -822,14 +798,6 @@ bool Mission_planner::init()
     callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
     callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_takeoff;
     callbackcmd.module_struct =                                 this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
-
-    callbackcmd.command_id = MAV_CMD_CONDITION_DISTANCE; // 114
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &is_arrived;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     callbackcmd.command_id = MAV_CMD_OVERRIDE_GOTO; // 252
