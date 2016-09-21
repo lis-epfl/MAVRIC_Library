@@ -59,43 +59,43 @@ Mpu_9250::Mpu_9250(Spi& spi, Gpio& nss_gpio, const conf_t config):
     switch (config.acc_range)
     {
         case ACC_2G:
-            acc_scale_ = 16384;
+            acc_scale_ = 16384.0f;
             break;
 
         case ACC_4G:
-            acc_scale_ = 8192;
+            acc_scale_ = 8192.0f;
             break;
 
         case ACC_8G:
-            acc_scale_ = 4096;
+            acc_scale_ = 4096.0f;
             break;
 
         case ACC_16G:
-            acc_scale_ = 2048;
+            acc_scale_ = 2048.0f;
             break;
     }
 
     switch (config.gyro_range)
     {
         case GYRO_250_DEG:
-            gyro_scale_ = 131;
+            gyro_scale_ = 131.0f;
             break;
 
         case GYRO_500_DEG:
-            gyro_scale_ = 65.5;
+            gyro_scale_ = 65.5f;
             break;
 
         case GYRO_1000_DEG:
-            gyro_scale_ = 32.8;
+            gyro_scale_ = 32.8f;
             break;
 
         case GYRO_2000_DEG:
-            gyro_scale_ = 16.4;
+            gyro_scale_ = 16.4f;
             break;
     }
 
     // converting from dps to rps
-    gyro_scale_ *= 180.0f/3.14159f;
+    gyro_scale_ *= 2.0f * 180.0f / 3.14159f;
 }
 
 bool Mpu_9250::init(void)
@@ -198,7 +198,7 @@ bool Mpu_9250::update_gyr(void)
     gyro_data_[0] /= gyro_scale_;
     gyro_data_[1] /= gyro_scale_;
     gyro_data_[2] /= gyro_scale_;
-    
+
     last_update_us_ = time_keeper_get_us();
 
     return success;
@@ -211,11 +211,11 @@ bool Mpu_9250::update_mag(void)
     // Read raw data from magnetometer (little endian)
     uint8_t mag_data_raw[6] = {0};
     success &= read_reg(EXT_SENS_DATA_00, mag_data_raw, 6);
-    
+
     mag_data_[0] = (float)((int16_t)(mag_data_raw[1] << 8 | mag_data_raw[0]));
     mag_data_[1] = (float)((int16_t)(mag_data_raw[3] << 8 | mag_data_raw[2]));
     mag_data_[2] = (float)((int16_t)(mag_data_raw[5] << 8 | mag_data_raw[4]));
-    
+
     last_update_us_ = time_keeper_get_us();
 
     return success;

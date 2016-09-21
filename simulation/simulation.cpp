@@ -47,6 +47,7 @@
 
 Simulation::Simulation(Dynamic_model& dynamic_model, simulation_conf_t config):
     dynamic_model_(dynamic_model),
+    config_(config),
     accelerometer_(dynamic_model_),
     gyroscope_(dynamic_model_),
     magnetometer_(dynamic_model_),

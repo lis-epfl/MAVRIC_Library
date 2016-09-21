@@ -43,13 +43,12 @@
 #include "control/vector_field_waypoint.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "cstdint"
 #include "util/vectors.h"
-
-#include "util/print_util.h"
 }
 
 //------------------------------------------------------------------------------
@@ -363,7 +362,11 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
     /**
      *  Student code Here
      */
-
+    (void)pos_mav; // unused
+    (void)pos_obj; // unused
+    (void)attractiveness; // unused
+    (void)cruise_speed; // unused
+    (void)radius; // unused
 
     /**
      *  End of Student code

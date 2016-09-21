@@ -45,11 +45,7 @@
 #include "control/dubin.hpp"
 #include "mission/mission_handler.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
-#include "util/print_util.h"
-}
+#include "util/print_util.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

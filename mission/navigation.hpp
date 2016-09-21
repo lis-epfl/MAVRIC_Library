@@ -45,7 +45,6 @@
 
 #include <cstdbool>
 
-#include "communication/mavlink_communication.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
 #include "mission/mission_handler_registry.hpp"

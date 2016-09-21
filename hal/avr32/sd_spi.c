@@ -53,7 +53,7 @@
 #include "hal/common/time_keeper.hpp"
 
 #include "hal/avr32/led.h"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 
 #include "libs/asf/common/boards/user_board/user_board.h"
 

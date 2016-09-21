@@ -50,12 +50,12 @@
 #include "mission/mission_handler_on_ground.hpp"
 #include "mission/mission_handler_navigating.hpp"
 #include "mission/mission_handler_hold_position.hpp"
+#include "util/print_util.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
 #include "util/maths.h"
-#include "util/constants.hpp"
 }
 
 

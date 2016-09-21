@@ -44,11 +44,7 @@
 #include "control/stabilisation_copter.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
-#include "util/print_util.h"
-}
+#include "util/print_util.hpp"
 
 
 bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const INS* ins, torque_command_t* torque, thrust_command_t* thrust)

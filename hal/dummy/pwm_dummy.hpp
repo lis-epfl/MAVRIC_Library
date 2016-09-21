@@ -69,7 +69,7 @@ public:
      *
      * \return Success
      */
-    bool set_pulse_width_us(uint16_t pulse_us)
+    bool set_pulse_width_us(uint16_t __attribute__((unused)) pulse_us)
     {
         return true;
     };
@@ -82,7 +82,7 @@ public:
      *
      * \return  Success
      */
-    bool set_period_us(uint16_t period_us)
+    bool set_period_us(uint16_t __attribute__((unused)) period_us)
     {
         return true;
     };

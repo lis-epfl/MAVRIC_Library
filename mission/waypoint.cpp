@@ -46,12 +46,12 @@
 
 #include <cstdlib>
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
+#include "util/constants.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
 #include "util/maths.h"
-#include "util/constants.hpp"
 }
 
 
@@ -208,7 +208,7 @@ bool Waypoint::heading(float& heading) const
     case MAV_CMD_NAV_PATHPLANNING:    // 81
         heading = param4_;
         return true;
-        
+
     case MAV_CMD_NAV_LOITER_TO_ALT: // 31
     default:
         heading = 0.0f;

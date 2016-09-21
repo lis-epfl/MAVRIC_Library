@@ -48,7 +48,7 @@ extern "C"
 #include "util/maths.h"
 }
 
-void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void scheduler_telemetry_send_rt_stats(Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     // static int id = 0
     // id ++;
@@ -124,7 +124,7 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
     stab_task->execution_time_max = 0;
 }
 
-void scheduler_telemetry_send_rt_stats_all(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void scheduler_telemetry_send_rt_stats_all(Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     float data[60];
 

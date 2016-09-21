@@ -77,8 +77,58 @@ public:
     bool update(void);
 
 
+    /**
+    * \brief   Get the last update time in microseconds
+    *
+    * \return   Value
+    */
+    uint64_t last_update_us(void) const;
+
+
+    /**
+     * \brief   Return the pressure
+     *
+     * \return  Value
+     */
+    float pressure(void)  const;
+
+
+    /**
+     * \brief   Get the altitude in meters above sea level
+     *
+     * \detail  Global frame: (>0 means upward)
+     *
+     * \return  Value
+     */
+    float altitude_gf(void) const;
+
+
+    /**
+     * \brief   Get the vertical speed in meters/second
+     *
+     * \detail  NED frame: (>0 means downward)
+     *
+     * \return  Value
+     */
+    float vertical_speed_lf(void) const;
+
+
+    /**
+     * \brief   Get sensor temperature
+     *
+     * \return  Value
+     */
+    float temperature(void) const;
+
 private:
     Dynamic_model&  dynamic_model_; ///< Reference to dynamic model
+
+    uint64_t last_update_us_;   ///< Last update time
+    float pressure_;            ///< Measured pressure
+    float temperature_;         ///< Measured temperature
+    float altitude_gf_;         ///< Measured altitude (global frame)
+    float altitude_filtered;    ///< Measured altitude without bias removal
+    float speed_lf_;            ///< Vario altitude speed (ned frame)
 };
 
 #endif /* BAROMETER_SIM_HPP_ */

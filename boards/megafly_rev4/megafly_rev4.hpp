@@ -54,7 +54,7 @@
 
 #include "drivers/airspeed_analog.hpp"
 #include "drivers/battery.hpp"
-#include "drivers/bmp085.hpp"
+#include "drivers/barometer_bmp085.hpp"
 #include "drivers/gps_ublox.hpp"
 #include "drivers/hmc5883l.hpp"
 #include "drivers/lsm330dlc.hpp"
@@ -146,7 +146,7 @@ public:
     I2c_avr32                   i2c1;
     Hmc5883l                    hmc5883l;
     Lsm330dlc                   lsm330dlc;
-    Bmp085                      bmp085;
+    Barometer_BMP085            barometer;
     Spektrum_satellite          spektrum_satellite;
     Led_avr32                   red_led;
     Led_avr32                   green_led;

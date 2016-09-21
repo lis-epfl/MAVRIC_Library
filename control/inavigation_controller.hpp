@@ -69,7 +69,7 @@ public:
      *
      * \return success  whether command was accepted
      */
-    inline virtual bool set_navigation_command(const nav_command_t& command) = 0;
+    virtual bool set_navigation_command(const nav_command_t& command) = 0;
 };
 
 #endif /* INAVIGATION_CONTROLLER_HPP_ */
