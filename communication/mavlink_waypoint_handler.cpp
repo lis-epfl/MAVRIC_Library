@@ -112,14 +112,14 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
             waypoint_handler->sending_waypoint_num_ = packet.seq;
             if (waypoint_handler->sending_waypoint_num_ < waypoint_handler->waypoint_count_)
             {
-                uint8_t isCurrent = 0;
+                uint8_t is_current = 0;
                 if (    waypoint_handler->sending_waypoint_num_ == waypoint_handler->current_waypoint_index_ && // This is the current waypoint
                         !waypoint_handler->navigation_.waiting_at_waypoint())                                   // And we are en route
                 {
-                    isCurrent = 1;
+                    is_current = 1;
                 }
 
-                waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].send(waypoint_handler->mavlink_stream_, sysid, msg, packet.seq, isCurrent);
+                waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].send(waypoint_handler->mavlink_stream_, sysid, msg, packet.seq, is_current);
 
                 print_util_dbg_print("Sending waypoint ");
                 print_util_dbg_print_num(waypoint_handler->sending_waypoint_num_, 10);
