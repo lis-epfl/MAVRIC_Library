@@ -79,7 +79,7 @@ public:
      * \return  True if the init succeed, false otherwise
      */
     Mavlink_waypoint_handler(   const INS& ins,
-                                Navigation& navigation,
+                                const Navigation& navigation,
                                 Mavlink_message_handler& message_handler,
                                 const Mavlink_stream& mavlink_stream,
                                 Mission_handler_registry& mission_handler_registry,
@@ -167,7 +167,7 @@ protected:
 
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream object
     const INS& ins_;                                            ///< The pointer to the position estimation structure
-    Navigation& navigation_;                                    ///< The reference to the navigation object
+    const Navigation& navigation_;                                    ///< The reference to the navigation object
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 private:

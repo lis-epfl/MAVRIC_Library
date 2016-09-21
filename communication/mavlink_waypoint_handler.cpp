@@ -288,7 +288,6 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                             print_util_dbg_print("flight plan received!\n");
                             waypoint_handler->is_receiving_waypoint_ = false;
 
-                            waypoint_handler->navigation_.set_start_wpt_time();
                             // TODO Should this auto start moving towards the point
                         }
                         else
@@ -390,7 +389,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 //------------------------------------------------------------------------------
 
 Mavlink_waypoint_handler::Mavlink_waypoint_handler( const INS& ins,
-                                                    Navigation& navigation,
+                                                    const Navigation& navigation,
                                                     Mavlink_message_handler& message_handler,
                                                     const Mavlink_stream& mavlink_stream,
                                                     Mission_handler_registry& mission_handler_registry,
@@ -503,7 +502,6 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
                         navigation_.takeoff_altitude);
 
     waypoint_count_ = 1;
-    navigation_.set_waiting_at_waypoint(false);
     set_current_waypoint_index(0);
 
     waypoint_list_[0] = waypoint;
