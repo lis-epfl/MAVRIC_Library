@@ -41,13 +41,11 @@
 
 #include "control/position_controller.hpp"
 
-//#include "util/print_util.h"
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Position_controller::Position_controller(INS& ins, ahrs_t& ahrs, conf_t config) :
+Position_controller::Position_controller(const INS& ins, const ahrs_t& ahrs, conf_t config) :
     ins_(ins),
     ahrs_(ahrs),
     cruise_mode_(false),
@@ -85,7 +83,7 @@ bool Position_controller::set_xyposition_zvel_command(const xypos_zvel_command_t
     zvel_command_ = command.vel_z;
     /* set ctrl_mode to use position in xy and velocity in z as input */
     ctrl_mode_ = ctrl_mode_t::POS_XY_VEL_Z;
-    return true;   
+    return true;
 }
 
 
@@ -112,7 +110,7 @@ void Position_controller::calc_velocity_command(const pos_command_t& pos_command
     rel_goal_pos[X] = pos_command.pos[X] - local_pos[X];
     rel_goal_pos[Y] = pos_command.pos[Y] - local_pos[Y];
     rel_goal_pos[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ?  0.0f : pos_command.pos[Z] - local_pos[Z];
-    
+
     // Normalize relative goal position to get desired direction (unit vector)
     float goal_distance = vectors_norm(rel_goal_pos);
     float scale = maths_f_min(1.0f/goal_distance, 2000.0f); // avoid division by 0
@@ -147,13 +145,13 @@ void Position_controller::calc_velocity_command(const pos_command_t& pos_command
     velocity_command_.tvel[X] = goal_dir_sg[X] * v_desired;
     velocity_command_.tvel[Y] = goal_dir_sg[Y] * v_desired;
     velocity_command_.tvel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir_sg[Z] * v_desired;
-    
+
     // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
     if(cruise_mode_)
     {
         float rel_heading;
         rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - coord_conventions_get_yaw(ahrs_.qe));
-        velocity_command_.rpy[YAW] = kp_yaw_ * rel_heading;    
+        velocity_command_.rpy[YAW] = kp_yaw_ * rel_heading;
     }
 }
 
@@ -163,7 +161,7 @@ void Position_controller::set_cruise_mode(bool cruise_mode)
 {
     /* choose pid_config to apply to controller */
     pid_controller_conf_t* pid_config = cruise_mode ? &cruise_pid_config_ : &hover_pid_config_;
-    
+
     /* apply chosen configuration */
     pid_controller_apply_config(&pid_controller_, pid_config);
 
@@ -184,6 +182,3 @@ control_command_t& Position_controller::velocity_command()
 {
     return velocity_command_;
 }
-
-
-
