@@ -569,17 +569,7 @@ bool LEQuad::main_task(void)
                 position_controller_.update();
                 controls = position_controller_.velocity_command();
                 controls.control_mode = VELOCITY_COMMAND_MODE;
-
-                // if no waypoints are set, we do position hold therefore the yaw mode is absolute
-                if ((((!navigation.waiting_at_waypoint() || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN)) && (mission_planner.internal_state() == Mission_planner::MISSION)) || (mission_planner.internal_state() == Mission_planner::MISSION))
-              	   || ((state.mav_state_ == MAV_STATE_CRITICAL) && (mission_planner.critical_behavior() == Mission_planner::FLY_TO_HOME_WP)))
-            	{
-                    controls.yaw_mode = YAW_RELATIVE;
-                }
-                else
-                {
-                    controls.yaw_mode = YAW_ABSOLUTE;
-                }
+                controls.yaw_mode = YAW_ABSOLUTE;
                 break;
 
             case Mav_mode::POSITION_HOLD:
