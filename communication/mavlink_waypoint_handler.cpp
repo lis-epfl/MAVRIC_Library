@@ -389,12 +389,16 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(INS& ins, Navigation& navigation, State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_handler_registry& mission_handler_registry, conf_t config):
+Mavlink_waypoint_handler::Mavlink_waypoint_handler( INS& ins,
+                                                    Navigation& navigation,
+                                                    Mavlink_message_handler& message_handler,
+                                                    const Mavlink_stream& mavlink_stream,
+                                                    Mission_handler_registry& mission_handler_registry,
+                                                    conf_t config):
     waypoint_count_(0),
     current_waypoint_index_(0),
     mavlink_stream_(mavlink_stream),
     ins_(ins),
-    state_(state),
     navigation_(navigation),
     message_handler_(message_handler),
     mission_handler_registry_(mission_handler_registry),

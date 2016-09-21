@@ -47,7 +47,6 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/state.hpp"
 #include "mission/navigation.hpp"
 #include "mission/waypoint.hpp"
 
@@ -72,7 +71,6 @@ public:
      *
      * \param   ins                         The reference to the Inertial Navigation System
      * \param   navigation                  The reference to the navigation structure
-     * \param   state                       The reference to the state structure
      * \param   message_handler             The reference to the message handler
      * \param   mavlink_stream              The reference to the MAVLink stream structure
      * \param   mission_handler_registry    The reference to the mission handler registry
@@ -82,7 +80,6 @@ public:
      */
     Mavlink_waypoint_handler(   INS& ins,
                                 Navigation& navigation,
-                                State& state,
                                 Mavlink_message_handler& message_handler,
                                 const Mavlink_stream& mavlink_stream,
                                 Mission_handler_registry& mission_handler_registry,
@@ -170,7 +167,6 @@ protected:
 
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream object
     INS& ins_;                                                  ///< The pointer to the position estimation structure
-    State& state_;                                              ///< The reference to the state object
     Navigation& navigation_;                                    ///< The reference to the navigation object
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
