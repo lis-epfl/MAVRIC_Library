@@ -176,8 +176,8 @@ protected:
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 private:
 
-    bool waypoint_sending_;                                     ///< Flag to tell whether waypoint are being sent
-    bool waypoint_receiving_;                                   ///< Flag to tell whether waypoint are being received or not
+    bool is_sending_waypoint_;                                  ///< Flag to tell whether waypoint are being sent
+    bool is_receiving_waypoint_;                                ///< Flag to tell whether waypoint are being received or not
 
     int32_t sending_waypoint_num_;                              ///< The ID number of the sending waypoint
     int32_t waypoint_request_number_;                           ///< The ID number of the requested waypoint
