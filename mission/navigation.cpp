@@ -562,7 +562,7 @@ bool Navigation::update(Navigation* navigation)
                 navigation->controls_nav.tvel[X] = 0.0f;
                 navigation->controls_nav.tvel[Y] = 0.0f;
                 navigation->controls_nav.tvel[Z] = 10.0f;
-                navigation->controls_nav.theading = 0.0f;
+                //navigation->controls_nav.theading = 0.0f;
             }
             break;
 
