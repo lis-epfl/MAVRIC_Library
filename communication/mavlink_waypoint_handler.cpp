@@ -389,7 +389,7 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler( INS& ins,
+Mavlink_waypoint_handler::Mavlink_waypoint_handler( const INS& ins,
                                                     Navigation& navigation,
                                                     Mavlink_message_handler& message_handler,
                                                     const Mavlink_stream& mavlink_stream,
