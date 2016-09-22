@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file iposition_controller.hpp
+ * \file position_controller_i.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
@@ -40,13 +40,13 @@
  ******************************************************************************/
 
 
-#ifndef IPOSITION_CONTROLLER_HPP_
-#define IPOSITION_CONTROLLER_HPP_
+#ifndef POSITION_CONTROLLER_I_HPP_
+#define POSITION_CONTROLLER_I_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "control/control_command.h"
 
-class IPosition_controller
+class Position_controller_I
 {
 public:
     /*
@@ -72,4 +72,4 @@ public:
     inline virtual bool set_position_command(const pos_command_t& command) = 0;
 };
 
-#endif /* IPOSITION_CONTROLLER_HPP_ */
+#endif /* POSITION_CONTROLLER_I_HPP_ */

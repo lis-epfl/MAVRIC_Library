@@ -59,8 +59,8 @@
 
 #include "control/altitude_controller.hpp"
 #include "control/attitude_controller.hpp"
-#include "control/inavigation_controller.hpp"
-#include "control/ixyposition_zvel_controller.hpp"
+#include "control/navigation_controller_i.hpp"
+#include "control/xyposition_zvel_controller_i.hpp"
 #include "control/manual_control.hpp"
 #include "control/position_controller.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
@@ -274,14 +274,14 @@ protected:
 
 
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
-    Mission_handler_hold_position<INavigation_controller> hold_position_handler;
-    Mission_handler_landing<INavigation_controller, IXyposition_zvel_controller> landing_handler;
-    Mission_handler_navigating<INavigation_controller> navigating_handler;
+    Mission_handler_hold_position<Navigation_controller_I> hold_position_handler;
+    Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I> landing_handler;
+    Mission_handler_navigating<Navigation_controller_I> navigating_handler;
     Mission_handler_on_ground on_ground_handler;
     Mission_handler_manual manual_ctrl_handler;
-    Mission_handler_takeoff<INavigation_controller> takeoff_handler;
-    Mission_handler_critical_landing<INavigation_controller, IXyposition_zvel_controller> critical_landing_handler;
-    Mission_handler_critical_navigating<INavigation_controller> critical_navigating_handler;
+    Mission_handler_takeoff<Navigation_controller_I> takeoff_handler;
+    Mission_handler_critical_landing<Navigation_controller_I, XYposition_Zvel_controller_I> critical_landing_handler;
+    Mission_handler_critical_navigating<Navigation_controller_I> critical_navigating_handler;
     Mission_planner mission_planner;                            ///< Controls the mission plan
 
 

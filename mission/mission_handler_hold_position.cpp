@@ -41,7 +41,7 @@
 
 
 #include "mission/mission_handler_hold_position.hpp"
-#include "control/inavigation_controller.hpp"
+#include "control/navigation_controller_i.hpp"
 extern "C"
 {
 
@@ -52,9 +52,9 @@ extern "C"
 //------------------------------------------------------------------------------
 
 template <>
-bool Mission_handler_hold_position<INavigation_controller>::set_control_command()
+bool Mission_handler_hold_position<Navigation_controller_I>::set_control_command()
 {
-	INavigation_controller::nav_command_t cmd;
+	Navigation_controller_I::nav_command_t cmd;
 	cmd.pos = waypoint_.local_pos();
 	return controller_.set_navigation_command(cmd);
 }
@@ -62,4 +62,3 @@ bool Mission_handler_hold_position<INavigation_controller>::set_control_command(
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-

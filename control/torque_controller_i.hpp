@@ -30,31 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file irate_controller.hpp
+ * \file torque_controller_i.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
  *
- * \brief Interface for rate controller
+ * \brief Interface for torque controller
  *
  ******************************************************************************/
 
 
-#ifndef IRATE_CONTROLLER_HPP_
-#define IRATE_CONTROLLER_HPP_
+#ifndef TORQUE_CONTROLLER_I_HPP_
+#define TORQUE_CONTROLLER_I_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "control/control_command.h"
 
-class IRate_controller
+class Torque_controller_I
 {
 public:
     /*
-     * \brief   structure representing a rate command; contains desired angular velocity and thrust in body frame
+     * \brief   structure representing a torq command; contains desired torq for each axis and thrust in body frame
      */
-    struct rate_command_t : base_command_t
+    struct torq_command_t : base_command_t
     {
-        std::array<float,3>  rates;       ///< desired rates (angular velocity) in body frame
+        std::array<float,3>  torq;       ///< desired torq for each axis in body frame
         float                thrust;     ///< desired thrust
     };
 
@@ -64,13 +64,13 @@ public:
     virtual void update() = 0;
 
     /**
-     * \brief           sets the rate command (desired angular velocity and thrust)
+     * \brief           sets the torque command (desired torque and thrust)
      *
-     * \param command   rate command indicating desired angular velocity and thrust in body frame
+     * \param command   torque command indicating desired torque and thrust in body frame
      *
      * \return success  whether command was accepted
      */
-    inline virtual bool set_rate_command(const rate_command_t& command) = 0;
+    virtual bool set_torque_command(const torq_command_t& command) = 0;
 };
 
-#endif /* IRATE_CONTROLLER_HPP_ */
+#endif /* TORQUE_CONTROLLER_I_HPP_ */
