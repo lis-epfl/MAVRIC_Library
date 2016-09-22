@@ -30,31 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file itorque_controller.hpp
+ * \file rate_controller_i.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
  *
- * \brief Interface for torque controller
+ * \brief Interface for rate controller
  *
  ******************************************************************************/
 
 
-#ifndef ITORQUE_CONTROLLER_HPP_
-#define ITORQUE_CONTROLLER_HPP_
+#ifndef RATE_CONTROLLER_I_HPP_
+#define RATE_CONTROLLER_I_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "control/control_command.h"
 
-class ITorque_controller
+class Rate_controller_I
 {
 public:
     /*
-     * \brief   structure representing a torq command; contains desired torq for each axis and thrust in body frame
+     * \brief   structure representing a rate command; contains desired angular velocity and thrust in body frame
      */
-    struct torq_command_t : base_command_t
+    struct rate_command_t : base_command_t
     {
-        std::array<float,3>  torq;       ///< desired torq for each axis in body frame
+        std::array<float,3>  rates;       ///< desired rates (angular velocity) in body frame
         float                thrust;     ///< desired thrust
     };
 
@@ -64,13 +64,13 @@ public:
     virtual void update() = 0;
 
     /**
-     * \brief           sets the torque command (desired torque and thrust)
+     * \brief           sets the rate command (desired angular velocity and thrust)
      *
-     * \param command   torque command indicating desired torque and thrust in body frame
+     * \param command   rate command indicating desired angular velocity and thrust in body frame
      *
      * \return success  whether command was accepted
      */
-    virtual bool set_torque_command(const torq_command_t& command) = 0;
+    inline virtual bool set_rate_command(const rate_command_t& command) = 0;
 };
 
-#endif /* ITORQUE_CONTROLLER_HPP_ */
+#endif /* RATE_CONTROLLER_I_HPP_ */

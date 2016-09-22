@@ -43,15 +43,15 @@
 #ifndef POSITION_CONTROLLER_HPP_
 #define POSITION_CONTROLLER_HPP_
 
-#include "control/iposition_controller.hpp"
-#include "control/ixyposition_zvel_controller.hpp"
-#include "control/inavigation_controller.hpp"
+#include "control/position_controller_i.hpp"
+#include "control/xyposition_zvel_controller_i.hpp"
+#include "control/navigation_controller_i.hpp"
 #include "control/pid_controller.hpp"
 #include "control/stabilisation.hpp"
 #include "sensing/ins.hpp"
 #include "sensing/ahrs.hpp"
 
-class Position_controller : public IPosition_controller, public IXyposition_zvel_controller, public INavigation_controller
+class Position_controller : public Position_controller_I, public XYposition_Zvel_controller_I, public Navigation_controller_I
 {
 public:
 

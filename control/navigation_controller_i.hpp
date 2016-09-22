@@ -30,33 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ixyposition_zvel_controller.hpp
+ * \file navigation_controller_i.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
  *
- * \brief Interface for horizontal position and vertical velocity controller (used e.g. for landing)
+ * \brief Interface for navigation controller
  *
  ******************************************************************************/
 
 
-#ifndef IXYPOSITION__ZVEL_CONTROLLER_HPP_
-#define IXYPOSITION__ZVEL_CONTROLLER_HPP_
+#ifndef NAVIGATION_CONTROLLER_I_HPP_
+#define NAVIGATION_CONTROLLER_I_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "control/control_command.h"
 
-class IXyposition_zvel_controller
+class Navigation_controller_I
 {
 public:
     /*
-     * \brief   structure representing a horizontal position & vertical velocity command; contains desired horizontal position and vertical velocity in local frame
+     * \brief   structure representing a navigation command; contains desired position in local frame
      */
-    struct xypos_zvel_command_t : base_command_t
+    struct nav_command_t : base_command_t
     {
-        float pos_x;    ///< desired position in x in local frame
-        float pos_y;    ///< desired position in y in local frame
-        float vel_z;    ///< desired velocity in z in local frame
+        local_position_t    pos;        ///< desired position in local frame
     };
 
     /**
@@ -65,13 +63,13 @@ public:
     virtual void update() = 0;
 
     /**
-     * \brief           sets the horizontal position & vertical velocity command
+     * \brief           sets the navigation command (desired position)
      *
-     * \param command   xy position z velocity command indicating target location & velocity in local frame
+     * \param command   navigation command indicating navigation target location in local frame
      *
      * \return success  whether command was accepted
      */
-    virtual bool set_xyposition_zvel_command(const xypos_zvel_command_t& command) = 0;
+    virtual bool set_navigation_command(const nav_command_t& command) = 0;
 };
 
-#endif /* IXYPOSITION__ZVEL_CONTROLLER_HPP_ */
+#endif /* NAVIGATION_CONTROLLER_I_HPP_ */

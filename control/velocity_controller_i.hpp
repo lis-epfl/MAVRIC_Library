@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ivelocity_controller.hpp
+ * \file velocity_controller_i.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
@@ -40,13 +40,13 @@
  ******************************************************************************/
 
 
-#ifndef IVELOCITY_CONTROLLER_HPP_
-#define IVELOCITY_CONTROLLER_HPP_
+#ifndef VELOCITY_CONTROLLER_I_HPP_
+#define VELOCITY_CONTROLLER_I_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "control/control_command.h"
 
-class IVelocity_controller
+class Velocity_controller_I
 {
 public:
     /*
@@ -72,4 +72,4 @@ public:
     inline virtual bool set_velocity_command(const pos_command_t& command) = 0;
 };
 
-#endif /* IVELOCITY_CONTROLLER_HPP_ */
+#endif /* VELOCITY_CONTROLLER_I_HPP_ */

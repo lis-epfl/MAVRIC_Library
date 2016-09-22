@@ -41,15 +41,15 @@
 
 
 #include "mission/mission_handler_navigating.hpp"
-#include "control/inavigation_controller.hpp"
+#include "control/navigation_controller_i.hpp"
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 template <>
-bool Mission_handler_navigating<INavigation_controller>::set_control_command()
+bool Mission_handler_navigating<Navigation_controller_I>::set_control_command()
 {
-    INavigation_controller::nav_command_t cmd;
+    Navigation_controller_I::nav_command_t cmd;
 	cmd.pos = waypoint_.local_pos();
 	return controller_.set_navigation_command(cmd);
 }
@@ -57,4 +57,3 @@ bool Mission_handler_navigating<INavigation_controller>::set_control_command()
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-

@@ -52,7 +52,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_on_ground::Mission_handler_on_ground(/*IAttitude_controller& attitude_controller, */Navigation& navigation):
+Mission_handler_on_ground::Mission_handler_on_ground(/*Attitude_controller_I& attitude_controller, */Navigation& navigation):
             Mission_handler(),
             /*attitude_controller_(attitude_controller),*/
             navigation_(navigation)
@@ -75,7 +75,7 @@ bool Mission_handler_on_ground::setup(const Waypoint& wpt)
 Mission_handler::update_status_t Mission_handler_on_ground::update()
 {
 	/*
-	IAttitude_controller::att_command_t cmd;
+	Attitude_controller_I::att_command_t cmd;
 	cmd.att.s = 1.0f;
 	cmd.att.v[0] = 0.0f;
 	cmd.att.v[1] = 0.0f;
