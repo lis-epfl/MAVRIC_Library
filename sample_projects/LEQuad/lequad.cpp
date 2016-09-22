@@ -478,7 +478,6 @@ bool LEQuad::init_navigation(void)
     ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,          (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
     ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mission_planner::update,     (Scheduler_task::task_argument_t)&mission_planner,  Scheduler_task::PRIORITY_HIGH);
 
     return ret;

@@ -263,7 +263,7 @@ protected:
     Position_estimation position_estimation;                    ///< The position estimaton structure
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
-    control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
+    control_command_t controls_nav;                             ///< The control nav structure used for velocity modes. TODO delete?, navigation module obsolete
 
     stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
 
