@@ -89,11 +89,11 @@ public:
     /**
      * \brief   Handles the mission every iteration
      *  
-     * \details     Does nothing and returns 1 for the status code.
+     * \details     Does nothing and returns MISSION_FINISHED for the status code.
      *
      * \return  Status code
      */
-    virtual int update();
+    virtual Mission_handler::update_status_t update();
 
     /**
      * \brief   Returns that the mission state is in MANUAL_CTRL

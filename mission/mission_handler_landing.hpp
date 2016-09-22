@@ -115,12 +115,12 @@ public:
      * \brief   Handles the mission every iteration
      *  
      * \details     Sets the goal location and determines the status code. The
-     *              code is 0 for landing in progress, 1 for landing finished
-     *              and autocontinue on, -1 for control command rejected.
+     *              code is MISSION_IN_PROGRESS for landing in progress, MISSION_FINISHED for landing finished
+     *              and autocontinue on, MISSION_FAILED for control command rejected.
      *
      * \return  Status code
      */
-    virtual int update();
+    virtual Mission_handler::update_status_t update();
 
     /**
      * \brief   Returns that the mission state is in POSTMISSION

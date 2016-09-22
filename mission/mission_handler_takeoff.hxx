@@ -101,7 +101,7 @@ bool Mission_handler_takeoff<T>::setup(const Waypoint& wpt)
 }
 
 template <class T>
-int Mission_handler_takeoff<T>::update()
+Mission_handler::update_status_t Mission_handler_takeoff<T>::update()
 {
     // Set goal
     bool ret = set_control_command();
@@ -159,16 +159,16 @@ int Mission_handler_takeoff<T>::update()
     // Return true if waiting at waypoint and autocontinue
     if (finished && waypoint_.autocontinue() == 1)
     {
-        return 1;
+        return MISSION_FINISHED;
     }
 
     // Handle control command failed status
     if (!ret)
     {
-        return -1;
+        return MISSION_FAILED;
     }
 
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 template <class T>

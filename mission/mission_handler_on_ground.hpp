@@ -86,13 +86,13 @@ public:
     virtual bool setup(const Waypoint& wpt);
 
     /**
-     * \brief   Returns 0
+     * \brief   Returns MISSION_IN_PROGRESS
      *  
-     * \details     Returns 0
+     * \details     Returns MISSION_IN_PROGRESS
      *
-     * \return  0
+     * \return  MISSION_IN_PROGRESS
      */
-    virtual int update();
+    virtual Mission_handler::update_status_t update();
 
     /**
      * \brief   Returns that the mission state is in STANDBY

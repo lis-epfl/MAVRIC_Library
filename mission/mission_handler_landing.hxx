@@ -103,7 +103,7 @@ bool Mission_handler_landing<T1, T2>::setup(const Waypoint& wpt)
 }
 
 template <class T1, class T2>
-int Mission_handler_landing<T1, T2>::update()
+Mission_handler::update_status_t Mission_handler_landing<T1, T2>::update()
 {
     /*****************************
     Handle internal landing states 
@@ -173,16 +173,16 @@ int Mission_handler_landing<T1, T2>::update()
     ********************/
     if (waypoint_.autocontinue() == 1 && is_landed_)
     {
-        return 1;
+        return MISSION_FINISHED;
     }
 
     // Handle control command failed status
     if (!ret)
     {
-        return -1;
+        return MISSION_FAILED;
     }
 
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 template <class T1, class T2>

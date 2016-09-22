@@ -70,9 +70,9 @@ bool Mission_handler_manual::setup(const Waypoint& wpt)
     return true;
 }
 
-int Mission_handler_manual::update()
+Mission_handler::update_status_t Mission_handler_manual::update()
 {
-	return 1;
+	return MISSION_FINISHED;
 }
 
 Mission_planner::internal_state_t Mission_handler_manual::handler_mission_state() const

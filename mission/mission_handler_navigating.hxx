@@ -123,7 +123,7 @@ bool Mission_handler_navigating<T>::setup(const Waypoint& wpt)
 }
 
 template <class T>
-int Mission_handler_navigating<T>::update()
+Mission_handler::update_status_t Mission_handler_navigating<T>::update()
 {
     // Set goal
     bool ret = set_control_command();
@@ -197,7 +197,7 @@ int Mission_handler_navigating<T>::update()
             if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO || 
                 radius == 0.0f)
             {
-                return 1;
+                return MISSION_FINISHED;
             }
             else if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
             {
@@ -237,7 +237,7 @@ int Mission_handler_navigating<T>::update()
 
                 if (maths_f_abs(rel_heading) < navigation_.heading_acceptance)
                 {
-                    return 1;
+                    return MISSION_FINISHED;
                 }
             }
         }
@@ -246,10 +246,10 @@ int Mission_handler_navigating<T>::update()
     // Handle control command failed status
     if (!ret)
     {
-        return -1;
+        return MISSION_FAILED;
     }
     
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 template <class T>

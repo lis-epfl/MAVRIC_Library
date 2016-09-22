@@ -96,12 +96,12 @@ public:
      * \brief   Handles the mission every iteration
      *  
      * \details     Sets the goal and determines the handler status. The status
-     *              is: 0 for takeoff in process, 1 for takeoff complete, and
-     *              -1 for control impossible
+     *              is: MISSION_IN_PROGRESS for takeoff in process, MISSION_FINISHED for takeoff complete, and
+     *              MISSION_FAILED for control impossible
      *
      * \return  Status code
      */
-    virtual int update();
+    virtual Mission_handler::update_status_t update();
 
     /**
      * \brief   Returns that the mission state is in PREMISSION

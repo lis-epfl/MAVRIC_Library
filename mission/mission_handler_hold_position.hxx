@@ -94,7 +94,7 @@ bool Mission_handler_hold_position<T>::setup(const Waypoint& wpt)
 }
 
 template <class T>
-int Mission_handler_hold_position<T>::update()
+Mission_handler::update_status_t Mission_handler_hold_position<T>::update()
 {
     // Set goal
     bool ret = set_control_command();
@@ -141,28 +141,28 @@ int Mission_handler_hold_position<T>::update()
         case MAV_CMD_NAV_LOITER_TIME:
             if (within_radius_ && ((time_keeper_get_ms() - start_time_) > waypoint_.param1() * 1000))
             {
-                return 1;
+                return MISSION_FINISHED;
             }
             break;
 
         case MAV_CMD_NAV_LOITER_TO_ALT:
             if (maths_f_abs(ins_.position_lf()[Z] - waypoint_.local_pos()[Z]) < waypoint_.param2()) // TODO: Add check for heading
             {
-                return 1;
+                return MISSION_FINISHED;
             }
             break;
         case MAV_CMD_OVERRIDE_GOTO:
-            return 1;
+            return MISSION_FINISHED;
         }
     }
 
     // Handle control command failed status
     if (!ret)
     {
-        return -1;
+        return MISSION_FAILED;
     }
 
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 template <class T>

@@ -100,13 +100,13 @@ public:
      * \brief   Handles the mission every iteration
      *  
      * \details     Handles the navigation to the waypoint and determines the
-     *              status code. The status code is 0 for currently navigating
-     *              to the waypoint, 1 for waypoint reached and autocontinue,
-     *              -1 for control command failed.
+     *              status code. The status code is MISSION_IN_PROGRESS for currently navigating
+     *              to the waypoint, MISSION_FINISHED for waypoint reached and autocontinue,
+     *              MISSION_FAILED for control command failed.
      *
      * \return  Status code
      */
-    virtual int update();
+    virtual Mission_handler::update_status_t update();
 
     /**
      * \brief   Returns that the mission state is in MISSION

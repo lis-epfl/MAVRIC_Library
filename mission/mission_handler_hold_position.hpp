@@ -96,13 +96,13 @@ public:
     /**
      * \brief   Handles the mission every iteration
      *  
-     * \details     Sets the waypoint goal to the setup waypoint. Returns 0
-     *              if the drone is still holding position, 1 if it should move
-     *              to the next waypoint, and -1 if the drone cannot hold position
+     * \details     Sets the waypoint goal to the setup waypoint. Returns MISSION_IN_PROGRESS
+     *              if the drone is still holding position, MISSION_FINISHED if it should move
+     *              to the next waypoint, and MISSION_FAILED if the drone cannot hold position
      *
      * \return  Status code
      */
-    virtual int update();
+    virtual Mission_handler::update_status_t update();
 
     /**
      * \brief   Returns that the mission state is in MISSION

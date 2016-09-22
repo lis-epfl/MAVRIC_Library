@@ -310,12 +310,12 @@ void Mission_planner::state_machine()
         if (current_mission_handler_ != NULL)
         {
             // Handle current mission
-            bool ret = current_mission_handler_->update();
+            Mission_handler::update_status_t ret = current_mission_handler_->update();
 
             // Check if we should be switch states
             // This is for automatic advancement (states can also advance from callback
             // functions from GCS or remote)
-            if (ret == 1)
+            if (ret == Mission_handler::MISSION_FINISHED)
             {
                 switch (internal_state())
                 {
@@ -580,10 +580,10 @@ void Mission_planner::critical_handler()
     // Handle critical state
     if (current_mission_handler_ != NULL)
     {
-        bool ret =current_mission_handler_->update();
+        Mission_handler::update_status_t ret = current_mission_handler_->update();
 
         // If we move to the next state, set the next state
-        if (ret == 1)
+        if (ret == Mission_handler::MISSION_FINISHED)
         {
             critical_next_state_ = false;
             switch (critical_behavior_)

@@ -71,9 +71,9 @@ bool Mission_handler_on_ground::setup(const Waypoint& wpt)
     return true;
 }
 
-int Mission_handler_on_ground::update()
+Mission_handler::update_status_t Mission_handler_on_ground::update()
 {
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 Mission_planner::internal_state_t Mission_handler_on_ground::handler_mission_state() const
