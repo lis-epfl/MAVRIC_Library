@@ -43,6 +43,7 @@
 #ifndef MISSION_HANDLER_ON_GROUND__
 #define MISSION_HANDLER_ON_GROUND__
 
+#include "control/iattitude_controller.hpp"
 #include "mission/mission_handler.hpp"
 #include "mission/navigation.hpp"
 
@@ -58,9 +59,10 @@ public:
     /**
      * \brief   Initialize the on ground mission planner handler
      *
+     * \param   attitude_controller     The reference to the attitude controls
      * \param   navigation              The reference to the navigation class
      */
-     Mission_handler_on_ground(Navigation& navigation);
+     Mission_handler_on_ground(/*IAttitude_controller& attitude_controller, */Navigation& navigation);
 
 
     /**
@@ -88,7 +90,7 @@ public:
     /**
      * \brief   Returns MISSION_IN_PROGRESS
      *  
-     * \details     Returns MISSION_IN_PROGRESS
+     * \details     Sets thrust to low and returns MISSION_IN_PROGRESS
      *
      * \return  MISSION_IN_PROGRESS
      */
@@ -102,6 +104,7 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
+    /*IAttitude_controller& attitude_controller_;                 ///< The reference to the attitude controller*/
     Navigation& navigation_;                                    ///< The reference to the navigation structure
 };
 
