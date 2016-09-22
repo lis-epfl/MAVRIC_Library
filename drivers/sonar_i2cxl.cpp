@@ -43,12 +43,8 @@
 #include "drivers/sonar_i2cxl.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
 
-extern "C"
-{
-#include "util/maths.h"
-#include "util/print_util.h"
-}
 #include <algorithm>
 
 const float   SONAR_I2CXL_LPF_VARIO                 = 0.4f;     ///< Low pass filter for velocity estimation
@@ -232,7 +228,7 @@ float Sonar_i2cxl::median_filter_n(float *in, int n)
         // Get median point
         middle = sorted[(n-1)/2];
     }
-    
+
     // Return the middle value
     return middle;
 }

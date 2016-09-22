@@ -44,122 +44,90 @@
 #include "util/constants.hpp"
 #include "hal/common/time_keeper.hpp"
 
-
 //------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
+// PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-/**
- * \brief               Performs inner stabilisation loop on angular rate
- *
- * \param controller    Pointer to attitude controller
- */
-static void attitude_controller_rate_loop(attitude_controller_t* controller);
+Attitude_controller::Attitude_controller(const ahrs_t& ahrs, const attitude_command_t& attitude_command, rate_command_t& rate_command, torque_command_t& torque_command, conf_t config) :
+    ahrs_(ahrs),
+    attitude_command_(attitude_command),
+    rate_command_(rate_command),
+    torque_command_(torque_command)
+{
+    // Init mode
+    dt_s_          = 0.0f;
+    last_update_s_ = 0.0f;
+
+    // Init attitude error estimator 
+    attitude_error_estimator_init(&attitude_error_estimator_, &ahrs_);
+
+    // Init rate gains
+    pid_controller_init(&rate_pid_[ROLL],  &config.rate_pid_config[ROLL]);
+    pid_controller_init(&rate_pid_[PITCH], &config.rate_pid_config[PITCH]);
+    pid_controller_init(&rate_pid_[YAW],   &config.rate_pid_config[YAW]);
+
+    // Init angle gains
+    pid_controller_init(&angle_pid_[ROLL],  &config.angle_pid_config[ROLL]);
+    pid_controller_init(&angle_pid_[PITCH], &config.angle_pid_config[PITCH]);
+    pid_controller_init(&angle_pid_[YAW],   &config.angle_pid_config[YAW]);
+}
 
 
-/**
- * \brief               Performs outer stabilisation loop on attitude angles
- *
- * \param controller    Pointer to attitude controller
- */
-static void attitude_controller_angle_loop(attitude_controller_t* controller);
+void Attitude_controller::update()
+{
+    float now      = time_keeper_get_s();
+    dt_s_          = now - last_update_s_;
+    last_update_s_ = now;
 
+    switch (mode_)
+    {
+        case mode_t::ATTITUDE_RATE:
+            update_angles();
+            break;
+
+        case mode_t::RATE:
+            break;
+    }
+
+    update_rates();
+}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void attitude_controller_rate_loop(attitude_controller_t* controller)
+void Attitude_controller::update_rates()
 {
     float errors[3];
 
     // Get errors on rate
-    errors[ROLL]  = controller->rate_command->xyz[ROLL]  - controller->ahrs->angular_speed[ROLL];
-    errors[PITCH] = controller->rate_command->xyz[PITCH] - controller->ahrs->angular_speed[PITCH];
-    errors[YAW]   = controller->rate_command->xyz[YAW]   - controller->ahrs->angular_speed[YAW];
+    errors[ROLL]  = rate_command_.xyz[ROLL]  - ahrs_.angular_speed[ROLL];
+    errors[PITCH] = rate_command_.xyz[PITCH] - ahrs_.angular_speed[PITCH];
+    errors[YAW]   = rate_command_.xyz[YAW]   - ahrs_.angular_speed[YAW];
 
     // Update PIDs
-    controller->torque_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->rate_pid[ROLL]),  errors[ROLL],  controller->dt_s);
-    controller->torque_command->xyz[PITCH] = pid_controller_update_dt(&(controller->rate_pid[PITCH]), errors[PITCH], controller->dt_s);
-    controller->torque_command->xyz[YAW]   = pid_controller_update_dt(&(controller->rate_pid[YAW]),   errors[YAW],   controller->dt_s);
+    torque_command_.xyz[ROLL]  = pid_controller_update_dt(&rate_pid_[ROLL],  errors[ROLL],  dt_s_);
+    torque_command_.xyz[PITCH] = pid_controller_update_dt(&rate_pid_[PITCH], errors[PITCH], dt_s_);
+    torque_command_.xyz[YAW]   = pid_controller_update_dt(&rate_pid_[YAW],   errors[YAW],   dt_s_);
 }
 
 
-static void attitude_controller_angle_loop(attitude_controller_t* controller)
+void Attitude_controller::update_angles()
 {
     float errors[3];
 
     // Get attitude command
-    attitude_error_estimator_set_quat_ref(&controller->attitude_error_estimator,
-                                          controller->attitude_command->quat);
+    attitude_error_estimator_set_quat_ref(&attitude_error_estimator_,
+                                          attitude_command_.quat);
 
     // Get local angular errors
-    attitude_error_estimator_update(&controller->attitude_error_estimator);
-    errors[ROLL]    = controller->attitude_error_estimator.rpy_errors[ROLL];
-    errors[PITCH]   = controller->attitude_error_estimator.rpy_errors[PITCH];
-    errors[YAW]     = controller->attitude_error_estimator.rpy_errors[YAW];
+    attitude_error_estimator_update(&attitude_error_estimator_);
+    errors[ROLL]    = attitude_error_estimator_.rpy_errors[ROLL];
+    errors[PITCH]   = attitude_error_estimator_.rpy_errors[PITCH];
+    errors[YAW]     = attitude_error_estimator_.rpy_errors[YAW];
 
     // Update PIDs
-    controller->rate_command->xyz[ROLL]  = pid_controller_update_dt(&(controller->angle_pid[ROLL]),  errors[ROLL],  controller->dt_s);
-    controller->rate_command->xyz[PITCH] = pid_controller_update_dt(&(controller->angle_pid[PITCH]), errors[PITCH], controller->dt_s);
-    controller->rate_command->xyz[YAW]   = pid_controller_update_dt(&(controller->angle_pid[YAW]),   errors[YAW],   controller->dt_s);
-}
-
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool attitude_controller_init(attitude_controller_t* controller, attitude_controller_conf_t config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command)
-{
-    bool init_success = true;
-
-    // Init dependencies
-    controller->attitude_command    = attitude_command;
-    controller->rate_command        = rate_command;
-    controller->torque_command      = torque_command;
-    controller->ahrs                = ahrs;
-
-    // Init mode
-    controller->dt_s          = 0.0f;
-    controller->last_update_s = 0.0f;
-    controller->mode = ATTITUDE_CONTROLLER_MODE_DEFAULT;
-
-    // Init attitude error estimator
-    init_success &= attitude_error_estimator_init(&controller->attitude_error_estimator, ahrs);
-
-    // Init rate gains
-    init_success &= pid_controller_init(&controller->rate_pid[ROLL],  &config.rate_pid_config[ROLL]);
-    init_success &= pid_controller_init(&controller->rate_pid[PITCH], &config.rate_pid_config[PITCH]);
-    init_success &= pid_controller_init(&controller->rate_pid[YAW],   &config.rate_pid_config[YAW]);
-
-    // Init angle gains
-    init_success &= pid_controller_init(&controller->angle_pid[ROLL],  &config.angle_pid_config[ROLL]);
-    init_success &= pid_controller_init(&controller->angle_pid[PITCH], &config.angle_pid_config[PITCH]);
-    init_success &= pid_controller_init(&controller->angle_pid[YAW],   &config.angle_pid_config[YAW]);
-
-    return init_success;
-}
-
-
-bool attitude_controller_update(attitude_controller_t* controller)
-{
-    float now                 = time_keeper_get_s();
-    controller->dt_s          = now - controller->last_update_s;
-    controller->last_update_s = now;
-
-    switch (controller->mode)
-    {
-        case ATTITUDE_CONTROLLER_MODE_DEFAULT:
-            attitude_controller_angle_loop(controller);
-            attitude_controller_rate_loop(controller);
-            break;
-
-        case ATTITUDE_CONTROLLER_MODE_RATE_ONLY:
-            attitude_controller_rate_loop(controller);
-            break;
-    }
-
-
-    return true;
+    rate_command_.xyz[ROLL]  = pid_controller_update_dt(&angle_pid_[ROLL],  errors[ROLL],  dt_s_);
+    rate_command_.xyz[PITCH] = pid_controller_update_dt(&angle_pid_[PITCH], errors[PITCH], dt_s_);
+    rate_command_.xyz[YAW]   = pid_controller_update_dt(&angle_pid_[YAW],   errors[YAW],   dt_s_);
 }

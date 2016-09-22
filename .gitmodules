@@ -10,3 +10,6 @@
 [submodule "libs/libopencm3"]
 	path = libs/libopencm3
 	url = https://github.com/libopencm3/libopencm3.git
+[submodule "libs/ChibiOS"]
+	path = libs/ChibiOS
+	url = https://github.com/ChibiOS/ChibiOS.git

@@ -77,8 +77,7 @@ void sys_tick_handler(void)
 void time_keeper_init(void)
 {
     /* clock rate / 1000000 to get 1uS interrupt rate */
-    systick_set_reload(168);
-    systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
+    systick_set_frequency(1000000, 168000000);
     systick_counter_enable();
     /* this done last */
     systick_interrupt_enable();
@@ -88,7 +87,7 @@ void time_keeper_init(void)
 double time_keeper_get_s(void)
 {
     // time in seconds since system start
-    return (float)(system_us) / 1000000.0f;
+    return (double)(system_us) / 1000000.0;
 }
 
 

@@ -148,7 +148,7 @@ private:
     float               velocity_x_;                ///< Velocity in x direction (m/s)
     float               velocity_y_;                ///< Velocity in y direction (m/s)
     float               ground_distance_;           ///< Ground distance (m)
-    Buffer_tpl<3,float> ground_distance_buffer_;    ///< Buffer used to filter sonar measurement
+    Buffer_T<3,float> ground_distance_buffer_;    ///< Buffer used to filter sonar measurement
     float               last_update_s_;             ///< Last update time in seconds
 
     I2c&                i2c_;                       ///< reference to I2C

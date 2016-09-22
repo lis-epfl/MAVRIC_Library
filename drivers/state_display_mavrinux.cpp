@@ -40,7 +40,7 @@
  ******************************************************************************/
 
  #include "drivers/state_display_mavrinux.hpp"
- #include "util/print_util.h"
+ #include "util/print_util.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION

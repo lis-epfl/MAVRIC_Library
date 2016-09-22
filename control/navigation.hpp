@@ -45,7 +45,6 @@
 
 #include <cstdbool>
 
-#include "communication/mavlink_communication.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/state.hpp"
 #include "control/dubin.hpp"
@@ -151,10 +150,9 @@ public:
      * \param   qe                      Reference to the attitude quaternion structure
      * \param   ins                     Reference to the Inertial navigation system
      * \param   state                   Reference to the state structure
-     * \param   mavlink_stream          Reference to the MAVLink_stream structure
      * \param   nav_config              Reference to the config structure
      */
-    Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config = default_config());
+    Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, conf_t nav_config = default_config());
 
     /**
      * \brief   Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -214,7 +212,6 @@ private:
     control_command_t& controls_nav;                    ///< Reference to the navigation control structure
     const INS& ins;                                     ///< Reference to the inertial navigation system
     State& state;                                       ///< Reference to the state
-    const Mavlink_stream& mavlink_stream;               ///< Reference to the MAVLink stream
 
     /**
      * \brief                   Sets the Robot speed to reach waypoint

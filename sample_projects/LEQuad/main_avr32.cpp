@@ -39,8 +39,7 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/lequad.hpp"
-// DOME SPECIFIC
-#include "sample_projects/LEQuad/lequad_dronedome.hpp"
+#include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
@@ -55,17 +54,13 @@
 // #include "hal/dummy/pwm_dummy.hpp"
 #include "hal/common/time_keeper.hpp"
 
+#include "util/print_util.hpp"
+
 extern "C"
 {
-#include "util/print_util.h"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
-
-// #include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 }
-#define MAVLINK_SYS_ID 1
-
-#define MAVLINK_SYS_ID 1
 
 // #include "hal/common/dbg.hpp"
 
@@ -95,30 +90,8 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    // LEQuad mav = LEQuad(board.imu,
-    //                     board.bmp085,
-    //                     board.gps_ublox,
-    //                     board.sonar_i2cxl,      // Warning:
-    //                     board.uart0,
-    //                     board.spektrum_satellite,
-    //                     board.state_display_megafly_rev4_,
-    //                     board.file_flash,
-    //                     board.battery,
-    //                     board.servo_0,
-    //                     board.servo_1,
-    //                     board.servo_2,
-    //                     board.servo_3,
-    //                     board.servo_4,
-    //                     board.servo_5,
-    //                     board.servo_6,
-    //                     board.servo_7,
-    //                     file_log,
-    //                     file_stat,
-    //                     mav_config );
-
-    // DOME SPECIFIC
-    LEQuad_dronedome mav = LEQuad_dronedome(board.imu,
-                        board.bmp085,
+    LEQuad mav = LEQuad(board.imu,
+                        board.barometer,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:
                         board.uart0,
@@ -137,7 +110,8 @@ int main(void)
                         file_log,
                         file_stat,
                         mav_config );
-    mav.init();
+    // initialize MAV
+    init_success &= mav.init();
 
     // // -------------------------------------------------------------------------
     // // Create simulation

@@ -42,11 +42,8 @@
 
 
 #include "control/servos_mix_quadcopter_diag.hpp"
+#include "util/print_util.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
 
 bool servos_mix_quadcotper_diag_init(servos_mix_quadcotper_diag_t* mix,
                                      const servos_mix_quadcopter_diag_conf_t config,

@@ -43,7 +43,7 @@
 #ifndef MAVLINK_WAYPOINT_HANDLER__
 #define MAVLINK_WAYPOINT_HANDLER__
 
-#include "communication/mavlink_communication.hpp"
+#include "communication/mavlink_message_handler.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -95,8 +95,9 @@ public:
      * \param   ahrs                    The pointer to the attitude estimation structure
      * \param   state                   The pointer to the state structure
      * \param   manual_control          The pointer to the manual control structure
-     * \param   mavlink_communication   The pointer to the MAVLink communication structure
+     * \param   message_handler         The pointer to the MAVLink message_handler structure
      * \param   mavlink_stream          The pointer to the MAVLink stream structure
+     * \param   config                  The configuration of the mavlink_waypoint handler structure
      *
      * \return  True if the init succeed, false otherwise
      */
@@ -139,6 +140,11 @@ public:
      */
     void hold_init(local_position_t local_pos);
 
+    /**
+     * \brief   Returns the number of waypoints
+     *
+     * \return  number of waypoints
+     */
     inline uint16_t waypoint_count() const {return waypoint_count_;};
 
     /**
@@ -207,7 +213,6 @@ private:
     /**
      * \brief   Computes the state machine for the Dubin navigation type
      *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
      * \param   waypoint_next_           The next waypoint structure
      */
     void dubin_state_machine(waypoint_local_struct_t* waypoint_next_);
@@ -253,7 +258,6 @@ private:
     /**
      * \brief   Sends the travel time between the last two waypoints
      *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
      * \param   mavlink_stream          The pointer to the MAVLink stream structure
      * \param   msg                     The pointer to the MAVLink message
      */

@@ -188,9 +188,9 @@ public:
 private:
     serial_avr32_conf_t         config_;            ///< Configuration
     volatile avr32_usart_t*     uart_;              ///< Hardware peripheral
-    Buffer_tpl<1024>            tx_buffer_;         ///< Transmission buffer
+    Buffer_T<1024>            tx_buffer_;         ///< Transmission buffer
     // Buffer                       rx_buffer_;         ///< Reception buffer
-    Buffer_tpl<1024>            rx_buffer_;         ///< Reception buffer
+    Buffer_T<1024>            rx_buffer_;         ///< Reception buffer
 
     static Serial_avr32*        handlers_[AVR32_SERIAL_MAX_NUMBER];     ///< Array of 'this' pointers used for interrupt handling
 

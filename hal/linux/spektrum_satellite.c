@@ -8,7 +8,7 @@
  */
 #include "spektrum_satellite.h"
 #include "hal/common/time_keeper.hpp"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 // #include "joystick.h"
 
 #include <stdlib.h>

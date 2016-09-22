@@ -84,6 +84,7 @@ public:
      */
     struct conf_t
     {
+        Joystick::conf_t    joystick_config;    ///< Configuration of the joystick
         mode_source_t       mode_source;        ///< The source mode
         control_source_t    control_source;     ///< Flag to tell whether the remote is active or not
     };
@@ -269,7 +270,7 @@ public:
 
 
     remote_t                remote;             ///< The pointer to the remote structure
-    joystick_t              joystick;           ///< The pointer to the joystick structure
+    Joystick                joystick;           ///< The pointer to the joystick structure
     mode_source_t           mode_source_;        ///< The source mode
     control_source_t        control_source_;     ///< Flag to tell whether the remote is active or not
 };
@@ -278,6 +279,7 @@ Manual_control::conf_t Manual_control::default_config()
 {
     conf_t conf = {};
 
+    conf.joystick_config = Joystick::default_config();
     conf.mode_source = MODE_SOURCE_REMOTE;
     conf.control_source = CONTROL_SOURCE_REMOTE;
 

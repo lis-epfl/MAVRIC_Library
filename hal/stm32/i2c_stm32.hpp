@@ -144,7 +144,7 @@ public:
      * @return  False       Data not read
      */
     bool read(uint8_t* buffer, uint32_t nbytes, uint32_t address);
-    
+
 
 private:
     i2c_stm32_conf_t        config_;        ///< Configuration
