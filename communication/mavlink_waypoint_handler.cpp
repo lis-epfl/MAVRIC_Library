@@ -108,7 +108,7 @@ mav_result_t Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoi
     return MAV_RESULT_ACCEPTED;
 }
 
-void Mavlink_waypoint_handler::send_count(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::request_list_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_mission_request_list_t packet;
 
@@ -129,8 +129,8 @@ void Mavlink_waypoint_handler::send_count(Mavlink_waypoint_handler* waypoint_han
 
         if (waypoint_handler->waypoint_count_ != 0)
         {
-            waypoint_handler->waypoint_sending_ = true;
-            waypoint_handler->waypoint_receiving_ = false;
+            waypoint_handler->is_sending_waypoint_ = true;
+            waypoint_handler->is_receiving_waypoint_ = false;
             waypoint_handler->start_timeout_ = time_keeper_get_ms();
         }
 
@@ -141,9 +141,9 @@ void Mavlink_waypoint_handler::send_count(Mavlink_waypoint_handler* waypoint_han
     }
 }
 
-void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_request_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
-    if (waypoint_handler->waypoint_sending_)
+    if (waypoint_handler->is_sending_waypoint_)
     {
         mavlink_mission_request_t packet;
 
@@ -161,14 +161,14 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
             waypoint_handler->sending_waypoint_num_ = packet.seq;
             if (waypoint_handler->sending_waypoint_num_ < waypoint_handler->waypoint_count_)
             {
-                uint8_t isCurrent = 0;
+                uint8_t is_current = 0;
                 if (    waypoint_handler->sending_waypoint_num_ == waypoint_handler->current_waypoint_index_ && // This is the current waypoint
                         !waypoint_handler->navigation_.waiting_at_waypoint())                                   // And we are en route
                 {
-                    isCurrent = 1;
+                    is_current = 1;
                 }
 
-                waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].send(waypoint_handler->mavlink_stream_, sysid, msg, packet.seq, isCurrent);
+                waypoint_handler->waypoint_list_[waypoint_handler->sending_waypoint_num_].send(waypoint_handler->mavlink_stream_, sysid, msg, packet.seq, is_current);
 
                 print_util_dbg_print("Sending waypoint ");
                 print_util_dbg_print_num(waypoint_handler->sending_waypoint_num_, 10);
@@ -180,7 +180,7 @@ void Mavlink_waypoint_handler::send_waypoint(Mavlink_waypoint_handler* waypoint_
     }
 }
 
-void Mavlink_waypoint_handler::receive_ack_msg(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_ack_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_mission_ack_t packet;
 
@@ -190,13 +190,13 @@ void Mavlink_waypoint_handler::receive_ack_msg(Mavlink_waypoint_handler* waypoin
     if (((uint8_t)packet.target_system == (uint8_t)sysid)
             && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
     {
-        waypoint_handler->waypoint_sending_ = false;
+        waypoint_handler->is_sending_waypoint_ = false;
         waypoint_handler->sending_waypoint_num_ = 0;
         print_util_dbg_print("Acknowledgment received, end of waypoint sending.\r\n");
     }
 }
 
-void Mavlink_waypoint_handler::receive_count(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_mission_count_t packet;
 
@@ -210,7 +210,7 @@ void Mavlink_waypoint_handler::receive_count(Mavlink_waypoint_handler* waypoint_
     if (((uint8_t)packet.target_system == (uint8_t)sysid)
             && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
     {
-        if (waypoint_handler->waypoint_receiving_ == false)
+        if (waypoint_handler->is_receiving_waypoint_ == false)
         {
             // comment these lines if you want to add new waypoints to the list instead of overwriting them
             waypoint_handler->waypoint_count_ = 0;
@@ -229,8 +229,8 @@ void Mavlink_waypoint_handler::receive_count(Mavlink_waypoint_handler* waypoint_
             print_util_dbg_print_num(packet.count + waypoint_handler->waypoint_count_, 10);
             print_util_dbg_print("\r\n");
 
-            waypoint_handler->waypoint_receiving_   = true;
-            waypoint_handler->waypoint_sending_     = false;
+            waypoint_handler->is_receiving_waypoint_   = true;
+            waypoint_handler->is_sending_waypoint_     = false;
             waypoint_handler->waypoint_request_number_ = 0;
 
 
@@ -253,7 +253,7 @@ void Mavlink_waypoint_handler::receive_count(Mavlink_waypoint_handler* waypoint_
 
 }
 
-void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_item_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_mission_item_t packet;
 
@@ -272,7 +272,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
         print_util_dbg_print(" receiving num :");
         print_util_dbg_print_num(packet.seq, 10);
         //print_util_dbg_print(" is it receiving :");
-        //print_util_dbg_print_num(waypoint_handler->waypoint_receiving_,10); // boolean value
+        //print_util_dbg_print_num(waypoint_handler->is_receiving_waypoint_,10); // boolean value
         print_util_dbg_print("\r\n");
 
         //current = 2 is a flag to tell us this is a "guided mode" waypoint and not for the mission
@@ -305,7 +305,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
         else
         {
             // Check if receiving waypoints
-            if (waypoint_handler->waypoint_receiving_)
+            if (waypoint_handler->is_receiving_waypoint_)
             {
                 // check if this is the requested waypoint
                 if (packet.seq == waypoint_handler->waypoint_request_number_)
@@ -335,9 +335,8 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                             waypoint_handler->mavlink_stream_.send(&_msg);
 
                             print_util_dbg_print("flight plan received!\n");
-                            waypoint_handler->waypoint_receiving_ = false;
+                            waypoint_handler->is_receiving_waypoint_ = false;
 
-                            waypoint_handler->navigation_.set_start_wpt_time();
                             // TODO Should this auto start moving towards the point
                         }
                         else
@@ -370,7 +369,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                                                      type);
                         waypoint_handler->mavlink_stream_.send(&_msg);
                     }
-                    
+
                 } //end of if (packet.seq == waypoint_handler->waypoint_request_number_)
                 else
                 {
@@ -385,7 +384,7 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                                                  type);
                     waypoint_handler->mavlink_stream_.send(&_msg);
                 }
-            } //end of if (waypoint_handler->waypoint_receiving_)
+            } //end of if (waypoint_handler->is_receiving_waypoint_)
             else
             {
                 MAV_MISSION_RESULT type = MAV_MISSION_ERROR;
@@ -399,12 +398,12 @@ void Mavlink_waypoint_handler::receive_waypoint(Mavlink_waypoint_handler* waypoi
                                              msg->compid,
                                              type);
                 waypoint_handler->mavlink_stream_.send(&_msg);
-            } //end of else of if (waypoint_handler->waypoint_receiving_)
+            } //end of else of if (waypoint_handler->is_receiving_waypoint_)
         } //end of else (packet.current != 2 && !=3 )
     } //end of if this message is for this system and subsystem
 }
 
-void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_clear_all_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
     mavlink_mission_clear_all_t packet;
 
@@ -438,23 +437,27 @@ void Mavlink_waypoint_handler::clear_waypoint_list(Mavlink_waypoint_handler* way
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mavlink_waypoint_handler::Mavlink_waypoint_handler(INS& ins, Navigation& navigation, State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mission_handler_registry& mission_handler_registry, conf_t config):
-            waypoint_count_(0),
-            current_waypoint_index_(0),
-            mavlink_stream_(mavlink_stream),
-            ins_(ins),
-            state_(state),
-            navigation_(navigation),
-            message_handler_(message_handler),
-            mission_handler_registry_(mission_handler_registry),
-            waypoint_sending_(false),
-            waypoint_receiving_(false),
-            sending_waypoint_num_(0),
-            waypoint_request_number_(0),
-            requested_waypoint_count_(0),
-            start_timeout_(time_keeper_get_ms()),
-            timeout_max_waypoint_(10000),
-            config_(config)
+Mavlink_waypoint_handler::Mavlink_waypoint_handler( const INS& ins,
+                                                    const Navigation& navigation,
+                                                    Mavlink_message_handler& message_handler,
+                                                    const Mavlink_stream& mavlink_stream,
+                                                    Mission_handler_registry& mission_handler_registry,
+                                                    conf_t config):
+    waypoint_count_(0),
+    current_waypoint_index_(0),
+    mavlink_stream_(mavlink_stream),
+    ins_(ins),
+    navigation_(navigation),
+    message_handler_(message_handler),
+    mission_handler_registry_(mission_handler_registry),
+    is_sending_waypoint_(false),
+    is_receiving_waypoint_(false),
+    sending_waypoint_num_(0),
+    waypoint_request_number_(0),
+    requested_waypoint_count_(0),
+    start_timeout_(time_keeper_get_ms()),
+    timeout_max_waypoint_(10000),
+    config_(config)
 {
     for (int i = 0; i < MAX_WAYPOINTS; i++)
     {
@@ -483,41 +486,41 @@ bool Mavlink_waypoint_handler::init()
     callback.message_id     = MAVLINK_MSG_ID_MISSION_ITEM; // 39
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &receive_waypoint;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_item_callback;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_REQUEST; // 40
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &send_waypoint;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_request_callback;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_REQUEST_LIST; // 43
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &send_count;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &request_list_callback;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_COUNT; // 44
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &receive_count;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_count_callback;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_msg_callback(&callback);
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_CLEAR_ALL; // 45
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &clear_waypoint_list;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_clear_all_callback;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
 
     callback.message_id     = MAVLINK_MSG_ID_MISSION_ACK; // 47
     callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
     callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &receive_ack_msg;
+    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_ack_callback;
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_msg_callback(&callback);
 
@@ -570,7 +573,6 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
                         navigation_.takeoff_altitude);
 
     waypoint_count_ = 1;
-    navigation_.set_waiting_at_waypoint(false);
     set_current_waypoint_index(0);
 
     waypoint_list_[0] = waypoint;
@@ -662,21 +664,21 @@ void Mavlink_waypoint_handler::advance_to_next_waypoint()
 
 void Mavlink_waypoint_handler::control_time_out_waypoint_msg()
 {
-    if (waypoint_sending_ || waypoint_receiving_)
+    if (is_sending_waypoint_ || is_receiving_waypoint_)
     {
         uint32_t tnow = time_keeper_get_ms();
 
         if ((tnow - start_timeout_) > timeout_max_waypoint_)
         {
             start_timeout_ = tnow;
-            if (waypoint_sending_)
+            if (is_sending_waypoint_)
             {
-                waypoint_sending_ = false;
+                is_sending_waypoint_ = false;
                 print_util_dbg_print("Sending waypoint timeout\r\n");
             }
-            if (waypoint_receiving_)
+            if (is_receiving_waypoint_)
             {
-                waypoint_receiving_ = false;
+                is_receiving_waypoint_ = false;
 
                 print_util_dbg_print("Receiving waypoint timeout\r\n");
                 waypoint_count_ = 0;

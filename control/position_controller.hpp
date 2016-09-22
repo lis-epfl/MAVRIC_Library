@@ -55,6 +55,9 @@ class Position_controller : public IPosition_controller, public IXyposition_zvel
 {
 public:
 
+    /**
+     * \brief Configuration
+     */
     struct conf_t
     {
         pid_controller_conf_t cruise_pid_config;
@@ -65,17 +68,39 @@ public:
         float kp_yaw;
     };
 
+    /**
+     * \brief Enumeration of control modes
+     */
     enum class ctrl_mode_t
     {
-        POS_XYZ,
-        POS_XY_VEL_Z
+        POS_XYZ,        ///< 3D position control
+        POS_XY_VEL_Z    ///< Horizontal position control + vertical velocity control
     };
 
-    Position_controller(INS& ins, ahrs_t& ahrs, conf_t config);
+    /**
+     * \brief Constructor
+     *
+     * \param   ins     Reference to Inertial Navigation System (INS)
+     * \param   ahrs    Reference to Attitude and Heading Reference System (AHRS)
+     * \param   config  Configuration structure
+     */
+    Position_controller(const INS& ins, const ahrs_t& ahrs, conf_t config);
 
+    /**
+     * \brief Main update function
+     */
     void update();
 
+
+    /**
+     * \brief           Sets the 3D position command
+     *
+     * \param command   xyz position command indicating target location in local frame
+     *
+     * \return success  whether command was accepted
+     */
     bool set_position_command(const pos_command_t& pos_command);
+
 
     /**
      * \brief           sets the horizontal position & vertical velocity command
@@ -86,6 +111,7 @@ public:
      */
     bool set_xyposition_zvel_command(const xypos_zvel_command_t& command);
 
+
     /**
      * \brief           sets the navigation command (desired position)
      *
@@ -95,8 +121,15 @@ public:
      */
     bool set_navigation_command(const nav_command_t& command);
 
+    /**
+     * \brief   Default configuration
+     *
+     * \return  config
+     */
     static inline conf_t default_config();
 
+
+    // TODO add doc and check why this returns control_command_t
     control_command_t& velocity_command();
 
 protected:
