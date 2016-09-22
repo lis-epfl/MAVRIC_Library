@@ -248,10 +248,10 @@ protected:
      * \param   msg                     The received MAVLink message structure with the number of the current waypoint
      *
      */
-    static void set_current_waypoint_from_parameter(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
+    static void mission_set_current_callback(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
     
 
-    static mav_result_t mission_start(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+    static mav_result_t mission_start_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 
 
     /**
@@ -262,7 +262,7 @@ protected:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_auto_takeoff(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+    static mav_result_t nav_takeoff_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 
     /**
      * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
@@ -272,7 +272,7 @@ protected:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_auto_landing(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+    static mav_result_t nav_land_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 
     /**
      * \brief   Pauses the navigation or resumes/advances the navigation waypoint
@@ -282,7 +282,7 @@ protected:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_override_goto(Mission_planner* mission_planner, mavlink_command_long_t* packet);
+    static mav_result_t override_goto_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 };
 
 
