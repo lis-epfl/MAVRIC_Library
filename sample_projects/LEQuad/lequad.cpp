@@ -49,6 +49,7 @@
 #include "drivers/sonar_telemetry.hpp"
 
 #include "sensing/imu_telemetry.hpp"
+#include "sensing/ins_telemetry.hpp"
 #include "sensing/ahrs_telemetry.hpp"
 #include "sensing/position_estimation_telemetry.hpp"
 
@@ -334,8 +335,8 @@ bool LEQuad::init_position_estimation(void)
     ret &= position_estimation_telemetry_init(&position_estimation, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Periodic_telemetry::telemetry_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Periodic_telemetry::telemetry_function_t)&position_estimation_telemetry_send_global_position, &position_estimation);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send_position,        &position_estimation);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send_global_position, &position_estimation);
 
     // Parameters
     ret &= communication.parameters().add(&position_estimation.kp_alt_baro,   "POS_KP_ALT_BARO" );

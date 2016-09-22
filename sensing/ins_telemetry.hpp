@@ -47,8 +47,6 @@
 #include "communication/mavlink_stream.hpp"
 
 /**
- * \brief Telemetry
- *
  * \brief   Function to send the MAVLink position estimation message
  *
  * \param   ins                     The pointer to the Inertial Navigation System
@@ -56,5 +54,25 @@
  * \param   msg                     The pointer to the MAVLink message
  */
 static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
+
+/**
+ * \brief   Function to send the MAVLink position estimation message
+ *
+ * \param   pos_est                 The pointer to the position estimation structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void ins_telemetry_send_position(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
+
+/**
+ * \brief   Function to send the MAVLink GPS global position message
+ *
+ * \param   pos_est                 The pointer to the position estimation structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void ins_telemetry_send_global_position(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* INS_TELEMETRY_HPP_ */
