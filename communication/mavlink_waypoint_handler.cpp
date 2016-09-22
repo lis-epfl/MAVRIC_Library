@@ -212,13 +212,13 @@ void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* 
     {
         if (waypoint_handler->is_receiving_waypoint_ == false)
         {
-            // comment these lines if you want to add new waypoints to the list instead of overwriting them
+            // Erase current waypoint list
             waypoint_handler->waypoint_count_ = 0;
-            //---//
 
-            if ((packet.count + waypoint_handler->waypoint_count_) > MAX_WAYPOINTS)
+            // Save the number of waypoints GCS is about to send
+            if (packet.count > MAX_WAYPOINTS)
             {
-                packet.count = MAX_WAYPOINTS - waypoint_handler->waypoint_count_;
+                packet.count = MAX_WAYPOINTS;
             }
             waypoint_handler->requested_waypoint_count_ = packet.count;
 
@@ -229,8 +229,12 @@ void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* 
             print_util_dbg_print_num(packet.count + waypoint_handler->waypoint_count_, 10);
             print_util_dbg_print("\r\n");
 
+            // we are about to receive a list of waypoints, so we stop sending
             waypoint_handler->is_receiving_waypoint_   = true;
             waypoint_handler->is_sending_waypoint_     = false;
+
+            // the next waypoint to request is number 0, this count will be increment until all
+            // waypoints are received (ie. waypoint_request_number_ == requested_waypoint_count_ - 1)
             waypoint_handler->waypoint_request_number_ = 0;
 
 
