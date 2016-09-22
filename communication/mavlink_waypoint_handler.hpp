@@ -109,7 +109,7 @@ public:
      *
      * \return current waypoint
      */
-    const Waypoint& current_waypoint();
+    const Waypoint& current_waypoint() const;
 
     /**
      * \brief Gets the next waypoint if available
@@ -119,7 +119,7 @@ public:
      *
      * \return next waypoint
      */
-    const Waypoint& next_waypoint();
+    const Waypoint& next_waypoint() const;
 
     /**
      * \brief   Returns a waypoint from the list from a specific index
@@ -129,14 +129,14 @@ public:
      *
      * \return  waypoint_list_[i]
      */
-    const Waypoint& waypoint_from_index(int i);
+    const Waypoint& waypoint_from_index(int i) const;
 
     /**
      * \brief   Returns the home waypoint
      *
      * \return  Home
      */
-    const Waypoint& home_waypoint();
+    const Waypoint& home_waypoint() const;
 
     /**
      * \brief   Sets the next waypoint as the current one. Should be called when

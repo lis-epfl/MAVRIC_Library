@@ -582,7 +582,7 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
     waypoint_list_[0] = waypoint;
 }
 
-const Waypoint& Mavlink_waypoint_handler::current_waypoint()
+const Waypoint& Mavlink_waypoint_handler::current_waypoint() const
 {
     // If there are no waypoints set, go to home
     if (waypoint_count_ == 0)
@@ -602,7 +602,7 @@ const Waypoint& Mavlink_waypoint_handler::current_waypoint()
     }
 }
 
-const Waypoint& Mavlink_waypoint_handler::next_waypoint()
+const Waypoint& Mavlink_waypoint_handler::next_waypoint() const
 {
     // If there are no waypoints set, go to home
     if (waypoint_count_ == 0)
@@ -630,7 +630,7 @@ const Waypoint& Mavlink_waypoint_handler::next_waypoint()
     }
 }
 
-const Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i)
+const Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i) const
 {
     // If there are no waypoints set, go to home
     if (waypoint_count_ == 0)
@@ -648,7 +648,7 @@ const Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i)
     }
 }
 
-const Waypoint& Mavlink_waypoint_handler::home_waypoint()
+const Waypoint& Mavlink_waypoint_handler::home_waypoint() const
 {
     return home_waypoint_;
 }

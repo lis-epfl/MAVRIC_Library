@@ -57,7 +57,7 @@ extern "C"
  */
 typedef struct
 {
-    Mavlink_waypoint_handler*   waypoint_handler;         ///< Waypoint list (input)
+    const Mavlink_waypoint_handler*   waypoint_handler;         ///< Waypoint list (input)
     const INS*                        ins;                      ///< Estimated position and speed (input)
     velocity_command_t*               velocity_command;         ///< Velocity command (output)
 } vector_field_waypoint_t;
