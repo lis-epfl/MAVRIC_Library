@@ -80,23 +80,20 @@ public:
      *
      * \details     Does nothing
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  True
      */
-    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+    virtual bool setup(const Waypoint& wpt);
 
     /**
      * \brief   Handles the mission every iteration
      *  
      * \details     Does nothing and returns 1 for the status code.
      *
-     * \param   mission_planner     The mission planner class
-     *
      * \return  Status code
      */
-    virtual int update(Mission_planner& mission_planner);
+    virtual int update();
 
     /**
      * \brief   Returns that the mission state is in MANUAL_CTRL

@@ -86,12 +86,11 @@ public:
      *  
      * \details     Records the waypoint reference and sets the mav mode
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Success
      */
-    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+    virtual bool setup(const Waypoint& wpt);
 
     /**
      * \brief   Handles the mission every iteration
@@ -100,11 +99,9 @@ public:
      *              is: 0 for takeoff in process, 1 for takeoff complete, and
      *              -1 for control impossible
      *
-     * \param   mission_planner     The mission planner class
-     *
      * \return  Status code
      */
-    virtual int update(Mission_planner& mission_planner);
+    virtual int update();
 
     /**
      * \brief   Returns that the mission state is in PREMISSION
@@ -124,11 +121,9 @@ protected:
     /**
      * \brief   Function to set the controller specific command
      *
-     * \param   mission_planner     The reference to the mission planner class
-     *
      * \return  Controller accepted input
      */
-    virtual bool set_control_command(Mission_planner& mission_planner);
+    virtual bool set_control_command();
 };
 
 #include "mission/mission_handler_takeoff.hxx"

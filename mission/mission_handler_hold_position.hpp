@@ -87,12 +87,11 @@ public:
      * \details     Stores the waypoint reference and records the starting
                     time
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Success
      */
-    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+    virtual bool setup(const Waypoint& wpt);
 
     /**
      * \brief   Handles the mission every iteration
@@ -101,11 +100,9 @@ public:
      *              if the drone is still holding position, 1 if it should move
      *              to the next waypoint, and -1 if the drone cannot hold position
      *
-     * \param   mission_planner     The mission planner class
-     *
      * \return  Status code
      */
-    virtual int update(Mission_planner& mission_planner);
+    virtual int update();
 
     /**
      * \brief   Returns that the mission state is in MISSION
@@ -126,11 +123,9 @@ protected:
     /**
      * \brief   Function to set the controller specific command
      *
-     * \param   mission_planner     The reference to the mission planner class
-     *
      * \return  Controller accepted input
      */
-    virtual bool set_control_command(Mission_planner& mission_planner);
+    virtual bool set_control_command();
 };
 
 #include "mission/mission_handler_hold_position.hxx"

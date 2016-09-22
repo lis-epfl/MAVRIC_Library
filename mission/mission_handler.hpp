@@ -81,12 +81,11 @@ public:
      *              every iteration. Base classes are also responsible for setting
      *              Navigation::waiting_at_waypoint
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Success
      */
-    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt) = 0;
+    virtual bool setup(const Waypoint& wpt) = 0;
 
     /**
      * \brief   Handles the mission every iteration
@@ -104,11 +103,9 @@ public:
      *                  +1: Handler successful, continue to next waypoint
      *                  -1: Handler failed, signifies error
      *
-     * \param   mission_planner     The mission planner class
-     *
      * \return  Status code. See details
      */
-    virtual int update(Mission_planner& mission_planner) = 0;
+    virtual int update() = 0;
 
     /**
      * \brief   Gets the mission state of this handler

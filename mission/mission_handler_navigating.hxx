@@ -111,7 +111,7 @@ bool Mission_handler_navigating<T>::can_handle(const Waypoint& wpt) const
 }
 
 template <class T>
-bool Mission_handler_navigating<T>::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+bool Mission_handler_navigating<T>::setup(const Waypoint& wpt)
 {
     bool success = true;
 
@@ -123,10 +123,10 @@ bool Mission_handler_navigating<T>::setup(Mission_planner& mission_planner, cons
 }
 
 template <class T>
-int Mission_handler_navigating<T>::update(Mission_planner& mission_planner)
+int Mission_handler_navigating<T>::update()
 {
     // Set goal
-    bool ret = set_control_command(mission_planner);
+    bool ret = set_control_command();
     
     /**********************************
     Determine if arrived for first time 

@@ -64,7 +64,6 @@ public:
      * \param   controller                          The reference to the controller
      * \param   ins                                 The reference to the ins
      * \param   navigation                          The reference to the navigation structure
-     * \param   mission_planner                     The reference to the mission planner
      * \param   mavlink_stream                      The reference to the MAVLink stream structure
      * \param   waypoint_handler                    The handler for the manual control state
      */
@@ -91,12 +90,11 @@ public:
      *  
      * \details     Records the waypoint reference
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Success
      */
-    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+    virtual bool setup(const Waypoint& wpt);
 
     /**
      * \brief   Handles the mission every iteration
@@ -106,11 +104,9 @@ public:
      *              to the waypoint, 1 for waypoint reached and autocontinue,
      *              -1 for control command failed.
      *
-     * \param   mission_planner     The mission planner class
-     *
      * \return  Status code
      */
-    virtual int update(Mission_planner& mission_planner);
+    virtual int update();
 
     /**
      * \brief   Returns that the mission state is in MISSION
@@ -133,11 +129,9 @@ protected:
     /**
      * \brief   Function to set the controller specific command
      *
-     * \param   mission_planner     The reference to the mission planner class
-     *
      * \return  Controller accepted input
      */
-    virtual bool set_control_command(Mission_planner& mission_planner);
+    virtual bool set_control_command();
     
     /**
      * \brief   Sends the travel time between the last two waypoints

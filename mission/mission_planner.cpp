@@ -310,7 +310,7 @@ void Mission_planner::state_machine()
         if (current_mission_handler_ != NULL)
         {
             // Handle current mission
-            bool ret = current_mission_handler_->update(*this);
+            bool ret = current_mission_handler_->update();
 
             // Check if we should be switch states
             // This is for automatic advancement (states can also advance from callback
@@ -447,7 +447,7 @@ void Mission_planner::state_machine()
 
         if (current_mission_handler_ != NULL)
         {
-            current_mission_handler_->update(*this);
+            current_mission_handler_->update();
         }
         // DONT CHECK IF FINISHED POSITION HOLD
     }
@@ -580,7 +580,7 @@ void Mission_planner::critical_handler()
     // Handle critical state
     if (current_mission_handler_ != NULL)
     {
-        bool ret =current_mission_handler_->update(*this);
+        bool ret =current_mission_handler_->update();
 
         // If we move to the next state, set the next state
         if (ret == 1)
@@ -861,7 +861,7 @@ bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
     }
 
     // Set current handler
-    bool ret = handler->setup(*this, waypoint);
+    bool ret = handler->setup(waypoint);
 
     if (ret)
     {

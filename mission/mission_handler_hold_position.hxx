@@ -82,7 +82,7 @@ bool Mission_handler_hold_position<T>::can_handle(const Waypoint& wpt) const
 }
 
 template <class T>
-bool Mission_handler_hold_position<T>::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+bool Mission_handler_hold_position<T>::setup(const Waypoint& wpt)
 {
     bool success = true;
     waypoint_ = wpt;
@@ -94,10 +94,10 @@ bool Mission_handler_hold_position<T>::setup(Mission_planner& mission_planner, c
 }
 
 template <class T>
-int Mission_handler_hold_position<T>::update(Mission_planner& mission_planner)
+int Mission_handler_hold_position<T>::update()
 {
     // Set goal
-    bool ret = set_control_command(mission_planner);
+    bool ret = set_control_command();
 
     /*******************
     Determine status code 

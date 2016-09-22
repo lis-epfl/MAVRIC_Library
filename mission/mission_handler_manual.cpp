@@ -64,13 +64,13 @@ bool Mission_handler_manual::can_handle(const Waypoint& wpt) const
     return wpt.command() == MAV_CMD_NAV_MANUAL_CTRL;
 }
 
-bool Mission_handler_manual::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+bool Mission_handler_manual::setup(const Waypoint& wpt)
 {
     navigation_.set_waiting_at_waypoint(false);
     return true;
 }
 
-int Mission_handler_manual::update(Mission_planner& mission_planner)
+int Mission_handler_manual::update()
 {
 	return 1;
 }

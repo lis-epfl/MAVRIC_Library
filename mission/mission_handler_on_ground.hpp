@@ -79,23 +79,20 @@ public:
      *  
      * \details     Does nothing
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  True
      */
-    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+    virtual bool setup(const Waypoint& wpt);
 
     /**
      * \brief   Returns 0
      *  
      * \details     Returns 0
      *
-     * \param   mission_planner     The mission planner class
-     *
      * \return  0
      */
-    virtual int update(Mission_planner& mission_planner);
+    virtual int update();
 
     /**
      * \brief   Returns that the mission state is in STANDBY
