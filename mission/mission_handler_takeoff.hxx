@@ -81,7 +81,7 @@ bool Mission_handler_takeoff<T>::can_handle(const Waypoint& wpt) const
 }
 
 template <class T>
-bool Mission_handler_takeoff<T>::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+bool Mission_handler_takeoff<T>::setup(const Waypoint& wpt)
 {
     bool success = true;
 
@@ -101,10 +101,10 @@ bool Mission_handler_takeoff<T>::setup(Mission_planner& mission_planner, const W
 }
 
 template <class T>
-int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
+Mission_handler::update_status_t Mission_handler_takeoff<T>::update()
 {
     // Set goal
-    bool ret = set_control_command(mission_planner);
+    bool ret = set_control_command();
 
     /*******************
     Determine status code 
@@ -159,16 +159,16 @@ int Mission_handler_takeoff<T>::update(Mission_planner& mission_planner)
     // Return true if waiting at waypoint and autocontinue
     if (finished && waypoint_.autocontinue() == 1)
     {
-        return 1;
+        return MISSION_FINISHED;
     }
 
     // Handle control command failed status
     if (!ret)
     {
-        return -1;
+        return MISSION_FAILED;
     }
 
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 template <class T>

@@ -56,7 +56,7 @@ extern "C"
 //------------------------------------------------------------------------------
 
 template <>
-bool Mission_handler_landing<INavigation_controller, IXyposition_zvel_controller>::set_desc_to_small_alt_control_command(Mission_planner& mission_planner)
+bool Mission_handler_landing<INavigation_controller, IXyposition_zvel_controller>::set_desc_to_small_alt_control_command()
 {
 	INavigation_controller::nav_command_t cmd;
 	cmd.pos = waypoint_.local_pos();
@@ -65,7 +65,7 @@ bool Mission_handler_landing<INavigation_controller, IXyposition_zvel_controller
 }
 
 template <>
-bool Mission_handler_landing<INavigation_controller,IXyposition_zvel_controller>::set_desc_to_ground_control_command(Mission_planner& mission_planner)
+bool Mission_handler_landing<INavigation_controller,IXyposition_zvel_controller>::set_desc_to_ground_control_command()
 {
 	IXyposition_zvel_controller::xypos_zvel_command_t cmd;
 	cmd.pos_x = waypoint_.local_pos()[X];

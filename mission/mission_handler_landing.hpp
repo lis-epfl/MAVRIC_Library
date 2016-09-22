@@ -105,25 +105,22 @@ public:
      *  
      * \details     Records the waypoint reference and sets the mav mode
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Success
      */
-    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt);
+    virtual bool setup(const Waypoint& wpt);
 
     /**
      * \brief   Handles the mission every iteration
      *  
      * \details     Sets the goal location and determines the status code. The
-     *              code is 0 for landing in progress, 1 for landing finished
-     *              and autocontinue on, -1 for control command rejected.
-     *
-     * \param   mission_planner     The mission planner class
+     *              code is MISSION_IN_PROGRESS for landing in progress, MISSION_FINISHED for landing finished
+     *              and autocontinue on, MISSION_FAILED for control command rejected.
      *
      * \return  Status code
      */
-    virtual int update(Mission_planner& mission_planner);
+    virtual Mission_handler::update_status_t update();
 
     /**
      * \brief   Returns that the mission state is in POSTMISSION
@@ -156,21 +153,17 @@ protected:
      * \brief   Function to set the controller specific command for the descent to
      *          small altitude state
      *
-     * \param   mission_planner     The reference to the mission planner class
-     *
      * \return  Controller accepted input
      */
-    virtual bool set_desc_to_small_alt_control_command(Mission_planner& mission_planner);
+    virtual bool set_desc_to_small_alt_control_command();
 
     /**
      * \brief   Function to set the controller specific command for the descent to
      *          ground state
      *
-     * \param   mission_planner     The reference to the mission planner class
-     *
      * \return  Controller accepted input
      */
-    virtual bool set_desc_to_ground_control_command(Mission_planner& mission_planner);
+    virtual bool set_desc_to_ground_control_command();
 };
 
 template <class T1, class T2>

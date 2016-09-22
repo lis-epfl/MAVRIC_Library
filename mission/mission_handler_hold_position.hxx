@@ -82,7 +82,7 @@ bool Mission_handler_hold_position<T>::can_handle(const Waypoint& wpt) const
 }
 
 template <class T>
-bool Mission_handler_hold_position<T>::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+bool Mission_handler_hold_position<T>::setup(const Waypoint& wpt)
 {
     bool success = true;
     waypoint_ = wpt;
@@ -94,10 +94,10 @@ bool Mission_handler_hold_position<T>::setup(Mission_planner& mission_planner, c
 }
 
 template <class T>
-int Mission_handler_hold_position<T>::update(Mission_planner& mission_planner)
+Mission_handler::update_status_t Mission_handler_hold_position<T>::update()
 {
     // Set goal
-    bool ret = set_control_command(mission_planner);
+    bool ret = set_control_command();
 
     /*******************
     Determine status code 
@@ -141,28 +141,28 @@ int Mission_handler_hold_position<T>::update(Mission_planner& mission_planner)
         case MAV_CMD_NAV_LOITER_TIME:
             if (within_radius_ && ((time_keeper_get_ms() - start_time_) > waypoint_.param1() * 1000))
             {
-                return 1;
+                return MISSION_FINISHED;
             }
             break;
 
         case MAV_CMD_NAV_LOITER_TO_ALT:
             if (maths_f_abs(ins_.position_lf()[Z] - waypoint_.local_pos()[Z]) < waypoint_.param2()) // TODO: Add check for heading
             {
-                return 1;
+                return MISSION_FINISHED;
             }
             break;
         case MAV_CMD_OVERRIDE_GOTO:
-            return 1;
+            return MISSION_FINISHED;
         }
     }
 
     // Handle control command failed status
     if (!ret)
     {
-        return -1;
+        return MISSION_FAILED;
     }
 
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 template <class T>

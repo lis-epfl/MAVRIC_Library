@@ -86,7 +86,7 @@ bool Mission_handler_landing<T1, T2>::can_handle(const Waypoint& wpt) const
 }
 
 template <class T1, class T2>
-bool Mission_handler_landing<T1, T2>::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+bool Mission_handler_landing<T1, T2>::setup(const Waypoint& wpt)
 {
     bool success = true;
 
@@ -103,7 +103,7 @@ bool Mission_handler_landing<T1, T2>::setup(Mission_planner& mission_planner, co
 }
 
 template <class T1, class T2>
-int Mission_handler_landing<T1, T2>::update(Mission_planner& mission_planner)
+Mission_handler::update_status_t Mission_handler_landing<T1, T2>::update()
 {
     /*****************************
     Handle internal landing states 
@@ -160,11 +160,11 @@ int Mission_handler_landing<T1, T2>::update(Mission_planner& mission_planner)
     switch (auto_landing_behavior_)
     {
         case DESCENT_TO_SMALL_ALTITUDE:
-            ret = set_desc_to_small_alt_control_command(mission_planner);
+            ret = set_desc_to_small_alt_control_command();
             break;
 
         case DESCENT_TO_GND:
-            ret = set_desc_to_ground_control_command(mission_planner);
+            ret = set_desc_to_ground_control_command();
             break;
     }
 
@@ -173,16 +173,16 @@ int Mission_handler_landing<T1, T2>::update(Mission_planner& mission_planner)
     ********************/
     if (waypoint_.autocontinue() == 1 && is_landed_)
     {
-        return 1;
+        return MISSION_FINISHED;
     }
 
     // Handle control command failed status
     if (!ret)
     {
-        return -1;
+        return MISSION_FAILED;
     }
 
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 template <class T1, class T2>

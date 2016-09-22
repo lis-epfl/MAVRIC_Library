@@ -65,15 +65,15 @@ bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
     return wpt.command() == MAV_CMD_NAV_ON_GROUND;
 }
 
-bool Mission_handler_on_ground::setup(Mission_planner& mission_planner, const Waypoint& wpt)
+bool Mission_handler_on_ground::setup(const Waypoint& wpt)
 {
     navigation_.set_waiting_at_waypoint(true);
     return true;
 }
 
-int Mission_handler_on_ground::update(Mission_planner& mission_planner)
+Mission_handler::update_status_t Mission_handler_on_ground::update()
 {
-    return 0;
+    return MISSION_IN_PROGRESS;
 }
 
 Mission_planner::internal_state_t Mission_handler_on_ground::handler_mission_state() const

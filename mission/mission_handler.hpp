@@ -59,6 +59,13 @@
 class Mission_handler
 {
 public:
+    enum update_status_t
+    {
+        MISSION_FAILED=-1,
+        MISSION_IN_PROGRESS=0,
+        MISSION_FINISHED=1
+    };
+
     /**
      * \brief   Checks if the handler is able to handle the request
      *  
@@ -81,12 +88,11 @@ public:
      *              every iteration. Base classes are also responsible for setting
      *              Navigation::waiting_at_waypoint
      *
-     * \param   mission_planner     The mission planner class
      * \param   wpt                 The waypoint class
      *
      * \return  Success
      */
-    virtual bool setup(Mission_planner& mission_planner, const Waypoint& wpt) = 0;
+    virtual bool setup(const Waypoint& wpt) = 0;
 
     /**
      * \brief   Handles the mission every iteration
@@ -95,20 +101,10 @@ public:
      *              routine checks and code that needs to be done every iteration
      *              The effective goal of the handle function is to set some
      *              command that will have the drone achieve the mission item.
-     *              The return integer is a status that shows how successful this
-     *              handler has been. It follows this layout:
-     *                   0: Handler in progress, not finished but not failed (if
-     *                          the handler has finished but the drone should not
-     *                          continue to the next waypoint, this should be
-     *                          outputted as 0)
-     *                  +1: Handler successful, continue to next waypoint
-     *                  -1: Handler failed, signifies error
      *
-     * \param   mission_planner     The mission planner class
-     *
-     * \return  Status code. See details
+     * \return  Update status code
      */
-    virtual int update(Mission_planner& mission_planner) = 0;
+    virtual update_status_t update() = 0;
 
     /**
      * \brief   Gets the mission state of this handler
