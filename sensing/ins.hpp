@@ -144,6 +144,9 @@ protected:
 
 private:
     static global_position_t origin_;
+
+    /* declare callback for setting the origin as friend to give access to set_origin */
+    friend void ins_telemetry_set_gps_global_origin_callback(INS* ins, uint32_t sysid, mavlink_message_t* msg);
 };
 
 #endif /* INS_HPP_ */
