@@ -340,7 +340,7 @@ void Mavlink_waypoint_handler::mission_item_callback(Mavlink_waypoint_handler* w
 
                             print_util_dbg_print("flight plan received!\n");
                             waypoint_handler->is_receiving_waypoint_ = false;
-
+                            waypoint_handler->waypoint_received_time_ms_ = time_keeper_get_ms();
                             // TODO Should this auto start moving towards the point
                         }
                         else
@@ -456,6 +456,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler( const INS& ins,
     mission_handler_registry_(mission_handler_registry),
     is_sending_waypoint_(false),
     is_receiving_waypoint_(false),
+    waypoint_received_time_ms_(0),
     sending_waypoint_num_(0),
     waypoint_request_number_(0),
     requested_waypoint_count_(0),

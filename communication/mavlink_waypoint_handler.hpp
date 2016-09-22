@@ -95,6 +95,13 @@ public:
     inline uint16_t waypoint_count() const {return waypoint_count_;};
 
     /**
+     * \brief   Returns the time that the waypoint list was received
+     *
+     * \return  Waypoint list reception time
+     */
+    inline uint64_t waypoint_received_time_ms() const { return waypoint_received_time_ms_; };
+
+    /**
      * \brief   Default configuration
      *
      * \return  Config structure
@@ -183,6 +190,7 @@ private:
 
     bool is_sending_waypoint_;                                  ///< Flag to tell whether waypoint are being sent
     bool is_receiving_waypoint_;                                ///< Flag to tell whether waypoint are being received or not
+    uint64_t waypoint_received_time_ms_;                        ///< The time that the waypoint list was received
 
     int32_t sending_waypoint_num_;                              ///< The ID number of the sending waypoint
     int32_t waypoint_request_number_;                           ///< The ID number of the requested waypoint

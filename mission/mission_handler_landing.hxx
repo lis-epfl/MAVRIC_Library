@@ -125,6 +125,21 @@ Mission_handler::update_status_t Mission_handler_landing<T1, T2>::update()
             next_state = true;
         }
     }
+    
+    /*************
+    Set controller 
+    *************/
+    bool ret = false;
+    switch (auto_landing_behavior_)
+    {
+        case DESCENT_TO_SMALL_ALTITUDE:
+            ret = set_desc_to_small_alt_control_command();
+            break;
+
+        case DESCENT_TO_GND:
+            ret = set_desc_to_ground_control_command();
+            break;
+    }
 
     // If we are switching between states, ... then switch
     if (next_state)
@@ -152,21 +167,6 @@ Mission_handler::update_status_t Mission_handler_landing<T1, T2>::update()
         }
     }
     
-    
-    /*************
-    Set controller 
-    *************/
-    bool ret = false;
-    switch (auto_landing_behavior_)
-    {
-        case DESCENT_TO_SMALL_ALTITUDE:
-            ret = set_desc_to_small_alt_control_command();
-            break;
-
-        case DESCENT_TO_GND:
-            ret = set_desc_to_ground_control_command();
-            break;
-    }
 
     /********************
     Determine status code 
