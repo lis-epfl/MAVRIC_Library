@@ -87,7 +87,7 @@ bool ins_telemetry_init(INS* ins, Mavlink_message_handler* message_handler)
 }
 
 
-static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void ins_telemetry_send_local_position_ned_cov(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     float cov[45];
     mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
@@ -109,7 +109,7 @@ static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavl
 }
 
 
-void ins_telemetry_send_position(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void ins_telemetry_send_local_position_ned(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     local_position_t pos_lf    = ins->position_lf();
     std::array<float,3> vel_lf = ins->velocity_lf();
@@ -125,7 +125,7 @@ void ins_telemetry_send_position(const INS* ins, const Mavlink_stream* mavlink_s
                                         vel_lf[Z]);
 }
 
-void ins_telemetry_send_global_position(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void ins_telemetry_send_global_position_int(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     // send integrated position (for now there is no GPS error correction...!!!)
     local_position_t pos_lf    = ins->position_lf();

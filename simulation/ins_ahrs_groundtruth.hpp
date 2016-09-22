@@ -53,6 +53,9 @@ class INS_AHRS_groundtruth : public INS
 {
 public:
 
+    /**
+     * \brief   Configuration structure
+     */
     struct conf_t
     {
         global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
@@ -120,13 +123,18 @@ public:
 
     /**
      * \brief   Returns the AHRS structure
-     * \details   Value is only updated upon calling update()
+     * \details Value is only updated upon calling update()
      *
      * \return ahrs
      */
      virtual inline const ahrs_t& ahrs() const {return ahrs_;};
 
-
+    /**
+     * \brief   Returns the default configuration for INS_AHRS_groundtruth
+     * \details default origin is set to ORIGIN_EPFL
+     *
+     * \return config   default configuration
+     */
     static inline conf_t default_config();
 
 protected:
@@ -139,11 +147,13 @@ protected:
     ahrs_t& ahrs_;                      ///< Attitude, acceleration and rate estimation
 };
 
+
+
 INS_AHRS_groundtruth::conf_t INS_AHRS_groundtruth::default_config()
 {
-    conf_t config;
-    config.origin = ORIGIN_EPFL;
-    return config;
+    conf_t conf;
+    conf.origin = ORIGIN_EPFL;
+    return conf;
 }
 
 #endif /* INS_AHRS_GROUNDTRUTH_HPP_ */

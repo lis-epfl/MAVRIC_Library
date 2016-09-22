@@ -45,7 +45,6 @@
 #define INS_TELEMETRY_HPP_
 
 #include "sensing/ins.hpp"
-//#include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
 
 
@@ -64,7 +63,7 @@ bool ins_telemetry_init(INS* ins, Mavlink_message_handler* message_handler);
  * \param   mavlink_stream          The pointer to the MAVLink stream
  * \param   msg                     The pointer to the MAVLink message
  */
-static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void ins_telemetry_send_local_position_ned_cov(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
@@ -74,7 +73,7 @@ static inline void ins_telemetry_send(const INS* ins, const Mavlink_stream* mavl
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void ins_telemetry_send_position(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void ins_telemetry_send_local_position_ned(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
@@ -84,7 +83,7 @@ void ins_telemetry_send_position(const INS* ins, const Mavlink_stream* mavlink_s
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void ins_telemetry_send_global_position(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void ins_telemetry_send_global_position_int(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Function to send the origin (INS::origin_)
