@@ -140,7 +140,7 @@ void Position_estimation::position_correction()
         // altimeter correction
         if (time_last_barometer_msg < barometer.last_update_us())
         {
-            last_alt = - (barometer.altitude_gf() - origin_.altitude);
+            last_alt = - (barometer.altitude_gf() - origin().altitude);
 
             time_last_barometer_msg = barometer.last_update_us();
         }
@@ -156,7 +156,7 @@ void Position_estimation::position_correction()
         if (is_gps_pos_initialized_)
         {
             // Correct barometer bias
-            float current_altitude_gf = - local_position[Z] + origin_.altitude;
+            float current_altitude_gf = - local_position[Z] + origin().altitude;
             barometer.calibrate_bias(current_altitude_gf);
         }
     }
@@ -168,7 +168,7 @@ void Position_estimation::position_correction()
             if ((time_last_gps_posllh_msg < gps.last_position_update_us()))
             {
                 global_gps_position = gps.position_gf();
-                coord_conventions_global_to_local_position(global_gps_position, origin_, local_coordinates);
+                coord_conventions_global_to_local_position(global_gps_position, origin(), local_coordinates);
 
                 // compute GPS velocity estimate
                 gps_dt = (gps.last_position_update_us() - time_last_gps_posllh_msg) / 1000000.0f;
@@ -270,7 +270,7 @@ void Position_estimation::gps_position_init()
 
             is_gps_pos_initialized_ = true;
 
-            origin_  = gps.position_gf();
+            set_origin(gps.position_gf());
             last_gps_pos           = local_position;
 
             last_alt = 0;
@@ -338,7 +338,7 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         sonar(sonar)
 {
     // default GPS origin
-    origin_ =  config.origin;
+    set_origin(config.origin);
 
     for(uint8_t i = 0; i < 3; i++)
     {
@@ -387,7 +387,7 @@ void Position_estimation::reset_velocity_altitude()
     if (is_gps_pos_initialized_)
     {
         float current_altitude_gf = - local_position[Z]
-                                    + origin_.altitude;
+                                    + origin().altitude;
         barometer.calibrate_bias(current_altitude_gf);
 
         print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
@@ -395,7 +395,7 @@ void Position_estimation::reset_velocity_altitude()
         print_util_dbg_print(" ( ");
         print_util_dbg_print_num(local_position[2], 10);
         print_util_dbg_print("  ");
-        print_util_dbg_print_num(origin_.altitude, 10);
+        print_util_dbg_print_num(origin().altitude, 10);
         print_util_dbg_print(" )\r\n");
     }
 
@@ -472,7 +472,7 @@ std::array<float,3> Position_estimation::velocity_lf(void) const
 
 float Position_estimation::absolute_altitude(void) const
 {
-    return (origin_.altitude - local_position[Z]);
+    return (origin().altitude - local_position[Z]);
 }
 
 

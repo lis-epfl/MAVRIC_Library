@@ -129,9 +129,20 @@ public:
      *
      * \return    origin
      */
-    static const global_position_t& origin(void);
+    static inline const global_position_t& origin(void) {return origin_;};
 
 protected:
+
+    /**
+     * \brief   set the origin of the local (NED) coordinate system
+     *
+     * \param origin    new origin location
+     *
+     * \return success  whether the new origin was accepted (currently always true)
+     */
+    static bool set_origin(global_position_t origin);
+
+private:
     static global_position_t origin_;
 };
 

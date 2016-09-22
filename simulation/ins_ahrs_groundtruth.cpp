@@ -63,7 +63,7 @@ bool INS_AHRS_groundtruth::update()
 
     /* calculate absolute altitude */
     global_position_t global_pos;
-    coord_conventions_local_to_global_position(model_.position_lf(), origin_, global_pos);
+    coord_conventions_local_to_global_position(model_.position_lf(), origin(), global_pos);
     absolute_altitude_ = global_pos.altitude;
 
     /* update ahrs */
