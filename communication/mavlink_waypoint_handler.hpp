@@ -137,6 +137,13 @@ public:
     const Waypoint& waypoint_from_index(int i);
 
     /**
+     * \brief   Returns the home waypoint
+     *
+     * \return  Home
+     */
+    const Waypoint& home_waypoint();
+
+    /**
      * \brief   Sets the next waypoint as the current one. Should be called when
      * the current waypoint has been reached.
      */
@@ -170,6 +177,8 @@ protected:
     uint16_t waypoint_count_;                                   ///< The total number of waypoints
     uint16_t current_waypoint_index_;                           ///< The current waypoint index
 
+    Waypoint home_waypoint_;                                    ///< The home waypoint
+
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream object
     INS& ins_;                                                  ///< The pointer to the position estimation structure
     State& state_;                                              ///< The reference to the state object
@@ -194,6 +203,16 @@ private:
     /************************************************
      *      static member functions (callbacks)     *
      ************************************************/
+
+    /**
+     * \brief   Sets the home position in the local frame
+     *
+     * \param   waypoint_handler    The pointer to the object of the waypoint handler
+     * \param   packet              The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t set_home(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
 
     /**
      * \brief   Sends the number of onboard waypoint to MAVLink when asked by ground station

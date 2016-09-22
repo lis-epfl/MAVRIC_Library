@@ -231,15 +231,6 @@ protected:
      *      static member functions (callbacks)     *
      ************************************************/
 
-//     /**
-//      * \brief   Set a new home position, origin of the local frame
-//      *
-//      * \param   mission_planner         The pointer to the waypoint handler
-//      * \param   sysid                   The system ID
-//      * \param   msg                     The received MAVLink message structure with the new home position
-//      */
-//     static void set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
-
     /**
      * \brief   Sets the current waypoint to num_of_waypoint
      *

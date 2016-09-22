@@ -64,47 +64,6 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-// void Mission_planner::set_home(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg)
-// {
-//     mavlink_set_gps_global_origin_t packet;
-//
-//     if (!mission_planner->state_.is_armed())
-//     {
-//         mavlink_msg_set_gps_global_origin_decode(msg, &packet);
-//
-//         // Check if this message is for this system and subsystem
-//         // Due to possible bug from QGroundControl, no check of target_component and compid
-//         if ((uint8_t)packet.target_system == (uint8_t)sysid)
-//         {
-//             print_util_dbg_print("Set new home location.\r\n");
-//             mission_planner->position_estimation_.local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
-//             mission_planner->position_estimation_.local_position.origin.longitude = (double) packet.longitude / 10000000.0f;
-//             mission_planner->position_estimation_.local_position.origin.altitude = (float) packet.altitude / 1000.0f;
-//
-//             print_util_dbg_print("New Home location: (");
-//             print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.latitude * 10000000.0f, 10);
-//             print_util_dbg_print(", ");
-//             print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.longitude * 10000000.0f, 10);
-//             print_util_dbg_print(", ");
-//             print_util_dbg_print_num(mission_planner->position_estimation_.local_position.origin.altitude * 1000.0f, 10);
-//             print_util_dbg_print(")\r\n");
-//
-//
-//             mission_planner->position_estimation_.set_new_fence_origin();
-//
-//             mavlink_message_t _msg;
-//             mavlink_msg_gps_global_origin_pack(mission_planner->mavlink_stream_.sysid(),
-//                                                mission_planner->mavlink_stream_.compid(),
-//                                                &_msg,
-//                                                mission_planner->position_estimation_.local_position.origin.latitude * 10000000.0f,
-//                                                mission_planner->position_estimation_.local_position.origin.longitude * 10000000.0f,
-//                                                mission_planner->position_estimation_.local_position.origin.altitude * 1000.0f);
-//             mission_planner->mavlink_stream_.send(&_msg);
-//         }
-//     }
-// }
-
-
 bool Mission_planner::set_current_waypoint(uint16_t index)
 {
     bool success = false;

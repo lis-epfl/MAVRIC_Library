@@ -58,6 +58,55 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+mav_result_t Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+{
+    if (packet->param1 == 0) // Use indicated location
+    {
+        waypoint_handler->home_waypoint_ = Waypoint(MAV_FRAME_LOCAL_NED,
+                                                    MAV_CMD_NAV_WAYPOINT,
+                                                    0,
+                                                    packet->param1,
+                                                    packet->param2,
+                                                    packet->param3,
+                                                    packet->param4,
+                                                    packet->param5,
+                                                    packet->param6,
+                                                    packet->param7);
+        print_util_dbg_print("New home location set to (");
+        print_util_dbg_putfloat(packet->param5, 3);
+        print_util_dbg_print(", ");
+        print_util_dbg_putfloat(packet->param6, 3);
+        print_util_dbg_print(", ");
+        print_util_dbg_putfloat(packet->param7, 3);
+        print_util_dbg_print(")\r\n");
+    }
+    else if (packet->param1 == 1) // Use current position
+    {
+        waypoint_handler->home_waypoint_ = Waypoint(MAV_FRAME_LOCAL_NED,
+                                                    MAV_CMD_NAV_WAYPOINT,
+                                                    0,
+                                                    packet->param1,
+                                                    packet->param2,
+                                                    packet->param3,
+                                                    packet->param4,
+                                                    waypoint_handler->ins_.position_lf()[X],
+                                                    waypoint_handler->ins_.position_lf()[Y],
+                                                    waypoint_handler->ins_.position_lf()[Z]);
+        print_util_dbg_print("New home location set to current position: (");
+        print_util_dbg_putfloat(waypoint_handler->ins_.position_lf()[X], 3);
+        print_util_dbg_print(", ");
+        print_util_dbg_putfloat(waypoint_handler->ins_.position_lf()[Y], 3);
+        print_util_dbg_print(", ");
+        print_util_dbg_putfloat(waypoint_handler->ins_.position_lf()[Z], 3);
+        print_util_dbg_print(")\r\n");
+    }
+    else
+    {
+        return MAV_RESULT_DENIED;
+    }
+
+    return MAV_RESULT_ACCEPTED;
+}
 
 void Mavlink_waypoint_handler::send_count(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
 {
@@ -411,6 +460,17 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler(INS& ins, Navigation& navigat
     {
         waypoint_list_[i] = Waypoint();
     }
+
+    home_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                MAV_CMD_NAV_WAYPOINT,
+                                0,
+                                0.0f,
+                                0.0f,
+                                0.0f,
+                                0.0f,
+                                0.0f,
+                                0.0f,
+                                navigation_.takeoff_altitude);
 }
 
 bool Mavlink_waypoint_handler::init()
@@ -461,6 +521,17 @@ bool Mavlink_waypoint_handler::init()
     callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_msg_callback(&callback);
 
+    // Add callbacks for waypoint handler commands requests
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
+
+    callbackcmd.command_id = MAV_CMD_DO_SET_HOME; // 179
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_home;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+
     init_homing_waypoint();
 
     if(!init_success)
@@ -507,22 +578,10 @@ void Mavlink_waypoint_handler::init_homing_waypoint()
 
 const Waypoint& Mavlink_waypoint_handler::current_waypoint()
 {
-    // If there are no waypoints set, create hold position
+    // If there are no waypoints set, go to home
     if (waypoint_count_ == 0)
     {
-        waypoint_list_[0] = Waypoint(   MAV_FRAME_LOCAL_NED,
-                                        MAV_CMD_NAV_LOITER_UNLIM,
-                                        0,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        ins_.position_lf()[X],
-                                        ins_.position_lf()[Y],
-                                        ins_.position_lf()[Z]);
-        waypoint_count_ = 1;
-        current_waypoint_index_ = 0;
-        return waypoint_list_[0];
+        return home_waypoint();
     }
 
     // If it is a good index
@@ -530,31 +589,19 @@ const Waypoint& Mavlink_waypoint_handler::current_waypoint()
     {
         return waypoint_list_[current_waypoint_index_];
     }
-    else // TODO: Return an error
+    else
     {
-        // For now, return last waypoint structure
-        return waypoint_list_[waypoint_count_-1];
+        // For now, set to home
+        return home_waypoint();
     }
 }
 
 const Waypoint& Mavlink_waypoint_handler::next_waypoint()
 {
-    // If there are no waypoints set, create hold position
+    // If there are no waypoints set, go to home
     if (waypoint_count_ == 0)
     {
-        waypoint_list_[0] = Waypoint(   MAV_FRAME_LOCAL_NED,
-                                        MAV_CMD_NAV_LOITER_UNLIM,
-                                        0,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        ins_.position_lf()[X],
-                                        ins_.position_lf()[Y],
-                                        ins_.position_lf()[Z]);
-        waypoint_count_ = 1;
-        current_waypoint_index_ = 0;
-        return waypoint_list_[0];
+        return home_waypoint();
     }
 
     // If it is a good index
@@ -570,31 +617,19 @@ const Waypoint& Mavlink_waypoint_handler::next_waypoint()
             return waypoint_list_[0];
         }
     }
-    else // TODO: Return an error
+    else
     {
-        // For now, set to last waypoint structure
-        return waypoint_list_[waypoint_count_-1];
+        // For now, set to home
+        return home_waypoint();
     }
 }
 
 const Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i)
 {
-    // If there are no waypoints set, create hold position
+    // If there are no waypoints set, go to home
     if (waypoint_count_ == 0)
     {
-        waypoint_list_[0] = Waypoint(   MAV_FRAME_LOCAL_NED,
-                                        MAV_CMD_NAV_LOITER_UNLIM,
-                                        0,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        0.0f,
-                                        ins_.position_lf()[X],
-                                        ins_.position_lf()[Y],
-                                        ins_.position_lf()[Z]);
-        waypoint_count_ = 1;
-        current_waypoint_index_ = 0;
-        return waypoint_list_[0];
+        return home_waypoint();
     }
 
     if (i >= 0 && i < waypoint_count_)
@@ -603,8 +638,13 @@ const Waypoint& Mavlink_waypoint_handler::waypoint_from_index(int i)
     }
     else
     {
-        return waypoint_list_[waypoint_count_-1];
+        return home_waypoint();
     }
+}
+
+const Waypoint& Mavlink_waypoint_handler::home_waypoint()
+{
+    return home_waypoint_;
 }
 
 void Mavlink_waypoint_handler::advance_to_next_waypoint()
