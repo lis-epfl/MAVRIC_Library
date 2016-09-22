@@ -420,7 +420,6 @@ void Mavlink_waypoint_handler::mission_clear_all_callback(Mavlink_waypoint_handl
         if (waypoint_handler->waypoint_count_ > 0)
         {
             waypoint_handler->waypoint_count_ = 0;
-            //Mission_handler::reset_hold_waypoint(); TODO
 
             mavlink_message_t _msg;
             mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
