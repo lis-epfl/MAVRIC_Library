@@ -153,7 +153,7 @@ void Position_estimation::position_correction()
     else
     {
         // Wait for gps to initialized as we need an absolute altitude
-        if (init_gps_position)
+        if (is_gps_pos_initialized_)
         {
             // Correct barometer bias
             float current_altitude_gf = - local_position[Z] + origin_.altitude;
@@ -161,7 +161,7 @@ void Position_estimation::position_correction()
         }
     }
 
-    if (init_gps_position)
+    if (is_gps_pos_initialized_)
     {
         if (gps.healthy() == true)
         {
@@ -260,7 +260,7 @@ void Position_estimation::position_correction()
 
 void Position_estimation::gps_position_init()
 {
-    if ((init_gps_position == false) && (gps.healthy() == true))
+    if ((is_gps_pos_initialized_ == false) && (gps.healthy() == true))
     {
         if ((time_last_gps_posllh_msg < gps.last_position_update_us())
                 && (time_last_gps_velned_msg < gps.last_velocity_update_us()))
@@ -268,7 +268,7 @@ void Position_estimation::gps_position_init()
             time_last_gps_posllh_msg = gps.last_position_update_us();
             time_last_gps_velned_msg = gps.last_velocity_update_us();
 
-            init_gps_position = true;
+            is_gps_pos_initialized_ = true;
 
             origin_  = gps.position_gf();
             last_gps_pos           = local_position;
@@ -327,7 +327,7 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         time_last_barometer_msg(0),
         dt_s_(0.0f),
         last_update_s_(0.0f),
-        init_gps_position(false),
+        is_gps_pos_initialized_(false),
         last_alt(0),
         last_vel{0.0f,0.0f,0.0f},
         gravity(config.gravity),
@@ -361,7 +361,7 @@ bool Position_estimation::update(void)
         if (state.reset_position)
         {
             state.reset_position = false;
-            reset_origin_position();
+            reset_velocity_altitude();
         }
 
         position_integration();
@@ -381,17 +381,10 @@ bool Position_estimation::update(void)
 }
 
 
-void Position_estimation::reset_origin_position()
+void Position_estimation::reset_velocity_altitude()
 {
-    // reset origin to position where quad is armed if we have GPS
-    if (init_gps_position)
-    {
-        origin_  = gps.position_gf();
-        last_gps_pos           = local_position;
-    }
-
     // Correct barometer bias
-    if (init_gps_position)
+    if (is_gps_pos_initialized_)
     {
         float current_altitude_gf = - local_position[Z]
                                     + origin_.altitude;
@@ -411,7 +404,6 @@ void Position_estimation::reset_origin_position()
     for (int32_t i = 0; i < 3; i++)
     {
         last_vel[i] = 0.0f;
-        local_position[i] = 0.0f;
         vel[i] = 0.0f;
         vel_bf[i] = 0.0f;
     }

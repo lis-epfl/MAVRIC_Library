@@ -189,7 +189,7 @@ private:
     uint32_t time_last_barometer_msg;       ///< Time at which we received the last barometer message in ms
     float dt_s_;                            ///< Time interval between updates
     float last_update_s_;                   ///< Last update time in seconds
-    bool init_gps_position;                 ///< Boolean flag ensuring that the GPS was initialized
+    bool is_gps_pos_initialized_;           ///< Boolean flag ensuring that the GPS was initialized
 
 
     float last_alt;                         ///< Value of the last altitude estimation
@@ -208,10 +208,10 @@ private:
     const Sonar& sonar;                     ///< Reference to the sonar structure
 
     /**
-     * \brief   Reset the origin position and altitude
+     * \brief   Reset the velocity and altitude estimation to 0 and corrects barometer bias
      *
      */
-    void reset_origin_position();
+    void reset_velocity_altitude();
 
     /**
      * \brief   Direct integration of the position with the IMU data
