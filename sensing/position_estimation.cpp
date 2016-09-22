@@ -337,7 +337,7 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         barometer(barometer),
         sonar(sonar)
 {
-    // default GPS home position
+    // default GPS origin
     origin_ =  config.origin;
 
     for(uint8_t i = 0; i < 3; i++)
@@ -361,7 +361,7 @@ bool Position_estimation::update(void)
         if (state.reset_position)
         {
             state.reset_position = false;
-            reset_home_position();
+            reset_origin_position();
         }
 
         position_integration();
@@ -381,7 +381,7 @@ bool Position_estimation::update(void)
 }
 
 
-void Position_estimation::reset_home_position()
+void Position_estimation::reset_origin_position()
 {
     // reset origin to position where quad is armed if we have GPS
     if (init_gps_position)
@@ -389,12 +389,6 @@ void Position_estimation::reset_home_position()
         origin_  = gps.position_gf();
         last_gps_pos           = local_position;
     }
-    //else
-    //{
-    //origin_.longitude = HOME_LONGITUDE;
-    //origin_.latitude = HOME_LATITUDE;
-    //origin_.altitude = HOME_ALTITUDE;
-    //}
 
     // Correct barometer bias
     if (init_gps_position)
@@ -424,43 +418,6 @@ void Position_estimation::reset_home_position()
 }
 
 
-/* THIS IS EVIL */
-bool Position_estimation::set_home_position_global(global_position_t new_home_pos)
-{
-    bool result = false;
-
-    if (!state.is_armed())
-    {
-        //coord_conventions_change_origin(&local_position, new_home_pos);
-        origin_ = new_home_pos;
-
-        // Set new home position from msg
-        print_util_dbg_print("[POSITION ESTIMATION] Set new home location: ");
-        print_util_dbg_print_num(origin_.latitude * 10000000.0f, 10);
-        print_util_dbg_print(", ");
-        print_util_dbg_print_num(origin_.longitude * 10000000.0f, 10);
-        print_util_dbg_print(", ");
-        print_util_dbg_print_num(origin_.altitude * 1000.0f, 10);
-        print_util_dbg_print(")\r\n");
-
-        state.nav_plan_active = false;
-
-        result = true;
-    }
-
-    return result;
-}
-
-
-bool Position_estimation::set_home_to_current_position()
-{
-   print_util_dbg_print("[POSITION ESTIMATION] Set new home to current location: \r\n");
-   global_position_t new_origin;
-   coord_conventions_local_to_global_position(local_position, origin_, new_origin);
-   return set_home_position_global(new_origin);
-}
-
-
 Position_estimation::fence_violation_state_t Position_estimation::get_fence_violation_state() const
 {
     fence_violation_state_t fence_violation_state = IN_FENCE;
@@ -480,7 +437,7 @@ Position_estimation::conf_t Position_estimation::default_config()
 {
     conf_t conf = {};
 
-    // default home location (EFPL Esplanade)
+    // default origin location (EFPL Esplanade)
     conf.origin        = ORIGIN_EPFL;
 
     conf.gravity       = 9.81f;
