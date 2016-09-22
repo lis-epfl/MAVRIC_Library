@@ -43,7 +43,7 @@
 #ifndef MISSION_HANDLER_ON_GROUND__
 #define MISSION_HANDLER_ON_GROUND__
 
-#include "control/iattitude_controller.hpp"
+#include "control/attitude_controller_i.hpp"
 #include "mission/mission_handler.hpp"
 #include "mission/navigation.hpp"
 
@@ -62,12 +62,12 @@ public:
      * \param   attitude_controller     The reference to the attitude controls
      * \param   navigation              The reference to the navigation class
      */
-     Mission_handler_on_ground(/*IAttitude_controller& attitude_controller, */Navigation& navigation);
+     Mission_handler_on_ground(/*Attitude_controller_I& attitude_controller, */Navigation& navigation);
 
 
     /**
      * \brief   Checks if the waypoint is on the ground
-     *  
+     *
      * \details     DOES NOT CURRENTLY CHECK IF WE ARE ON GROUND
      *
      * \param   wpt                 The waypoint class
@@ -78,7 +78,7 @@ public:
 
     /**
      * \brief   Does nothing
-     *  
+     *
      * \details     Does nothing
      *
      * \param   wpt                 The waypoint class
@@ -89,7 +89,7 @@ public:
 
     /**
      * \brief   Returns MISSION_IN_PROGRESS
-     *  
+     *
      * \details     Sets thrust to low and returns MISSION_IN_PROGRESS
      *
      * \return  MISSION_IN_PROGRESS
