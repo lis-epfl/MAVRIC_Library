@@ -250,7 +250,26 @@ protected:
      */
     static void mission_set_current_callback(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg);
     
+    /**
+     * \brief   Navigate to the home position and hold
+     *
+     * \details N.B. Intentionally mislabelled to go to home, not return to launch
+     *
+     * \param   mission_planner     The pointer to the object of the Mission planner takeoff handler
+     * \param   packet              The pointer to the structure of the MAVLink command message long
+     *
+     * \return  The MAV_RESULT of the command
+     */
+    static mav_result_t nav_go_home(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 
+    /**
+     * \brief   Starts the mission
+     *
+     * \param   mission_planner         The pointer to the mission planner class
+     * \param   sysid                   The system ID
+     * \param   msg                     The received MAVLink message structure with the number of the current waypoint
+     *
+     */
     static mav_result_t mission_start_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet);
 
 

@@ -91,6 +91,27 @@ bool Mission_planner::set_current_waypoint(uint16_t index)
     return success;
 }
 
+mav_result_t Mission_planner::nav_go_home(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+{
+    bool success = false;
+
+    if (mission_planner->state_.is_auto())
+    {
+        // Get home waypoint
+        Waypoint home = mission_planner->waypoint_handler_.home_waypoint();
+        success = mission_planner->insert_ad_hoc_waypoint(home);
+    }
+
+    if (success)
+    {
+        print_util_dbg_print("[MISSION_PLANNER]: Return to home\r\n");
+        return MAV_RESULT_ACCEPTED;
+    }
+    else
+    {
+        return MAV_RESULT_DENIED;
+    }
+}
 
 mav_result_t Mission_planner::mission_start_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet)
 {
@@ -735,6 +756,15 @@ bool Mission_planner::init()
 
     // Add callbacks for waypoint handler commands requests
     Mavlink_message_handler::cmd_callback_t callbackcmd;
+
+    // N.B. intentionally mislabelled to go to home
+    callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
+    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &nav_go_home;
+    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
     callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;

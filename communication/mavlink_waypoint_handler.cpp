@@ -63,15 +63,15 @@ mav_result_t Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoi
     if (packet->param1 == 0) // Use indicated location
     {
         waypoint_handler->home_waypoint_ = Waypoint(MAV_FRAME_LOCAL_NED,
-                                                    MAV_CMD_NAV_WAYPOINT,
+                                                    MAV_CMD_NAV_LOITER_UNLIM,
                                                     0,
-                                                    packet->param1,
-                                                    packet->param2,
-                                                    packet->param3,
-                                                    packet->param4,
-                                                    packet->param5,
-                                                    packet->param6,
-                                                    packet->param7);
+                                                    0.0f,
+                                                    0.0f,
+                                                    0.0f,
+                                                    0.0f,
+                                                    0.0f,
+                                                    0.0f,
+                                                    0.0f);
         print_util_dbg_print("New home location set to (");
         print_util_dbg_putfloat(packet->param5, 3);
         print_util_dbg_print(", ");
@@ -83,12 +83,12 @@ mav_result_t Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoi
     else if (packet->param1 == 1) // Use current position
     {
         waypoint_handler->home_waypoint_ = Waypoint(MAV_FRAME_LOCAL_NED,
-                                                    MAV_CMD_NAV_WAYPOINT,
+                                                    MAV_CMD_NAV_LOITER_UNLIM,
                                                     0,
-                                                    packet->param1,
-                                                    packet->param2,
-                                                    packet->param3,
-                                                    packet->param4,
+                                                    0.0f,
+                                                    0.0f,
+                                                    0.0f,
+                                                    0.0f,
                                                     waypoint_handler->ins_.position_lf()[X],
                                                     waypoint_handler->ins_.position_lf()[Y],
                                                     waypoint_handler->ins_.position_lf()[Z]);
@@ -470,7 +470,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler( const INS& ins,
     }
 
     home_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                MAV_CMD_NAV_WAYPOINT,
+                                MAV_CMD_NAV_LOITER_UNLIM,
                                 0,
                                 0.0f,
                                 0.0f,
