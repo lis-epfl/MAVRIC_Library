@@ -52,10 +52,9 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_on_ground::Mission_handler_on_ground(/*Attitude_controller_I& attitude_controller, */Navigation& navigation):
-            Mission_handler(),
+Mission_handler_on_ground::Mission_handler_on_ground(/*Attitude_controller_I& attitude_controller, */):
+            Mission_handler()
             /*attitude_controller_(attitude_controller),*/
-            navigation_(navigation)
 {
 
 }

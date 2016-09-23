@@ -47,14 +47,12 @@ template <class T1, class T2>
 Mission_handler_landing<T1, T2>::Mission_handler_landing(   T1& desc_to_small_alt_controller,
                                                             T2& desc_to_ground_controller,
                                                             const INS& ins,
-                                                            Navigation& navigation,
                                                             State& state,
                                                             conf_t config):
             Mission_handler(),
             desc_to_small_alt_controller_(desc_to_small_alt_controller),
             desc_to_ground_controller_(desc_to_ground_controller),
             ins_(ins),
-            navigation_(navigation),
             state_(state)
 {
     waypoint_ = Waypoint (  MAV_FRAME_LOCAL_NED,

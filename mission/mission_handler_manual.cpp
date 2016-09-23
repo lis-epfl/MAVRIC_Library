@@ -52,9 +52,8 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_manual::Mission_handler_manual(Navigation& navigation):
-            Mission_handler(),
-            navigation_(navigation)
+Mission_handler_manual::Mission_handler_manual():
+            Mission_handler()
 {
 }
 

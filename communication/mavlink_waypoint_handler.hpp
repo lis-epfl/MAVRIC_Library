@@ -47,8 +47,9 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "mission/navigation.hpp"
+#include "mission/mission_handler_registry.hpp"
 #include "mission/waypoint.hpp"
+#include "sensing/ins.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 

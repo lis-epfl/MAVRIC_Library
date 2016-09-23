@@ -44,7 +44,6 @@
 #define MISSION_HANDLER_MANUAL__
 
 #include "mission/mission_handler.hpp"
-#include "mission/navigation.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -57,10 +56,8 @@ public:
 
     /**
      * \brief   Initialize the manual mission planner handler
-     *
-     * \param   navigation              The reference to the navigation class
      */
-     Mission_handler_manual(Navigation& navigation);
+     Mission_handler_manual();
 
 
     /**
@@ -103,7 +100,7 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    Navigation& navigation_;                                    ///< The reference to the navigation structure
+    
 };
 
 

@@ -491,8 +491,6 @@ void Mission_planner::critical_handler()
     // Only handle critical if auto or in hold position
     if (state_.mav_mode().is_auto() || state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD)
     {
-        float rel_pos[3];
-
         //Check whether we entered critical mode due to a battery low level or a lost
         // connection with the GND station or are out of fence control
         // If one of these happens, we need to land RIGHT NOW
@@ -583,12 +581,6 @@ void Mission_planner::critical_handler()
 
             // Set this new waypoint
             switch_mission_handler(critical_waypoint_);
-
-            for (uint8_t i = 0; i < 3; i++)
-            {
-                rel_pos[i] = critical_waypoint_.local_pos()[i] - ins_.position_lf()[i];
-            }
-            navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
         }
 
         // Handle critical state
@@ -698,13 +690,12 @@ void Mission_planner::set_internal_state(internal_state_t new_internal_state)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_planner::Mission_planner(INS& ins, Navigation& navigation, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mavlink_waypoint_handler& waypoint_handler, Mission_handler_registry& mission_handler_registry, conf_t config):
+Mission_planner::Mission_planner(INS& ins, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mavlink_waypoint_handler& waypoint_handler, Mission_handler_registry& mission_handler_registry, conf_t config):
             waypoint_handler_(waypoint_handler),
             mission_handler_registry_(mission_handler_registry),
             critical_next_state_(false),
             mavlink_stream_(mavlink_stream),
             state_(state),
-            navigation_(navigation),
             ins_(ins),
             ahrs_(ahrs),
             manual_control_(manual_control),

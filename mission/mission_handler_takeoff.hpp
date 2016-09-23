@@ -45,7 +45,6 @@
 
 #include "communication/state.hpp"
 #include "mission/mission_handler.hpp"
-#include "mission/navigation.hpp"
 
 /*
  * The handler class takes in a template parameter that allows control inputs.
@@ -61,12 +60,10 @@ public:
      *
      * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation class
      * \param   state                   The reference to the state class
      */
      Mission_handler_takeoff(   T& controller,
                                 const INS& ins,
-                                Navigation& navigation,
                                 State& state);
 
     /**
@@ -113,7 +110,6 @@ public:
 protected:
     T& controller_;                                             ///< The reference to the controller
     const INS& ins_;                                            ///< The reference to the ins interface
-    Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
 
     Waypoint waypoint_;
