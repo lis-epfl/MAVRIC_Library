@@ -190,34 +190,53 @@ void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* 
     if (((uint8_t)packet.target_system == (uint8_t)sysid)
             && ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
     {
-            // Erase current waypoint list
-            waypoint_handler->waypoint_count_ = 0;
+        // Erase current waypoint list
+        waypoint_handler->waypoint_count_ = 0;
 
-            // Save the number of waypoints GCS is about to send
-            if (packet.count > MAX_WAYPOINTS)
-            {
-                packet.count = MAX_WAYPOINTS;
-            }
-            waypoint_handler->requested_waypoint_count_ = packet.count;
+        // Save the number of waypoints GCS is about to send
+        if (packet.count > MAX_WAYPOINTS)
+        {
+            packet.count = MAX_WAYPOINTS;
+        }
+        waypoint_handler->requested_waypoint_count_ = packet.count;
 
-            print_util_dbg_print("[Mavlink_waypoint_handler] Receiving ");
-            print_util_dbg_print_num(packet.count, 10);
-            print_util_dbg_print(" new waypoints.");
+        print_util_dbg_print("[Mavlink_waypoint_handler] Receiving ");
+        print_util_dbg_print_num(packet.count, 10);
+        print_util_dbg_print(" new waypoints.");
+        print_util_dbg_print("\r\n");
+
+        if (waypoint_handler->requested_waypoint_count_ > 0) // Request first waypoint
+        {
+            mavlink_message_t _msg;
+            mavlink_msg_mission_request_pack(sysid,
+                                             waypoint_handler->mavlink_stream_.compid(),
+                                             &_msg,
+                                             msg->sysid,
+                                             msg->compid,
+                                             0);
+            waypoint_handler->mavlink_stream_.send(&_msg);
+
+            print_util_dbg_print("[Mavlink_waypoint_handler] Asking for waypoint ");
+            print_util_dbg_print_num(0, 10);
             print_util_dbg_print("\r\n");
         }
+        else // Acknowledge empty waypoint list
+        {
+            MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
 
-        mavlink_message_t _msg;
-        mavlink_msg_mission_request_pack(sysid,
+            mavlink_message_t _msg;
+            mavlink_msg_mission_ack_pack(waypoint_handler->mavlink_stream_.sysid(),
                                          waypoint_handler->mavlink_stream_.compid(),
                                          &_msg,
                                          msg->sysid,
-                                         msg->compid,
-                                         0);
-        waypoint_handler->mavlink_stream_.send(&_msg);
+                                         msg->compid, 
+                                         type);
+            waypoint_handler->mavlink_stream_.send(&_msg);
 
-        print_util_dbg_print("[Mavlink_waypoint_handler] Asking for waypoint ");
-        print_util_dbg_print_num(0, 10);
-        print_util_dbg_print("\r\n");
+            print_util_dbg_print("[Mavlink_waypoint_handler] Flight plan received!\n");
+            waypoint_handler->waypoint_received_time_ms_ = time_keeper_get_ms();
+        }
+    }
 }
 
 void Mavlink_waypoint_handler::mission_item_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
