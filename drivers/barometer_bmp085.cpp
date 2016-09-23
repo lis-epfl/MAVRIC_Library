@@ -96,7 +96,7 @@ Barometer_BMP085::Barometer_BMP085(I2c& i2c):
     ac4_(32741),
     ac5_(32757),
     ac6_(23153),
-    mb_(1),     // TODO check value in datasheet
+    mb_(-32768),
     mc_(-8711),
     md_(2868),
     b1_(6190),
@@ -125,11 +125,45 @@ bool Barometer_BMP085::init(void)
     // Test if the sensor if here
     res &= i2c_.probe(BMP085_SLAVE_ADDRESS);
 
+    // Read calibration data
+    res &= read_eprom_calibration();
+
     // Reset Barometer_BMP085 state
     state_ = BMP085_IDLE;
 
     return res;
 }
+
+
+bool Barometer_BMP085::read_eprom_calibration(void)
+{
+    bool res = true;
+
+    uint8_t start_address = BMP085_CAL_AC1;
+    uint8_t buffer[22];
+
+    // Read EPROM
+    res &= i2c_.write(&start_address, 1, BMP085_SLAVE_ADDRESS);
+    res &= i2c_.read(buffer, 22, BMP085_SLAVE_ADDRESS);
+
+    if (res)
+    {
+        ac1_ = (int16_t)(buffer[0] << 8 | buffer[1]);
+        ac2_ = (int16_t)(buffer[2] << 8 | buffer[3]);
+        ac3_ = (int16_t)(buffer[4] << 8 | buffer[5]);
+        ac4_ = (uint16_t)(buffer[6] << 8 | buffer[7]);
+        ac5_ = (uint16_t)(buffer[8] << 8 | buffer[9]);
+        ac6_ = (uint16_t)(buffer[10] << 8 | buffer[11]);
+        b1_  = (int16_t)(buffer[12] << 8 | buffer[13]);
+        b2_  = (int16_t)(buffer[14] << 8 | buffer[15]);
+        mb_  = (int16_t)(buffer[16] << 8 | buffer[17]);
+        mc_  = (int16_t)(buffer[18] << 8 | buffer[19]);
+        md_  = (int16_t)(buffer[20] << 8 | buffer[21]);
+    }
+
+    return res;
+}
+
 
 
 bool Barometer_BMP085::update(void)
