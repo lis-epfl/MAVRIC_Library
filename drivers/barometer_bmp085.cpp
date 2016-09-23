@@ -111,7 +111,6 @@ Barometer_BMP085::Barometer_BMP085(I2c& i2c):
     pressure_           = 0.0f;
     temperature_        = 0.0f;
     altitude_gf_        = 0.0f;
-    altitude_filtered   = 0.0f;
     speed_lf_           = 0.0f;
     last_update_us_     = 0.0f;
     temperature_        = 24.0f;    // Nice day
@@ -236,26 +235,23 @@ bool Barometer_BMP085::update(void)
             altitude_raw = maths_median_filter_3x(last_altitudes_[0], last_altitudes_[1], last_altitudes_[2]);
 
             // Keep old, filtered altitude
-            altitude_filtered_old = altitude_filtered;
+            altitude_filtered_old = altitude_gf_;
 
             // Low pass filter the altitude, only if this is not a spike
             if (maths_f_abs(altitude_raw - altitude_filtered_old) < 15.0f)
             {
-                altitude_filtered = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_raw;
+                altitude_gf_ = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_raw;
             }
             else
             {
-                altitude_filtered = altitude_raw;
+                altitude_gf_ = altitude_raw;
             }
-
-            // remove bias
-            altitude_gf_ = altitude_filtered;
 
             // Time interval since last update
             dt_s_ = (time_keeper_get_us() - last_update_us_) / 1000000.0f;
 
             // Compute new vertical speed from two last filtered altitudes
-            new_speed_lf = - (altitude_filtered - altitude_filtered_old) / dt_s_;
+            new_speed_lf = - (altitude_gf_ - altitude_filtered_old) / dt_s_;
 
             // Remove spikes
             if (maths_f_abs(new_speed_lf) > 20)
