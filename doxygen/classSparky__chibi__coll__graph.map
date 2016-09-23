@@ -7,7 +7,7 @@
 <area shape="rect" id="node12" href="$classI2c__chibios.html" title="I2C peripheral driver using ChibiOS/HAL." alt="" coords="464,394,571,566"/>
 <area shape="rect" id="node14" href="$classI2c.html" title="{I2c\n||+ init()\l+ probe()\l+ write()\l+ read()\l+ transfer()\l}" alt="" coords="475,67,560,221"/>
 <area shape="rect" id="node16" href="$classBarometer__MS5611.html" title="Driver for the MS5611 barometer." alt="" coords="595,333,904,627"/>
-<area shape="rect" id="node18" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="663,6,836,282"/>
+<area shape="rect" id="node18" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="635,6,864,282"/>
 <area shape="rect" id="node20" href="$classState__display__sparky__v2.html" title="{State_display_sparky_v2\n||+ State_display_sparky_v2()\l+ update()\l}" alt="" coords="928,429,1115,531"/>
 <area shape="rect" id="node22" href="$classState__display.html" title="Interface class for state display." alt="" coords="971,75,1072,213"/>
 <area shape="rect" id="node24" href="$classPwm__chibios.html" title="Wrapper class for PWM using ChibiOS/HAL." alt="" coords="1139,403,1296,557"/>

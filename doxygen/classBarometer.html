@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a>  </div>
+<a href="#pro-static-methods">Static Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Barometer Class Reference</div>  </div>
 </div><!--header-->
@@ -104,6 +104,8 @@ Inheritance diagram for Barometer:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8897b528e81035a869f01414dad13fcc"></a><!-- doxytag: member="Barometer::Barometer" ref="a8897b528e81035a869f01414dad13fcc" args="(float pressure_at_sea_level=101325.0f)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>Barometer</b> (float <a class="el" href="classBarometer.html#af663650061973eaae325530bdd079dad">pressure_at_sea_level</a>=101325.0f)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#ab974654bfaace814da10856ca87526b3">init</a> (void)=0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the sensor.  <a href="#ab974654bfaace814da10856ca87526b3"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#aba694236e900ea8bdd06aae6eda2e62d">update</a> (void)=0</td></tr>
@@ -111,39 +113,35 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a0c9353d8be366f2f5eec9550ba837af3">last_update_us</a> (void) const =0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the last update time in microseconds.  <a href="#a0c9353d8be366f2f5eec9550ba837af3"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a811cffa4af95a25948ab5244118bd981">pressure</a> (void) const =0</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the pressure.  <a href="#a811cffa4af95a25948ab5244118bd981"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the pressure (in Pa)  <a href="#a811cffa4af95a25948ab5244118bd981"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#ab3c38d1f210a0cfaae0246c25b315f45">altitude_gf</a> (void) const =0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the altitude in meters above sea level.  <a href="#ab3c38d1f210a0cfaae0246c25b315f45"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a198bd738afc5212b93dabdeaa4e63080">vertical_speed_lf</a> (void) const =0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the vertical speed in meters/second.  <a href="#a198bd738afc5212b93dabdeaa4e63080"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a6e087f5af86788588039474cc8c1d389">temperature</a> (void) const =0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get sensor temperature.  <a href="#a6e087f5af86788588039474cc8c1d389"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359">has_been_calibrated</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the flag stating if the barometer has been calibrated.  <a href="#a39b6b8ce5ce4bce0eaf002ed4f53d359"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4">calibrate_bias</a> (float current_altitude_gf)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Correct altitude offset using current altitude.  <a href="#a4d978549f2dbc110a0e92c7d6c8a7ce4"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a8e5b1fc3eeb41f802c1252bb02fa8305">altitude_from_pressure</a> (float <a class="el" href="classBarometer.html#a811cffa4af95a25948ab5244118bd981">pressure</a>, float altitude_bias=0)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compue altitude above sea level from pressure.  <a href="#a8e5b1fc3eeb41f802c1252bb02fa8305"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af01c889a2b36d3f1e2b9b094dd91f17a"></a><!-- doxytag: member="Barometer::altitude_bias_gf_" ref="af01c889a2b36d3f1e2b9b094dd91f17a" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#af01c889a2b36d3f1e2b9b094dd91f17a">altitude_bias_gf_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Offset of the barometer sensor for matching GPS altitude value. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdf5e59e29258d4a9d71db2f5be41daa"></a><!-- doxytag: member="Barometer::has_been_calibrated_" ref="abdf5e59e29258d4a9d71db2f5be41daa" args="" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#abdf5e59e29258d4a9d71db2f5be41daa">has_been_calibrated_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag stating if the barometer has been calibrated. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#aebdd61556f8c58cb8a11c527896b1569">altitude_from_pressure</a> (float <a class="el" href="classBarometer.html#a811cffa4af95a25948ab5244118bd981">pressure</a>, float <a class="el" href="classBarometer.html#af663650061973eaae325530bdd079dad">pressure_at_sea_level</a>=<a class="el" href="classBarometer.html#af663650061973eaae325530bdd079dad">pressure_at_sea_level</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute altitude above sea level from pressure.  <a href="#aebdd61556f8c58cb8a11c527896b1569"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a9c0adda16abb188f353cca394dc96c53">compute_pressure_at_sea_level</a> (float <a class="el" href="classBarometer.html#a811cffa4af95a25948ab5244118bd981">pressure</a>, float altitude)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute pressure at sea level from pressure and altitude.  <a href="#a9c0adda16abb188f353cca394dc96c53"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#af663650061973eaae325530bdd079dad">pressure_at_sea_level</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the pressure at sea level  The pressure at sea level is used to compute altitude from pressure.  <a href="#af663650061973eaae325530bdd079dad"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#ac69a5f330393973a87a175949a03ae9f">set_pressure_at_sea_level</a> (float <a class="el" href="classBarometer.html#af663650061973eaae325530bdd079dad">pressure_at_sea_level</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the pressure at sea level  The pressure at sea level is used to compute altitude from pressure.  <a href="#ac69a5f330393973a87a175949a03ae9f"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Interface class for barometers. </p>
 </div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a8e5b1fc3eeb41f802c1252bb02fa8305"></a><!-- doxytag: member="Barometer::altitude_from_pressure" ref="a8e5b1fc3eeb41f802c1252bb02fa8305" args="(float pressure, float altitude_bias=0)" -->
+<a class="anchor" id="aebdd61556f8c58cb8a11c527896b1569"></a><!-- doxytag: member="Barometer::altitude_from_pressure" ref="aebdd61556f8c58cb8a11c527896b1569" args="(float pressure, float pressure_at_sea_level=pressure_at_sea_level())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float <a class="el" href="classBarometer.html#a8e5b1fc3eeb41f802c1252bb02fa8305">Barometer::altitude_from_pressure</a> </td>
+          <td class="memname">float <a class="el" href="classBarometer.html#aebdd61556f8c58cb8a11c527896b1569">Barometer::altitude_from_pressure</a> </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
           <td class="paramname"><em>pressure</em>, </td>
@@ -152,7 +150,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>altitude_bias</em> = <code>0</code>&#160;</td>
+          <td class="paramname"><em>pressure_at_sea_level</em> = <code><a class="el" href="classBarometer.html#af663650061973eaae325530bdd079dad">pressure_at_sea_level</a>()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -163,11 +161,11 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 </div>
 <div class="memdoc">
 
-<p>Compue altitude above sea level from pressure. </p>
+<p>Compute altitude above sea level from pressure. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">pressure</td><td>Current atmospheric pressure </td></tr>
-    <tr><td class="paramname">altitude_bias</td><td>Altitude correction (optional)</td></tr>
+    <tr><td class="paramname">pressure</td><td>Current atmospheric pressure (in Pa) </td></tr>
+    <tr><td class="paramname">pressure_at_sea_level</td><td>Pressure at sea level (in Pa) (optional)</td></tr>
   </table>
   </dd>
 </dl>
@@ -176,8 +174,8 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classBarometer_a8e5b1fc3eeb41f802c1252bb02fa8305_icgraph.png" border="0" usemap="#classBarometer_a8e5b1fc3eeb41f802c1252bb02fa8305_icgraph" alt=""/></div>
-<map name="classBarometer_a8e5b1fc3eeb41f802c1252bb02fa8305_icgraph" id="classBarometer_a8e5b1fc3eeb41f802c1252bb02fa8305_icgraph">
+<div class="center"><img src="classBarometer_aebdd61556f8c58cb8a11c527896b1569_icgraph.png" border="0" usemap="#classBarometer_aebdd61556f8c58cb8a11c527896b1569_icgraph" alt=""/></div>
+<map name="classBarometer_aebdd61556f8c58cb8a11c527896b1569_icgraph" id="classBarometer_aebdd61556f8c58cb8a11c527896b1569_icgraph">
 <area shape="rect" id="node3" href="classBarometer__BMP085.html#abfadb217c2295c76138d0c251c713dbd" title="Main update function &#160;Reads new values from sensor." alt="" coords="277,5,464,35"/></map>
 </div>
 </p>
@@ -205,67 +203,42 @@ Here is the caller graph for this function:</div>
 
 <p>Implemented in <a class="el" href="classBarometer__MS5611.html#ad216194b69c06890e4b72466e2dee1b9">Barometer_MS5611</a>, <a class="el" href="classBarometer__BMP085.html#ac2c1e5ae5e80c530b6d9020c43edad76">Barometer_BMP085</a>, and <a class="el" href="classBarometer__sim.html#aaa88190e8ef8a6d9b8ddf9f06c6f03fb">Barometer_sim</a>.</p>
 
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classBarometer_ab3c38d1f210a0cfaae0246c25b315f45_icgraph.png" border="0" usemap="#classBarometer_ab3c38d1f210a0cfaae0246c25b315f45_icgraph" alt=""/></div>
-<map name="classBarometer_ab3c38d1f210a0cfaae0246c25b315f45_icgraph" id="classBarometer_ab3c38d1f210a0cfaae0246c25b315f45_icgraph">
-<area shape="rect" id="node3" href="classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4" title="Correct altitude offset using current altitude." alt="" coords="205,5,376,35"/></map>
-</div>
-</p>
-
 </div>
 </div>
-<a class="anchor" id="a4d978549f2dbc110a0e92c7d6c8a7ce4"></a><!-- doxytag: member="Barometer::calibrate_bias" ref="a4d978549f2dbc110a0e92c7d6c8a7ce4" args="(float current_altitude_gf)" -->
+<a class="anchor" id="a9c0adda16abb188f353cca394dc96c53"></a><!-- doxytag: member="Barometer::compute_pressure_at_sea_level" ref="a9c0adda16abb188f353cca394dc96c53" args="(float pressure, float altitude)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4">Barometer::calibrate_bias</a> </td>
+          <td class="memname">float <a class="el" href="classBarometer.html#a9c0adda16abb188f353cca394dc96c53">Barometer::compute_pressure_at_sea_level</a> </td>
           <td>(</td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>current_altitude_gf</em></td><td>)</td>
+          <td class="paramname"><em>pressure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>altitude</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Correct altitude offset using current altitude. </p>
+<p>Compute pressure at sea level from pressure and altitude. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">current_altitude_gf</td><td>Current altitude in global frame </td></tr>
+    <tr><td class="paramname">pressure</td><td>Current atmospheric pressure (in Pa) </td></tr>
+    <tr><td class="paramname">altitude_</td><td>Altitude</td></tr>
   </table>
   </dd>
 </dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classBarometer_a4d978549f2dbc110a0e92c7d6c8a7ce4_cgraph.png" border="0" usemap="#classBarometer_a4d978549f2dbc110a0e92c7d6c8a7ce4_cgraph" alt=""/></div>
-<map name="classBarometer_a4d978549f2dbc110a0e92c7d6c8a7ce4_cgraph" id="classBarometer_a4d978549f2dbc110a0e92c7d6c8a7ce4_cgraph">
-<area shape="rect" id="node3" href="classBarometer.html#ab3c38d1f210a0cfaae0246c25b315f45" title="Get the altitude in meters above sea level." alt="" coords="225,5,375,35"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a39b6b8ce5ce4bce0eaf002ed4f53d359"></a><!-- doxytag: member="Barometer::has_been_calibrated" ref="a39b6b8ce5ce4bce0eaf002ed4f53d359" args="() const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359">Barometer::has_been_calibrated</a> </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Gets the flag stating if the barometer has been calibrated. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>has_been_read_ </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Pressure at sea level (in Pa) </dd></dl>
 
 </div>
 </div>
@@ -328,10 +301,78 @@ Here is the call graph for this function:</div>
 </div>
 <div class="memdoc">
 
-<p>Return the pressure. </p>
+<p>Return the pressure (in Pa) </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
 <p>Implemented in <a class="el" href="classBarometer__MS5611.html#aa36bf8114604fd453c5de23ab633351a">Barometer_MS5611</a>, <a class="el" href="classBarometer__BMP085.html#ad66d38f69a61a1b035784c15bcec4d06">Barometer_BMP085</a>, and <a class="el" href="classBarometer__sim.html#a02399571d03470f623d29ca97755edc9">Barometer_sim</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af663650061973eaae325530bdd079dad"></a><!-- doxytag: member="Barometer::pressure_at_sea_level" ref="af663650061973eaae325530bdd079dad" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classBarometer.html#af663650061973eaae325530bdd079dad">Barometer::pressure_at_sea_level</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get the pressure at sea level  The pressure at sea level is used to compute altitude from pressure. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pressure_at_sea_level</td><td>(in Pa) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBarometer_af663650061973eaae325530bdd079dad_icgraph.png" border="0" usemap="#classBarometer_af663650061973eaae325530bdd079dad_icgraph" alt=""/></div>
+<map name="classBarometer_af663650061973eaae325530bdd079dad_icgraph" id="classBarometer_af663650061973eaae325530bdd079dad_icgraph">
+<area shape="rect" id="node3" href="classBarometer.html#ac69a5f330393973a87a175949a03ae9f" title="Update the pressure at sea level &#160;The pressure at sea level is used to compute altitude from pressure..." alt="" coords="275,5,520,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ac69a5f330393973a87a175949a03ae9f"></a><!-- doxytag: member="Barometer::set_pressure_at_sea_level" ref="ac69a5f330393973a87a175949a03ae9f" args="(float pressure_at_sea_level)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classBarometer.html#ac69a5f330393973a87a175949a03ae9f">Barometer::set_pressure_at_sea_level</a> </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>pressure_at_sea_level</em></td><td>)</td>
+          <td><code> [static, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Update the pressure at sea level  The pressure at sea level is used to compute altitude from pressure. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pressure_at_sea_level</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBarometer_ac69a5f330393973a87a175949a03ae9f_cgraph.png" border="0" usemap="#classBarometer_ac69a5f330393973a87a175949a03ae9f_cgraph" alt=""/></div>
+<map name="classBarometer_ac69a5f330393973a87a175949a03ae9f_cgraph" id="classBarometer_ac69a5f330393973a87a175949a03ae9f_cgraph">
+<area shape="rect" id="node3" href="classBarometer.html#af663650061973eaae325530bdd079dad" title="Get the pressure at sea level &#160;The pressure at sea level is used to compute altitude from pressure..." alt="" coords="300,5,519,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -424,7 +465,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 15:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

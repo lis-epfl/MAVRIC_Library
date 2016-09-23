@@ -33,7 +33,7 @@
 <area shape="rect" id="node65" href="$classAdc.html" title="{Adc\n||+ init()\l+ update()\l+ voltage()\l}" alt="" coords="2576,343,2659,463"/>
 <area shape="rect" id="node67" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="2693,619,2824,877"/>
 <area shape="rect" id="node69" href="$classHmc5883l.html" title="Driver for HMC5883L magnetometer." alt="" coords="2848,636,2979,860"/>
-<area shape="rect" id="node71" href="$classMagnetometer.html" title="Abstract class for magnetometers." alt="" coords="2848,299,2979,506"/>
-<area shape="rect" id="node73" href="$classBarometer__BMP085.html" title="Driver for the BMP085 barometer." alt="" coords="3003,636,3179,860"/>
-<area shape="rect" id="node75" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="3004,265,3177,541"/>
+<area shape="rect" id="node71" href="$classMagnetometer.html" title="Abstract class for magnetometers." alt="" coords="2841,299,2972,506"/>
+<area shape="rect" id="node73" href="$classBarometer__BMP085.html" title="Driver for the BMP085 barometer." alt="" coords="3016,636,3192,860"/>
+<area shape="rect" id="node75" href="$classBarometer.html" title="Interface class for barometers." alt="" coords="2996,265,3225,541"/>
 </map>

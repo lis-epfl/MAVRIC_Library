@@ -129,39 +129,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00046"></a>00046 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {
 <a name="l00047"></a>00047 <span class="preprocessor">#endif</span>
 <a name="l00048"></a>00048 <span class="preprocessor"></span>
-<a name="l00049"></a>00049 <span class="preprocessor">#define MAVLINK_SYS_ID 0</span>
-<a name="l00050"></a>00050 <span class="preprocessor"></span>
-<a name="l00052"></a>00052 <span class="preprocessor">#define M_REAR_LEFT 0       ///&lt; Define the index for the control</span>
-<a name="l00053"></a>00053 <span class="preprocessor"></span><span class="preprocessor">#define M_FRONT_LEFT 1      ///&lt; Define the index for the control</span>
-<a name="l00054"></a>00054 <span class="preprocessor"></span><span class="preprocessor">#define M_FRONT_RIGHT 2     ///&lt; Define the index for the control</span>
-<a name="l00055"></a>00055 <span class="preprocessor"></span><span class="preprocessor">#define M_REAR_RIGHT 3      ///&lt; Define the index for the control</span>
-<a name="l00056"></a>00056 <span class="preprocessor"></span>
-<a name="l00057"></a>00057 <span class="preprocessor">#define M_FR_DIR ( 1)       ///&lt; Define the front right motor turn direction</span>
-<a name="l00058"></a>00058 <span class="preprocessor"></span><span class="preprocessor">#define M_FL_DIR (-1)       ///&lt; Define the front left motor turn direction</span>
-<a name="l00059"></a>00059 <span class="preprocessor"></span><span class="preprocessor">#define M_RR_DIR (-1)       ///&lt; Define the motor turn direction</span>
-<a name="l00060"></a>00060 <span class="preprocessor"></span><span class="preprocessor">#define M_RL_DIR ( 1)       ///&lt; Define the motor turn direction</span>
-<a name="l00061"></a>00061 <span class="preprocessor"></span>
-<a name="l00062"></a>00062 <span class="preprocessor">#define M_FRONT 0           ///&lt; Define the index for the movement control to go front</span>
-<a name="l00063"></a>00063 <span class="preprocessor"></span><span class="preprocessor">#define M_RIGHT 1           ///&lt; Define the index for the movement control to go right</span>
-<a name="l00064"></a>00064 <span class="preprocessor"></span><span class="preprocessor">#define M_REAR 2            ///&lt; Define the index for the movement control to go backward</span>
-<a name="l00065"></a>00065 <span class="preprocessor"></span><span class="preprocessor">#define M_LEFT 3            ///&lt; Define the index for the movement control to go left</span>
-<a name="l00066"></a>00066 <span class="preprocessor"></span>
-<a name="l00067"></a>00067 <span class="preprocessor">#define M_FRONT_DIR ( 1)    ///&lt; Define the direction of control</span>
-<a name="l00068"></a>00068 <span class="preprocessor"></span><span class="preprocessor">#define M_RIGHT_DIR (-1)    ///&lt; Define the direction of control</span>
-<a name="l00069"></a>00069 <span class="preprocessor"></span><span class="preprocessor">#define M_REAR_DIR  ( 1)    ///&lt; Define the direction of control</span>
-<a name="l00070"></a>00070 <span class="preprocessor"></span><span class="preprocessor">#define M_LEFT_DIR  (-1)    ///&lt; Define the direction of control</span>
-<a name="l00071"></a>00071 <span class="preprocessor"></span>
-<a name="l00072"></a>00072 <span class="preprocessor">#define MIN_THRUST -0.9f    ///&lt; Define the minimum thrust to apply</span>
-<a name="l00073"></a>00073 <span class="preprocessor"></span><span class="preprocessor">#define MAX_THRUST 1.0f     ///&lt; Define the maximum thrust to apply</span>
-<a name="l00074"></a>00074 <span class="preprocessor"></span>
-<a name="l00076"></a>00076 <span class="preprocessor">#define USE_SERVOS_7_8 false</span>
-<a name="l00077"></a>00077 <span class="preprocessor"></span>
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079 <span class="preprocessor">#ifdef __cplusplus</span>
-<a name="l00080"></a>00080 <span class="preprocessor"></span>}
-<a name="l00081"></a>00081 <span class="preprocessor">#endif</span>
-<a name="l00082"></a>00082 <span class="preprocessor"></span>
-<a name="l00083"></a>00083 <span class="preprocessor">#endif </span><span class="comment">/* CONF_PLATFORM_H_ */</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#define MAVLINK_SYS_ID 2</span>
+<a name="l00051"></a>00051 <span class="preprocessor"></span>
+<a name="l00053"></a>00053 <span class="preprocessor">#define M_REAR_LEFT 0       ///&lt; Define the index for the control</span>
+<a name="l00054"></a>00054 <span class="preprocessor"></span><span class="preprocessor">#define M_FRONT_LEFT 1      ///&lt; Define the index for the control</span>
+<a name="l00055"></a>00055 <span class="preprocessor"></span><span class="preprocessor">#define M_FRONT_RIGHT 2     ///&lt; Define the index for the control</span>
+<a name="l00056"></a>00056 <span class="preprocessor"></span><span class="preprocessor">#define M_REAR_RIGHT 3      ///&lt; Define the index for the control</span>
+<a name="l00057"></a>00057 <span class="preprocessor"></span>
+<a name="l00058"></a>00058 <span class="preprocessor">#define M_FR_DIR ( 1)       ///&lt; Define the front right motor turn direction</span>
+<a name="l00059"></a>00059 <span class="preprocessor"></span><span class="preprocessor">#define M_FL_DIR (-1)       ///&lt; Define the front left motor turn direction</span>
+<a name="l00060"></a>00060 <span class="preprocessor"></span><span class="preprocessor">#define M_RR_DIR (-1)       ///&lt; Define the motor turn direction</span>
+<a name="l00061"></a>00061 <span class="preprocessor"></span><span class="preprocessor">#define M_RL_DIR ( 1)       ///&lt; Define the motor turn direction</span>
+<a name="l00062"></a>00062 <span class="preprocessor"></span>
+<a name="l00063"></a>00063 <span class="preprocessor">#define M_FRONT 0           ///&lt; Define the index for the movement control to go front</span>
+<a name="l00064"></a>00064 <span class="preprocessor"></span><span class="preprocessor">#define M_RIGHT 1           ///&lt; Define the index for the movement control to go right</span>
+<a name="l00065"></a>00065 <span class="preprocessor"></span><span class="preprocessor">#define M_REAR 2            ///&lt; Define the index for the movement control to go backward</span>
+<a name="l00066"></a>00066 <span class="preprocessor"></span><span class="preprocessor">#define M_LEFT 3            ///&lt; Define the index for the movement control to go left</span>
+<a name="l00067"></a>00067 <span class="preprocessor"></span>
+<a name="l00068"></a>00068 <span class="preprocessor">#define M_FRONT_DIR ( 1)    ///&lt; Define the direction of control</span>
+<a name="l00069"></a>00069 <span class="preprocessor"></span><span class="preprocessor">#define M_RIGHT_DIR (-1)    ///&lt; Define the direction of control</span>
+<a name="l00070"></a>00070 <span class="preprocessor"></span><span class="preprocessor">#define M_REAR_DIR  ( 1)    ///&lt; Define the direction of control</span>
+<a name="l00071"></a>00071 <span class="preprocessor"></span><span class="preprocessor">#define M_LEFT_DIR  (-1)    ///&lt; Define the direction of control</span>
+<a name="l00072"></a>00072 <span class="preprocessor"></span>
+<a name="l00073"></a>00073 <span class="preprocessor">#define MIN_THRUST -0.9f    ///&lt; Define the minimum thrust to apply</span>
+<a name="l00074"></a>00074 <span class="preprocessor"></span><span class="preprocessor">#define MAX_THRUST 1.0f     ///&lt; Define the maximum thrust to apply</span>
+<a name="l00075"></a>00075 <span class="preprocessor"></span>
+<a name="l00077"></a>00077 <span class="preprocessor">#define USE_SERVOS_7_8 false</span>
+<a name="l00078"></a>00078 <span class="preprocessor"></span>
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080 <span class="preprocessor">#ifdef __cplusplus</span>
+<a name="l00081"></a>00081 <span class="preprocessor"></span>}
+<a name="l00082"></a>00082 <span class="preprocessor">#endif</span>
+<a name="l00083"></a>00083 <span class="preprocessor"></span>
+<a name="l00084"></a>00084 <span class="preprocessor">#endif </span><span class="comment">/* CONF_PLATFORM_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -180,7 +180,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 15:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 23 2016 16:13:52 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

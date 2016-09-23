@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['calibrate_5fbias',['calibrate_bias',['../classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4',1,'Barometer']]],
   ['calibrate_5fesc',['calibrate_esc',['../classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a',1,'Servo']]],
   ['calibrating_5fnorth_5fvector',['calibrating_north_vector',['../classAhrs__ekf.html#a4cec1cbd87e6f6b2798ce3a8d925d92a',1,'Ahrs_ekf']]],
   ['callback',['callback',['../classGps__mocap.html#a04ca5bd4ae82f5374a55064f767c85a7',1,'Gps_mocap::callback()'],['../classAhrs__ekf__mocap.html#ab2a10400f1040c8de6aa1b8dea8619da',1,'Ahrs_ekf_mocap::callback()']]],
@@ -14,6 +13,7 @@ var searchData=
   ['cmd_5fdefault_5fdbg',['cmd_default_dbg',['../classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16',1,'Mavlink_message_handler']]],
   ['cols',['cols',['../classMat.html#a4ef77ff6c7056d1e33ed9cdc22d8ad61',1,'Mat']]],
   ['compid',['compid',['../classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441',1,'Mavlink_stream']]],
+  ['compute_5fpressure_5fat_5fsea_5flevel',['compute_pressure_at_sea_level',['../classBarometer.html#a9c0adda16abb188f353cca394dc96c53',1,'Barometer']]],
   ['configure',['configure',['../classGps.html#a485a8f353e92861951bc63985c007243',1,'Gps::configure()'],['../classGps__mocap.html#a657e8edc7ffb44e03bf7c68a3bc0330f',1,'Gps_mocap::configure()'],['../classGps__ublox.html#aa06c870ac330623efb14f2da09a0cfaa',1,'Gps_ublox::configure()'],['../classGpio__avr32.html#ab9c0f2998f0624efc62e367f028dee2c',1,'Gpio_avr32::configure()'],['../classGpio__chibios.html#a50826f68b036cc5a148c9152c418628a',1,'Gpio_chibios::configure()'],['../classGpio.html#af2c5f3040da67693c9a26bb351d9fb88',1,'Gpio::configure()'],['../classGpio__dummy.html#a632b4df2ad22a109f7c2776a7257482d',1,'Gpio_dummy::configure()'],['../classGpio__stm32.html#a3af5f0fc7d3cba3fef4e2ab6ece12527',1,'Gpio_stm32::configure()'],['../classGps__sim.html#acee2d17338145b1f314f3ca05e35cb6a',1,'Gps_sim::configure()']]],
   ['connection_5fstatus',['connection_status',['../classState.html#af9414375a28112394b48994db66743b6',1,'State']]],
   ['console',['Console',['../classConsole.html#a17ca5bcb69c15274ddfcaa4d7b6f8057',1,'Console']]],

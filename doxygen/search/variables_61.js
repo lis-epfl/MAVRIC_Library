@@ -26,7 +26,6 @@ var searchData=
   ['alt_5ffct',['alt_fct',['../structgpio__stm32__conf__t.html#af996ddd28cecf26ce19eb83bb0a42c4a',1,'gpio_stm32_conf_t']]],
   ['alt_5flpf',['alt_lpf',['../structNavigation_1_1conf__t.html#a1806f7622a4533fa3a4eb43dcde88111',1,'Navigation::conf_t::alt_lpf()'],['../classNavigation.html#a01e49a3e454238cd4e4b32b42e1a0cd4',1,'Navigation::alt_lpf()']]],
   ['altitude',['altitude',['../structgps__t.html#a72edc614dd84ab0d29c6720d15d79e8e',1,'gps_t::altitude()'],['../structglobal__position__t.html#a0220524a6a33a48c556ed2761c2c3bfe',1,'global_position_t::altitude()']]],
-  ['altitude_5fbias_5fgf_5f',['altitude_bias_gf_',['../classBarometer.html#af01c889a2b36d3f1e2b9b094dd91f17a',1,'Barometer']]],
   ['altitude_5fellipsoid',['altitude_ellipsoid',['../structubx__nav__pos__llh__t.html#a581ce8d49671f3e58b24bc3d9f238f62',1,'ubx_nav_pos_llh_t']]],
   ['altitude_5fmsl',['altitude_msl',['../structubx__nav__pos__llh__t.html#a42a2ac8104b8b9859ef03075424b6d13',1,'ubx_nav_pos_llh_t']]],
   ['altitude_5fstatus',['altitude_status',['../structgps__t.html#a735c356c141ada40ddf7d35e7bed28b7',1,'gps_t']]],

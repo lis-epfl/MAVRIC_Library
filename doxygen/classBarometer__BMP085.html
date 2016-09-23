@@ -95,14 +95,14 @@ Inheritance diagram for Barometer_BMP085:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBarometer__BMP085__inherit__graph.png" border="0" usemap="#Barometer__BMP085_inherit__map" alt="Inheritance graph"/></div>
 <map name="Barometer__BMP085_inherit__map" id="Barometer__BMP085_inherit__map">
-<area shape="rect" id="node2" href="classBarometer.html" title="Interface class for barometers." alt="" coords="7,6,180,282"/></map>
+<area shape="rect" id="node2" href="classBarometer.html" title="Interface class for barometers." alt="" coords="5,6,235,282"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Barometer_BMP085:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBarometer__BMP085__coll__graph.png" border="0" usemap="#Barometer__BMP085_coll__map" alt="Collaboration graph"/></div>
 <map name="Barometer__BMP085_coll__map" id="Barometer__BMP085_coll__map">
-<area shape="rect" id="node2" href="classBarometer.html" title="Interface class for barometers." alt="" coords="7,6,180,282"/></map>
+<area shape="rect" id="node2" href="classBarometer.html" title="Interface class for barometers." alt="" coords="5,6,235,282"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classBarometer__BMP085-members.html">List of all members.</a></p>
@@ -120,7 +120,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__BMP085.html#a1b2834fbedb1d3ec3801bbc9c20ae18b">last_update_us</a> (void) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the last update time in microseconds.  <a href="#a1b2834fbedb1d3ec3801bbc9c20ae18b"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__BMP085.html#ad66d38f69a61a1b035784c15bcec4d06">pressure</a> (void) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the pressure.  <a href="#ad66d38f69a61a1b035784c15bcec4d06"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the pressure (in Pa)  <a href="#ad66d38f69a61a1b035784c15bcec4d06"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__BMP085.html#ac2c1e5ae5e80c530b6d9020c43edad76">altitude_gf</a> (void) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the altitude in meters above sea level.  <a href="#ac2c1e5ae5e80c530b6d9020c43edad76"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer__BMP085.html#ab21587e48ae1a431b8467938dd1ab7ae">vertical_speed_lf</a> (void) const </td></tr>
@@ -257,7 +257,7 @@ Here is the caller graph for this function:</div>
 </div>
 <div class="memdoc">
 
-<p>Return the pressure. </p>
+<p>Return the pressure (in Pa) </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
 <p>Implements <a class="el" href="classBarometer.html#a811cffa4af95a25948ab5244118bd981">Barometer</a>.</p>
@@ -351,7 +351,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBarometer__BMP085_abfadb217c2295c76138d0c251c713dbd_cgraph.png" border="0" usemap="#classBarometer__BMP085_abfadb217c2295c76138d0c251c713dbd_cgraph" alt=""/></div>
 <map name="classBarometer__BMP085_abfadb217c2295c76138d0c251c713dbd_cgraph" id="classBarometer__BMP085_abfadb217c2295c76138d0c251c713dbd_cgraph">
-<area shape="rect" id="node3" href="classI2c.html#a6df122b68bbb83bdfbd85399761cf6b6" title="Write multiple bytes to a I2C slave device." alt="" coords="315,5,389,35"/><area shape="rect" id="node5" href="classI2c.html#aae83ee6e5df1bc8b39832fc63a448bdb" title="Read multiple bytes to a I2C slave device." alt="" coords="316,59,388,88"/><area shape="rect" id="node7" href="classBarometer.html#a8e5b1fc3eeb41f802c1252bb02fa8305" title="Compue altitude above sea level from pressure." alt="" coords="241,112,463,141"/></map>
+<area shape="rect" id="node3" href="classI2c.html#a6df122b68bbb83bdfbd85399761cf6b6" title="Write multiple bytes to a I2C slave device." alt="" coords="315,5,389,35"/><area shape="rect" id="node5" href="classI2c.html#aae83ee6e5df1bc8b39832fc63a448bdb" title="Read multiple bytes to a I2C slave device." alt="" coords="316,59,388,88"/><area shape="rect" id="node7" href="classBarometer.html#aebdd61556f8c58cb8a11c527896b1569" title="Compute altitude above sea level from pressure." alt="" coords="241,112,463,141"/></map>
 </div>
 </p>
 
@@ -402,7 +402,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 15:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

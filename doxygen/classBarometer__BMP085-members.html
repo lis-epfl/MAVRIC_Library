@@ -84,18 +84,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#af01c889a2b36d3f1e2b9b094dd91f17a">altitude_bias_gf_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a8e5b1fc3eeb41f802c1252bb02fa8305">altitude_from_pressure</a>(float pressure, float altitude_bias=0)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer.html#aebdd61556f8c58cb8a11c527896b1569">altitude_from_pressure</a>(float pressure, float pressure_at_sea_level=pressure_at_sea_level())</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#ac2c1e5ae5e80c530b6d9020c43edad76">altitude_gf</a>(void) const </td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td><code> [virtual]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>Barometer</b>() (defined in <a class="el" href="classBarometer.html">Barometer</a>)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>Barometer</b>(float pressure_at_sea_level=101325.0f) (defined in <a class="el" href="classBarometer.html">Barometer</a>)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#a4c01183bdda76c70ab2af4c8d19ad86c">Barometer_BMP085</a>(I2c &amp;i2c)</td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a4d978549f2dbc110a0e92c7d6c8a7ce4">calibrate_bias</a>(float current_altitude_gf)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#a39b6b8ce5ce4bce0eaf002ed4f53d359">has_been_calibrated</a>() const </td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#abdf5e59e29258d4a9d71db2f5be41daa">has_been_calibrated_</a></td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer.html#a9c0adda16abb188f353cca394dc96c53">compute_pressure_at_sea_level</a>(float pressure, float altitude)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#a70fe08b39b8f79068779fa9f4848f4e9">init</a>(void)</td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#a1b2834fbedb1d3ec3801bbc9c20ae18b">last_update_us</a>(void) const </td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#ad66d38f69a61a1b035784c15bcec4d06">pressure</a>(void) const </td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer.html#af663650061973eaae325530bdd079dad">pressure_at_sea_level</a>(void)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#a5d09b2ebb46edca24618bffeb1f1672c">read_eprom_calibration</a>(void)</td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer.html#ac69a5f330393973a87a175949a03ae9f">set_pressure_at_sea_level</a>(float pressure_at_sea_level)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [protected, static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#aad2f82324ee2cd7f9625e2c79550994b">temperature</a>(void) const </td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#abfadb217c2295c76138d0c251c713dbd">update</a>(void)</td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__BMP085.html#ab21587e48ae1a431b8467938dd1ab7ae">vertical_speed_lf</a>(void) const </td><td><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></td><td><code> [virtual]</code></td></tr>
@@ -117,7 +116,7 @@ This is the complete list of members for <a class="el" href="classBarometer__BMP
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 15:22:58 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
