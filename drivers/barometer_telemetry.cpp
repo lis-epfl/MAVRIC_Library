@@ -54,7 +54,7 @@ void barometer_telemetry_send(const Barometer* barometer, const Mavlink_stream* 
                                      mavlink_stream->compid(),
                                      msg,
                                      time_keeper_get_ms(),
+                                     barometer->pressure(),
                                      barometer->altitude_gf(),
-                                     barometer->vertical_speed_lf(),
                                      barometer->temperature());
 }
