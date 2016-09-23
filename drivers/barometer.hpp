@@ -157,7 +157,7 @@ protected:
 
 
 private:
-    static float pressure_at_sea_level_;    ///< Offset of the barometer sensor for matching GPS altitude value
+    static float pressure_at_sea_level_;    ///< Pressure at sea level. This is a static variable shared by all barometers
 };
 
 /**
