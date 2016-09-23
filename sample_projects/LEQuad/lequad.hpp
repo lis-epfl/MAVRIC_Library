@@ -136,6 +136,7 @@ public:
         Mavlink_communication::conf_t mavlink_communication_config;
         Navigation::conf_t navigation_config;
         Mavlink_waypoint_handler::conf_t waypoint_handler_config;
+        Mission_planner::conf_t mission_planner_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         Position_estimation::conf_t position_estimation_config;
@@ -323,6 +324,8 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
 
+    conf.mission_planner_config = Mission_planner::default_config();
+    
     conf.qfilter_config = qfilter_default_config();
 
     conf.ahrs_ekf_config = Ahrs_ekf::default_config();

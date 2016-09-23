@@ -62,7 +62,7 @@ public:
 
     struct conf_t
     {
-        ;
+        float home_altitude;
     };
 
 
@@ -141,6 +141,10 @@ public:
     /**
      * \brief   Returns the home waypoint
      *
+     * \details     Recreates the home waypoint if it has not been manually set
+     *              as the takeoff altitude could have changed from the onboard
+     *              parameters
+     *
      * \return  Home
      */
     const Waypoint& home_waypoint() const;
@@ -180,7 +184,6 @@ protected:
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 private:
-
     uint64_t waypoint_received_time_ms_;                        ///< The time that the waypoint list was received
 
     uint16_t requested_waypoint_count_;                         ///< The number of waypoints requested from the GCS
@@ -263,6 +266,8 @@ private:
 Mavlink_waypoint_handler::conf_t Mavlink_waypoint_handler::default_config()
 {
     conf_t conf                                                = {};
+
+    conf.home_altitude                                         = -10.0f;
 
     return conf;
 };

@@ -469,7 +469,7 @@ bool LEQuad::init_navigation(void)
     // Parameters
     ret &= communication.parameters().add(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
     ret &= communication.parameters().add(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
-    ret &= communication.parameters().add(&navigation.takeoff_altitude,                        "NAV_TAKEOFF_ALT" );
+    ret &= communication.parameters().add(&mission_planner.takeoff_altitude(),                 "NAV_TAKEOFF_ALT" );
     ret &= communication.parameters().add(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
     ret &= communication.parameters().add(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
     ret &= communication.parameters().add(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );

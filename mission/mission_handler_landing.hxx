@@ -120,7 +120,7 @@ Mission_handler::update_status_t Mission_handler_landing<T1, T2>::update()
     }
     else if (auto_landing_behavior_ == DESCENT_TO_SMALL_ALTITUDE)
     {
-        if (maths_f_abs(ins_.position_lf()[Z] - navigation_.takeoff_altitude/2.0f) < 0.5f)
+        if (maths_f_abs(ins_.position_lf()[Z] - waypoint_.local_pos()[Z]/2.0f) < 0.5f)
         {
             next_state = true;
         }
