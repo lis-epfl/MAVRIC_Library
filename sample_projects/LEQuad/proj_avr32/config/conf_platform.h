@@ -46,6 +46,7 @@
 extern "C" {
 #endif
 
+///< Warning sysid 0 is not supported anymore by QGroundControl 
 #define MAVLINK_SYS_ID 2
 
 ///< Definitions of Platform configuration
