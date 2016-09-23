@@ -56,14 +56,14 @@ Mission_handler_takeoff<T>::Mission_handler_takeoff(T& controller,
 {
     waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
                             MAV_CMD_NAV_TAKEOFF,
-                            1,
+                            0,
                             0.0f,
                             0.0f,
                             0.0f,
                             0.0f,
                             0.0f,
                             0.0f,
-                            navigation_.takeoff_altitude);
+                            0.0f);
 }
 
 template <class T>

@@ -86,15 +86,11 @@ public:
 
         float kp_yaw;                                       ///< The yaw gain in velocity control mode
 
-        float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
-        float critical_landing_altitude;                    ///< The altitude at which the drone will try to land in the critical state
         float minimal_radius;                               ///< The minimal circle radius
         float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
 
         pid_controller_t hovering_controller;               ///< hovering controller
         pid_controller_t wpt_nav_controller;                ///< waypoint navigation controller
-
-        float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
 
         strategy_t navigation_strategy;                  ///< The type of navigation strategy
     };
@@ -176,11 +172,8 @@ public:
     float max_climb_rate;                               ///< Max climb rate in m/s
     float one_over_scaling;                             ///< Line vector field parameter
     float vertical_vel_gain;                            ///< Gain for the vertical velocity calculation
-    float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
-    float critical_landing_altitude;                    ///< The altitude at which the drone will try to land in the critical state
     float minimal_radius;                               ///< The minimal circle radius
     float heading_acceptance;                           ///< The heading acceptance to switch to next waypoint
-    float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing
 
     strategy_t navigation_strategy;                     ///< The type of navigation strategy
 
@@ -277,13 +270,9 @@ Navigation::conf_t Navigation::default_config()
     conf.hovering_controller.soft_zone_width         = 0.0f;
 
     conf.one_over_scaling                            = 0.3f;
-    conf.safe_altitude                               = -30.0f;
-    conf.critical_landing_altitude                   = 5.0f;
     conf.minimal_radius                              = 5.0f;
     conf.heading_acceptance                          = PI/6.0f;
     conf.vertical_vel_gain                           = 1.0f;
-    conf.takeoff_altitude                            = -10.0f;
-    //conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
     conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
     return conf;
 };
@@ -295,10 +284,10 @@ Navigation::conf_t Navigation::default_wing_config()
     conf.cruise_speed                                = 12.0f;
     conf.max_climb_rate                              = 6.0f;
 
-    conf.safe_altitude                               = -60.0f;
+    //conf.safe_altitude                               = -60.0f;
     conf.minimal_radius                              = 45.0f;
     // conf.heading_acceptance                          = PI/6.0f;  //TODO should this be adapted for the wing
-    conf.takeoff_altitude                            = -60.0f;
+    //conf.takeoff_altitude                            = -60.0f;
     conf.navigation_strategy                         = Navigation::strategy_t::DIRECT_TO;
     return conf;
 };

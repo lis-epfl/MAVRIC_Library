@@ -60,7 +60,7 @@ bool Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller
 {
 	Navigation_controller_I::nav_command_t cmd;
 	cmd.pos = waypoint_.local_pos();
-	cmd.pos[Z] = navigation_.takeoff_altitude/2.0f;
+	cmd.pos[Z] = cmd.pos[Z]/2.0f;
     return desc_to_small_alt_controller_.set_navigation_command(cmd);
 }
 

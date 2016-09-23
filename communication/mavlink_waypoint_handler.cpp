@@ -381,7 +381,7 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler( const INS& ins,
                                 0.0f,
                                 0.0f,
                                 0.0f,
-                                navigation_.takeoff_altitude);
+                                config_.home_altitude);
 }
 
 bool Mavlink_waypoint_handler::init()

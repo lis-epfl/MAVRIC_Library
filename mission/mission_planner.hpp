@@ -87,6 +87,9 @@ public:
 
     struct conf_t
     {
+        float safe_altitude;                                ///< The altitude at which the robot will fly in critical mode
+        float critical_landing_altitude;                    ///< The altitude at which the drone will try to land in the critical state
+        float takeoff_altitude;                             ///< Local altitude at which the take-off procedure should stop, for a fixed-wing.
     };
 
 
@@ -175,6 +178,13 @@ public:
      * \return  Success
      */
     bool insert_ad_hoc_waypoint(Waypoint wpt);
+
+    /**
+     * \brief   Gets the reference to the takeoff altitude
+     *
+     * \return  Takeoff altitude
+     */
+    inline float& takeoff_altitude() { return config_.takeoff_altitude; }
 
 protected:
     Mission_handler* current_mission_handler_;                  ///< The currently used mission handler
@@ -307,7 +317,11 @@ protected:
 
 Mission_planner::conf_t Mission_planner::default_config()
 {
-    conf_t conf                                                = {};
+    conf_t conf                                                 = {};
+
+    conf.safe_altitude                                          = -30.0f;
+    conf.critical_landing_altitude                              = 5.0f;
+    conf.takeoff_altitude                                       = -10.0f;
 
     return conf;
 };

@@ -218,7 +218,7 @@ mav_result_t Mission_planner::nav_takeoff_callback(Mission_planner* mission_plan
                                 packet->param4,
                                 mission_planner->ins_.position_lf()[X],
                                 mission_planner->ins_.position_lf()[Y],
-                                mission_planner->navigation_.takeoff_altitude); // packet->param7);
+                                mission_planner->config_.takeoff_altitude); // packet->param7);
 
         print_util_dbg_print("Starting automatic take-off from button\r\n");
         mission_planner->insert_ad_hoc_waypoint(takeoff_wpt);
@@ -323,7 +323,7 @@ void Mission_planner::state_machine()
                                             coord_conventions_get_yaw(ahrs_.qe),
                                             ins_.position_lf()[X],
                                             ins_.position_lf()[Y],
-                                            navigation_.takeoff_altitude);
+                                            config_.takeoff_altitude);
             insert_ad_hoc_waypoint(inserted_waypoint_);
             require_takeoff_ = false;
         }
@@ -444,7 +444,7 @@ void Mission_planner::state_machine()
                                             coord_conventions_get_yaw(ahrs_.qe),
                                             ins_.position_lf()[X],
                                             ins_.position_lf()[Y],
-                                            navigation_.takeoff_altitude);
+                                            config_.takeoff_altitude);
             insert_ad_hoc_waypoint(inserted_waypoint_);
             require_takeoff_ = false;
             hold_position_set_ = true;
@@ -537,7 +537,7 @@ void Mission_planner::critical_handler()
                                                 0.0f,
                                                 ins_.position_lf()[X],
                                                 ins_.position_lf()[Y],
-                                                navigation_.safe_altitude);
+                                                config_.safe_altitude);
 
                 break;
 
@@ -554,7 +554,7 @@ void Mission_planner::critical_handler()
                                                 0.0f,
                                                 0.0f,
                                                 0.0f,
-                                                navigation_.safe_altitude);
+                                                config_.safe_altitude);
                 break;
 
             case HOME_LAND:
@@ -570,7 +570,7 @@ void Mission_planner::critical_handler()
                                                 0.0f,
                                                 0.0f,
                                                 0.0f,
-                                                navigation_.critical_landing_altitude);
+                                                config_.critical_landing_altitude);
                 break;
 
             case CRITICAL_LAND:
@@ -587,7 +587,7 @@ void Mission_planner::critical_handler()
                                                 0.0f,
                                                 ins_.position_lf()[X],
                                                 ins_.position_lf()[Y],
-                                                navigation_.critical_landing_altitude);
+                                                config_.critical_landing_altitude);
                 break;
             }
 
@@ -742,7 +742,7 @@ bool Mission_planner::init()
                                     0.0f,
                                     0.0f,
                                     0.0f,
-                                    navigation_.critical_landing_altitude);
+                                    config_.critical_landing_altitude);
 
     // Manual hold position information
     require_takeoff_ = true;
