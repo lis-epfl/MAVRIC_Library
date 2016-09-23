@@ -1,16 +1,18 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classBarometer__BMP085.html#abfadb217c2295c76138d0c251c713dbd" title="Main update function &#160;Reads new values from sensor." alt="" coords="131,5,317,35"/>
-<area shape="rect" id="node5" href="$classBarometer__MS5611.html#af201abf179ac7cdfd78710f0be983da8" title="Initialise the sensor." alt="" coords="143,59,305,88"/>
-<area shape="rect" id="node11" href="$classHmc5883l.html#acd6966f7b8e7f084c9c07a670658bab7" title="Initialise the sensor." alt="" coords="171,112,277,141"/>
-<area shape="rect" id="node15" href="$classHmc5883l.html#aed6816efef437df0e65a3f3b107c13b0" title="Main update function &#160;Reads new values from sensor." alt="" coords="160,165,288,195"/>
-<area shape="rect" id="node17" href="$classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9" title="Initialise the sensor." alt="" coords="169,219,279,248"/>
-<area shape="rect" id="node20" href="$classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6" title="Main update function." alt="" coords="144,272,304,301"/>
-<area shape="rect" id="node22" href="$classMpu__6050.html#acac68dd3f9ff860aa1c6b9e66e2eda88" title="Initialise the sensor." alt="" coords="171,325,277,355"/>
-<area shape="rect" id="node24" href="$classMpu__6050.html#ae23ffc947827a02f18f0f8c7dccc3a57" title="Main update function." alt="" coords="145,379,303,408"/>
-<area shape="rect" id="node26" href="$classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="155,432,293,461"/>
-<area shape="rect" id="node30" href="$classI2c.html#a5a8fb204c7af27e971b74112a1ee16f2" title="Write then Read data to/from an I2C device." alt="" coords="179,485,269,515"/>
-<area shape="rect" id="node7" href="$classSparky__chibi.html#a11ac79dbd29abeed3bcb800a726ee56f" title="Hardware initialisation." alt="" coords="396,32,519,61"/>
-<area shape="rect" id="node9" href="$classBarometer__MS5611.html#a0674c51bec727bc276be6614bbe41801" title="Main update function &#160;Reads new values from sensor." alt="" coords="365,85,549,115"/>
-<area shape="rect" id="node13" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="395,179,520,208"/>
-<area shape="rect" id="node28" href="$classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="372,432,543,461"/>
+<area shape="rect" id="node3" href="$classBarometer__BMP085.html#a5d09b2ebb46edca24618bffeb1f1672c" title="Read calibration data from EPROM." alt="" coords="132,5,412,35"/>
+<area shape="rect" id="node9" href="$classBarometer__BMP085.html#abfadb217c2295c76138d0c251c713dbd" title="Main update function &#160;Reads new values from sensor." alt="" coords="179,59,365,88"/>
+<area shape="rect" id="node11" href="$classBarometer__MS5611.html#af201abf179ac7cdfd78710f0be983da8" title="Initialise the sensor." alt="" coords="191,112,353,141"/>
+<area shape="rect" id="node17" href="$classHmc5883l.html#acd6966f7b8e7f084c9c07a670658bab7" title="Initialise the sensor." alt="" coords="500,165,607,195"/>
+<area shape="rect" id="node20" href="$classHmc5883l.html#aed6816efef437df0e65a3f3b107c13b0" title="Main update function &#160;Reads new values from sensor." alt="" coords="208,216,336,245"/>
+<area shape="rect" id="node22" href="$classLsm330dlc.html#a7ed13528e15ce4df5decd94f68e4eba9" title="Initialise the sensor." alt="" coords="499,244,608,273"/>
+<area shape="rect" id="node25" href="$classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6" title="Main update function." alt="" coords="192,320,352,349"/>
+<area shape="rect" id="node27" href="$classMpu__6050.html#acac68dd3f9ff860aa1c6b9e66e2eda88" title="Initialise the sensor." alt="" coords="219,373,325,403"/>
+<area shape="rect" id="node29" href="$classMpu__6050.html#ae23ffc947827a02f18f0f8c7dccc3a57" title="Main update function." alt="" coords="193,427,351,456"/>
+<area shape="rect" id="node31" href="$classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="203,480,341,509"/>
+<area shape="rect" id="node35" href="$classI2c.html#a5a8fb204c7af27e971b74112a1ee16f2" title="Write then Read data to/from an I2C device." alt="" coords="227,533,317,563"/>
+<area shape="rect" id="node5" href="$classBarometer__BMP085.html#a70fe08b39b8f79068779fa9f4848f4e9" title="Initialise the sensor." alt="" coords="472,5,635,35"/>
+<area shape="rect" id="node7" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="693,165,819,195"/>
+<area shape="rect" id="node13" href="$classSparky__chibi.html#a11ac79dbd29abeed3bcb800a726ee56f" title="Hardware initialisation." alt="" coords="492,59,615,88"/>
+<area shape="rect" id="node15" href="$classBarometer__MS5611.html#a0674c51bec727bc276be6614bbe41801" title="Main update function &#160;Reads new values from sensor." alt="" coords="461,112,645,141"/>
+<area shape="rect" id="node33" href="$classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="468,480,639,509"/>
 </map>
