@@ -443,7 +443,7 @@ bool Mavlink_waypoint_handler::init()
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
-    init_homing_waypoint();
+    init_first_waypoint();
 
     if(!init_success)
     {
@@ -453,7 +453,7 @@ bool Mavlink_waypoint_handler::init()
     return init_success;
 }
 
-void Mavlink_waypoint_handler::init_homing_waypoint()
+void Mavlink_waypoint_handler::init_first_waypoint()
 {
     /*
     Constructor order:
