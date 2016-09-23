@@ -101,7 +101,7 @@ public:
      * \param   sonar           sonar structure
      * \param   gps             GPS structure
      * \param   ahrs            attitude estimation structure
-     * \param   config          default home position and gravity value
+     * \param   config          default origin position and gravity value
      *
      * \return  True if the init succeed, false otherwise
      */
@@ -128,30 +128,6 @@ public:
     fence_violation_state_t get_fence_violation_state() const;
 
     static conf_t default_config();
-
-    /**
-     * \brief   set the home position and altitude
-     *
-     * \details change of home is only accepted if the vehicle is not armed
-     *          THIS IS EVIL: CHANGES ORIGIN OF LOCAL FRAME!!!
-     *
-     * \param   new_home_pos    new home position in global reference frame
-     *
-     * \return  accepted    true if new position is accepted;
-     */
-    bool set_home_position_global(global_position_t new_home_pos);
-
-    /**
-     * \brief   set the home position and altitude to currrent position
-     *
-     * \details calls set_home_position_global with the current position;
-     *          only accepted if vehicle is not armed
-     *          THIS IS EVIL: CHANGES ORIGIN OF LOCAL FRAME!!!
-     *
-     * \return  accepted    true if new position is accepted;
-     */
-    bool set_home_to_current_position();
-
 
     /**
      * \brief     Last update in seconds
@@ -213,7 +189,7 @@ private:
     uint32_t time_last_barometer_msg;       ///< Time at which we received the last barometer message in ms
     float dt_s_;                            ///< Time interval between updates
     float last_update_s_;                   ///< Last update time in seconds
-    bool init_gps_position;                 ///< Boolean flag ensuring that the GPS was initialized
+    bool is_gps_pos_initialized_;           ///< Boolean flag ensuring that the GPS was initialized
 
 
     float last_alt;                         ///< Value of the last altitude estimation
@@ -232,10 +208,10 @@ private:
     const Sonar& sonar;                     ///< Reference to the sonar structure
 
     /**
-     * \brief   Reset the home position and altitude
+     * \brief   Reset the velocity and altitude estimation to 0 and corrects barometer bias
      *
      */
-    void reset_home_position();
+    void reset_velocity_altitude();
 
     /**
      * \brief   Direct integration of the position with the IMU data
