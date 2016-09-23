@@ -44,7 +44,6 @@
 #define MISSION_HANDLER_HOLD_POSITION__
 
 #include "mission/mission_handler.hpp"
-#include "mission/navigation.hpp"
 
 /*
  * The handler class takes in a template parameter that allows control inputs.
@@ -60,11 +59,9 @@ public:
      *
      * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
-     * \param   navigation              The reference to the navigation structure
      */
      Mission_handler_hold_position( T& controller,
-                                    const INS& ins,
-                                    Navigation& navigation);
+                                    const INS& ins);
 
     /**
      * \brief   Checks if the waypoint is a hold position waypoint
@@ -118,7 +115,6 @@ protected:
 
     T& controller_;                     ///< The reference to the controller
     const INS& ins_;                    ///< The reference to the ins structure
-    Navigation& navigation_;            ///< The reference to the navigation structure
 
     /**
      * \brief   Function to set the controller specific command

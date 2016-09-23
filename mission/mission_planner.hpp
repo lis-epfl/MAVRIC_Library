@@ -52,7 +52,6 @@
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
 #include "mission/mission_handler_registry.hpp"
-#include "mission/navigation.hpp"
 #include "control/dubin.hpp"
 
 class Mission_handler;

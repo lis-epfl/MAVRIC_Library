@@ -111,7 +111,6 @@ LIB_SRCS += mission/mission_handler_navigating.cpp
 LIB_SRCS += mission/mission_handler_on_ground.cpp
 LIB_SRCS += mission/mission_handler_registry.cpp
 LIB_SRCS += mission/mission_handler_takeoff.cpp
-LIB_SRCS += mission/navigation.cpp
 LIB_SRCS += mission/waypoint.cpp
 
 LIB_SRCS += runtime/scheduler.cpp

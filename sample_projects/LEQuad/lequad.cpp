@@ -86,18 +86,17 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
-    navigation(controls, ahrs.qe, position_estimation, state, communication.mavlink_stream(), mission_handler_registry, config.navigation_config),
     cascade_controller_({position_estimation, ahrs, {ahrs, position_estimation, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}, config.cascade_controller_config),
     mission_handler_registry(),
     waypoint_handler(position_estimation, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
-    hold_position_handler(cascade_controller_, position_estimation, navigation),
+    hold_position_handler(cascade_controller_, position_estimation),
     landing_handler(cascade_controller_, cascade_controller_, position_estimation, state),
-    navigating_handler(cascade_controller_, position_estimation, navigation, communication.mavlink_stream(), waypoint_handler),
+    navigating_handler(cascade_controller_, position_estimation, communication.mavlink_stream(), waypoint_handler),
     on_ground_handler(/*position_controller_, */),
     manual_ctrl_handler(),
     takeoff_handler(cascade_controller_, position_estimation, state),
     critical_landing_handler(cascade_controller_, cascade_controller_, position_estimation, state),
-    critical_navigating_handler(cascade_controller_, position_estimation, navigation, communication.mavlink_stream(), waypoint_handler),
+    critical_navigating_handler(cascade_controller_, position_estimation, communication.mavlink_stream(), waypoint_handler),
     mission_planner(position_estimation, ahrs, state, manual_control, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
@@ -124,8 +123,8 @@ bool LEQuad::init(void)
     success &= init_sonar();
     success &= init_attitude_estimation();
     success &= init_position_estimation();
+    success &= init_mission_planning();
     success &= init_stabilisers();
-    success &= init_navigation();
     success &= init_hud();
     success &= init_servos();
     success &= init_ground_control();
@@ -444,7 +443,7 @@ bool LEQuad::init_stabilisers(void)
 // -------------------------------------------------------------------------
 // Navigation
 // -------------------------------------------------------------------------
-bool LEQuad::init_navigation(void)
+bool LEQuad::init_mission_planning(void)
 {
     bool ret = true;
 
@@ -461,15 +460,15 @@ bool LEQuad::init_navigation(void)
     ret &= mission_planner.init();
 
     // Parameters
-    ret &= communication.parameters().add(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
-    ret &= communication.parameters().add(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
+    //ret &= communication.parameters().add(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
+    //ret &= communication.parameters().add(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
     ret &= communication.parameters().add(&mission_planner.takeoff_altitude(),                 "NAV_TAKEOFF_ALT" );
-    ret &= communication.parameters().add(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
-    ret &= communication.parameters().add(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
-    ret &= communication.parameters().add(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
-    ret &= communication.parameters().add(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
-    ret &= communication.parameters().add(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
-    ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
+    //ret &= communication.parameters().add(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
+    //ret &= communication.parameters().add(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
+    //ret &= communication.parameters().add(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
+    //ret &= communication.parameters().add(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
+    //ret &= communication.parameters().add(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
+    //ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
     ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mission_planner::update,     (Scheduler_task::task_argument_t)&mission_planner,  Scheduler_task::PRIORITY_HIGH);

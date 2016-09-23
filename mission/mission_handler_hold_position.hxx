@@ -45,12 +45,10 @@
 
 template <class T>
 Mission_handler_hold_position<T>::Mission_handler_hold_position(T& controller,
-                                                                const INS& ins,
-                                                                Navigation& navigation):
+                                                                const INS& ins):
             Mission_handler(),
             controller_(controller),
-            ins_(ins),
-            navigation_(navigation)
+            ins_(ins)
 {
     waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
                             MAV_CMD_NAV_LOITER_UNLIM,
@@ -110,14 +108,8 @@ Mission_handler::update_status_t Mission_handler_hold_position<T>::update()
         radius = 0.0f;
     }
     
-    // Check if we are doing dubin circles
-    if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
-    {
-        within_radius_ = true;
-    }
-    // Or that we are at the waypoint
-    else if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO &&
-            ((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < radius*radius)
+    // Check that we are at the waypoint
+    else if (((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < radius*radius)
     {
         within_radius_ = true;
     }
