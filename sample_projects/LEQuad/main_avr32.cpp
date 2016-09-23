@@ -40,7 +40,7 @@
 
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
- 
+
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
 // #include "hal/dummy/file_dummy.hpp"
@@ -62,7 +62,6 @@ extern "C"
 #include "libs/asf/avr32/services/delay/delay.h"
 }
 
-// #include "hal/common/dbg.hpp"
 
 int main(void)
 {
@@ -72,7 +71,7 @@ int main(void)
     // Create board
     // -------------------------------------------------------------------------
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
-    board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
+    // board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
     Megafly_rev4 board = Megafly_rev4(board_config);
 
     // Board initialisation
