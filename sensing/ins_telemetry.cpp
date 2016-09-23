@@ -54,6 +54,9 @@ void ins_telemetry_set_gps_global_origin_callback(INS* ins, uint32_t sysid, mavl
 
 void ins_telemetry_set_gps_global_origin_callback(INS* ins, uint32_t sysid, mavlink_message_t* msg)
 {
+    (void) ins;   // unused
+    (void) sysid; // unused
+
     /* decode message */
     mavlink_set_gps_global_origin_t set_gps_global_origin;
     mavlink_msg_set_gps_global_origin_decode(msg, &set_gps_global_origin);
@@ -153,6 +156,8 @@ void ins_telemetry_send_global_position_int(const INS* ins, const Mavlink_stream
 
 void ins_telemetry_send_gps_global_origin(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
+    (void) ins; // unused
+    
     global_position_t origin = INS::origin();
     mavlink_msg_gps_global_origin_pack( mavlink_stream->sysid(),
                                         mavlink_stream->compid(),
