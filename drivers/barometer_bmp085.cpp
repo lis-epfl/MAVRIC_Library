@@ -223,7 +223,7 @@ bool Barometer_BMP085::update(void)
             pressure_ = p;
 
             // Compute new altitude from pressure
-            altitude_raw = altitude_from_pressure(pressure_, 0);
+            altitude_raw = altitude_from_pressure(pressure_);
 
             // Update circular buffer with last 3 altitudes
             for (int32_t i = 0; i < 2; i++)
