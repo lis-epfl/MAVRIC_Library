@@ -201,13 +201,13 @@ private:
 
     float gravity;                          ///< Value of the gravity
 
-    float barometer_bias;
-    bool barometer_calibrated;
+    float barometer_bias;                   ///< Altitude bias between actual altitude and altitude given by the barometer
+    bool barometer_calibrated;              ///< Flag that indicates if the barometer was calibrated
 
     const ahrs_t& ahrs;                     ///< Reference to the attitude estimation structure
     State& state;                           ///< Reference to the state structure
     const Gps& gps;                         ///< Reference to the GPS structure
-    const Barometer& barometer;                   ///< Reference to the barometer structure
+    const Barometer& barometer;             ///< Reference to the barometer structure
     const Sonar& sonar;                     ///< Reference to the sonar structure
 
     /**
