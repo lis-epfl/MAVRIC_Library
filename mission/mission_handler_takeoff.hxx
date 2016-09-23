@@ -87,8 +87,6 @@ bool Mission_handler_takeoff<T>::setup(const Waypoint& wpt)
 
     waypoint_ = wpt;
 
-    navigation_.set_waiting_at_waypoint(false);
-
     print_util_dbg_print("Automatic take-off, will hold position at: (");
     print_util_dbg_print_num(wpt.local_pos()[X], 10);
     print_util_dbg_print(", ");
@@ -132,7 +130,6 @@ Mission_handler::update_status_t Mission_handler_takeoff<T>::update()
        if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
         {
             finished = true;
-            navigation_.set_waiting_at_waypoint(true);
         }
         break;
 
@@ -142,7 +139,6 @@ Mission_handler::update_status_t Mission_handler_takeoff<T>::update()
             if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
             {
                 finished = true;
-                navigation_.set_waiting_at_waypoint(true);
             }
         }
         else
@@ -150,7 +146,6 @@ Mission_handler::update_status_t Mission_handler_takeoff<T>::update()
             if (ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
             {
                 finished = true;
-                navigation_.set_waiting_at_waypoint(true);
             }
         }
         break;

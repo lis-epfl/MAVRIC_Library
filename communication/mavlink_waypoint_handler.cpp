@@ -177,8 +177,7 @@ void Mavlink_waypoint_handler::mission_request_callback(Mavlink_waypoint_handler
         if (packet.seq < waypoint_handler->waypoint_count_)
         {
             uint8_t is_current = 0;
-            if (    packet.seq == waypoint_handler->current_waypoint_index_ &&  // This is the current waypoint
-                    !waypoint_handler->navigation_.waiting_at_waypoint())       // And we are en route
+            if (    packet.seq == waypoint_handler->current_waypoint_index_)       // And we are en route
             {
                 is_current = 1;
             }
@@ -493,7 +492,7 @@ bool Mavlink_waypoint_handler::init()
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
     send_home_waypoint();
-    
+
     if(!init_success)
     {
         print_util_dbg_print("[MAVLINK_WAYPOINT_HANDLER] constructor: ERROR\r\n");

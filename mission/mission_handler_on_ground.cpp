@@ -68,7 +68,6 @@ bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
 
 bool Mission_handler_on_ground::setup(const Waypoint& wpt)
 {
-    navigation_.set_waiting_at_waypoint(true);
     return true;
 }
 

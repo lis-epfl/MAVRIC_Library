@@ -81,6 +81,7 @@ Mission_handler_navigating<T>::Mission_handler_navigating(  T& controller,
             navigation_(navigation),
             mavlink_stream_(mavlink_stream),
             waypoint_handler_(waypoint_handler),
+            waypoint_reached_(false),
             start_time_(0),
             travel_time_(0)
 {
@@ -116,7 +117,7 @@ bool Mission_handler_navigating<T>::setup(const Waypoint& wpt)
     bool success = true;
 
     start_time_ = time_keeper_get_ms();
-    navigation_.set_waiting_at_waypoint(false);
+    waypoint_reached_ = false;
     waypoint_ = wpt;
 
     return success;
@@ -152,7 +153,7 @@ Mission_handler::update_status_t Mission_handler_navigating<T>::update()
            (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
     {
         // If we are near the waypoint but the flag has not been set, do this once ...
-        if (!navigation_.waiting_at_waypoint())
+        if (!waypoint_reached_)
         {
             // Send debug log ...
             if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
@@ -180,7 +181,7 @@ Mission_handler::update_status_t Mission_handler_navigating<T>::update()
             travel_time_ = time_keeper_get_ms() - navigation_.start_wpt_time();
 
             // ... and set to waiting at waypoint ...
-            navigation_.set_waiting_at_waypoint(true);
+            waypoint_reached_ = true;
         }
     }
 
@@ -188,7 +189,7 @@ Mission_handler::update_status_t Mission_handler_navigating<T>::update()
     Determine status code 
     ********************/
     // First check if we have reached the waypoint
-    if (navigation_.waiting_at_waypoint())
+    if (waypoint_reached_)
     {
         // Then ensure that we are in autocontinue
         if ((waypoint_.autocontinue() == 1) && (waypoint_handler_.waypoint_count() > 1))

@@ -82,7 +82,6 @@ bool Mission_planner::set_current_waypoint(uint16_t index)
         {
             print_util_dbg_print("changing right now\n");
             navigation_.set_start_wpt_time();
-            navigation_.set_waiting_at_waypoint(false);
             switch_mission_handler(waypoint_handler_.current_waypoint());
         }
 
@@ -348,7 +347,6 @@ void Mission_planner::state_machine()
                     {
                         // Advance mission item
                         navigation_.set_start_wpt_time();
-                        navigation_.set_waiting_at_waypoint(false);
                         waypoint_handler_.advance_to_next_waypoint();
 
                         // Set mission handler
@@ -372,7 +370,6 @@ void Mission_planner::state_machine()
                     {
                         // Advance to next waypoint
                         navigation_.set_start_wpt_time();
-                        navigation_.set_waiting_at_waypoint(false);
                         waypoint_handler_.advance_to_next_waypoint();
 
                         // Set mission handler
@@ -408,7 +405,6 @@ void Mission_planner::state_machine()
                     {
                         // Reset but don't advance current waypoint
                         navigation_.set_start_wpt_time();
-                        navigation_.set_waiting_at_waypoint(false);
 
                         // Set mission handler
                         switch_mission_handler(waypoint_handler_.current_waypoint());

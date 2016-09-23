@@ -88,7 +88,6 @@ bool Mission_handler_hold_position<T>::setup(const Waypoint& wpt)
     waypoint_ = wpt;
     start_time_ = time_keeper_get_ms();
     within_radius_ = false;
-    navigation_.set_waiting_at_waypoint(true);
 
     return success;
 }

@@ -112,7 +112,7 @@ void Navigation::set_speed_command(float rel_pos[])
     dir_desired_sg[Z] /= norm_rel_dist;
 
     // Check if we are hovering at a waypoint
-    if ((mode.is_auto() && (!waiting_at_waypoint_))/* || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)) TODO */)
+    if ((mode.is_auto()/* && (!waiting_at_waypoint_)*/)/* || ((state.mav_state_ == MAV_STATE_CRITICAL) && (critical_behavior == Navigation::FLY_TO_HOME_WP)) TODO */)
     {
 
         if (((maths_f_abs(rel_pos[X]) <= 1.0f) && (maths_f_abs(rel_pos[Y]) <= 1.0f)) || ((maths_f_abs(rel_pos[X]) <= 5.0f) && (maths_f_abs(rel_pos[Y]) <= 5.0f) && (maths_f_abs(rel_pos[Z]) >= 3.0f)))
@@ -496,7 +496,6 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     last_update = 0;
 
     dist2wp_sqr = 0.0f;
-    waiting_at_waypoint_ = false;
     start_wpt_time_ = time_keeper_get_ms();
 
     wpt_nav_controller = nav_config.wpt_nav_controller;
@@ -629,14 +628,4 @@ void Navigation::set_start_wpt_time()
 uint32_t Navigation::start_wpt_time() const
 {
     return start_wpt_time_;
-}
-
-bool Navigation::waiting_at_waypoint() const
-{
-    return waiting_at_waypoint_;
-}
-
-void Navigation::set_waiting_at_waypoint(bool waiting_at_waypoint)
-{
-    waiting_at_waypoint_ = waiting_at_waypoint;
 }

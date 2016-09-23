@@ -151,18 +151,6 @@ public:
      */
     uint32_t start_wpt_time() const;
 
-    /**
-     * \brief   Gets a flag stating if the drone is currently waiting at a waypoint
-     *
-     * \return  Is drone waiting at a waypoint
-     */
-    bool waiting_at_waypoint() const;
-
-    /**
-     * \brief   Sets the flag stating if the drone is currently waiting at a waypoint
-     */
-    void set_waiting_at_waypoint(bool waiting_at_waypoint);
-
 
 
     dubin_state_t dubin_state;                          ///< The internal Dubin state
@@ -183,7 +171,6 @@ public:
     const quat_t& qe;                                   ///< The pointer to the attitude quaternion structure
 
 private:
-    bool waiting_at_waypoint_;                          ///< Flag stating if the drone is currently at a waypoint waiting to advance
     uint32_t start_wpt_time_;                           ///< The time at which the MAV starts to travel towards its waypoint
 
     Waypoint goal_;                                     ///< The local position of the navigation function goal
