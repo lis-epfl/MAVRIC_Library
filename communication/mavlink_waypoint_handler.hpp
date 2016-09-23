@@ -257,14 +257,6 @@ private:
      * \param   msg                     The received MAVLink message structure with the clear command
      */
     static void mission_clear_all_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
-
-    /**
-     * \brief   Initialize a first waypoint at (0,0,0) at start up
-     *
-     * \details Is called by the constructor
-     *
-     */
-    void init_first_waypoint();
 };
 
 

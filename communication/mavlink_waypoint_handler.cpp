@@ -443,47 +443,12 @@ bool Mavlink_waypoint_handler::init()
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
-    init_first_waypoint();
-
     if(!init_success)
     {
         print_util_dbg_print("[MAVLINK_WAYPOINT_HANDLER] constructor: ERROR\r\n");
     }
 
     return init_success;
-}
-
-void Mavlink_waypoint_handler::init_first_waypoint()
-{
-    /*
-    Constructor order:
-
-    uint8_t frame,
-    uint16_t command,
-    uint8_t autocontinue,
-    float param1,   Minimum pitch (if airspeed sensor present), desired pitch without sensor [rad]
-    float param2,   Empty
-    float param3,   Takeoff ascend rate [ms^-1]
-    float param4,   Yaw angle [rad] (if magnetometer or another yaw estimation source present), ignored without one of these
-    float param5,   Y-axis position [m] (I dont know why they made it this order)
-    float param6,   X-axis position [m] (I dont know why they made it this order)
-    float param7    Z-axis position [m]
-    */
-    Waypoint waypoint(  MAV_FRAME_LOCAL_NED,
-                        MAV_CMD_NAV_TAKEOFF,
-                        0,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        navigation_.takeoff_altitude);
-
-    waypoint_count_ = 1;
-    set_current_waypoint_index(0);
-
-    waypoint_list_[0] = waypoint;
 }
 
 const Waypoint& Mavlink_waypoint_handler::current_waypoint() const
