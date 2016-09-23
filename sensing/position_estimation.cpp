@@ -311,7 +311,7 @@ void Position_estimation::fence_control()
 
 void Position_estimation::calibrate_barometer()
 {
-    barometer_bias = barometer.altitude_gf() - (- local_position[Z] + origin_.altitude);
+    barometer_bias = barometer.altitude_gf() - (- local_position[Z] + origin().altitude);
     barometer_calibrated = true;
 }
 
