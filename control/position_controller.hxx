@@ -41,8 +41,6 @@
 
 #include "control/position_controller.hpp"
 
-// #include "util/print_util.h"
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -76,7 +74,8 @@ void Position_controller<TVelocity_controller>::update()
         /* calculate torque_command and propagate down the cascade */
         typename TVelocity_controller::vel_command_t vel_command = calc_velocity_command(position_command_);
         TVelocity_controller::update_cascade(vel_command);
-    }else
+    }
+    else
     {
         /* propagate update() down the cascade until reaching the highest active level */
         TVelocity_controller::update();
@@ -173,13 +172,13 @@ typename TVelocity_controller::vel_command_t Position_controller<TVelocity_contr
     attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
     q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
 
-    float goal_dir_sg[3];
-    quaternions_rotate_vector(q_rot, goal_dir, goal_dir_sg);
+    //float goal_dir_sg[3];
+    //quaternions_rotate_vector(q_rot, goal_dir, goal_dir_sg);
 	
 	typename TVelocity_controller::vel_command_t velocity_command;
-    velocity_command.vel[X] = goal_dir_sg[X] * v_desired;
-    velocity_command.vel[Y] = goal_dir_sg[Y] * v_desired;
-    velocity_command.vel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir_sg[Z] * v_desired;
+    velocity_command.vel[X] = goal_dir[X] * v_desired;
+    velocity_command.vel[Y] = goal_dir[Y] * v_desired;
+    velocity_command.vel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
 
     // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
     if(cruise_mode_)

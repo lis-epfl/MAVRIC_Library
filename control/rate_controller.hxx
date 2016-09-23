@@ -104,7 +104,7 @@ template<class TServos_mix>
 void Rate_controller<TServos_mix>::update_cascade(const rate_command_t& rate_command)
 {
     rate_command_ = rate_command;
-    update();
+    Rate_controller::update();
 }
 
 template<class TServos_mix>
