@@ -112,7 +112,6 @@ Barometer_BMP085::Barometer_BMP085(I2c& i2c):
     temperature_        = 0.0f;
     altitude_gf_        = 0.0f;
     altitude_filtered   = 0.0f;
-    altitude_bias_gf_   = 0.0f;
     speed_lf_           = 0.0f;
     last_update_us_     = 0.0f;
     temperature_        = 24.0f;    // Nice day
@@ -250,7 +249,7 @@ bool Barometer_BMP085::update(void)
             }
 
             // remove bias
-            altitude_gf_ = altitude_filtered - altitude_bias_gf_;
+            altitude_gf_ = altitude_filtered;
 
             // Time interval since last update
             dt_s_ = (time_keeper_get_us() - last_update_us_) / 1000000.0f;

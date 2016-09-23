@@ -52,7 +52,7 @@
 class Barometer
 {
 public:
-    Barometer();
+    Barometer(float pressure_at_sea_level = 101325.0f);
 
     /**
      * \brief   Initialise the sensor
@@ -116,36 +116,48 @@ public:
 
 
     /**
-     * \brief   Gets the flag stating if the barometer has been calibrated
+     * \brief   Compute altitude above sea level from pressure
      *
-     * \return  has_been_read_
-     */
-    bool has_been_calibrated() const;
-
-
-    /**
-     * \brief   Correct altitude offset using current altitude
-     *
-     * \param   current_altitude_gf     Current altitude in global frame
-     */
-    void calibrate_bias(float current_altitude_gf);
-
-
-    /**
-     * \brief   Compue altitude above sea level from pressure
-     *
-     * \param   pressure        Current atmospheric pressure
-     * \param   altitude_bias   Altitude correction (optional)
+     * \param   pressure                Current atmospheric pressure
+     * \param   pressure_at_sea_level   Pressure at sea level (optional)
      *
      * \return  Altitude (global frame)
-     *
      */
-    static float altitude_from_pressure(float pressure, float altitude_bias = 0);
+    static float altitude_from_pressure(float pressure, float pressure_at_sea_level = pressure_at_sea_level());
+
+
+    /**
+     * \brief   Compute pressure at sea level from pressure and altitude
+     *
+     * \param   pressure        Current atmospheric pressure
+     * \param   altitude_       Altitude
+     *
+     * \return  Pressure at sea level
+     */
+    static float compute_pressure_at_sea_level(float pressure, float altitude);
+
+
+    /**
+     * \brief   Get the pressure at sea level
+     * \detail  The pressure at sea level is used to compute altitude from pressure
+     *
+     * \param   pressure_at_sea_level
+     */
+    static float pressure_at_sea_level(void);
+
 
 protected:
+    /**
+     * \brief   Update the pressure at sea level
+     * \detail  The pressure at sea level is used to compute altitude from pressure
+     *
+     * \param   pressure_at_sea_level
+     */
+    static void set_pressure_at_sea_level(float pressure_at_sea_level);
 
-    float altitude_bias_gf_;    ///< Offset of the barometer sensor for matching GPS altitude value
-    bool has_been_calibrated_;  ///< Flag stating if the barometer has been calibrated
+
+private:
+    static float pressure_at_sea_level_;    ///< Offset of the barometer sensor for matching GPS altitude value
 };
 
 /**
