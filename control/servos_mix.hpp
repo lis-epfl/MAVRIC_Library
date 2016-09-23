@@ -30,44 +30,49 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_wing_default_config.hpp
+ * \file servos_mix.hpp
  *
  * \author MAV'RIC Team
- * \author Simon Pyroth
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * \author Basil Huber
  *
- * \brief Default configuration for the servo_mix for the MAVRIC wing
+ * \brief Abstract class that links between torque commands and servos PWM command for quadcopters
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
-#define SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
+#ifndef SERVOS_MIX_HPP_
+#define SERVOS_MIX_HPP_
 
-
-#include "control/servos_mix_wing.hpp"
+#include "drivers/servo.hpp"
 #include "util/constants.hpp"
 
+#include "control/servos_mix_i.hpp"
 
-static inline servos_mix_wing_conf_t servos_mix_wing_default_config()
+
+class Servos_mix : public Servos_mix_I
 {
-	servos_mix_wing_conf_t conf;
+public:
 
-	conf.servo_right = 2;
-	conf.servo_left = 1;
-	conf.motor = 0;
+    Servos_mix();
 
-	conf.servo_right_dir = FLAP_INVERTED;
-	conf.servo_left_dir = FLAP_NORMAL;
+    /*
+     * \brief   Write motor commands to servo structure based on torque command
+     */
+    virtual void update()=0;
 
-	conf.min_amplitude = -1.0f;
-	conf.max_amplitude = 1.0f;
-	conf.min_thrust = -0.9f;
-	conf.max_thrust = 1.0f;
+    /*
+     * \brief   Set torque command and set controller cascade to "torque mode" 
+     * \details Sets the torq_command_ and sets cascade_command_ to point to torq_command, signaling that this is the command mode
+     *          This function should NOT be called from higher level controllers if they provide a command, use update_cascade instead
+     * \param torq_command  torque command to be set and used for motor commands
+     */
+    inline bool set_torque_command(const torq_command_t& torq_command){torq_command_ = torq_command; return true;};
 
-	conf.trim_roll = 0.252273f;
-	conf.trim_pitch = 0.0090908f;
+protected:
 
-	return conf;
+    torq_command_t torq_command_;               ///< torque command (desired torque and thrust)
 };
 
-#endif // SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
+#endif

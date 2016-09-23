@@ -46,7 +46,7 @@
 #include "util/coord_conventions.hpp"
 #include "control/control_command.h"
 
-class IAttitude_controller
+class Attitude_controller_I
 {
 public:
     /*

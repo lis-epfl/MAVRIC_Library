@@ -47,11 +47,10 @@
 #include "control/xyposition_zvel_controller_i.hpp"
 #include "control/navigation_controller_i.hpp"
 #include "control/pid_controller.hpp"
-#include "control/stabilisation.hpp"
 #include "sensing/ins.hpp"
-#include "sensing/ahrs.hpp"
 
-class Position_controller : public Position_controller_I, public XYposition_Zvel_controller_I, public Navigation_controller_I
+template<class TVelocity_controller>
+class Position_controller : public Position_controller_I, public XYposition_Zvel_controller_I, public Navigation_controller_I, public TVelocity_controller
 {
 public:
 
@@ -65,32 +64,31 @@ public:
         float max_climb_rate;
         float max_rel_yaw;
         float min_cruise_dist;
-        float kp_yaw;
+		float kp_yaw;
+        typename TVelocity_controller::conf_t velocity_controller_config;
     };
 
-    /**
-     * \brief Enumeration of control modes
-     */
     enum class ctrl_mode_t
     {
         POS_XYZ,        ///< 3D position control
         POS_XY_VEL_Z    ///< Horizontal position control + vertical velocity control
     };
 
-    /**
-     * \brief Constructor
-     *
-     * \param   ins     Reference to Inertial Navigation System (INS)
-     * \param   ahrs    Reference to Attitude and Heading Reference System (AHRS)
-     * \param   config  Configuration structure
-     */
-    Position_controller(const INS& ins, const ahrs_t& ahrs, conf_t config);
 
-    /**
+    struct args_t
+    {
+        INS& ins;
+        ahrs_t& ahrs;
+        typename TVelocity_controller::args_t velocity_controller_args;
+    };
+
+    Position_controller(args_t args, const conf_t& config = default_config());
+
+
+	/**
      * \brief Main update function
      */
-    void update();
-
+    virtual void update();
 
     /**
      * \brief           Sets the 3D position command
@@ -101,7 +99,6 @@ public:
      */
     bool set_position_command(const pos_command_t& pos_command);
 
-
     /**
      * \brief           sets the horizontal position & vertical velocity command
      *
@@ -110,7 +107,6 @@ public:
      * \return success  whether command was accepted
      */
     bool set_xyposition_zvel_command(const xypos_zvel_command_t& command);
-
 
     /**
      * \brief           sets the navigation command (desired position)
@@ -128,18 +124,24 @@ public:
      */
     static inline conf_t default_config();
 
-
-    // TODO add doc and check why this returns control_command_t
-    control_command_t& velocity_command();
-
 protected:
+
+    /*
+     * \brief   calc velocity command based on given position command and update underlaying cascade level (TVelocity_controller)
+     * \details Sets the internal position_command_ to the provided one, without modifiying cascade_command_
+     *          Calls calc_velocity_command followed by TVelocity_controller::update_cascade
+     *          This function should be called from higher level controllers if they provide a command
+     * \param   position_command  position command to be set
+     */
+    void update_cascade(const pos_command_t& pos_command);
+
     /*
      * \brief   calc velocity command based on given position command
      * \details Sets the internal position_command_ to the provided one, without modifiying cascade_command_
      *          This function should be called from higher level controllers if they provide a command
      * \param position_command  position command
      */
-    void calc_velocity_command(const pos_command_t& pos_command);
+    typename TVelocity_controller::vel_command_t calc_velocity_command(const pos_command_t& pos_command);
 
 
     pid_controller_conf_t& cruise_pid_config(); // TODO: set return to const when onboard parameter use get/set
@@ -159,7 +161,6 @@ private:
     const INS&          ins_;                       /// inertial navigation unit ti use for position estimation
     const ahrs_t&       ahrs_;                      ///< Attitude estimation
     pos_command_t       position_command_;          ///< Position command in local frame; Z coord ONLY VALID if in POS_XYZ
-    control_command_t   velocity_command_;
     float               zvel_command_;              ///< Velocity command in z direction (local frame); ONLY VALID if in POS_XY_VELZ mode
     pid_controller_t    pid_controller_;            //< position pid controller
 
@@ -171,11 +172,11 @@ private:
     pid_controller_conf_t hover_pid_config_;         //< configuration of hover pid position controller
     float max_climb_rate_;                           //< maximal climb rate (velocity is scaled so that output velocity in Z <= max_climb_rate)
     float min_cruise_dist_;                          //< minimal distance to target above which the vehicle changes to cruise mode
-    float kp_yaw_;
-
+	float kp_yaw_;
 };
 
-Position_controller::conf_t Position_controller::default_config()
+template<class TVelocity_controller>
+typename Position_controller<TVelocity_controller>::conf_t Position_controller<TVelocity_controller>::default_config()
 {
     conf_t conf;
     conf.max_climb_rate     = 1.0f;
@@ -204,7 +205,12 @@ Position_controller::conf_t Position_controller::default_config()
     conf.hover_pid_config.differentiator.clip     = 0.46f;
     conf.hover_pid_config.soft_zone_width         = 0.0f;
 
+    conf.velocity_controller_config = TVelocity_controller::default_config();
+
     return conf;
 };
+
+
+#include "control/position_controller.hxx"
 
 #endif /* POSITION_CONTROLLER_HPP_ */

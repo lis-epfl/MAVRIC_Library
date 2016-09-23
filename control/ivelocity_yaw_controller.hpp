@@ -30,41 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_ywing_default_config.h
+ * \file ivelocity_yaw_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief Default configuration for Ywing servo mix
+ * \brief Interface for velocity controller taking also a yaw command
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
+#ifndef IVELOCITY_CONTROLLER_YAW_HPP_
+#define IVELOCITY_CONTROLLER_YAW_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-
-#include "servos_mix_ywing.h"
-
-
-servo_mix_ywing_conf_t servo_mix_ywing_default_config =
+class IVelocity_yaw_controller
 {
-    .flap_top_dir   = FLAP_INVERTED,
-    .flap_right_dir = FLAP_INVERTED,
-    .flap_left_dir  = FLAP_INVERTED,
-    .min_thrust     = -0.9f,
-    .max_thrust     = 1.0f,
-    .min_deflection = -1.0f,
-    .max_deflection = 1.0f,
+public:
+    /*
+     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
+     */
+    struct vel_yaw_command_t : base_command_t
+    {
+        local_velocity_t    vel;        ///< desired velocity in local frame
+        float               yaw;        ///< desired absolute yaw in local frame
+    };
+
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
+
+    /**
+     * \brief           sets the velocity yaw command (desired velocity and desired yaw)
+     *
+     * \param command   velocity command indicating desired velocity and yaw in local frame
+     *
+     * \return success  whether command was accepted
+     */
+    inline virtual bool set_velocity_yaw_command(const vel_yaw_command_t& command) = 0;
 };
 
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
+#endif /* IVELOCITY_CONTROLLER_YAW_HPP_ */

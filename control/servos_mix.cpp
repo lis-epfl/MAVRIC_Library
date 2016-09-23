@@ -30,47 +30,25 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_i.hpp
+ * \file servos_mix.cpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
  * \author Basil Huber
  *
- * \brief Interface for torque controller
+ * \brief Links between torque commands and servos PWM command for quadcopters
+ * in diagonal configuration
  *
  ******************************************************************************/
 
+#include "control/servos_mix.hpp"
 
-#ifndef TORQUE_CONTROLLER_I_HPP_
-#define TORQUE_CONTROLLER_I_HPP_
-
-#include "util/coord_conventions.hpp"
-#include "control/control_command.h"
-
-class Torque_controller_I
+Servos_mix::Servos_mix()
 {
-public:
-    /*
-     * \brief   structure representing a torq command; contains desired torq for each axis and thrust in body frame
-     */
-    struct torq_command_t : base_command_t
-    {
-        std::array<float,3>  torq;       ///< desired torq for each axis in body frame
-        float                thrust;     ///< desired thrust
-    };
-
-    /**
-     * \brief   Update controller;
-     */
-    virtual void update() = 0;
-
-    /**
-     * \brief           sets the torque command (desired torque and thrust)
-     *
-     * \param command   torque command indicating desired torque and thrust in body frame
-     *
-     * \return success  whether command was accepted
-     */
-    virtual bool set_torque_command(const torq_command_t& command) = 0;
-};
-
-#endif /* TORQUE_CONTROLLER_I_HPP_ */
+    /* set initial torque command */
+    torq_command_t initial_torque_command;
+    initial_torque_command.torq = {0.0f, 0.0f, 0.0f};
+    initial_torque_command.thrust = {-1.0f};
+    set_torque_command(initial_torque_command);
+}

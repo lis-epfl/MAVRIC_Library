@@ -30,64 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_wing.cpp
+ * \file iservos_mix_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Simon Pyroth
  * \author Basil Huber
  *
- * \brief Links between regulation output and PWM commands for a wing aircraft
+ * \brief Interface for servo mix, allowing to convert torque command to servo commands
  *
  ******************************************************************************/
 
 
-#include "control/servos_mix_wing.hpp"
+#ifndef ISERVOS_MIX_HPP_
+#define ISERVOS_MIX_HPP_
 
-Servos_mix_wing::Servos_mix_wing(args_t& args, const conf_t& config) :
-    config_(config),
-    servo_left_(args.servo_left),
-    servo_right_(args.servo_right),
-    motor_(args.motor)
-    {}
+#include "util/coord_conventions.hpp"
+#include "control/control_command.h"
 
-
-void Servos_mix_wing::update()
+class Servos_mix_I
 {
-    // Calculate value to be sent to the motors
-    float tmp_right_servo   = config_.servo_right_dir * ( (torq_command_.torq[1] + config_.trim_pitch) + (torq_command_.torq[0] + config_.trim_roll) );
-    float tmp_left_servo    = config_.servo_left_dir  * ( (torq_command_.torq[1] + config_.trim_pitch) - (torq_command_.torq[0] + config_.trim_roll) );
-    float tmp_motor         = torq_command_.thrust;
+public:
+    /*
+     * \brief   structure representing a torq command; contains desired torq for each axis and thrust in body frame
+     */
+    struct torq_command_t : base_command_t
+    {
+        std::array<float,3>  torq;       ///< desired torq for each axis in body frame
+        float                thrust;     ///< desired thrust
+    };
 
-    // Clip values
-    if (tmp_right_servo < config_.min_amplitude)
-    {
-        tmp_right_servo = config_.min_amplitude;
-    }
-    else if (tmp_right_servo > config_.max_amplitude)
-    {
-        tmp_right_servo = config_.max_amplitude;
-    }
+    /**
+     * \brief   Update controller;
+     */
+    virtual void update() = 0;
 
-    if (tmp_left_servo < config_.min_amplitude)
-    {
-        tmp_left_servo = config_.min_amplitude;
-    }
-    else if (tmp_left_servo > config_.max_amplitude)
-    {
-        tmp_left_servo = config_.max_amplitude;
-    }
+    /**
+     * \brief           sets the torque command (desired torque and thrust)
+     *
+     * \param command   torque command indicating desired torque and thrust in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool set_torque_command(const torq_command_t& command) = 0;
+};
 
-    if (tmp_motor < config_.min_thrust)
-    {
-        tmp_motor = config_.min_thrust;
-    }
-    else if (tmp_motor > config_.max_thrust)
-    {
-        tmp_motor = config_.max_thrust;
-    }
-
-    // Set the calculated values to each motors
-    servo_left_.write(tmp_left_servo);
-    servo_right_.write(tmp_right_servo);
-    motor_.write(tmp_motor);
-}
+#endif /* ISERVOS_MIX_HPP_ */

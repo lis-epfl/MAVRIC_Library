@@ -30,90 +30,73 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_diag.hpp
+ * \file servos_mix_birotor.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief Links between torque commands and servos PWM command for quadcopters
- * in diagonal configuration
+ * \brief Links between torque commands and servos PWM command for birotors
  *
  ******************************************************************************/
 
 #ifndef SERVOS_MIX_BIROTOR_HPP_
 #define SERVOS_MIX_BIROTOR_HPP_
 
-#include "drivers/servo.hpp"
-#include "util/constants.hpp"
+#include "control/servos_mix.hpp"
 
 extern "C"
 {
-#include "control/control_command.h"
 #include "drivers/unsupported/daler_dc_motor_ctrl.h"
 }
 
-/**
- * \brief Configuration structure
- */
-typedef struct
+class Servos_mix_birotor : public Servos_mix
 {
-    rot_dir_t   motor_left_dir;     ///< Left motor rotation direction
-    rot_dir_t   motor_right_dir;    ///< Right motor rotation direction
-    rot_dir_t   servo_left_dir;     ///< Left servo rotation direction
-    rot_dir_t   servo_right_dir;    ///< Right servo rotation direction
-    float       min_thrust;         ///< Minimum thrust command
-    float       max_thrust;         ///< Maximum thrust command
-    float       min_servo;          ///< Minimum servo command
-    float       max_servo;          ///< Maximum servo command
 
-} servo_mix_birotor_conf_t;
-
-
-/**
- * \brief   servos mix structure
- */
-typedef struct
-{
-    rot_dir_t   motor_left_dir;                 ///< Left motor rotation direction
-    rot_dir_t   motor_right_dir;                ///< Right motor rotation direction
-    rot_dir_t   servo_left_dir;                 ///< Left servo rotation direction
-    rot_dir_t   servo_right_dir;                ///< Right servo rotation direction
-    float       min_thrust;                     ///< Minimum thrust command
-    float       max_thrust;                     ///< Maximum thrust command
-    float       min_servo;                      ///< Minimum servo command
-    float       max_servo;                      ///< Maximum servo command
-    const torque_command_t* torque_command;     ///< Pointer to torque command (input)
-    const thrust_command_t* thrust_command;     ///< Pointer to thrust command (input)
-    Servo* motor_left;                          ///< Pointer to servos (output)
-    Servo* motor_right;                         ///< Pointer to servos (output)
-    Servo* servo_left;                          ///< Pointer to servos (output)
-    Servo* servo_right;                         ///< Pointer to servos (output)
-    daler_dc_motor_ctrl_t*  dc_motors;          ///< Pointer to DC motor controller (output)
-} servo_mix_birotor_t;
+    /**
+     * \brief Configuration structure
+     */
+    struct conf_t
+    {
+        rot_dir_t   motor_left_dir;     ///< Left motor rotation direction
+        rot_dir_t   motor_right_dir;    ///< Right motor rotation direction
+        rot_dir_t   servo_left_dir;     ///< Left servo rotation direction
+        rot_dir_t   servo_right_dir;    ///< Right servo rotation direction
+        float       min_servo;          ///< Minimum servo command
+        float       max_servo;          ///< Maximum servo command
+        float       min_thrust;        ///< Minimal thrust
+        float       max_thrust;        ///< Maxmal thrust
+    };
 
 
-/**
- * \brief [brief description]
- * @details [long description]
- *
- * \param servo_mix [description]
- * \param config [description]
- * \param torque_command [description]
- * \param servo_pwm [description]
- *
- * \return success
- */
-bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos, daler_dc_motor_ctrl_t*  dc_motor);
+    /**
+     * \brief Constructor arguments
+     */
+    struct args_t
+    {
+        Servo& motor_left;
+        Servo& motor_right;
+        Servo& servo_left;
+        Servo& servo_right;
+        daler_dc_motor_ctrl_t& dc_motors;
+    };
 
+    Servos_mix_birotor(args_t& args, const conf_t& config);
 
-/**
- * \brief [brief description]
- * @details [long description]
- *
- * \param servo_mix [description]
- *
- * \return success
- */
-bool servos_mix_birotor_update(servo_mix_birotor_t* mix);
+private:
+    rot_dir_t   motor_left_dir_;                 ///< Left motor rotation direction
+    rot_dir_t   motor_right_dir_;                ///< Right motor rotation direction
+    rot_dir_t   servo_left_dir_;                 ///< Left servo rotation direction
+    rot_dir_t   servo_right_dir_;                ///< Right servo rotation direction
+    float       min_servo_;                      ///< Minimum servo command
+    float       max_servo_;                      ///< Maximum servo command
+    float       min_thrust_;                     ///< Minimal thrust
+    float       max_thrust_;                     ///< Maxmal thrust
+    Servo& motor_left_;                          ///< Servo (output)
+    Servo& motor_right_;                         ///< Servo (output)
+    Servo& servo_left_;                          ///< Servo (output)
+    Servo& servo_right_;                         ///< Servo (output)
+    daler_dc_motor_ctrl_t&  dc_motors_;          ///< DC motor controller (output)
+};
 
 #endif // SERVOS_MIX_BIROTOR_HPP_

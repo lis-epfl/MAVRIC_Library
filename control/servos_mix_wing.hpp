@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Simon Pyroth
+ * \author Basil Huber
  *
  * \brief Links between regulation output and PWM commands for a wing aircraft
  *
@@ -44,78 +45,78 @@
 #define SERVOS_MIX_WING_HPP_
 
 #include "drivers/servo.hpp"
-#include "util/constants.hpp"
-#include "control/stabilisation.hpp"
 
-extern "C"
+#include "control/servos_mix.hpp"
+
+class Servos_mix_wing : public Servos_mix
 {
-#include "control/control_command.h"
-}
+public:
+    /**
+     * \brief The servo mix structure for a wing
+     */
+    struct conf_t
+    {
+        uint8_t             servo_right;        ///< Right aileron servo index
+        uint8_t             servo_left;         ///< Left aileron servo index
+        uint8_t             motor;              ///< Propulsion motor index
 
+        flap_dir_t          servo_right_dir;    ///< Right aileron servo direction
+        flap_dir_t          servo_left_dir;     ///< Left aileron servo direction
 
-/**
- * \brief The servo mix structure for a wing
- */
-typedef struct
+        float               min_amplitude;      ///< Minimum value which can be put on servo
+        float               max_amplitude;      ///< Maximum value which can be put on servo
+
+        float               trim_roll;          ///< Trim value for roll
+        float               trim_pitch;         ///< Trim value for pitch
+
+        float               min_thrust;        ///< Minimal thrust
+        float               max_thrust;        ///< Maxmal thrust
+    };
+
+    /**
+     * \brief Constructor arguments
+     */
+    struct args_t
+    {
+        Servo& servo_left;
+        Servo& servo_right;
+        Servo& motor;
+    };
+
+    Servos_mix_wing(args_t& args, const conf_t& config = default_config());
+
+    virtual void update();
+
+    static inline conf_t default_config();
+
+private:
+    conf_t   config_;                        ///< Configuration of the mix
+    Servo& servo_left_;                      ///< Left servo
+    Servo& servo_right_;                     ///< Right servo
+    Servo& motor_;                           ///< Motor
+};
+
+Servos_mix_wing::conf_t Servos_mix_wing::default_config()
 {
-    uint8_t             servo_right;        ///< Right aileron servo index
-    uint8_t             servo_left;         ///< Left aileron servo index
-    uint8_t             motor;              ///< Propulsion motor index
+    conf_t conf;
 
-    flap_dir_t          servo_right_dir;    ///< Right aileron servo direction
-    flap_dir_t          servo_left_dir;     ///< Left aileron servo direction
+    conf.servo_right = 2;
+    conf.servo_left = 1;
+    conf.motor = 0;
 
-    float               min_amplitude;      ///< Minimum value which can be put on servo
-    float               max_amplitude;      ///< Maximum value which can be put on servo
-    float               min_thrust;         ///< Minimum value which can be put on the motor
-    float               max_thrust;         ///< Maximum value which can be put on the motor
+    conf.servo_right_dir = FLAP_INVERTED;
+    conf.servo_left_dir = FLAP_NORMAL;
 
-    float               trim_roll;          ///< Trim value for roll
-    float               trim_pitch;         ///< Trim value for pitch
-} servos_mix_wing_conf_t;
+    conf.min_amplitude = -1.0f;
+    conf.max_amplitude = 1.0f;
 
-/**
- * \brief   Servos mix structure
- */
-typedef struct
-{
-    servos_mix_wing_conf_t   config;        ///< Configuration of the mix
-    const torque_command_t* torque_command; ///< The pointer to the torque command
-    const thrust_command_t* thrust_command; ///< The pointer to the thrust command
-    Servo* servo_left;                      ///< The pointer to the left servo
-    Servo* servo_right;                     ///< The pointer to the right servo
-    Servo* motor;                           ///< The pointer to the motor
-} servos_mix_wing_t;
+    conf.trim_roll = 0.252273f;
+    conf.trim_pitch = 0.0090908f;
 
+    conf.min_thrust = -0.9f;
+    conf.max_thrust = 1.0f;
 
-/**
- * \brief                  Initialize the servo mix
- *
- * \param mix              Pointer to the servo mix structure of the wing
- * \param config           Pointer to the configuration of servo mix structure
- * \param torque_command   Pointer to the torque command
- * \param thrust_command   Pointer to the torque command
- * \param servo_left       Pointer to the left servo
- * \param servo_right      Pointer to the right servo
- * \param motor            Pointer to the motor
- *
- * \return  True if the init succeed, false otherwise
- */
-bool servos_mix_wing_init(  servos_mix_wing_t* mix,
-                            const servos_mix_wing_conf_t config,
-                            const torque_command_t* torque_command,
-                            const thrust_command_t* thrust_command,
-                            Servo* servo_left,
-                            Servo* servo_right,
-                            Servo* motor);
-
-
-/**
- * \brief                  Update the servos mix
- *
- * \param mix              Pointer to the servos mix structure
- */
-void servos_mix_wing_update(servos_mix_wing_t* mix);
-
+    return conf;
+};
 
 #endif

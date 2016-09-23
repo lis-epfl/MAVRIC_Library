@@ -34,87 +34,72 @@
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * \author Basil Huber
  *
  * \brief Links between torque commands and servos PWM command for quadcopters
  * in cross configuration
  *
  ******************************************************************************/
 
-
 #include "control/servos_mix_quadcopter_cross.hpp"
 
 
-bool servos_mix_quadcotper_cross_init(servos_mix_quadcotper_cross_t* mix,
-                                      const servos_mix_quadcopter_cross_conf_t* config,
-                                      const torque_command_t* torque_command,
-                                      const thrust_command_t* thrust_command,
-                                      Servo* motor_front,
-                                      Servo* motor_left,
-                                      Servo* motor_right,
-                                      Servo* motor_rear)
+Servos_mix_quadcopter_cross::Servos_mix_quadcopter_cross(args_t args, const conf_t& config) : 
+    motor_front_dir_(config.motor_front_dir),
+    motor_left_dir_(config.motor_left_dir),
+    motor_right_dir_(config.motor_front_dir),
+    motor_rear_dir_(config.motor_rear_dir),
+    min_thrust_(config.min_thrust),
+    max_thrust_(config.max_thrust),
+    motor_front_(args.motor_front),
+    motor_left_(args.motor_left),
+    motor_right_(args.motor_right),
+    motor_rear_(args.motor_rear)
 {
-    // Init dependencies
-    mix->torque_command = torque_command;
-    mix->thrust_command = thrust_command;
-    mix->motor_front    = motor_front;
-    mix->motor_left     = motor_left;
-    mix->motor_right    = motor_right;
-    mix->motor_rear     = motor_rear;
 
-    // Init parameters
-    mix->motor_front_dir = config->motor_front_dir;
-    mix->motor_left_dir  = config->motor_left_dir;
-    mix->motor_right_dir = config->motor_right_dir;
-    mix->motor_rear_dir  = config->motor_rear_dir;
-
-    mix->min_thrust        = config->min_thrust;
-    mix->max_thrust        = config->max_thrust;
-
-    return true;
 }
 
-
-bool servos_mix_quadcopter_cross_update(servos_mix_quadcotper_cross_t* mix)
+void Servos_mix_quadcopter_cross::update()
 {
     float motor[4];
 
-    // Front motor
-    motor[0] =  mix->thrust_command->thrust +
-                mix->torque_command->xyz[1]  +
-                mix->motor_front_dir * mix->torque_command->xyz[2];
+    // Front Right motor
+    motor[0] =  torq_command_.thrust +
+                torq_command_.torq[1] +
+                motor_front_dir_ * torq_command_.torq[2];
 
-    // Right motor
-    motor[1] =  mix->thrust_command->thrust +
-                (- mix->torque_command->xyz[0]) +
-                mix->motor_right_dir * mix->torque_command->xyz[2];
+    // Front Left motor
+    motor[1] =  torq_command_.thrust +
+                (- torq_command_.torq[0]) +
+                motor_right_dir_ * torq_command_.torq[2];
 
-    // Rear motor
-    motor[2]  = mix->thrust_command->thrust +
-                (- mix->torque_command->xyz[1]) +
-                mix->motor_rear_dir * mix->torque_command->xyz[2];
+    // Rear Right motor
+    motor[2]  = torq_command_.thrust +
+                (- torq_command_.torq[1]) +
+                torq_command_.torq[1] +
+                motor_rear_dir_ * torq_command_.torq[2];
 
-    // Left motor
-    motor[3]  = mix->thrust_command->thrust +
-                mix->torque_command->xyz[0]  +
-                mix->motor_left_dir * mix->torque_command->xyz[2];
+    // Rear Left motor
+    motor[3]  = torq_command_.thrust +
+                torq_command_.torq[0] +
+                motor_left_dir_ * torq_command_.torq[2];
 
     // Clip values
     for (int32_t i = 0; i < 4; i++)
     {
-        if (motor[i] < mix->min_thrust)
+        if (motor[i] < min_thrust_)
         {
-            motor[i] = mix->min_thrust;
+            motor[i] = min_thrust_;
         }
-        else if (motor[i] > mix->max_thrust)
+        else if (motor[i] > max_thrust_)
         {
-            motor[i] = mix->max_thrust;
+            motor[i] = max_thrust_;
         }
     }
 
-    mix->motor_front->write(motor[0]);
-    mix->motor_right->write(motor[1]);
-    mix->motor_rear->write(motor[2]);
-    mix->motor_left->write(motor[3]);
-
-    return true;
+    motor_front_.write(motor[0]);
+    motor_right_.write(motor[1]);
+    motor_rear_.write(motor[2]);
+    motor_left_.write(motor[3]);
 }

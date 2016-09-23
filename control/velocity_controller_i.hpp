@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Basil Huber
  *
- * \brief Interface for position controller
+ * \brief Interface for velocity controller with yaw aligned with velocity vector
  *
  ******************************************************************************/
 
@@ -54,7 +54,8 @@ public:
      */
     struct vel_command_t : base_command_t
     {
-        local_velocity_t    vel;        ///< desired velocity in local frame
+        local_velocity_t    vel;        ///< desired velocity in local frame (NED)
+        float               yaw;        ///< desired float in local frame (NED)
     };
 
     /**
@@ -69,7 +70,7 @@ public:
      *
      * \return success  whether command was accepted
      */
-    inline virtual bool set_velocity_command(const pos_command_t& command) = 0;
+    inline virtual bool set_velocity_command(const vel_command_t& command) = 0;
 };
 
 #endif /* VELOCITY_CONTROLLER_I_HPP_ */
