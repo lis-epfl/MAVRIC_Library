@@ -85,6 +85,14 @@ public:
 
 
     /**
+     * \brief   Read calibration data from EPROM
+     *
+     * \return  Success
+     */
+    bool read_eprom_calibration(void);
+
+
+    /**
      * \brief   Main update function
      * \detail  Reads new values from sensor
      *
@@ -101,7 +109,7 @@ public:
 
 
     /**
-     * \brief   Return the pressure
+     * \brief   Return the pressure (in Pa)
      *
      * \return  Value
      */
@@ -178,7 +186,7 @@ private:
     float   altitude_gf_raw_;       ///< Unfiltered altitude (global frame)
     float   speed_lf_raw_;          ///< Unfiltered vertical speed (NED frame)
 
-    float   pressure_;              ///< Measured pressure
+    float   pressure_;              ///< Measured pressure (in Pa)
     float   temperature_;           ///< Measured temperature
     float   altitude_gf_;           ///< Measured altitude (global frame)
     float   altitude_filtered;      ///< Measured altitude without bias removal

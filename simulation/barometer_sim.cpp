@@ -53,7 +53,6 @@ Barometer_sim::Barometer_sim(Dynamic_model& dynamic_model):
     temperature_        = 0.0f;
     altitude_gf_        = 0.0f;
     altitude_filtered   = 0.0f;
-    altitude_bias_gf_   = 0.0f;
     speed_lf_           = 0.0f;
     last_update_us_     = 0.0f;
     temperature_        = 24.0f;    // Nice day
@@ -85,7 +84,7 @@ bool Barometer_sim::update(void)
 
         // Get variation of altitude
         speed_lf_       = - (altitude_filtered - altitude_filtered_old) / dt_s;
-        altitude_gf_    = altitude_filtered - altitude_bias_gf_;
+        altitude_gf_    = altitude_filtered;
 
         // Get pressure
         pressure_ = 0.0f; // TODO

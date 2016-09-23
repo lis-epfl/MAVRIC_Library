@@ -62,7 +62,6 @@ extern "C"
 #include "libs/asf/avr32/services/delay/delay.h"
 }
 
-// #include "hal/common/dbg.hpp"
 
 int main(void)
 {
