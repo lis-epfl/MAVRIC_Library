@@ -496,7 +496,6 @@ Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const 
     last_update = 0;
 
     dist2wp_sqr = 0.0f;
-    start_wpt_time_ = time_keeper_get_ms();
 
     wpt_nav_controller = nav_config.wpt_nav_controller;
     hovering_controller = nav_config.hovering_controller;
@@ -618,14 +617,4 @@ void Navigation::set_goal(Waypoint new_goal)
 
     // Update goal based on the inputted waypoint
     goal_ = new_goal;
-}
-
-void Navigation::set_start_wpt_time()
-{
-    start_wpt_time_ = time_keeper_get_ms();
-}
-
-uint32_t Navigation::start_wpt_time() const
-{
-    return start_wpt_time_;
 }

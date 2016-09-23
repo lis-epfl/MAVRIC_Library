@@ -139,18 +139,6 @@ public:
      */
     void set_goal(Waypoint new_goal);
 
-    /**
-     * \brief   Sets the start_wpt_time_ to the current time
-     */
-    void set_start_wpt_time();
-
-    /**
-     * \brief   Gets the time that the drone started to move towards the waypoint
-     *
-     * \return  start_wpt_time
-     */
-    uint32_t start_wpt_time() const;
-
 
 
     dubin_state_t dubin_state;                          ///< The internal Dubin state
@@ -171,8 +159,6 @@ public:
     const quat_t& qe;                                   ///< The pointer to the attitude quaternion structure
 
 private:
-    uint32_t start_wpt_time_;                           ///< The time at which the MAV starts to travel towards its waypoint
-
     Waypoint goal_;                                     ///< The local position of the navigation function goal
     dubin_t goal_dubin_;                                ///< The dubin structure for the goal
 

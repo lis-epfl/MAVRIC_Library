@@ -398,7 +398,6 @@ void Mavlink_waypoint_handler::mission_clear_all_callback(Mavlink_waypoint_handl
 //------------------------------------------------------------------------------
 
 Mavlink_waypoint_handler::Mavlink_waypoint_handler( const INS& ins,
-                                                    const Navigation& navigation,
                                                     Mavlink_message_handler& message_handler,
                                                     const Mavlink_stream& mavlink_stream,
                                                     Mission_handler_registry& mission_handler_registry,
@@ -407,7 +406,6 @@ Mavlink_waypoint_handler::Mavlink_waypoint_handler( const INS& ins,
     current_waypoint_index_(0),
     mavlink_stream_(mavlink_stream),
     ins_(ins),
-    navigation_(navigation),
     message_handler_(message_handler),
     mission_handler_registry_(mission_handler_registry),
     waypoint_received_time_ms_(0),

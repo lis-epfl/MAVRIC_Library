@@ -178,7 +178,7 @@ Mission_handler::update_status_t Mission_handler_navigating<T>::update()
             mavlink_stream_.send(&msg);
 
             // ... and record the travel time ...
-            travel_time_ = time_keeper_get_ms() - navigation_.start_wpt_time();
+            travel_time_ = time_keeper_get_ms() - start_time_;
 
             // ... and set to waiting at waypoint ...
             waypoint_reached_ = true;
