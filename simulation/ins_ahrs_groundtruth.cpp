@@ -30,32 +30,52 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ins.cpp
+ * \file ins_ahrs_groundtruth.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
- *
- * \brief   Inertial Navigation System (estimates position and velocity)
+ * \author Basil Huber
+
+ * \brief   Mockup Inertial Navigation System (INS) and Attitude Heading Reference System (AHRS) providing groundtruth 
+ *          for position and velocity, attitude, acceleration and rates, obtained from the dynamic model
  *
  ******************************************************************************/
 
 
-#include "sensing/ins.hpp"
+#include "ins_ahrs_groundtruth.hpp"
 
-
-// It is a static member (meaning it is shared by all instances of that class), 
- // => it has to be defined somewhere.
-global_position_t INS::origin_;
-
-
-INS::INS(global_position_t origin)
+INS_AHRS_groundtruth::INS_AHRS_groundtruth(Dynamic_model& model, ahrs_t& ahrs, const conf_t& config):
+    INS(config.origin),
+    model_(model),
+    ahrs_(ahrs)
 {
-    INS::origin_ = origin;
-};
+    update();
+}
 
 
-bool INS::set_origin(global_position_t origin)
+bool INS_AHRS_groundtruth::update()
 {
-    origin_ = origin;
+    model_.update();
+
+    /* udpate internal INS values */
+    last_update_s_ = model_.last_update_us()/1e6;
+    position_lf_ = model_.position_lf();
+    velocity_lf_ = model_.velocity_lf();
+
+    /* calculate absolute altitude */
+    global_position_t global_pos;
+    coord_conventions_local_to_global_position(model_.position_lf(), origin(), global_pos);
+    absolute_altitude_ = global_pos.altitude;
+
+    /* update ahrs */
+    ahrs_.qe = model_.attitude();
+    ahrs_.angular_speed[X] = model_.angular_velocity_bf()[X];
+    ahrs_.angular_speed[Y] = model_.angular_velocity_bf()[Y];
+    ahrs_.angular_speed[Z] = model_.angular_velocity_bf()[Z];
+    ahrs_.linear_acc[X] = model_.acceleration_bf()[X];
+    ahrs_.linear_acc[Y] = model_.acceleration_bf()[Y];
+    ahrs_.linear_acc[Z] = model_.acceleration_bf()[Z];
+    ahrs_.internal_state = AHRS_READY;
+    ahrs_.last_update_s = last_update_s_;
+
     return true;
 }
