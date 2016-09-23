@@ -85,6 +85,14 @@ public:
 
 
     /**
+     * \brief   Read calibration data from EPROM
+     *
+     * \return  Success
+     */
+    bool read_eprom_calibration(void);
+
+
+    /**
      * \brief   Main update function
      * \detail  Reads new values from sensor
      *

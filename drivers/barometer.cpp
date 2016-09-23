@@ -71,11 +71,13 @@ void Barometer::set_pressure_at_sea_level(float pressure_at_sea_level)
 
 float Barometer::altitude_from_pressure(float pressure, float pressure_at_sea_level)
 {
+    //from https://en.wikipedia.org/wiki/Atmospheric_pressure
     return 44330.0f * (1.0f - pow(pressure / pressure_at_sea_level, 0.190295f));
 }
 
 
 float Barometer::compute_pressure_at_sea_level(float pressure, float altitude)
 {
+    //from https://en.wikipedia.org/wiki/Atmospheric_pressure
     return pressure / pow(1.0f - altitude / 44330.0f, 5.255f);
 }
