@@ -354,7 +354,7 @@ bool INS_kf::update(void)
         // Measure from sonar (only if small angles, to avoid peaks)
         float sigma_sonar;
         aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        if ( (abs(current_attitude.rpy[ROLL]) < PI/9.0f) && (abs(current_attitude.rpy[PITCH]) < PI/9.0f) )
+        if ( (maths_f_abs(current_attitude.rpy[ROLL]) < PI/9.0f) && (maths_f_abs(current_attitude.rpy[PITCH]) < PI/9.0f) )
         {
             if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
             {
