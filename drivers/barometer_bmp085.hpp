@@ -101,7 +101,7 @@ public:
 
 
     /**
-     * \brief   Return the pressure
+     * \brief   Return the pressure (in Pa)
      *
      * \return  Value
      */
@@ -135,7 +135,7 @@ public:
      */
     float temperature(void) const;
 
-    
+
 private:
     I2c&        i2c_;                   ///< Reference to I2C peripheral
 
@@ -154,7 +154,7 @@ private:
     uint8_t     raw_pressure_[3];       ///< Raw pressure contained in 3 uint8_t
     uint8_t     raw_temperature_[2];    ///< Raw temperature contained in 2 uint8_t
 
-    float   pressure_;              ///< Measured pressure
+    float   pressure_;              ///< Measured pressure (in Pa)
     float   temperature_;           ///< Measured temperature
     float   altitude_gf_;           ///< Measured altitude (global frame)
     float   altitude_filtered;      ///< Measured altitude without bias removal

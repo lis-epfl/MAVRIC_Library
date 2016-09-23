@@ -80,7 +80,7 @@ public:
 
 
     /**
-     * \brief   Return the pressure
+     * \brief   Return the pressure (in Pa)
      *
      * \return  Value
      */
@@ -118,8 +118,8 @@ public:
     /**
      * \brief   Compute altitude above sea level from pressure
      *
-     * \param   pressure                Current atmospheric pressure
-     * \param   pressure_at_sea_level   Pressure at sea level (optional)
+     * \param   pressure                Current atmospheric pressure (in Pa)
+     * \param   pressure_at_sea_level   Pressure at sea level (in Pa) (optional)
      *
      * \return  Altitude (global frame)
      */
@@ -129,10 +129,10 @@ public:
     /**
      * \brief   Compute pressure at sea level from pressure and altitude
      *
-     * \param   pressure        Current atmospheric pressure
+     * \param   pressure        Current atmospheric pressure (in Pa)
      * \param   altitude_       Altitude
      *
-     * \return  Pressure at sea level
+     * \return  Pressure at sea level (in Pa)
      */
     static float compute_pressure_at_sea_level(float pressure, float altitude);
 
@@ -141,7 +141,7 @@ public:
      * \brief   Get the pressure at sea level
      * \detail  The pressure at sea level is used to compute altitude from pressure
      *
-     * \param   pressure_at_sea_level
+     * \param   pressure_at_sea_level (in Pa)
      */
     static float pressure_at_sea_level(void);
 
@@ -157,7 +157,7 @@ protected:
 
 
 private:
-    static float pressure_at_sea_level_;    ///< Pressure at sea level. This is a static variable shared by all barometers
+    static float pressure_at_sea_level_;    ///< Pressure at sea level (is Pa). This is a static variable shared by all barometers
 };
 
 /**

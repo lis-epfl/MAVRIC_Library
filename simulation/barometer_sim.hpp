@@ -86,7 +86,7 @@ public:
 
 
     /**
-     * \brief   Return the pressure
+     * \brief   Return the pressure (in Pa)
      *
      * \return  Value
      */
