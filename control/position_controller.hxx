@@ -41,13 +41,17 @@
 
 #include "control/position_controller.hpp"
 
+// #include "util/print_util.h"
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Position_controller::Position_controller(const INS& ins, const ahrs_t& ahrs, conf_t config) :
-    ins_(ins),
-    ahrs_(ahrs),
+template<class TVelocity_controller>
+Position_controller<TVelocity_controller>::Position_controller(args_t args, const conf_t& config) :
+    TVelocity_controller(args.velocity_controller_args, config.velocity_controller_config),
+    ins_(args.ins),
+    ahrs_(args.ahrs),
     cruise_mode_(false),
     ctrl_mode_(ctrl_mode_t::POS_XYZ),
     cruise_pid_config_(config.cruise_pid_config),
@@ -63,35 +67,56 @@ Position_controller::Position_controller(const INS& ins, const ahrs_t& ahrs, con
     set_position_command(pos_command);
 }
 
-void Position_controller::update()
+template<class TVelocity_controller>
+void Position_controller<TVelocity_controller>::update()
 {
-   calc_velocity_command(position_command_);
+    /* check whether this is the highest active level of the cascade */
+    if(TVelocity_controller::cascade_command_ == &position_command_)
+    {
+        /* calculate torque_command and propagate down the cascade */
+        typename TVelocity_controller::vel_command_t vel_command = calc_velocity_command(position_command_);
+        TVelocity_controller::update_cascade(vel_command);
+    }else
+    {
+        /* propagate update() down the cascade until reaching the highest active level */
+        TVelocity_controller::update();
+    }
 }
 
-bool Position_controller::set_position_command(const pos_command_t& pos_command)
+
+template<class TVelocity_controller>
+bool Position_controller<TVelocity_controller>::set_position_command(const pos_command_t& pos_command)
 {
     position_command_ = pos_command;
     /* set ctrl_mode to use position in xyz as input */
     ctrl_mode_ = ctrl_mode_t::POS_XYZ;
+    /* set this as input cascade level */
+    TVelocity_controller::cascade_command_ = &position_command_;
     return true;
 }
 
 
-bool Position_controller::set_xyposition_zvel_command(const xypos_zvel_command_t& command)
+template<class TVelocity_controller>
+bool Position_controller<TVelocity_controller>::set_xyposition_zvel_command(const xypos_zvel_command_t& command)
 {
     position_command_.pos = std::array<float,3>{{command.pos_x, command.pos_y, 0}};
     zvel_command_ = command.vel_z;
     /* set ctrl_mode to use position in xy and velocity in z as input */
     ctrl_mode_ = ctrl_mode_t::POS_XY_VEL_Z;
-    return true;
+    /* set this as input cascade level */
+    TVelocity_controller::cascade_command_ = &position_command_;
+    return true;   
 }
 
 
-bool Position_controller::set_navigation_command(const nav_command_t& command)
+template<class TVelocity_controller>
+bool Position_controller<TVelocity_controller>::set_navigation_command(const nav_command_t& command)
 {
     position_command_.pos = command.pos;
     /* set ctrl_mode to use position in xyz as input*/
     ctrl_mode_ = ctrl_mode_t::POS_XYZ;
+    /* set this as input cascade level */
+    TVelocity_controller::cascade_command_ = &position_command_;
     return true;
 }
 
@@ -100,7 +125,16 @@ bool Position_controller::set_navigation_command(const nav_command_t& command)
 // PROTECTED FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Position_controller::calc_velocity_command(const pos_command_t& pos_command)
+template<class TVelocity_controller>
+void Position_controller<TVelocity_controller>::update_cascade(const pos_command_t& pos_command)
+{
+    position_command_ = pos_command;
+    typename TVelocity_controller::vel_command_t vel_command = calc_velocity_command(position_command_);
+    TVelocity_controller::update_cascade(vel_command);
+}
+
+template<class TVelocity_controller>
+typename TVelocity_controller::vel_command_t Position_controller<TVelocity_controller>::calc_velocity_command(const pos_command_t& pos_command)
 {
     /* get current vehicle position in local frame */
     local_position_t local_pos = ins_.position_lf();
@@ -141,23 +175,27 @@ void Position_controller::calc_velocity_command(const pos_command_t& pos_command
 
     float goal_dir_sg[3];
     quaternions_rotate_vector(q_rot, goal_dir, goal_dir_sg);
-
-    velocity_command_.tvel[X] = goal_dir_sg[X] * v_desired;
-    velocity_command_.tvel[Y] = goal_dir_sg[Y] * v_desired;
-    velocity_command_.tvel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir_sg[Z] * v_desired;
+	
+	typename TVelocity_controller::vel_command_t velocity_command;
+    velocity_command.vel[X] = goal_dir_sg[X] * v_desired;
+    velocity_command.vel[Y] = goal_dir_sg[Y] * v_desired;
+    velocity_command.vel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir_sg[Z] * v_desired;
 
     // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
     if(cruise_mode_)
     {
         float rel_heading;
         rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - coord_conventions_get_yaw(ahrs_.qe));
-        velocity_command_.rpy[YAW] = kp_yaw_ * rel_heading;
+        velocity_command.yaw = kp_yaw_ * rel_heading;
     }
+
+	return velocity_command;
 }
 
 
 
-void Position_controller::set_cruise_mode(bool cruise_mode)
+template<class TVelocity_controller>
+void Position_controller<TVelocity_controller>::set_cruise_mode(bool cruise_mode)
 {
     /* choose pid_config to apply to controller */
     pid_controller_conf_t* pid_config = cruise_mode ? &cruise_pid_config_ : &hover_pid_config_;
@@ -168,17 +206,14 @@ void Position_controller::set_cruise_mode(bool cruise_mode)
     cruise_mode_ = cruise_mode;
 }
 
-pid_controller_conf_t& Position_controller::cruise_pid_config()
+template<class TVelocity_controller>
+pid_controller_conf_t& Position_controller<TVelocity_controller>::cruise_pid_config()
 {
     return cruise_pid_config_;
 }
 
-pid_controller_conf_t& Position_controller::hover_pid_config()
+template<class TVelocity_controller>
+pid_controller_conf_t& Position_controller<TVelocity_controller>::hover_pid_config()
 {
     return hover_pid_config_;
-}
-
-control_command_t& Position_controller::velocity_command()
-{
-    return velocity_command_;
 }

@@ -30,35 +30,27 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_default_config.hpp
+ * \file base_cascade_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Basil Huber
  *
- * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
+ * \brief Abstract Base class for cascade style controller hierarchy. Only the lowest level should inherit from this class!
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
-#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
+#ifndef BASE_CASC_CONTROLLER_HPP_
+#define BASE_CASC_CONTROLLER_HPP_
 
-#include "control/servos_mix_quadcopter_diag.hpp"
+#include "control/control_command.h"
 
-
-static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
+class Base_cascade_controller
 {
-    servos_mix_quadcopter_diag_conf_t conf  = {};
+protected:
+    Base_cascade_controller() : cascade_command_(NULL){};
 
-    conf.motor_front_right_dir              = CCW;
-    conf.motor_front_left_dir               = CW;
-    conf.motor_rear_right_dir               = CW;
-    conf.motor_rear_left_dir                = CCW;
-    conf.min_thrust                         = -0.9f;
-    conf.max_thrust                         = 1.0f;
-
-    return conf;
+    base_command_t const*  cascade_command_;
 };
 
-
-#endif /* SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_ */
+#endif /* BASE_CASC_CONTROLLER_HPP_ */

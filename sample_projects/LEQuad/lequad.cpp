@@ -86,18 +86,18 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
+    navigation(controls, ahrs.qe, position_estimation, state, communication.mavlink_stream(), mission_handler_registry, config.navigation_config),
+    cascade_controller_({position_estimation, ahrs, {ahrs, position_estimation, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}, config.cascade_controller_config),
     mission_handler_registry(),
-    navigation(controls_nav, ahrs.qe, position_estimation, state, communication.mavlink_stream(), mission_handler_registry, config.navigation_config),
-    position_controller_(position_estimation, ahrs, config.position_controller_config),
     waypoint_handler(position_estimation, navigation, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
-    hold_position_handler(position_controller_, position_estimation, navigation),
-    landing_handler(position_controller_, position_controller_, position_estimation, navigation, state),
-    navigating_handler(position_controller_, position_estimation, navigation, communication.mavlink_stream(), waypoint_handler),
+    hold_position_handler(cascade_controller_, position_estimation, navigation),
+    landing_handler(cascade_controller_, cascade_controller_, position_estimation, navigation, state),
+    navigating_handler(cascade_controller_, position_estimation, navigation, communication.mavlink_stream(), waypoint_handler),
     on_ground_handler(/*position_controller_, */navigation),
     manual_ctrl_handler(navigation),
-    takeoff_handler(position_controller_, position_estimation, navigation, state),
-    critical_landing_handler(position_controller_, position_controller_, position_estimation, navigation, state),
-    critical_navigating_handler(position_controller_, position_estimation, navigation, communication.mavlink_stream(), waypoint_handler),
+    takeoff_handler(cascade_controller_, position_estimation, navigation, state),
+    critical_landing_handler(cascade_controller_, cascade_controller_, position_estimation, navigation, state),
+    critical_navigating_handler(cascade_controller_, position_estimation, navigation, communication.mavlink_stream(), waypoint_handler),
     mission_planner(position_estimation, navigation, ahrs, state, manual_control, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
@@ -380,68 +380,62 @@ bool LEQuad::init_stabilisers(void)
     // Stabilisation copter
     // -------------------------------------------------------------------------
     // Module
-    ret &= stabilisation_copter_init(&stabilisation_copter,
-                                    config_.stabilisation_copter_config,
-                                    &controls,
-                                    &ahrs,
-                                    &position_estimation,
-                                    &command.torque,
-                                    &command.thrust);
+    
     ret &= stabilisation_init(&controls);
 
     // Parameters
-    Onboard_parameters& op            = communication.parameters();
-    stabiliser_t* rate_stabiliser     = &stabilisation_copter.stabiliser_stack.rate_stabiliser;
-    stabiliser_t* attitude_stabiliser = &stabilisation_copter.stabiliser_stack.attitude_stabiliser;
-    stabiliser_t* velocity_stabiliser = &stabilisation_copter.stabiliser_stack.velocity_stabiliser;
-    ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].p_gain,                    "ROLL_R_KP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].integrator.clip,           "ROLL_R_I_CLIP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].integrator.gain,           "ROLL_R_KI");
-    ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip,       "ROLL_R_D_CLIP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain,       "ROLL_R_KD");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_A_KP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_A_I_CLIP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_A_KI");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip,   "ROLL_A_D_CLIP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_A_KD");
-    ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].p_gain,                   "PITCH_R_KP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].integrator.clip,          "PITCH_R_I_CLIP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].integrator.gain,          "PITCH_R_KI");
-    ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip,      "PITCH_R_D_CLIP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain,      "PITCH_R_KD");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_A_KP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_A_I_CLIP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_A_KI");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip,  "PITCH_A_D_CLIP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_A_KD");
-    ret &= op.add(&rate_stabiliser->rpy_controller[YAW].p_gain,                     "YAW_R_KP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[YAW].clip_max,                   "YAW_R_P_CLMX");
-    ret &= op.add(&rate_stabiliser->rpy_controller[YAW].clip_min,                   "YAW_R_P_CLMN");
-    ret &= op.add(&rate_stabiliser->rpy_controller[YAW].integrator.clip,            "YAW_R_I_CLIP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[YAW].integrator.gain,            "YAW_R_KI");
-    ret &= op.add(&rate_stabiliser->rpy_controller[YAW].differentiator.clip,        "YAW_R_D_CLIP");
-    ret &= op.add(&rate_stabiliser->rpy_controller[YAW].differentiator.gain,        "YAW_R_KD");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAW_A_KP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAW_A_P_CLMX");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAW_A_P_CLMN");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAW_A_I_CLIP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAW_A_KI");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAW_A_D_CLIP");
-    ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAW_A_KD");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_V_KP");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip_pre,   "ROLL_V_I_CLPRE");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_V_KI");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_V_I_CLIP");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_V_KD");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_V_KP");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip_pre,  "PITCH_V_I_CLPRE");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_V_KI");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_V_I_CLIP");
-    ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_V_KD");
-    ret &= op.add(&velocity_stabiliser->thrust_controller.p_gain,                   "THRV_KP");
-    ret &= op.add(&velocity_stabiliser->thrust_controller.integrator.clip_pre,      "THRV_I_PREG");
-    ret &= op.add(&velocity_stabiliser->thrust_controller.differentiator.gain,      "THRV_KD");
-    ret &= op.add(&velocity_stabiliser->thrust_controller.soft_zone_width,          "THRV_SOFT");
+    // Onboard_parameters& op            = communication.parameters();
+    // stabiliser_t* rate_stabiliser     = &stabilisation_copter.stabiliser_stack.rate_stabiliser;
+    // stabiliser_t* attitude_stabiliser = &stabilisation_copter.stabiliser_stack.attitude_stabiliser;
+    // stabiliser_t* velocity_stabiliser = &stabilisation_copter.stabiliser_stack.velocity_stabiliser;
+    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].p_gain,                    "ROLL_R_KP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].integrator.clip,           "ROLL_R_I_CLIP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].integrator.gain,           "ROLL_R_KI");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip,       "ROLL_R_D_CLIP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain,       "ROLL_R_KD");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_A_KP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_A_I_CLIP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_A_KI");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip,   "ROLL_A_D_CLIP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_A_KD");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].p_gain,                   "PITCH_R_KP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].integrator.clip,          "PITCH_R_I_CLIP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].integrator.gain,          "PITCH_R_KI");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip,      "PITCH_R_D_CLIP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain,      "PITCH_R_KD");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_A_KP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_A_I_CLIP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_A_KI");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip,  "PITCH_A_D_CLIP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_A_KD");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].p_gain,                     "YAW_R_KP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].clip_max,                   "YAW_R_P_CLMX");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].clip_min,                   "YAW_R_P_CLMN");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].integrator.clip,            "YAW_R_I_CLIP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].integrator.gain,            "YAW_R_KI");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].differentiator.clip,        "YAW_R_D_CLIP");
+    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].differentiator.gain,        "YAW_R_KD");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAW_A_KP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAW_A_P_CLMX");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAW_A_P_CLMN");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAW_A_I_CLIP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAW_A_KI");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAW_A_D_CLIP");
+    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAW_A_KD");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_V_KP");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip_pre,   "ROLL_V_I_CLPRE");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_V_KI");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_V_I_CLIP");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_V_KD");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_V_KP");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip_pre,  "PITCH_V_I_CLPRE");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_V_KI");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_V_I_CLIP");
+    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_V_KD");
+    // ret &= op.add(&velocity_stabiliser->thrust_controller.p_gain,                   "THRV_KP");
+    // ret &= op.add(&velocity_stabiliser->thrust_controller.integrator.clip_pre,      "THRV_I_PREG");
+    // ret &= op.add(&velocity_stabiliser->thrust_controller.differentiator.gain,      "THRV_KD");
+    // ret &= op.add(&velocity_stabiliser->thrust_controller.soft_zone_width,          "THRV_SOFT");
 
     return ret;
 }
@@ -507,12 +501,6 @@ bool LEQuad::init_servos(void)
 {
     bool ret = true;
 
-    // Module
-    ret = servos_mix_quadcotper_diag_init(&servo_mix,
-                                          config_.servos_mix_quadcopter_diag_config,
-                                          &command.torque, &command.thrust,
-                                          &servo_0, &servo_1, &servo_2, &servo_3);
-
     // DOWN telemetry
     ret &= servos_telemetry_init(&servos_telemetry,
                                  &servo_0, &servo_1, &servo_2, &servo_3,
@@ -557,6 +545,9 @@ bool LEQuad::main_task(void)
     ahrs_ekf.update();
     position_estimation.update();
 
+    /* temporary to deal with relative yaw commands from manual control */
+    float yaw = coord_conventions_get_yaw(cascade_controller_.attitude_command().att);
+
     bool failsafe = false;
 
     // Do control
@@ -565,43 +556,40 @@ bool LEQuad::main_task(void)
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
-                position_controller_.update();
-                controls = position_controller_.velocity_command();
-                controls.control_mode = VELOCITY_COMMAND_MODE;
-                controls.yaw_mode = YAW_ABSOLUTE;
-                break;
 
             case Mav_mode::POSITION_HOLD:
-                position_controller_.update();
-                controls = position_controller_.velocity_command();
-                controls.control_mode = VELOCITY_COMMAND_MODE;
-
-                if ( ((state.mav_state_ == MAV_STATE_CRITICAL) && (mission_planner.critical_behavior() == Mission_planner::FLY_TO_HOME_WP))  || (navigation.navigation_strategy == Navigation::strategy_t::DUBIN))
-                {
-                    controls.yaw_mode = YAW_RELATIVE;
-                }
-                else
-                {
-                    controls.yaw_mode = YAW_ABSOLUTE;
-                }
                 break;
-
             case Mav_mode::VELOCITY:
-                manual_control.get_velocity_vector(&controls);
-                controls.control_mode = VELOCITY_COMMAND_MODE;
-                controls.yaw_mode = YAW_RELATIVE;
+                if(state.mav_mode().ctrl_mode() == Mav_mode::VELOCITY)
+                {
+                    manual_control.get_velocity_vector(&controls);
+                }
+                Cascade_controller::vel_command_t vel_command;
+                vel_command.vel = {controls.tvel[0], controls.tvel[1], controls.tvel[2]};
+                cascade_controller_.set_velocity_command(vel_command);
                 break;
 
             case Mav_mode::ATTITUDE:
                 manual_control.get_control_command(&controls);
-                controls.control_mode = ATTITUDE_COMMAND_MODE;
-                controls.yaw_mode = YAW_RELATIVE;
+                /* convert controls from control_command_t (legacy) to att_command_t */
+                Cascade_controller::att_command_t att_command;
+                controls.rpy[YAW] += yaw;
+                att_command.att = coord_conventions_quaternion_from_rpy(controls.rpy);
+                att_command.thrust = controls.thrust;
+                /* set attitude command */
+                cascade_controller_.set_attitude_command(att_command);
                 break;
 
-            //case Mav_mode::RATE:
-            //    manual_control.get_rate_command(&controls);
-            //    controls.control_mode = RATE_COMMAND_MODE;
-            //    break;
+            // case Mav_mode::RATE:
+            //     rate_command_t rate_command_legacy;
+            //     manual_control.get_rate_command(&rate_command_legacy,1.0f);
+            //     /* convert controls from control_command_t (legacy) to att_command_t */
+            //     Cascade_controller::rate_command_t rate_command;
+            //     rate_command.rates = {rate_command_legacy.xyz[0], rate_command_legacy.xyz[1], rate_command_legacy.xyz[2]};
+            //     rate_command.thrust = manual_control.get_thrust();
+            //     /* set attitude command */
+            //     cascade_controller_.set_rate_command(rate_command);
+            //     break;
 
             default:
                 failsafe = true;    // undefined behaviour -> failsafe
@@ -615,8 +603,8 @@ bool LEQuad::main_task(void)
     // if behaviour defined, execute controller and mix; otherwise: set servos to failsafe
     if(!failsafe)
     {
-        stabilisation_copter_cascade_stabilise(&stabilisation_copter);
-        servos_mix_quadcopter_diag_update(&servo_mix);
+        /* update controller cascade down to the motors */
+        cascade_controller_.update();
     }
     else
     {
@@ -630,23 +618,6 @@ bool LEQuad::main_task(void)
 }
 
 
-  // // Attitude controller
-  // ret &= attitude_controller_init(&attitude_controller,
-  //                                 config_.attitude_controller_config,
-  //                                 &ahrs,
-  //                                 &command.attitude,
-  //                                 &command.rate,
-  //                                 &command.torque);
-  //
-  // // Velocity controller
-  // ret &= velocity_controller_copter_init(&velocity_controller,
-  //                                        &ahrs,
-  //                                        &position_estimation,
-  //                                        &command.velocity,
-  //                                        &command.attitude,
-  //                                        &command.thrust
-  //                                        config_.velocity_controller_copter_config);
-  //
   // // Vector field
   // ret &= vector_field_waypoint_init(&vector_field_waypoint,
   //                                   {},
