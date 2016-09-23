@@ -65,7 +65,6 @@ Barometer_MS5611::Barometer_MS5611(I2c& i2c, conf_t config):
     pressure_           = 0.0f;
     temperature_        = 0.0f;
     altitude_gf_        = 0.0f;
-    altitude_bias_gf_   = 0.0f;
     speed_lf_           = 0.0f;
     temperature_        = 24.0f;    // Nice day
 }
