@@ -77,5 +77,5 @@ float Barometer::altitude_from_pressure(float pressure, float pressure_at_sea_le
 
 float Barometer::compute_pressure_at_sea_level(float pressure, float altitude)
 {
-    return pressure / pow(1.0f - altitude / 44330.0f, 5.255);
+    return pressure / pow(1.0f - altitude / 44330.0f, 5.255f);
 }
