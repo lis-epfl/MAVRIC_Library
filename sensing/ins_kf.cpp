@@ -43,8 +43,8 @@
 
 #include "sensing/ins_kf.hpp"
 
-#include <cstdlib>
-#include <ctime>
+// #include <cstdlib>
+// #include <ctime>
 #include "util/coord_conventions.hpp"
 
 //------------------------------------------------------------------------------
@@ -117,12 +117,26 @@ INS_kf::INS_kf(State& state,
     dt_(0.0f),
     last_update_(0.0f)
 {
-    // Init randomness
-    srand(static_cast<unsigned>(time(0)));
-
     // Init the filter
     init();
     init_flag = 0;
+}
+
+
+void INS_kf::init(void)
+{
+    // Initialization is done, no need to do once more
+    init_flag = 0;
+
+    // Init state
+    x_ = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    // Init covariance
+    P_ = Mat<11,11>(100, true);
+
+
+    // Update last time to avoid glitches at initilaization
+    last_update_ = time_keeper_get_s();
 }
 
 
@@ -169,7 +183,7 @@ bool INS_kf::is_healthy(INS::healthy_t type) const
     {
         case INS::healthy_t::XY_VELOCITY:
             ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_vel_update_s_) < timeout) )
-              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) 
+              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) )
               );
 
         break;
@@ -193,7 +207,7 @@ bool INS_kf::is_healthy(INS::healthy_t type) const
         break;
 
         case INS::healthy_t::Z_REL_POSITION:
-            ret = ( 
+            ret = (
                     //( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
                     ( sonar_.healthy()     && ( (now - last_sonar_update_s_)   < timeout) ) );
         break;
@@ -263,12 +277,6 @@ bool INS_kf::update(void)
                 ori = origin();
                 coord_conventions_global_to_local_position(gps_global, origin(), gps_local);
 
-                // DOME SPECIFIC
-                // Simulate some noise on the GPS local positions (to fit measured sigma, which was directly on the local, not the global)
-                gps_local[0] += rand_sigma(config_.noise_gps_xy);
-                gps_local[1] += rand_sigma(config_.noise_gps_xy);
-                gps_local[2] += rand_sigma(config_.noise_gps_z);
-
                 // Recompute the measurement noise matrix
                 R_ = Mat<3,3>({ SQR(config_.sigma_gps_xy), 0,                         0,
                                 0,                         SQR(config_.sigma_gps_xy), 0,
@@ -286,12 +294,6 @@ bool INS_kf::update(void)
             {
                 // Get velocity from GPS
                 gps_velocity = gps_.velocity_lf();
-
-                // DOME SPECIFIC
-                // Simulate some noise on the GPS local velocities (to fit measured sigma, which was directly on the local, not the global)
-                gps_velocity[0] += rand_sigma(config_.noise_gps_velxy);
-                gps_velocity[1] += rand_sigma(config_.noise_gps_velxy);
-                gps_velocity[2] += rand_sigma(config_.noise_gps_velz);
 
                 // Recompute the measurement noise matrix
                 R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velxy),  0,                            0,
@@ -322,7 +324,7 @@ bool INS_kf::update(void)
               Kalman<11,3,3>::update(Mat<1,1>(z_baro),
                                      H_baro_,
                                      R_baro_);
-           
+
               // Update timing
               last_baro_update_s_ = (float)(barometer_.last_update_us())/1e6f;
            }
@@ -554,33 +556,4 @@ void INS_kf::predict_kf(void)
 
     // Compute default KF prediciton step (using local accelerations as input, warning z acceleration sign)
     predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
-}
-
-
-float INS_kf::rand_sigma(float sigma)
-{
-    // Compute the approximate corresponding amplitude
-    float noise_amp = 3.45f * sigma;
-
-    // Compute the sample (generate sample between [0;1], offset it between [-0.5;0.5], scale it by the corresponding amplitude to obtain the desired sigma)
-    return noise_amp * ( (static_cast<float>(rand()) / static_cast<float>(RAND_MAX)) - 0.5f );
-}
-
-
-void INS_kf::init(void)
-{
-    // Initialization is done, no need to do once more
-    init_flag = 0;
-
-    // Init state
-    x_ = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-    // Init covariance
-    P_ = Mat<11,11>(100, true);
-    // P_(7,7) = 0.0f;
-    // P_(8,8) = 0.0f;
-    // P_(9,9) = 0.0f;
-
-    // Update last time to avoid glitches at initilaization
-    last_update_ = time_keeper_get_s();
 }
