@@ -85,6 +85,14 @@ public:
 
 
     /**
+     * \brief   Read calibration data from EPROM
+     *
+     * \return  Success
+     */
+    bool read_eprom_calibration(void);
+
+
+    /**
      * \brief   Main update function
      * \detail  Reads new values from sensor
      *
@@ -135,7 +143,7 @@ public:
      */
     float temperature(void) const;
 
-    
+
 private:
     I2c&        i2c_;                   ///< Reference to I2C peripheral
 
