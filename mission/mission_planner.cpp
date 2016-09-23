@@ -859,8 +859,6 @@ bool Mission_planner::update(Mission_planner* mission_planner)
         break;
     }
 
-    mission_planner->waypoint_handler_.control_time_out_waypoint_msg();
-
     return true;
 }
 

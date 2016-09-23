@@ -152,13 +152,6 @@ public:
     void advance_to_next_waypoint();
 
     /**
-     * \brief   Control if time is over timeout and change sending/receiving flags to false
-     *
-     * \return  The task status
-     */
-    void control_time_out_waypoint_msg();
-
-    /**
      * \brief   Gets the current waypoint index
      *
      * \return  Current waypoint index
@@ -188,15 +181,10 @@ protected:
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 private:
 
-    bool is_sending_waypoint_;                                  ///< Flag to tell whether waypoint are being sent
-    bool is_receiving_waypoint_;                                ///< Flag to tell whether waypoint are being received or not
     uint64_t waypoint_received_time_ms_;                        ///< The time that the waypoint list was received
 
-    int32_t sending_waypoint_num_;                              ///< The ID number of the sending waypoint
-    int32_t waypoint_request_number_;                           ///< The ID number of the requested waypoint
     uint16_t requested_waypoint_count_;                         ///< The number of waypoints requested from the GCS
 
-    uint32_t start_timeout_;                                    ///< The start time for the waypoint timeout
     uint32_t timeout_max_waypoint_;                             ///< The max waiting time for communication
 
     conf_t config_;
