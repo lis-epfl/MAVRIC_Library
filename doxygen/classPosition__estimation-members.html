@@ -100,14 +100,12 @@ This is the complete list of members for <a class="el" href="classPosition__esti
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#acac5d9260bf7de5cbb9dd9079cae4832">kp_vel_sonar</a></td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a26712a2884be95e68f3e7e57c79ed6e2">last_update_s</a>(void) const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>Mavlink_waypoint_handler</b> (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [friend]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classINS.html#a1d62705e3a33594ccdf182680ce52647">origin</a>(void)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [static]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>origin_</b> (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [protected, static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae">origin</a>(void)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [inline, static]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>OUTSIDE_FENCE1</b> enum value (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>OUTSIDE_FENCE2</b> enum value (defined in <a class="el" href="classPosition__estimation.html">Position_estimation</a>)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a920c4a264457690d29fbd658ec791f99">Position_estimation</a>(State &amp;state, Barometer &amp;barometer, const Sonar &amp;sonar, const Gps &amp;gps, const ahrs_t &amp;ahrs, const conf_t config=default_config())</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#af177fdbf47265574602db4137edb3a4f">position_lf</a>(void) const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a983d61358e48bd9b9a09a3192110ecc0">set_home_position_global</a>(global_position_t new_home_pos)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a430f64e917b2dd5cfb1a995bcdfdfc21">set_home_to_current_position</a>()</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9">set_origin</a>(global_position_t origin)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [protected, static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5">update</a>(void)</td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classPosition__estimation.html#ac5323a4e1d37bc97777757ede0bb5629">velocity_lf</a>(void) const </td><td><a class="el" href="classPosition__estimation.html">Position_estimation</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>XY_ABS_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
@@ -137,7 +135,7 @@ This is the complete list of members for <a class="el" href="classPosition__esti
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 20 2016 12:40:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 23 2016 09:24:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -83,7 +83,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pro-static-attribs">Static Protected Attributes</a>  </div>
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
+<a href="#friends">Friends</a>  </div>
   <div class="headertitle">
 <div class="title">INS Class Reference</div>  </div>
 </div><!--header-->
@@ -93,14 +94,7 @@ Inheritance diagram for INS:</div>
 <div class="dyncontent">
 <div class="center"><img src="classINS__inherit__graph.png" border="0" usemap="#INS_inherit__map" alt="Inheritance graph"/></div>
 <map name="INS_inherit__map" id="INS_inherit__map">
-<area shape="rect" id="node3" href="classINS__kf.html" title="Altitude estimator." alt="" coords="5,331,144,538"/><area shape="rect" id="node5" href="classPosition__estimation.html" title="{Position_estimation\n|+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l+ kp_alt_sonar\l+ kp_vel_sonar\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ set_home_position_global()\l+ set_home_to_current_position()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ default_config()\l}" alt="" coords="168,262,384,607"/></map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for INS:</div>
-<div class="dyncontent">
-<div class="center"><img src="classINS__coll__graph.png" border="0" usemap="#INS_coll__map" alt="Collaboration graph"/></div>
-<map name="INS_coll__map" id="INS_coll__map">
-<area shape="rect" id="node2" href="structglobal__position__t.html" title="Global position structure." alt="" coords="16,5,133,125"/></map>
+<area shape="rect" id="node3" href="classINS__AHRS__groundtruth.html" title="{INS_AHRS_groundtruth\n|# model_\l# last_update_s_\l# position_lf_\l# velocity_lf_\l# absolute_altitude_\l# ahrs_\l|+ INS_AHRS_groundtruth()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ ahrs()\l+ default_config()\l}" alt="" coords="5,278,187,589"/><area shape="rect" id="node5" href="classINS__kf.html" title="Altitude estimator." alt="" coords="211,330,349,537"/><area shape="rect" id="node7" href="classPosition__estimation.html" title="{Position_estimation\n|+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l+ kp_alt_sonar\l+ kp_vel_sonar\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ default_config()\l}" alt="" coords="373,278,563,589"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classINS-members.html">List of all members.</a></p>
@@ -125,7 +119,7 @@ Public Types</h2></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a72b551f6ce6cf46b33d1699618b44937"></a><!-- doxytag: member="INS::INS" ref="a72b551f6ce6cf46b33d1699618b44937" args="(global_position_t origin=ORIGIN_EPFL)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#a72b551f6ce6cf46b33d1699618b44937">INS</a> (<a class="el" href="structglobal__position__t.html">global_position_t</a> <a class="el" href="classINS.html#a1d62705e3a33594ccdf182680ce52647">origin</a>=ORIGIN_EPFL)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#a72b551f6ce6cf46b33d1699618b44937">INS</a> (<a class="el" href="structglobal__position__t.html">global_position_t</a> <a class="el" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae">origin</a>=ORIGIN_EPFL)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#a091756ab3fd40d57c71a476b605f93e0">update</a> (void)=0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function.  <a href="#a091756ab3fd40d57c71a476b605f93e0"></a><br/></td></tr>
@@ -141,12 +135,16 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates which estimate can be trusted.  <a href="#a4806a6d39547e538c4554c1b6aa7eba2"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structglobal__position__t.html">global_position_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#a1d62705e3a33594ccdf182680ce52647">origin</a> (void)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Position of origin in global coordinates.  <a href="#a1d62705e3a33594ccdf182680ce52647"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pro-static-attribs"></a>
-Static Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4634f010e33d60b3c011721e890c210a"></a><!-- doxytag: member="INS::origin_" ref="a4634f010e33d60b3c011721e890c210a" args="" -->
-static <a class="el" href="structglobal__position__t.html">global_position_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>origin_</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structglobal__position__t.html">global_position_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae">origin</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Position of origin in global coordinates.  <a href="#a80b65bcba9f35450c2d350768d2199ae"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9">set_origin</a> (<a class="el" href="structglobal__position__t.html">global_position_t</a> <a class="el" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae">origin</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set the origin of the local (NED) coordinate system  <a href="#aa14cc9f393d1567f96a7f03c3c8894a9"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="friends"></a>
+Friends</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#a62eca08329059f16e88effeecbe2fa46">ins_telemetry_set_gps_global_origin_callback</a> (<a class="el" href="classINS.html">INS</a> *ins, uint32_t sysid, mavlink_message_t *msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for receiving SET_GPS_GLOBAL_ORIGIN messages.  <a href="#a62eca08329059f16e88effeecbe2fa46"></a><br/></td></tr>
 </table>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="af8a125150d36bd77f1253a700d627af7"></a><!-- doxytag: member="INS::absolute_altitude" ref="af8a125150d36bd77f1253a700d627af7" args="(void) const =0" -->
@@ -167,7 +165,7 @@ static <a class="el" href="structglobal__position__t.html">global_position_t</a>
 <p>Absolute altitude above sea level in meters (&gt;=0) </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>altitude </dd></dl>
 
-<p>Implemented in <a class="el" href="classPosition__estimation.html#a5abf9309fcf42e92b59f9b313991a78c">Position_estimation</a>, and <a class="el" href="classINS__kf.html#ab8eaaae0714f6ce078495a2b3c8cabee">INS_kf</a>.</p>
+<p>Implemented in <a class="el" href="classINS__kf.html#ab8eaaae0714f6ce078495a2b3c8cabee">INS_kf</a>, <a class="el" href="classPosition__estimation.html#a5abf9309fcf42e92b59f9b313991a78c">Position_estimation</a>, and <a class="el" href="classINS__AHRS__groundtruth.html#aeddb9218bd9929c7931d1119b5f3019a">INS_AHRS_groundtruth</a>.</p>
 
 </div>
 </div>
@@ -195,7 +193,7 @@ static <a class="el" href="structglobal__position__t.html">global_position_t</a>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>boolean </dd></dl>
 
-<p>Implemented in <a class="el" href="classPosition__estimation.html#aa0962c38f66141d91755fdc614c994a3">Position_estimation</a>, and <a class="el" href="classINS__kf.html#a4a6f11345110e1f34c27cda5a20254ed">INS_kf</a>.</p>
+<p>Implemented in <a class="el" href="classINS__kf.html#a4a6f11345110e1f34c27cda5a20254ed">INS_kf</a>, <a class="el" href="classPosition__estimation.html#aa0962c38f66141d91755fdc614c994a3">Position_estimation</a>, and <a class="el" href="classINS__AHRS__groundtruth.html#a04b28c7016bcb8a06aa014dea9a53d6d">INS_AHRS_groundtruth</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -226,20 +224,20 @@ Here is the caller graph for this function:</div>
 <p>Last update in seconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>time </dd></dl>
 
-<p>Implemented in <a class="el" href="classPosition__estimation.html#a26712a2884be95e68f3e7e57c79ed6e2">Position_estimation</a>, and <a class="el" href="classINS__kf.html#a7adbcd44d3e137d0e65e3ba40956442f">INS_kf</a>.</p>
+<p>Implemented in <a class="el" href="classINS__kf.html#a7adbcd44d3e137d0e65e3ba40956442f">INS_kf</a>, <a class="el" href="classPosition__estimation.html#a26712a2884be95e68f3e7e57c79ed6e2">Position_estimation</a>, and <a class="el" href="classINS__AHRS__groundtruth.html#ae799ea5a96d9ea8b7d058d06ed363c6b">INS_AHRS_groundtruth</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1d62705e3a33594ccdf182680ce52647"></a><!-- doxytag: member="INS::origin" ref="a1d62705e3a33594ccdf182680ce52647" args="(void)" -->
+<a class="anchor" id="a80b65bcba9f35450c2d350768d2199ae"></a><!-- doxytag: member="INS::origin" ref="a80b65bcba9f35450c2d350768d2199ae" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="structglobal__position__t.html">global_position_t</a> &amp; <a class="el" href="classINS.html#a1d62705e3a33594ccdf182680ce52647">INS::origin</a> </td>
+          <td class="memname">static const <a class="el" href="structglobal__position__t.html">global_position_t</a>&amp; <a class="el" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae">INS::origin</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td><code> [static]</code></td>
+          <td><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -251,9 +249,9 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classINS_a1d62705e3a33594ccdf182680ce52647_icgraph.png" border="0" usemap="#classINS_a1d62705e3a33594ccdf182680ce52647_icgraph" alt=""/></div>
-<map name="classINS_a1d62705e3a33594ccdf182680ce52647_icgraph" id="classINS_a1d62705e3a33594ccdf182680ce52647_icgraph">
-<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="139,32,397,61"/><area shape="rect" id="node9" href="classINS.html#a72b551f6ce6cf46b33d1699618b44937" title="Constructor." alt="" coords="231,85,305,115"/><area shape="rect" id="node11" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="213,139,323,168"/><area shape="rect" id="node13" href="classDynamic__model__quad__diag.html#ac4fe34730b0cf423f9f478a3749374bd" title="Main update function &#160;Reads new values from sensor." alt="" coords="153,192,383,221"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="445,5,781,35"/><area shape="rect" id="node7" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="503,59,724,88"/></map>
+<div class="center"><img src="classINS_a80b65bcba9f35450c2d350768d2199ae_icgraph.png" border="0" usemap="#classINS_a80b65bcba9f35450c2d350768d2199ae_icgraph" alt=""/></div>
+<map name="classINS_a80b65bcba9f35450c2d350768d2199ae_icgraph" id="classINS_a80b65bcba9f35450c2d350768d2199ae_icgraph">
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="139,32,397,61"/><area shape="rect" id="node9" href="classINS.html#a72b551f6ce6cf46b33d1699618b44937" title="Constructor." alt="" coords="231,85,305,115"/><area shape="rect" id="node11" href="classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9" title="set the origin of the local (NED) coordinate system" alt="" coords="213,139,323,168"/><area shape="rect" id="node13" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="213,192,323,221"/><area shape="rect" id="node15" href="classPosition__estimation.html#a5abf9309fcf42e92b59f9b313991a78c" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="147,245,389,275"/><area shape="rect" id="node17" href="classDynamic__model__quad__diag.html#ac4fe34730b0cf423f9f478a3749374bd" title="Main update function &#160;Reads new values from sensor." alt="" coords="153,299,383,328"/><area shape="rect" id="node19" href="classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="164,352,372,381"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="445,5,781,35"/><area shape="rect" id="node7" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="503,59,724,88"/><area shape="rect" id="node21" href="classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="459,352,768,381"/></map>
 </div>
 </p>
 
@@ -277,7 +275,7 @@ Here is the caller graph for this function:</div>
 <p>3D Position in meters (NED frame) </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>position </dd></dl>
 
-<p>Implemented in <a class="el" href="classPosition__estimation.html#af177fdbf47265574602db4137edb3a4f">Position_estimation</a>, and <a class="el" href="classINS__kf.html#a0b96a086949db8d74dd72de676bc0931">INS_kf</a>.</p>
+<p>Implemented in <a class="el" href="classINS__kf.html#a0b96a086949db8d74dd72de676bc0931">INS_kf</a>, <a class="el" href="classPosition__estimation.html#af177fdbf47265574602db4137edb3a4f">Position_estimation</a>, and <a class="el" href="classINS__AHRS__groundtruth.html#ad65af560ac66ee1bb00f23bcf5a23a7c">INS_AHRS_groundtruth</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -285,6 +283,41 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classINS_a265b87bc040a0dfd8f8981f03c6d4ea0_icgraph.png" border="0" usemap="#classINS_a265b87bc040a0dfd8f8981f03c6d4ea0_icgraph" alt=""/></div>
 <map name="classINS_a265b87bc040a0dfd8f8981f03c6d4ea0_icgraph" id="classINS_a265b87bc040a0dfd8f8981f03c6d4ea0_icgraph">
 <area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="165,32,424,61"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="472,5,808,35"/><area shape="rect" id="node7" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="529,59,751,88"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="aa14cc9f393d1567f96a7f03c3c8894a9"></a><!-- doxytag: member="INS::set_origin" ref="aa14cc9f393d1567f96a7f03c3c8894a9" args="(global_position_t origin)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9">INS::set_origin</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structglobal__position__t.html">global_position_t</a>&#160;</td>
+          <td class="paramname"><em>origin</em></td><td>)</td>
+          <td><code> [static, protected]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>set the origin of the local (NED) coordinate system </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">origin</td><td>new origin location</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success whether the new origin was accepted (currently always true) </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classINS_aa14cc9f393d1567f96a7f03c3c8894a9_cgraph.png" border="0" usemap="#classINS_aa14cc9f393d1567f96a7f03c3c8894a9_cgraph" alt=""/></div>
+<map name="classINS_aa14cc9f393d1567f96a7f03c3c8894a9_cgraph" id="classINS_aa14cc9f393d1567f96a7f03c3c8894a9_cgraph">
+<area shape="rect" id="node3" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="164,5,247,35"/></map>
 </div>
 </p>
 
@@ -308,7 +341,7 @@ Here is the caller graph for this function:</div>
 <p>Main update function. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
 
-<p>Implemented in <a class="el" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967">INS_kf</a>, and <a class="el" href="classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5">Position_estimation</a>.</p>
+<p>Implemented in <a class="el" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967">INS_kf</a>, <a class="el" href="classPosition__estimation.html#a4889621f84bbf2dad7c6591a68e4ece5">Position_estimation</a>, and <a class="el" href="classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc">INS_AHRS_groundtruth</a>.</p>
 
 </div>
 </div>
@@ -330,7 +363,7 @@ Here is the caller graph for this function:</div>
 <p>Velocity in meters/seconds in NED frame. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>velocity </dd></dl>
 
-<p>Implemented in <a class="el" href="classPosition__estimation.html#ac5323a4e1d37bc97777757ede0bb5629">Position_estimation</a>, and <a class="el" href="classINS__kf.html#a8367f80db8e40f6a11c90ac14153dc9f">INS_kf</a>.</p>
+<p>Implemented in <a class="el" href="classINS__kf.html#a8367f80db8e40f6a11c90ac14153dc9f">INS_kf</a>, <a class="el" href="classPosition__estimation.html#ac5323a4e1d37bc97777757ede0bb5629">Position_estimation</a>, and <a class="el" href="classINS__AHRS__groundtruth.html#a2f013d760a2557cfd34ff6e2ea36cf85">INS_AHRS_groundtruth</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -340,6 +373,43 @@ Here is the caller graph for this function:</div>
 <area shape="rect" id="node3" href="classVelocity__controller__copter.html#ad8e1dae39f82575faa1661f26d87e14c" title="Main update function." alt="" coords="165,5,384,35"/></map>
 </div>
 </p>
+
+</div>
+</div>
+<hr/><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" id="a62eca08329059f16e88effeecbe2fa46"></a><!-- doxytag: member="INS::ins_telemetry_set_gps_global_origin_callback" ref="a62eca08329059f16e88effeecbe2fa46" args="(INS *ins, uint32_t sysid, mavlink_message_t *msg)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classINS.html#a62eca08329059f16e88effeecbe2fa46">ins_telemetry_set_gps_global_origin_callback</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classINS.html">INS</a> *&#160;</td>
+          <td class="paramname"><em>ins</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>sysid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">mavlink_message_t *&#160;</td>
+          <td class="paramname"><em>msg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Callback for receiving SET_GPS_GLOBAL_ORIGIN messages. </p>
+<p>Sets <a class="el" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates.">INS::origin</a> to the position sent indicated in the message </p>
 
 </div>
 </div>
@@ -365,7 +435,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 20 2016 12:40:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 23 2016 09:24:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

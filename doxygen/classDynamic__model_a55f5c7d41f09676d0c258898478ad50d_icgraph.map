@@ -3,6 +3,8 @@
 <area shape="rect" id="node5" href="$classBarometer__sim.html#a4075bc813d0616b6d52f53f9cf97c037" title="Main update function &#160;Reads new values from sensor." alt="" coords="304,59,461,88"/>
 <area shape="rect" id="node7" href="$classGps__sim.html#a31264788b969fe38e96bc71e830ad0de" title="Main update function &#160;Reads new values from sensor." alt="" coords="323,112,443,141"/>
 <area shape="rect" id="node9" href="$classGyroscope__sim.html#aba98fa8cb19a6914195344691efdb559" title="Get last update time in microseconds." alt="" coords="279,165,487,195"/>
-<area shape="rect" id="node11" href="$classMagnetometer__sim.html#a27736b2fb7d73afb96584458a7120580" title="Get last update time in microseconds." alt="" coords="268,219,497,248"/>
-<area shape="rect" id="node13" href="$classSonar__sim.html#aa4fc17facb51ff8b2eea85b6b9580e60" title="Main update function &#160;Reads new values from sensor." alt="" coords="317,272,448,301"/>
+<area shape="rect" id="node11" href="$classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="279,219,487,248"/>
+<area shape="rect" id="node15" href="$classMagnetometer__sim.html#a27736b2fb7d73afb96584458a7120580" title="Get last update time in microseconds." alt="" coords="268,272,497,301"/>
+<area shape="rect" id="node17" href="$classSonar__sim.html#aa4fc17facb51ff8b2eea85b6b9580e60" title="Main update function &#160;Reads new values from sensor." alt="" coords="317,325,448,355"/>
+<area shape="rect" id="node13" href="$classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="548,219,857,248"/>
 </map>

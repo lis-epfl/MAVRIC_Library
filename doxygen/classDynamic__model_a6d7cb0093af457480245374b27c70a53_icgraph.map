@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classSonar__sim.html#aa4fc17facb51ff8b2eea85b6b9580e60" title="Main update function &#160;Reads new values from sensor." alt="" coords="237,5,368,35"/>
+<area shape="rect" id="node3" href="$classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="239,5,447,35"/>
+<area shape="rect" id="node7" href="$classSonar__sim.html#aa4fc17facb51ff8b2eea85b6b9580e60" title="Main update function &#160;Reads new values from sensor." alt="" coords="277,59,408,88"/>
+<area shape="rect" id="node5" href="$classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="497,5,807,35"/>
 </map>

@@ -7,7 +7,7 @@ var searchData=
   ['last_5fheartbeat_5fmsg',['last_heartbeat_msg',['../structState_1_1conf__t.html#a8d681b5bdb91acefeef4fb64f2be46a4',1,'State::conf_t::last_heartbeat_msg()'],['../classState.html#af0385b450d3af94a99270134bbd442f4',1,'State::last_heartbeat_msg()']]],
   ['last_5fsatellite_5fupdate',['last_satellite_update',['../structremote__t.html#a5c2ef89ddf281d357248f03b216fea02',1,'remote_t']]],
   ['last_5fupdate_5fs',['last_update_s',['../structpid__controller__t.html#a3bdcdcc5c5f4134536a52fc8c72c7895',1,'pid_controller_t::last_update_s()'],['../structstabilisation__copter__t.html#a1ceef3c0d1da53b102ef07c9c12066df',1,'stabilisation_copter_t::last_update_s()'],['../structstabilisation__wing__t.html#a0538703ec30600e0ff937793b15f3bd4',1,'stabilisation_wing_t::last_update_s()'],['../structahrs__t.html#a7b42987de5731cdf7672657f53606f30',1,'ahrs_t::last_update_s()']]],
-  ['last_5fupdate_5fs_5f',['last_update_s_',['../classAhrs__ekf.html#afb043bb727110606b0c6739ed43e71b4',1,'Ahrs_ekf']]],
+  ['last_5fupdate_5fs_5f',['last_update_s_',['../classAhrs__ekf.html#afb043bb727110606b0c6739ed43e71b4',1,'Ahrs_ekf::last_update_s_()'],['../classINS__AHRS__groundtruth.html#ad02f41f3c011f5183aafc9e5c9e3790e',1,'INS_AHRS_groundtruth::last_update_s_()']]],
   ['last_5fupdate_5fus',['last_update_us',['../classFlow.html#acc04aa9b0b912198c001f62ef49ae41b',1,'Flow']]],
   ['last_5fupdate_5fus_5f',['last_update_us_',['../classAhrs__ekf__mocap.html#a73505a89f74869aac417ffa96f84fb56',1,'Ahrs_ekf_mocap']]],
   ['latitude',['latitude',['../structubx__nav__pos__llh__t.html#a7d1ba587900afd53e25a0cf7cf17c8c0',1,'ubx_nav_pos_llh_t::latitude()'],['../structgps__t.html#af54fe11cbde7878a0727616f24dd8fc7',1,'gps_t::latitude()'],['../structglobal__position__t.html#abb11cc9a6ed7de72abdfc4eaedfb5b69',1,'global_position_t::latitude()']]],
@@ -38,7 +38,7 @@ var searchData=
   ['lp_5fmode',['lp_mode',['../structubx__cfg__rxm__t.html#a4ff05819515300e6d25706198328411f',1,'ubx_cfg_rxm_t']]],
   ['lpf',['LPF',['../structcurvace__t.html#a1b2207f5cf259127b1af1143b047f487',1,'curvace_t']]],
   ['lpf_5facc',['lpf_acc',['../structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8',1,'imu_conf_t']]],
-  ['lpf_5fgain',['LPF_gain',['../structNavigation_1_1conf__t.html#a684982e5d2a5858a17345546a8d8e8c8',1,'Navigation::conf_t::LPF_gain()'],['../classNavigation.html#a0829c1b675749035a36ac1a725a21e3f',1,'Navigation::LPF_gain()'],['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()']]],
+  ['lpf_5fgain',['lpf_gain',['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()'],['../structNavigation_1_1conf__t.html#a684982e5d2a5858a17345546a8d8e8c8',1,'Navigation::conf_t::LPF_gain()'],['../classNavigation.html#a0829c1b675749035a36ac1a725a21e3f',1,'Navigation::LPF_gain()']]],
   ['lpf_5fgyro',['lpf_gyro',['../structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd',1,'imu_conf_t']]],
   ['lpf_5fmag',['lpf_mag',['../structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82',1,'imu_conf_t']]],
   ['lpf_5fmean',['lpf_mean',['../structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e',1,'imu_conf_t']]]

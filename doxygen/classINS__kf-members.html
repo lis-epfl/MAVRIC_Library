@@ -98,8 +98,7 @@ This is the complete list of members for <a class="el" href="classINS__kf.html">
   <tr class="memlist"><td><a class="el" href="classKalman.html#a1b034e5779fbfa587292220238052478">Kalman</a>(void)</td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classKalman.html#a4d30e9bdfd6a6c47e3d38ea73fee0f18">Kalman</a>(Mat&lt; n, 1 &gt; x, Mat&lt; n, n &gt; P, Mat&lt; n, n &gt; F, Mat&lt; n, n &gt; Q, Mat&lt; m, n &gt; H, Mat&lt; m, m &gt; R, Mat&lt; n, p &gt; B=Mat&lt; n, p &gt;())</td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__kf.html#a7adbcd44d3e137d0e65e3ba40956442f">last_update_s</a>(void) const </td><td><a class="el" href="classINS__kf.html">INS_kf</a></td><td><code> [virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classINS.html#a1d62705e3a33594ccdf182680ce52647">origin</a>(void)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [static]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>origin_</b> (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [protected, static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae">origin</a>(void)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [inline, static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classKalman.html#a8176df8da9236e193a0221b7ea9bfbc0">P</a>(void) const</td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classKalman.html#a8b90b9c36fe7a3260ebf7ce52e7e97a1">P_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__kf.html#a0b96a086949db8d74dd72de676bc0931">position_lf</a>(void) const </td><td><a class="el" href="classINS__kf.html">INS_kf</a></td><td><code> [virtual]</code></td></tr>
@@ -108,6 +107,7 @@ This is the complete list of members for <a class="el" href="classINS__kf.html">
   <tr class="memlist"><td><a class="el" href="classKalman.html#ad7996509ae2289351ac94025722df2e9">Q_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classKalman.html#aed56eb17f9b2e79632d02d1a8ba1e11f">R_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classKalman.html#a8b1e7443e5709e17a6f66361ed38634e">S_</a></td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9">set_origin</a>(global_position_t origin)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [protected, static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967">update</a>(void)</td><td><a class="el" href="classINS__kf.html">INS_kf</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classKalman.html#a86e9babb7c8fad0c8d6a02751f51d491">Kalman&lt; 8, 3, 3 &gt;::update</a>(Mat&lt; m, 1, float &gt; z)</td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classKalman.html#af67a3d126b5f9a193e9bbe5c37ec4b9b">Kalman&lt; 8, 3, 3 &gt;::update</a>(Mat&lt; mm, 1, float &gt; z, Mat&lt; mm, n, float &gt; H, Mat&lt; mm, mm, float &gt; R)</td><td><a class="el" href="classKalman.html">Kalman&lt; 8, 3, 3 &gt;</a></td><td><code> [inline]</code></td></tr>
@@ -142,7 +142,7 @@ This is the complete list of members for <a class="el" href="classINS__kf.html">
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 20 2016 12:40:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 23 2016 09:24:57 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

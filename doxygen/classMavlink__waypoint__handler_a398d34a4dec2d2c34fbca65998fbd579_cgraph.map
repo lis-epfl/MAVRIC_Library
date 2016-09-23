@@ -11,5 +11,5 @@
 <area shape="rect" id="node21" href="$classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="852,272,977,301"/>
 <area shape="rect" id="node23" href="$classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="853,325,976,355"/>
 <area shape="rect" id="node25" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="859,379,971,408"/>
-<area shape="rect" id="node27" href="$classINS.html#a1d62705e3a33594ccdf182680ce52647" title="Position of origin in global coordinates." alt="" coords="873,432,956,461"/>
+<area shape="rect" id="node27" href="$classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="873,432,956,461"/>
 </map>

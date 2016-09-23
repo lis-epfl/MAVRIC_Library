@@ -6,6 +6,7 @@ var searchData=
   ['vehicle_5fdrag',['vehicle_drag',['../structdynamic__model__quad__diag__conf__t.html#aca09aa9cb9752ebd5a00355586ec73fe',1,'dynamic_model_quad_diag_conf_t']]],
   ['velocity',['velocity',['../structcommand__t.html#afa35a9fcb7d7ff418fc77466429e17a4',1,'command_t']]],
   ['velocity_5fcommand',['velocity_command',['../structvector__field__waypoint__t.html#aad0f05784741fd6318d77fe2f4ef66d2',1,'vector_field_waypoint_t']]],
+  ['velocity_5flf_5f',['velocity_lf_',['../classINS__AHRS__groundtruth.html#ad401cab1f2e57769f3657547ae9a0e51',1,'INS_AHRS_groundtruth']]],
   ['velocity_5fstabiliser',['velocity_stabiliser',['../structstabiliser__stack__copter__t.html#a1efdb71c834ee94aa4a4bdfc999cb3b4',1,'stabiliser_stack_copter_t::velocity_stabiliser()'],['../structstabiliser__stack__wing__t.html#a45c1efe0ad6750c646e3dbc7096644b0',1,'stabiliser_stack_wing_t::velocity_stabiliser()']]],
   ['vendor_5fid',['vendor_id',['../structubx__cfg__usb__t.html#a45adbdea193328bd6cd41773fb85cc34',1,'ubx_cfg_usb_t']]],
   ['vendor_5fstring',['vendor_string',['../structubx__cfg__usb__t.html#a19cb72d38d92649d341f8f009c657080',1,'ubx_cfg_usb_t']]],
