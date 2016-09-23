@@ -49,9 +49,8 @@
 #include "drivers/sonar_telemetry.hpp"
 
 #include "sensing/imu_telemetry.hpp"
-#include "sensing/ahrs_telemetry.hpp"
-#include "sensing/position_estimation_telemetry.hpp"
 #include "sensing/ins_telemetry.hpp"
+#include "sensing/ahrs_telemetry.hpp"
 
 #include "control/manual_control_telemetry.hpp"
 
@@ -334,12 +333,13 @@ bool LEQuad::init_attitude_estimation(void)
 bool LEQuad::init_position_estimation(void)
 {
     bool ret = true;
+
     // UP telemetry
-    ret &= position_estimation_telemetry_init(&position_estimation, &communication.handler());
+    ret &= ins_telemetry_init(&position_estimation, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Periodic_telemetry::telemetry_function_t)&position_estimation_telemetry_send_position,        &position_estimation);
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Periodic_telemetry::telemetry_function_t)&position_estimation_telemetry_send_global_position, &position_estimation);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send_local_position_ned,  &position_estimation);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send_global_position_int, &position_estimation);
 
     // Parameters
     ret &= communication.parameters().add(&position_estimation.kp_alt_baro,   "POS_KP_ALT_BARO" );
@@ -370,7 +370,7 @@ bool LEQuad::init_ins_kf(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send,   &ins_kf);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send_local_position_ned_cov,   &ins_kf);
 
     // Parameters
     ret &= communication.parameters().add(&ins_kf.config_.sigma_z_gnd,      "INS_X_Z_GND"       );

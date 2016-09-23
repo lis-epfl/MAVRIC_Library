@@ -34,69 +34,130 @@
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *
  * \brief   Telemetry for Inertial Navigation System
  *
  ******************************************************************************/
 
 #include "sensing/ins_telemetry.hpp"
+#include "util/print_util.hpp"
 
-void ins_telemetry_send(const INS_kf* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+
+/**
+ * \brief   Callback for receiving SET_GPS_GLOBAL_ORIGIN messages
+ * \details Sets INS::origin to the position sent indicated in the message
+ */
+void ins_telemetry_set_gps_global_origin_callback(INS* ins, uint32_t sysid, mavlink_message_t* msg);
+
+
+
+void ins_telemetry_set_gps_global_origin_callback(INS* ins, uint32_t sysid, mavlink_message_t* msg)
 {
-    // Fill the covaiance array
-    float cov[45];
-    // First elements are the diagonal
-    for(int i = 0; i < 11; i++)
-    {
-        cov[i] = ins->P()(i,i);
-    }
-    // Last elements are the noisy GPS postions and speed
-    cov[20] = ins->x()[3];
-    cov[21] = ins->z_sonar;
-    cov[30] = ins->x()[10];
-    cov[31] = ins->barometer_.altitude_gf_raw() - INS::origin().altitude;
-    cov[32] = -(ins->barometer_.altitude_gf_raw() - INS::origin().altitude + ins->x_[10]);
-    cov[39] = ins->gps_local[0];
-    cov[40] = ins->gps_local[1];
-    cov[41] = ins->gps_local[2];
-    cov[42] = ins->gps_velocity[0];
-    cov[43] = ins->gps_velocity[1];
-    cov[44] = ins->gps_velocity[2];
+    /* decode message */
+    mavlink_set_gps_global_origin_t set_gps_global_origin;
+    mavlink_msg_set_gps_global_origin_decode(msg, &set_gps_global_origin);
 
-    // Send message
+    /* create origin */
+    global_position_t origin;
+    origin.latitude =  ((double)set_gps_global_origin.latitude) / 1.0e7;
+    origin.longitude = ((double)set_gps_global_origin.longitude) / 1.0e7;
+    origin.altitude =  ((float)set_gps_global_origin.altitude) / 1.0e3;
+
+    /* set the origin */
+    INS::set_origin(origin);
+}
+
+
+bool ins_telemetry_init(INS* ins, Mavlink_message_handler* message_handler)
+{
+    bool init_success = true;
+
+    Mavlink_message_handler::cmd_callback_t callbackcmd;
+
+    callbackcmd.command_id    = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN; // 48
+    callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
+    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+    callbackcmd.compid_target = MAV_COMP_ID_ALL;
+    callbackcmd.function      = (Mavlink_message_handler::cmd_callback_func_t)   &ins_telemetry_set_gps_global_origin_callback;
+    callbackcmd.module_struct =                                     ins;
+    init_success &= message_handler->add_cmd_callback(&callbackcmd);
+
+    return init_success;
+}
+
+
+void ins_telemetry_send_local_position_ned_cov(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    float cov[45];
     mavlink_msg_local_position_ned_cov_pack(mavlink_stream->sysid(),
                                             mavlink_stream->compid(),
                                             msg,
                                             time_keeper_get_ms(),
                                             time_keeper_get_ms(),
                                             0,
-                                            ins->x()[0],
-                                            ins->x()[1],
-                                            ins->x()[2],
-                                            ins->x()[4],
-                                            ins->x()[5],
-                                            ins->x()[6],
-                                            ins->x()[7],
-                                            ins->x()[8],
-                                            ins->x()[9],
+                                            ins->position_lf()[0],
+                                            ins->position_lf()[1],
+                                            ins->position_lf()[2],
+                                            ins->velocity_lf()[0],
+                                            ins->velocity_lf()[1],
+                                            ins->velocity_lf()[2],
+                                            0.0f,
+                                            0.0f,
+                                            ins->absolute_altitude(),
                                             cov);
+}
 
-    // mavlink_msg_hil_sensor_pack(mavlink_stream->sysid(),
-    //                             mavlink_stream->compid(),
-    //                             msg,
-    //                             time_keeper_get_us(),
-    //                             ins->x()[0],    // xacc <-> x
-    //                             ins->x()[1],    // yacc <-> y
-    //                             ins->x()[2],    // zacc <-> z
-    //                             ins->x()[4],    // xgyro <-> vx
-    //                             ins->x()[5],    // ygyro <-> vy
-    //                             ins->x()[6],    // zgyro <-> vz
-    //                             ins->x()[7],    // xmag <-> bias_accx
-    //                             ins->x()[8],    // ymag <-> bias_accy
-    //                             ins->x()[9],    // zmag <-> bias_accz
-    //                             ins->x()[3],    // abs_pressure <-> z_gnd
-    //                             ins->x()[10],   // diff_pressure <-> bias_baro
-    //                             0.0f,           // pressure_alt <-> 0.0f
-    //                             0.0f,           // temperature <-> 0.0f
-    //                             0);             // fields_updated <-> 0
+
+void ins_telemetry_send_local_position_ned(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    local_position_t pos_lf    = ins->position_lf();
+    std::array<float,3> vel_lf = ins->velocity_lf();
+    mavlink_msg_local_position_ned_pack(mavlink_stream->sysid(),
+                                        mavlink_stream->compid(),
+                                        msg,
+                                        time_keeper_get_ms(),
+                                        pos_lf[X],
+                                        pos_lf[Y],
+                                        pos_lf[Z],
+                                        vel_lf[X],
+                                        vel_lf[Y],
+                                        vel_lf[Z]);
+}
+
+void ins_telemetry_send_global_position_int(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    // send integrated position (for now there is no GPS error correction...!!!)
+    local_position_t pos_lf    = ins->position_lf();
+    std::array<float,3> vel_lf = ins->velocity_lf();
+
+    global_position_t pos_gf;
+    coord_conventions_local_to_global_position(pos_lf, ins->origin(), pos_gf);
+
+
+    //mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
+    mavlink_msg_global_position_int_pack(mavlink_stream->sysid(),
+                                         mavlink_stream->compid(),
+                                         msg,
+                                         time_keeper_get_ms(),
+                                         pos_gf.latitude * 10000000,
+                                         pos_gf.longitude * 10000000,
+                                         pos_gf.altitude * 1000.0f,
+                                         -pos_lf[Z] * 1000,
+                                         vel_lf[X] * 100.0f,
+                                         vel_lf[Y] * 100.0f,
+                                         vel_lf[Z] * 100.0f,
+                                         0.0f);
+}
+
+
+void ins_telemetry_send_gps_global_origin(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    global_position_t origin = INS::origin();
+    mavlink_msg_gps_global_origin_pack( mavlink_stream->sysid(),
+                                        mavlink_stream->compid(),
+                                        msg,
+                                        origin.latitude * 1e7,
+                                        origin.longitude * 1e7,
+                                        origin.altitude * 1e3);
 }

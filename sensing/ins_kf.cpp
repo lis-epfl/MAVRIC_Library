@@ -168,7 +168,7 @@ std::array<float,3> INS_kf::velocity_lf(void) const
 
 float INS_kf::absolute_altitude(void) const
 {
-    return -x_[2] + origin_.altitude;
+    return -x_[2] + origin().altitude;
 }
 
 
@@ -320,7 +320,7 @@ bool INS_kf::update(void)
               R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
 
               // Run kalman Update
-              z_baro = barometer_.altitude_gf_raw() - origin_.altitude;
+              z_baro = barometer_.altitude_gf_raw() - origin().altitude;
               Kalman<11,3,3>::update(Mat<1,1>(z_baro),
                                      H_baro_,
                                      R_baro_);

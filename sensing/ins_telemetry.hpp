@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *
  * \brief   Telemetry for Inertial Navigation System
  *
@@ -43,18 +44,53 @@
 #ifndef INS_TELEMETRY_HPP_
 #define INS_TELEMETRY_HPP_
 
-#include "sensing/ins_kf.hpp"
-#include "communication/mavlink_stream.hpp"
+#include "sensing/ins.hpp"
+#include "communication/mavlink_message_handler.hpp"
+
 
 /**
- * \brief Telemetry
+ * \brief   Initalize INS telemetry
+ * \details Setup callback for receiving SET_GPS_GLOBAL_ORIGIN messages
  *
+ * \return success
+ */
+bool ins_telemetry_init(INS* ins, Mavlink_message_handler* message_handler);
+
+/**
  * \brief   Function to send the MAVLink position estimation message
  *
- * \param   ins                     The pointer to the Inertial Navigation System
+ * \param   ins                     The pointer to the Inertial Navigation System (INS)
  * \param   mavlink_stream          The pointer to the MAVLink stream
  * \param   msg                     The pointer to the MAVLink message
  */
-void ins_telemetry_send(const INS_kf* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void ins_telemetry_send_local_position_ned_cov(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
+
+/**
+ * \brief   Function to send the MAVLink position estimation message
+ *
+ * \param   ins                     The pointer to the Inertial Navigation System (INS)
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void ins_telemetry_send_local_position_ned(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
+
+/**
+ * \brief   Function to send the MAVLink GPS global position message
+ *
+ * \param   ins                     The pointer to the Inertial Navigation System (INS)
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void ins_telemetry_send_global_position_int(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
+/**
+ * \brief   Function to send the origin (INS::origin_)
+ *
+ * \param   ins                     The pointer to the Inertial Navigation System (INS)
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void ins_telemetry_send_gps_global_origin(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 #endif /* INS_TELEMETRY_HPP_ */
