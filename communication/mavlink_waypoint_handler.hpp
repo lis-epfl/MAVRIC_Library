@@ -192,6 +192,10 @@ private:
 
     conf_t config_;
 
+    /**
+     * \brief   Sends the home waypoint to the ground control station
+     */
+    void send_home_waypoint();
 
     /************************************************
      *      static member functions (callbacks)     *

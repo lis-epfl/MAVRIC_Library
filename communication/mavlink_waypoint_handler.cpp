@@ -105,7 +105,33 @@ mav_result_t Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoi
         return MAV_RESULT_DENIED;
     }
 
+    waypoint_handler->send_home_waypoint();
     return MAV_RESULT_ACCEPTED;
+}
+
+void Mavlink_waypoint_handler::send_home_waypoint()
+{
+    local_position_t local_pos = home_waypoint_.local_pos();
+    global_position_t global_pos;
+    coord_conventions_local_to_global_position(local_pos, INS::origin(), global_pos);
+
+    float surface_norm[4];
+
+    mavlink_message_t msg;
+    mavlink_msg_home_position_pack( mavlink_stream_.sysid(), 
+                                    mavlink_stream_.compid(), 
+                                    &msg,
+                                    global_pos.latitude*1e7, 
+                                    global_pos.longitude*1e7, 
+                                    global_pos.altitude*1e3, 
+                                    local_pos[X], 
+                                    local_pos[Y], 
+                                    local_pos[Z], 
+                                    surface_norm,   // q: surface norm 
+                                    0.0f,           // approach_x
+                                    0.0f,           // approach_x
+                                    0.0f);          // approach_x
+    mavlink_stream_.send(&msg);
 }
 
 void Mavlink_waypoint_handler::request_list_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
@@ -235,6 +261,8 @@ void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* 
 
             print_util_dbg_print("[Mavlink_waypoint_handler] Flight plan received!\n");
             waypoint_handler->waypoint_received_time_ms_ = time_keeper_get_ms();
+
+            waypoint_handler->send_home_waypoint();
         }
     }
 }
@@ -289,6 +317,8 @@ void Mavlink_waypoint_handler::mission_item_callback(Mavlink_waypoint_handler* w
 
                     print_util_dbg_print("[Mavlink_waypoint_handler] Flight plan received!\n");
                     waypoint_handler->waypoint_received_time_ms_ = time_keeper_get_ms();
+
+                    waypoint_handler->send_home_waypoint();
                 }
                 else
                 {
@@ -462,6 +492,8 @@ bool Mavlink_waypoint_handler::init()
     callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
     init_success &= message_handler_.add_cmd_callback(&callbackcmd);
 
+    send_home_waypoint();
+    
     if(!init_success)
     {
         print_util_dbg_print("[MAVLINK_WAYPOINT_HANDLER] constructor: ERROR\r\n");
