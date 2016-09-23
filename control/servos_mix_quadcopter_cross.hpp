@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_quadcopter_cross.hpp
+ * \file servos_mix_quadcopter_cross.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -43,13 +43,13 @@
  ******************************************************************************/
 
 
-#ifndef TORQUE_CONTROLLER_QUADCOPTER_CROSS_HPP_
-#define TORQUE_CONTROLLER_QUADCOPTER_CROSS_HPP_
+#ifndef SERVOS_MIX_QUADCOPTER_CROSS_HPP_
+#define SERVOS_MIX_QUADCOPTER_CROSS_HPP_
 
-#include "control/torque_controller.hpp"
+#include "control/servos_mix.hpp"
 
 
-class Torque_controller_quadcopter_cross : public Torque_controller
+class Servos_mix_quadcopter_cross : public Servos_mix
 {
 public:
 
@@ -83,15 +83,13 @@ public:
      * \param args              Constructor arguments
      * \param config            configuration
      */
-    Torque_controller_quadcopter_cross(args_t args, const conf_t& config);
+    Servos_mix_quadcopter_cross(args_t args, const conf_t& config);
 
 
     /*
      * \brief   Write motor commands to servo structure based on torque command
      */
     virtual void update();
-
-    static inline conf_t default_config();
 
 private:
     rot_dir_t   motor_front_dir_;              ///< Front  motor turning direction
@@ -106,4 +104,4 @@ private:
     Servo&      motor_rear_;                   ///< Servo for rear right motor
 };
 
-#endif /* TORQUE_CONTROLLER_QUADCOPTER_CROSS_HPP_ */
+#endif /* SERVOS_MIX_QUADCOPTER_CROSS_HPP_ */

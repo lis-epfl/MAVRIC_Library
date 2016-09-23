@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_wing.hpp
+ * \file servos_mix_wing.hpp
  *
  * \author MAV'RIC Team
  * \author Simon Pyroth
@@ -46,9 +46,9 @@
 
 #include "drivers/servo.hpp"
 
-#include "control/torque_controller.hpp"
+#include "control/servos_mix.hpp"
 
-class Torque_controller_wing : public Torque_controller
+class Servos_mix_wing : public Servos_mix
 {
 public:
     /**
@@ -83,7 +83,7 @@ public:
         Servo& motor;
     };
 
-    Torque_controller_wing(args_t& args, const conf_t& config = default_config());
+    Servos_mix_wing(args_t& args, const conf_t& config = default_config());
 
     virtual void update();
 
@@ -96,7 +96,7 @@ private:
     Servo& motor_;                           ///< Motor
 };
 
-Torque_controller_wing::conf_t Torque_controller_wing::default_config()
+Servos_mix_wing::conf_t Servos_mix_wing::default_config()
 {
     conf_t conf;
 

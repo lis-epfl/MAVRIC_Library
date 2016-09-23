@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_quadcopter_diag.hpp
+ * \file servos_mix_quadcopter_diag.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -43,13 +43,13 @@
  ******************************************************************************/
 
 
-#ifndef TORQUE_CONTROLLER_QUADCOPTER_DIAG_HPP_
-#define TORQUE_CONTROLLER_QUADCOPTER_DIAG_HPP_
+#ifndef SERVOS_MIX_QUADCOPTER_DIAG_HPP_
+#define SERVOS_MIX_QUADCOPTER_DIAG_HPP_
 
-#include "control/torque_controller.hpp"
+#include "control/servos_mix.hpp"
 
 
-class Torque_controller_quadcopter_diag : public Torque_controller
+class Servos_mix_quadcopter_diag : public Servos_mix
 {
 public:
 
@@ -64,7 +64,6 @@ public:
         rot_dir_t   motor_rear_right_dir;       ///< Right motor turning direction
         float       min_thrust;                ///< Minimal thrust
         float       max_thrust;                ///< Maxmal thrust
-    
     };
 
     /**
@@ -87,14 +86,19 @@ public:
      * \param motor_rear_right  Rear right motor
      * \param config            configuration
      */
-    Torque_controller_quadcopter_diag(args_t& args, const conf_t& config = default_config());
+    Servos_mix_quadcopter_diag(args_t args, const conf_t& config = default_config());
 
-
+    
     /*
      * \brief   Write motor commands to servo structure based on torque command
      */
     virtual void update();
 
+    /*
+     * \brief   Default configuration
+     *
+     * \return default configuration
+     */
     static inline conf_t default_config();
 
 private:
@@ -110,7 +114,7 @@ private:
     Servo&      motor_rear_right_;               ///< Servo for rear right motor
 };
 
-Torque_controller_quadcopter_diag::conf_t Torque_controller_quadcopter_diag::default_config()
+Servos_mix_quadcopter_diag::conf_t Servos_mix_quadcopter_diag::default_config()
 {
     conf_t conf;
 
@@ -124,4 +128,4 @@ Torque_controller_quadcopter_diag::conf_t Torque_controller_quadcopter_diag::def
     return conf;
 }
 
-#endif /* TORQUE_CONTROLLER_QUADCOPTER_DIAG_HPP_ */
+#endif /* SERVOS_MIX_QUADCOPTER_DIAG_HPP_ */

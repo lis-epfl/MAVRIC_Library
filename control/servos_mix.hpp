@@ -30,64 +30,49 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_wing.cpp
+ * \file servos_mix.hpp
  *
  * \author MAV'RIC Team
- * \author Simon Pyroth
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
  * \author Basil Huber
  *
- * \brief Links between regulation output and PWM commands for a wing aircraft
+ * \brief Abstract class that links between torque commands and servos PWM command for quadcopters
  *
  ******************************************************************************/
 
 
-#include "control/torque_controller_wing.hpp"
+#ifndef SERVOS_MIX_HPP_
+#define SERVOS_MIX_HPP_
 
-Torque_controller_wing::Torque_controller_wing(args_t& args, const conf_t& config) :
-    config_(config),
-    servo_left_(args.servo_left),
-    servo_right_(args.servo_right),
-    motor_(args.motor)
-    {}
+#include "drivers/servo.hpp"
+#include "util/constants.hpp"
+
+#include "control/iservos_mix.hpp"
 
 
-void Torque_controller_wing::update()
+class Servos_mix : public IServos_mix
 {
-    // Calculate value to be sent to the motors
-    float tmp_right_servo   = config_.servo_right_dir * ( (torq_command_.torq[1] + config_.trim_pitch) + (torq_command_.torq[0] + config_.trim_roll) );
-    float tmp_left_servo    = config_.servo_left_dir  * ( (torq_command_.torq[1] + config_.trim_pitch) - (torq_command_.torq[0] + config_.trim_roll) );
-    float tmp_motor         = torq_command_.thrust;
+public:
 
-    // Clip values
-    if (tmp_right_servo < config_.min_amplitude)
-    {
-        tmp_right_servo = config_.min_amplitude;
-    }
-    else if (tmp_right_servo > config_.max_amplitude)
-    {
-        tmp_right_servo = config_.max_amplitude;
-    }
+    Servos_mix();
 
-    if (tmp_left_servo < config_.min_amplitude)
-    {
-        tmp_left_servo = config_.min_amplitude;
-    }
-    else if (tmp_left_servo > config_.max_amplitude)
-    {
-        tmp_left_servo = config_.max_amplitude;
-    }
+    /*
+     * \brief   Write motor commands to servo structure based on torque command
+     */
+    virtual void update()=0;
 
-    if (tmp_motor < config_.min_thrust)
-    {
-        tmp_motor = config_.min_thrust;
-    }
-    else if (tmp_motor > config_.max_thrust)
-    {
-        tmp_motor = config_.max_thrust;
-    }
+    /*
+     * \brief   Set torque command and set controller cascade to "torque mode" 
+     * \details Sets the torq_command_ and sets cascade_command_ to point to torq_command, signaling that this is the command mode
+     *          This function should NOT be called from higher level controllers if they provide a command, use update_cascade instead
+     * \param torq_command  torque command to be set and used for motor commands
+     */
+    inline bool set_torque_command(const torq_command_t& torq_command){torq_command_ = torq_command; return true;};
 
-    // Set the calculated values to each motors
-    servo_left_.write(tmp_left_servo);
-    servo_right_.write(tmp_right_servo);
-    motor_.write(tmp_motor);
-}
+protected:
+
+    torq_command_t torq_command_;               ///< torque command (desired torque and thrust)
+};
+
+#endif

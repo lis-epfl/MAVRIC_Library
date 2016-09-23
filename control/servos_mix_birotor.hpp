@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_birotor.hpp
+ * \file servos_mix_birotor.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,17 +40,17 @@
  *
  ******************************************************************************/
 
-#ifndef TORQUE_CONTROLLER_HPP_
-#define TORQUE_CONTROLLER_HPP_
+#ifndef SERVOS_MIX_BIROTOR_HPP_
+#define SERVOS_MIX_BIROTOR_HPP_
 
-#include "control/torque_controller.hpp"
+#include "control/servos_mix.hpp"
 
 extern "C"
 {
 #include "drivers/unsupported/daler_dc_motor_ctrl.h"
 }
 
-class Torque_controller_birotor : public Torque_controller
+class Servos_mix_birotor : public Servos_mix
 {
 
     /**
@@ -66,7 +66,7 @@ class Torque_controller_birotor : public Torque_controller
         float       max_servo;          ///< Maximum servo command
         float       min_thrust;        ///< Minimal thrust
         float       max_thrust;        ///< Maxmal thrust
-    } servo_mix_birotor_conf_t;
+    };
 
 
     /**
@@ -81,7 +81,7 @@ class Torque_controller_birotor : public Torque_controller
         daler_dc_motor_ctrl_t& dc_motors;
     };
 
-    Torque_controller_birotor(args_t& args, const conf_t& config);
+    Servos_mix_birotor(args_t& args, const conf_t& config);
 
 private:
     rot_dir_t   motor_left_dir_;                 ///< Left motor rotation direction
@@ -99,4 +99,4 @@ private:
     daler_dc_motor_ctrl_t&  dc_motors_;          ///< DC motor controller (output)
 };
 
-#endif // TORQUE_CONTROLLER_HPP_
+#endif // SERVOS_MIX_BIROTOR_HPP_

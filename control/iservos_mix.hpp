@@ -30,23 +30,23 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file itorque_controller.hpp
+ * \file iservos_mix_controller.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
  *
- * \brief Interface for torque controller
+ * \brief Interface for servo mix, allowing to convert torque command to servo commands
  *
  ******************************************************************************/
 
 
-#ifndef ITORQUE_CONTROLLER_HPP_
-#define ITORQUE_CONTROLLER_HPP_
+#ifndef ISERVOS_MIX_HPP_
+#define ISERVOS_MIX_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "control/control_command.h"
 
-class ITorque_controller
+class IServos_mix
 {
 public:
     /*
@@ -73,4 +73,4 @@ public:
     virtual bool set_torque_command(const torq_command_t& command) = 0;
 };
 
-#endif /* ITORQUE_CONTROLLER_HPP_ */
+#endif /* ISERVOS_MIX_HPP_ */

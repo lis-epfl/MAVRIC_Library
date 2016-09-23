@@ -53,15 +53,16 @@
 #ifndef RATE_CONTROLLER_HPP_
 #define RATE_CONTROLLER_HPP_
 
+#include "control/base_cascade_controller.hpp"
 #include "control/irate_controller.hpp"
-#include "control/itorque_controller.hpp"
+#include "control/iservos_mix.hpp"
 #include "control/pid_controller.hpp"
 #include "util/constants.hpp"
 #include "sensing/ahrs.hpp"
 
 
-template<class TTorque_controller>
-class Rate_controller : public IRate_controller, public TTorque_controller
+template<class TServos_mix>
+class Rate_controller : public IRate_controller, public Base_cascade_controller
 {
 public:
 
@@ -71,7 +72,7 @@ public:
     struct conf_t
     {
         pid_controller_conf_t pid_config[3];   ///< Angular rate PID controller for roll, pitch and yaw
-        typename TTorque_controller::conf_t torque_controller_config;
+        typename TServos_mix::conf_t servos_mix_config;
     };
 
     /**
@@ -80,13 +81,13 @@ public:
     struct args_t
     {
         const ahrs_t& ahrs;
-        typename TTorque_controller::args_t torque_controller_args;
+        typename TServos_mix::args_t servos_mix_args;
     };    
 
     /**
      * \brief                       Constructor
      *
-     * \param   args                containing constructor arguments for rate controller and TTorque_controller
+     * \param   args                containing constructor arguments for rate controller and TServos_mix
      * \param   config              Configuration     
      */
     Rate_controller(args_t args, const conf_t& config = default_config());
@@ -121,7 +122,7 @@ protected:
      *          This function should be called from higher level controllers if they provide a command
      * \param rate_command  rate_command
      */
-    ITorque_controller::torq_command_t calc_torque_command(const rate_command_t& rate_command);
+    IServos_mix::torq_command_t calc_torque_command(const rate_command_t& rate_command);
 
 
 private:
@@ -130,10 +131,11 @@ private:
     float                       last_update_s_;         ///< The time of the last update in s
     const ahrs_t&               ahrs_;                  ///< Ref to attitude estimation (input)
     rate_command_t              rate_command_;          ///< Rate command (input/output)
+    TServos_mix                 servos_mix_;            ///< Servos_mix
 };
 
-template<class TTorque_controller>
-typename Rate_controller<TTorque_controller>::conf_t Rate_controller<TTorque_controller>::default_config()
+template<class TServos_mix>
+typename Rate_controller<TServos_mix>::conf_t Rate_controller<TServos_mix>::default_config()
 {
     conf_t conf = {};
 
@@ -183,7 +185,7 @@ typename Rate_controller<TTorque_controller>::conf_t Rate_controller<TTorque_con
     conf.pid_config[YAW].differentiator.clip        = 0.0f;
     conf.pid_config[YAW].soft_zone_width            = 0.0;
 
-    conf.torque_controller_config = TTorque_controller::default_config();
+    conf.servos_mix_config = TServos_mix::default_config();
 
     return conf;
 };

@@ -30,76 +30,82 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_quadcopter_cross.cpp
+ * \file torque_controller_ywing.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
- * \author Nicolas Dousse
  * \author Basil Huber
  *
- * \brief Links between torque commands and servos PWM command for quadcopters
- * in cross configuration
+ * \brief Links between torque commands and servos PWM command for Ywing
  *
  ******************************************************************************/
 
-#include "control/torque_controller_quadcopter_cross.hpp"
 
+#include "control/servos_mix_ywing.hpp"
 
-Torque_controller_quadcopter_cross::Torque_controller_quadcopter_cross(args_t args, const conf_t& config) : 
-    motor_front_dir_(config.motor_front_dir),
-    motor_left_dir_(config.motor_left_dir),
-    motor_right_dir_(config.motor_front_dir),
-    motor_rear_dir_(config.motor_rear_dir),
+Servos_mix_ywing::Servos_mix_ywing(args_t& args, const conf_t& config) :
+    flap_top_dir_(config.flap_top_dir),
+    flap_right_dir_(config.flap_right_dir),
+    flap_left_dir_(config.flap_left_dir),
     min_thrust_(config.min_thrust),
     max_thrust_(config.max_thrust),
-    motor_front_(args.motor_front),
-    motor_left_(args.motor_left),
-    motor_right_(args.motor_right),
-    motor_rear_(args.motor_rear)
+    min_deflection_(config.min_deflection),
+    max_deflection_(config.max_deflection),
+    motor_(args.servo_motor),
+    flap_top_(args.servo_flap_top),
+    flap_right_(args.servo_flap_right),
+    flap_left_(args.servo_flap_left)
 {
 
 }
 
-void Torque_controller_quadcopter_cross::update()
+
+void Servos_mix_ywing::update()
 {
-    float motor[4];
+    float servos[4];
 
-    // Front Right motor
-    motor[0] =  torq_command_.thrust +
-                torq_command_.torq[1] +
-                motor_front_dir_ * torq_command_.torq[2];
-
-    // Front Left motor
-    motor[1] =  torq_command_.thrust +
-                (- torq_command_.torq[0]) +
-                motor_right_dir_ * torq_command_.torq[2];
-
-    // Rear Right motor
-    motor[2]  = torq_command_.thrust +
-                (- torq_command_.torq[1]) +
-                torq_command_.torq[1] +
-                motor_rear_dir_ * torq_command_.torq[2];
-
-    // Rear Left motor
-    motor[3]  = torq_command_.thrust +
-                torq_command_.torq[0] +
-                motor_left_dir_ * torq_command_.torq[2];
+    // Main motor
+    servos[0] = torq_command_.thrust;
 
     // Clip values
-    for (int32_t i = 0; i < 4; i++)
+    if (servos[0] < min_thrust_)
     {
-        if (motor[i] < min_thrust_)
+        servos[0] = min_thrust_;
+    }
+    else if (servos[0] > max_thrust_)
+    {
+        servos[0] = max_thrust_;
+    }
+
+    // Top flap
+    servos[1] = flap_top_dir_ * (torq_command_.torq[ROLL]
+                                     - torq_command_.torq[YAW]);
+
+    // Right flap
+    servos[2]  = flap_right_dir_ * (torq_command_.torq[ROLL]
+                                        + 0.86f * torq_command_.torq[PITCH]
+                                        + 0.50f * torq_command_.torq[YAW]);
+
+    // Left flap
+    servos[3]  = flap_left_dir_ * (torq_command_.torq[ROLL]
+                                       - 0.86f * torq_command_.torq[PITCH]
+                                       + 0.50f * torq_command_.torq[YAW]);
+
+    // Clip values
+    for (int32_t i = 1; i < 4; i++)
+    {
+        if (servos[i] < min_deflection_)
         {
-            motor[i] = min_thrust_;
+            servos[i] = min_deflection_;
         }
-        else if (motor[i] > max_thrust_)
+        else if (servos[i] > max_deflection_)
         {
-            motor[i] = max_thrust_;
+            servos[i] = max_deflection_;
         }
     }
 
-    motor_front_.write(motor[0]);
-    motor_right_.write(motor[1]);
-    motor_rear_.write(motor[2]);
-    motor_left_.write(motor[3]);
+    motor_.write(servos[0]);
+    flap_top_.write(servos[1]);
+    flap_right_.write(servos[2]);
+    flap_left_.write(servos[3]);
 }

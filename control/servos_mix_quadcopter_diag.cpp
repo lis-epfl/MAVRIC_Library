@@ -30,82 +30,79 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_ywing.hpp
+ * \file servos_mix_quadcopter_diag.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Nicolas Dousse
  * \author Basil Huber
  *
- * \brief Links between torque commands and servos PWM command for Ywing
+ * \brief Links between torque commands and servos PWM command for quadcopters
+ * in diagonal configuration
  *
  ******************************************************************************/
 
+#include "control/servos_mix_quadcopter_diag.hpp"
 
-#include "control/torque_controller_ywing.hpp"
-
-Torque_controller_ywing::Torque_controller_ywing(args_t& args, const conf_t& config)
-    flap_top_dir_(config.flap_top_dir),
-    flap_right_dir_(config.flap_right_dir),
-    flat_left_dir_(config.flap_left_dir),
+Servos_mix_quadcopter_diag::Servos_mix_quadcopter_diag(args_t args, const conf_t& config) : 
+    motor_rear_left_dir_(config.motor_rear_left_dir),
+    motor_front_left_dir_(config.motor_front_left_dir),
+    motor_front_right_dir_(config.motor_front_right_dir),
+    motor_rear_right_dir_(config.motor_rear_right_dir),
     min_thrust_(config.min_thrust),
     max_thrust_(config.max_thrust),
-    min_deflection_(config.min_deflection),
-    max_deflection_(config.max_deflection),
-    motor_(args.servo_motor),
-    flap_top_(args.servo_flap_top),
-    flap_right_(args.servo_flap_right),
-    flap_left_(args.servo_flap_left)
+    motor_rear_left_(args.motor_rear_left),
+    motor_front_left_(args.motor_front_left),
+    motor_front_right_(args.motor_front_right),
+    motor_rear_right_(args.motor_rear_right)
 {
-
 }
 
-
-void Torque_controller_ywing::update()
+void Servos_mix_quadcopter_diag::update()
 {
-    float servos[4];
+    float motor[4];
 
-    // Main motor
-    servos[0] = torq_command_.thrust;
+    // Front Right motor
+    motor[0] =  torq_command_.thrust +
+                (- torq_command_.torq[0]) +
+                (+ torq_command_.torq[1]) +
+                motor_front_right_dir_ * torq_command_.torq[2];
 
-    // Clip values
-    if (servos[0] < min_thrust)
-    {
-        servos[0] = min_thrust;
-    }
-    else if (servos[0] > max_thrust)
-    {
-        servos[0] = max_thrust;
-    }
+    // Front Left motor
+    motor[1] =  torq_command_.thrust +
+                (+ torq_command_.torq[0]) +
+                (+ torq_command_.torq[1]) +
+                motor_front_left_dir_ * torq_command_.torq[2];
 
-    // Top flap
-    servos[1] = flap_top_dir * (torq_command_.torq[ROLL]
-                                     - torq_command_.torq[YAW]);
+    // Rear Right motor
+    motor[2]  = torq_command_.thrust +
+                (- torq_command_.torq[0]) +
+                (- torq_command_.torq[1]) +
+                motor_rear_right_dir_ * torq_command_.torq[2];
 
-    // Right flap
-    servos[2]  = flap_right_dir * (torq_command_.torq[ROLL]
-                                        + 0.86f * torq_command_.torq[PITCH]
-                                        + 0.50f * torq_command_.torq[YAW]);
-
-    // Left flap
-    servos[3]  = flap_left_dir * (torq_command_.torq[ROLL]
-                                       - 0.86f * torq_command_.torq[PITCH]
-                                       + 0.50f * torq_command_.torq[YAW]);
+    // Rear Left motor
+    motor[3]  = torq_command_.thrust +
+                (+ torq_command_.torq[0]) +
+                (- torq_command_.torq[1]) +
+                motor_rear_left_dir_ * torq_command_.torq[2];
 
     // Clip values
-    for (int32_t i = 1; i < 4; i++)
+    for (int8_t i = 0; i < 4; i++)
     {
-        if (servos[i] < min_deflection)
+        if (motor[i] < min_thrust_)
         {
-            servos[i] = min_deflection;
+            motor[i] = min_thrust_;
         }
-        else if (servos[i] > max_deflection)
+        else if (motor[i] > max_thrust_)
         {
-            servos[i] = max_deflection;
+            motor[i] = max_thrust_;
         }
     }
 
-    motor.write(servos[0]);
-    flap_top.write(servos[1]);
-    flap_right.write(servos[2]);
-    flap_left.write(servos[3]);
+
+
+    motor_front_right_.write(motor[0]);
+    motor_front_left_.write(motor[1]);
+    motor_rear_right_.write(motor[2]);
+    motor_rear_left_.write(motor[3]);
 }

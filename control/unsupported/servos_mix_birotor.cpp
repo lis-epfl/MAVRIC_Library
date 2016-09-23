@@ -41,10 +41,10 @@
  ******************************************************************************/
 
 
-#include "control/torque_controller_birotor.hpp"
+#include "control/servos_mix_birotor.hpp"
 
 
-Torque_controller_birotor::Torque_controller_birotor(args_t& args, const conf_t& config) : 
+Servos_mix_birotor::Servos_mix_birotor(args_t& args, const conf_t& config) : 
     motor_left_dir_(config.motor_left_dir),
     motor_right_dir_(config.motor_right_dir),
     servo_left_dir_(config.servo_left_dir),
@@ -64,7 +64,7 @@ Torque_controller_birotor::Torque_controller_birotor(args_t& args, const conf_t&
 
 
 
-void Torque_controller_birotor::update()
+void Servos_mix_birotor::update()
 {
     float motor[4];
 

@@ -55,10 +55,10 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-template<class TTorque_controller>
-Rate_controller<TTorque_controller>::Rate_controller(args_t args, const conf_t& config) :
-    TTorque_controller(args.torque_controller_args, config.torque_controller_config),
-    ahrs_(args.ahrs)
+template<class TServos_mix>
+Rate_controller<TServos_mix>::Rate_controller(args_t args, const conf_t& config) : 
+    ahrs_(args.ahrs),
+    servos_mix_(args.servos_mix_args, config.servos_mix_config)
 {
     // Init mode
     dt_s_          = 0.0f;
@@ -77,28 +77,21 @@ Rate_controller<TTorque_controller>::Rate_controller(args_t args, const conf_t& 
 }
 
 
-template<class TTorque_controller>
-void Rate_controller<TTorque_controller>::update()
+template<class TServos_mix>
+void Rate_controller<TServos_mix>::update()
 {
-    /* check whether this is the highest active level of the cascade */
-    if(TTorque_controller::cascade_command_ == &rate_command_)
-    {
-        /* calculate torque_command and propagate down the cascade */
-        ITorque_controller::torq_command_t torq_command = calc_torque_command(rate_command_);
-        TTorque_controller::update_cascade(torq_command);
-    }else
-    {
-        /* propagate update() down the cascade until reaching the highest active level */
-        TTorque_controller::update();
-    }
+    /* calculate torque_command, pass it to servos_mix and update servos_mix */
+    IServos_mix::torq_command_t torq_command = calc_torque_command(rate_command_);
+    servos_mix_.set_torque_command(torq_command);
+    servos_mix_.update();
 }
 
 
-template<class TTorque_controller>
-bool Rate_controller<TTorque_controller>::set_rate_command(const rate_command_t& rate_command)
+template<class TServos_mix>
+bool Rate_controller<TServos_mix>::set_rate_command(const rate_command_t& rate_command)
 {
     rate_command_ = rate_command;
-    TTorque_controller::cascade_command_ = &rate_command_;
+    cascade_command_ = &rate_command_;
     return true;
 }
 
@@ -107,23 +100,22 @@ bool Rate_controller<TTorque_controller>::set_rate_command(const rate_command_t&
 // PROTECTED FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-template<class TTorque_controller>
-void Rate_controller<TTorque_controller>::update_cascade(const rate_command_t& rate_command)
+template<class TServos_mix>
+void Rate_controller<TServos_mix>::update_cascade(const rate_command_t& rate_command)
 {
     rate_command_ = rate_command;
-    ITorque_controller::torq_command_t torq_command = calc_torque_command(rate_command);
-    TTorque_controller::update_cascade(torq_command);
+    update();
 }
 
-template<class TTorque_controller>
-ITorque_controller::torq_command_t Rate_controller<TTorque_controller>::calc_torque_command(const rate_command_t& rate_command)
+template<class TServos_mix>
+IServos_mix::torq_command_t Rate_controller<TServos_mix>::calc_torque_command(const rate_command_t& rate_command)
 {
     float now      = time_keeper_get_s();
     dt_s_          = now - last_update_s_;
     last_update_s_ = now;
 
     float errors[3];
-    ITorque_controller::torq_command_t torque_command;
+    IServos_mix::torq_command_t torque_command;
 
     // Get errors on rate
     errors[ROLL]  = rate_command.rates[ROLL]  - ahrs_.angular_speed[ROLL];

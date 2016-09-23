@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file torque_controller_ywing.hpp
+ * \file servos_mix_ywing.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -44,44 +44,44 @@
 #ifndef TORQUE_CONTROLLER_YWING_HPP_
 #define TORQUE_CONTROLLER_YWING_HPP_
 
-#include "control/torque_controller.hpp"
+#include "control/servos_mix.hpp"
 
-class Torque_controller_ywing: class torque_controller
+class Servos_mix_ywing: public Servos_mix
 {
 public:
 
-  /**
-   * \brief The servo mix structure for a Ywing
-   */
-  struct conf_t
-  {
-      flap_dir_t  flap_top_dir;       ///< Left  flap turning direction
-      flap_dir_t  flap_right_dir;     ///< Right flap turning direction
-      flap_dir_t  flap_left_dir;      ///< Rear  flap turning direction
-      float       min_thrust;         ///< Minimum thrust
-      float       max_thrust;         ///< Maximum thrust
-      float       min_deflection;     ///< Minimum deflection for flaps
-      float       max_deflection;     ///< Maximum deflection for flaps
-  };
+    /**
+    * \brief The servo mix structure for a Ywing
+    */
+    struct conf_t
+    {
+        flap_dir_t  flap_top_dir;       ///< Left  flap turning direction
+        flap_dir_t  flap_right_dir;     ///< Right flap turning direction
+        flap_dir_t  flap_left_dir;      ///< Rear  flap turning direction
+        float       min_thrust;         ///< Minimum thrust
+        float       max_thrust;         ///< Maximum thrust
+        float       min_deflection;     ///< Minimum deflection for flaps
+        float       max_deflection;     ///< Maximum deflection for flaps
+    };
 
 
-  /**
-   * \brief Constructor arguments
-   */
-  struct args_t
-  {
-      Servo& servo_motor;
-      Servo& servo_flap_top;
-      Servo& servo_flap_right;
-      Servo& servo_flap_left;
-  };
+    /**
+    * \brief Constructor arguments
+    */
+    struct args_t
+    {
+        Servo& servo_motor;
+        Servo& servo_flap_top;
+        Servo& servo_flap_right;
+        Servo& servo_flap_left;
+    };
 
-  Torque_controller_ywing(args_t& args, const conf_t& config = default_config());
+    Servos_mix_ywing(args_t& args, const conf_t& config = default_config());
 
-  virtual void update();
+    virtual void update();
 
 
-  static inline conf_t default_config();
+    static inline conf_t default_config();
 
 private:
     flap_dir_t  flap_top_dir_;       ///< Left  flap turning direction
@@ -99,16 +99,18 @@ private:
 
 
 
-Torque_controller::conf_t Torque_controller::default_config(){
+Servos_mix_ywing::conf_t Servos_mix_ywing::default_config()
 {
-  conf_t config;
-    config.flap_top_dir   = FLAP_INVERTED,
-    config.flap_right_dir = FLAP_INVERTED,
-    config.flap_left_dir  = FLAP_INVERTED,
-    config.min_thrust     = -0.9f,
-    config.max_thrust     = 1.0f,
-    config .min_deflection = -1.0f,
-    config .max_deflection = 1.0f,
+    conf_t conf;
+    conf.flap_top_dir   = FLAP_INVERTED;
+    conf.flap_right_dir = FLAP_INVERTED;
+    conf.flap_left_dir  = FLAP_INVERTED;
+    conf.min_thrust     = -0.9f;
+    conf.max_thrust     = 1.0f;
+    conf.min_deflection = -1.0f;
+    conf.max_deflection = 1.0f;
+
+    return conf;
 };
 
 #endif

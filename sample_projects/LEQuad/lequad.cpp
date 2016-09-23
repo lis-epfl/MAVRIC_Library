@@ -53,8 +53,6 @@
 #include "sensing/position_estimation_telemetry.hpp"
 
 #include "control/manual_control_telemetry.hpp"
-#include "control/rate_controller.hpp"
-#include "control/torque_controller_quadcopter_diag.hpp"
 
 #include "runtime/scheduler_telemetry.hpp"
 #include "hal/common/time_keeper.hpp"
