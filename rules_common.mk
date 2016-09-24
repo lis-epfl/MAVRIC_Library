@@ -61,7 +61,6 @@ LIB_SRCS += control/joystick_telemetry.cpp
 LIB_SRCS += control/manual_control.cpp
 LIB_SRCS += control/manual_control_telemetry.cpp
 LIB_SRCS += control/pid_controller.cpp
-
 LIB_SRCS += control/stabilisation.cpp
 #LIB_SRCS += control/stabilisation_wing.cpp
 LIB_SRCS += control/servos_mix.cpp

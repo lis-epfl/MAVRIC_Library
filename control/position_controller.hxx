@@ -50,15 +50,11 @@ Position_controller<TVelocity_controller>::Position_controller(args_t args, cons
     TVelocity_controller(args.velocity_controller_args, config.velocity_controller_config),
     ins_(args.ins),
     ahrs_(args.ahrs),
-    cruise_mode_(false),
     ctrl_mode_(ctrl_mode_t::POS_XYZ),
-    cruise_pid_config_(config.cruise_pid_config),
-    hover_pid_config_(config.hover_pid_config),
     max_climb_rate_(config.max_climb_rate),
-    min_cruise_dist_(config.min_cruise_dist),
     kp_yaw_(config.kp_yaw)
 {
-    pid_controller_init(&pid_controller_, &hover_pid_config_);
+    pid_controller_init(&pid_controller_, &config.pid_config);
 
     pos_command_t pos_command;
     pos_command.pos = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
@@ -108,18 +104,6 @@ bool Position_controller<TVelocity_controller>::set_xyposition_zvel_command(cons
 }
 
 
-template<class TVelocity_controller>
-bool Position_controller<TVelocity_controller>::set_navigation_command(const nav_command_t& command)
-{
-    position_command_.pos = command.pos;
-    /* set ctrl_mode to use position in xyz as input*/
-    ctrl_mode_ = ctrl_mode_t::POS_XYZ;
-    /* set this as input cascade level */
-    TVelocity_controller::cascade_command_ = &position_command_;
-    return true;
-}
-
-
 //------------------------------------------------------------------------------
 // PROTECTED FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -152,10 +136,6 @@ typename TVelocity_controller::vel_command_t Position_controller<TVelocity_contr
     goal_dir[Y] = rel_goal_pos[Y] * scale;
     goal_dir[Z] = rel_goal_pos[Z] * scale;
 
-    /* set cruise mode in any case since parameters of config might change */
-    bool cruise_mode_new = goal_distance > min_cruise_dist_;
-    set_cruise_mode(cruise_mode_new);
-
     /* get desired speed from pid controller */
     float v_desired = pid_controller_update(&pid_controller_, goal_distance);
     // make sure maximal climb rate is not exceeded, reduce v_desired if necessary
@@ -171,9 +151,6 @@ typename TVelocity_controller::vel_command_t Position_controller<TVelocity_contr
     attitude_yaw.rpy[1] = 0.0f;
     attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
     q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
-
-    //float goal_dir_sg[3];
-    //quaternions_rotate_vector(q_rot, goal_dir, goal_dir_sg);
 	
 	typename TVelocity_controller::vel_command_t velocity_command;
     velocity_command.vel[X] = goal_dir[X] * v_desired;
@@ -181,38 +158,9 @@ typename TVelocity_controller::vel_command_t Position_controller<TVelocity_contr
     velocity_command.vel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
 
     // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
-    if(cruise_mode_)
-    {
-        float rel_heading;
-        rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - coord_conventions_get_yaw(ahrs_.qe));
-        velocity_command.yaw = kp_yaw_ * rel_heading;
-    }
+    float rel_heading;
+    rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - coord_conventions_get_yaw(ahrs_.qe));
+    velocity_command.yaw = kp_yaw_ * rel_heading;
 
 	return velocity_command;
-}
-
-
-
-template<class TVelocity_controller>
-void Position_controller<TVelocity_controller>::set_cruise_mode(bool cruise_mode)
-{
-    /* choose pid_config to apply to controller */
-    pid_controller_conf_t* pid_config = cruise_mode ? &cruise_pid_config_ : &hover_pid_config_;
-
-    /* apply chosen configuration */
-    pid_controller_apply_config(&pid_controller_, pid_config);
-
-    cruise_mode_ = cruise_mode;
-}
-
-template<class TVelocity_controller>
-pid_controller_conf_t& Position_controller<TVelocity_controller>::cruise_pid_config()
-{
-    return cruise_pid_config_;
-}
-
-template<class TVelocity_controller>
-pid_controller_conf_t& Position_controller<TVelocity_controller>::hover_pid_config()
-{
-    return hover_pid_config_;
 }

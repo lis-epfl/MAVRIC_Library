@@ -87,7 +87,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
     navigation(controls, ahrs.qe, position_estimation, state, communication.mavlink_stream(), mission_handler_registry, config.navigation_config),
-    cascade_controller_({position_estimation, ahrs, {ahrs, position_estimation, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}, config.cascade_controller_config),
+    cascade_controller_({position_estimation, {position_estimation, ahrs, {ahrs, position_estimation, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.cascade_controller_config),
     mission_handler_registry(),
     waypoint_handler(position_estimation, navigation, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
     hold_position_handler(cascade_controller_, position_estimation, navigation),

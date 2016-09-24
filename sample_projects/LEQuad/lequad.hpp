@@ -62,7 +62,7 @@
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/manual_control.hpp"
-#include "control/position_controller.hpp"
+#include "control/navigation_directto.hpp"
 #include "control/rate_controller.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/manual_control.hpp"
@@ -108,7 +108,7 @@ extern "C"
 #include "sensing/altitude.h"
 }
 
-typedef Position_controller<Velocity_controller_copter<Attitude_controller<Rate_controller<Servos_mix_quadcopter_diag> > > >Cascade_controller;
+typedef Navigation_directto<Position_controller<Velocity_controller_copter<Attitude_controller<Rate_controller<Servos_mix_quadcopter_diag> > > > > Cascade_controller;
 
 /**
  * \brief MAV class
