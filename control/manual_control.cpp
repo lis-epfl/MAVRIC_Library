@@ -236,19 +236,22 @@ void Manual_control::get_attitude_command_absolute_yaw(attitude_command_t* comma
 }
 
 
-void Manual_control::get_attitude_command(const float k_yaw, attitude_command_t* command, float scale) const
+Attitude_controller_I::att_command_t Manual_control::get_attitude_command(quat_t current_attitude, float dt_s)
 {
+    Attitude_controller_I::att_command_t command;
     switch (control_source_)
     {
+
         case CONTROL_SOURCE_REMOTE:
-            remote_get_attitude_command(&remote, k_yaw, command, scale);
+            command = remote_get_attitude_command(&remote, current_attitude, dt_s);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_attitude_command(k_yaw, command, scale);
+            command = joystick.get_attitude_command(current_attitude, dt_s);
             break;
         case CONTROL_SOURCE_NONE:
             break;
     }
+    return command;
 }
 
 

@@ -281,6 +281,8 @@ protected:
     Data_logging_T<10>    data_logging_stat;
 
     command_t                       command;
+
+    float last_main_task_s_;
     // attitude_controller_t           attitude_controller;
     // velocity_controller_copter_t    velocity_controller;
     // vector_field_waypoint_t         vector_field_waypoint;

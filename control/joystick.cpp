@@ -235,17 +235,20 @@ void Joystick::get_thrust_command(thrust_command_t* command) const
 }
 
 
-void Joystick::get_attitude_command(const float ki_yaw, attitude_command_t* command, float scale) const
+Attitude_controller_I::att_command_t Joystick::get_attitude_command(quat_t current_attitude, float dt_s)
 {
-    command->rpy[ROLL]  = scale * roll();
-    command->rpy[PITCH] = scale * pitch();
-    command->rpy[YAW]   += ki_yaw * scale * yaw();
+    // TODO: work directly on quaternion
+    // TODO: add scale as config member
+    float rpy[3];
+    rpy[YAW] = coord_conventions_get_yaw(current_attitude) + dt_s * scale_attitude_.r * yaw();
+    rpy[ROLL] = roll() * scale_attitude_.x;
+    rpy[PITCH] = pitch() * scale_attitude_.y;
+    
+    Attitude_controller_I::att_command_t command;
+    command.att = coord_conventions_quaternion_from_rpy(rpy);
+    command.thrust = throttle() * scale_attitude_.z;
 
-    aero_attitude_t attitude;
-    attitude.rpy[ROLL]  = command->rpy[ROLL];
-    attitude.rpy[PITCH] = command->rpy[PITCH];
-    attitude.rpy[YAW]   = command->rpy[YAW];
-    command->quat = coord_conventions_quaternion_from_aero(attitude);
+    return command;
 }
 
 

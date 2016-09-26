@@ -101,6 +101,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
+    last_main_task_s_(time_keeper_get_s()),
     sysid_(communication.sysid()),
     config_(config)
 {}
@@ -545,9 +546,12 @@ bool LEQuad::main_task(void)
     position_estimation.update();
 
     /* temporary to deal with relative yaw commands from manual control */
-    float yaw = coord_conventions_get_yaw(cascade_controller_.attitude_command().att);
+    //float yaw = coord_conventions_get_yaw(cascade_controller_.attitude_command().att);
 
     bool failsafe = false;
+
+    float dt_s = 1.0f;//time_keeper_get_s() - last_main_task_s_;
+    last_main_task_s_ = time_keeper_get_s();
 
     // Do control
     if (state.is_armed())
@@ -572,14 +576,8 @@ bool LEQuad::main_task(void)
 
             case Mav_mode::ATTITUDE:
             {
-                manual_control.get_control_command(&controls);
-                /* convert controls from control_command_t (legacy) to att_command_t */
-                Cascade_controller::att_command_t att_command;
-                controls.rpy[YAW] += yaw;
-                att_command.att = coord_conventions_quaternion_from_rpy(controls.rpy);
-                att_command.thrust = controls.thrust;
-                /* set attitude command */
-                cascade_controller_.set_attitude_command(att_command);
+                Attitude_controller_I::att_command_t command = manual_control.get_attitude_command(ahrs.qe, dt_s);
+                cascade_controller_.set_attitude_command(command);
             }
                 break;
 

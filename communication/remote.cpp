@@ -510,17 +510,19 @@ void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_c
 }
 
 
-void remote_get_attitude_command(const remote_t* remote, const float ki_yaw, attitude_command_t* command, float scale)
+Attitude_controller_I::att_command_t remote_get_attitude_command(const remote_t* remote, quat_t current_attitude, float dt_s)
 {
-    command->rpy[ROLL]  = scale * remote_get_roll(remote);
-    command->rpy[PITCH] = scale * remote_get_pitch(remote);
-    command->rpy[YAW]   += ki_yaw * scale * remote_get_yaw(remote);
-
-    aero_attitude_t attitude;
-    attitude.rpy[ROLL]  = command->rpy[ROLL];
-    attitude.rpy[PITCH] = command->rpy[PITCH];
-    attitude.rpy[YAW]   = command->rpy[YAW];
-    command->quat = coord_conventions_quaternion_from_aero(attitude);
+    // TODO: work directly on quaternion
+    // TODO: add scale as config member
+    float rpy[3];
+    rpy[YAW] = coord_conventions_get_yaw(current_attitude) + dt_s * 0.5f * remote_get_yaw(remote);
+    rpy[ROLL] = remote_get_roll(remote);
+    rpy[PITCH] = remote_get_pitch(remote);
+    
+    Attitude_controller_I::att_command_t command;
+    command.att = coord_conventions_quaternion_from_rpy(rpy);
+    command.thrust = remote_get_throttle(remote);
+    return command;
 }
 
 
