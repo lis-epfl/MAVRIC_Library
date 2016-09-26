@@ -69,6 +69,9 @@ class Mavlink_message_handler
 {
 public:
 
+    /**
+     * \brief   Prototype of function callback for mavlink messages
+     */
     template<typename T>
     struct msg_function
     {
@@ -76,6 +79,9 @@ public:
     };
 
 
+    /**
+     * \brief   Prototype of function callback for mavlink commands
+     */
     template<typename T>
     struct cmd_function
     {
@@ -189,11 +195,11 @@ protected:
      */
     struct msg_callback_t
     {
-        uint8_t                             message_id;                     ///<    The function will be called only for messages with ID message_id
-        uint8_t                             sysid_filter;                   ///<    The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
-        mav_component_t                     compid_filter;                  ///<    The function will be called only for messages coming from component compid_filter (0 for all)
-        typename msg_function<void>::type_t function;                       ///<    Pointer to the function to be executed
-        void*                               module_struct;                  ///<    Pointer to module data structure to be given as argument to the function
+        uint8_t                     message_id;                     ///<    The function will be called only for messages with ID message_id
+        uint8_t                     sysid_filter;                   ///<    The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
+        mav_component_t             compid_filter;                  ///<    The function will be called only for messages coming from component compid_filter (0 for all)
+        msg_function<void>::type_t  function;                       ///<    Pointer to the function to be executed
+        void*                       module_struct;                  ///<    Pointer to module data structure to be given as argument to the function
     };
 
 
@@ -202,12 +208,12 @@ protected:
      */
     struct cmd_callback_t
     {
-        uint16_t                            command_id;                     ///<    The function will be called only for commands with ID command_id
-        uint8_t                             sysid_filter;                   ///<    The function will be called only for commands coming from MAVs with ID sysid_filter (0 for all)
-        mav_component_t                     compid_filter;                  ///<    The function will be called only for commands coming from component compid_filter (0 for all)
-        mav_component_t                     compid_target;                  ///<    The function will be called only if the commands targets the component compid_target of this system (0 for all)
-        typename cmd_function<void>::type_t function;                       ///<    Pointer to the function to be executed
-        void*                               module_struct;                  ///<    Pointer to module data structure to be given as argument to the function
+        uint16_t                    command_id;                     ///<    The function will be called only for commands with ID command_id
+        uint8_t                     sysid_filter;                   ///<    The function will be called only for commands coming from MAVs with ID sysid_filter (0 for all)
+        mav_component_t             compid_filter;                  ///<    The function will be called only for commands coming from component compid_filter (0 for all)
+        mav_component_t             compid_target;                  ///<    The function will be called only if the commands targets the component compid_target of this system (0 for all)
+        cmd_function<void>::type_t  function;                       ///<    Pointer to the function to be executed
+        void*                       module_struct;                  ///<    Pointer to module data structure to be given as argument to the function
     };
 
 
