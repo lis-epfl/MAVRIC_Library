@@ -55,38 +55,36 @@ Onboard_parameters::Onboard_parameters(File& file, const State& state, Mavlink_m
     mavlink_stream_(mavlink_stream),
     param_count_(0)
 {
-    bool init_success = true;
-
     // Init debug mode
     debug_ = config.debug;
 
     // Add callbacks for onboard parameters requests
-    init_success &= message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_REQUEST_LIST, // 21
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        &schedule_all_parameters,
-                                                        this );
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_REQUEST_LIST, // 21
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &schedule_all_parameters,
+                                        this );
 
-    init_success &= message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_REQUEST_READ, // 20
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        &send_parameter,
-                                                        this );
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_REQUEST_READ, // 20
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &send_parameter,
+                                        this );
 
 
-    init_success &= message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_SET, // 23
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        &receive_parameter,
-                                                        this );
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_SET, // 23
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &receive_parameter,
+                                        this );
 
     // Add callbacks for waypoint handler commands requests
-    init_success &= message_handler.add_cmd_callback(   MAV_CMD_PREFLIGHT_STORAGE, // 245
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        MAV_COMP_ID_ALL,
-                                                        &preflight_storage,
-                                                        this );
+    message_handler.add_cmd_callback(   MAV_CMD_PREFLIGHT_STORAGE, // 245
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        MAV_COMP_ID_ALL,
+                                        &preflight_storage,
+                                        this );
 }
 
 

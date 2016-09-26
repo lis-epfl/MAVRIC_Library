@@ -43,10 +43,18 @@
 #include "util/print_util.hpp"
 
 Periodic_telemetry::Periodic_telemetry( Mavlink_stream& mavlink_stream,
+                                        Mavlink_message_handler& handler,
                                         conf_t __attribute__((unused)) config):
     mavlink_stream_(mavlink_stream),
     count_(0)
-{}
+{
+    // Add callback to activate / disactivate streams
+    handler.add_msg_callback(  MAVLINK_MSG_ID_REQUEST_DATA_STREAM, // 66
+                               MAVLINK_BASE_STATION_ID,
+                               MAV_COMP_ID_ALL,
+                               &toggle_telemetry_stream,
+                               this );
+}
 
 bool Periodic_telemetry::update(void)
 {

@@ -46,6 +46,7 @@
 #include <cstdbool>
 
 #include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
 #include "runtime/scheduler.hpp"
 
 class Periodic_telemetry
@@ -89,9 +90,10 @@ public:
      * \brief   Constructor
      *
      * \param   mavlink_stream      Stream to which messages will be written
+     * \param   message_handler     MAVLink message handler
      * \param   config              Configuration structure
      */
-    Periodic_telemetry(Mavlink_stream& mavlink_stream, conf_t config = default_config());
+    Periodic_telemetry(Mavlink_stream& mavlink_stream, Mavlink_message_handler& handler, conf_t config = default_config());
 
 
     /**
@@ -209,8 +211,8 @@ public:
      * \param   mavlink_stream      Stream to which messages will be written
      * \param   config              Configuration structure
      */
-    Periodic_telemetry_T(Mavlink_stream& mavlink_stream, conf_t config):
-        Periodic_telemetry(mavlink_stream, config),
+    Periodic_telemetry_T(Mavlink_stream& mavlink_stream, Mavlink_message_handler& handler, conf_t config):
+        Periodic_telemetry(mavlink_stream, handler, config),
         scheduler_(config.scheduler_config)
     {};
 
