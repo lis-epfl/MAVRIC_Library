@@ -42,7 +42,7 @@
 #include "communication/periodic_telemetry.hpp"
 #include "util/print_util.hpp"
 
-Periodic_telemetry::Periodic_telemetry( Mavlink_stream& mavlink_stream, 
+Periodic_telemetry::Periodic_telemetry( Mavlink_stream& mavlink_stream,
                                         conf_t __attribute__((unused)) config):
     mavlink_stream_(mavlink_stream),
     count_(0)
@@ -75,8 +75,8 @@ bool Periodic_telemetry::add(   uint32_t                        task_id,
         add_success &= true;
 
         add_success &= scheduler().add_task(repeat_period,
-                                           (Scheduler_task::task_function_t)&send_message,
-                                           (Scheduler_task::task_argument_t)new_entry,
+                                           &send_message,
+                                           new_entry,
                                            priority,
                                            timing_mode,
                                            run_mode,

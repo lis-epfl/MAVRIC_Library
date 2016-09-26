@@ -154,7 +154,7 @@ bool LEQuad::init_main_task(void)
     bool ret = true;
 
     // Task
-    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&LEQuad::main_task_func, (Scheduler_task::task_argument_t)this, Scheduler_task::PRIORITY_HIGHEST);
+    ret &= scheduler.add_task(4000, &LEQuad::main_task_func, this, Scheduler_task::PRIORITY_HIGHEST);
 
     // DOWN link
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Periodic_telemetry::telemetry_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
@@ -182,9 +182,9 @@ bool LEQuad::init_state(void)
     ret &= data_logging_stat.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
 
     // Task
-    ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
+    ret &= scheduler.add_task(200000, &State_machine::update, &state_machine);
     // Leds blinks at 1, 3 and 6Hz, then smallest half period is 83333us
-    ret &= scheduler.add_task( 83333, (Scheduler_task::task_function_t)&task_state_display_update, (Scheduler_task::task_argument_t)&state_display_);
+    ret &= scheduler.add_task( 83333, &task_state_display_update, &state_display_);
 
     return ret;
 }
@@ -198,7 +198,7 @@ bool LEQuad::init_communication(void)
     bool ret = true;
 
     // Task
-    ret &= scheduler.add_task(4000,  (Scheduler_task::task_function_t)&Mavlink_communication::update_task,    (Scheduler_task::task_argument_t)&communication);
+    ret &= scheduler.add_task(4000,  &Mavlink_communication::update_task, &communication);
 
     return ret;
 }
@@ -216,8 +216,8 @@ bool LEQuad::init_data_logging(void)
     ret &= data_logging_telemetry_init(&data_logging_stat, &communication.handler());
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_continuous);
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_stat);
+    ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_continuous);
+    ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_stat);
 
     return ret;
 }
@@ -237,7 +237,7 @@ bool LEQuad::init_gps(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Periodic_telemetry::telemetry_function_t)&gps_telemetry_send_raw, &gps);
 
     // Task
-    ret &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_gps_update, (Scheduler_task::task_argument_t)&gps, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(100000, &task_gps_update, &gps, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -285,7 +285,7 @@ bool LEQuad::init_barometer(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_PRESSURE, 100000, (Periodic_telemetry::telemetry_function_t)&barometer_telemetry_send, &barometer);
 
     // Task
-    ret &= scheduler.add_task(15000, (Scheduler_task::task_function_t)&task_barometer_update, (Scheduler_task::task_argument_t)&barometer, Scheduler_task::PRIORITY_HIGH, Scheduler_task::PERIODIC_RELATIVE);
+    ret &= scheduler.add_task(15000, &task_barometer_update, &barometer, Scheduler_task::PRIORITY_HIGH, Scheduler_task::PERIODIC_RELATIVE);
 
     return ret;
 }
@@ -303,7 +303,7 @@ bool LEQuad::init_sonar(void)
 
 
     // Task
-    ret &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_sonar_update, (Scheduler_task::task_argument_t)&sonar, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(100000, &task_sonar_update, &sonar, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -458,8 +458,8 @@ bool LEQuad::init_navigation(void)
     ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update, (Scheduler_task::task_argument_t)&waypoint_handler, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, &Navigation::update,               &navigation,       Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, &Mavlink_waypoint_handler::update, &waypoint_handler, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -523,7 +523,7 @@ bool LEQuad::init_ground_control(void)
     ret &= communication.parameters().add((int32_t*) &manual_control.mode_source_,    "COM_RC_IN_MODE");
 
     // Task
-    ret &= scheduler.add_task(20000, (Scheduler_task::task_function_t)&remote_update, (Scheduler_task::task_argument_t)&manual_control.remote, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(20000, &remote_update, &manual_control.remote, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
