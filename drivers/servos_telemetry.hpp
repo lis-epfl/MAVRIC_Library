@@ -79,6 +79,6 @@ bool servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0,
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, Mavlink_stream* Mavlink_stream, mavlink_message_t* msg);
+void servos_telemetry_mavlink_send(const servos_telemetry_t* servos_telemetry, const Mavlink_stream* Mavlink_stream, mavlink_message_t* msg);
 
 #endif /* SERVOS_TELEMETRY_HPP_ */

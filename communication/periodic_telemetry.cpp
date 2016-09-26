@@ -54,44 +54,6 @@ bool Periodic_telemetry::update(void)
 }
 
 
-bool Periodic_telemetry::add(   uint32_t                        task_id,
-                                uint32_t                        repeat_period,
-                                telemetry_function_t            function,
-                                telemetry_module_t              module_structure,
-                                Scheduler_task::priority_t      priority,
-                                Scheduler_task::timing_mode_t   timing_mode,
-                                Scheduler_task::run_mode_t      run_mode)
-{
-    bool add_success = true;
-
-    if (count_ <  max_count())
-    {
-        telemetry_entry_t* new_entry = &list()[count_++];
-
-        new_entry->mavlink_stream = &mavlink_stream_;
-        new_entry->function       = function;
-        new_entry->module         = module_structure;
-
-        add_success &= true;
-
-        add_success &= scheduler().add_task(repeat_period,
-                                           &send_message,
-                                           new_entry,
-                                           priority,
-                                           timing_mode,
-                                           run_mode,
-                                           task_id);
-    }
-    else
-    {
-        print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
-
-        add_success &= false;
-    }
-
-    return add_success;
-}
-
 bool Periodic_telemetry::sort(void)
 {
     return scheduler().sort_tasks();
@@ -106,11 +68,10 @@ bool Periodic_telemetry::send_message(telemetry_entry_t* telemetry_entry)
 {
     bool success = true;
 
-    telemetry_function_t function = telemetry_entry->function;
-    telemetry_module_t   module   = telemetry_entry->module;
-
     mavlink_message_t msg;
-    function(module, telemetry_entry->mavlink_stream, &msg);
+    telemetry_entry->function(  telemetry_entry->module,
+                                telemetry_entry->mavlink_stream,
+                                &msg);
 
     success &= telemetry_entry->mavlink_stream->send(&msg);
 

@@ -30,37 +30,50 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file scheduler_task.hxx
+ * \file periodic_telemetry.hxx
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *
- * \brief Task managed by the scheduler
+ * \brief Periodic telemetry
  *
  ******************************************************************************/
 
-
 template<typename T>
-Scheduler_task::Scheduler_task( uint32_t repeat_period,
-                                run_mode_t run_mode,
-                                timing_mode_t timing_mode,
-                                priority_t priority,
-                                typename function<T>::type_t task_function,
-                                T* task_argument,
-                                int32_t task_id):
-    task_id(task_id),
-    run_mode(run_mode),
-    timing_mode(timing_mode),
-    priority(priority),
-    repeat_period(repeat_period),
-    next_run(0),
-    execution_time(0),
-    execution_time_avg(0),
-    execution_time_var(0),
-    execution_time_max(0),
-    delay(0),
-    delay_avg(0),
-    delay_var(0),
-    delay_max(0),
-    task_function(reinterpret_cast<function<void>::type_t>(task_function)),  // we do dangerous casting here, but it is safe because
-    task_argument(reinterpret_cast<void*>(task_argument))                    // the types of task_function and task_argument are compatible
-{}
+bool Periodic_telemetry::add(   uint32_t                        task_id,
+                                uint32_t                        repeat_period,
+                                typename function<T>::type_t    telemetry_function,
+                                T*                              telemetry_module,
+                                Scheduler_task::priority_t      priority,
+                                Scheduler_task::timing_mode_t   timing_mode,
+                                Scheduler_task::run_mode_t      run_mode)
+{
+    bool add_success = true;
+
+    if (count_ <  max_count())
+    {
+        telemetry_entry_t* new_entry = &list()[count_++];
+
+        new_entry->mavlink_stream = &mavlink_stream_;
+        new_entry->function       = reinterpret_cast<function<void>::type_t>(telemetry_function);   // we do dangerous casting here, but it is safe because
+        new_entry->module         = reinterpret_cast<void*>(telemetry_module);                       // the types of telemetry_function and telemetry_argument are compatible
+
+        add_success &= true;
+
+        add_success &= scheduler().add_task(repeat_period,
+                                           &send_message,
+                                           new_entry,
+                                           priority,
+                                           timing_mode,
+                                           run_mode,
+                                           task_id);
+    }
+    else
+    {
+        print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
+
+        add_success &= false;
+    }
+
+    return add_success;
+}
