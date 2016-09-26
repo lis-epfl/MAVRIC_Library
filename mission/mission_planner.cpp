@@ -69,7 +69,6 @@ bool Mission_planner::set_current_waypoint(uint16_t index)
     bool success = false;
     if ((waypoint_handler_.set_current_waypoint_index(index)))
     {
-        print_util_dbg_print("setting current wp\n");
         /* send new index to ground station */
         mavlink_message_t msg;
         mavlink_msg_mission_current_pack(mavlink_stream_.sysid(),
@@ -80,7 +79,6 @@ bool Mission_planner::set_current_waypoint(uint16_t index)
 
         if (state_.is_auto())
         {
-            print_util_dbg_print("changing right now\n");
             switch_mission_handler(waypoint_handler_.current_waypoint());
         }
 

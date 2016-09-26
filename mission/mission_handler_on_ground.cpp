@@ -52,9 +52,9 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_on_ground::Mission_handler_on_ground(/*Attitude_controller_I& attitude_controller, */):
-            Mission_handler()
-            /*attitude_controller_(attitude_controller),*/
+Mission_handler_on_ground::Mission_handler_on_ground(Rate_controller_I& rate_controller):
+            Mission_handler(),
+            rate_controller_(rate_controller)
 {
 
 }
@@ -72,15 +72,12 @@ bool Mission_handler_on_ground::setup(const Waypoint& wpt)
 
 Mission_handler::update_status_t Mission_handler_on_ground::update()
 {
-	/*
-	Attitude_controller_I::att_command_t cmd;
-	cmd.att.s = 1.0f;
-	cmd.att.v[0] = 0.0f;
-	cmd.att.v[1] = 0.0f;
-	cmd.att.v[2] = 0.0f;
-	cmd.thrust = -1.0f;
-	attitude_controller_.set_attitude_command(cmd);
-	*/
+	// Set prop speeds to lowest setting
+	Rate_controller_I::rate_command_t cmd;
+	cmd.rates = {0.0f, 0.0f, 0.0f};
+    cmd.thrust = -1.0f;
+	rate_controller_.set_rate_command(cmd);
+	
     return MISSION_IN_PROGRESS;
 }
 

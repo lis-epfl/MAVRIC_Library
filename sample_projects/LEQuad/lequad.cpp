@@ -92,7 +92,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     hold_position_handler(cascade_controller_, position_estimation),
     landing_handler(cascade_controller_, cascade_controller_, position_estimation, state),
     navigating_handler(cascade_controller_, position_estimation, communication.mavlink_stream(), waypoint_handler),
-    on_ground_handler(/*position_controller_, */),
+    on_ground_handler(cascade_controller_),
     manual_ctrl_handler(),
     takeoff_handler(cascade_controller_, position_estimation, state),
     critical_landing_handler(cascade_controller_, cascade_controller_, position_estimation, state),
