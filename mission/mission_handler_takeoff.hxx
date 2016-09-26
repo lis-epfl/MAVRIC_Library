@@ -46,12 +46,10 @@
 template <class T>
 Mission_handler_takeoff<T>::Mission_handler_takeoff(T& controller,
                                                     const INS& ins,
-                                                    Navigation& navigation,
                                                     State& state):
             Mission_handler(),
             controller_(controller),
             ins_(ins),
-            navigation_(navigation),
             state_(state)
 {
     waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
@@ -86,8 +84,6 @@ bool Mission_handler_takeoff<T>::setup(const Waypoint& wpt)
     bool success = true;
 
     waypoint_ = wpt;
-
-    navigation_.set_waiting_at_waypoint(false);
 
     print_util_dbg_print("Automatic take-off, will hold position at: (");
     print_util_dbg_print_num(wpt.local_pos()[X], 10);
@@ -126,34 +122,9 @@ Mission_handler::update_status_t Mission_handler_takeoff<T>::update()
     xy_dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
     // Determine if finished
-    switch(navigation_.navigation_strategy)
+    if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
     {
-    case Navigation::strategy_t::DIRECT_TO:
-       if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
-        {
-            finished = true;
-            navigation_.set_waiting_at_waypoint(true);
-        }
-        break;
-
-    case Navigation::strategy_t::DUBIN:
-        if (state_.autopilot_type == MAV_TYPE_QUADROTOR)
-        {
-            if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
-            {
-                finished = true;
-                navigation_.set_waiting_at_waypoint(true);
-            }
-        }
-        else
-        {
-            if (ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
-            {
-                finished = true;
-                navigation_.set_waiting_at_waypoint(true);
-            }
-        }
-        break;
+        finished = true;
     }
 
     // Return true if waiting at waypoint and autocontinue

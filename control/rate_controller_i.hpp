@@ -70,7 +70,7 @@ public:
      *
      * \return success  whether command was accepted
      */
-    inline virtual bool set_rate_command(const rate_command_t& command) = 0;
+    virtual bool set_rate_command(const rate_command_t& command) = 0;
 };
 
 #endif /* RATE_CONTROLLER_I_HPP_ */

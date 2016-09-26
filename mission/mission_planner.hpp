@@ -52,7 +52,6 @@
 #include "sensing/qfilter.hpp"
 #include "control/manual_control.hpp"
 #include "mission/mission_handler_registry.hpp"
-#include "mission/navigation.hpp"
 #include "control/dubin.hpp"
 
 class Mission_handler;
@@ -97,7 +96,6 @@ public:
      * \brief   Initialize the waypoint handler
      *
      * \param   ins                         The reference to the ins structure
-     * \param   navigation                  The reference to the navigation structure
      * \param   ahrs                        The reference to the attitude estimation structure
      * \param   state                       The reference to the state structure
      * \param   manual_control              The reference to the manual control structure
@@ -109,7 +107,6 @@ public:
      * \return  True if the init succeed, false otherwise
      */
     Mission_planner(    INS& ins,
-                        Navigation& navigation,
                         const ahrs_t& ahrs,
                         State& state,
                         const Manual_control& manual_control,
@@ -204,7 +201,6 @@ protected:
 
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
-    Navigation& navigation_;                                    ///< The reference to the navigation structure
     INS& ins_;                                                  ///< The reference to the ins structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     const Manual_control& manual_control_;                      ///< The reference to the manual_control structure

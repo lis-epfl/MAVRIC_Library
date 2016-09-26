@@ -72,15 +72,14 @@ void Mission_handler_navigating<T>::send_nav_time(const Mavlink_stream* mavlink_
 template <class T>
 Mission_handler_navigating<T>::Mission_handler_navigating(  T& controller,
                                                             const INS& ins,
-                                                            Navigation& navigation,
                                                             const Mavlink_stream& mavlink_stream,
                                                             Mavlink_waypoint_handler& waypoint_handler):
             Mission_handler(),
             controller_(controller),
             ins_(ins),
-            navigation_(navigation),
             mavlink_stream_(mavlink_stream),
             waypoint_handler_(waypoint_handler),
+            waypoint_reached_(false),
             start_time_(0),
             travel_time_(0)
 {
@@ -116,7 +115,7 @@ bool Mission_handler_navigating<T>::setup(const Waypoint& wpt)
     bool success = true;
 
     start_time_ = time_keeper_get_ms();
-    navigation_.set_waiting_at_waypoint(false);
+    waypoint_reached_ = false;
     waypoint_ = wpt;
 
     return success;
@@ -138,7 +137,7 @@ Mission_handler::update_status_t Mission_handler_navigating<T>::update()
     {
         rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
     }
-    navigation_.dist2wp_sqr = vectors_norm_sqr(rel_pos);
+    float dist2wp_sqr = vectors_norm_sqr(rel_pos);
 
     // Check if radius is available
     float radius;
@@ -148,25 +147,17 @@ Mission_handler::update_status_t Mission_handler_navigating<T>::update()
     }
 
     // If we are near the waypoint or are doing dubin circles
-    if (navigation_.dist2wp_sqr < (radius * radius) ||
-           (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2))
+    if (dist2wp_sqr < (radius * radius))
     {
         // If we are near the waypoint but the flag has not been set, do this once ...
-        if (!navigation_.waiting_at_waypoint())
+        if (!waypoint_reached_)
         {
             // Send debug log ...
-            if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN && navigation_.dubin_state == DUBIN_CIRCLE2)
-            {
-                print_util_dbg_print("Waypoint reached by entering dubin circles 2.\r\n");
-            }
-            else if (navigation_.dist2wp_sqr < (radius * radius))
-            {
-                print_util_dbg_print("Waypoint reached, distance: ");
-                print_util_dbg_putfloat(sqrt(navigation_.dist2wp_sqr), 3);
-                print_util_dbg_print(" m. Less than acceptable radius:");
-                print_util_dbg_putfloat(sqrt(radius * radius), 3);
-                print_util_dbg_print(" m.\r\n");
-            }
+            print_util_dbg_print("Waypoint reached, distance: ");
+            print_util_dbg_putfloat(sqrt(dist2wp_sqr), 3);
+            print_util_dbg_print(" m. Less than acceptable radius:");
+            print_util_dbg_putfloat(sqrt(radius * radius), 3);
+            print_util_dbg_print(" m.\r\n");
 
             // ... as well as a mavlink message ...
             mavlink_message_t msg;
@@ -177,10 +168,10 @@ Mission_handler::update_status_t Mission_handler_navigating<T>::update()
             mavlink_stream_.send(&msg);
 
             // ... and record the travel time ...
-            travel_time_ = time_keeper_get_ms() - navigation_.start_wpt_time();
+            travel_time_ = time_keeper_get_ms() - start_time_;
 
             // ... and set to waiting at waypoint ...
-            navigation_.set_waiting_at_waypoint(true);
+            waypoint_reached_ = true;
         }
     }
 
@@ -188,58 +179,13 @@ Mission_handler::update_status_t Mission_handler_navigating<T>::update()
     Determine status code 
     ********************/
     // First check if we have reached the waypoint
-    if (navigation_.waiting_at_waypoint())
+    if (waypoint_reached_)
     {
         // Then ensure that we are in autocontinue
         if ((waypoint_.autocontinue() == 1) && (waypoint_handler_.waypoint_count() > 1))
         {
             // Differentiate between dubin and direct to
-            if (navigation_.navigation_strategy == Navigation::strategy_t::DIRECT_TO || 
-                radius == 0.0f)
-            {
-                return MISSION_FINISHED;
-            }
-            else if (navigation_.navigation_strategy == Navigation::strategy_t::DUBIN)
-            {
-                /* Check for correct heading */
-                const Waypoint& next = waypoint_handler_.next_waypoint();
-                float next_radius;
-                if (!waypoint_.radius(next_radius))
-                {
-                    next_radius = 0.0f;
-                }
-
-                // Find the direction of the next waypoint
-                float rel_wpt_pos[3];
-                for (int i=0;i<3;i++)
-                {
-                    rel_wpt_pos[i] = next.local_pos()[i] - waypoint_.local_pos()[i];
-                }
-                float rel_pos_norm[3];
-                vectors_normalize(rel_wpt_pos, rel_pos_norm);
-
-                // Find the tangent point of the next waypoint
-                float outter_pt[3];
-                outter_pt[X] = next.local_pos()[X] + rel_pos_norm[Y]*next_radius;
-                outter_pt[Y] = next.local_pos()[Y] - rel_pos_norm[X]*next_radius;
-                outter_pt[Z] = 0.0f;
-
-                // Determine the relative position to this tangent point
-                float rel_pos[3];
-                for (int i=0;i<3;i++)
-                {
-                    rel_pos[i] = outter_pt[i]-ins_.position_lf()[i];
-                }
-
-                // Find angle between our x axis and line to next tangent point
-                std::array<float,3> vel = ins_.velocity_lf();
-                float rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - atan2(vel[Y], vel[X]));
-
-                if (maths_f_abs(rel_heading) < navigation_.heading_acceptance)
-                {
-                    return MISSION_FINISHED;
-                }
-            }
+            return MISSION_FINISHED;
         }
     }
 

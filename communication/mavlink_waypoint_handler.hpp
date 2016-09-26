@@ -47,8 +47,9 @@
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "mission/navigation.hpp"
+#include "mission/mission_handler_registry.hpp"
 #include "mission/waypoint.hpp"
+#include "sensing/ins.hpp"
 
 #define MAX_WAYPOINTS 10        ///< The maximal size of the waypoint list
 
@@ -70,7 +71,6 @@ public:
      * \brief   Initialize the waypoint handler
      *
      * \param   ins                         The reference to the Inertial Navigation System
-     * \param   navigation                  The reference to the navigation structure
      * \param   message_handler             The reference to the message handler
      * \param   mavlink_stream              The reference to the MAVLink stream structure
      * \param   mission_handler_registry    The reference to the mission handler registry
@@ -79,7 +79,6 @@ public:
      * \return  True if the init succeed, false otherwise
      */
     Mavlink_waypoint_handler(   const INS& ins,
-                                const Navigation& navigation,
                                 Mavlink_message_handler& message_handler,
                                 const Mavlink_stream& mavlink_stream,
                                 Mission_handler_registry& mission_handler_registry,
@@ -180,7 +179,6 @@ protected:
 
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream object
     const INS& ins_;                                            ///< The pointer to the position estimation structure
-    const Navigation& navigation_;                                    ///< The reference to the navigation object
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 private:
@@ -192,6 +190,10 @@ private:
 
     conf_t config_;
 
+    /**
+     * \brief   Sends the home waypoint to the ground control station
+     */
+    void send_home_waypoint();
 
     /************************************************
      *      static member functions (callbacks)     *

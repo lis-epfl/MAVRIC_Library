@@ -43,9 +43,8 @@
 #ifndef MISSION_HANDLER_ON_GROUND__
 #define MISSION_HANDLER_ON_GROUND__
 
-#include "control/attitude_controller_i.hpp"
+#include "control/rate_controller_i.hpp"
 #include "mission/mission_handler.hpp"
-#include "mission/navigation.hpp"
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -59,10 +58,9 @@ public:
     /**
      * \brief   Initialize the on ground mission planner handler
      *
-     * \param   attitude_controller     The reference to the attitude controls
-     * \param   navigation              The reference to the navigation class
+     * \param   rate_controller     The reference to the attitude controls
      */
-     Mission_handler_on_ground(/*Attitude_controller_I& attitude_controller, */Navigation& navigation);
+     Mission_handler_on_ground(Rate_controller_I& rate_controller);
 
 
     /**
@@ -104,8 +102,7 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    /*IAttitude_controller& attitude_controller_;                 ///< The reference to the attitude controller*/
-    Navigation& navigation_;                                    ///< The reference to the navigation structure
+    Rate_controller_I& rate_controller_;                    ///< The reference to the rate controller
 };
 
 

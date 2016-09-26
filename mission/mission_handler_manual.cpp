@@ -52,9 +52,8 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_manual::Mission_handler_manual(Navigation& navigation):
-            Mission_handler(),
-            navigation_(navigation)
+Mission_handler_manual::Mission_handler_manual():
+            Mission_handler()
 {
 }
 
@@ -66,7 +65,6 @@ bool Mission_handler_manual::can_handle(const Waypoint& wpt) const
 
 bool Mission_handler_manual::setup(const Waypoint& wpt)
 {
-    navigation_.set_waiting_at_waypoint(false);
     return true;
 }
 

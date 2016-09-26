@@ -50,10 +50,9 @@
 template <class T>
 Mission_handler_critical_navigating<T>::Mission_handler_critical_navigating(T& controller,
                                                                             const INS& ins,
-                                                                            Navigation& navigation,
                                                                             const Mavlink_stream& mavlink_stream,
                                                                             Mavlink_waypoint_handler& waypoint_handler):
-            Mission_handler_navigating<T>(controller, ins, navigation, mavlink_stream, waypoint_handler)
+            Mission_handler_navigating<T>(controller, ins, mavlink_stream, waypoint_handler)
 {
 }
 

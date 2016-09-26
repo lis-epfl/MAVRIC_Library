@@ -45,7 +45,6 @@
 
 #include "communication/state.hpp"
 #include "mission/mission_handler.hpp"
-#include "mission/navigation.hpp"
 
 /*
  * The handler class takes in a template parameter that allows control inputs.
@@ -77,14 +76,12 @@ public:
      * \param   desc_to_small_alt_controller    The reference to the controller used during the descent to small altitudes phase
      * \param   desc_to_ground_controller       The reference to the controller used during the descent to ground phase
      * \param   ins                             The reference to the ins
-     * \param   navigation                      The reference to the navigation structure
      * \param   state                           The reference to the state structure
      * \param   config                          The landing mission handler config structure
      */
      Mission_handler_landing(   T1& desc_to_small_alt_controller,
                                 T2& desc_to_ground_controller,
                                 const INS& ins,
-                                Navigation& navigation,
                                 State& state,
                                 conf_t config = default_config());
 
@@ -130,7 +127,7 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
     /**
-     * \brief   default configuration for navigation
+     * \brief   default configuration for the landing handler
      *
      * \return default config
      */
@@ -146,7 +143,6 @@ protected:
     T1& desc_to_small_alt_controller_;                          ///< The reference to the controller used during the descent to small altitudes phase
     T2& desc_to_ground_controller_;                             ///< The reference to the controller used during the descent to ground phase
     const INS& ins_;                                            ///< The reference to the ins interface
-    Navigation& navigation_;                                    ///< The reference to the navigation structure
     State& state_;                                              ///< The reference to the state structure
 
     /**

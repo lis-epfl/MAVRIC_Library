@@ -88,7 +88,6 @@
 #include "mission/mission_handler_navigating.hpp"
 #include "mission/mission_handler_on_ground.hpp"
 #include "mission/mission_handler_takeoff.hpp"
-#include "mission/navigation.hpp"
 
 #include "simulation/simulation.hpp"
 
@@ -133,7 +132,6 @@ public:
         Data_logging::conf_t data_logging_stat_config;
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
-        Navigation::conf_t navigation_config;
         Mavlink_waypoint_handler::conf_t waypoint_handler_config;
         Mission_planner::conf_t mission_planner_config;
         qfilter_conf_t qfilter_config;
@@ -215,7 +213,7 @@ protected:
     virtual bool init_attitude_estimation(void);
     virtual bool init_position_estimation(void);
     virtual bool init_stabilisers(void);
-    virtual bool init_navigation(void);
+    virtual bool init_mission_planning(void);
     virtual bool init_hud(void);
     virtual bool init_servos(void);
     virtual bool init_ground_control(void);
@@ -258,7 +256,6 @@ protected:
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
 
-    Navigation navigation;                                      ///< The structure to perform GPS navigation
     Cascade_controller cascade_controller_;
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
@@ -308,8 +305,6 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.data_logging_stat_config.log_data         = 0;
 
     conf.scheduler_config = Scheduler::default_config();
-
-    conf.navigation_config = Navigation::default_config();
 
     conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
 

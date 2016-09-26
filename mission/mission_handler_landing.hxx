@@ -47,14 +47,12 @@ template <class T1, class T2>
 Mission_handler_landing<T1, T2>::Mission_handler_landing(   T1& desc_to_small_alt_controller,
                                                             T2& desc_to_ground_controller,
                                                             const INS& ins,
-                                                            Navigation& navigation,
                                                             State& state,
                                                             conf_t config):
             Mission_handler(),
             desc_to_small_alt_controller_(desc_to_small_alt_controller),
             desc_to_ground_controller_(desc_to_ground_controller),
             ins_(ins),
-            navigation_(navigation),
             state_(state)
 {
     waypoint_ = Waypoint (  MAV_FRAME_LOCAL_NED,
@@ -94,7 +92,6 @@ bool Mission_handler_landing<T1, T2>::setup(const Waypoint& wpt)
     auto_landing_behavior_ = DESCENT_TO_SMALL_ALTITUDE;
     state_.mav_mode_custom &= static_cast<Mav_mode::custom_mode_t>(0xFFFFFFE0);
     state_.mav_mode_custom |= Mav_mode::CUST_DESCENT_TO_SMALL_ALTITUDE;
-    navigation_.set_waiting_at_waypoint(false);
     is_landed_ = false;
 
     waypoint_ = wpt;
@@ -161,7 +158,6 @@ Mission_handler::update_status_t Mission_handler_landing<T1, T2>::update()
                 // in case something went wrong. Is reset while arming
                 state_.set_armed(false);
                 state_.mav_state_ = MAV_STATE_STANDBY;
-                navigation_.set_waiting_at_waypoint(true);
                 is_landed_ = true;
                 break;
         }

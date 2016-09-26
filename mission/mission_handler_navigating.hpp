@@ -45,7 +45,6 @@
 
 #include "communication/mavlink_message_handler.hpp"
 #include "mission/mission_handler.hpp"
-#include "mission/navigation.hpp"
 
 class Mavlink_waypoint_handler;
 
@@ -63,13 +62,11 @@ public:
      *
      * \param   controller                          The reference to the controller
      * \param   ins                                 The reference to the ins
-     * \param   navigation                          The reference to the navigation structure
      * \param   mavlink_stream                      The reference to the MAVLink stream structure
      * \param   waypoint_handler                    The handler for the manual control state
      */
      Mission_handler_navigating(    T& controller,
                                     const INS& ins,
-                                    Navigation& navigation,
                                     const Mavlink_stream& mavlink_stream,
                                     Mavlink_waypoint_handler& waypoint_handler);
 
@@ -118,11 +115,11 @@ public:
 protected:
     T& controller_;                                                     ///< The reference to the controller
     const INS& ins_;                                                    ///< The reference to the ins interface
-    Navigation& navigation_;                                            ///< The reference to the navigation object
     const Mavlink_stream& mavlink_stream_;                              ///< The reference to the mavlink object
     Mavlink_waypoint_handler& waypoint_handler_;                        ///< The reference to the mavlink waypoint handler
 
     Waypoint waypoint_;                                                 ///< The waypoint that we are heading towards
+    bool waypoint_reached_;                                             ///< Flag stating if this waypoint has been reached or not
     uint64_t start_time_;                                               ///< The start time for travelling to this waypoint
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
