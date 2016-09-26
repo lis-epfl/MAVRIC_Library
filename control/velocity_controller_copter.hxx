@@ -68,7 +68,7 @@ Velocity_controller_copter<TAttitude_controller>::Velocity_controller_copter( ar
 
         /* set initial velocity command */
     vel_command_t initial_command;
-    initial_command.vel = {0.0f,0.0f,0.0f};
+    initial_command.vel = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
     set_velocity_command(initial_command);
 }
 

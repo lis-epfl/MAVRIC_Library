@@ -74,7 +74,7 @@ Mission_handler::update_status_t Mission_handler_on_ground::update()
 {
 	// Set prop speeds to lowest setting
 	Rate_controller_I::rate_command_t cmd;
-	cmd.rates = {0.0f, 0.0f, 0.0f};
+	cmd.rates = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
     cmd.thrust = -1.0f;
 	rate_controller_.set_rate_command(cmd);
 	
