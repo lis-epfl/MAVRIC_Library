@@ -56,7 +56,7 @@ bool Periodic_telemetry::add(   uint32_t                        task_id,
 
         new_entry->mavlink_stream = &mavlink_stream_;
         new_entry->function       = reinterpret_cast<function<void>::type_t>(telemetry_function);   // we do dangerous casting here, but it is safe because
-        new_entry->module         = reinterpret_cast<void*>(telemetry_module);                       // the types of telemetry_function and telemetry_argument are compatible
+        new_entry->module         = reinterpret_cast<void*>(telemetry_module);                      // the types of telemetry_function and telemetry_argument are compatible
 
         add_success &= true;
 

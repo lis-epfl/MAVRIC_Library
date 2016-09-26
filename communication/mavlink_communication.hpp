@@ -112,15 +112,11 @@ public:
         bool init_success = true;
 
         // Add callback to activate / disactivate streams
-        Mavlink_message_handler::msg_callback_t callback;
-
-        callback.message_id     = MAVLINK_MSG_ID_REQUEST_DATA_STREAM; // 66
-        callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-        callback.compid_filter  = MAV_COMP_ID_ALL;
-        callback.function       = (Mavlink_message_handler::msg_callback_func_t)       &Periodic_telemetry::toggle_telemetry_stream;
-        callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)  &telemetry_;
-
-        init_success &= handler_.add_msg_callback(&callback);
+        // init_success &= handler_.add_msg_callback<Periodic_telemetry>(  MAVLINK_MSG_ID_REQUEST_DATA_STREAM, // 66
+        //                                                                 MAVLINK_BASE_STATION_ID,
+        //                                                                 MAV_COMP_ID_ALL,
+        //                                                                 &Periodic_telemetry::toggle_telemetry_stream,
+        //                                                                 &telemetry_ );
 
         if(!init_success)
         {

@@ -79,7 +79,7 @@ bool Periodic_telemetry::send_message(telemetry_entry_t* telemetry_entry)
 }
 
 
-void Periodic_telemetry::toggle_telemetry_stream(Periodic_telemetry* telemetry, uint32_t sysid, mavlink_message_t* msg)
+void Periodic_telemetry::toggle_telemetry_stream(Periodic_telemetry* telemetry, uint32_t sysid, const mavlink_message_t* msg)
 {
     // Decode message
     mavlink_request_data_stream_t request;

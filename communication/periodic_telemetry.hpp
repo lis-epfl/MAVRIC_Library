@@ -140,7 +140,7 @@ public:
      * \param sysid         MAV sysid
      * \param msg           pointer to the stream you want to toggle
      */
-    static void toggle_telemetry_stream(Periodic_telemetry* scheduler, uint32_t sysid, mavlink_message_t* msg);
+    static void toggle_telemetry_stream(Periodic_telemetry* scheduler, uint32_t sysid, const mavlink_message_t* msg);
 
 
 protected:

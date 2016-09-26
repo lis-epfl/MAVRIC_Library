@@ -61,14 +61,14 @@
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t manual_control_telemetry_toggle_remote_use(Manual_control* manual_control, mavlink_command_long_t* packet);
+static mav_result_t manual_control_telemetry_toggle_remote_use(Manual_control* manual_control, const mavlink_command_long_t* packet);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t manual_control_telemetry_toggle_remote_use(Manual_control* manual_control, mavlink_command_long_t* packet)
+static mav_result_t manual_control_telemetry_toggle_remote_use(Manual_control* manual_control, const mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
 
@@ -109,15 +109,12 @@ bool manual_control_telemetry_init(Manual_control* manual_control, Mavlink_messa
                                             message_handler);
 
     // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_DO_PARACHUTE; // 208
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_SYSTEM_CONTROL; // 250
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)            &manual_control_telemetry_toggle_remote_use;
-    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) manual_control;
-    init_success &= message_handler->add_cmd_callback(&callbackcmd);
+    init_success &= message_handler->add_cmd_callback(  MAV_CMD_DO_PARACHUTE, // 208
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_SYSTEM_CONTROL, // 250
+                                                        &manual_control_telemetry_toggle_remote_use,
+                                                        manual_control );
 
     return init_success;
 }

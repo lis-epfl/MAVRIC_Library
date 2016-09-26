@@ -46,6 +46,7 @@
 
 #include "communication/mavlink_stream.hpp"
 
+#include "util/print_util.hpp"
 
 #define MAV_SYS_ID_ALL 0
 #define MAV_MSG_ENUM_END 255
@@ -68,23 +69,18 @@ class Mavlink_message_handler
 {
 public:
 
-    /**
-     * \brief       Pointer a module's data structure
-     *
-     * \details     This is used as an alias to any data structure in the prototype of callback functions
-     */
-    typedef void* handling_module_struct_t;
-
-    /**
-     * \brief       Prototype of callback functions for MAVLink messages
-     */
-    typedef void (*msg_callback_func_t)(handling_module_struct_t, uint32_t sysid, mavlink_message_t*);
+    template<typename T>
+    struct msg_function
+    {
+        typedef void (*type_t)(T*, uint32_t sysid, const mavlink_message_t*);
+    };
 
 
-    /**
-     * \brief       Prototype of callback functions for MAVLink commands
-     */
-    typedef mav_result_t (*cmd_callback_func_t)(handling_module_struct_t, mavlink_command_long_t*);
+    template<typename T>
+    struct cmd_function
+    {
+        typedef mav_result_t (*type_t)(T*, const mavlink_command_long_t*);
+    };
 
 
     /**
@@ -92,32 +88,6 @@ public:
      * \details     The enumeration MAV_COMPONENT is defined by MAVLink
      */
     typedef enum MAV_COMPONENT mav_component_t;
-
-    /**
-     * \brief       Message callback
-     */
-    typedef struct
-    {
-        uint8_t                         message_id;                     ///<    The function will be called only for messages with ID message_id
-        uint8_t                         sysid_filter;                   ///<    The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
-        mav_component_t                 compid_filter;                  ///<    The function will be called only for messages coming from component compid_filter (0 for all)
-        msg_callback_func_t             function;                       ///<    Pointer to the function to be executed
-        handling_module_struct_t        module_struct;                  ///<    Pointer to module data structure to be given as argument to the function
-    } msg_callback_t;
-
-
-    /**
-     * \brief       Command callback
-     */
-    typedef struct
-    {
-        uint16_t                        command_id;                     ///<    The function will be called only for commands with ID command_id
-        uint8_t                         sysid_filter;                   ///<    The function will be called only for commands coming from MAVs with ID sysid_filter (0 for all)
-        mav_component_t                 compid_filter;                  ///<    The function will be called only for commands coming from component compid_filter (0 for all)
-        mav_component_t                 compid_target;                  ///<    The function will be called only if the commands targets the component compid_target of this system (0 for all)
-        cmd_callback_func_t             function;                       ///<    Pointer to the function to be executed
-        handling_module_struct_t        module_struct;                  ///<    Pointer to module data structure to be given as argument to the function
-    } cmd_callback_t;
 
 
     /**
@@ -147,29 +117,46 @@ public:
 
     /**
      * \brief                       Registers a new callback for a message
+     *
      * \details                     You should call mavlink_message_handler_sort_callback function after having added all callbacks,
      *                              as it is used by mavlink_message_handler_receive to speed up matching
      *
-     * \param   msg_callback        Pointer to new message callback (this structure
-     *                              is copied internally, so it does not need to be
-     *                              kept in memory after the function is called)
+     * \param   message_id          The function will be called only for messages with ID message_id
+     * \param   sysid_filter        The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
+     * \param   compid_filter       The function will be called only for messages coming from component compid_filter (0 for all)
+     * \param   function            Pointer to the function to be executed
+     * \param   module_struct       Pointer to module data structure to be given as argument to the function
      *
      * \return  True if the message callback was correctly added, false otherwise
      */
-    bool add_msg_callback(msg_callback_t* msg_callback);
+    template<typename T>
+    bool add_msg_callback( uint8_t                          message_id,
+                           uint8_t                          sysid_filter,
+                           mav_component_t                  compid_filter,
+                           typename msg_function<T>::type_t function,
+                           T*                               module_struct);
 
     /**
      * \brief                       Registers a new callback for a command
      * \details                     You should call mavlink_message_handler_sort_callback function after having added all callbacks,
      *                              as it is used by mavlink_message_handler_receive to speed up matching
      *
-     * \param   cmd_callback        Pointer to new command callback (this structure
-     *                              is copied internally, so it does not need to be
-     *                              kept in memory after the function is called)
+     * \param    command_id         The function will be called only for commands with ID command_id
+     * \param    sysid_filter       The function will be called only for commands coming from MAVs with ID sysid_filter (0 for all)
+     * \param    compid_filter      The function will be called only for commands coming from component compid_filter (0 for all)
+     * \param    compid_target      The function will be called only if the commands targets the component compid_target of this system (0 for all)
+     * \param    function           Pointer to the function to be executed
+     * \param    module_struct      Pointer to module data structure to be given as argument to the function
      *
      * \return  True if the command callback was correctly added, false otherwise
      */
-    bool add_cmd_callback(cmd_callback_t* cmd_callback);
+    template<typename T>
+    bool add_cmd_callback(  uint16_t                            command_id,
+                            uint8_t                             sysid_filter,
+                            mav_component_t                     compid_filter,
+                            mav_component_t                     compid_target,
+                            typename cmd_function<T>::type_t    function,
+                            T*                                  module_struct);
 
     /**
      * \brief       Main update function, handles the incoming message according to
@@ -196,6 +183,33 @@ public:
     static void cmd_default_dbg(mavlink_command_long_t* cmd);
 
 protected:
+
+    /**
+     * \brief       Message callback
+     */
+    struct msg_callback_t
+    {
+        uint8_t                             message_id;                     ///<    The function will be called only for messages with ID message_id
+        uint8_t                             sysid_filter;                   ///<    The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
+        mav_component_t                     compid_filter;                  ///<    The function will be called only for messages coming from component compid_filter (0 for all)
+        typename msg_function<void>::type_t function;                       ///<    Pointer to the function to be executed
+        void*                               module_struct;                  ///<    Pointer to module data structure to be given as argument to the function
+    };
+
+
+    /**
+     * \brief       Command callback
+     */
+    struct cmd_callback_t
+    {
+        uint16_t                            command_id;                     ///<    The function will be called only for commands with ID command_id
+        uint8_t                             sysid_filter;                   ///<    The function will be called only for commands coming from MAVs with ID sysid_filter (0 for all)
+        mav_component_t                     compid_filter;                  ///<    The function will be called only for commands coming from component compid_filter (0 for all)
+        mav_component_t                     compid_target;                  ///<    The function will be called only if the commands targets the component compid_target of this system (0 for all)
+        typename cmd_function<void>::type_t function;                       ///<    Pointer to the function to be executed
+        void*                               module_struct;                  ///<    Pointer to module data structure to be given as argument to the function
+    };
+
 
     /**
      * \brief       Get maximum number of message callbacks
@@ -371,6 +385,6 @@ Mavlink_message_handler::conf_t Mavlink_message_handler::default_config(void)
     return conf;
 }
 
-
+#include "mavlink_message_handler.hxx"
 
 #endif /* MAVLINK_MESSAGE_HANDLING_H */
