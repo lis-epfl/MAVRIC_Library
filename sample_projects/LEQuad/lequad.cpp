@@ -559,16 +559,19 @@ bool LEQuad::main_task(void)
             case Mav_mode::POSITION_HOLD:
                 break;
             case Mav_mode::VELOCITY:
+            {
                 if(state.mav_mode().ctrl_mode() == Mav_mode::VELOCITY)
                 {
                     manual_control.get_velocity_vector(&controls);
                 }
                 Cascade_controller::vel_command_t vel_command;
-                vel_command.vel = {controls.tvel[0], controls.tvel[1], controls.tvel[2]};
+                vel_command.vel = std::array<float,3>{{controls.tvel[0], controls.tvel[1], controls.tvel[2]}};
                 cascade_controller_.set_velocity_command(vel_command);
+            }
                 break;
 
             case Mav_mode::ATTITUDE:
+            {
                 manual_control.get_control_command(&controls);
                 /* convert controls from control_command_t (legacy) to att_command_t */
                 Cascade_controller::att_command_t att_command;
@@ -577,6 +580,7 @@ bool LEQuad::main_task(void)
                 att_command.thrust = controls.thrust;
                 /* set attitude command */
                 cascade_controller_.set_attitude_command(att_command);
+            }
                 break;
 
             // case Mav_mode::RATE:

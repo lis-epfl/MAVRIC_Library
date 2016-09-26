@@ -71,7 +71,7 @@ Rate_controller<TServos_mix>::Rate_controller(args_t args, const conf_t& config)
 
     // set initial rate command
     rate_command_t initial_rate_command;
-    initial_rate_command.rates = {0.0f,0.0f,0.0f};
+    initial_rate_command.rates = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
     initial_rate_command.thrust = {-1.0f};
     set_rate_command(initial_rate_command);
 }

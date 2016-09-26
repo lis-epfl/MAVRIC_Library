@@ -48,7 +48,7 @@ Servos_mix::Servos_mix()
 {
     /* set initial torque command */
     torq_command_t initial_torque_command;
-    initial_torque_command.torq = {0.0f, 0.0f, 0.0f};
+    initial_torque_command.torq = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
     initial_torque_command.thrust = {-1.0f};
     set_torque_command(initial_torque_command);
 }
