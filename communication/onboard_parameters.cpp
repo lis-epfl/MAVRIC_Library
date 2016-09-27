@@ -55,45 +55,36 @@ Onboard_parameters::Onboard_parameters(File& file, const State& state, Mavlink_m
     mavlink_stream_(mavlink_stream),
     param_count_(0)
 {
-    bool init_success = true;
-
     // Init debug mode
     debug_ = config.debug;
 
     // Add callbacks for onboard parameters requests
-    Mavlink_message_handler::msg_callback_t callback;
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_REQUEST_LIST, // 21
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &schedule_all_parameters,
+                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_PARAM_REQUEST_LIST; // 21
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &schedule_all_parameters;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_REQUEST_READ, // 20
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &send_parameter,
+                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_PARAM_REQUEST_READ; // 20
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &send_parameter;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
-    init_success &= message_handler.add_msg_callback(&callback);
 
-    callback.message_id     = MAVLINK_MSG_ID_PARAM_SET; // 23
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &receive_parameter;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_SET, // 23
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &receive_parameter,
+                                        this );
 
     // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_PREFLIGHT_STORAGE; // 245
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL;
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &preflight_storage;
-    callbackcmd.module_struct = this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    message_handler.add_cmd_callback(   MAV_CMD_PREFLIGHT_STORAGE, // 245
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        MAV_COMP_ID_ALL,
+                                        &preflight_storage,
+                                        this );
 }
 
 
@@ -359,7 +350,7 @@ bool Onboard_parameters::send_all_scheduled_parameters(Onboard_parameters* onboa
 }
 
 
-void Onboard_parameters::schedule_all_parameters(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg)
+void Onboard_parameters::schedule_all_parameters(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_param_request_list_t packet;
     mavlink_msg_param_request_list_decode(msg, &packet);
@@ -376,7 +367,7 @@ void Onboard_parameters::schedule_all_parameters(Onboard_parameters* onboard_par
 }
 
 
-void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg)
+void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_param_request_read_t request;
     mavlink_msg_param_request_read_decode(msg, &request);
@@ -436,7 +427,7 @@ void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, 
 
 
 
-void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg)
+void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg)
 {
     bool match = true;
 
@@ -543,7 +534,7 @@ void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameter
 }
 
 
-mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_parameters, mavlink_command_long_t* msg)
+mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_parameters, const mavlink_command_long_t* msg)
 {
     mav_result_t result = MAV_RESULT_DENIED;
 

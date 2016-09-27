@@ -46,7 +46,7 @@
 #include "util/print_util.hpp"
 
 
-void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t __attribute__((unused)) sysid, mavlink_message_t* msg)
+void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t __attribute__((unused)) sysid, const mavlink_message_t* msg)
 {
     mavlink_gimbal_command_t packet;
     mavlink_msg_gimbal_command_decode(msg, &packet);
@@ -63,14 +63,11 @@ bool gimbal_controller_telemetry_init(Gimbal_controller* gimbal_controller, Mavl
     bool init_success = true;
 
     // Add callbacks for waypoint handler messages requests
-    Mavlink_message_handler::msg_callback_t callback;
-
-    callback.message_id     = MAVLINK_MSG_ID_GIMBAL_COMMAND; //185
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &gimbal_telemetry_parse_msg;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) gimbal_controller;
-    init_success &= message_handler->add_msg_callback(&callback);
+    init_success &= message_handler->add_msg_callback(  MAVLINK_MSG_ID_GIMBAL_COMMAND, //185
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &gimbal_telemetry_parse_msg,
+                                                        gimbal_controller );
 
     return init_success;
 }

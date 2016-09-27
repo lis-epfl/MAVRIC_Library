@@ -57,7 +57,7 @@
  *
  * \return  The MAV_RESULT of the command
  */
-void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t sysid, mavlink_message_t* msg);
+void gimbal_telemetry_parse_msg(Gimbal_controller* gimbal_controller, uint32_t sysid, const mavlink_message_t* msg);
 
 
 /**

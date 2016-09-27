@@ -105,28 +105,10 @@ public:
      */
     Mavlink_communication_T(Serial& serial, State& state, File& file_storage, const conf_t& config = default_config()):
         mavlink_stream_(serial, config.mavlink_stream),
-        telemetry_(mavlink_stream_, config.telemetry),
         handler_(mavlink_stream_, config.handler),
+        telemetry_(mavlink_stream_, handler_, config.telemetry),
         parameters_(file_storage, state, handler_, mavlink_stream_, config.parameters)
-    {
-        bool init_success = true;
-
-        // Add callback to activate / disactivate streams
-        Mavlink_message_handler::msg_callback_t callback;
-
-        callback.message_id     = MAVLINK_MSG_ID_REQUEST_DATA_STREAM; // 66
-        callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-        callback.compid_filter  = MAV_COMP_ID_ALL;
-        callback.function       = (Mavlink_message_handler::msg_callback_func_t)       &Periodic_telemetry::toggle_telemetry_stream;
-        callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)  &telemetry_;
-
-        init_success &= handler_.add_msg_callback(&callback);
-
-        if(!init_success)
-        {
-            print_util_dbg_print("[MAVLINK COMMUNICATION] constructor error\r\n");
-        }
-    }
+    {}
 
     /**
      * \brief   Returns sysid of the underlying mavlink_stream
@@ -211,8 +193,8 @@ public:
 
 private:
     Mavlink_stream                                  mavlink_stream_;       ///<    Mavlink interface using streams
-    Periodic_telemetry_T<N_TELEM>                   telemetry_;            ///<    Periodic telemetry
     Mavlink_message_handler_T<N_MSG_CB, N_CMD_CB>   handler_;              ///<    Message handler
+    Periodic_telemetry_T<N_TELEM>                   telemetry_;            ///<    Periodic telemetry
     Onboard_parameters_T<N_PARAM>                   parameters_;           ///<    Onboard parameters
 };
 
