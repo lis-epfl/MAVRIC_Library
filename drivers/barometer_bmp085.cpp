@@ -96,7 +96,7 @@ Barometer_BMP085::Barometer_BMP085(I2c& i2c):
     ac4_(32741),
     ac5_(32757),
     ac6_(23153),
-    mb_(1),     // TODO check value in datasheet
+    mb_(-32768),
     mc_(-8711),
     md_(2868),
     b1_(6190),
@@ -111,8 +111,6 @@ Barometer_BMP085::Barometer_BMP085(I2c& i2c):
     pressure_           = 0.0f;
     temperature_        = 0.0f;
     altitude_gf_        = 0.0f;
-    altitude_filtered   = 0.0f;
-    altitude_bias_gf_   = 0.0f;
     speed_lf_           = 0.0f;
     last_update_us_     = 0.0f;
     temperature_        = 24.0f;    // Nice day
@@ -126,11 +124,45 @@ bool Barometer_BMP085::init(void)
     // Test if the sensor if here
     res &= i2c_.probe(BMP085_SLAVE_ADDRESS);
 
+    // Read calibration data
+    res &= read_eprom_calibration();
+
     // Reset Barometer_BMP085 state
     state_ = BMP085_IDLE;
 
     return res;
 }
+
+
+bool Barometer_BMP085::read_eprom_calibration(void)
+{
+    bool res = true;
+
+    uint8_t start_address = BMP085_CAL_AC1;
+    uint8_t buffer[22];
+
+    // Read EPROM
+    res &= i2c_.write(&start_address, 1, BMP085_SLAVE_ADDRESS);
+    res &= i2c_.read(buffer, 22, BMP085_SLAVE_ADDRESS);
+
+    if (res)
+    {
+        ac1_ = (int16_t)(buffer[0] << 8 | buffer[1]);
+        ac2_ = (int16_t)(buffer[2] << 8 | buffer[3]);
+        ac3_ = (int16_t)(buffer[4] << 8 | buffer[5]);
+        ac4_ = (uint16_t)(buffer[6] << 8 | buffer[7]);
+        ac5_ = (uint16_t)(buffer[8] << 8 | buffer[9]);
+        ac6_ = (uint16_t)(buffer[10] << 8 | buffer[11]);
+        b1_  = (int16_t)(buffer[12] << 8 | buffer[13]);
+        b2_  = (int16_t)(buffer[14] << 8 | buffer[15]);
+        mb_  = (int16_t)(buffer[16] << 8 | buffer[17]);
+        mc_  = (int16_t)(buffer[18] << 8 | buffer[19]);
+        md_  = (int16_t)(buffer[20] << 8 | buffer[21]);
+    }
+
+    return res;
+}
+
 
 
 bool Barometer_BMP085::update(void)
@@ -224,7 +256,7 @@ bool Barometer_BMP085::update(void)
             pressure_ = p;
 
             // Compute new altitude from pressure
-            altitude_raw = altitude_from_pressure(pressure_, 0);
+            altitude_raw = altitude_from_pressure(pressure_);
 
             // Update circular buffer with last 3 altitudes
             for (int32_t i = 0; i < 2; i++)
@@ -237,26 +269,23 @@ bool Barometer_BMP085::update(void)
             altitude_raw = maths_median_filter_3x(last_altitudes_[0], last_altitudes_[1], last_altitudes_[2]);
 
             // Keep old, filtered altitude
-            altitude_filtered_old = altitude_filtered;
+            altitude_filtered_old = altitude_gf_;
 
             // Low pass filter the altitude, only if this is not a spike
             if (maths_f_abs(altitude_raw - altitude_filtered_old) < 15.0f)
             {
-                altitude_filtered = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_raw;
+                altitude_gf_ = (BARO_ALT_LPF * altitude_filtered_old) + (1.0f - BARO_ALT_LPF) * altitude_raw;
             }
             else
             {
-                altitude_filtered = altitude_raw;
+                altitude_gf_ = altitude_raw;
             }
-
-            // remove bias
-            altitude_gf_ = altitude_filtered - altitude_bias_gf_;
 
             // Time interval since last update
             dt_s_ = (time_keeper_get_us() - last_update_us_) / 1000000.0f;
 
             // Compute new vertical speed from two last filtered altitudes
-            new_speed_lf = - (altitude_filtered - altitude_filtered_old) / dt_s_;
+            new_speed_lf = - (altitude_gf_ - altitude_filtered_old) / dt_s_;
 
             // Remove spikes
             if (maths_f_abs(new_speed_lf) > 20)
