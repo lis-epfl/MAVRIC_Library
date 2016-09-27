@@ -87,7 +87,7 @@ bool Mission_planner::set_current_waypoint(uint16_t index)
     return success;
 }
 
-mav_result_t Mission_planner::nav_go_home(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::nav_go_home(Mission_planner* mission_planner, const mavlink_command_long_t* packet)
 {
     bool success = false;
 
@@ -109,7 +109,7 @@ mav_result_t Mission_planner::nav_go_home(Mission_planner* mission_planner, mavl
     }
 }
 
-mav_result_t Mission_planner::mission_start_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::mission_start_callback(Mission_planner* mission_planner, const mavlink_command_long_t* packet)
 {
     print_util_dbg_print("[MISSION_PLANNER]: Mission_start: ");
     bool success = false;
@@ -124,7 +124,7 @@ mav_result_t Mission_planner::mission_start_callback(Mission_planner* mission_pl
 }
 
 
-void Mission_planner::mission_set_current_callback(Mission_planner* mission_planner, uint32_t sysid, mavlink_message_t* msg)
+void Mission_planner::mission_set_current_callback(Mission_planner* mission_planner, uint32_t sysid, const mavlink_message_t* msg)
 {
     print_util_dbg_print("Set_current_waypoint_from_parameter:  seq");
     uint8_t new_current = mavlink_msg_mission_set_current_get_seq(msg);
@@ -133,7 +133,7 @@ void Mission_planner::mission_set_current_callback(Mission_planner* mission_plan
     mission_planner->set_current_waypoint(new_current);
 }
 
-mav_result_t Mission_planner::override_goto_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::override_goto_callback(Mission_planner* mission_planner, const mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
 
@@ -199,7 +199,7 @@ mav_result_t Mission_planner::override_goto_callback(Mission_planner* mission_pl
     return result;
 }
 
-mav_result_t Mission_planner::nav_takeoff_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::nav_takeoff_callback(Mission_planner* mission_planner, const mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
@@ -229,7 +229,7 @@ mav_result_t Mission_planner::nav_takeoff_callback(Mission_planner* mission_plan
     return result;
 }
 
-mav_result_t Mission_planner::nav_land_callback(Mission_planner* mission_planner, mavlink_command_long_t* packet)
+mav_result_t Mission_planner::nav_land_callback(Mission_planner* mission_planner, const mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
@@ -728,58 +728,47 @@ bool Mission_planner::init()
     hold_position_set_ = false;
 
     // Add callbacks for waypoint handler messages requests
-    Mavlink_message_handler::msg_callback_t callback;
-
-    callback.message_id     = MAVLINK_MSG_ID_MISSION_SET_CURRENT; // 41
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_set_current_callback;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_SET_CURRENT, // 41
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &mission_set_current_callback,
+                                                        this );
 
     // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_RETURN_TO_LAUNCH, // 20
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &nav_go_home,    // N.B. intentionally mislabelled to go to home
+                                                        this );
 
-    // N.B. intentionally mislabelled to go to home
-    callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &nav_go_home;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_LAND, // 21
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &nav_land_callback,
+                                                        this );
 
-    callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &nav_land_callback;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_TAKEOFF, // 22
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &nav_takeoff_callback,
+                                                        this );
 
-    callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &nav_takeoff_callback;
-    callbackcmd.module_struct =                                 this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_OVERRIDE_GOTO, // 252
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &override_goto_callback,
+                                                        this );
 
-    callbackcmd.command_id = MAV_CMD_OVERRIDE_GOTO; // 252
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &override_goto_callback;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
-
-    callbackcmd.command_id = MAV_CMD_MISSION_START; // 300
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &mission_start_callback;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_MISSION_START, // 300
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 190
+                                                        &mission_start_callback,
+                                                        this );
 
     if(!init_success)
     {
