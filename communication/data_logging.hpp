@@ -43,7 +43,6 @@
 #ifndef DATA_LOGGING_HPP__
 #define DATA_LOGGING_HPP__
 
-#include "communication/mavlink_communication.hpp"
 #include "communication/state.hpp"
 #include "hal/common/file.hpp"
 #include "hal/common/console.hpp"
@@ -60,49 +59,59 @@ typedef struct
 } data_logging_entry_t;
 
 
-/**
- * \brief       Configuration of the data_logging element
- */
-typedef struct
-{
-    uint32_t max_data_logging_count;            ///< Maximum number of parameters
-    uint16_t max_logs;                          ///< The max number of logged files with the same name on the SD card
-    bool debug;                                 ///< Indicates if debug messages should be printed for each param change
-    uint32_t log_data;                          ///< The initial state of writing a file
-} data_logging_conf_t;
+
+
 
 /**
- * \brief   Default configuration for the data_logging
+ * \brief   Log data in files
  *
- * \return  Config structure
- */
-static inline data_logging_conf_t data_logging_default_config();
-
-/**
- * \brief   The class of the log of the data
- *
- * \details     data_logging_set is implemented as pointer because its memory will be
- *              allocated during initialisation
+ * \details This class is abstract and does not contains the task list,
+ *          use the child class Data_logging_T
  */
 class Data_logging
 {
 public:
     /**
+     * \brief       Configuration of the data_logging element
+     */
+    typedef struct
+    {
+        uint16_t max_logs;                          ///< The max number of logged files with the same name on the SD card
+        bool debug;                                 ///< Indicates if debug messages should be printed for each param change
+        uint32_t log_data;                          ///< The initial state of writing a file
+        bool continuous_write;                      ///< A flag to tell whether we write continuously to the file or not
+    } conf_t;
+
+    /**
+     * \brief   Default configuration for the data_logging
+     *
+     * \return  Config structure
+     */
+    static conf_t default_config()
+    {
+        conf_t conf    = {};
+
+        conf.max_logs               = 500;
+        conf.debug                  = true;
+        conf.log_data               = 0;     // 1: log data, 0: no log data
+        conf.continuous_write       = false;
+        return conf;
+    };
+
+    /**
      * \brief   Data logging constructor
      */
-    Data_logging(File& file, State& state, data_logging_conf_t config = data_logging_default_config());
-
+    Data_logging(File& file, State& state, conf_t config = default_config());
 
     /**
      * \brief   Initialise the data logging module
      *
      * \param   file_name               The pointer to name of the file to create
-     * \param   continuous_write        Boolean to state whether writing should be continous or not
      * \param   sysid                   The system identification number of the MAV
      *
      * \return  True if the init succeed, false otherwise
      */
-    bool create_new_log_file(const char* file_name_, bool continuous_write_, uint32_t sysid);
+    bool create_new_log_file(const char* file_name_, uint32_t sysid);
 
     /**
      * \brief   The task to log the data to the SD card
@@ -165,7 +174,32 @@ public:
     bool add_field(const T* val, const char* param_name, uint32_t precision);
 
 
+protected:
+
+    /**
+     * \brief  Get maximum number of variables to log
+     *
+     * \details     Abstract method to be implemented in child classes
+     *
+     * \return Maximum number of variables to log
+     */
+    virtual uint32_t max_count(void) = 0;
+
+
+    /**
+     * \brief  Get list of variables to log
+     *
+     * \details     Abstract method to be implemented in child classes
+     *
+     * \return list
+     */
+    virtual data_logging_entry_t* list() = 0;
+
+
 private:
+
+    static const uint8_t MAX_FILENAME_LENGTH = 255;    ///< Maximum length of file names
+
     /**
     * \brief    Add in the file fp the first line with the name of the parameter
     *
@@ -249,23 +283,18 @@ private:
      */
     bool checksum_control(void);
 
-    data_logging_conf_t config_;                ///< configuration of the data_logging module
+    conf_t config_;                ///< configuration of the data_logging module
 
     bool debug_;                                 ///< Indicates if debug messages should be printed for each param change
     uint32_t data_logging_count_;               ///< Number of data logging parameter effectively in the array
-    data_logging_entry_t* data_log_;            ///< Data logging array, needs memory allocation
 
-
-    int buffer_name_size_;                       ///< The buffer for the size of the file's name
-
-    char* file_name_;                            ///< The file name
-    char* name_n_extension_;                     ///< Stores the name of the file
+    char file_name_[MAX_FILENAME_LENGTH];                        ///< The file name
+    char name_n_extension_[MAX_FILENAME_LENGTH];                 ///< Stores the name of the file
 
     bool file_init_;                             ///< A flag to tell whether a file is init or not
     bool file_opened_;                           ///< A flag to tell whether a file is opened or not
     bool sys_status_;                            ///< A flag to tell whether the file system status is ok or not
 
-    bool continuous_write_;                      ///< A flag to tell whether we write continuously to the file or not
     uint32_t log_data_;                          ///< A flag to stop/start writing to file
 
     uint32_t logging_time_;                      ///< The time that we've passed logging since the last f_close
@@ -280,16 +309,47 @@ private:
     State& state_;                              ///< The pointer to the state structure
 };
 
-static inline data_logging_conf_t data_logging_default_config()
+
+/**
+ * \brief   Log data in files
+ *
+ * \tparam  N   Maximum number of variables to log
+ */
+template<uint32_t N>
+class Data_logging_T: public Data_logging
 {
-    data_logging_conf_t conf    = {};
+public:
+    /**
+     * \brief   Data logging constructor
+     */
+    Data_logging_T(File& file, State& state, conf_t config = default_config()):
+        Data_logging(file, state, config)
+    {}
 
-    conf.max_data_logging_count = 50;
-    conf.max_logs               = 500;
-    conf.debug                  = true;
-    conf.log_data               = 0;  // 1: log data, 0: no log data
+protected:
 
-    return conf;
+    /**
+     * \brief  Get maximum number of variables to log
+     *
+     * \return Maximum number of variables to log
+     */
+    uint32_t max_count(void)
+    {
+        return N;
+    }
+
+    /**
+     * \brief  Get list of variables to log
+     *
+     * \return list
+     */
+    data_logging_entry_t* list()
+    {
+        return list_;
+    }
+
+private:
+    data_logging_entry_t list_[N];            ///< Data logging array, needs memory allocation
 };
 
 

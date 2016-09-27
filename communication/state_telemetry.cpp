@@ -45,11 +45,8 @@
 #include "communication/state.hpp"
 #include "util/version.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -62,7 +59,7 @@ extern "C"
  * \param   sysid               The system ID
  * \param   msg                 The received MAVLink message structure
  */
-void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_message_t* msg);
+void state_telemetry_heartbeat_received(State* state, uint32_t sysid, const mavlink_message_t* msg);
 
 /**
  * \brief                       Set the state and the mode of the vehicle
@@ -71,7 +68,7 @@ void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_me
  * \param   sysid               The system ID
  * \param   msg                 The received MAVLink message structure
  */
-static void state_telemetry_set_mav_mode(State_machine* state_machine, uint32_t sysid, mavlink_message_t* msg);
+static void state_telemetry_set_mav_mode(State_machine* state_machine, uint32_t sysid, const mavlink_message_t* msg);
 
 /**
  * \brief   Set the MAV mode from a command message
@@ -81,7 +78,7 @@ static void state_telemetry_set_mav_mode(State_machine* state_machine, uint32_t 
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t state_telemetry_set_mode_from_cmd(State_machine* state_machine, mavlink_command_long_t* packet);
+static mav_result_t state_telemetry_set_mode_from_cmd(State_machine* state_machine, const mavlink_command_long_t* packet);
 
 /**
  * \brief   Set the ARM mode from a command message
@@ -91,7 +88,7 @@ static mav_result_t state_telemetry_set_mode_from_cmd(State_machine* state_machi
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_command_long_t* packet);
+static mav_result_t state_telemetry_set_arm_from_cmd(State* state, const mavlink_command_long_t* packet);
 
 /**
  * \brief   Set state->mav_mode
@@ -116,13 +113,15 @@ bool state_telemetry_set_mode(State_machine* state_machine, Mav_mode mav_mode);
  *
  * \return  The MAV_RESULT of the command
  */
-mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet);
+mav_result_t state_telemetry_send_autopilot_capabilities(State* state, const mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_message_t* msg)
+void state_telemetry_heartbeat_received(State* state,
+                                        uint32_t __attribute__((unused)) sysid,
+                                        const mavlink_message_t __attribute__((unused)) * msg)
 {
     state->first_connection_set = true;
 
@@ -130,7 +129,8 @@ void state_telemetry_heartbeat_received(State* state, uint32_t sysid, mavlink_me
     state->msg_count++;
 }
 
-void state_telemetry_set_mav_mode(State_machine* state_machine, uint32_t sysid, mavlink_message_t* msg)
+
+void state_telemetry_set_mav_mode(State_machine* state_machine, uint32_t sysid, const mavlink_message_t* msg)
 {
     // decode packet
     mavlink_set_mode_t packet;
@@ -145,11 +145,13 @@ void state_telemetry_set_mav_mode(State_machine* state_machine, uint32_t sysid, 
     }
 }
 
-static mav_result_t state_telemetry_set_mode_from_cmd(State_machine* state_machine, mavlink_command_long_t* packet)
+
+static mav_result_t state_telemetry_set_mode_from_cmd(State_machine* state_machine, const mavlink_command_long_t* packet)
 {
     Mav_mode new_mode = packet->param1;
     return state_telemetry_set_mode(state_machine,new_mode) ? MAV_RESULT_ACCEPTED : MAV_RESULT_TEMPORARILY_REJECTED;
 }
+
 
 bool state_telemetry_set_mode(State_machine* state_machine, Mav_mode new_mode)
 {
@@ -171,13 +173,15 @@ bool state_telemetry_set_mode(State_machine* state_machine, Mav_mode new_mode)
     return state_machine->set_ctrl_mode(new_mode);
 }
 
-static mav_result_t state_telemetry_set_arm_from_cmd(State* state, mavlink_command_long_t* packet)
+
+static mav_result_t state_telemetry_set_arm_from_cmd(State* state, const mavlink_command_long_t* packet)
 {
     float arm_cmd = packet->param1;
     return state->set_armed(arm_cmd == 1) ? MAV_RESULT_ACCEPTED : MAV_RESULT_TEMPORARILY_REJECTED;
 }
 
-mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet)
+
+mav_result_t state_telemetry_send_autopilot_capabilities(State* state, const mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_ACCEPTED;
 
@@ -225,48 +229,39 @@ bool state_telemetry_init(State_machine* state_machine, Mavlink_message_handler*
     bool init_success = true;
 
     // Add callbacks for onboard parameters requests
-    Mavlink_message_handler::msg_callback_t callback;
+    init_success &= message_handler->add_msg_callback(  MAVLINK_MSG_ID_HEARTBEAT, // 1
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &state_telemetry_heartbeat_received,
+                                                        &state_machine->state_ );
 
-    callback.message_id     = MAVLINK_MSG_ID_HEARTBEAT; // 1
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &state_telemetry_heartbeat_received;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) &state_machine->state_;
-    init_success &= message_handler->add_msg_callback(&callback);
-
-    callback.message_id     = MAVLINK_MSG_ID_SET_MODE; // 11
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &state_telemetry_set_mav_mode;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) state_machine;
-    init_success &= message_handler->add_msg_callback(&callback);
+    init_success &= message_handler->add_msg_callback(  MAVLINK_MSG_ID_SET_MODE, // 11
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &state_telemetry_set_mav_mode,
+                                                        state_machine );
 
     // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
+    init_success &= message_handler->add_cmd_callback(  MAV_CMD_DO_SET_MODE, // 176
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &state_telemetry_set_mode_from_cmd,
+                                                        state_machine );
 
-    callbackcmd.command_id = MAV_CMD_DO_SET_MODE; // 176
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)         &state_telemetry_set_mode_from_cmd;
-    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) state_machine;
-    init_success &= message_handler->add_cmd_callback(&callbackcmd);
+    init_success &= message_handler->add_cmd_callback(  MAV_CMD_COMPONENT_ARM_DISARM, // 400
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &state_telemetry_set_arm_from_cmd,
+                                                        &state_machine->state_ );
 
-    callbackcmd.command_id = MAV_CMD_COMPONENT_ARM_DISARM; // 400
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &state_telemetry_set_arm_from_cmd;
-    callbackcmd.module_struct =                                 &state_machine->state_;
-    init_success &= message_handler->add_cmd_callback(&callbackcmd);
-
-    callbackcmd.command_id    = MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES; // 520
-    callbackcmd.sysid_filter  = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &state_telemetry_send_autopilot_capabilities;
-    callbackcmd.module_struct =                                 &state_machine->state_;
-    init_success &= message_handler->add_cmd_callback(&callbackcmd);
+    init_success &= message_handler->add_cmd_callback(  MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES, // 520
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &state_telemetry_send_autopilot_capabilities,
+                                                        &state_machine->state_ );
 
     return init_success;
 }

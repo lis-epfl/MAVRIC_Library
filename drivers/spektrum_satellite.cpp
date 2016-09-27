@@ -43,11 +43,8 @@
 
 #include "drivers/spektrum_satellite.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
 
 Spektrum_satellite* spek_sat;
 
@@ -61,7 +58,7 @@ Spektrum_satellite* spek_sat;
  *
  * @param serial    Peripheral
  */
-void spektrum_irq_callback(Serial* serial)
+void spektrum_irq_callback(Serial __attribute((unused)) * serial)
 {
     spek_sat->handle_interrupt();
 };

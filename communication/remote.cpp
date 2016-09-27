@@ -44,12 +44,9 @@
 #include "hal/common/time_keeper.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
+#include "util/quick_trig.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-#include "util/quick_trig.h"
-}
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -182,7 +179,7 @@ bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config)
 }
 
 
-void remote_update(remote_t* remote)
+bool remote_update(remote_t* remote)
 {
     uint32_t now = time_keeper_get_us() ;
     float raw;
@@ -233,6 +230,8 @@ void remote_update(remote_t* remote)
             remote->signal_quality = SIGNAL_LOST;
         }
     }
+
+    return true;
 }
 
 

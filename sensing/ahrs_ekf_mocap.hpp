@@ -54,7 +54,7 @@
 
 #include "sensing/ahrs_ekf.hpp"
 #include "util/matrix.hpp"
-#include "communication/mavlink_communication.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 
 /**
@@ -103,7 +103,7 @@ protected:
      * \param   sysid           ID of the system
      * \param   msg             Pointer to the incoming message
      */
-    static void callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg);
+    static void callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, const mavlink_message_t* msg);
 
     Ahrs_ekf& ahrs_ekf_;                        ///< AHRS extended callman filter
     Mavlink_message_handler& message_handler_;  ///< State covariance

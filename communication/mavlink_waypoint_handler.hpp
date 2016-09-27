@@ -43,7 +43,7 @@
 #ifndef MAVLINK_WAYPOINT_HANDLER__
 #define MAVLINK_WAYPOINT_HANDLER__
 
-#include "communication/mavlink_communication.hpp"
+#include "communication/mavlink_message_handler.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "sensing/position_estimation.hpp"
 #include "communication/mavlink_message_handler.hpp"
@@ -95,8 +95,9 @@ public:
      * \param   ahrs                    The pointer to the attitude estimation structure
      * \param   state                   The pointer to the state structure
      * \param   manual_control          The pointer to the manual control structure
-     * \param   mavlink_communication   The pointer to the MAVLink communication structure
+     * \param   message_handler         The pointer to the MAVLink message_handler structure
      * \param   mavlink_stream          The pointer to the MAVLink stream structure
+     * \param   config                  The configuration of the mavlink_waypoint handler structure
      *
      * \return  True if the init succeed, false otherwise
      */
@@ -139,6 +140,11 @@ public:
      */
     void hold_init(local_position_t local_pos);
 
+    /**
+     * \brief   Returns the number of waypoints
+     *
+     * \return  number of waypoints
+     */
     inline uint16_t waypoint_count() const {return waypoint_count_;};
 
     /**
@@ -207,7 +213,6 @@ private:
     /**
      * \brief   Computes the state machine for the Dubin navigation type
      *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
      * \param   waypoint_next_           The next waypoint structure
      */
     void dubin_state_machine(waypoint_local_struct_t* waypoint_next_);
@@ -253,7 +258,6 @@ private:
     /**
      * \brief   Sends the travel time between the last two waypoints
      *
-     * \param   waypoint_handler        The pointer to the waypoint handler structure
      * \param   mavlink_stream          The pointer to the MAVLink stream structure
      * \param   msg                     The pointer to the MAVLink message
      */
@@ -278,7 +282,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The pointer to the received MAVLink message structure asking the send count
      */
-    static void send_count(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void send_count(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Sends a given waypoint via a MAVLink message
@@ -287,7 +291,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The pointer to the received MAVLink message structure asking for a waypoint
      */
-    static void send_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void send_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Receives a acknowledge message from MAVLink
@@ -296,7 +300,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure
      */
-    static void receive_ack_msg(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void receive_ack_msg(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Receives the number of waypoints that the ground station is sending
@@ -305,7 +309,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the total number of waypoint
      */
-    static void receive_count(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void receive_count(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Receives a given waypoint and stores it in the local structure
@@ -314,7 +318,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the waypoint
      */
-    static void receive_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void receive_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Sets the current waypoint to num_of_waypoint
@@ -323,7 +327,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the number of the current waypoint
      */
-    static void set_current_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void set_current_waypoint(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Set the current waypoint to new_current
@@ -333,7 +337,7 @@ private:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t set_current_waypoint_from_parameter(Mavlink_waypoint_handler* waypoint_handler, const mavlink_command_long_t* packet);
 
     /**
      * \brief   Clears the waypoint list
@@ -342,7 +346,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the clear command
      */
-    static void clear_waypoint_list(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void clear_waypoint_list(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Set a new home position, origin of the local frame
@@ -351,7 +355,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the new home position
      */
-    static void set_home(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void set_home(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Set the next waypoint as current waypoint
@@ -361,7 +365,7 @@ private:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t continue_to_next_waypoint(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t continue_to_next_waypoint(Mavlink_waypoint_handler* waypoint_handler, const mavlink_command_long_t* packet);
 
     /**
      * \brief   Sends back whether the MAV is currently stopped at a waypoint or not
@@ -371,7 +375,7 @@ private:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t is_arrived(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t is_arrived(Mavlink_waypoint_handler* waypoint_handler, const mavlink_command_long_t* packet);
 
     /**
      * \brief   Start/Stop the navigation
@@ -381,7 +385,7 @@ private:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t start_stop_navigation(Mavlink_waypoint_handler* waypoint_handler, const mavlink_command_long_t* packet);
 
     /**
      * \brief   Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
@@ -391,7 +395,7 @@ private:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t set_auto_takeoff(Mavlink_waypoint_handler* waypoint_handler, const mavlink_command_long_t* packet);
 
     /**
      * \brief   Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
@@ -401,7 +405,7 @@ private:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t set_auto_landing(Mavlink_waypoint_handler* waypoint_handler, const mavlink_command_long_t* packet);
 };
 
 

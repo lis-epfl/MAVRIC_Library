@@ -43,13 +43,12 @@
 #include "control/vector_field_waypoint.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "cstdint"
 #include "util/vectors.h"
-
-#include "util/print_util.h"
 }
 
 //------------------------------------------------------------------------------
@@ -419,7 +418,11 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
     /**
      *  Student code Here
      */
-
+    (void)pos_mav; // unused
+    (void)pos_obj; // unused
+    (void)attractiveness; // unused
+    (void)cruise_speed; // unused
+    (void)radius; // unused
 
     /**
      *  End of Student code
@@ -439,7 +442,7 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command)
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t __attribute__((unused)) * config, const Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command)
 {
     // Init dependencies
     vector_field->waypoint_handler  = waypoint_handler;

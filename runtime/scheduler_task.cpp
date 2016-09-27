@@ -1,24 +1,48 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
+
+/*******************************************************************************
+ * \file scheduler_task.cpp
+ *
+ * \author MAV'RIC Team
+ *
+ * \brief Task managed by the scheduler
+ *
+ ******************************************************************************/
+
+
 #include "runtime/scheduler_task.hpp"
 #include "hal/common/time_keeper.hpp"
 
-
-Scheduler_task::Scheduler_task(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id) :
-        task_id(task_id),
-        run_mode(run_mode),
-        timing_mode(timing_mode),
-        priority(priority),
-        repeat_period(repeat_period),
-        next_run(0),
-        execution_time(0),
-        execution_time_avg(0),
-        execution_time_var(0),
-        execution_time_max(0),
-        delay(0),
-        delay_avg(0),
-        delay_var(0),
-        delay_max(0),
-        call_function(call_function),
-        function_argument(function_argument)
+Scheduler_task::Scheduler_task(void)
 {}
 
 
@@ -72,7 +96,7 @@ bool Scheduler_task::execute()
     delay = task_start_time - next_run;
 
     // Execute task
-    bool success = call_function(function_argument);
+    bool success = task_function(task_argument);
 
     // Set the next execution time of the task
     if (success)

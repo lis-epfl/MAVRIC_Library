@@ -39,6 +39,7 @@
  ******************************************************************************/
 
 #include "sample_projects/LEQuad/lequad.hpp"
+#include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
@@ -53,16 +54,14 @@
 // #include "hal/dummy/pwm_dummy.hpp"
 #include "hal/common/time_keeper.hpp"
 
+#include "util/print_util.hpp"
+
 extern "C"
 {
-#include "util/print_util.h"
 #include "hal/piezo_speaker.h"
 #include "libs/asf/avr32/services/delay/delay.h"
-
-#include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 }
 
-// #include "hal/common/dbg.hpp"
 
 int main(void)
 {
@@ -91,7 +90,7 @@ int main(void)
     // Create MAV using real sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
     LEQuad mav = LEQuad(board.imu,
-                        board.bmp085,
+                        board.barometer,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:
                         board.uart0,
@@ -110,6 +109,8 @@ int main(void)
                         file_log,
                         file_stat,
                         mav_config );
+    // initialize MAV
+    init_success &= mav.init();
 
     // // -------------------------------------------------------------------------
     // // Create simulation

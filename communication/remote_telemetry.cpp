@@ -59,14 +59,14 @@
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_command_long_t* packet);
+static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, const mavlink_command_long_t* packet);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_command_long_t* packet)
+static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, const mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_DENIED;
 
@@ -106,15 +106,12 @@ bool remote_telemetry_init(remote_t* remote, Mavlink_message_handler* mavlink_ha
 {
     bool init_success = true;
 
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id    = MAV_CMD_START_RX_PAIR; // 500
-    callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL;
-    callbackcmd.function      = (Mavlink_message_handler::cmd_callback_func_t)    &remote_telemetry_satellite_bind;
-    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) remote;
-    init_success &= mavlink_handler->add_cmd_callback(&callbackcmd);
+    init_success &= mavlink_handler->add_cmd_callback(  MAV_CMD_START_RX_PAIR, // 500
+                                                        MAV_SYS_ID_ALL,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL,
+                                                        &remote_telemetry_satellite_bind,
+                                                        remote );
 
     return init_success;
 }

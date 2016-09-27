@@ -40,93 +40,19 @@
  *
  ******************************************************************************/
 
-
 #include <cstdlib>
 
 #include "runtime/scheduler.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
 
 Scheduler::Scheduler(const Scheduler::conf_t config) :
     schedule_strategy_(config.schedule_strategy),
     debug_(config.debug),
     task_count_(0),
     current_schedule_slot_(0)
-{
-    // allocate memory for tasks
-    for(max_task_count_ = config.max_task_count; max_task_count_ > 0; max_task_count_--)
-    {
-        tasks_ = (Scheduler_task*)malloc(sizeof(Scheduler_task)*max_task_count_);
-
-        if(tasks_ != NULL)
-        {
-            break;
-        }
-    }
-    if(max_task_count_< config.max_task_count)
-    {
-        print_util_dbg_print("[Scheduler] constructor: tried to allocate task list for ");
-        print_util_dbg_print_num(config.max_task_count,10);
-        print_util_dbg_print(" tasks; only space for ");
-        print_util_dbg_print_num(max_task_count_,10);
-        print_util_dbg_print("\r\n");
-    }
-}
-
-
-bool Scheduler::add_task(uint32_t repeat_period,
-              Scheduler_task::task_function_t call_function,
-              Scheduler_task::task_argument_t function_argument,
-              Scheduler_task::priority_t priority,
-              Scheduler_task::timing_mode_t timing_mode,
-              Scheduler_task::run_mode_t run_mode,
-              int32_t task_id)
-{
-    bool task_successfully_added = false;
-
-    // Check if the scheduler is not full
-    if (task_count_ < max_task_count_)
-    {
-        if (task_id == -1)
-        {
-           task_id = task_count_;
-        }
-
-        // Check if there is already a task with this ID
-        bool id_is_unique = true;
-        for (uint32_t i = 0; i < task_count_; ++i)
-        {
-            if (tasks_[i].get_id() == task_id)
-            {
-                id_is_unique = false;
-                break;
-            }
-        }
-
-        // Add new task
-        if (id_is_unique == true)
-        {
-            tasks_[task_count_++] = Scheduler_task(repeat_period, run_mode, timing_mode, priority, call_function, function_argument, task_id);
-            task_successfully_added = true;
-        }
-        else
-        {
-            print_util_dbg_print("[SCHEDULER] Error: There is already a task with this ID\r\n");
-            task_successfully_added = false;
-        }
-    }
-    else
-    {
-        print_util_dbg_print("[SCHEDULER] Error: Cannot add more task\r\n");
-        task_successfully_added = false;
-    }
-
-    return task_successfully_added;
-}
+{}
 
 
 bool Scheduler::sort_tasks(void)
@@ -146,14 +72,14 @@ bool Scheduler::sort_tasks(void)
         // Iterate through registered tasks
         for (uint32_t i = 0; i < (task_count_ - 1); i++)
         {
-            if (tasks_[i].priority < tasks_[i + 1].priority)
+            if (tasks()[i].priority < tasks()[i + 1].priority)
             {
                 // Task i has lower priority than task i+1 -> need swap
                 sorted = false;
             }
-            else if (tasks_[i].priority == tasks_[i + 1].priority)
+            else if (tasks()[i].priority == tasks()[i + 1].priority)
             {
-                if (tasks_[i].repeat_period > tasks_[i + 1].repeat_period)
+                if (tasks()[i].repeat_period > tasks()[i + 1].repeat_period)
                 {
                     // Tasks i and i+1 have equal priority, but task i has higher
                     // repeat period than task i+1 -> need swap
@@ -164,9 +90,9 @@ bool Scheduler::sort_tasks(void)
             // Swap tasks i and i+1 if necessary
             if (sorted == false)
             {
-                Scheduler_task tmp(tasks_[i]);
-                tasks_[i] = tasks_[i + 1];
-                tasks_[i + 1] = tmp;
+                Scheduler_task tmp(tasks()[i]);
+                tasks()[i] = tasks()[i + 1];
+                tasks()[i + 1] = tmp;
                 sorted = false;
             }
         }
@@ -184,10 +110,10 @@ int32_t Scheduler::update(void)
     do
     {
         // If the task is active and has waited long enough...
-        if (tasks_[i].is_due())
+        if (tasks()[i].is_due())
         {
             // Execute task
-            if (!tasks_[i].execute())
+            if (!tasks()[i].execute())
             {
                 realtime_violation++; //realtime violation!!
             }
@@ -216,14 +142,14 @@ int32_t Scheduler::update(void)
 }
 
 
-Scheduler_task* Scheduler::get_task_by_id(uint16_t task_id) const
+const Scheduler_task* Scheduler::get_task_by_id(uint16_t task_id) const
 {
 
     for (uint32_t i = 0; i < task_count_; i++)
     {
-        if (tasks_[i].task_id == task_id)
+        if (tasks()[i].task_id == task_id)
         {
-            return &tasks_[i];
+            return &tasks()[i];
         }
     }
 
@@ -231,11 +157,37 @@ Scheduler_task* Scheduler::get_task_by_id(uint16_t task_id) const
 }
 
 
-Scheduler_task* Scheduler::get_task_by_index(uint16_t task_index) const
+Scheduler_task* Scheduler::get_task_by_id(uint16_t task_id)
+{
+
+    for (uint32_t i = 0; i < task_count_; i++)
+    {
+        if (tasks()[i].task_id == task_id)
+        {
+            return &tasks()[i];
+        }
+    }
+
+    return NULL;
+}
+
+
+const Scheduler_task* Scheduler::get_task_by_index(uint16_t task_index) const
 {
     if (task_index < task_count_)
     {
-        return &tasks_[task_index];
+        return &(tasks()[task_index]);
+    }
+
+    return NULL;
+}
+
+
+Scheduler_task* Scheduler::get_task_by_index(uint16_t task_index)
+{
+    if (task_index < task_count_)
+    {
+        return &(tasks()[task_index]);
     }
 
     return NULL;
@@ -246,7 +198,7 @@ void Scheduler::suspend_all_tasks(uint32_t delay)
 {
     for(uint32_t i = 0; i < task_count_; i++)
     {
-        tasks_[i].suspend(delay);
+        tasks()[i].suspend(delay);
     }
 }
 
@@ -255,7 +207,7 @@ void Scheduler::run_all_tasks_now(void)
 {
     for(uint32_t i = 0; i < task_count_; i++)
     {
-        tasks_[i].run_now();
+        tasks()[i].run_now();
     }
 }
 
@@ -272,7 +224,6 @@ Scheduler::conf_t Scheduler::default_config(void)
 {
     Scheduler::conf_t conf  = {};
 
-    conf.max_task_count    = 15;
     // conf.schedule_strategy = FIXED_PRIORITY;
     conf.schedule_strategy = ROUND_ROBIN;
     conf.debug             = true;

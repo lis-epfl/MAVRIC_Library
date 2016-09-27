@@ -42,16 +42,11 @@
 
 #include "communication/data_logging.hpp"
 
-#include <cstdlib>
 #include <cmath>
 #include <string>
 
 #include "hal/common/time_keeper.hpp"
-
-extern "C"
-{
-#include "util/print_util.h"
-}
+#include "util/print_util.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -72,7 +67,7 @@ void Data_logging::add_header_name(void)
 
     for (i = 0; i < data_logging_count_; i++)
     {
-        data_logging_entry_t* param = &data_log_[i];
+        data_logging_entry_t* param = &list()[i];
 
         init &= console_.write(reinterpret_cast<uint8_t*>(param->param_name), strlen(param->param_name));
         write_separator(i);
@@ -128,7 +123,7 @@ void Data_logging::log_parameters(void)
     for (i = 0; i < data_logging_count_; i++)
     {
         // Writing the value of the parameter to the file, separate values by tab character
-        data_logging_entry_t* param = &data_log_[i];
+        data_logging_entry_t* param = &list()[i];
         switch (param->data_type)
         {
             case MAV_PARAM_TYPE_UINT8:
@@ -351,16 +346,16 @@ bool Data_logging::open_new_log_file(void)
             bool successful_filename = true;
 
             // Add iteration number to name_n_extension_ (does not yet have extension)
-            successful_filename &= filename_append_int(name_n_extension_, file_name_, i, buffer_name_size_);
+            successful_filename &= filename_append_int(name_n_extension_, file_name_, i, MAX_FILENAME_LENGTH);
 
             // Add extension (.txt) to name_n_extension_
-            successful_filename &= filename_append_extension(name_n_extension_, name_n_extension_, buffer_name_size_);
+            successful_filename &= filename_append_extension(name_n_extension_, name_n_extension_, MAX_FILENAME_LENGTH);
 
             // Check if there wasn't enough memory allocated to name_n_extension_
             if (!successful_filename)
             {
                 print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
-                print_util_dbg_print_num(buffer_name_size_, 10);
+                print_util_dbg_print_num(MAX_FILENAME_LENGTH, 10);
                 print_util_dbg_print(" and it is ");
                 print_util_dbg_print_num(sizeof(name_n_extension_), 10);
                 print_util_dbg_print("\r\n");
@@ -435,7 +430,7 @@ bool Data_logging::checksum_control(void)
 
     for (uint32_t i = 0; i < data_logging_count_; ++i)
     {
-        data_logging_entry_t* param = &data_log_[i];
+        data_logging_entry_t* param = &list()[i];
         switch (param->data_type)
         {
             case MAV_PARAM_TYPE_UINT8:
@@ -526,63 +521,26 @@ bool Data_logging::checksum_control(void)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Data_logging::Data_logging(File& file, State& state, data_logging_conf_t config):
+Data_logging::Data_logging(File& file, State& state, conf_t config):
     config_(config),
+    data_logging_count_(0),
+    log_data_(config_.log_data),
     console_(file),
     state_(state)
-{
-    data_log_ = (data_logging_entry_t*)malloc(sizeof(data_logging_entry_t[config_.max_data_logging_count]));
+{}
 
-    //in case malloc failed
-    if (data_log_ == NULL)
-    {
-        config_.max_data_logging_count = 0;
-    }
-
-    log_data_ = config_.log_data;
-
-    data_logging_count_ = 0;
-}
-
-bool Data_logging::create_new_log_file(const char* file_name__, bool continuous_write__, uint32_t sysid)
+bool Data_logging::create_new_log_file(const char* file_name__, uint32_t sysid)
 {
     bool init_success = true;
-
-    // Allocate memory for the onboard data_log
-    //data_logging_set = (data_logging_set_t*)malloc(sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]));
 
     file_init_ = false;
     file_opened_ = false;
     sys_status_ = true;
 
-    // Setting the maximal size of the name string
-#if _USE_LFN
-    buffer_name_size_ = _MAX_LFN;
-#else
-#ifdef _MAX_LFN
-    buffer_name_size_ = 8;
-#else
-    buffer_name_size_ = 255;
-#endif
-#endif
-
-    // Allocating memory for the file name string
-    file_name_ = (char*)malloc(buffer_name_size_);
-    name_n_extension_ = (char*)malloc(buffer_name_size_);
-
-    if (file_name_ == NULL)
-    {
-        init_success &= false;
-    }
-    if (name_n_extension_ == NULL)
-    {
-        init_success &= false;
-    }
-
     sys_id_ = sysid;
 
     // Append sysid to filename
-    filename_append_int(file_name_, (char*)file_name__, sysid, buffer_name_size_);
+    filename_append_int(file_name_, (char*)file_name__, sysid, MAX_FILENAME_LENGTH);
 
     init_success &= open_new_log_file();
 
@@ -617,7 +575,7 @@ bool Data_logging::update(void)
                 }
             }
 
-            if (continuous_write_)
+            if (config_.continuous_write)
             {
                 log_parameters();
             }
@@ -715,11 +673,11 @@ bool Data_logging::add_field(const uint8_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -761,11 +719,11 @@ bool Data_logging::add_field(const int8_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -807,11 +765,11 @@ bool Data_logging::add_field(const uint16_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -853,11 +811,11 @@ bool Data_logging::add_field(const int16_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -899,11 +857,11 @@ bool Data_logging::add_field(const uint32_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -945,11 +903,11 @@ bool Data_logging::add_field(const int32_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -991,11 +949,11 @@ bool Data_logging::add_field(const uint64_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -1037,11 +995,11 @@ bool Data_logging::add_field(const int64_t* val, const char* param_name)
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -1083,11 +1041,11 @@ bool Data_logging::add_field(const float* val, const char* param_name, uint32_t 
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = (double*) val;
                 strcpy(new_param->param_name,        param_name);
@@ -1130,11 +1088,11 @@ bool Data_logging::add_field(const double* val, const char* param_name, uint32_t
     }
     else
     {
-        if (data_logging_count_ < config_.max_data_logging_count)
+        if (data_logging_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                data_logging_entry_t* new_param = &data_log_[data_logging_count_];
+                data_logging_entry_t* new_param = &list()[data_logging_count_];
 
                 new_param->param                     = val;
                 strcpy(new_param->param_name,        param_name);

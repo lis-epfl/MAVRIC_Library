@@ -129,10 +129,24 @@ public:
      *
      * \return    origin
      */
-    static const global_position_t& origin(void);
+    static inline const global_position_t& origin(void) {return origin_;};
 
 protected:
+
+    /**
+     * \brief   set the origin of the local (NED) coordinate system
+     *
+     * \param origin    new origin location
+     *
+     * \return success  whether the new origin was accepted (currently always true)
+     */
+    static bool set_origin(global_position_t origin);
+
+private:
     static global_position_t origin_;
+
+    /* declare callback for setting the origin as friend to give access to set_origin */
+    friend void ins_telemetry_set_gps_global_origin_callback(INS* ins, uint32_t sysid, const mavlink_message_t* msg);
 };
 
 #endif /* INS_HPP_ */

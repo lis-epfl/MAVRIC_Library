@@ -44,6 +44,7 @@
 #ifndef BAROMETER_HPP_
 #define BAROMETER_HPP_
 
+#include <cstdint>
 
 /**
  * \brief   Interface class for barometers
@@ -51,7 +52,7 @@
 class Barometer
 {
 public:
-    Barometer();
+    Barometer(float pressure_at_sea_level = 101325.0f);
 
     /**
      * \brief   Initialise the sensor
@@ -75,15 +76,15 @@ public:
     *
     * \return   Value
     */
-    const float& last_update_us(void) const;
+    virtual uint64_t last_update_us(void) const = 0;
 
 
     /**
-     * \brief   Return the pressure
+     * \brief   Return the pressure (in Pa)
      *
      * \return  Value
      */
-    const float& pressure(void)  const;
+    virtual float pressure(void)  const = 0;
 
 
     /**
@@ -93,7 +94,7 @@ public:
      *
      * \return  Value
      */
-    const float& altitude_gf(void) const;
+    virtual float altitude_gf(void) const = 0;
 
 
     /**
@@ -103,7 +104,7 @@ public:
      *
      * \return  Value
      */
-    const float& vertical_speed_lf(void) const;
+    virtual float vertical_speed_lf(void) const = 0;
 
 
     /**
@@ -111,44 +112,52 @@ public:
      *
      * \return  Value
      */
-    const float& temperature(void) const;
-
-    /**
-     * \brief   Gets the flag stating if the barometer has been calibrated
-     *
-     * \return  has_been_read_
-     */
-    bool has_been_calibrated() const;
-
-    /**
-     * \brief   Correct altitude offset using current altitude
-     *
-     * \param   current_altitude_gf     Current altitude in global frame
-     */
-    void calibrate_bias(float current_altitude_gf);
+    virtual float temperature(void) const = 0;
 
 
     /**
-     * \brief   Compue altitude above sea level from pressure
+     * \brief   Compute altitude above sea level from pressure
      *
-     * \param   pressure        Current atmospheric pressure
-     * \param   altitude_bias   Altitude correction (optional)
+     * \param   pressure                Current atmospheric pressure (in Pa)
+     * \param   pressure_at_sea_level   Pressure at sea level (in Pa) (optional)
      *
      * \return  Altitude (global frame)
-     *
      */
-    static float altitude_from_pressure(float pressure, float altitude_bias = 0);
+    static float altitude_from_pressure(float pressure, float pressure_at_sea_level = pressure_at_sea_level());
+
+
+    /**
+     * \brief   Compute pressure at sea level from pressure and altitude
+     *
+     * \param   pressure        Current atmospheric pressure (in Pa)
+     * \param   altitude_       Altitude
+     *
+     * \return  Pressure at sea level (in Pa)
+     */
+    static float compute_pressure_at_sea_level(float pressure, float altitude);
+
+
+    /**
+     * \brief   Get the pressure at sea level
+     * \detail  The pressure at sea level is used to compute altitude from pressure
+     *
+     * \param   pressure_at_sea_level (in Pa)
+     */
+    static float pressure_at_sea_level(void);
+
 
 protected:
+    /**
+     * \brief   Update the pressure at sea level
+     * \detail  The pressure at sea level is used to compute altitude from pressure
+     *
+     * \param   pressure_at_sea_level
+     */
+    static void set_pressure_at_sea_level(float pressure_at_sea_level);
 
-    float pressure_;            ///< Measured pressure
-    float temperature_;         ///< Measured temperature
-    float altitude_gf_;         ///< Measured altitude (global frame)
-    float altitude_filtered;   ///< Measured altitude without bias removal
-    float altitude_bias_gf_;    ///< Offset of the barometer sensor for matching GPS altitude value
-    float speed_lf_;            ///< Vario altitude speed (ned frame)
-    float last_update_us_;      ///< Time of the last update of the barometer
-    bool has_been_calibrated_;  ///< Flag stating if the barometer has been calibrated
+
+private:
+    static float pressure_at_sea_level_;    ///< Pressure at sea level (is Pa). This is a static variable shared by all barometers
 };
 
 /**

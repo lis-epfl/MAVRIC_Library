@@ -44,10 +44,10 @@
 #include "communication/mavlink_waypoint_handler_swarm.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
 #include "util/maths.h"
 }
 
@@ -55,7 +55,7 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-mav_result_t Mavlink_waypoint_handler_swarm::set_scenario(Mavlink_waypoint_handler_swarm* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mavlink_waypoint_handler_swarm::set_scenario(Mavlink_waypoint_handler_swarm* waypoint_handler, const mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
@@ -91,7 +91,7 @@ mav_result_t Mavlink_waypoint_handler_swarm::set_scenario(Mavlink_waypoint_handl
     return result;
 }
 
-void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t* packet)
+void Mavlink_waypoint_handler_swarm::set_circle_scenario(const mavlink_command_long_t* packet)
 {
     float circle_radius = packet->param2;
     float num_of_vhc = packet->param3;
@@ -190,7 +190,7 @@ void Mavlink_waypoint_handler_swarm::set_circle_scenario(mavlink_command_long_t*
     }
 }
 
-void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(mavlink_command_long_t* packet)
+void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(const mavlink_command_long_t* packet)
 {
     int16_t i;
 
@@ -271,7 +271,7 @@ void Mavlink_waypoint_handler_swarm::set_circle_uniform_scenario(mavlink_command
     }
 }
 
-void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t* packet)
+void Mavlink_waypoint_handler_swarm::set_stream_scenario(const mavlink_command_long_t* packet)
 {
     float dist = packet->param2;
     float num_of_vhc = packet->param3;
@@ -401,7 +401,7 @@ void Mavlink_waypoint_handler_swarm::set_stream_scenario(mavlink_command_long_t*
     }
 }
 
-void Mavlink_waypoint_handler_swarm::set_swarm_scenario(mavlink_command_long_t* packet)
+void Mavlink_waypoint_handler_swarm::set_swarm_scenario(const mavlink_command_long_t* packet)
 {
     float dist = packet->param2;
     uint8_t num_of_vhc = packet->param3;
@@ -578,13 +578,10 @@ Mavlink_waypoint_handler_swarm::Mavlink_waypoint_handler_swarm(Position_estimati
                                                                const Mavlink_stream& mavlink_stream_):
     Mavlink_waypoint_handler(position_estimation_, navigation_, ahrs, state_, manual_control, message_handler, mavlink_stream_)
 {
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_CONDITION_LAST; // 159
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &set_scenario;
-    callbackcmd.module_struct =                                 this;
-    message_handler.add_cmd_callback(&callbackcmd);
+    message_handler.add_cmd_callback(   MAV_CMD_CONDITION_LAST, // 159
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        MAV_COMP_ID_MISSIONPLANNER, // 190
+                                        &set_scenario,
+                                        this );
 }

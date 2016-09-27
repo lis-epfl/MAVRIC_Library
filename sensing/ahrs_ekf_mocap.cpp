@@ -53,10 +53,10 @@
 #include "util/kalman.hpp"
 #include "util/constants.hpp"
 #include "util/coord_conventions.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
 #include "util/maths.h"
 #include "util/vectors.h"
 #include "util/quaternions.h"
@@ -74,7 +74,9 @@ using namespace mat;
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-void Ahrs_ekf_mocap::callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, mavlink_message_t* msg)
+void Ahrs_ekf_mocap::callback(  Ahrs_ekf_mocap* ahrs_ekf_mocap,
+                                uint32_t __attribute__((unused)) sysid,
+                                const mavlink_message_t* msg)
 {
     ahrs_ekf_mocap->R_mocap_ = Mat<4, 4>(ahrs_ekf_mocap->config_.R_mocap, true);
 
@@ -123,15 +125,11 @@ bool Ahrs_ekf_mocap::init()
     if (!is_init_)
     {
         // Add callbacks for waypoint handler messages requests
-        Mavlink_message_handler::msg_callback_t callback;
-
-        callback.message_id     = MAVLINK_MSG_ID_ATT_POS_MOCAP; // 69
-        callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-        callback.compid_filter  = MAV_COMP_ID_ALL;
-        callback.function       = (Mavlink_message_handler::msg_callback_func_t) &Ahrs_ekf_mocap::callback;
-        callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        this;
-
-        is_init_ = message_handler_.add_msg_callback(&callback);
+        is_init_ = message_handler_.add_msg_callback(   MAVLINK_MSG_ID_ATT_POS_MOCAP, // 69
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &Ahrs_ekf_mocap::callback,
+                                                        this );
     }
 
     return is_init_;

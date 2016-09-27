@@ -50,9 +50,7 @@ extern "C"
 
 void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
-    // static int id = 0
-    // id ++;
-    Scheduler_task* stab_task = scheduler->get_task_by_id(0);
+    const Scheduler_task* stab_task = scheduler->get_task_by_id(0);
 
     mavlink_msg_named_value_float_pack(mavlink_stream->sysid(),
                                        mavlink_stream->compid(),
@@ -117,11 +115,6 @@ void scheduler_telemetry_send_rt_stats(const Scheduler* scheduler, const Mavlink
                                        "ExTimeMax",
                                        stab_task->execution_time_max);
     mavlink_stream->send(msg);
-
-
-    stab_task->rt_violations = 0;
-    stab_task->delay_max = 0;
-    stab_task->execution_time_max = 0;
 }
 
 void scheduler_telemetry_send_rt_stats_all(const Scheduler* scheduler, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
@@ -137,7 +130,7 @@ void scheduler_telemetry_send_rt_stats_all(const Scheduler* scheduler, const Mav
     for (uint32_t i = 0; i < n_tasks; ++i)
     {
         // Get i-th task
-        Scheduler_task* task = scheduler->get_task_by_id(i);
+        const Scheduler_task* task = scheduler->get_task_by_id(i);
 
         if (task != NULL)
         {

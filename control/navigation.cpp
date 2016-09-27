@@ -44,11 +44,7 @@
 #include "hal/common/time_keeper.hpp"
 #include "control/dubin.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
-#include "util/print_util.h"
-}
+#include "util/print_util.hpp"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -311,12 +307,11 @@ void Navigation::run()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, Mavlink_stream& mavlink_stream, conf_t nav_config) :
+Navigation::Navigation(control_command_t& controls_nav, const quat_t& qe, const INS& ins, State& state, conf_t nav_config) :
     qe(qe),
     controls_nav(controls_nav),
     ins(ins),
-    state(state),
-    mavlink_stream(mavlink_stream)
+    state(state)
 {
     //navigation controller init
 

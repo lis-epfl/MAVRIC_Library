@@ -47,10 +47,13 @@
 #include <cstdint>
 #include "runtime/scheduler_task.hpp"
 
+#include "util/print_util.hpp"
 
 /**
- * \brief   Scheduler
+ * \brief   Scheduler base class
  *
+ * \details This class is abstract and does not contains the task list,
+ *          use the child class Scheduler_T
  */
 class Scheduler
 {
@@ -74,7 +77,6 @@ public:
      */
     struct conf_t
     {
-        uint32_t max_task_count;                    ///<    Maximum number of tasks
         Scheduler::strategy_t schedule_strategy;    ///<    Schedule strategy
         bool debug;                                 ///<    Indicates whether the scheduler should print debug messages
     };
@@ -92,8 +94,8 @@ public:
      * \brief                   Register a new task to the task set, in the first available slot
      *
      * \param repeat_period     Repeat period (us)
-     * \param call_function     Function pointer to be called
-     * \param function_argument Argument to be passed to the function
+     * \param task_function     Function pointer to be called
+     * \param task_argument     Argument to be passed to the function
      * \param priority          Priority
      * \param task_id           Unique task identifier, if -1 the ID will be automatically chosen
      * \param timing_mode       Timing mode
@@ -101,13 +103,14 @@ public:
      *
      * \return                  True if the task was successfully added, False if not
      */
-    bool add_task(uint32_t repeat_period,
-                  Scheduler_task::task_function_t call_function,
-                  Scheduler_task::task_argument_t function_argument,
-                  Scheduler_task::priority_t priority       = Scheduler_task::PRIORITY_NORMAL,
-                  Scheduler_task::timing_mode_t timing_mode = Scheduler_task::PERIODIC_ABSOLUTE,
-                  Scheduler_task::run_mode_t run_mode       = Scheduler_task::RUN_REGULAR,
-                  int32_t task_id                           = -1);
+    template<typename T>
+    bool add_task(uint32_t                                      repeat_period,
+                  typename Scheduler_task::function<T>::type_t  task_function,
+                  T*                                            task_argument,
+                  Scheduler_task::priority_t                    priority       = Scheduler_task::PRIORITY_NORMAL,
+                  Scheduler_task::timing_mode_t                 timing_mode    = Scheduler_task::PERIODIC_ABSOLUTE,
+                  Scheduler_task::run_mode_t                    run_mode       = Scheduler_task::RUN_REGULAR,
+                  int32_t                                       task_id        = -1);
 
 
     /**
@@ -133,7 +136,8 @@ public:
      *
      * \return              Pointer to the target task
      */
-    Scheduler_task* get_task_by_id(uint16_t task_id) const;
+    const Scheduler_task* get_task_by_id(uint16_t task_id) const;
+    Scheduler_task* get_task_by_id(uint16_t task_id);
 
 
     /**
@@ -143,7 +147,8 @@ public:
      *
      * \return              Pointer to the target task
      */
-    Scheduler_task* get_task_by_index(uint16_t task_index) const;
+    const Scheduler_task* get_task_by_index(uint16_t task_index) const;
+    Scheduler_task* get_task_by_index(uint16_t task_index);
 
 
     /**
@@ -174,14 +179,82 @@ public:
      */
     static Scheduler::conf_t default_config(void);
 
+protected:
+    /**
+     * \brief       Get maximum number of tasks
+     * \details     To be overriden by child class
+     *
+     * \return      Maximum number of tasks
+     */
+    virtual uint32_t max_task_count(void) = 0;
+
+
+    /**
+     * \brief       Get pointer to the task list
+     *
+     * \details     Abstract method to be implemented in child classes
+     *
+     * \return      task list
+     */
+    virtual Scheduler_task* tasks(void) = 0;
+    virtual const Scheduler_task* tasks(void) const = 0;
 
 private:
     strategy_t schedule_strategy_;               ///<    Scheduling strategy
     bool debug_;                                 ///<    Indicates whether the scheduler should print debug messages
     uint32_t task_count_;                        ///<    Number_of_tasks
-    uint32_t max_task_count_;                    ///<    Maximum number of tasks
     uint32_t current_schedule_slot_;             ///<    Slot of the task being executed
-    Scheduler_task* tasks_;                      ///<    Array of tasks_entry to be executed, needs memory allocation
 };
+
+
+/**
+ * \brief   Scheduler
+ *
+ * \tparam  N   Maximum number of tasks
+ */
+template<uint32_t N = 10>
+class Scheduler_T: public Scheduler
+{
+public:
+    /**
+     * \brief       Constructor
+     */
+    Scheduler_T(const Scheduler::conf_t config = default_config()):
+        Scheduler(config)
+    {;}
+
+protected:
+
+    /**
+     * \brief       Get maximum number of tasks
+     * \details     To be overriden by child class
+     *
+     * \return      Maximum number of tasks
+     */
+    uint32_t max_task_count(void)
+    {
+        return N;
+    };
+
+    /**
+     * \brief Get pointer to the task list
+     *
+     * \return task list
+     */
+    Scheduler_task* tasks(void)
+    {
+        return tasks_;
+    }
+
+    const Scheduler_task* tasks(void) const
+    {
+        return tasks_;
+    }
+
+private:
+    Scheduler_task  tasks_[N];           ///< Array of tasks to be executed
+};
+
+#include "scheduler.hxx"
 
 #endif /* SCHEDULER_HPP_ */

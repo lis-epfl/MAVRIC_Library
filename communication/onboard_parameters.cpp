@@ -39,96 +39,56 @@
  *
  ******************************************************************************/
 
-#include <cstdlib>
-
 #include "communication/onboard_parameters.hpp"
 #include "communication/mavlink_communication.hpp"
-extern "C"
-{
-#include "util/print_util.h"
-}
+#include "util/print_util.hpp"
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 
-Onboard_parameters::Onboard_parameters(Scheduler& scheduler, File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config) :
-        file_(file),
-        state_(state),
-        mavlink_stream_(mavlink_stream),
-        param_count_(0)
+Onboard_parameters::Onboard_parameters(File& file, const State& state, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, const conf_t& config) :
+    file_(file),
+    state_(state),
+    mavlink_stream_(mavlink_stream),
+    param_count_(0)
 {
-    bool init_success = true;
-
     // Init debug mode
     debug_ = config.debug;
 
-    // allocate memory for command callbacks
-    for(max_param_count_ = config.max_param_count; max_param_count_ > 0; max_param_count_--)
-    {
-        parameters_ = (param_entry_t*)malloc(sizeof(param_entry_t)*max_param_count_);
-        if(parameters_ != NULL)
-        {
-            break;
-        }
-    }
-    if(max_param_count_ < config.max_param_count)
-    {
-        print_util_dbg_print("[ONBOARD PARAMETERS] constructor: tried to allocate list for ");
-        print_util_dbg_print_num(config.max_param_count,10);
-        print_util_dbg_print(" parameters; only space for ");
-        print_util_dbg_print_num(max_param_count_,10);
-        print_util_dbg_print("\r\n");
-    }
-
-    // Add onboard parameter telemetry to the scheduler
-    init_success &= scheduler.add_task(100000,
-                                       (Scheduler_task::task_function_t)&send_all_scheduled_parameters,
-                                       (Scheduler_task::task_argument_t)this,
-                                       Scheduler_task::PRIORITY_NORMAL,
-                                       Scheduler_task::PERIODIC_RELATIVE,
-                                       Scheduler_task::RUN_REGULAR,
-                                       MAVLINK_MSG_ID_PARAM_VALUE);
-
     // Add callbacks for onboard parameters requests
-    Mavlink_message_handler::msg_callback_t callback;
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_REQUEST_LIST, // 21
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &schedule_all_parameters,
+                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_PARAM_REQUEST_LIST; // 21
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &schedule_all_parameters;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_REQUEST_READ, // 20
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &send_parameter,
+                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_PARAM_REQUEST_READ; // 20
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &send_parameter;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
-    init_success &= message_handler.add_msg_callback(&callback);
 
-    callback.message_id     = MAVLINK_MSG_ID_PARAM_SET; // 23
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t) &receive_parameter;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)this;
-    init_success &= message_handler.add_msg_callback(&callback);
+    message_handler.add_msg_callback(   MAVLINK_MSG_ID_PARAM_SET, // 23
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        &receive_parameter,
+                                        this );
 
     // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_PREFLIGHT_STORAGE; // 245
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL;
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &preflight_storage;
-    callbackcmd.module_struct = this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    message_handler.add_cmd_callback(   MAV_CMD_PREFLIGHT_STORAGE, // 245
+                                        MAVLINK_BASE_STATION_ID,
+                                        MAV_COMP_ID_ALL,
+                                        MAV_COMP_ID_ALL,
+                                        &preflight_storage,
+                                        this );
 }
 
 
-bool Onboard_parameters::add_parameter_uint32(uint32_t* val, const char* param_name)
+bool Onboard_parameters::add(uint32_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -140,11 +100,11 @@ bool Onboard_parameters::add_parameter_uint32(uint32_t* val, const char* param_n
     }
     else
     {
-        if (param_count_ < max_param_count_)
+        if (param_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                param_entry_t* new_param = &parameters_[param_count_++];
+                param_entry_t* new_param = &parameters()[param_count_++];
 
                 new_param->param                     = (float*) val;
                 strcpy(new_param->param_name,       param_name);
@@ -175,7 +135,7 @@ bool Onboard_parameters::add_parameter_uint32(uint32_t* val, const char* param_n
 }
 
 
-bool Onboard_parameters::add_parameter_int32(int32_t* val, const char* param_name)
+bool Onboard_parameters::add(int32_t* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -187,11 +147,11 @@ bool Onboard_parameters::add_parameter_int32(int32_t* val, const char* param_nam
     }
     else
     {
-        if (param_count_ < max_param_count_)
+        if (param_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                param_entry_t* new_param = &parameters_[param_count_++];
+                param_entry_t* new_param = &parameters()[param_count_++];
 
                 new_param->param                     = (float*) val;
                 strcpy(new_param->param_name,       param_name);
@@ -222,7 +182,7 @@ bool Onboard_parameters::add_parameter_int32(int32_t* val, const char* param_nam
 }
 
 
-bool Onboard_parameters::add_parameter_float(float* val, const char* param_name)
+bool Onboard_parameters::add(float* val, const char* param_name)
 {
     bool add_success = true;
 
@@ -234,11 +194,11 @@ bool Onboard_parameters::add_parameter_float(float* val, const char* param_name)
     }
     else
     {
-        if (param_count_ < max_param_count_)
+        if (param_count_ < max_count())
         {
             if (strlen(param_name) < MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN)
             {
-                param_entry_t* new_param = &parameters_[param_count_++];
+                param_entry_t* new_param = &parameters()[param_count_++];
 
                 new_param->param                     = val;
                 strcpy(new_param->param_name,       param_name);
@@ -269,7 +229,7 @@ bool Onboard_parameters::add_parameter_float(float* val, const char* param_name)
 }
 
 
-bool Onboard_parameters::read_parameters_from_storage()
+bool Onboard_parameters::read_from_storage()
 {
     bool success = false;
 
@@ -278,7 +238,8 @@ bool Onboard_parameters::read_parameters_from_storage()
 
     // Declare a local array large enough
     uint32_t to_read = file_.length();
-    float* values    = (float*)malloc(sizeof(uint8_t) * to_read);
+    uint8_t buffer[to_read];
+    float* values = (float*)buffer;
 
     // Read from file
     file_.seek(0, FILE_SEEK_START);
@@ -299,7 +260,7 @@ bool Onboard_parameters::read_parameters_from_storage()
         print_util_dbg_print("[FLASH] Read successful\r\n");
         for (uint32_t i = 1; i < (param_count_ + 1); i++)
         {
-            *(parameters_[i - 1].param) = values[i];
+            *(parameters()[i - 1].param) = values[i];
         }
         success = true;
     }
@@ -308,15 +269,11 @@ bool Onboard_parameters::read_parameters_from_storage()
         print_util_dbg_print("[FLASH] [ERROR] Failed to read\r\n");
     }
 
-    // Free memory
-    free(values);
-
-
     return success;
 }
 
 
-bool Onboard_parameters::write_parameters_to_storage()
+bool Onboard_parameters::write_to_storage()
 {
     bool success = false;
 
@@ -328,7 +285,8 @@ bool Onboard_parameters::write_parameters_to_storage()
     uint32_t bytes_to_write = 4 * (param_count_ + 3);
 
     // Declare a local array large enough
-    float* values = (float*)malloc(sizeof(uint8_t) * bytes_to_write);
+    uint8_t buffer[bytes_to_write];
+    float* values = (float*)buffer;
 
     // Init checksums
     values[0] = param_count_;
@@ -338,7 +296,7 @@ bool Onboard_parameters::write_parameters_to_storage()
     // Copy parameters to local array and do checksum
     for (uint32_t i = 1; i <= param_count_; i++)
     {
-        values[i] = *(parameters_[i - 1].param);
+        values[i] = *(parameters()[i - 1].param);
 
         cksum1 += values[i];
         cksum2 += cksum1;
@@ -350,12 +308,25 @@ bool Onboard_parameters::write_parameters_to_storage()
     file_.seek(0, FILE_SEEK_START);
     success &= file_.write((uint8_t*)values, bytes_to_write);
     success &= file_.flush();
-    // Free memory
-    free(values);
 
     return success;
 }
 
+bool Onboard_parameters::send_first_scheduled_parameter(void)
+{
+    bool success = true;
+
+    for (uint8_t i = 0; i < param_count_; i++)
+    {
+        if (parameters()[i].schedule_for_transmission)
+        {
+            success = send_one_parameter_now(i);
+            return success;
+        }
+    }
+
+    return success;
+}
 
 //------------------------------------------------------------------------------
 // PRIVATE STATIC FUNCTIONS IMPLEMENTATION (CALLBACKS)
@@ -369,7 +340,7 @@ bool Onboard_parameters::send_all_scheduled_parameters(Onboard_parameters* onboa
 
     for (uint8_t i = 0; i < onboard_parameters->param_count_; i++)
     {
-        if (onboard_parameters->parameters_[i].schedule_for_transmission)
+        if (onboard_parameters->parameters()[i].schedule_for_transmission)
         {
             success = onboard_parameters->send_one_parameter_now(i);
         }
@@ -379,7 +350,7 @@ bool Onboard_parameters::send_all_scheduled_parameters(Onboard_parameters* onboa
 }
 
 
-void Onboard_parameters::schedule_all_parameters(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg)
+void Onboard_parameters::schedule_all_parameters(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_param_request_list_t packet;
     mavlink_msg_param_request_list_decode(msg, &packet);
@@ -390,13 +361,13 @@ void Onboard_parameters::schedule_all_parameters(Onboard_parameters* onboard_par
         // schedule all parameters for transmission
         for (uint8_t i = 0; i < onboard_parameters->param_count_; i++)
         {
-            onboard_parameters->parameters_[i].schedule_for_transmission = true;
+            onboard_parameters->parameters()[i].schedule_for_transmission = true;
         }
     }
 }
 
 
-void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg)
+void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_param_request_read_t request;
     mavlink_msg_param_request_read_decode(msg, &request);
@@ -422,7 +393,7 @@ void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, 
                 bool match = true;
 
                 // Get pointer to parameter number i
-                param_entry_t* param = &onboard_parameters->parameters_[i];
+                param_entry_t* param = &onboard_parameters->parameters()[i];
 
                 for (uint16_t j = 0; j < param->param_name_length; j++)
                 {
@@ -456,7 +427,7 @@ void Onboard_parameters::send_parameter(Onboard_parameters* onboard_parameters, 
 
 
 
-void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg)
+void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg)
 {
     bool match = true;
 
@@ -481,7 +452,7 @@ void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameter
 
         for (uint16_t i = 0; i < onboard_parameters->param_count_; i++)
         {
-            param = &onboard_parameters->parameters_[i];
+            param = &onboard_parameters->parameters()[i];
             match = true;
 
             for (uint16_t j = 0; j < param->param_name_length; j++)
@@ -563,7 +534,7 @@ void Onboard_parameters::receive_parameter(Onboard_parameters* onboard_parameter
 }
 
 
-mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_parameters, mavlink_command_long_t* msg)
+mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_parameters, const mavlink_command_long_t* msg)
 {
     mav_result_t result = MAV_RESULT_DENIED;
 
@@ -574,7 +545,7 @@ mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_p
         {
             // read parameters from flash
             print_util_dbg_print("Reading from flashc...\r\n");
-            if (onboard_parameters->read_parameters_from_storage())
+            if (onboard_parameters->read_from_storage())
             {
                 result = MAV_RESULT_ACCEPTED;
             }
@@ -588,7 +559,7 @@ mav_result_t Onboard_parameters::preflight_storage(Onboard_parameters* onboard_p
 
             // write parameters to flash
             print_util_dbg_print("Writing to flashc\r\n");
-            onboard_parameters->write_parameters_to_storage();
+            onboard_parameters->write_to_storage();
 
             result = MAV_RESULT_ACCEPTED;
         }
@@ -617,38 +588,38 @@ bool Onboard_parameters::send_one_parameter_now(uint32_t index)
 
     // Copy parameter value into a float
     float param_value = 0.0f;
-    switch(parameters_[index].data_type)
+    switch(parameters()[index].data_type)
     {
         case MAVLINK_TYPE_CHAR:
-            param_value = *((char*)(parameters_[index].param));
+            param_value = *((char*)(parameters()[index].param));
         break;
 
         case MAVLINK_TYPE_UINT8_T:
-            param_value = *((uint8_t*)(parameters_[index].param));
+            param_value = *((uint8_t*)(parameters()[index].param));
         break;
 
         case MAVLINK_TYPE_INT8_T:
-            param_value = *((int8_t*)(parameters_[index].param));
+            param_value = *((int8_t*)(parameters()[index].param));
         break;
 
         case MAVLINK_TYPE_UINT16_T:
-            param_value = *((uint16_t*)(parameters_[index].param));
+            param_value = *((uint16_t*)(parameters()[index].param));
         break;
 
         case MAVLINK_TYPE_INT16_T:
-            param_value = *((int16_t*)(parameters_[index].param));
+            param_value = *((int16_t*)(parameters()[index].param));
         break;
 
         case MAVLINK_TYPE_UINT32_T:
-            param_value = *((uint32_t*)(parameters_[index].param));
+            param_value = *((uint32_t*)(parameters()[index].param));
         break;
 
         case MAVLINK_TYPE_INT32_T:
-            param_value = *((int32_t*)(parameters_[index].param));
+            param_value = *((int32_t*)(parameters()[index].param));
         break;
 
         case MAVLINK_TYPE_FLOAT:
-            param_value = *(parameters_[index].param);
+            param_value = *(parameters()[index].param);
         break;
 
         case MAVLINK_TYPE_UINT64_T:
@@ -668,14 +639,14 @@ bool Onboard_parameters::send_one_parameter_now(uint32_t index)
     mavlink_msg_param_value_pack(mavlink_stream_.sysid(),
                                  mavlink_stream_.compid(),
                                  &msg,
-                                 (char*)parameters_[index].param_name,
+                                 (char*)parameters()[index].param_name,
                                  param_value,
                                  MAVLINK_TYPE_FLOAT,
                                  param_count_,
                                  index);
 
     // Schedule for transmission
-    parameters_[index].schedule_for_transmission = true;
+    parameters()[index].schedule_for_transmission = true;
 
     // Try to send
     success = mavlink_stream_.send(&msg);
@@ -683,7 +654,7 @@ bool Onboard_parameters::send_one_parameter_now(uint32_t index)
     if (success)
     {
         // If successfully sent, un-schedule
-        parameters_[index].schedule_for_transmission = false;
+        parameters()[index].schedule_for_transmission = false;
     }
 
     return success;

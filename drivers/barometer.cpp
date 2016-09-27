@@ -48,55 +48,36 @@ extern "C"
 #include "util/maths.h"
 }
 
-Barometer::Barometer() :
-    has_been_calibrated_(false)
-{
+// Definition of static member
+float Barometer::pressure_at_sea_level_;
 
+
+Barometer::Barometer(float pressure_at_sea_level)
+{
+    Barometer::pressure_at_sea_level_ = pressure_at_sea_level;
 }
 
-const float& Barometer::last_update_us(void) const
+float Barometer::pressure_at_sea_level(void)
 {
-    return last_update_us_;
-}
-
-
-const float& Barometer::pressure(void)  const
-{
-    return pressure_;
+    return pressure_at_sea_level_;
 }
 
 
-const float& Barometer::altitude_gf(void) const
+void Barometer::set_pressure_at_sea_level(float pressure_at_sea_level)
 {
-    return altitude_gf_;
+    Barometer::pressure_at_sea_level_ = pressure_at_sea_level;
+};
+
+
+float Barometer::altitude_from_pressure(float pressure, float pressure_at_sea_level)
+{
+    //from https://en.wikipedia.org/wiki/Atmospheric_pressure
+    return 44330.0f * (1.0f - pow(pressure / pressure_at_sea_level, 0.190295f));
 }
 
 
-const float& Barometer::vertical_speed_lf(void) const
+float Barometer::compute_pressure_at_sea_level(float pressure, float altitude)
 {
-    return speed_lf_;
-}
-
-
-const float& Barometer::temperature(void) const
-{
-    return temperature_;
-}
-
-bool Barometer::has_been_calibrated() const
-{
-    return has_been_calibrated_;
-}
-
-void Barometer::calibrate_bias(float current_altitude_gf)
-{
-    altitude_bias_gf_ = altitude_filtered - current_altitude_gf;
-    altitude_gf_ = current_altitude_gf;
-    has_been_calibrated_ = true;
-}
-
-
-float Barometer::altitude_from_pressure(float pressure, float altitude_bias)
-{
-    return 44330.0f * (1.0f - pow(pressure / 101325.0f, 0.190295f)) - altitude_bias;
+    //from https://en.wikipedia.org/wiki/Atmospheric_pressure
+    return pressure / pow(1.0f - altitude / 44330.0f, 5.255f);
 }

@@ -54,7 +54,8 @@ INS::INS(global_position_t origin)
 };
 
 
-const global_position_t& INS::origin(void)
+bool INS::set_origin(global_position_t origin)
 {
-    return origin_;
+    origin_ = origin;
+    return true;
 }

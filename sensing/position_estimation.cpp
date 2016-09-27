@@ -43,10 +43,10 @@
 #include "sensing/position_estimation.hpp"
 #include "drivers/barometer.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
 #include "util/maths.h"
 }
 
@@ -135,12 +135,12 @@ void Position_estimation::position_correction()
     // uint32_t t_inter_baro;
     int32_t i;
 
-    if (barometer.has_been_calibrated())
+    if (barometer_calibrated)
     {
         // altimeter correction
         if (time_last_barometer_msg < barometer.last_update_us())
         {
-            last_alt = - (barometer.altitude_gf() - origin_.altitude);
+            last_alt = - (barometer.altitude_gf() - origin().altitude - barometer_bias);
 
             time_last_barometer_msg = barometer.last_update_us();
         }
@@ -153,22 +153,21 @@ void Position_estimation::position_correction()
     else
     {
         // Wait for gps to initialized as we need an absolute altitude
-        if (init_gps_position)
+        if (is_gps_pos_initialized_)
         {
             // Correct barometer bias
-            float current_altitude_gf = - local_position[Z] + origin_.altitude;
-            barometer.calibrate_bias(current_altitude_gf);
+            calibrate_barometer();
         }
     }
 
-    if (init_gps_position)
+    if (is_gps_pos_initialized_)
     {
         if (gps.healthy() == true)
         {
             if ((time_last_gps_posllh_msg < gps.last_position_update_us()))
             {
                 global_gps_position = gps.position_gf();
-                coord_conventions_global_to_local_position(global_gps_position, origin_, local_coordinates);
+                coord_conventions_global_to_local_position(global_gps_position, origin(), local_coordinates);
 
                 // compute GPS velocity estimate
                 gps_dt = (gps.last_position_update_us() - time_last_gps_posllh_msg) / 1000000.0f;
@@ -260,7 +259,7 @@ void Position_estimation::position_correction()
 
 void Position_estimation::gps_position_init()
 {
-    if ((init_gps_position == false) && (gps.healthy() == true))
+    if ((is_gps_pos_initialized_ == false) && (gps.healthy() == true))
     {
         if ((time_last_gps_posllh_msg < gps.last_position_update_us())
                 && (time_last_gps_velned_msg < gps.last_velocity_update_us()))
@@ -268,9 +267,9 @@ void Position_estimation::gps_position_init()
             time_last_gps_posllh_msg = gps.last_position_update_us();
             time_last_gps_velned_msg = gps.last_velocity_update_us();
 
-            init_gps_position = true;
+            is_gps_pos_initialized_ = true;
 
-            origin_  = gps.position_gf();
+            set_origin(gps.position_gf());
             last_gps_pos           = local_position;
 
             last_alt = 0;
@@ -310,12 +309,18 @@ void Position_estimation::fence_control()
     }
 }
 
+void Position_estimation::calibrate_barometer()
+{
+    barometer_bias = barometer.altitude_gf() - (- local_position[Z] + origin().altitude);
+    barometer_calibrated = true;
+}
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Position_estimation::Position_estimation(State& state, Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config) :
+Position_estimation::Position_estimation(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config) :
         kp_alt_baro(config.kp_alt_baro),
         kp_vel_baro(config.kp_vel_baro),
         kp_alt_sonar(config.kp_alt_sonar),
@@ -327,18 +332,20 @@ Position_estimation::Position_estimation(State& state, Barometer& barometer, con
         time_last_barometer_msg(0),
         dt_s_(0.0f),
         last_update_s_(0.0f),
-        init_gps_position(false),
+        is_gps_pos_initialized_(false),
         last_alt(0),
         last_vel{0.0f,0.0f,0.0f},
         gravity(config.gravity),
+        barometer_bias(0.0f),
+        barometer_calibrated(false),
         ahrs(ahrs),
         state(state),
         gps(gps),
         barometer(barometer),
         sonar(sonar)
 {
-    // default GPS home position
-    origin_ =  config.origin;
+    // default GPS origin
+    set_origin(config.origin);
 
     for(uint8_t i = 0; i < 3; i++)
     {
@@ -361,7 +368,7 @@ bool Position_estimation::update(void)
         if (state.reset_position)
         {
             state.reset_position = false;
-            reset_home_position();
+            reset_velocity_altitude();
         }
 
         position_integration();
@@ -381,34 +388,19 @@ bool Position_estimation::update(void)
 }
 
 
-void Position_estimation::reset_home_position()
+void Position_estimation::reset_velocity_altitude()
 {
-    // reset origin to position where quad is armed if we have GPS
-    if (init_gps_position)
-    {
-        origin_  = gps.position_gf();
-        last_gps_pos           = local_position;
-    }
-    //else
-    //{
-    //origin_.longitude = HOME_LONGITUDE;
-    //origin_.latitude = HOME_LATITUDE;
-    //origin_.altitude = HOME_ALTITUDE;
-    //}
-
     // Correct barometer bias
-    if (init_gps_position)
+    if (is_gps_pos_initialized_)
     {
-        float current_altitude_gf = - local_position[Z]
-                                    + origin_.altitude;
-        barometer.calibrate_bias(current_altitude_gf);
+        calibrate_barometer();
 
         print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
-        print_util_dbg_print_num(barometer.altitude_gf(), 10);
+        print_util_dbg_print_num(barometer.altitude_gf() - barometer_bias, 10);
         print_util_dbg_print(" ( ");
         print_util_dbg_print_num(local_position[2], 10);
         print_util_dbg_print("  ");
-        print_util_dbg_print_num(origin_.altitude, 10);
+        print_util_dbg_print_num(origin().altitude, 10);
         print_util_dbg_print(" )\r\n");
     }
 
@@ -417,47 +409,9 @@ void Position_estimation::reset_home_position()
     for (int32_t i = 0; i < 3; i++)
     {
         last_vel[i] = 0.0f;
-        local_position[i] = 0.0f;
         vel[i] = 0.0f;
         vel_bf[i] = 0.0f;
     }
-}
-
-
-/* THIS IS EVIL */
-bool Position_estimation::set_home_position_global(global_position_t new_home_pos)
-{
-    bool result = false;
-
-    if (!state.is_armed())
-    {
-        //coord_conventions_change_origin(&local_position, new_home_pos);
-        origin_ = new_home_pos;
-
-        // Set new home position from msg
-        print_util_dbg_print("[POSITION ESTIMATION] Set new home location: ");
-        print_util_dbg_print_num(origin_.latitude * 10000000.0f, 10);
-        print_util_dbg_print(", ");
-        print_util_dbg_print_num(origin_.longitude * 10000000.0f, 10);
-        print_util_dbg_print(", ");
-        print_util_dbg_print_num(origin_.altitude * 1000.0f, 10);
-        print_util_dbg_print(")\r\n");
-
-        state.nav_plan_active = false;
-
-        result = true;
-    }
-
-    return result;
-}
-
-
-bool Position_estimation::set_home_to_current_position()
-{
-   print_util_dbg_print("[POSITION ESTIMATION] Set new home to current location: \r\n");
-   global_position_t new_origin;
-   coord_conventions_local_to_global_position(local_position, origin_, new_origin);
-   return set_home_position_global(new_origin);
 }
 
 
@@ -480,7 +434,7 @@ Position_estimation::conf_t Position_estimation::default_config()
 {
     conf_t conf = {};
 
-    // default home location (EFPL Esplanade)
+    // default origin location (EFPL Esplanade)
     conf.origin        = ORIGIN_EPFL;
 
     conf.gravity       = 9.81f;
@@ -523,11 +477,11 @@ std::array<float,3> Position_estimation::velocity_lf(void) const
 
 float Position_estimation::absolute_altitude(void) const
 {
-    return (origin_.altitude - local_position[Z]);
+    return (origin().altitude - local_position[Z]);
 }
 
 
-bool Position_estimation::is_healthy(INS::healthy_t type) const
+bool Position_estimation::is_healthy(INS::healthy_t __attribute__((unused)) type) const
 {
     return true;
 }

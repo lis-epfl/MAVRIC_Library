@@ -39,7 +39,8 @@ CM3_LIB_DIR		= $(OPENCM3_DIR)/lib
 CM3_SCRIPT_DIR	= $(OPENCM3_DIR)/scripts
 CM3_LIBNAME 	= opencm3_stm32f4
 CM3_DEFS		= -DSTM32F4
-CM3_FP_FLAGS	?= -mfloat-abi=hard -mfpu=fpv4-sp-d16
+# CM3_FP_FLAGS	?= -mfloat-abi=hard -mfpu=fpv4-sp-d16
+CM3_FP_FLAGS	= -mfloat-abi=hard -mfpu=fpv4-sp-d16
 CM3_ARCH_FLAGS	= -mthumb -mcpu=cortex-m4 $(CM3_FP_FLAGS)
 # CM3_LDSCRIPT 	= $(OPENCM3_DIR)/lib/libopencm3_stm32f4.ld
 CM3_LDSCRIPT 	= mavrimini.ld
@@ -62,7 +63,7 @@ SIZER 	:= arm-none-eabi-size
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CFLAGS	+= -O0 -g -std=gnu99 -MMD -MP
+CFLAGS	+= -O3 -g -std=gnu99 -MMD -MP
 CFLAGS	+= -Wall
 CFLAGS	+= -Wextra -Wshadow -Wimplicit-function-declaration
 CFLAGS	+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
@@ -75,7 +76,7 @@ CFLAGS += ${LIB_INC}
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
 # ------------------------------------------------------------------------------
-CXXFLAGS	+= -O0 -g -std=c++11 -MMD -MP
+CXXFLAGS	+= -O3 -g -std=c++11 -MMD -MP
 CXXFLAGS	+= -Wall
 CXXFLAGS	+= -Wextra -Wshadow -Wredundant-decls  -Weffc++
 CXXFLAGS	+= -fno-common -ffunction-sections -fdata-sections
@@ -192,7 +193,8 @@ flash: $(PROJ_NAME).bin
 	@st-flash write $(PROJ_NAME).bin 0x8000000
 
 dfu: $(PROJ_NAME).bin
-	@dfu-util --device 0x483:0xdf11 -a 0 -s 0x8000000:leave -D $(PROJ_NAME).bin
+	# @dfu-util --device 0x483:0xdf11 -a 0 -s 0x8000000:leave -D $(PROJ_NAME).bin
+	@dfu-util --device 0x483:0xdf11 -a 0 -s 0x8000000 -D $(PROJ_NAME).bin
 
 .PHONY: clean rebuild
 clean:

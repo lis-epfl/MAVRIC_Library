@@ -45,13 +45,8 @@
 #include "sensing/imu.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/constants.hpp"
-
-extern "C"
-{
-#include "util/print_util.h"
-#include "util/quick_trig.h"
-}
-
+#include "util/print_util.hpp"
+#include "util/quick_trig.hpp"
 
 
 Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magnetometer, imu_conf_t config):
