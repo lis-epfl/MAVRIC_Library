@@ -101,11 +101,11 @@ public:
      * \param   sonar           sonar structure
      * \param   gps             GPS structure
      * \param   ahrs            attitude estimation structure
-     * \param   config          default home position and gravity value
+     * \param   config          default origin position and gravity value
      *
      * \return  True if the init succeed, false otherwise
      */
-    Position_estimation(State& state, Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config = default_config());
+    Position_estimation(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config = default_config());
 
 
     /**
@@ -128,30 +128,6 @@ public:
     fence_violation_state_t get_fence_violation_state() const;
 
     static conf_t default_config();
-
-    /**
-     * \brief   set the home position and altitude
-     *
-     * \details change of home is only accepted if the vehicle is not armed
-     *          THIS IS EVIL: CHANGES ORIGIN OF LOCAL FRAME!!!
-     *
-     * \param   new_home_pos    new home position in global reference frame
-     *
-     * \return  accepted    true if new position is accepted;
-     */
-    bool set_home_position_global(global_position_t new_home_pos);
-
-    /**
-     * \brief   set the home position and altitude to currrent position
-     *
-     * \details calls set_home_position_global with the current position;
-     *          only accepted if vehicle is not armed
-     *          THIS IS EVIL: CHANGES ORIGIN OF LOCAL FRAME!!!
-     *
-     * \return  accepted    true if new position is accepted;
-     */
-    bool set_home_to_current_position();
-
 
     /**
      * \brief     Last update in seconds
@@ -213,7 +189,7 @@ private:
     uint32_t time_last_barometer_msg;       ///< Time at which we received the last barometer message in ms
     float dt_s_;                            ///< Time interval between updates
     float last_update_s_;                   ///< Last update time in seconds
-    bool init_gps_position;                 ///< Boolean flag ensuring that the GPS was initialized
+    bool is_gps_pos_initialized_;           ///< Boolean flag ensuring that the GPS was initialized
 
 
     float last_alt;                         ///< Value of the last altitude estimation
@@ -225,17 +201,20 @@ private:
 
     float gravity;                          ///< Value of the gravity
 
+    float barometer_bias;                   ///< Altitude bias between actual altitude and altitude given by the barometer
+    bool barometer_calibrated;              ///< Flag that indicates if the barometer was calibrated
+
     const ahrs_t& ahrs;                     ///< Reference to the attitude estimation structure
     State& state;                           ///< Reference to the state structure
     const Gps& gps;                         ///< Reference to the GPS structure
-    Barometer& barometer;                   ///< Reference to the barometer structure
+    const Barometer& barometer;             ///< Reference to the barometer structure
     const Sonar& sonar;                     ///< Reference to the sonar structure
 
     /**
-     * \brief   Reset the home position and altitude
+     * \brief   Reset the velocity and altitude estimation to 0 and corrects barometer bias
      *
      */
-    void reset_home_position();
+    void reset_velocity_altitude();
 
     /**
      * \brief   Direct integration of the position with the IMU data
@@ -264,6 +243,13 @@ private:
      * \return  void
      */
     void fence_control();
+
+    /**
+     * \brief   Calibrate the barometer (update the bias)
+     *
+     * \return  void
+     */
+    void calibrate_barometer();
 
 };
 #endif // POSITION_ESTIMATION_HPP__

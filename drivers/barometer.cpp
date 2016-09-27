@@ -48,25 +48,36 @@ extern "C"
 #include "util/maths.h"
 }
 
-Barometer::Barometer() :
-    has_been_calibrated_(false)
-{
+// Definition of static member
+float Barometer::pressure_at_sea_level_;
 
+
+Barometer::Barometer(float pressure_at_sea_level)
+{
+    Barometer::pressure_at_sea_level_ = pressure_at_sea_level;
 }
 
-bool Barometer::has_been_calibrated() const
+float Barometer::pressure_at_sea_level(void)
 {
-    return has_been_calibrated_;
-}
-
-void Barometer::calibrate_bias(float current_altitude_gf)
-{
-    altitude_bias_gf_ = altitude_gf() - current_altitude_gf;
-    has_been_calibrated_ = true;
+    return pressure_at_sea_level_;
 }
 
 
-float Barometer::altitude_from_pressure(float pressure, float altitude_bias)
+void Barometer::set_pressure_at_sea_level(float pressure_at_sea_level)
 {
-    return 44330.0f * (1.0f - pow(pressure / 101325.0f, 0.190295f)) - altitude_bias;
+    Barometer::pressure_at_sea_level_ = pressure_at_sea_level;
+};
+
+
+float Barometer::altitude_from_pressure(float pressure, float pressure_at_sea_level)
+{
+    //from https://en.wikipedia.org/wiki/Atmospheric_pressure
+    return 44330.0f * (1.0f - pow(pressure / pressure_at_sea_level, 0.190295f));
+}
+
+
+float Barometer::compute_pressure_at_sea_level(float pressure, float altitude)
+{
+    //from https://en.wikipedia.org/wiki/Atmospheric_pressure
+    return pressure / pow(1.0f - altitude / 44330.0f, 5.255f);
 }

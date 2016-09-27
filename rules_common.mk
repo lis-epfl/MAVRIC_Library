@@ -53,8 +53,8 @@ LIB_SRCS += communication/state_telemetry.cpp
 
 
 LIB_SRCS += control/altitude_controller.cpp
-LIB_SRCS += control/attitude_controller_p2.c
-LIB_SRCS += control/attitude_error_estimator.c
+LIB_SRCS += control/attitude_controller_p2.cpp
+LIB_SRCS += control/attitude_error_estimator.cpp
 LIB_SRCS += control/dubin.cpp
 LIB_SRCS += control/joystick.cpp
 LIB_SRCS += control/joystick_telemetry.cpp
@@ -128,7 +128,6 @@ LIB_SRCS += sensing/ins.cpp
 LIB_SRCS += sensing/ins_kf.cpp
 LIB_SRCS += sensing/ins_telemetry.cpp
 LIB_SRCS += sensing/position_estimation.cpp
-LIB_SRCS += sensing/position_estimation_telemetry.cpp
 LIB_SRCS += sensing/qfilter.cpp
 
 LIB_SRCS += simulation/accelerometer_sim.cpp
@@ -138,6 +137,7 @@ LIB_SRCS += simulation/dynamic_model_telemetry.cpp
 LIB_SRCS += simulation/flow_sim.cpp
 LIB_SRCS += simulation/gps_sim.cpp
 LIB_SRCS += simulation/gyroscope_sim.cpp
+LIB_SRCS += simulation/ins_ahrs_groundtruth.cpp
 LIB_SRCS += simulation/magnetometer_sim.cpp
 LIB_SRCS += simulation/simulation.cpp
 LIB_SRCS += simulation/sonar_sim.cpp
