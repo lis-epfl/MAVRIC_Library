@@ -43,16 +43,15 @@
 #ifndef OFFBOARD_TAG_SEARCH_HPP_
 #define OFFBOARD_TAG_SEARCH_HPP_
 
-#include "runtime/scheduler.hpp"
-#include "util/coord_conventions.hpp"
-#include "sensing/ahrs.hpp"
-#include "sensing/position_estimation.hpp"
-#include "sensing/offboard_tag_search_telemetry.hpp"
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
+#include "runtime/scheduler.hpp"
+#include "sensing/ahrs.hpp"
+#include "sensing/position_estimation.hpp"
+#include "sensing/offboard_tag_search_telemetry.hpp"
+#include "util/coord_conventions.hpp"
 
-class Mavlink_waypoint_handler_tag;
 
 extern "C"
 {
@@ -123,11 +122,10 @@ public:
      *
      * \param ins                       position_estimation
      * \param ahrs                      ahrs
-     * \param waypoint_handler          waypoint_handler
      * \param mavlink_communication     mavlink_communication
      * \param config                    The offboard camera configuration
      */
-    Offboard_Tag_Search(const INS& ins, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
+    Offboard_Tag_Search(const INS& ins, const ahrs_t& ahrs, Mavlink_communication_T<10, 10, 10, 10>& mavlink_communication, offboard_tag_search_conf_t config = offboard_tag_search_conf_default());
 
 
     /**
@@ -137,7 +135,7 @@ public:
      * \param   camera_state    The new state of the camera
      * \return  Success
      */
-    bool update(const Scheduler* scheduler, bool camera_state);
+    bool update(bool camera_state);
 
 
     /**
@@ -180,8 +178,7 @@ public:
     // Getters and setters
     const ahrs_t& ahrs() const;
     const INS& ins() const;
-    Mavlink_communication& mavlink_communication();
-    Mavlink_waypoint_handler_tag& waypoint_handler();
+    Mavlink_communication_T<10, 10, 10, 10>& mavlink_communication();
 
     int camera_id() const;
     int camera_x_resolution() const;
@@ -203,7 +200,7 @@ public:
     const int16_t& start_tag_msg_count() const;
     const int16_t& picture_count() const;
     const int16_t& tag_count() const;
-    local_position_t& tag_location();
+    std::array<float,2>& tag_location();
 
     const int offboard_threads() const;
     const local_position_t position_at_photo(int index) const;
@@ -226,14 +223,12 @@ protected:
     int16_t start_tag_msg_count_;                           ///< The count of the start tag landing msg sent
     int16_t picture_count_;                                 ///< The count of the pictures received
     int16_t tag_count_;                                     ///< The count of the tags received
-    local_position_t tag_location_;                         ///< The location of the tag in the local frame
+    std::array<float,2> tag_location_;                      ///< The location of the tag in the local frame
     land_on_tag_behavior_t land_on_tag_behavior_;           ///< The land on tag behavior enum
 
     const INS& ins_;
     const ahrs_t& ahrs_;
-    Mavlink_communication& mavlink_communication_;
-    Mavlink_waypoint_handler_tag& waypoint_handler_;
-
+    Mavlink_communication_T<10, 10, 10, 10>& mavlink_communication_;
 };
 
 

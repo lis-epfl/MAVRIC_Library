@@ -51,22 +51,22 @@
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
-#include "communication/mavlink_waypoint_handler_tag.hpp"
 #include "communication/onboard_parameters.hpp"
 #include "communication/state.hpp"
 #include "communication/state_machine.hpp"
 #include "communication/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
+#include "control/position_controller.hpp"
+#include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/manual_control.hpp"
-#include "control/navigation.hpp"
+#include "control/navigation_directto.hpp"
+#include "control/rate_controller.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
-#include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/manual_control.hpp"
 #include "control/stabilisation.hpp"
-#include "control/stabilisation_copter.hpp"
-#include "control/stabilisation_copter_default_config.hpp"
-#include "control/velocity_controller_copter.hpp"
+
 #include "control/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
@@ -78,6 +78,16 @@
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"
 
+#include "mission/mission_planner.hpp"
+#include "mission/mission_handler_critical_landing.hpp"
+#include "mission/mission_handler_critical_navigating.hpp"
+#include "mission/mission_handler_hold_position.hpp"
+#include "mission/mission_handler_landing.hpp"
+#include "mission/mission_handler_manual.hpp"
+#include "mission/mission_handler_navigating.hpp"
+#include "mission/mission_handler_on_ground.hpp"
+#include "mission/mission_handler_takeoff.hpp"
+
 #include "simulation/simulation.hpp"
 
 #include "sensing/ahrs.hpp"
@@ -87,17 +97,16 @@
 #include "sensing/position_estimation.hpp"
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
-#include "sensing/offboard_tag_search.hpp"
 
 #include "util/coord_conventions.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
 #include "sensing/altitude.h"
-#include "util/print_util.h"
 }
 
-
+typedef Navigation_directto<Position_controller<Velocity_controller_copter<Attitude_controller<Rate_controller<Servos_mix_quadcopter_diag> > > > > Cascade_controller;
 
 /**
  * \brief MAV class
@@ -105,27 +114,31 @@ extern "C"
 class LEQuad
 {
 public:
+    static const uint32_t N_TELEM  = 30;
+    static const uint32_t N_MSG_CB = 20;
+    static const uint32_t N_CMD_CB = 20;
+    static const uint32_t N_PARAM  = 120;
+    typedef Mavlink_communication_T<N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM> Mavlink_communication;
+
+
     /**
      * \brief   Configuration structure
      */
      struct conf_t
     {
         State::conf_t state_config;
-        data_logging_conf_t data_logging_continuous_config;
-        data_logging_conf_t data_logging_stat_config;
+        Data_logging::conf_t data_logging_continuous_config;
+        Data_logging::conf_t data_logging_stat_config;
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
-        Navigation::conf_t navigation_config;
         Mavlink_waypoint_handler::conf_t waypoint_handler_config;
+        Mission_planner::conf_t mission_planner_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         Position_estimation::conf_t position_estimation_config;
-        stabilisation_copter_conf_t stabilisation_copter_config;
-        servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        Attitude_controller::conf_t attitude_controller_config;
-        Velocity_controller_copter::conf_t velocity_controller_copter_config;
+        Cascade_controller::conf_t cascade_controller_config;
     };
 
     /**
@@ -146,7 +159,6 @@ public:
                   Gps& gps,
                   Sonar& sonar,
                   Serial& serial_mavlink,
-                  Serial& raspi_serial_mavlink,
                   Satellite& satellite,
                   State_display& state_display,
                   File& file_flash,
@@ -161,8 +173,15 @@ public:
                   Servo& servo_7,
                   File& file1,
                   File& file2,
-                  offboard_tag_search_conf_t& offboard_tag_search_conf,
                   const conf_t& config = default_config());
+
+    /*
+     * \brief   Initializes LEQuad
+     * \details  Calls all init functions (init_*());
+     *
+     * \return  success
+     */
+    virtual bool init(void);
 
     /**
      *  \brief    Main update function (infinite loop)
@@ -177,7 +196,7 @@ public:
      *
      * \return  MAVLINK Communication module
      */
-     inline Mavlink_communication& mavlink_communication(){return mavlink_communication_;};
+     inline Mavlink_communication& mavlink_communication(){return communication;};
 
 
 protected:
@@ -193,11 +212,10 @@ protected:
     virtual bool init_attitude_estimation(void);
     virtual bool init_position_estimation(void);
     virtual bool init_stabilisers(void);
-    virtual bool init_navigation(void);
+    virtual bool init_mission_planning(void);
     virtual bool init_hud(void);
     virtual bool init_servos(void);
     virtual bool init_ground_control(void);
-    virtual bool init_offboard_tag_search(void);
 
     virtual bool main_task(void);
     static inline bool main_task_func(LEQuad* mav)
@@ -210,7 +228,6 @@ protected:
     Gps&            gps;                ///< Reference to GPS
     Sonar&          sonar;              ///< Reference to sonar
     Serial&         serial_mavlink;     ///< Reference to telemetry serial
-    Serial&         raspi_serial_mavlink;   ///< Reference to raspberry pi telemetry serial
     Satellite&      satellite;          ///< Reference to remote control satellite
     State_display&  state_display_;     ///< Reference to the state display
     File&           file_flash;         ///< Reference to flash storage
@@ -228,12 +245,8 @@ protected:
 
     State state;                                                ///< The structure with all state information
 
-    Scheduler scheduler;
-
-    Mavlink_communication mavlink_communication_;
-    Mavlink_communication raspi_mavlink_communication;
-
-    servos_mix_quadcotper_diag_t servo_mix;
+    Scheduler_T<20>       scheduler;
+    Mavlink_communication   communication;
 
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
@@ -241,25 +254,32 @@ protected:
     Position_estimation position_estimation;                    ///< The position estimaton structure
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
-    control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
 
-    stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
+    Cascade_controller cascade_controller_;
 
-    Navigation navigation;                                      ///< The structure to perform GPS navigation
+    Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
+    Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
+    Mission_handler_hold_position<Navigation_controller_I> hold_position_handler;
+    Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I> landing_handler;
+    Mission_handler_navigating<Navigation_controller_I> navigating_handler;
+    Mission_handler_on_ground on_ground_handler;
+    Mission_handler_manual manual_ctrl_handler;
+    Mission_handler_takeoff<Navigation_controller_I> takeoff_handler;
+    Mission_handler_critical_landing<Navigation_controller_I, XYposition_Zvel_controller_I> critical_landing_handler;
+    Mission_handler_critical_navigating<Navigation_controller_I> critical_navigating_handler;
+    Mission_planner mission_planner;                            ///< Controls the mission plan
 
-    Mavlink_waypoint_handler_tag waypoint_handler;
+
 
     State_machine state_machine;                                ///< The structure for the state machine
 
     hud_telemetry_t hud;                                        ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    Data_logging    data_logging_continuous;
-    Data_logging    data_logging_stat;
+    Data_logging_T<10>    data_logging_continuous;
+    Data_logging_T<10>    data_logging_stat;
 
     command_t                       command;
-
-    Offboard_Tag_Search offboard_tag_search;                          ///< The offboard camera control class reference
 
 private:
     uint8_t sysid_;    ///< System ID
@@ -273,39 +293,37 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.state_config = State::default_config();
 
-    conf.data_logging_continuous_config = data_logging_default_config();
-    conf.data_logging_stat_config       = data_logging_default_config();
+    conf.data_logging_continuous_config                  = Data_logging::default_config();
+    conf.data_logging_continuous_config.continuous_write = true;
+    conf.data_logging_continuous_config.log_data         = 0;
+
+    conf.data_logging_stat_config                  = Data_logging::default_config();
+    conf.data_logging_stat_config.continuous_write = false;
+    conf.data_logging_stat_config.log_data         = 0;
 
     conf.scheduler_config = Scheduler::default_config();
 
-    conf.navigation_config = Navigation::default_config();
-
     conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
 
+    conf.mission_planner_config = Mission_planner::default_config();
+    
     conf.qfilter_config = qfilter_default_config();
 
     conf.ahrs_ekf_config = Ahrs_ekf::default_config();
 
     conf.position_estimation_config = Position_estimation::default_config();
 
-    conf.stabilisation_copter_config = stabilisation_copter_default_config();
-
-    conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
-
     conf.manual_control_config = Manual_control::default_config();
 
     conf.remote_config = remote_default_config();
 
-    conf.attitude_controller_config = Attitude_controller::default_config();
-
-    conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
+    conf.cascade_controller_config = Cascade_controller::default_config();
 
     /* Mavlink communication config */
-    Mavlink_communication::conf_t mavlink_communication_config   = Mavlink_communication::default_config(sysid);
-    mavlink_communication_config.message_handler_config.debug    = false;
-    mavlink_communication_config.onboard_parameters_config.debug = true;
-    mavlink_communication_config.mavlink_stream_config.debug     = false;
-    conf.mavlink_communication_config = mavlink_communication_config;
+    conf.mavlink_communication_config                        = Mavlink_communication::default_config(sysid);
+    conf.mavlink_communication_config.handler.debug          = false;
+    conf.mavlink_communication_config.parameters.debug       = true;
+    conf.mavlink_communication_config.mavlink_stream.debug   = false;
 
     return conf;
 };

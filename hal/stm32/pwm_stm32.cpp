@@ -40,11 +40,11 @@
  ******************************************************************************/
 
 #include "hal/stm32/pwm_stm32.hpp"
+#include "util/print_util.hpp"
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
-#include "hal/common/time_keeper.hpp"
 #include <math.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/rcc.h>

@@ -46,12 +46,12 @@
 #include "drivers/unsupported/acoustic.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
+#include "util/quick_trig.hpp"
 
 extern "C"
 {
 #include "uart_int.h"
-#include "util/print_util.h"
-#include "util/quick_trig.h"
 }
 
 float az[STORE_SIZE] =          ///< Store pre-computed value for the azimuth
@@ -315,14 +315,16 @@ static void acoustic_set_waypoint_command(audio_t* audio_data)
         speed_gain = 0.0f;
     }
 
-    audio_data->waypoint_handler->waypoint_hold_coordinates.pos[0] = speed_gain * target_vect_global[0] + position_previous[0];
-    audio_data->waypoint_handler->waypoint_hold_coordinates.pos[1] = speed_gain * target_vect_global[1] + position_previous[1];
+    local_position_t local_pos = Mission_handler::hold_waypoint().local_pos();
+    local_pos.pos[0] = speed_gain * target_vect_global[0] + position_previous[0];
+    local_pos.pos[1] = speed_gain * target_vect_global[1] + position_previous[1];
     //centralData->controls_nav.theading=audio_data->azimuth*PI/180;
 
     if (speed_gain > 3.0f)
     {
-        audio_data->waypoint_handler->waypoint_hold_coordinates.heading = atan2(target_vect_global[Y], target_vect_global[X]);
+        local_pos.heading = atan2(target_vect_global[Y], target_vect_global[X]);
     }
+    Mission_handler::set_hold_waypoint(local_pos);
 }
 
 

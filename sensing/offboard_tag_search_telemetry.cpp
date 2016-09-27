@@ -49,7 +49,7 @@
 
 extern "C"
 {
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/maths.h"
 }
@@ -210,7 +210,6 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
             // Set hold position
             offboard_tag_search.tag_location()[0] = tag_x_pos;
             offboard_tag_search.tag_location()[1] = tag_y_pos;
-            offboard_tag_search.tag_location()[2] = offboard_tag_search.waypoint_handler().tag_search_altitude();
 
             // Update recorded time
             offboard_tag_search.update_last_update_us();
@@ -246,13 +245,9 @@ bool offboard_tag_search_telemetry_init(Offboard_Tag_Search* offboard_tag_search
     // Set tag landing state to tag not found
     offboard_tag_search->land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_NOT_FOUND);
 
-    // Set the tag landing altitude to be the starting altitude
-    offboard_tag_search->waypoint_handler().tag_search_altitude(-10.0f);
-
     // Init tag_location vector to 0
     offboard_tag_search->tag_location()[0] = 0.0f;
     offboard_tag_search->tag_location()[1] = 0.0f;
-    offboard_tag_search->tag_location()[2] = 0.0f;
 
     // Add callbacks for cmd
     Mavlink_message_handler::cmd_callback_t callbackcmd;
@@ -308,32 +303,12 @@ void offboard_tag_search_telemetry_send_take_new_photo(int index, Offboard_Tag_S
 void offboard_tag_search_telemetry_send_start_stop(Offboard_Tag_Search* camera, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     // Switch boolean to int as mavlink sends ints/flaots
-    switch(camera->is_camera_running())
+    if(camera->is_camera_running())
     {
-        case true: // Send 1 message per thread to take photo and start
-            // Send thread message
-            for (int i = 0; i < camera->offboard_threads(); i++)
-            {
-                offboard_tag_search_telemetry_send_take_new_photo(i, camera, mavlink_stream, msg);
-            }
-            break;
-        case false: // Send message to stop
-        /*
-            mavlink_msg_command_long_pack(  mavlink_stream->sysid(),        // system_id
-                                            mavlink_stream->compid(),       // component_id
-                                            msg,                            // mavlink_msg
-                                            0,                              // target_system
-                                            0,                              // target_component
-                                            MAV_CMD_DO_CONTROL_VIDEO,       // command
-                                            0,                              // confirmation
-                                            camera->camera_id(),            // param1
-                                            camera->is_camera_running(),    // param2
-                                            0,                              // param3
-                                            0,                              // param4
-                                            0,                              // param5
-                                            0,                              // param6
-                                            0);                             // param7
-                                            */
-            break;
+        // Send thread message
+        for (int i = 0; i < camera->offboard_threads(); i++)
+        {
+            offboard_tag_search_telemetry_send_take_new_photo(i, camera, mavlink_stream, msg);
+        }
     }
 }

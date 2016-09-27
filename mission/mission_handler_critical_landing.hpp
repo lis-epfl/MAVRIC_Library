@@ -1,0 +1,91 @@
+/*******************************************************************************
+ * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
+
+/*******************************************************************************
+ * \file mission_handler_critical_landing.hpp
+ *
+ * \author MAV'RIC Team
+ * \author Matthew Douglas
+ *
+ * \brief The MAVLink mission planner handler for the critical landing state
+ *
+ ******************************************************************************/
+
+
+#ifndef MISSION_HANDLER_CRITICAL_LANDING__
+#define MISSION_HANDLER_CRITICAL_LANDING__
+
+#include "mission/mission_handler_landing.hpp"
+
+/*
+ * The handler class takes in a template parameter that allows control inputs.
+ */
+template <class T1, class T2>
+class Mission_handler_critical_landing : public Mission_handler_landing<T1, T2>
+{
+public:
+
+
+    /**
+     * \brief   Initialize the landing mission planner handler
+     *
+     * \param   desc_to_small_alt_controller    The reference to the controller used during the descent to small altitudes phase
+     * \param   desc_to_ground_controller       The reference to the controller used during the descent to ground phase
+     * \param   ins                             The reference to the ins
+     * \param   state                           The reference to the state structure
+     */
+     Mission_handler_critical_landing(  T1& desc_to_small_alt_controller,
+                                        T2& desc_to_ground_controller,
+                                        const INS& ins,
+                                        State& state);
+
+    /**
+     * \brief   Checks if the waypoint is a landing waypoint
+     *  
+     * \details     Checks if the inputted waypoint is a:
+     *                  MAV_CMD_NAV_CRITICAL_LAND
+     *
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Can handle
+     */
+    virtual bool can_handle(const Waypoint& wpt) const;
+};
+
+
+#include "mission/mission_handler_critical_landing.hxx"
+
+
+
+
+
+
+#endif // MISSION_HANDLER_CRITICAL_LANDING__

@@ -43,7 +43,7 @@
 #include "sensing/ins.hpp"
 
 
-// It is a static member (meaning it is shared by all instances of that class), 
+// It is a static member (meaning it is shared by all instances of that class),
  // => it has to be defined somewhere.
 global_position_t INS::origin_;
 

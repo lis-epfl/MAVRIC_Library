@@ -62,6 +62,9 @@ bool Gpio_dummy::init(void)
 
 bool Gpio_dummy::configure(gpio_dir_t dir, gpio_pull_updown_t pull)
 {
+    (void)dir;  // unused
+    (void)pull; // unused
+    
     return true;
 }
 

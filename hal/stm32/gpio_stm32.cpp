@@ -64,7 +64,7 @@ bool Gpio_stm32::init(void)
 
 bool Gpio_stm32::configure(gpio_dir_t dir, gpio_pull_updown_t pull)
 {
-    uint8_t mode;
+    uint8_t mode = GPIO_MODE_INPUT;
     uint8_t pull_up_down;
 
     // Keep config

@@ -43,12 +43,9 @@
 #include "control/joystick.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
+#include "util/print_util.hpp"
+#include "util/quick_trig.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-#include "util/quick_trig.h"
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -77,7 +74,13 @@ Joystick::Joystick(conf_t config)
 
 float Joystick::throttle() const
 {
-    return channels_.z;
+    if(throttle_mode_ == throttle_mode_t::ZERO_CENTER)
+    {
+        return channels_.z;
+    }else
+    {
+        return 2 * channels_.z - 1;
+    }
 }
 
 

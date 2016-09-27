@@ -46,7 +46,6 @@
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/mavlink_waypoint_handler_tag.hpp"
 
 class Offboard_Tag_Search;
 /**

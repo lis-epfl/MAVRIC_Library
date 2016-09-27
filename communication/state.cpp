@@ -42,11 +42,8 @@
 
 #include "communication/state.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
-extern "C"
-{
-#include "util/print_util.h"
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -78,8 +75,6 @@ State::State(Mavlink_stream& mavlink_stream, Battery& battery, State::conf_t con
     out_of_fence_1 = false;
     out_of_fence_2 = false;
 
-    nav_plan_active = false;
-
     reset_position = false;
 
     last_heartbeat_msg = time_keeper_get_s();
@@ -96,7 +91,6 @@ void State::switch_to_active_mode(mav_state_t* mav_state_)
 
     // Tell other modules to reset position and re-compute waypoints
     reset_position = true;
-    nav_plan_active = false;
 
     print_util_dbg_print("Switching to active mode.\r\n");
 }

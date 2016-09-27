@@ -45,21 +45,20 @@
 extern "C"
 {
 #include "hal/common/time_keeper.hpp"
-#include "util/print_util.h"
+#include "util/print_util.hpp"
 #include "util/constants.hpp"
 #include "util/maths.h"
 }
 
 
 
-Offboard_Tag_Search::Offboard_Tag_Search(const INS& ins, const ahrs_t& ahrs, Mavlink_waypoint_handler_tag& waypoint_handler, Mavlink_communication& mavlink_communication, offboard_tag_search_conf_t config):
+Offboard_Tag_Search::Offboard_Tag_Search(const INS& ins, const ahrs_t& ahrs, Mavlink_communication_T<10, 10, 10, 10>& mavlink_communication, offboard_tag_search_conf_t config):
     conf_(config),
     is_camera_running_(false),
     last_update_us_(time_keeper_get_us()),
     ins_(ins),
     ahrs_(ahrs),
-    mavlink_communication_(mavlink_communication),
-    waypoint_handler_(waypoint_handler)
+    mavlink_communication_(mavlink_communication)
 {
     // Set picture count to 0
     picture_count_ = 0;
@@ -91,7 +90,7 @@ Offboard_Tag_Search::Offboard_Tag_Search(const INS& ins, const ahrs_t& ahrs, Mav
 }
 
 
-bool Offboard_Tag_Search::update(const Scheduler* scheduler, bool camera_state)
+bool Offboard_Tag_Search::update(bool camera_state)
 {
     bool success = true;
 
@@ -233,7 +232,7 @@ float Offboard_Tag_Search::camera_y_fov() const
     return conf_.camera_fov_y;
 }
 
-local_position_t& Offboard_Tag_Search::tag_location()
+std::array<float,2>& Offboard_Tag_Search::tag_location()
 {
     return tag_location_;
 }
@@ -283,7 +282,7 @@ const ahrs_t& Offboard_Tag_Search::ahrs() const
     return ahrs_;
 }
 
-Mavlink_communication& Offboard_Tag_Search::mavlink_communication()
+Mavlink_communication_T<10, 10, 10, 10>& Offboard_Tag_Search::mavlink_communication()
 {
     return mavlink_communication_;
 }
@@ -291,11 +290,6 @@ Mavlink_communication& Offboard_Tag_Search::mavlink_communication()
 const INS& Offboard_Tag_Search::ins() const
 {
     return ins_;
-}
-
-Mavlink_waypoint_handler_tag& Offboard_Tag_Search::waypoint_handler()
-{
-    return waypoint_handler_;
 }
 
 bool Offboard_Tag_Search::has_photo_been_taken(int index) const

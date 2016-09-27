@@ -43,10 +43,10 @@
 #include "sensing/position_estimation.hpp"
 #include "drivers/barometer.hpp"
 #include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
 extern "C"
 {
-#include "util/print_util.h"
 #include "util/maths.h"
 }
 
@@ -443,8 +443,6 @@ bool Position_estimation::set_home_position_global(global_position_t new_home_po
         print_util_dbg_print_num(origin_.altitude * 1000.0f, 10);
         print_util_dbg_print(")\r\n");
 
-        state.nav_plan_active = false;
-
         result = true;
     }
 
@@ -527,7 +525,7 @@ float Position_estimation::absolute_altitude(void) const
 }
 
 
-bool Position_estimation::is_healthy(INS::healthy_t type) const
+bool Position_estimation::is_healthy(INS::healthy_t __attribute__((unused)) type) const
 {
     return true;
 }

@@ -95,13 +95,14 @@ bool Dynamic_model_quad_diag::update(void)
     // Update timing
     float now       = time_keeper_get_us();
     dt_s_           = (now - last_update_us_) / 1000000.0f;
-    last_update_us_ = now;
 
     // Do nothing if updated too often
     if (dt_s_ < 0.001f)
     {
         return true;
     }
+
+    last_update_us_ = now;
 
     // Clip dt if too large, this is not realistic but the simulation will be more precise
     if (dt_s_ > 0.1f)
