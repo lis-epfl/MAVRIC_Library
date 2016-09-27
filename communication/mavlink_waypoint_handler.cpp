@@ -58,7 +58,7 @@ extern "C"
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-mav_result_t Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet)
+mav_result_t Mavlink_waypoint_handler::set_home(Mavlink_waypoint_handler* waypoint_handler, const mavlink_command_long_t* packet)
 {
     if (packet->param1 == 0) // Use indicated location
     {
@@ -118,23 +118,23 @@ void Mavlink_waypoint_handler::send_home_waypoint()
     float surface_norm[4];
 
     mavlink_message_t msg;
-    mavlink_msg_home_position_pack( mavlink_stream_.sysid(), 
-                                    mavlink_stream_.compid(), 
+    mavlink_msg_home_position_pack( mavlink_stream_.sysid(),
+                                    mavlink_stream_.compid(),
                                     &msg,
-                                    global_pos.latitude*1e7, 
-                                    global_pos.longitude*1e7, 
-                                    global_pos.altitude*1e3, 
-                                    local_pos[X], 
-                                    local_pos[Y], 
-                                    local_pos[Z], 
-                                    surface_norm,   // q: surface norm 
+                                    global_pos.latitude*1e7,
+                                    global_pos.longitude*1e7,
+                                    global_pos.altitude*1e3,
+                                    local_pos[X],
+                                    local_pos[Y],
+                                    local_pos[Z],
+                                    surface_norm,   // q: surface norm
                                     0.0f,           // approach_x
                                     0.0f,           // approach_x
                                     0.0f);          // approach_x
     mavlink_stream_.send(&msg);
 }
 
-void Mavlink_waypoint_handler::request_list_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::request_list_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_mission_request_list_t packet;
 
@@ -159,7 +159,7 @@ void Mavlink_waypoint_handler::request_list_callback(Mavlink_waypoint_handler* w
     }
 }
 
-void Mavlink_waypoint_handler::mission_request_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_request_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_mission_request_t packet;
 
@@ -191,7 +191,7 @@ void Mavlink_waypoint_handler::mission_request_callback(Mavlink_waypoint_handler
     }
 }
 
-void Mavlink_waypoint_handler::mission_ack_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_ack_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_mission_ack_t packet;
 
@@ -205,7 +205,7 @@ void Mavlink_waypoint_handler::mission_ack_callback(Mavlink_waypoint_handler* wa
     }
 }
 
-void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_mission_count_t packet;
 
@@ -254,7 +254,7 @@ void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* 
                                          waypoint_handler->mavlink_stream_.compid(),
                                          &_msg,
                                          msg->sysid,
-                                         msg->compid, 
+                                         msg->compid,
                                          type);
             waypoint_handler->mavlink_stream_.send(&_msg);
 
@@ -266,7 +266,7 @@ void Mavlink_waypoint_handler::mission_count_callback(Mavlink_waypoint_handler* 
     }
 }
 
-void Mavlink_waypoint_handler::mission_item_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_item_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_mission_item_t packet;
 
@@ -310,7 +310,7 @@ void Mavlink_waypoint_handler::mission_item_callback(Mavlink_waypoint_handler* w
                                                  waypoint_handler->mavlink_stream_.compid(),
                                                  &_msg,
                                                  msg->sysid,
-                                                 msg->compid, 
+                                                 msg->compid,
                                                  type);
                     waypoint_handler->mavlink_stream_.send(&_msg);
 
@@ -367,7 +367,7 @@ void Mavlink_waypoint_handler::mission_item_callback(Mavlink_waypoint_handler* w
     } //end of if this message is for this system and subsystem
 }
 
-void Mavlink_waypoint_handler::mission_clear_all_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
+void Mavlink_waypoint_handler::mission_clear_all_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_mission_clear_all_t packet;
 
@@ -434,60 +434,50 @@ bool Mavlink_waypoint_handler::init()
 {
     bool init_success = true;
 
-    // Add callbacks for waypoint handler messages requests
-    Mavlink_message_handler::msg_callback_t callback;
+    // Add message callbacks for waypoint handler messages requests
+    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_ITEM, // 39
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &mission_item_callback,
+                                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_MISSION_ITEM; // 39
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_item_callback;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_REQUEST, // 40
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &mission_request_callback,
+                                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_MISSION_REQUEST; // 40
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_request_callback;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_REQUEST_LIST, // 43
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &request_list_callback,
+                                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_MISSION_REQUEST_LIST; // 43
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &request_list_callback;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_COUNT, // 44
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &mission_count_callback,
+                                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_MISSION_COUNT; // 44
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_count_callback;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_msg_callback(&callback);
+    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_CLEAR_ALL, // 45
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &mission_clear_all_callback,
+                                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_MISSION_CLEAR_ALL; // 45
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_clear_all_callback;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
+    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_ACK, // 47
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &mission_ack_callback,
+                                                        this );
 
-    callback.message_id     = MAVLINK_MSG_ID_MISSION_ACK; // 47
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &mission_ack_callback;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_msg_callback(&callback);
-
-    // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_DO_SET_HOME; // 179
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_home;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler_.add_cmd_callback(&callbackcmd);
+    // Add command callbacks for waypoint handler messages requests
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_DO_SET_HOME, // 179
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &set_home,
+                                                        this );
 
     send_home_waypoint();
 

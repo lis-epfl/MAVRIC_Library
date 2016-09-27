@@ -197,7 +197,7 @@ bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config);
  *
  * \param   remote              The pointer to the remote structure
  */
-void remote_update(remote_t* remote);
+bool remote_update(remote_t* remote);
 
 
 /**

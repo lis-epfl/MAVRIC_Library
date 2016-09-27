@@ -46,6 +46,8 @@
 #include <cstdint>
 #include <cstdbool>
 
+#include "util/coord_conventions.hpp"	/* coord_conventions_get_yaw */
+
 extern "C"
 {
 #include "util/quaternions.h"
@@ -75,6 +77,13 @@ typedef struct
 
     ahrs_state_t internal_state;        ///< Leveling state of the ahrs
     float        last_update_s;         ///< The time of the last IMU update in s
+
+    /**
+     * \brief	Gets the yaw angle from the ahrs quaternion
+     *
+     * \return 	yaw
+     */
+    float yaw() const { return coord_conventions_get_yaw(qe); }
 } ahrs_t;
 
 

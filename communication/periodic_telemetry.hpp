@@ -46,6 +46,7 @@
 #include <cstdbool>
 
 #include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
 #include "runtime/scheduler.hpp"
 
 class Periodic_telemetry
@@ -58,7 +59,6 @@ public:
     struct conf_t
     {
         Scheduler::conf_t  scheduler_config;   ///< Configuration for scheduler
-
     };
 
 
@@ -71,26 +71,29 @@ public:
 
 
     /**
-     * \brief       Pointer a module's data structure
-     *
-     * \details     This is used as an alias to any data structure in the prototype of callback functions
-     */
-    typedef void* telemetry_module_t;
-
-
-    /**
      * \brief       Prototype of telemetry functions
+     *
+     * \detail  If gcc > 4.7 was supported on AVR32, we could use sth like
+     *          ```
+     *          template<typename T>
+     *          using function_T = void(*)(const T*, const Mavlink_stream*, const mavlink_message_t*);
+     *          ```
      */
-    typedef void (*telemetry_function_t)(telemetry_module_t, Mavlink_stream*, mavlink_message_t*);
+    template<typename T>
+    struct function
+    {
+        typedef void (*type_t)(const T*, const Mavlink_stream*, mavlink_message_t*);
+    };
 
 
     /**
      * \brief   Constructor
      *
      * \param   mavlink_stream      Stream to which messages will be written
+     * \param   message_handler     MAVLink message handler
      * \param   config              Configuration structure
      */
-    Periodic_telemetry(Mavlink_stream& mavlink_stream, conf_t config = default_config());
+    Periodic_telemetry(Mavlink_stream& mavlink_stream, Mavlink_message_handler& handler, conf_t config = default_config());
 
 
     /**
@@ -102,20 +105,23 @@ public:
     /**
      * \brief   Add new telemetry message to the scheduler
      *
+     * \tparam  T                       Type of the module
+     *
      * \param   task_id                 Unique task identifier
      * \param   repeat_period           Repeat period (us)
-     * \param   function                Function pointer to be called
-     * \param   module_structure        Argument to be passed to the function
+     * \param   telemetry_function      Function pointer to be called
+     * \param   telemetry_module        Argument to be passed to the function
      * \param   priority                Priority
      * \param   timing_mode             Timing mode
      * \param   run_mode                Run mode
      *
      * \return  True if the message was correctly added, false otherwise
      */
+    template<typename T>
     bool add(   uint32_t                        task_id,
                 uint32_t                        repeat_period,
-                telemetry_function_t            function,
-                telemetry_module_t              module,
+                typename function<T>::type_t    telemetry_function,
+                T*                              telemetry_module,
                 Scheduler_task::priority_t      priority    = Scheduler_task::PRIORITY_NORMAL,
                 Scheduler_task::timing_mode_t   timing_mode = Scheduler_task::PERIODIC_RELATIVE,
                 Scheduler_task::run_mode_t      run_mode    = Scheduler_task::RUN_REGULAR);
@@ -136,7 +142,7 @@ public:
      * \param sysid         MAV sysid
      * \param msg           pointer to the stream you want to toggle
      */
-    static void toggle_telemetry_stream(Periodic_telemetry* scheduler, uint32_t sysid, mavlink_message_t* msg);
+    static void toggle_telemetry_stream(Periodic_telemetry* scheduler, uint32_t sysid, const mavlink_message_t* msg);
 
 
 protected:
@@ -146,8 +152,8 @@ protected:
     */
     struct telemetry_entry_t
     {
-        telemetry_function_t    function;           ///<    Pointer to the function to be executed
-        telemetry_module_t      module;             ///<    Pointer to module data structure to be given as argument to the function
+        function<void>::type_t  function;           ///<    Pointer to the function to be executed
+        void*                   module;             ///<    Pointer to module data structure to be given as argument to the function
         Mavlink_stream*         mavlink_stream;     ///<    Pointer to the MAVLink stream structure
     };
 
@@ -205,8 +211,8 @@ public:
      * \param   mavlink_stream      Stream to which messages will be written
      * \param   config              Configuration structure
      */
-    Periodic_telemetry_T(Mavlink_stream& mavlink_stream, conf_t config):
-        Periodic_telemetry(mavlink_stream, config),
+    Periodic_telemetry_T(Mavlink_stream& mavlink_stream, Mavlink_message_handler& handler, conf_t config):
+        Periodic_telemetry(mavlink_stream, handler, config),
         scheduler_(config.scheduler_config)
     {};
 
@@ -261,5 +267,6 @@ Periodic_telemetry::conf_t Periodic_telemetry::default_config(void)
     return conf;
 };
 
+#include "periodic_telemetry.hxx"
 
 #endif /* PERIODIC_TELEMETRY_HPP_ */

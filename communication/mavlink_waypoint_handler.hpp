@@ -207,7 +207,7 @@ private:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_home(Mavlink_waypoint_handler* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t set_home(Mavlink_waypoint_handler* waypoint_handler, const mavlink_command_long_t* packet);
 
     /**
      * \brief   Sends the number of onboard waypoint to MAVLink when asked by ground station
@@ -216,7 +216,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The pointer to the received MAVLink message structure asking the send count
      */
-    static void request_list_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void request_list_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Sends a given waypoint via a MAVLink message
@@ -225,7 +225,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The pointer to the received MAVLink message structure asking for a waypoint
      */
-    static void mission_request_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void mission_request_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Receives a acknowledge message from MAVLink
@@ -234,7 +234,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure
      */
-    static void mission_ack_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void mission_ack_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Receives the number of waypoints that the ground station is sending
@@ -243,7 +243,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the total number of waypoint
      */
-    static void mission_count_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void mission_count_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Receives a given waypoint and stores it in the local structure
@@ -252,7 +252,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the waypoint
      */
-    static void mission_item_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void mission_item_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Clears the waypoint list
@@ -261,7 +261,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     The received MAVLink message structure with the clear command
      */
-    static void mission_clear_all_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, mavlink_message_t* msg);
+    static void mission_clear_all_callback(Mavlink_waypoint_handler* waypoint_handler, uint32_t sysid, const mavlink_message_t* msg);
 };
 
 

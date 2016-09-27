@@ -217,7 +217,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     Incoming MAVLink message
      */
-    static void schedule_all_parameters(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
+    static void schedule_all_parameters(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Callback to a MAVlink parameter request
@@ -226,7 +226,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     Incoming MAVLink message
      */
-    static void send_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
+    static void send_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Callback to a MAVlink parameter set
@@ -235,7 +235,7 @@ private:
      * \param   sysid                   The system ID
      * \param   msg                     Incoming MAVLink message
      */
-    static void receive_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
+    static void receive_parameter(Onboard_parameters* onboard_parameters, uint32_t sysid, const mavlink_message_t* msg);
 
     /**
      * \brief   Read/Write from/to flash depending on the parameters of the MAVLink command message
@@ -245,7 +245,7 @@ private:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t preflight_storage(Onboard_parameters* onboard_parameters, mavlink_command_long_t* msg);
+    static mav_result_t preflight_storage(Onboard_parameters* onboard_parameters, const mavlink_command_long_t* msg);
 
 };
 

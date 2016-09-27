@@ -30,33 +30,37 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file dynamic_model_telemetry.hpp
+ * \file scheduler_task.hxx
  *
  * \author MAV'RIC Team
- * \author Basil Huber
  *
- * \brief This module takes care of sending periodic telemetric messages for
- * the dynamic model
+ * \brief Task managed by the scheduler
  *
  ******************************************************************************/
 
 
-#ifndef DYNAMIC_MODEL_TELEMETRY_HPP_
-#define DYNAMIC_MODEL_TELEMETRY_HPP_
-
-#include "communication/mavlink_stream.hpp"
-#include "simulation/dynamic_model.hpp"
-
-
-/**
- * \brief   Function to send the MAVLink HIL_STATE_QUATERNION message sending the groundtruth of the simulation
- *
- * \details true airspeed and indicated airspeed currently equal ground speed
- *
- * \param   dynamic_model           Dynamic model of the simulation
- * \param   mavlink_stream          The pointer to the MAVLink stream structure
- * \param   msg                     The pointer to the MAVLink message
- */
-void dynamic_model_telemetry_send_state_quaternion(const Dynamic_model* model, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-
-#endif /* DYNAMIC_MODEL_TELEMETRY_HPP_ */
+template<typename T>
+Scheduler_task::Scheduler_task( uint32_t repeat_period,
+                                run_mode_t run_mode,
+                                timing_mode_t timing_mode,
+                                priority_t priority,
+                                typename function<T>::type_t task_function,
+                                T* task_argument,
+                                int32_t task_id):
+    task_id(task_id),
+    run_mode(run_mode),
+    timing_mode(timing_mode),
+    priority(priority),
+    repeat_period(repeat_period),
+    next_run(0),
+    execution_time(0),
+    execution_time_avg(0),
+    execution_time_var(0),
+    execution_time_max(0),
+    delay(0),
+    delay_avg(0),
+    delay_var(0),
+    delay_max(0),
+    task_function(reinterpret_cast<function<void>::type_t>(task_function)),  // we do dangerous casting here, but it is safe because
+    task_argument(reinterpret_cast<void*>(task_argument))                    // the types of task_function and task_argument are compatible
+{}

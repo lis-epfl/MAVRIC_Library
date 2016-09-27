@@ -51,6 +51,24 @@
 class Scheduler_task
 {
 public:
+
+
+    /**
+     * \brief   Prototype of a task function and its argument
+     *
+     * \detail  If gcc > 4.7 was supported on AVR32, we could use sth like
+     *          ```
+     *          template<typename T>
+     *          using function_T = bool(*)(T*);
+     *          ```
+     */
+    template<typename T>
+    struct function
+    {
+        typedef bool(*type_t)(T*);
+    };
+
+
     /**
      * \brief   Task return code
      */
@@ -60,18 +78,6 @@ public:
         RUN_BLOCKED = 0,       ///<    If a task returns "TASK_RUN_BLOCKED", the scheduler will try to re-run at the next schedule update, and not update "next_run"
         RUN_SUCCESS = 1        ///<    The task was successfully executed
     };
-
-
-    /**
-     * \brief   Generic argument to be passed to a task function
-     */
-    typedef void* task_argument_t;
-
-
-    /**
-     * \brief   Prototype of a task function
-     */
-    typedef bool (*task_function_t)(task_argument_t);
 
 
     /**
@@ -117,22 +123,24 @@ public:
     /**
      * \brief   Constructor
      *
+     * \tparam T                    Type of the module
+     *
      * \param repeat_period         Repeat period in us
      * \param run_mode              Run mode, defined in enum Scheduler_task::run_mode_t
      * \param timing_mode           Timing mode, defined in Scheduler_task::timing_mode_t
      * \param priority              Priority ,defined in Scheduler_task::priority_t
-     * \param call_function         Function to call
-     * \param function_argument     Argument of the funtion to call
+     * \param task_function         Function to call
+     * \param task_argument         Argument of the funtion to call
      * \param task_id               ID of the task
      */
+    template<typename T>
     Scheduler_task( uint32_t repeat_period,
-                    Scheduler_task::run_mode_t run_mode,
-                    Scheduler_task::timing_mode_t timing_mode,
-                    Scheduler_task::priority_t priority,
-                    Scheduler_task::task_function_t call_function,
-                    Scheduler_task::task_argument_t function_argument,
+                    run_mode_t run_mode,
+                    timing_mode_t timing_mode,
+                    priority_t priority,
+                    typename function<T>::type_t task_function,
+                    T* task_argument,
                     int32_t task_id);
-
 
     /**
      * \brief               Modifies the run mode of an existing task
@@ -204,8 +212,10 @@ public:
     uint32_t            rt_violations;          ///<    Number of Real-time violations, this is incremented each time an execution is skipped
 
 private:
-    task_function_t     call_function;          ///<    Function to be called
-    task_argument_t     function_argument;      ///<    Argument to be passed to the function
+    function<void>::type_t  task_function;      ///<    Function to be called
+    void*                   task_argument;      ///<    Argument to be passed to the function
 };
+
+#include "scheduler_task.hxx"
 
 #endif /* SCHEDULER_TASK_HPP_ */

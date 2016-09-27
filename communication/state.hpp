@@ -224,8 +224,7 @@ public:
     static inline conf_t wing_default_config();
 
     friend bool state_telemetry_set_mode(State* state, Mav_mode mav_mode);
-
-    friend mav_result_t state_telemetry_send_autopilot_capabilities(State* state, mavlink_command_long_t* packet);
+    friend mav_result_t state_telemetry_send_autopilot_capabilities(State* state, const mavlink_command_long_t* packet);
 
 // TODO:
 // All this should be private

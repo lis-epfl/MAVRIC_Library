@@ -65,28 +65,28 @@ private:
      *
      * \param   packet                  The pointer to the structure of the MAVLink command message long
      */
-    void set_circle_scenario(mavlink_command_long_t* packet);
+    void set_circle_scenario(const mavlink_command_long_t* packet);
 
     /**
      * \brief   Sets a circle scenario, where n waypoints are set at random position on a circle
      *
      * \param   packet                  The pointer to the structure of the MAVLink command message long
      */
-    void set_circle_uniform_scenario(mavlink_command_long_t* packet);
+    void set_circle_uniform_scenario(const mavlink_command_long_t* packet);
 
     /**
      * \brief   Sets a stream scenario, where two flows of MAVs go in opposite ways
      *
      * \param   packet                  The pointer to the structure of the MAVLink command message long
      */
-    void set_stream_scenario(mavlink_command_long_t* packet);
+    void set_stream_scenario(const mavlink_command_long_t* packet);
 
     /**
      * \brief   Sets a swarm scenario, where two flocks (grouping) of MAVs go in opposite ways
      *
      * \param   packet                  The pointer to the structure of the MAVLink command message long
      */
-    void set_swarm_scenario(mavlink_command_long_t* packet);
+    void set_swarm_scenario(const mavlink_command_long_t* packet);
 
 
     /**
@@ -97,7 +97,7 @@ private:
      *
      * \return  mav_result_t            The result of the scenario setting up
      */
-    static mav_result_t set_scenario(Mavlink_waypoint_handler_swarm* waypoint_handler, mavlink_command_long_t* packet);
+    static mav_result_t set_scenario(Mavlink_waypoint_handler_swarm* waypoint_handler, const mavlink_command_long_t* packet);
 
 
 };

@@ -61,13 +61,13 @@ extern "C"
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t gps_start_configuration(Gps* gps, mavlink_command_long_t* packet);
+static mav_result_t gps_start_configuration(Gps* gps, const mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t gps_start_configuration(Gps* gps, mavlink_command_long_t* packet)
+static mav_result_t gps_start_configuration(Gps* gps, const mavlink_command_long_t* packet)
 {
     mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
 
@@ -90,15 +90,12 @@ bool gps_telemetry_init(Gps* gps, Mavlink_message_handler* message_handler)
     bool init_success = true;
 
     // Add callbacks for fat_fs_mounting commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_PREFLIGHT_UAVCAN; // 243
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)            &gps_start_configuration;
-    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) gps;
-    init_success &= message_handler->add_cmd_callback(&callbackcmd);
+    init_success &= message_handler->add_cmd_callback(  MAV_CMD_PREFLIGHT_UAVCAN, // 243
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &gps_start_configuration,
+                                                        gps );
 
     return init_success;
 }

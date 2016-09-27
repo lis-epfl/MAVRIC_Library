@@ -59,14 +59,14 @@
  *
  * \return  The MAV_RESULT of the command
  */
-static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_long_t* packet);
+static mav_result_t imu_telemetry_start_calibration(Imu* imu, const mavlink_command_long_t* packet);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t imu_telemetry_start_calibration(Imu* imu, mavlink_command_long_t* packet)
+static mav_result_t imu_telemetry_start_calibration(Imu* imu, const mavlink_command_long_t* packet)
 {
     bool success = true;
     mav_result_t result = MAV_RESULT_UNSUPPORTED;
@@ -198,15 +198,12 @@ bool imu_telemetry_init(Imu* imu, Mavlink_message_handler* message_handler)
     bool init_success = true;
 
     // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_PREFLIGHT_CALIBRATION; // 241
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)            &imu_telemetry_start_calibration;
-    callbackcmd.module_struct  = (Mavlink_message_handler::handling_module_struct_t) imu;
-    init_success &= message_handler->add_cmd_callback(&callbackcmd);
+    init_success &= message_handler->add_cmd_callback(  MAV_CMD_PREFLIGHT_CALIBRATION, // 241
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &imu_telemetry_start_calibration,
+                                                        imu );
 
     return init_success;
 }
