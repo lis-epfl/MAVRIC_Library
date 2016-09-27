@@ -240,18 +240,18 @@ mav_result_t Mission_planner::nav_land_callback(Mission_planner* mission_planner
         result = MAV_RESULT_ACCEPTED;
 
         // Determine landing location
-        local_position_t landing_position = mission_planner->ins_.position_lf();
-        landing_position[Z] = -5.0f;
+        local_position_t landing_position;
         if (packet->param1 == 1)
         {
             print_util_dbg_print("Landing at a given location\r\n");
             landing_position[X] = packet->param5;
             landing_position[Y] = packet->param6;
-
+            landing_position[Z] = packet->param7;
         }
         else
         {
             print_util_dbg_print("Landing on the spot\r\n");
+            landing_position = mission_planner->ins_.position_lf();
         }
 
         // Set hold position for landing
