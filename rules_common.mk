@@ -53,8 +53,8 @@ LIB_SRCS += communication/state_telemetry.cpp
 
 
 LIB_SRCS += control/altitude_controller.cpp
-LIB_SRCS += control/attitude_controller_p2.c
-LIB_SRCS += control/attitude_error_estimator.c
+LIB_SRCS += control/attitude_controller_p2.cpp
+LIB_SRCS += control/attitude_error_estimator.cpp
 LIB_SRCS += control/dubin.cpp
 LIB_SRCS += control/joystick.cpp
 LIB_SRCS += control/joystick_telemetry.cpp
