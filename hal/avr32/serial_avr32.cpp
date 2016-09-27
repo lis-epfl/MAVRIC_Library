@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 
-#include "hal/avr32/serial_avr32.hpp"
+#include "serial_avr32.hpp"
 
 extern "C"
 {
@@ -55,6 +55,11 @@ Serial_avr32::Serial_avr32(serial_avr32_conf_t config)
 {
     config_         = config;
     irq_callback    = NULL;
+}
+
+//Empty constructor called while the initialization of GSM Module
+Serial_avr32::Serial_avr32()
+{
 }
 
 

@@ -111,6 +111,14 @@ public:
      */
     Serial_avr32(serial_avr32_conf_t config);
 
+    /**
+       * \brief   Empty constructor called while the initialization of GSM Module
+       *
+       * \return  true Success
+       * \return  false Error
+       */
+    Serial_avr32();
+
 
     /**
      * \brief   Hardware initialization
@@ -118,7 +126,7 @@ public:
      * \return  true Success
      * \return  false Error
      */
-    bool init(void);
+     bool init(void);
 
 
     /**
@@ -126,7 +134,7 @@ public:
      *
      * \return  Number of incoming bytes available
      */
-    uint32_t readable(void);
+     uint32_t readable(void);
 
 
     /**
@@ -134,7 +142,7 @@ public:
      *
      * \return  Number of bytes available for writing
      */
-    uint32_t writeable(void);
+     uint32_t writeable(void);
 
 
     /**
@@ -142,7 +150,7 @@ public:
      *
      * \return  Number of bytes available for writing
      */
-    void flush(void);
+     void flush(void);
 
 
     /**
@@ -158,7 +166,7 @@ public:
      * \return  true        Success
      * \return  false       Failed
      */
-    bool attach(serial_interrupt_callback_t func);
+     bool attach(serial_interrupt_callback_t func);
 
 
     /**
@@ -170,7 +178,7 @@ public:
      * \return  true        Data successfully written
      * \return  false       Data not written
      */
-    bool write(const uint8_t* bytes, const uint32_t size = 1);
+    virtual bool write(const uint8_t* bytes, const uint32_t size = 1);
 
 
     /**
@@ -185,7 +193,7 @@ public:
     bool read(uint8_t* bytes, const uint32_t size = 1);
 
 
-private:
+protected:
     serial_avr32_conf_t         config_;            ///< Configuration
     volatile avr32_usart_t*     uart_;              ///< Hardware peripheral
     Buffer_tpl<1024>            tx_buffer_;         ///< Transmission buffer
