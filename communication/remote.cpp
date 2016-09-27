@@ -179,7 +179,7 @@ bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config)
 }
 
 
-void remote_update(remote_t* remote)
+bool remote_update(remote_t* remote)
 {
     uint32_t now = time_keeper_get_us() ;
     float raw;
@@ -230,6 +230,8 @@ void remote_update(remote_t* remote)
             remote->signal_quality = SIGNAL_LOST;
         }
     }
+
+    return true;
 }
 
 

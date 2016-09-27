@@ -58,14 +58,14 @@
  * \param   sysid       The sysid of the system
  * \param   msg         The pointer to the MAVLink message received
  */
-static void joystick_telemetry_parse_msg(Joystick* joystick, uint32_t sysid, mavlink_message_t* msg);
+static void joystick_telemetry_parse_msg(Joystick* joystick, uint32_t sysid, const mavlink_message_t* msg);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void joystick_telemetry_parse_msg(Joystick* joystick, uint32_t sysid, mavlink_message_t* msg)
+static void joystick_telemetry_parse_msg(Joystick* joystick, uint32_t sysid, const mavlink_message_t* msg)
 {
     mavlink_manual_control_t packet;
     mavlink_msg_manual_control_decode(msg, &packet);
@@ -91,14 +91,11 @@ bool joystick_telemetry_init(Joystick* joystick, Mavlink_message_handler* messag
     bool init_success = true;
 
     // Add callbacks for waypoint handler messages requests
-    Mavlink_message_handler::msg_callback_t callback;
-
-    callback.message_id     = MAVLINK_MSG_ID_MANUAL_CONTROL; // 69
-    callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-    callback.compid_filter  = MAV_COMP_ID_ALL;
-    callback.function       = (Mavlink_message_handler::msg_callback_func_t)      &joystick_telemetry_parse_msg;
-    callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t) joystick;
-    init_success &= message_handler->add_msg_callback(&callback);
+    init_success &= message_handler->add_msg_callback(  MAVLINK_MSG_ID_MANUAL_CONTROL, // 69
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &joystick_telemetry_parse_msg,
+                                                        joystick );
 
     return init_success;
 }

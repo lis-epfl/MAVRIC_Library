@@ -59,7 +59,7 @@ bool servos_telemetry_init(servos_telemetry_t* servos_telemetry, Servo* servo_0,
     return true;
 }
 
-void servos_telemetry_mavlink_send(servos_telemetry_t* servos_telemetry, Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void servos_telemetry_mavlink_send(const servos_telemetry_t* servos_telemetry, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_servo_output_raw_pack(mavlink_stream->sysid(),
                                       mavlink_stream->compid(),
