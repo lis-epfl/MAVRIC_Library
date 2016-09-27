@@ -42,6 +42,10 @@
 #ifndef MEGAFLY_REV4_HPP_
 #define MEGAFLY_REV4_HPP_
 
+//#include "../../drivers/2GCellular/GSMShield.h"
+#include "../../hal/avr32/serial_avr32.hpp"
+#include "../../hal/avr32/serial_avr32_gsm.hpp"
+#include "../../hal/avr32/serial_avr32_gsm_udp.hpp"
 #include "hal/avr32/adc_avr32.hpp"
 #include "hal/avr32/file_flash_avr32.hpp"
 #include "hal/avr32/file_fat_fs.hpp"
@@ -49,7 +53,6 @@
 #include "hal/avr32/i2c_avr32.hpp"
 #include "hal/avr32/led_avr32.hpp"
 #include "hal/avr32/pwm_avr32.hpp"
-#include "hal/avr32/serial_avr32.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
 
 #include "drivers/airspeed_analog.hpp"
@@ -95,6 +98,7 @@ typedef struct
     serial_avr32_conf_t     uart0_config;
     serial_avr32_conf_t     uart1_config;
     serial_avr32_conf_t     uart3_config;
+    serial_avr32_conf_t     uart4_config;
     serial_usb_avr32_conf_t uart_usb_config;
     i2c_avr32_conf_t        i2c0_config;
     i2c_avr32_conf_t        i2c1_config;
@@ -138,9 +142,10 @@ public:
      */
     Gpio_avr32                  dsm_receiver_pin;
     Gpio_avr32                  dsm_power_pin;
-    Serial_avr32                uart0;
-    Serial_avr32                uart1;
+    Serial_avr32      			uart0;
+    Serial_avr32        		uart1;
     Serial_avr32                uart3;
+    Serial_avr32_gsm_udp		uart4;
     Serial_usb_avr32            uart_usb;
     I2c_avr32                   i2c0;
     I2c_avr32                   i2c1;
@@ -266,6 +271,22 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.uart3_config.options.channelmode   = USART_NORMAL_CHMODE;
     conf.uart3_config.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
     conf.uart3_config.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
+
+
+    // -------------------------------------------------------------------------
+	// UART4 configuration
+	// -------------------------------------------------------------------------
+	conf.uart4_config                       = {};
+	conf.uart4_config.serial_device         = AVR32_SERIAL_4;
+	conf.uart4_config.mode                  = AVR32_SERIAL_IN_OUT;
+	conf.uart4_config.options               = {};
+	conf.uart4_config.options.baudrate      = 9600;
+	conf.uart4_config.options.charlength    = 8;
+	conf.uart4_config.options.paritytype    = USART_NO_PARITY;
+	conf.uart4_config.options.stopbits      = USART_1_STOPBIT;
+	conf.uart4_config.options.channelmode   = USART_NORMAL_CHMODE;
+	conf.uart4_config.rx_pin_map            = {AVR32_USART4_RXD_2_PIN, AVR32_USART4_RXD_2_FUNCTION};
+	conf.uart4_config.tx_pin_map            = {AVR32_USART4_TXD_2_PIN, AVR32_USART4_TXD_2_FUNCTION};
 
 
     // -------------------------------------------------------------------------
