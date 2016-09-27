@@ -41,6 +41,7 @@
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 #include "hal/common/time_keeper.hpp"
 
+
 extern "C"
 {
 #include "util/print_util.h"
@@ -55,6 +56,8 @@ extern "C"
 #include "hal/analog_monitor_default_config.h"
 
 #include "hal/piezo_speaker.h"
+
+
 }
 
 
@@ -71,6 +74,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
     uart0(config.uart0_config),
     uart1(config.uart1_config),
     uart3(config.uart3_config),
+	uart4(config.uart4_config),
     uart_usb(config.uart_usb_config),
     i2c0(config.i2c0_config),
     i2c1(config.i2c1_config),
@@ -192,6 +196,14 @@ bool Megafly_rev4::init(void)
     print_util_dbg_init_msg("[UART3]", ret);
     init_success &= ret;
     time_keeper_delay_ms(50);
+
+    // -------------------------------------------------------------------------
+	// Init UART4
+	// -------------------------------------------------------------------------
+	ret = uart4.init();
+	print_util_dbg_init_msg("[UART4]", ret);
+	init_success &= ret;
+	time_keeper_delay_ms(50);
 
 
     // -------------------------------------------------------------------------
@@ -362,6 +374,7 @@ bool Megafly_rev4::init(void)
     // -------------------------------------------------------------------------
     // Init sonar
     // -------------------------------------------------------------------------
+    // Gives error
     ret = sonar_i2cxl.init();
     print_util_dbg_init_msg("[SONAR]", ret);
     init_success &= ret;
