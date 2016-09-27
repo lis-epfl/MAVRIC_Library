@@ -176,8 +176,6 @@ public:
     bool is_healthy() const;
 
     // Getters and setters
-    const ahrs_t& ahrs() const;
-    const INS& ins() const;
     Mavlink_communication_T<10, 10, 10, 10>& mavlink_communication();
 
     int camera_id() const;

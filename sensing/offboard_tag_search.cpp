@@ -153,18 +153,18 @@ void Offboard_Tag_Search::set_position_at_photo(int index)
     position_at_photo_[index][1] = ins_.position_lf()[1];
     position_at_photo_[index][2] = ins_.position_lf()[2];
 
-    ahrs_at_photo_[index].qe.v[0] = ahrs().qe.v[0];
-    ahrs_at_photo_[index].qe.v[1] = ahrs().qe.v[1];
-    ahrs_at_photo_[index].qe.v[2] = ahrs().qe.v[2];
-    ahrs_at_photo_[index].qe.s = ahrs().qe.s;
-    ahrs_at_photo_[index].angular_speed[0] = ahrs().angular_speed[0];
-    ahrs_at_photo_[index].angular_speed[1] = ahrs().angular_speed[1];
-    ahrs_at_photo_[index].angular_speed[2] = ahrs().angular_speed[2];
-    ahrs_at_photo_[index].linear_acc[0] = ahrs().linear_acc[0];
-    ahrs_at_photo_[index].linear_acc[1] = ahrs().linear_acc[1];
-    ahrs_at_photo_[index].linear_acc[2] = ahrs().linear_acc[2];
-    ahrs_at_photo_[index].internal_state = ahrs().internal_state;
-    ahrs_at_photo_[index].last_update_s = ahrs().last_update_s;
+    ahrs_at_photo_[index].qe.v[0] = ahrs_.qe.v[0];
+    ahrs_at_photo_[index].qe.v[1] = ahrs_.qe.v[1];
+    ahrs_at_photo_[index].qe.v[2] = ahrs_.qe.v[2];
+    ahrs_at_photo_[index].qe.s = ahrs_.qe.s;
+    ahrs_at_photo_[index].angular_speed[0] = ahrs_.angular_speed[0];
+    ahrs_at_photo_[index].angular_speed[1] = ahrs_.angular_speed[1];
+    ahrs_at_photo_[index].angular_speed[2] = ahrs_.angular_speed[2];
+    ahrs_at_photo_[index].linear_acc[0] = ahrs_.linear_acc[0];
+    ahrs_at_photo_[index].linear_acc[1] = ahrs_.linear_acc[1];
+    ahrs_at_photo_[index].linear_acc[2] = ahrs_.linear_acc[2];
+    ahrs_at_photo_[index].internal_state = ahrs_.internal_state;
+    ahrs_at_photo_[index].last_update_s = ahrs_.last_update_s;
 }
 
 const float& Offboard_Tag_Search::last_update_us(void) const
@@ -277,19 +277,9 @@ void Offboard_Tag_Search::land_on_tag_behavior(land_on_tag_behavior_t behavior)
     land_on_tag_behavior_ = behavior;
 }
 
-const ahrs_t& Offboard_Tag_Search::ahrs() const
-{
-    return ahrs_;
-}
-
 Mavlink_communication_T<10, 10, 10, 10>& Offboard_Tag_Search::mavlink_communication()
 {
     return mavlink_communication_;
-}
-
-const INS& Offboard_Tag_Search::ins() const
-{
-    return ins_;
 }
 
 bool Offboard_Tag_Search::has_photo_been_taken(int index) const
