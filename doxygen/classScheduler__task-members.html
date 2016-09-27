@@ -119,11 +119,9 @@ This is the complete list of members for <a class="el" href="classScheduler__tas
   <tr class="memlist"><td><a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046">RUN_REGULAR</a> enum value</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler__task.html#a79650dbee331039a9977c6b86ccd4ceba4393f0be52ea934a219a57bc4d817294">RUN_SUCCESS</a> enum value</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler__task.html#af8cfd1985c6793db9f01fe606b8aa5c3">Scheduler_task</a>(void)</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classScheduler__task.html#ad73165a275b61207e31e2ef9d04d1caa">Scheduler_task</a>(uint32_t repeat_period, Scheduler_task::run_mode_t run_mode, Scheduler_task::timing_mode_t timing_mode, Scheduler_task::priority_t priority, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, int32_t task_id)</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classScheduler__task.html#afaf1c6ecda031c2157771d670f14fd11">Scheduler_task</a>(uint32_t repeat_period, run_mode_t run_mode, timing_mode_t timing_mode, priority_t priority, typename function&lt; T &gt;::type_t task_function, T *task_argument, int32_t task_id)</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef">set_run_mode</a>(run_mode_t mode)</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler__task.html#a70f6839a9a39df993c5afeb7bc7f0451">suspend</a>(uint32_t delay)</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classScheduler__task.html#a28462679852aacf669176cd93005842a">task_argument_t</a> typedef</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classScheduler__task.html#a28dad589f3de23a75e9d0dca49ef9057">task_function_t</a> typedef</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler__task.html#ac07cc83bbbad8a5afe7a62cfe89ef3a7">task_id</a></td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler__task.html#a24f8c10d6fab7845f8f16bbd0a3b2aa9">timing_mode</a></td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">timing_mode_t</a> enum name</td><td><a class="el" href="classScheduler__task.html">Scheduler_task</a></td><td></td></tr>
@@ -145,7 +143,7 @@ This is the complete list of members for <a class="el" href="classScheduler__tas
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 27 2016 09:47:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

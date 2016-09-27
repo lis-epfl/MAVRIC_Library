@@ -84,7 +84,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classScheduler__T.html">Scheduler_T&lt; N &gt;</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb">add_task</a>(uint32_t repeat_period, Scheduler_task::task_function_t call_function, Scheduler_task::task_argument_t function_argument, Scheduler_task::priority_t priority=Scheduler_task::PRIORITY_NORMAL, Scheduler_task::timing_mode_t timing_mode=Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::run_mode_t run_mode=Scheduler_task::RUN_REGULAR, int32_t task_id=-1)</td><td><a class="el" href="classScheduler.html">Scheduler</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classScheduler.html#a0c94779cd53b5df92e48ff321d0954a3">add_task</a>(uint32_t repeat_period, typename Scheduler_task::function&lt; T &gt;::type_t task_function, T *task_argument, Scheduler_task::priority_t priority=Scheduler_task::PRIORITY_NORMAL, Scheduler_task::timing_mode_t timing_mode=Scheduler_task::PERIODIC_ABSOLUTE, Scheduler_task::run_mode_t run_mode=Scheduler_task::RUN_REGULAR, int32_t task_id=-1)</td><td><a class="el" href="classScheduler.html">Scheduler</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler.html#a14bff08b808d78e8a1db43266bc26695">default_config</a>(void)</td><td><a class="el" href="classScheduler.html">Scheduler</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93a182d5726549fd24825e5d9b4c1f3a20d">FIXED_PRIORITY</a> enum value</td><td><a class="el" href="classScheduler.html">Scheduler</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classScheduler.html#a4127de73d7febc64303fb8cccaf522d1">get_task_by_id</a>(uint16_t task_id) const </td><td><a class="el" href="classScheduler.html">Scheduler</a></td><td></td></tr>
@@ -122,7 +122,7 @@ This is the complete list of members for <a class="el" href="classScheduler__T.h
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 27 2016 09:47:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

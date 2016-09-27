@@ -1,8 +1,8 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="391,112,681,141"/>
-<area shape="rect" id="node5" href="$classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="732,5,1071,35"/>
-<area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="733,59,1069,88"/>
-<area shape="rect" id="node9" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="765,112,1037,141"/>
-<area shape="rect" id="node11" href="$classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="843,165,960,195"/>
-<area shape="rect" id="node13" href="$classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="829,219,973,248"/>
+<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a1f977e1892b567c50d64c19e20b6ea00" title="Registers a new callback for a message." alt="" coords="391,112,681,141"/>
+<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="731,5,1067,35"/>
+<area shape="rect" id="node7" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="763,59,1035,88"/>
+<area shape="rect" id="node9" href="$classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c" title="Constructor." alt="" coords="776,112,1021,141"/>
+<area shape="rect" id="node11" href="$classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="840,165,957,195"/>
+<area shape="rect" id="node13" href="$classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="827,219,971,248"/>
 </map>

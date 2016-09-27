@@ -120,8 +120,8 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880">init</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes callback to mavlink messages.  <a href="#a05223fc2ab26f0f24bfde738ef97a880"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__mocap.html#a04ca5bd4ae82f5374a55064f767c85a7">callback</a> (uint32_t sysid, mavlink_message_t *msg)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Method used to update internal state when a message is received.  <a href="#a04ca5bd4ae82f5374a55064f767c85a7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__mocap.html#a6c7014122cf33718aa966bd6d69661d1">callback</a> (uint32_t sysid, const mavlink_message_t *msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Method used to update internal state when a message is received.  <a href="#a6c7014122cf33718aa966bd6d69661d1"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGps__mocap.html#a9f541133d4ee0322a2af688cc4846d7a">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function  Reads new values from sensor.  <a href="#a9f541133d4ee0322a2af688cc4846d7a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a657e8edc7ffb44e03bf7c68a3bc0330f"></a><!-- doxytag: member="Gps_mocap::configure" ref="a657e8edc7ffb44e03bf7c68a3bc0330f" args="(void)" -->
@@ -162,12 +162,12 @@ Static Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Class to expose data received from motion capture system as GPS data. </p>
 <p>The mocap data is received via mavlink messages of type ATT_POS_MOCAP </p>
 </div><hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a04ca5bd4ae82f5374a55064f767c85a7"></a><!-- doxytag: member="Gps_mocap::callback" ref="a04ca5bd4ae82f5374a55064f767c85a7" args="(uint32_t sysid, mavlink_message_t *msg)" -->
+<a class="anchor" id="a6c7014122cf33718aa966bd6d69661d1"></a><!-- doxytag: member="Gps_mocap::callback" ref="a6c7014122cf33718aa966bd6d69661d1" args="(uint32_t sysid, const mavlink_message_t *msg)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classGps__mocap.html#a04ca5bd4ae82f5374a55064f767c85a7">Gps_mocap::callback</a> </td>
+          <td class="memname">void <a class="el" href="classGps__mocap.html#a6c7014122cf33718aa966bd6d69661d1">Gps_mocap::callback</a> </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>sysid</em>, </td>
@@ -175,7 +175,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">mavlink_message_t *&#160;</td>
+          <td class="paramtype">const mavlink_message_t *&#160;</td>
           <td class="paramname"><em>msg</em>&#160;</td>
         </tr>
         <tr>
@@ -195,15 +195,6 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classGps__mocap_a04ca5bd4ae82f5374a55064f767c85a7_icgraph.png" border="0" usemap="#classGps__mocap_a04ca5bd4ae82f5374a55064f767c85a7_icgraph" alt=""/></div>
-<map name="classGps__mocap_a04ca5bd4ae82f5374a55064f767c85a7_icgraph" id="classGps__mocap_a04ca5bd4ae82f5374a55064f767c85a7_icgraph">
-<area shape="rect" id="node3" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="203,5,320,35"/></map>
-</div>
-</p>
 
 </div>
 </div>
@@ -380,7 +371,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classGps__mocap_a05223fc2ab26f0f24bfde738ef97a880_cgraph.png" border="0" usemap="#classGps__mocap_a05223fc2ab26f0f24bfde738ef97a880_cgraph" alt=""/></div>
 <map name="classGps__mocap_a05223fc2ab26f0f24bfde738ef97a880_cgraph" id="classGps__mocap_a05223fc2ab26f0f24bfde738ef97a880_cgraph">
-<area shape="rect" id="node3" href="classGps__mocap.html#a04ca5bd4ae82f5374a55064f767c85a7" title="Method used to update internal state when a message is received." alt="" coords="244,5,391,35"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="172,59,463,88"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="513,32,847,61"/><area shape="rect" id="node9" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="536,85,824,115"/></map>
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a1f977e1892b567c50d64c19e20b6ea00" title="Registers a new callback for a message." alt="" coords="172,32,463,61"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="513,5,847,35"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="536,59,824,88"/></map>
 </div>
 </p>
 
@@ -624,7 +615,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 27 2016 09:47:15 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

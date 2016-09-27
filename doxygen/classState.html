@@ -220,8 +220,8 @@ Friends</h2></td></tr>
 class&#160;</td><td class="memItemRight" valign="bottom"><b>State_machine</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af08b686cbd52663ddf362b24f664ac88"></a><!-- doxytag: member="State::state_telemetry_set_mode" ref="af08b686cbd52663ddf362b24f664ac88" args="(State *state, Mav_mode mav_mode)" -->
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>state_telemetry_set_mode</b> (<a class="el" href="classState.html">State</a> *state, <a class="el" href="classMav__mode.html">Mav_mode</a> <a class="el" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16">mav_mode</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">mav_result_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a4664b4ca5c776f7a5db625292bd8b91c">state_telemetry_send_autopilot_capabilities</a> (<a class="el" href="classState.html">State</a> *state, mavlink_command_long_t *packet)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES.  <a href="#a4664b4ca5c776f7a5db625292bd8b91c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">mav_result_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a77c465b144bffefa1a8c720ceee95fcc">state_telemetry_send_autopilot_capabilities</a> (<a class="el" href="classState.html">State</a> *state, const mavlink_command_long_t *packet)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback to the command 520 MAV_CMD_REQUEST_AUTOPILOT_CAPABILITIES.  <a href="#a77c465b144bffefa1a8c720ceee95fcc"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The MAV state. </p>
@@ -664,12 +664,12 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" id="a4664b4ca5c776f7a5db625292bd8b91c"></a><!-- doxytag: member="State::state_telemetry_send_autopilot_capabilities" ref="a4664b4ca5c776f7a5db625292bd8b91c" args="(State *state, mavlink_command_long_t *packet)" -->
+<a class="anchor" id="a77c465b144bffefa1a8c720ceee95fcc"></a><!-- doxytag: member="State::state_telemetry_send_autopilot_capabilities" ref="a77c465b144bffefa1a8c720ceee95fcc" args="(State *state, const mavlink_command_long_t *packet)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">mav_result_t <a class="el" href="classState.html#a4664b4ca5c776f7a5db625292bd8b91c">state_telemetry_send_autopilot_capabilities</a> </td>
+          <td class="memname">mav_result_t <a class="el" href="classState.html#a77c465b144bffefa1a8c720ceee95fcc">state_telemetry_send_autopilot_capabilities</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classState.html">State</a> *&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -677,7 +677,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">mavlink_command_long_t *&#160;</td>
+          <td class="paramtype">const mavlink_command_long_t *&#160;</td>
           <td class="paramname"><em>packet</em>&#160;</td>
         </tr>
         <tr>
@@ -723,7 +723,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 27 2016 09:47:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

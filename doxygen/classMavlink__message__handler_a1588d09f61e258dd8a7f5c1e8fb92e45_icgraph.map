@@ -1,8 +1,8 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a01aac22ef067cbcb5d48a095b6ddd2c1" title="Registers a new callback for a command." alt="" coords="343,59,633,88"/>
-<area shape="rect" id="node9" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="375,112,601,141"/>
-<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="683,5,1019,35"/>
-<area shape="rect" id="node7" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="715,59,987,88"/>
-<area shape="rect" id="node11" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="739,112,963,141"/>
-<area shape="rect" id="node13" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1067,112,1323,141"/>
+<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="375,5,601,35"/>
+<area shape="rect" id="node9" href="$classMavlink__message__handler.html#a75064672275e4187f71185925b0cf247" title="Registers a new callback for a command." alt="" coords="343,59,633,88"/>
+<area shape="rect" id="node5" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="739,5,963,35"/>
+<area shape="rect" id="node7" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1067,5,1323,35"/>
+<area shape="rect" id="node11" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="683,59,1019,88"/>
+<area shape="rect" id="node13" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="715,112,987,141"/>
 </map>

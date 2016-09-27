@@ -81,7 +81,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a>  </div>
@@ -103,32 +102,28 @@ Inheritance diagram for Periodic_telemetry:</div>
 Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPeriodic__telemetry_1_1conf__t.html">conf_t</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration structure.  <a href="structPeriodic__telemetry_1_1conf__t.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPeriodic__telemetry_1_1function.html">function</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype of telemetry functions.  <a href="structPeriodic__telemetry_1_1function.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPeriodic__telemetry_1_1telemetry__entry__t.html">telemetry_entry_t</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">MAVLink message handler structure.  <a href="structPeriodic__telemetry_1_1telemetry__entry__t.html#details">More...</a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">typedef void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b">telemetry_module_t</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer a module's data structure.  <a href="#a5c7c1ef1152e56a77cdf98e8ed72252b"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab1bf3e1cc481736d50669f9dc939c2f7"></a><!-- doxytag: member="Periodic_telemetry::telemetry_function_t" ref="ab1bf3e1cc481736d50669f9dc939c2f7" args=")(telemetry_module_t, Mavlink_stream *, mavlink_message_t *)" -->
-typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#ab1bf3e1cc481736d50669f9dc939c2f7">telemetry_function_t</a> )(<a class="el" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b">telemetry_module_t</a>, <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> *, mavlink_message_t *)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Prototype of telemetry functions. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a7e0645e3788e8133ab047aa570d9b653">Periodic_telemetry</a> (<a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="structPeriodic__telemetry_1_1conf__t.html">conf_t</a> config=<a class="el" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071">default_config</a>())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a7e0645e3788e8133ab047aa570d9b653"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c">Periodic_telemetry</a> (<a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> &amp;handler, <a class="el" href="structPeriodic__telemetry_1_1conf__t.html">conf_t</a> config=<a class="el" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071">default_config</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a04a68e559575833958821d5ea624695c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ffdf6785d73e5114ad1991d532aa5f0"></a><!-- doxytag: member="Periodic_telemetry::update" ref="a5ffdf6785d73e5114ad1991d532aa5f0" args="(void)" -->
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f">add</a> (uint32_t task_id, uint32_t repeat_period, <a class="el" href="classPeriodic__telemetry.html#ab1bf3e1cc481736d50669f9dc939c2f7">telemetry_function_t</a> function, <a class="el" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b">telemetry_module_t</a> module, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> priority=<a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0">Scheduler_task::PRIORITY_NORMAL</a>, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> timing_mode=<a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedaadb371d200cf0f8641705df34dd8dd15">Scheduler_task::PERIODIC_RELATIVE</a>, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> run_mode=<a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046">Scheduler_task::RUN_REGULAR</a>)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Add new telemetry message to the scheduler.  <a href="#ac65f199f000f00f38808d7c29cb8fa5f"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a55201e12974a1283a51e1202776c33d5">add</a> (uint32_t task_id, uint32_t repeat_period, typename <a class="el" href="structPeriodic__telemetry_1_1function.html">function</a>&lt; T &gt;::type_t telemetry_function, T *telemetry_module, <a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569">Scheduler_task::priority_t</a> priority=<a class="el" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0">Scheduler_task::PRIORITY_NORMAL</a>, <a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed">Scheduler_task::timing_mode_t</a> timing_mode=<a class="el" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedaadb371d200cf0f8641705df34dd8dd15">Scheduler_task::PERIODIC_RELATIVE</a>, <a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed">Scheduler_task::run_mode_t</a> run_mode=<a class="el" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046">Scheduler_task::RUN_REGULAR</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Add new telemetry message to the scheduler.  <a href="#a55201e12974a1283a51e1202776c33d5"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf">sort</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sort telemetry items by decreasing priority, then by increasing repeat period.  <a href="#a2c9ec6c12f96692ee5aed070f92f3dbf"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structPeriodic__telemetry_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071">default_config</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration structure.  <a href="#a64198d9ad88e7b129e69916006fe6071"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a6a836cbe1f379b50ec28597779301b3c">toggle_telemetry_stream</a> (<a class="el" href="classPeriodic__telemetry.html">Periodic_telemetry</a> *<a class="el" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59">scheduler</a>, uint32_t sysid, mavlink_message_t *msg)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle mavlink telemetry stream.  <a href="#a6a836cbe1f379b50ec28597779301b3c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#aaa0e5fdda8fb9b8567fc8f1f58da8f6d">toggle_telemetry_stream</a> (<a class="el" href="classPeriodic__telemetry.html">Periodic_telemetry</a> *<a class="el" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59">scheduler</a>, uint32_t sysid, const mavlink_message_t *msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Toggle mavlink telemetry stream.  <a href="#aaa0e5fdda8fb9b8567fc8f1f58da8f6d"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#aa3de647762bc4e15235b4fb5819318b9">max_count</a> (void)=0</td></tr>
@@ -138,33 +133,22 @@ Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structPeriodic__telemetry_1_1telemetry__entry__t.html">telemetry_entry_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPeriodic__telemetry.html#a7b04804a2df353a39d21f31d7992560e">list</a> (void)=0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get pointer to list of telemetry items.  <a href="#a7b04804a2df353a39d21f31d7992560e"></a><br/></td></tr>
 </table>
-<hr/><h2>Member Typedef Documentation</h2>
-<a class="anchor" id="a5c7c1ef1152e56a77cdf98e8ed72252b"></a><!-- doxytag: member="Periodic_telemetry::telemetry_module_t" ref="a5c7c1ef1152e56a77cdf98e8ed72252b" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef void* <a class="el" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b">Periodic_telemetry::telemetry_module_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Pointer a module's data structure. </p>
-<p>This is used as an alias to any data structure in the prototype of callback functions </p>
-
-</div>
-</div>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a7e0645e3788e8133ab047aa570d9b653"></a><!-- doxytag: member="Periodic_telemetry::Periodic_telemetry" ref="a7e0645e3788e8133ab047aa570d9b653" args="(Mavlink_stream &amp;mavlink_stream, conf_t config=default_config())" -->
+<a class="anchor" id="a04a68e559575833958821d5ea624695c"></a><!-- doxytag: member="Periodic_telemetry::Periodic_telemetry" ref="a04a68e559575833958821d5ea624695c" args="(Mavlink_stream &amp;mavlink_stream, Mavlink_message_handler &amp;handler, conf_t config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classPeriodic__telemetry.html#a7e0645e3788e8133ab047aa570d9b653">Periodic_telemetry::Periodic_telemetry</a> </td>
+          <td class="memname"><a class="el" href="classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c">Periodic_telemetry::Periodic_telemetry</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#160;</td>
           <td class="paramname"><em>mavlink_stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> &amp;&#160;</td>
+          <td class="paramname"><em>handler</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -185,20 +169,32 @@ Protected Member Functions</h2></td></tr>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">mavlink_stream</td><td>Stream to which messages will be written </td></tr>
+    <tr><td class="paramname">message_handler</td><td>MAVLink message handler </td></tr>
     <tr><td class="paramname">config</td><td>Configuration structure </td></tr>
   </table>
   </dd>
 </dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPeriodic__telemetry_a04a68e559575833958821d5ea624695c_cgraph.png" border="0" usemap="#classPeriodic__telemetry_a04a68e559575833958821d5ea624695c_cgraph" alt=""/></div>
+<map name="classPeriodic__telemetry_a04a68e559575833958821d5ea624695c_cgraph" id="classPeriodic__telemetry_a04a68e559575833958821d5ea624695c_cgraph">
+<area shape="rect" id="node3" href="classMavlink__message__handler.html#a1f977e1892b567c50d64c19e20b6ea00" title="Registers a new callback for a message." alt="" coords="303,59,593,88"/><area shape="rect" id="node9" href="classPeriodic__telemetry.html#aaa0e5fdda8fb9b8567fc8f1f58da8f6d" title="Toggle mavlink telemetry stream." alt="" coords="308,192,588,221"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="644,5,977,35"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="667,59,955,88"/><area shape="rect" id="node11" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="713,112,908,141"/><area shape="rect" id="node13" href="classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd" title="Run all tasks immediately." alt="" coords="713,219,908,248"/><area shape="rect" id="node19" href="classScheduler.html#a4127de73d7febc64303fb8cccaf522d1" title="Find a task according to its idea." alt="" coords="723,165,899,195"/><area shape="rect" id="node22" href="classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef" title="Modifies the run mode of an existing task." alt="" coords="1027,299,1229,328"/><area shape="rect" id="node24" href="classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5" title="Modifies the period of execution of an existing task." alt="" coords="709,272,912,301"/><area shape="rect" id="node15" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="1068,172,1188,201"/><area shape="rect" id="node17" href="classScheduler__task.html#adc0e604f86fd585d32b94bb845d0eb8c" title="Run a task immediately." alt="" coords="1044,232,1212,261"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ac65f199f000f00f38808d7c29cb8fa5f"></a><!-- doxytag: member="Periodic_telemetry::add" ref="ac65f199f000f00f38808d7c29cb8fa5f" args="(uint32_t task_id, uint32_t repeat_period, telemetry_function_t function, telemetry_module_t module, Scheduler_task::priority_t priority=Scheduler_task::PRIORITY_NORMAL, Scheduler_task::timing_mode_t timing_mode=Scheduler_task::PERIODIC_RELATIVE, Scheduler_task::run_mode_t run_mode=Scheduler_task::RUN_REGULAR)" -->
+<a class="anchor" id="a55201e12974a1283a51e1202776c33d5"></a><!-- doxytag: member="Periodic_telemetry::add" ref="a55201e12974a1283a51e1202776c33d5" args="(uint32_t task_id, uint32_t repeat_period, typename function&lt; T &gt;::type_t telemetry_function, T *telemetry_module, Scheduler_task::priority_t priority=Scheduler_task::PRIORITY_NORMAL, Scheduler_task::timing_mode_t timing_mode=Scheduler_task::PERIODIC_RELATIVE, Scheduler_task::run_mode_t run_mode=Scheduler_task::RUN_REGULAR)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f">Periodic_telemetry::add</a> </td>
+          <td class="memname">bool <a class="el" href="classPeriodic__telemetry.html#a55201e12974a1283a51e1202776c33d5">Periodic_telemetry::add</a> </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
           <td class="paramname"><em>task_id</em>, </td>
@@ -212,14 +208,14 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classPeriodic__telemetry.html#ab1bf3e1cc481736d50669f9dc939c2f7">telemetry_function_t</a>&#160;</td>
-          <td class="paramname"><em>function</em>, </td>
+          <td class="paramtype">typename <a class="el" href="structPeriodic__telemetry_1_1function.html">function</a>&lt; T &gt;::type_t&#160;</td>
+          <td class="paramname"><em>telemetry_function</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b">telemetry_module_t</a>&#160;</td>
-          <td class="paramname"><em>module</em>, </td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>telemetry_module</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -249,12 +245,18 @@ Protected Member Functions</h2></td></tr>
 <div class="memdoc">
 
 <p>Add new telemetry message to the scheduler. </p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>Type of the module</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">task_id</td><td>Unique task identifier </td></tr>
     <tr><td class="paramname">repeat_period</td><td>Repeat period (us) </td></tr>
-    <tr><td class="paramname">function</td><td>Function pointer to be called </td></tr>
-    <tr><td class="paramname">module_structure</td><td>Argument to be passed to the function </td></tr>
+    <tr><td class="paramname">telemetry_function</td><td>Function pointer to be called </td></tr>
+    <tr><td class="paramname">telemetry_module</td><td>Argument to be passed to the function </td></tr>
     <tr><td class="paramname">priority</td><td>Priority </td></tr>
     <tr><td class="paramname">timing_mode</td><td>Timing mode </td></tr>
     <tr><td class="paramname">run_mode</td><td>Run mode</td></tr>
@@ -266,9 +268,9 @@ Protected Member Functions</h2></td></tr>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classPeriodic__telemetry_ac65f199f000f00f38808d7c29cb8fa5f_cgraph.png" border="0" usemap="#classPeriodic__telemetry_ac65f199f000f00f38808d7c29cb8fa5f_cgraph" alt=""/></div>
-<map name="classPeriodic__telemetry_ac65f199f000f00f38808d7c29cb8fa5f_cgraph" id="classPeriodic__telemetry_ac65f199f000f00f38808d7c29cb8fa5f_cgraph">
-<area shape="rect" id="node3" href="classPeriodic__telemetry.html#aa3de647762bc4e15235b4fb5819318b9" title="Get maximum number of telemetry messages." alt="" coords="213,5,416,35"/><area shape="rect" id="node5" href="classPeriodic__telemetry.html#a7b04804a2df353a39d21f31d7992560e" title="Get pointer to list of telemetry items." alt="" coords="237,59,392,88"/><area shape="rect" id="node7" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="217,112,412,141"/><area shape="rect" id="node9" href="classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot." alt="" coords="244,165,385,195"/><area shape="rect" id="node11" href="classScheduler.html#a26c76e721291762e9389da0eae352517" title="Get maximum number of tasks." alt="" coords="464,139,648,168"/><area shape="rect" id="node13" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="496,192,616,221"/></map>
+<div class="center"><img src="classPeriodic__telemetry_a55201e12974a1283a51e1202776c33d5_cgraph.png" border="0" usemap="#classPeriodic__telemetry_a55201e12974a1283a51e1202776c33d5_cgraph" alt=""/></div>
+<map name="classPeriodic__telemetry_a55201e12974a1283a51e1202776c33d5_cgraph" id="classPeriodic__telemetry_a55201e12974a1283a51e1202776c33d5_cgraph">
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#aa3de647762bc4e15235b4fb5819318b9" title="Get maximum number of telemetry messages." alt="" coords="213,5,416,35"/><area shape="rect" id="node5" href="classPeriodic__telemetry.html#a7b04804a2df353a39d21f31d7992560e" title="Get pointer to list of telemetry items." alt="" coords="237,59,392,88"/><area shape="rect" id="node7" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="217,112,412,141"/><area shape="rect" id="node9" href="classScheduler.html#a0c94779cd53b5df92e48ff321d0954a3" title="Register a new task to the task set, in the first available slot." alt="" coords="244,165,385,195"/><area shape="rect" id="node11" href="classScheduler.html#a26c76e721291762e9389da0eae352517" title="Get maximum number of tasks." alt="" coords="464,139,648,168"/><area shape="rect" id="node13" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="496,192,616,221"/></map>
 </div>
 </p>
 
@@ -320,7 +322,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPeriodic__telemetry_a7b04804a2df353a39d21f31d7992560e_icgraph.png" border="0" usemap="#classPeriodic__telemetry_a7b04804a2df353a39d21f31d7992560e_icgraph" alt=""/></div>
 <map name="classPeriodic__telemetry_a7b04804a2df353a39d21f31d7992560e_icgraph" id="classPeriodic__telemetry_a7b04804a2df353a39d21f31d7992560e_icgraph">
-<area shape="rect" id="node3" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f" title="Add new telemetry message to the scheduler." alt="" coords="209,5,367,35"/></map>
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#a55201e12974a1283a51e1202776c33d5" title="Add new telemetry message to the scheduler." alt="" coords="209,5,367,35"/></map>
 </div>
 </p>
 
@@ -352,7 +354,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPeriodic__telemetry_aa3de647762bc4e15235b4fb5819318b9_icgraph.png" border="0" usemap="#classPeriodic__telemetry_aa3de647762bc4e15235b4fb5819318b9_icgraph" alt=""/></div>
 <map name="classPeriodic__telemetry_aa3de647762bc4e15235b4fb5819318b9_icgraph" id="classPeriodic__telemetry_aa3de647762bc4e15235b4fb5819318b9_icgraph">
-<area shape="rect" id="node3" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f" title="Add new telemetry message to the scheduler." alt="" coords="257,5,415,35"/></map>
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#a55201e12974a1283a51e1202776c33d5" title="Add new telemetry message to the scheduler." alt="" coords="257,5,415,35"/></map>
 </div>
 </p>
 
@@ -384,7 +386,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPeriodic__telemetry_abb5412138a7233c8b5d6a8ff92cf3a59_icgraph.png" border="0" usemap="#classPeriodic__telemetry_abb5412138a7233c8b5d6a8ff92cf3a59_icgraph" alt=""/></div>
 <map name="classPeriodic__telemetry_abb5412138a7233c8b5d6a8ff92cf3a59_icgraph" id="classPeriodic__telemetry_abb5412138a7233c8b5d6a8ff92cf3a59_icgraph">
-<area shape="rect" id="node3" href="classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function." alt="" coords="301,5,477,35"/><area shape="rect" id="node9" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f" title="Add new telemetry message to the scheduler." alt="" coords="311,59,468,88"/><area shape="rect" id="node11" href="classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf" title="Sort telemetry items by decreasing priority, then by increasing repeat period." alt="" coords="309,112,469,141"/><area shape="rect" id="node15" href="classPeriodic__telemetry.html#a6a836cbe1f379b50ec28597779301b3c" title="Toggle mavlink telemetry stream." alt="" coords="249,165,529,195"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="637,5,861,35"/><area shape="rect" id="node7" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="968,5,1224,35"/><area shape="rect" id="node13" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="699,112,800,141"/><area shape="rect" id="node17" href="classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="580,165,919,195"/></map>
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function." alt="" coords="301,5,477,35"/><area shape="rect" id="node9" href="classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf" title="Sort telemetry items by decreasing priority, then by increasing repeat period." alt="" coords="309,59,469,88"/><area shape="rect" id="node13" href="classPeriodic__telemetry.html#aaa0e5fdda8fb9b8567fc8f1f58da8f6d" title="Toggle mavlink telemetry stream." alt="" coords="249,112,529,141"/><area shape="rect" id="node17" href="classPeriodic__telemetry.html#a55201e12974a1283a51e1202776c33d5" title="Add new telemetry message to the scheduler." alt="" coords="311,165,468,195"/><area shape="rect" id="node5" href="classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="591,5,815,35"/><area shape="rect" id="node7" href="classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="875,5,1131,35"/><area shape="rect" id="node11" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="652,59,753,88"/><area shape="rect" id="node15" href="classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c" title="Constructor." alt="" coords="580,112,825,141"/></map>
 </div>
 </p>
 
@@ -428,12 +430,12 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a6a836cbe1f379b50ec28597779301b3c"></a><!-- doxytag: member="Periodic_telemetry::toggle_telemetry_stream" ref="a6a836cbe1f379b50ec28597779301b3c" args="(Periodic_telemetry *scheduler, uint32_t sysid, mavlink_message_t *msg)" -->
+<a class="anchor" id="aaa0e5fdda8fb9b8567fc8f1f58da8f6d"></a><!-- doxytag: member="Periodic_telemetry::toggle_telemetry_stream" ref="aaa0e5fdda8fb9b8567fc8f1f58da8f6d" args="(Periodic_telemetry *scheduler, uint32_t sysid, const mavlink_message_t *msg)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classPeriodic__telemetry.html#a6a836cbe1f379b50ec28597779301b3c">Periodic_telemetry::toggle_telemetry_stream</a> </td>
+          <td class="memname">void <a class="el" href="classPeriodic__telemetry.html#aaa0e5fdda8fb9b8567fc8f1f58da8f6d">Periodic_telemetry::toggle_telemetry_stream</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classPeriodic__telemetry.html">Periodic_telemetry</a> *&#160;</td>
           <td class="paramname"><em>scheduler</em>, </td>
@@ -447,7 +449,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">mavlink_message_t *&#160;</td>
+          <td class="paramtype">const mavlink_message_t *&#160;</td>
           <td class="paramname"><em>msg</em>&#160;</td>
         </tr>
         <tr>
@@ -472,8 +474,8 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classPeriodic__telemetry_a6a836cbe1f379b50ec28597779301b3c_cgraph.png" border="0" usemap="#classPeriodic__telemetry_a6a836cbe1f379b50ec28597779301b3c_cgraph" alt=""/></div>
-<map name="classPeriodic__telemetry_a6a836cbe1f379b50ec28597779301b3c_cgraph" id="classPeriodic__telemetry_a6a836cbe1f379b50ec28597779301b3c_cgraph">
+<div class="center"><img src="classPeriodic__telemetry_aaa0e5fdda8fb9b8567fc8f1f58da8f6d_cgraph.png" border="0" usemap="#classPeriodic__telemetry_aaa0e5fdda8fb9b8567fc8f1f58da8f6d_cgraph" alt=""/></div>
+<map name="classPeriodic__telemetry_aaa0e5fdda8fb9b8567fc8f1f58da8f6d_cgraph" id="classPeriodic__telemetry_aaa0e5fdda8fb9b8567fc8f1f58da8f6d_cgraph">
 <area shape="rect" id="node3" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="341,5,536,35"/><area shape="rect" id="node5" href="classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd" title="Run all tasks immediately." alt="" coords="341,112,536,141"/><area shape="rect" id="node11" href="classScheduler.html#a4127de73d7febc64303fb8cccaf522d1" title="Find a task according to its idea." alt="" coords="351,59,527,88"/><area shape="rect" id="node14" href="classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef" title="Modifies the run mode of an existing task." alt="" coords="589,192,792,221"/><area shape="rect" id="node16" href="classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5" title="Modifies the period of execution of an existing task." alt="" coords="337,165,540,195"/><area shape="rect" id="node7" href="classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="631,65,751,95"/><area shape="rect" id="node9" href="classScheduler__task.html#adc0e604f86fd585d32b94bb845d0eb8c" title="Run a task immediately." alt="" coords="607,125,775,155"/></map>
 </div>
 </p>
@@ -481,9 +483,9 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classPeriodic__telemetry_a6a836cbe1f379b50ec28597779301b3c_icgraph.png" border="0" usemap="#classPeriodic__telemetry_a6a836cbe1f379b50ec28597779301b3c_icgraph" alt=""/></div>
-<map name="classPeriodic__telemetry_a6a836cbe1f379b50ec28597779301b3c_icgraph" id="classPeriodic__telemetry_a6a836cbe1f379b50ec28597779301b3c_icgraph">
-<area shape="rect" id="node3" href="classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="337,5,676,35"/></map>
+<div class="center"><img src="classPeriodic__telemetry_aaa0e5fdda8fb9b8567fc8f1f58da8f6d_icgraph.png" border="0" usemap="#classPeriodic__telemetry_aaa0e5fdda8fb9b8567fc8f1f58da8f6d_icgraph" alt=""/></div>
+<map name="classPeriodic__telemetry_aaa0e5fdda8fb9b8567fc8f1f58da8f6d_icgraph" id="classPeriodic__telemetry_aaa0e5fdda8fb9b8567fc8f1f58da8f6d_icgraph">
+<area shape="rect" id="node3" href="classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c" title="Constructor." alt="" coords="337,5,583,35"/></map>
 </div>
 </p>
 
@@ -492,6 +494,7 @@ Here is the caller graph for this function:</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/communication/<a class="el" href="periodic__telemetry_8hpp_source.html">periodic_telemetry.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/communication/periodic_telemetry.cpp</li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/communication/<a class="el" href="periodic__telemetry_8hxx_source.html">periodic_telemetry.hxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -511,7 +514,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 27 2016 09:47:16 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

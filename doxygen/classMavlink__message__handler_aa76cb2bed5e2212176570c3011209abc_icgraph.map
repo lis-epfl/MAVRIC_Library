@@ -1,11 +1,11 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a8a8ff7d63f0b2ce0c9757dfc584ec38c" title="Registers a new callback for a message." alt="" coords="343,139,633,168"/>
-<area shape="rect" id="node15" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="375,245,601,275"/>
-<area shape="rect" id="node5" href="$classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="684,5,1023,35"/>
-<area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="685,59,1021,88"/>
-<area shape="rect" id="node9" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="717,112,989,141"/>
-<area shape="rect" id="node11" href="$classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="795,165,912,195"/>
-<area shape="rect" id="node13" href="$classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="781,219,925,248"/>
-<area shape="rect" id="node17" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="741,272,965,301"/>
-<area shape="rect" id="node19" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1072,272,1328,301"/>
+<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="375,32,601,61"/>
+<area shape="rect" id="node9" href="$classMavlink__message__handler.html#a1f977e1892b567c50d64c19e20b6ea00" title="Registers a new callback for a message." alt="" coords="343,139,633,168"/>
+<area shape="rect" id="node5" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="739,5,963,35"/>
+<area shape="rect" id="node7" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1067,5,1323,35"/>
+<area shape="rect" id="node11" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="683,59,1019,88"/>
+<area shape="rect" id="node13" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="715,112,987,141"/>
+<area shape="rect" id="node15" href="$classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c" title="Constructor." alt="" coords="728,165,973,195"/>
+<area shape="rect" id="node17" href="$classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="792,219,909,248"/>
+<area shape="rect" id="node19" href="$classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="779,272,923,301"/>
 </map>

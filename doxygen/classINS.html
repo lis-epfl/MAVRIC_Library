@@ -143,8 +143,8 @@ Static Protected Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set the origin of the local (NED) coordinate system  <a href="#aa14cc9f393d1567f96a7f03c3c8894a9"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#a62eca08329059f16e88effeecbe2fa46">ins_telemetry_set_gps_global_origin_callback</a> (<a class="el" href="classINS.html">INS</a> *ins, uint32_t sysid, mavlink_message_t *msg)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for receiving SET_GPS_GLOBAL_ORIGIN messages.  <a href="#a62eca08329059f16e88effeecbe2fa46"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS.html#a0196c708ca1ba89cb60e33491aa93f20">ins_telemetry_set_gps_global_origin_callback</a> (<a class="el" href="classINS.html">INS</a> *ins, uint32_t sysid, const mavlink_message_t *msg)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for receiving SET_GPS_GLOBAL_ORIGIN messages.  <a href="#a0196c708ca1ba89cb60e33491aa93f20"></a><br/></td></tr>
 </table>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="af8a125150d36bd77f1253a700d627af7"></a><!-- doxytag: member="INS::absolute_altitude" ref="af8a125150d36bd77f1253a700d627af7" args="(void) const =0" -->
@@ -377,12 +377,12 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" id="a62eca08329059f16e88effeecbe2fa46"></a><!-- doxytag: member="INS::ins_telemetry_set_gps_global_origin_callback" ref="a62eca08329059f16e88effeecbe2fa46" args="(INS *ins, uint32_t sysid, mavlink_message_t *msg)" -->
+<a class="anchor" id="a0196c708ca1ba89cb60e33491aa93f20"></a><!-- doxytag: member="INS::ins_telemetry_set_gps_global_origin_callback" ref="a0196c708ca1ba89cb60e33491aa93f20" args="(INS *ins, uint32_t sysid, const mavlink_message_t *msg)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classINS.html#a62eca08329059f16e88effeecbe2fa46">ins_telemetry_set_gps_global_origin_callback</a> </td>
+          <td class="memname">void <a class="el" href="classINS.html#a0196c708ca1ba89cb60e33491aa93f20">ins_telemetry_set_gps_global_origin_callback</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classINS.html">INS</a> *&#160;</td>
           <td class="paramname"><em>ins</em>, </td>
@@ -396,7 +396,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">mavlink_message_t *&#160;</td>
+          <td class="paramtype">const mavlink_message_t *&#160;</td>
           <td class="paramname"><em>msg</em>&#160;</td>
         </tr>
         <tr>
@@ -435,7 +435,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 16:13:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 27 2016 09:47:15 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,17 +1,17 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot." alt="" coords="201,29,343,59"/>
-<area shape="rect" id="node7" href="$classScheduler.html#a65d37b2e1af43239d990163e98428a74" title="Sort tasks by decreasing priority, then by increasing repeat period." alt="" coords="197,108,347,137"/>
-<area shape="rect" id="node14" href="$classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790" title="Run update (check for tasks ready for execution and execute them)" alt="" coords="209,161,335,191"/>
-<area shape="rect" id="node23" href="$classScheduler.html#a4127de73d7febc64303fb8cccaf522d1" title="Find a task according to its idea." alt="" coords="184,215,360,244"/>
-<area shape="rect" id="node29" href="$classScheduler.html#aae95dd0d6efd04e0ead6d7916d0cd18a" title="Find a task according to its index." alt="" coords="173,268,371,297"/>
-<area shape="rect" id="node31" href="$classScheduler.html#a692bc156fd166f13c410cff5c769d239" title="Suspends all tasks." alt="" coords="175,321,369,351"/>
-<area shape="rect" id="node33" href="$classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd" title="Run all tasks immediately." alt="" coords="175,375,369,404"/>
-<area shape="rect" id="node5" href="$classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f" title="Add new telemetry message to the scheduler." alt="" coords="481,5,639,35"/>
-<area shape="rect" id="node9" href="$classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf" title="Sort telemetry items by decreasing priority, then by increasing repeat period." alt="" coords="480,59,640,88"/>
-<area shape="rect" id="node11" href="$classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="869,111,971,140"/>
-<area shape="rect" id="node16" href="$classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function." alt="" coords="472,213,648,243"/>
-<area shape="rect" id="node18" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="808,213,1032,243"/>
-<area shape="rect" id="node20" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1139,213,1395,243"/>
-<area shape="rect" id="node25" href="$classPeriodic__telemetry.html#a6a836cbe1f379b50ec28597779301b3c" title="Toggle mavlink telemetry stream." alt="" coords="420,320,700,349"/>
-<area shape="rect" id="node27" href="$classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2" title="Initialisation of the module MAVLink communication." alt="" coords="751,320,1089,349"/>
+<area shape="rect" id="node3" href="$classScheduler.html#a65d37b2e1af43239d990163e98428a74" title="Sort tasks by decreasing priority, then by increasing repeat period." alt="" coords="197,56,347,85"/>
+<area shape="rect" id="node10" href="$classScheduler.html#ad1af97cfd75325ea9d88e4ab2f12e790" title="Run update (check for tasks ready for execution and execute them)" alt="" coords="209,109,335,139"/>
+<area shape="rect" id="node19" href="$classScheduler.html#a4127de73d7febc64303fb8cccaf522d1" title="Find a task according to its idea." alt="" coords="184,163,360,192"/>
+<area shape="rect" id="node25" href="$classScheduler.html#aae95dd0d6efd04e0ead6d7916d0cd18a" title="Find a task according to its index." alt="" coords="173,216,371,245"/>
+<area shape="rect" id="node27" href="$classScheduler.html#a692bc156fd166f13c410cff5c769d239" title="Suspends all tasks." alt="" coords="175,269,369,299"/>
+<area shape="rect" id="node29" href="$classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd" title="Run all tasks immediately." alt="" coords="175,323,369,352"/>
+<area shape="rect" id="node32" href="$classScheduler.html#a0c94779cd53b5df92e48ff321d0954a3" title="Register a new task to the task set, in the first available slot." alt="" coords="201,376,343,405"/>
+<area shape="rect" id="node5" href="$classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf" title="Sort telemetry items by decreasing priority, then by increasing repeat period." alt="" coords="480,5,640,35"/>
+<area shape="rect" id="node7" href="$classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="823,57,924,87"/>
+<area shape="rect" id="node12" href="$classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function." alt="" coords="472,160,648,189"/>
+<area shape="rect" id="node14" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="761,160,985,189"/>
+<area shape="rect" id="node16" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="1045,160,1301,189"/>
+<area shape="rect" id="node21" href="$classPeriodic__telemetry.html#aaa0e5fdda8fb9b8567fc8f1f58da8f6d" title="Toggle mavlink telemetry stream." alt="" coords="420,269,700,299"/>
+<area shape="rect" id="node23" href="$classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c" title="Constructor." alt="" coords="751,269,996,299"/>
+<area shape="rect" id="node34" href="$classPeriodic__telemetry.html#a55201e12974a1283a51e1202776c33d5" title="Add new telemetry message to the scheduler." alt="" coords="481,376,639,405"/>
 </map>

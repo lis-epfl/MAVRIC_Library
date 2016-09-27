@@ -1,0 +1,13 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a1f977e1892b567c50d64c19e20b6ea00" title="Registers a new callback for a message." alt="" coords="303,59,593,88"/>
+<area shape="rect" id="node9" href="$classPeriodic__telemetry.html#aaa0e5fdda8fb9b8567fc8f1f58da8f6d" title="Toggle mavlink telemetry stream." alt="" coords="308,192,588,221"/>
+<area shape="rect" id="node5" href="$classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="644,5,977,35"/>
+<area shape="rect" id="node7" href="$classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="667,59,955,88"/>
+<area shape="rect" id="node11" href="$classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="713,112,908,141"/>
+<area shape="rect" id="node13" href="$classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd" title="Run all tasks immediately." alt="" coords="713,219,908,248"/>
+<area shape="rect" id="node19" href="$classScheduler.html#a4127de73d7febc64303fb8cccaf522d1" title="Find a task according to its idea." alt="" coords="723,165,899,195"/>
+<area shape="rect" id="node22" href="$classScheduler__task.html#a81635f94d0854c6a604a83fcf697efef" title="Modifies the run mode of an existing task." alt="" coords="1027,299,1229,328"/>
+<area shape="rect" id="node24" href="$classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5" title="Modifies the period of execution of an existing task." alt="" coords="709,272,912,301"/>
+<area shape="rect" id="node15" href="$classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="1068,172,1188,201"/>
+<area shape="rect" id="node17" href="$classScheduler__task.html#adc0e604f86fd585d32b94bb845d0eb8c" title="Run a task immediately." alt="" coords="1044,232,1212,261"/>
+</map>

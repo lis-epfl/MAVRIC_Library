@@ -129,122 +129,125 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00046"></a>00046 <span class="preprocessor">#include &lt;cstdbool&gt;</span>
 <a name="l00047"></a>00047 
 <a name="l00048"></a>00048 <span class="preprocessor">#include &quot;communication/mavlink_stream.hpp&quot;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;runtime/scheduler.hpp&quot;</span>
-<a name="l00050"></a>00050 
-<a name="l00051"></a><a class="code" href="classPeriodic__telemetry.html">00051</a> <span class="keyword">class </span><a class="code" href="classPeriodic__telemetry.html">Periodic_telemetry</a>
-<a name="l00052"></a>00052 {
-<a name="l00053"></a>00053 <span class="keyword">public</span>:
-<a name="l00054"></a>00054 
-<a name="l00058"></a><a class="code" href="structPeriodic__telemetry_1_1conf__t.html">00058</a>     <span class="keyword">struct </span><a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">conf_t</a>
-<a name="l00059"></a>00059     {
-<a name="l00060"></a><a class="code" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0">00060</a>         <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a>  <a class="code" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0" title="Configuration for scheduler.">scheduler_config</a>;   
-<a name="l00061"></a>00061 
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;communication/mavlink_message_handler.hpp&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;runtime/scheduler.hpp&quot;</span>
+<a name="l00051"></a>00051 
+<a name="l00052"></a><a class="code" href="classPeriodic__telemetry.html">00052</a> <span class="keyword">class </span><a class="code" href="classPeriodic__telemetry.html">Periodic_telemetry</a>
+<a name="l00053"></a>00053 {
+<a name="l00054"></a>00054 <span class="keyword">public</span>:
+<a name="l00055"></a>00055 
+<a name="l00059"></a><a class="code" href="structPeriodic__telemetry_1_1conf__t.html">00059</a>     <span class="keyword">struct </span><a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">conf_t</a>
+<a name="l00060"></a>00060     {
+<a name="l00061"></a><a class="code" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0">00061</a>         <a class="code" href="structScheduler_1_1conf__t.html" title="Scheduler configuration.">Scheduler::conf_t</a>  <a class="code" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0" title="Configuration for scheduler.">scheduler_config</a>;   
 <a name="l00062"></a>00062     };
 <a name="l00063"></a>00063 
 <a name="l00064"></a>00064 
 <a name="l00070"></a>00070     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">conf_t</a> <a class="code" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071" title="Default configuration structure.">default_config</a>(<span class="keywordtype">void</span>);
 <a name="l00071"></a>00071 
 <a name="l00072"></a>00072 
-<a name="l00078"></a><a class="code" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b">00078</a>     <span class="keyword">typedef</span> <span class="keywordtype">void</span>* <a class="code" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b" title="Pointer a module&#39;s data structure.">telemetry_module_t</a>;
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080 
-<a name="l00084"></a><a class="code" href="classPeriodic__telemetry.html#ab1bf3e1cc481736d50669f9dc939c2f7">00084</a>     <span class="keyword">typedef</span> void (*<a class="code" href="classPeriodic__telemetry.html#ab1bf3e1cc481736d50669f9dc939c2f7" title="Prototype of telemetry functions.">telemetry_function_t</a>)(<a class="code" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b" title="Pointer a module&#39;s data structure.">telemetry_module_t</a>, <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>*, mavlink_message_t*);
-<a name="l00085"></a>00085 
-<a name="l00086"></a>00086 
-<a name="l00093"></a>00093     <a class="code" href="classPeriodic__telemetry.html#a7e0645e3788e8133ab047aa570d9b653" title="Constructor.">Periodic_telemetry</a>(<a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream, <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">conf_t</a> config = <a class="code" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071" title="Default configuration structure.">default_config</a>());
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095 
-<a name="l00099"></a>00099     <span class="keywordtype">bool</span> <a class="code" href="classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101 
-<a name="l00115"></a>00115     <span class="keywordtype">bool</span> <a class="code" href="classPeriodic__telemetry.html#ac65f199f000f00f38808d7c29cb8fa5f" title="Add new telemetry message to the scheduler.">add</a>(   uint32_t                        task_id,
-<a name="l00116"></a>00116                 uint32_t                        repeat_period,
-<a name="l00117"></a>00117                 <a class="code" href="classPeriodic__telemetry.html#ab1bf3e1cc481736d50669f9dc939c2f7" title="Prototype of telemetry functions.">telemetry_function_t</a>            <span class="keyword">function</span>,
-<a name="l00118"></a>00118                 <a class="code" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b" title="Pointer a module&#39;s data structure.">telemetry_module_t</a>              module,
-<a name="l00119"></a>00119                 <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569" title="Task priority.">Scheduler_task::priority_t</a>      priority    = <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0" title="Normal priority.">Scheduler_task::PRIORITY_NORMAL</a>,
-<a name="l00120"></a>00120                 <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed" title="Task timing mode.">Scheduler_task::timing_mode_t</a>   timing_mode = <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedaadb371d200cf0f8641705df34dd8dd15" title="The task will be executed with constant period relative to the last execution.">Scheduler_task::PERIODIC_RELATIVE</a>,
-<a name="l00121"></a>00121                 <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">Scheduler_task::run_mode_t</a>      run_mode    = <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046" title="The task will be executed periodically.">Scheduler_task::RUN_REGULAR</a>);
-<a name="l00122"></a>00122 
-<a name="l00123"></a>00123 
-<a name="l00129"></a>00129     <span class="keywordtype">bool</span> <a class="code" href="classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf" title="Sort telemetry items by decreasing priority, then by increasing repeat period.">sort</a>(<span class="keywordtype">void</span>);
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131 
-<a name="l00139"></a>00139     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classPeriodic__telemetry.html#a6a836cbe1f379b50ec28597779301b3c" title="Toggle mavlink telemetry stream.">toggle_telemetry_stream</a>(<a class="code" href="classPeriodic__telemetry.html">Periodic_telemetry</a>* <a class="code" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler.">scheduler</a>, uint32_t sysid, mavlink_message_t* msg);
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141 
-<a name="l00142"></a>00142 <span class="keyword">protected</span>:
-<a name="l00143"></a>00143 
-<a name="l00147"></a><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html">00147</a>     <span class="keyword">struct </span><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html" title="MAVLink message handler structure.">telemetry_entry_t</a>
-<a name="l00148"></a>00148     {
-<a name="l00149"></a><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a3962f3632957c9086487880a786b4dd2">00149</a>         <a class="code" href="classPeriodic__telemetry.html#ab1bf3e1cc481736d50669f9dc939c2f7" title="Prototype of telemetry functions.">telemetry_function_t</a>    <span class="keyword">function</span>;           
-<a name="l00150"></a><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a88b4679d6a9e83ddd34786a8f119660c">00150</a>         <a class="code" href="classPeriodic__telemetry.html#a5c7c1ef1152e56a77cdf98e8ed72252b" title="Pointer a module&#39;s data structure.">telemetry_module_t</a>      <a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a88b4679d6a9e83ddd34786a8f119660c" title="Pointer to module data structure to be given as argument to the function.">module</a>;             
-<a name="l00151"></a><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a7bb3df13d0af2d6e5222321268b4e93d">00151</a>         <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>*         <a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a7bb3df13d0af2d6e5222321268b4e93d" title="Pointer to the MAVLink stream structure.">mavlink_stream</a>;     
-<a name="l00152"></a>00152     };
-<a name="l00153"></a>00153 
-<a name="l00160"></a>00160     <span class="keyword">virtual</span> uint32_t <a class="code" href="classPeriodic__telemetry.html#aa3de647762bc4e15235b4fb5819318b9" title="Get maximum number of telemetry messages.">max_count</a>(<span class="keywordtype">void</span>) = 0;
-<a name="l00161"></a>00161 
-<a name="l00162"></a>00162 
-<a name="l00169"></a>00169     <span class="keyword">virtual</span> <a class="code" href="classScheduler.html" title="Scheduler base class.">Scheduler</a>&amp; <a class="code" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler.">scheduler</a>(<span class="keywordtype">void</span>) = 0;
-<a name="l00170"></a>00170 
-<a name="l00171"></a>00171 
-<a name="l00178"></a>00178     <span class="keyword">virtual</span> <a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html" title="MAVLink message handler structure.">telemetry_entry_t</a>* <a class="code" href="classPeriodic__telemetry.html#a7b04804a2df353a39d21f31d7992560e" title="Get pointer to list of telemetry items.">list</a>(<span class="keywordtype">void</span>) = 0;
-<a name="l00179"></a>00179 
-<a name="l00180"></a>00180 
-<a name="l00181"></a>00181 <span class="keyword">private</span>:
-<a name="l00182"></a>00182 
-<a name="l00183"></a>00183     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp;             mavlink_stream_;                    
-<a name="l00184"></a>00184     uint32_t                    count_;                             
+<a name="l00082"></a>00082     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00083"></a><a class="code" href="structPeriodic__telemetry_1_1function.html">00083</a>     <span class="keyword">struct </span><a class="code" href="structPeriodic__telemetry_1_1function.html" title="Prototype of telemetry functions.">function</a>
+<a name="l00084"></a>00084     {
+<a name="l00085"></a>00085         <span class="keyword">typedef</span> void (*type_t)(<span class="keyword">const</span> T*, <span class="keyword">const</span> <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>*, mavlink_message_t*);
+<a name="l00086"></a>00086     };
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088 
+<a name="l00096"></a>00096     <a class="code" href="classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c" title="Constructor.">Periodic_telemetry</a>(<a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream, <a class="code" href="classMavlink__message__handler.html" title="Message handler base class.">Mavlink_message_handler</a>&amp; handler, <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">conf_t</a> config = <a class="code" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071" title="Default configuration structure.">default_config</a>());
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098 
+<a name="l00102"></a>00102     <span class="keywordtype">bool</span> <a class="code" href="classPeriodic__telemetry.html#a5ffdf6785d73e5114ad1991d532aa5f0" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 
+<a name="l00120"></a>00120     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00121"></a>00121     <span class="keywordtype">bool</span> <a class="code" href="classPeriodic__telemetry.html#a55201e12974a1283a51e1202776c33d5" title="Add new telemetry message to the scheduler.">add</a>(   uint32_t                        task_id,
+<a name="l00122"></a>00122                 uint32_t                        repeat_period,
+<a name="l00123"></a>00123                 <span class="keyword">typename</span> <a class="code" href="structPeriodic__telemetry_1_1function.html" title="Prototype of telemetry functions.">function&lt;T&gt;::type_t</a>    telemetry_function,
+<a name="l00124"></a>00124                 T*                              telemetry_module,
+<a name="l00125"></a>00125                 <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569" title="Task priority.">Scheduler_task::priority_t</a>      priority    = <a class="code" href="classScheduler__task.html#aa3e4e9dfef8e01fa71a6f12067c39569a95b95dbd2020611ac5d768f09a5c61c0" title="Normal priority.">Scheduler_task::PRIORITY_NORMAL</a>,
+<a name="l00126"></a>00126                 <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aed" title="Task timing mode.">Scheduler_task::timing_mode_t</a>   timing_mode = <a class="code" href="classScheduler__task.html#a6d8a76b77e218f9199322bb124618aedaadb371d200cf0f8641705df34dd8dd15" title="The task will be executed with constant period relative to the last execution.">Scheduler_task::PERIODIC_RELATIVE</a>,
+<a name="l00127"></a>00127                 <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6ed" title="Task run mode.">Scheduler_task::run_mode_t</a>      run_mode    = <a class="code" href="classScheduler__task.html#a43a5b41231d5c2549470f68b00b7c6eda26945ede0909200e139bcdf0710c1046" title="The task will be executed periodically.">Scheduler_task::RUN_REGULAR</a>);
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 
+<a name="l00135"></a>00135     <span class="keywordtype">bool</span> <a class="code" href="classPeriodic__telemetry.html#a2c9ec6c12f96692ee5aed070f92f3dbf" title="Sort telemetry items by decreasing priority, then by increasing repeat period.">sort</a>(<span class="keywordtype">void</span>);
+<a name="l00136"></a>00136 
+<a name="l00137"></a>00137 
+<a name="l00145"></a>00145     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classPeriodic__telemetry.html#aaa0e5fdda8fb9b8567fc8f1f58da8f6d" title="Toggle mavlink telemetry stream.">toggle_telemetry_stream</a>(<a class="code" href="classPeriodic__telemetry.html">Periodic_telemetry</a>* <a class="code" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler.">scheduler</a>, uint32_t sysid, <span class="keyword">const</span> mavlink_message_t* msg);
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147 
+<a name="l00148"></a>00148 <span class="keyword">protected</span>:
+<a name="l00149"></a>00149 
+<a name="l00153"></a><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html">00153</a>     <span class="keyword">struct </span><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html" title="MAVLink message handler structure.">telemetry_entry_t</a>
+<a name="l00154"></a>00154     {
+<a name="l00155"></a><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#ac251a3ef6f3cc6e1888840a7e6d1b878">00155</a>         <a class="code" href="structPeriodic__telemetry_1_1function.html" title="Prototype of telemetry functions.">function&lt;void&gt;::type_t</a>  <span class="keyword">function</span>;           
+<a name="l00156"></a><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a0dccd47c5f2d60a26518339a491e96b5">00156</a>         <span class="keywordtype">void</span>*                   <a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a0dccd47c5f2d60a26518339a491e96b5" title="Pointer to module data structure to be given as argument to the function.">module</a>;             
+<a name="l00157"></a><a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a7bb3df13d0af2d6e5222321268b4e93d">00157</a>         <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>*         <a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html#a7bb3df13d0af2d6e5222321268b4e93d" title="Pointer to the MAVLink stream structure.">mavlink_stream</a>;     
+<a name="l00158"></a>00158     };
+<a name="l00159"></a>00159 
+<a name="l00166"></a>00166     <span class="keyword">virtual</span> uint32_t <a class="code" href="classPeriodic__telemetry.html#aa3de647762bc4e15235b4fb5819318b9" title="Get maximum number of telemetry messages.">max_count</a>(<span class="keywordtype">void</span>) = 0;
+<a name="l00167"></a>00167 
+<a name="l00168"></a>00168 
+<a name="l00175"></a>00175     <span class="keyword">virtual</span> <a class="code" href="classScheduler.html" title="Scheduler base class.">Scheduler</a>&amp; <a class="code" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler.">scheduler</a>(<span class="keywordtype">void</span>) = 0;
+<a name="l00176"></a>00176 
+<a name="l00177"></a>00177 
+<a name="l00184"></a>00184     <span class="keyword">virtual</span> <a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html" title="MAVLink message handler structure.">telemetry_entry_t</a>* <a class="code" href="classPeriodic__telemetry.html#a7b04804a2df353a39d21f31d7992560e" title="Get pointer to list of telemetry items.">list</a>(<span class="keywordtype">void</span>) = 0;
 <a name="l00185"></a>00185 
-<a name="l00193"></a>00193     <span class="keyword">static</span> <span class="keywordtype">bool</span> send_message(<a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html" title="MAVLink message handler structure.">telemetry_entry_t</a>* telemetry_entry);
-<a name="l00194"></a>00194 };
-<a name="l00195"></a>00195 
-<a name="l00196"></a>00196 
-<a name="l00197"></a>00197 <span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>32_t N = 10&gt;
-<a name="l00198"></a><a class="code" href="classPeriodic__telemetry__T.html">00198</a> <span class="keyword">class </span><a class="code" href="classPeriodic__telemetry__T.html">Periodic_telemetry_T</a>: <span class="keyword">public</span> <a class="code" href="classPeriodic__telemetry.html">Periodic_telemetry</a>
-<a name="l00199"></a>00199 {
-<a name="l00200"></a>00200 <span class="keyword">public</span>:
+<a name="l00186"></a>00186 
+<a name="l00187"></a>00187 <span class="keyword">private</span>:
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189     <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp;             mavlink_stream_;                    
+<a name="l00190"></a>00190     uint32_t                    count_;                             
+<a name="l00191"></a>00191 
+<a name="l00199"></a>00199     <span class="keyword">static</span> <span class="keywordtype">bool</span> send_message(<a class="code" href="structPeriodic__telemetry_1_1telemetry__entry__t.html" title="MAVLink message handler structure.">telemetry_entry_t</a>* telemetry_entry);
+<a name="l00200"></a>00200 };
 <a name="l00201"></a>00201 
-<a name="l00208"></a><a class="code" href="classPeriodic__telemetry__T.html#a3363414bae76ab6d2aba740ae7569f45">00208</a>     <a class="code" href="classPeriodic__telemetry__T.html#a3363414bae76ab6d2aba740ae7569f45" title="Constructor.">Periodic_telemetry_T</a>(<a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream, <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">conf_t</a> config):
-<a name="l00209"></a>00209         <a class="code" href="classPeriodic__telemetry.html">Periodic_telemetry</a>(mavlink_stream, config),
-<a name="l00210"></a>00210         scheduler_(config.scheduler_config)
-<a name="l00211"></a>00211     {};
-<a name="l00212"></a>00212 
-<a name="l00213"></a>00213 <span class="keyword">protected</span>:
-<a name="l00214"></a>00214 
-<a name="l00220"></a><a class="code" href="classPeriodic__telemetry__T.html#a4f1bcc4a9f3968dbe66db3c6dc34f2ce">00220</a>     uint32_t <a class="code" href="classPeriodic__telemetry__T.html#a4f1bcc4a9f3968dbe66db3c6dc34f2ce" title="Get maximum number of telemetry messages.">max_count</a>(<span class="keywordtype">void</span>)
-<a name="l00221"></a>00221     {
-<a name="l00222"></a>00222         <span class="keywordflow">return</span> N;
-<a name="l00223"></a>00223     }
-<a name="l00224"></a>00224 
-<a name="l00231"></a><a class="code" href="classPeriodic__telemetry__T.html#a5c303c981e35f4fc1f0b52b1e6d196ab">00231</a>     <a class="code" href="classScheduler.html" title="Scheduler base class.">Scheduler</a>&amp; <a class="code" href="classPeriodic__telemetry__T.html#a5c303c981e35f4fc1f0b52b1e6d196ab" title="Get reference to scheduler.">scheduler</a>(<span class="keywordtype">void</span>)
-<a name="l00232"></a>00232     {
-<a name="l00233"></a>00233         <span class="keywordflow">return</span> scheduler_;
-<a name="l00234"></a>00234     }
-<a name="l00235"></a>00235 
-<a name="l00242"></a><a class="code" href="classPeriodic__telemetry__T.html#a9166ab0121e615e649e47ab8270a3b30">00242</a>     telemetry_entry_t* <a class="code" href="classPeriodic__telemetry__T.html#a9166ab0121e615e649e47ab8270a3b30" title="Get pointer to list of telemetry items.">list</a>(<span class="keywordtype">void</span>)
-<a name="l00243"></a>00243     {
-<a name="l00244"></a>00244         <span class="keywordflow">return</span> list_;
-<a name="l00245"></a>00245     }
-<a name="l00246"></a>00246 
-<a name="l00247"></a>00247 <span class="keyword">private</span>:
-<a name="l00248"></a>00248     <a class="code" href="classScheduler__T.html" title="Scheduler.">Scheduler_T&lt;N&gt;</a>     scheduler_;          
-<a name="l00249"></a>00249     telemetry_entry_t    list_[N];            
-<a name="l00250"></a>00250 };
-<a name="l00251"></a>00251 
+<a name="l00202"></a>00202 
+<a name="l00203"></a>00203 <span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>32_t N = 10&gt;
+<a name="l00204"></a><a class="code" href="classPeriodic__telemetry__T.html">00204</a> <span class="keyword">class </span><a class="code" href="classPeriodic__telemetry__T.html">Periodic_telemetry_T</a>: <span class="keyword">public</span> <a class="code" href="classPeriodic__telemetry.html">Periodic_telemetry</a>
+<a name="l00205"></a>00205 {
+<a name="l00206"></a>00206 <span class="keyword">public</span>:
+<a name="l00207"></a>00207 
+<a name="l00214"></a><a class="code" href="classPeriodic__telemetry__T.html#a93509694027503f4c934064ce4fadfa8">00214</a>     <a class="code" href="classPeriodic__telemetry__T.html#a93509694027503f4c934064ce4fadfa8" title="Constructor.">Periodic_telemetry_T</a>(<a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream, <a class="code" href="classMavlink__message__handler.html" title="Message handler base class.">Mavlink_message_handler</a>&amp; handler, <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">conf_t</a> config):
+<a name="l00215"></a>00215         <a class="code" href="classPeriodic__telemetry.html">Periodic_telemetry</a>(mavlink_stream, handler, config),
+<a name="l00216"></a>00216         scheduler_(config.scheduler_config)
+<a name="l00217"></a>00217     {};
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219 <span class="keyword">protected</span>:
+<a name="l00220"></a>00220 
+<a name="l00226"></a><a class="code" href="classPeriodic__telemetry__T.html#a4f1bcc4a9f3968dbe66db3c6dc34f2ce">00226</a>     uint32_t <a class="code" href="classPeriodic__telemetry__T.html#a4f1bcc4a9f3968dbe66db3c6dc34f2ce" title="Get maximum number of telemetry messages.">max_count</a>(<span class="keywordtype">void</span>)
+<a name="l00227"></a>00227     {
+<a name="l00228"></a>00228         <span class="keywordflow">return</span> N;
+<a name="l00229"></a>00229     }
+<a name="l00230"></a>00230 
+<a name="l00237"></a><a class="code" href="classPeriodic__telemetry__T.html#a5c303c981e35f4fc1f0b52b1e6d196ab">00237</a>     <a class="code" href="classScheduler.html" title="Scheduler base class.">Scheduler</a>&amp; <a class="code" href="classPeriodic__telemetry__T.html#a5c303c981e35f4fc1f0b52b1e6d196ab" title="Get reference to scheduler.">scheduler</a>(<span class="keywordtype">void</span>)
+<a name="l00238"></a>00238     {
+<a name="l00239"></a>00239         <span class="keywordflow">return</span> scheduler_;
+<a name="l00240"></a>00240     }
+<a name="l00241"></a>00241 
+<a name="l00248"></a><a class="code" href="classPeriodic__telemetry__T.html#a9166ab0121e615e649e47ab8270a3b30">00248</a>     telemetry_entry_t* <a class="code" href="classPeriodic__telemetry__T.html#a9166ab0121e615e649e47ab8270a3b30" title="Get pointer to list of telemetry items.">list</a>(<span class="keywordtype">void</span>)
+<a name="l00249"></a>00249     {
+<a name="l00250"></a>00250         <span class="keywordflow">return</span> list_;
+<a name="l00251"></a>00251     }
 <a name="l00252"></a>00252 
-<a name="l00253"></a>00253 
-<a name="l00254"></a><a class="code" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071">00254</a> <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">Periodic_telemetry::conf_t</a> <a class="code" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071" title="Default configuration structure.">Periodic_telemetry::default_config</a>(<span class="keywordtype">void</span>)
-<a name="l00255"></a>00255 {
-<a name="l00256"></a>00256     <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">Periodic_telemetry::conf_t</a> conf  = {};
+<a name="l00253"></a>00253 <span class="keyword">private</span>:
+<a name="l00254"></a>00254     <a class="code" href="classScheduler__T.html" title="Scheduler.">Scheduler_T&lt;N&gt;</a>     scheduler_;          
+<a name="l00255"></a>00255     telemetry_entry_t    list_[N];            
+<a name="l00256"></a>00256 };
 <a name="l00257"></a>00257 
-<a name="l00258"></a>00258     conf.<a class="code" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0" title="Configuration for scheduler.">scheduler_config</a>.<a class="code" href="structScheduler_1_1conf__t.html#add0e17c51dba8ff62c3d9afbf8622d9e" title="Schedule strategy.">schedule_strategy</a> = <a class="code" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93a16ad807367312df2f9b6b74c4395014b" title="Round robin scheduling.">Scheduler::ROUND_ROBIN</a>;
-<a name="l00259"></a>00259     conf.<a class="code" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0" title="Configuration for scheduler.">scheduler_config</a>.<a class="code" href="structScheduler_1_1conf__t.html#af4db3b0909a6097bb46542bf76c09359" title="Indicates whether the scheduler should print debug messages.">debug</a>             = <span class="keyword">false</span>;
-<a name="l00260"></a>00260 
-<a name="l00261"></a>00261     <span class="keywordflow">return</span> conf;
-<a name="l00262"></a>00262 };
+<a name="l00258"></a>00258 
+<a name="l00259"></a>00259 
+<a name="l00260"></a><a class="code" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071">00260</a> <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">Periodic_telemetry::conf_t</a> <a class="code" href="classPeriodic__telemetry.html#a64198d9ad88e7b129e69916006fe6071" title="Default configuration structure.">Periodic_telemetry::default_config</a>(<span class="keywordtype">void</span>)
+<a name="l00261"></a>00261 {
+<a name="l00262"></a>00262     <a class="code" href="structPeriodic__telemetry_1_1conf__t.html" title="Configuration structure.">Periodic_telemetry::conf_t</a> conf  = {};
 <a name="l00263"></a>00263 
-<a name="l00264"></a>00264 
-<a name="l00265"></a>00265 <span class="preprocessor">#endif </span><span class="comment">/* PERIODIC_TELEMETRY_HPP_ */</span>
+<a name="l00264"></a>00264     conf.<a class="code" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0" title="Configuration for scheduler.">scheduler_config</a>.<a class="code" href="structScheduler_1_1conf__t.html#add0e17c51dba8ff62c3d9afbf8622d9e" title="Schedule strategy.">schedule_strategy</a> = <a class="code" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93a16ad807367312df2f9b6b74c4395014b" title="Round robin scheduling.">Scheduler::ROUND_ROBIN</a>;
+<a name="l00265"></a>00265     conf.<a class="code" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0" title="Configuration for scheduler.">scheduler_config</a>.<a class="code" href="structScheduler_1_1conf__t.html#af4db3b0909a6097bb46542bf76c09359" title="Indicates whether the scheduler should print debug messages.">debug</a>             = <span class="keyword">false</span>;
+<a name="l00266"></a>00266 
+<a name="l00267"></a>00267     <span class="keywordflow">return</span> conf;
+<a name="l00268"></a>00268 };
+<a name="l00269"></a>00269 
+<a name="l00270"></a>00270 <span class="preprocessor">#include &quot;periodic_telemetry.hxx&quot;</span>
+<a name="l00271"></a>00271 
+<a name="l00272"></a>00272 <span class="preprocessor">#endif </span><span class="comment">/* PERIODIC_TELEMETRY_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -263,7 +266,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 23 2016 16:13:52 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 27 2016 09:47:14 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

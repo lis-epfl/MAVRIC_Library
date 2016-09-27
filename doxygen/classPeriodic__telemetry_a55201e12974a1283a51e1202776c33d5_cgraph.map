@@ -2,7 +2,7 @@
 <area shape="rect" id="node3" href="$classPeriodic__telemetry.html#aa3de647762bc4e15235b4fb5819318b9" title="Get maximum number of telemetry messages." alt="" coords="213,5,416,35"/>
 <area shape="rect" id="node5" href="$classPeriodic__telemetry.html#a7b04804a2df353a39d21f31d7992560e" title="Get pointer to list of telemetry items." alt="" coords="237,59,392,88"/>
 <area shape="rect" id="node7" href="$classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59" title="Get reference to scheduler." alt="" coords="217,112,412,141"/>
-<area shape="rect" id="node9" href="$classScheduler.html#acfc1ac23c05eebd7f7bac3bdc015e1fb" title="Register a new task to the task set, in the first available slot." alt="" coords="244,165,385,195"/>
+<area shape="rect" id="node9" href="$classScheduler.html#a0c94779cd53b5df92e48ff321d0954a3" title="Register a new task to the task set, in the first available slot." alt="" coords="244,165,385,195"/>
 <area shape="rect" id="node11" href="$classScheduler.html#a26c76e721291762e9389da0eae352517" title="Get maximum number of tasks." alt="" coords="464,139,648,168"/>
 <area shape="rect" id="node13" href="$classScheduler.html#a317529117f23358269ce3d8db1cab912" title="Get pointer to the task list." alt="" coords="496,192,616,221"/>
 </map>
