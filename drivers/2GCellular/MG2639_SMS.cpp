@@ -23,8 +23,9 @@ Distributed as-is; no warranty is given.
 #include "../2GCellular/MG2639_SMS.h"
 
 #include <Arduino.h>
-#include "../2GCellular/MG2639_AT.h"
-#include "../2GCellular/SFE_MG2639_CellShield.h"
+
+#include "at_commands.h"
+#include "GSMShield.h"
 
 // Message sends are completed by sending a CTRL+Z (0x1A) byte
 #define CTRL_Z 0x1A

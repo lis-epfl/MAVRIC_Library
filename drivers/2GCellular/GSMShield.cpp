@@ -42,34 +42,128 @@
  ******************************************************************************/
 
 
-#include "../2GCellular/SFE_MG2639_CellShield.h"
+#include "at_commands.h"
+#include "GSMShield.h"
+#include "util/print_util.h"
 
-#include "MG2639_AT.h"
-#include <Arduino.h>
+#include "hal/common/time_keeper.hpp"
 
 #define BAUD_COUNT 7 // Number of possible baud rates the MG2639 can be set to
 unsigned long baudRates[BAUD_COUNT] = {2400, 4800, 9600, 19200, 38400, 
 										57600, 115200};
+
+#define DEBUG 1
+#if defined(DEBUG) && DEBUG > 0
+# define DEBUG_PRINT(x) Serial.print(x)
+# define DEBUG_PRINTLN(x) Serial.println(x)
+# define DEBUG_WRITE(x) Serial.write(x)
+#else
+# define DEBUG_PRINT(x) do {} while (0)
+# define DEBUG_PRINTLN(x) do {} while (0)
+# define DEBUG_WRITE(x) do {} while (0)
+#endif
 	
 /////////////////
 // Constructor //
 /////////////////
-MG2639_Cell::MG2639_Cell():uart0(CELL_SW_TX, CELL_SW_RX)
+GSMShield::GSMShield(Serial& uart)
 {
-	memset(rxBuffer, '\0', RX_BUFFER_LENGTH); // Clear rxBuffer
-	clearBuffer(); // Clear UART receive buffer
+	IPAddress myIP; // IP address to store local IP
+
+	IPAddress serverIP(128, 178, 46, 22);
+
+	DEBUG_PRINTLN("Checking SIM...");
+	  int simCheck = cell.checkSIM();
+	  // Call cell.begin() to turn the module on and verify
+	  // communication.
+	  DEBUG_PRINTLN("Starting communication with the mobile shield");
+
+	  int beginStatus = cell.begin();
+	  while (beginStatus <= 0)
+	  {
+	    DEBUG_PRINTLN(F("Unable to communicate with shield. Looping"));
+	    beginStatus = cell.begin();
+	  }
+	  DEBUG_PRINTLN(F("Communication established with the shield. "));
+	  DEBUG_PRINTLN(F("Attempting to open mobile network and GPRS "));
+
+	  // gprs.open() enables GPRS. This function should be called
+	  // before doing any TCP stuff. It should only be necessary
+	  // to call this function once.
+	  // gprs.open() can take up to 30 seconds to successfully
+	  // return. It'll return a positive value upon success.
+	  int openStatus = gprs.open();
+	  while (openStatus <= 0)
+	  {
+	    DEBUG_PRINTLN(F("Unable to open GPRS. Looping"));
+	    openStatus = gprs.open();
+	  }
+	   DEBUG_PRINTLN(F("Opening GPRS Connection"));
+	  // gprs.status() returns the current GPRS connection status.
+	  // This function will either return a 1 if a connection is
+	  // established, or a 0 if the module is disconnected.
+	  int GPRSStatus = gprs.status();
+	  if (GPRSStatus == 1)
+	    DEBUG_PRINTLN(F("GPRS Connection Established"));
+	  else
+	    DEBUG_PRINTLN(F("GPRS disconnected"));
+
+	  // gprs.localIP() gets and returns the local IP address
+	  // assigned to the MG2639 during this session.
+	 // myIP = gprs.localIP();
+	 // DEBUG_PRINT(F("My IP address is: "));
+	 // DEBUG_PRINTLN(myIP);
+
+	  // gprsHostByName(char * domain, IPAddress * ipRet) looks
+	  // up the DNS value of a domain name. The pertinent return
+	  // value is passed back by reference in the second
+	  // parameter. The return value is an negative error code or
+	  // positive integer if successful.
+	 // int DNSStatus = gprs.hostByName(server, &serverIP);
+	//  if (DNSStatus <= 0)
+	//  {
+	//    Serial.println(F("Couldn't find the server IP. Looping."));
+	//    while (1)
+	//      ;
+	 //  }
+	//  DEBUG_PRINT(F("Server IP is: "));
+	//  DEBUG_PRINTLN(serverIP);
+
+	  // gprs.connect(IPAddress remoteIP, port) establishes a TCP
+	  // connection to the desired host on the desired port.
+	  // We looked up serverIP in the previous step. Port 80 is
+	  // the standard HTTP port.
+	  int connectStatus = gprs.connectUDP(serverIP, 14550);
+	  // a gprs.connect(char * domain, port) is also defined.
+	  // It takes care of the DNS lookup for you. For example:
+	  //gprs.connect(server, 80); // Connect to a domain
+	  if (connectStatus <= 0)
+	  {
+	    DEBUG_PRINTLN(F("Unable to connect. Looping."));
+	    while (1)
+	      ;
+	  }
+	  DEBUG_PRINTLN(F("Connected!"));
 }
 
 //////////////////////////////
 // Initialization Functions //
 //////////////////////////////
+
+//bool Spektrum_satellite::init(void)
+//{
+//	// Attach interrupt handler function to UART if necessary
+//	return true;
+//
+//}
+
   
-uint8_t MG2639_Cell::begin(unsigned long baud)
+uint8_t GSMShield::begin(unsigned long baud)
 {
 	unsigned long setBaud = 0;
 	uint8_t tries = 0;
 	
-	initializePins(); // Set up power and UART pin direction
+	//initializePins(); // Set up power and UART pin direction
 	initializeUART(baud); // Initialize UART to requested baud
 	
 	// Try turning echo off first (send ATE0 command). If it succeeds,
@@ -89,7 +183,7 @@ uint8_t MG2639_Cell::begin(unsigned long baud)
 			{
 				// If autoBaud fails to find anything, the module must be off.
 				powerPulse(); // Send a power pulse (hold PWRKEY for 3s)
-				delay(MODULE_WARM_UP_TIME); // Delay ~3s for module to warm up
+				time_keeper_delay_ms(MODULE_WARM_UP_TIME); // Delay ~3s for module to warm up
 			}
 			tries++; // Increment tries and go again
 		}
@@ -120,12 +214,12 @@ uint8_t MG2639_Cell::begin(unsigned long baud)
 				return 0;
 			}
 		}
-		delay(COMMAND_RESPONSE_TIME);
+		time_keeper_delay_ms(COMMAND_RESPONSE_TIME);
 	}
 	return 1;
 }
 
-uint8_t MG2639_Cell::begin()
+uint8_t GSMShield::begin()
 {
 	// begin() works just like begin([baud]), but we'll call
 	// TARGET_BAUD_RATE defined in the h file.
@@ -136,18 +230,19 @@ uint8_t MG2639_Cell::begin()
 // Hardware Control //
 //////////////////////
 	
-void MG2639_Cell::initializePins()
-{
+//void MG2639_Cell::initializePins()
+//{
 	// Set ON/OFF and RESET pins as OUTPUTs:
-	pinMode(CELL_ON_OFF, OUTPUT);	// Set CELL_ON_OFF as an OUTPUT
-	digitalWrite(CELL_ON_OFF, LOW);
-}
+	// To avoid complexity, no connection has been given to this pin
+	//pinMode(CELL_ON_OFF, OUTPUT);	// Set CELL_ON_OFF as an OUTPUT
+	//digitalWrite(CELL_ON_OFF, LOW);
+//}
 
-void MG2639_Cell::powerPulse()
+void GSMShield::powerPulse()
 {
-	digitalWrite(CELL_ON_OFF, HIGH);	// Writing high will initiate
-	delay(POWER_PULSE_DURATION);		// Delay 2 to 5 seconds to turn on/off
-	digitalWrite(CELL_ON_OFF, LOW);		// Writing low will end the pulse
+	//digitalWrite(CELL_ON_OFF, HIGH);	// Writing high will initiate
+	//delay(POWER_PULSE_DURATION);		// Delay 2 to 5 seconds to turn on/off
+	//digitalWrite(CELL_ON_OFF, LOW);		// Writing low will end the pulse
 }
 
 ///////////////////////////////
@@ -155,7 +250,7 @@ void MG2639_Cell::powerPulse()
 ///////////////////////////////
 
 // Turn Echo ON or OFF
-int MG2639_Cell::setEcho(uint8_t on)
+int GSMShield::setEcho(uint8_t on)
 {
 	int iRetVal;
 	
@@ -175,7 +270,7 @@ int MG2639_Cell::setEcho(uint8_t on)
 // Baud Rate Control //
 ///////////////////////
 
-unsigned long MG2639_Cell::autoBaud()
+unsigned long GSMShield::autoBaud()
 {
 	int i;
 	int echoResponse;
@@ -184,7 +279,7 @@ unsigned long MG2639_Cell::autoBaud()
 		initializeUART(baudRates[i]); // Set UART to baud rate
 
 		printChar('\r'); // Print a '\r' to send any possible garbage command
-		delay(10); // Wait for a possible "ERROR" response
+		time_keeper_delay_ms(10); // Wait for a possible "ERROR" response
 
 		// Try turning echo off to see if the module responds with "OK"
 		echoResponse = setEcho(0);
@@ -199,7 +294,7 @@ unsigned long MG2639_Cell::autoBaud()
 		return 0; // Otherwise we failed to find it, return 0
 }
 
-int MG2639_Cell::changeBaud(unsigned long from, unsigned long to)
+int GSMShield::changeBaud(unsigned long from, unsigned long to)
 {
 	int iRetVal;
 	char changeBaudCmd[14];
@@ -221,12 +316,12 @@ int MG2639_Cell::changeBaud(unsigned long from, unsigned long to)
 	// Earlier versions of SS can't reliably read, but we should be able
 	// to tell the difference between "ERROR" and "OK" due to the size
 	// of the received string.
-	unsigned long timeIn = millis();
+	unsigned long timeIn = time_keeper_get_ms();
 	unsigned long timeout = 10; // Set timeout to 10ms
 	int received = 0;
 	
 	clearBuffer(); // Clear rxBuffer
-	while (timeIn + timeout > millis()) // Check for a timeout
+	while (timeIn + timeout > time_keeper_get_ms()) // Check for a timeout
 	{
 		if (dataAvailable()) // If data available on UART
 		{
@@ -244,7 +339,7 @@ int MG2639_Cell::changeBaud(unsigned long from, unsigned long to)
 // difference between "ERROR" and "OK" by the length of the response. 
 // An OK response is usually 5 characters, ERROR is 8 (string + \r\n).
 // If the response exists and is short, assume we got an OK.
-uint8_t MG2639_Cell::bruteForceBaudChange(unsigned long from, unsigned long to,
+uint8_t GSMShield::bruteForceBaudChange(unsigned long from, unsigned long to,
 											unsigned int tries)
 {
 	uint8_t baudRsp;
@@ -263,7 +358,7 @@ uint8_t MG2639_Cell::bruteForceBaudChange(unsigned long from, unsigned long to,
 // Information Queries //
 /////////////////////////
 
-int8_t MG2639_Cell::getInformation(char * infoRet)
+int8_t GSMShield::getInformation(char * infoRet)
 {
 	int8_t iRetVal;
 	
@@ -283,7 +378,7 @@ int8_t MG2639_Cell::getInformation(char * infoRet)
 	return iRetVal;
 }
 
-bool MG2639_Cell::checkSIM()
+bool GSMShield::checkSIM()
 {
 	int8_t iRetVal;
 	
@@ -307,7 +402,7 @@ bool MG2639_Cell::checkSIM()
 	return false;
 }
 
-int8_t MG2639_Cell::getPhoneNumber(char * phoneRet)
+int8_t GSMShield::getPhoneNumber(char * phoneRet)
 {
 	int8_t iRetVal;
 	
@@ -329,7 +424,7 @@ int8_t MG2639_Cell::getPhoneNumber(char * phoneRet)
 	return iRetVal;
 }
 
-int8_t MG2639_Cell::getICCID(char * iccidRet)
+int8_t GSMShield::getICCID(char * iccidRet)
 {
 	int iRetVal;
 	
@@ -349,7 +444,7 @@ int8_t MG2639_Cell::getICCID(char * iccidRet)
 	return iRetVal;	
 }
 
-int8_t MG2639_Cell::getIMI(char * imiRet)
+int8_t GSMShield::getIMI(char * imiRet)
 {
 	int iRetVal;
 	
@@ -368,7 +463,7 @@ int8_t MG2639_Cell::getIMI(char * imiRet)
 	return iRetVal;
 }
 
-int8_t MG2639_Cell::getIMEI(char * imeiRet)
+int8_t GSMShield::getIMEI(char * imeiRet)
 {
 	int iRetVal;
 	
@@ -392,7 +487,7 @@ int8_t MG2639_Cell::getIMEI(char * imeiRet)
 // Command Drivers //
 /////////////////////
 
-void MG2639_Cell::sendATCommand(const char * command)
+void GSMShield::sendATCommand(const char * command)
 {	
 	clearSerial();	// Empty the UART receive buffer
 	// Send the command:
@@ -401,16 +496,16 @@ void MG2639_Cell::sendATCommand(const char * command)
 	printChar('\r'); // Print a carriage return to end command
 }
 
-int8_t MG2639_Cell::readBetween(char begin, char end, char * rsp, 
+int8_t GSMShield::readBetween(char begin, char end, char * rsp,
                                  unsigned int timeout)
 {
-	unsigned long timeIn = millis(); // timeIn stores timestamp where we enter
+	unsigned long timeIn = time_keeper_get_ms(); // timeIn stores timestamp where we enter
 	bool inString = false; // Flag to keep track of whether we've seen [begin]
 	char c = 0; // Char to store currently read character
 	int index = 0;
 	
 	//clearBuffer();
-	while (timeIn + timeout > millis()) // While we haven't timed out
+	while (timeIn + timeout > time_keeper_get_ms()) // While we haven't timed out
 	{
 		if (inString == false) // Waiting for beginning character
 		{
@@ -444,14 +539,14 @@ int8_t MG2639_Cell::readBetween(char begin, char end, char * rsp,
 	return 0;
 }
 
-int MG2639_Cell::readUntil(char * dest, char end, int maxChars, 
+int GSMShield::readUntil(char * dest, char end, int maxChars,
                             unsigned int timeout)
 {
-	unsigned long timeIn = millis();
+	unsigned long timeIn = time_keeper_get_ms();
 	char c = 0;
 	int index = 0;
 	
-	while ((timeIn + timeout > millis()) && (index < maxChars))
+	while ((timeIn + timeout > time_keeper_get_ms()) && (index < maxChars))
 	{
 		if (dataAvailable())
 		{
@@ -469,13 +564,13 @@ int MG2639_Cell::readUntil(char * dest, char end, int maxChars,
 	return ERROR_TIMEOUT;
 }
 
-int MG2639_Cell::readWaitForResponse(const char *goodRsp, unsigned int timeout)
+int GSMShield::readWaitForResponse(const char *goodRsp, unsigned int timeout)
 {
-	unsigned long timeIn = millis();	// Timestamp coming into function
+	unsigned long timeIn = time_keeper_get_ms();	// Timestamp coming into function
 	unsigned int received = 0; // received keeps track of number of chars read
 	
 	clearBuffer();	// Clear the class receive buffer (rxBuffer)
-	while (timeIn + timeout > millis()) // While we haven't timed out
+	while (timeIn + timeout > time_keeper_get_ms()) // While we haven't timed out
 	{
 		if (dataAvailable()) // If data is available on UART RX
 		{
@@ -491,14 +586,14 @@ int MG2639_Cell::readWaitForResponse(const char *goodRsp, unsigned int timeout)
 		return ERROR_TIMEOUT; // Return the timeout error code
 }
 
-int MG2639_Cell::readWaitForResponses(const char * goodRsp, 
+int GSMShield::readWaitForResponses(const char * goodRsp,
                                       const char * failRsp, unsigned int timeout)
 {
-	unsigned long timeIn = millis(); // Timestamp coming into function
+	unsigned long timeIn = time_keeper_get_ms(); // Timestamp coming into function
 	unsigned int received = 0; // received keeps track of number of chars read
 	
 	clearBuffer(); // Clear the class receive buffer (rxBuffer)
-	while (timeIn + timeout > millis()) // While we haven't timed out
+	while (timeIn + timeout > time_keeper_get_ms()) // While we haven't timed out
 	{
 		if (dataAvailable()) // If data is available on UART RX
 		{
@@ -517,7 +612,7 @@ int MG2639_Cell::readWaitForResponses(const char * goodRsp,
 		return ERROR_TIMEOUT; // Return the timeout error code
 }
 
-int MG2639_Cell::getSubstringBetween(char * dest, const char * src, char in, char out)
+int GSMShield::getSubstringBetween(char * dest, const char * src, char in, char out)
 {
 	char * start;
 	char * end;
@@ -541,21 +636,21 @@ int MG2639_Cell::getSubstringBetween(char * dest, const char * src, char in, cha
 // UART Functions //
 ////////////////////
 
-void MG2639_Cell::initializeUART(long baud)
-{
+//void GSMShield::initializeUART(long baud)
+//{
 	// End any previously started UART 
 	// (maybe it was begin()'s at a different baud rate)
-	uart0.end();
+	//uart0.end();
 	// Start our UART at the requested baud rate
-	uart0.begin(baud);
-}
+	//uart0.begin(baud);
+//}
 
-void MG2639_Cell::printString(const char * str)
+void GSMShield::printString(const char * str)
 {
 	uart0.print(str); // Abstracting a UART print char array
 }
 
-void MG2639_Cell::printString(const char * str, size_t length)
+void GSMShield::printString(const char * str, size_t length)
 {
 	unsigned int i;
 	for (i = 0; i < length; i++)
@@ -564,17 +659,17 @@ void MG2639_Cell::printString(const char * str, size_t length)
 	}
 }
 
-void MG2639_Cell::printChar(char c)
+void GSMShield::printChar(char c)
 {
 	uart0.print(c); // Abstracting a UART print char
 }
 
-unsigned char MG2639_Cell::uartRead()
+unsigned char GSMShield::uartRead()
 {
 	return uart0.read(); // Abstracting UART read
 }
 
-unsigned int MG2639_Cell::readByteToBuffer()
+unsigned int GSMShield::readByteToBuffer()
 {
 	// Read the data in
 	char c = uartRead();	// uart0.read();
@@ -587,13 +682,13 @@ unsigned int MG2639_Cell::readByteToBuffer()
 	return 1;
 }
 
-void MG2639_Cell::clearBuffer()
+void GSMShield::clearBuffer()
 {
 	memset(rxBuffer, '\0', RX_BUFFER_LENGTH);
 	bufferHead = 0;
 }
 
-char * MG2639_Cell::searchBuffer(const char * test)
+char * GSMShield::searchBuffer(const char * test)
 {
 	int bufferLen = strlen((const char *)rxBuffer);
 	// If our buffer isn't full, just do an strstr
@@ -603,23 +698,24 @@ char * MG2639_Cell::searchBuffer(const char * test)
 	{	//! TODO
 		// If the buffer is full, we need to search from the end of the 
 		// buffer back to the beginning.
-		int testLen = strlen(test);
-		for (int i=0; i<RX_BUFFER_LENGTH; i++)
-		{
+		//int testLen = strlen(test);
+		//for (int i=0; i<RX_BUFFER_LENGTH; i++)
+		//{
 			
-		}
+		//}
+		return 0;
 	}
 }
 
-int MG2639_Cell::dataAvailable()
+int GSMShield::dataAvailable()
 {
 	return uart0.available();
 }
 
-void MG2639_Cell::clearSerial()
+void GSMShield::clearSerial()
 {
 	while (uart0.available())
 		uart0.read();
 }
 
-MG2639_Cell cell;
+GSMShield cell;

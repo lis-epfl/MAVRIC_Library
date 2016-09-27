@@ -22,11 +22,20 @@ Distributed as-is; no warranty is given.
 #ifndef _SFE_MG2639_CELLSHIELD_H_
 #define _SFE_MG2639_CELLSHIELD_H_
 
-#include <SoftwareSerial.h> // SoftwareSerial used to communicate with shield
+#include "hal/common/serial.hpp"
+
+//#include <SoftwareSerial.h> // SoftwareSerial used to communicate with shield
+
+
+extern "C"
+{
+	#include <string.h>
 #include <inttypes.h>
-#include "MG2639_SMS.h"	// SMS (text messaging) functions (send, read, etc.)
-#include "MG2639_GPRS.h" // GPRS functions (TCP connect, send, etc.)
-#include "MG2639_Phone.h" // Phone call functions (answer, dial, hangup, etc.)
+	#include "MG2639_SMS.h"	// SMS (text messaging) functions (send, read, etc.)
+	#include "MG2639_GPRS.h" // GPRS functions (TCP connect, send, etc.)
+	#include "MG2639_Phone.h" // Phone call functions (answer, dial, hangup, etc.)
+}
+
 
 ////////////////////////
 // Memory Allocations //
@@ -51,8 +60,8 @@ Distributed as-is; no warranty is given.
 // Timing Characteristics //
 ////////////////////////////
 // All constants in this section defined in milliseconds
-#define POWER_PULSE_DURATION	3000  // 2-5s pulse required to turn on/off
-#define MODULE_OFF_TIME			10000 // Time the module takes to turn off
+//#define POWER_PULSE_DURATION	3000  // 2-5s pulse required to turn on/off
+//#define MODULE_OFF_TIME			10000 // Time the module takes to turn off
 #define COMMAND_RESPONSE_TIME	500  // Command response timeout on UART
 #define MODULE_WARM_UP_TIME		3000  // Time between on and ready
 
@@ -67,7 +76,7 @@ enum cmd_response {
 	SUCCESS_OK = 1 // Good response.
 };
 
-class MG2639_Cell
+class GSMShield
 {
 public:
 	////////////////////////////////////
@@ -76,8 +85,15 @@ public:
 	
 	/// MG2639_Cell() - Constructor
 	/// - Initializes rxBuffer and uart0.
-	MG2639_Cell();
+	GSMShield(Serial& uart);
 	
+
+	/**
+	* \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
+	*/
+	//bool init(void);
+
+
 	/// begin([baud]) - Cell shield initialization at specified baud rate
 	///
 	/// Attempt to initialize the cellular shield at a specific baud rate.
@@ -175,8 +191,6 @@ public:
 	friend class MG2639_Phone;
 
 private:
-	// SoftwareSerial is used to communicate with the shield's UART0.
-	SoftwareSerial uart0;
 	
 	// Characters received on the software serial uart are stored in rxBuffer.
 	// rxBuffer is a circular buffer with no overwrite protection.
@@ -190,10 +204,10 @@ private:
 	//////////////////////////////
 	
 	/// initializePins() - Sets up direction and initial state of shield pins
-	void initializePins();
+	//void initializePins();
 	
 	/// initializeUART([baud]) - Starts the SoftwareSerial uart at [baud]
-	void initializeUART(long baud);
+	//void initializeUART(long baud);
 	
 	/// powerPulse() - Sends a power pulse signal
 	/// Depending on the state of the MG2639, this will either turn the module
@@ -205,7 +219,8 @@ private:
 	/// Previously: SoftwareSerial was very unreliable at 115200. 1 of 100 character writes
 	/// may be correct. This function tried to send 100's of baud change commands in the
 	/// hope that one of them was clear.
-	uint8_t bruteForceBaudChange(unsigned long from, unsigned long to, unsigned int tries);
+	//uint8_t bruteForceBaudChange(unsigned long from, unsigned long to, unsigned int tries);
+	//Always opert
 	
 	//////////////////////////////////
 	// Command and Response Drivers //
@@ -312,8 +327,11 @@ private:
 	/// Fail: returns NULL
 	//! TODO: Fix this function so it searches circularly
 	char * searchBuffer(const char * test);	
+
+private:
+    Serial&                 uart_;                  ///< Serial port
 };
 
-extern MG2639_Cell cell;
+extern GSMShield cell;
 
 #endif

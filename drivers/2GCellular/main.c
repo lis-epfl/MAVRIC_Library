@@ -20,8 +20,9 @@ Distributed as-is; no warranty is given.
 // to communicate with the MG2639 module. Include that
 // library first:
 #include <SoftwareSerial.h>
+#include <headers/IPAddress.h>
 // Include the MG2639 Cellular Shield library
-#include <SFE_MG2639_CellShield.h>
+#include "GSMShield.h"
 #define DEBUG 1
 #if defined(DEBUG) && DEBUG > 0
 # define DEBUG_PRINT(x) Serial.print(x)

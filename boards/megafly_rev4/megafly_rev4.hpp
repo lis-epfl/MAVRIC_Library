@@ -145,7 +145,7 @@ public:
     Serial_avr32      			uart0;
     Serial_avr32        		uart1;
     Serial_avr32                uart3;
-    Serial_avr32_gsm_udp		uart4;
+    Serial_avr32 				uart4;
     Serial_usb_avr32            uart_usb;
     I2c_avr32                   i2c0;
     I2c_avr32                   i2c1;

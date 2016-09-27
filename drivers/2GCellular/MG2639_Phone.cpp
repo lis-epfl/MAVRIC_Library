@@ -22,8 +22,8 @@ Distributed as-is; no warranty is given.
 
 #include "../2GCellular/MG2639_Phone.h"
 
-#include "../2GCellular/MG2639_AT.h"
-#include "../2GCellular/SFE_MG2639_CellShield.h"
+#include "at_commands.h"
+#include "GSMShield.h"
 
 #define CELL_RING	A0	// Cellular module's RING output goes to Arduino's A0
 #define CELL_RING_THRESHOLD 100
