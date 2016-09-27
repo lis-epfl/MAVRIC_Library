@@ -572,14 +572,8 @@ bool LEQuad::main_task(void)
 
             case Mav_mode::ATTITUDE:
             {
-                manual_control.get_control_command(&controls);
-                /* convert controls from control_command_t (legacy) to att_command_t */
-                Cascade_controller::att_command_t att_command;
-                controls.rpy[YAW] += yaw;
-                att_command.att = coord_conventions_quaternion_from_rpy(controls.rpy);
-                att_command.thrust = controls.thrust;
-                /* set attitude command */
-                cascade_controller_.set_attitude_command(att_command);
+                Attitude_controller_I::att_command_t command = manual_control.get_attitude_command(ahrs.qe);
+                cascade_controller_.set_attitude_command(command);
             }
                 break;
 

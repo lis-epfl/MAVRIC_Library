@@ -46,6 +46,8 @@
 #include "communication/state.hpp"
 #include "control/stabilisation.hpp"
 #include "control/control_command.h"
+#include "control/attitude_controller_i.hpp"
+ 
 
 
 #define MAX_JOYSTICK_RANGE 0.8  ///< Scale down the joystick channel amplitude, as done in remote
@@ -243,12 +245,14 @@ public:
 
 
     /**
-     * \brief   Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)
+     * \brief   Compute attitude command from joystick input (absolute roll and pitch, relative yaw)
+     * \details Yaw is relative to current yaw (command.yaw = current.yaw + 0.5 * input.yaw)
      *
-     * \param   ki_yaw          Integration factor for yaw (0.02 is ok) (input)
-     * \param   command         Attitude command (output)
+     * \param   current_attitude    Current attitude of the vehicle
+     *
+     * \return  command
      */
-    void get_attitude_command(const float ki_yaw, attitude_command_t* command, float scale) const;
+    Attitude_controller_I::att_command_t get_attitude_command(quat_t current_attitude) const;
 
 
     /**

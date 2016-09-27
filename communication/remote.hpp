@@ -46,6 +46,7 @@
 #include "communication/mav_modes.hpp"
 #include "drivers/satellite.hpp"
 #include "control/stabilisation.hpp"
+#include "control/attitude_controller_i.hpp"
 
 extern "C"
 {
@@ -380,14 +381,15 @@ void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_c
 
 
 /**
- * \brief   Compute attitude command from the remote (absolute roll and pitch, integrated yaw)
+ * \brief   Compute attitude command from the remote (absolute roll and pitch, relative yaw)
+ * \details Yaw is relative to current yaw (command.yaw = current.yaw + 0.5 * input.yaw)
  *
- * \param   remote          Remote structure (input)
- * \param   k_yaw           Integration factor for yaw (0.02 is ok) (input)
- * \param   command         Attitude command (output)
- * \param   scale           Scale (maximum output / max remote input)
+ * \param   remote              Remote structure
+ * \param   current_attitude    Current attitude of the vehicle
+ *
+ * \return  command
  */
-void remote_get_attitude_command(const remote_t* remote, const float k_yaw, attitude_command_t* command, float scale);
+Attitude_controller_I::att_command_t remote_get_attitude_command(const remote_t* remote, quat_t current_attitude);
 
 
 /**
