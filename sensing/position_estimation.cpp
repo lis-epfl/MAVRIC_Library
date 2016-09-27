@@ -352,6 +352,9 @@ Position_estimation::Position_estimation(State& state, const Barometer& baromete
         local_position[i] = 0.0f;
         kp_pos_gps[i] = config.kp_pos_gps[i];
         kp_vel_gps[i] = config.kp_vel_gps[i];
+
+        last_gps_pos[i] = 0.0f;
+        fence_position[i] = 0.0f;
     }
 }
 
