@@ -292,7 +292,7 @@ mav_result_t Mission_handler_land_on_tag<T1, T2, T3>::set_auto_landing_tag(Missi
     // mav_result_t result;
     mav_result_t result = MAV_RESULT_ACCEPTED; // Testing
 
-    print_util_dbg_print("Attempting to land\r\n");
+    print_util_dbg_print("Attempting to land on tag\r\n");
 
     if (   (land_on_tag_handler->mission_planner_.internal_state() == Mission_planner::MISSION)
         || (land_on_tag_handler->mission_planner_.internal_state() == Mission_planner::PAUSED))
@@ -308,7 +308,7 @@ mav_result_t Mission_handler_land_on_tag<T1, T2, T3>::set_auto_landing_tag(Missi
         // Specific spot case
         if (packet->param1 == 1)
         {
-            print_util_dbg_print("Landing at a given local location\r\n");
+            print_util_dbg_print("Searching for tag at a given local location\r\n");
             landing_wpt = Waypoint( MAV_FRAME_LOCAL_NED,
                                     MAV_CMD_NAV_LAND_ON_TAG,
                                     0,
@@ -322,7 +322,7 @@ mav_result_t Mission_handler_land_on_tag<T1, T2, T3>::set_auto_landing_tag(Missi
         }
         else
         {
-            print_util_dbg_print("Landing on the spot\r\n");
+            print_util_dbg_print("Searching for tag on the spot\r\n");
             local_position_t landing_position = land_on_tag_handler->ins_.position_lf();
             landing_wpt = Waypoint( MAV_FRAME_LOCAL_NED,
                                     MAV_CMD_NAV_LAND_ON_TAG,
