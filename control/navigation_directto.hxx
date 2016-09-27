@@ -83,7 +83,7 @@ template<class TPosition_controller>
 bool Navigation_directto<TPosition_controller>::set_position_command(const typename TPosition_controller::pos_command_t& pos_command)
 {
     /* set pid controller to standard parameters */
-    pid_controller_apply_config(&(TPosition_controller::pid_controller_), &std_pid_config_);
+    //pid_controller_apply_config(&(TPosition_controller::pid_controller_), &std_pid_config_);
 
     /* call parent class method */
     return TPosition_controller::set_position_command(pos_command);
@@ -94,7 +94,7 @@ template<class TPosition_controller>
 bool Navigation_directto<TPosition_controller>::set_xyposition_zvel_command(const typename TPosition_controller::xypos_zvel_command_t& command)
 {
     /* set pid controller to standard parameters */
-    pid_controller_apply_config(&(TPosition_controller::pid_controller_), &std_pid_config_);
+    //pid_controller_apply_config(&(TPosition_controller::pid_controller_), &std_pid_config_);
     
     /* call parent class method */
     return TPosition_controller::set_xyposition_zvel_command(command);
@@ -135,8 +135,8 @@ typename TPosition_controller::pos_command_t Navigation_directto<TPosition_contr
     distance_to_goal_sqr_ = vectors_norm_sqr(dist);
 
     // adjust PID parameters of position controller depending on distance to goal
-    pid_controller_conf_t pid_config = distance_to_goal_sqr_ > min_cruise_dist_sqr_ ? cruise_pid_config_ : hover_pid_config_;
-    pid_controller_apply_config(&(TPosition_controller::pid_controller_), &pid_config);
+    //pid_controller_conf_t pid_config = distance_to_goal_sqr_ > min_cruise_dist_sqr_ ? cruise_pid_config_ : hover_pid_config_;
+    //pid_controller_apply_config(&(TPosition_controller::pid_controller_), &pid_config);
 
 	return pos_command;
 }
