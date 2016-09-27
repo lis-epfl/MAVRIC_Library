@@ -47,7 +47,7 @@
 #include "control/stabilisation.hpp"
 #include "control/control_command.h"
 #include "control/attitude_controller_i.hpp"
- 
+
 
 
 #define MAX_JOYSTICK_RANGE 0.8  ///< Scale down the joystick channel amplitude, as done in remote
@@ -325,7 +325,7 @@ Joystick::conf_t Joystick::default_config()
     conf.scale_attitude.x = -0.8f;  // pitch (negativ scale to invert for QGC >= 2.9)
     conf.scale_attitude.y = 0.8f;   // roll
     conf.scale_attitude.z = 1;      // thrust
-    conf.scale_attitude.r = 0.008f;   // yaw
+    conf.scale_attitude.r = 0.8f;   // yaw
     /* velocity scales */
     conf.scale_velocity.x = 8.0f;   // x
     conf.scale_velocity.y = 8.0f;   // y
