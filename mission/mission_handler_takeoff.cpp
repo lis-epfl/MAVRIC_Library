@@ -42,11 +42,6 @@
 
 #include "mission/mission_handler_takeoff.hpp"
 #include "control/navigation_controller_i.hpp"
-extern "C"
-{
-
-}
-
 
 
 //------------------------------------------------------------------------------

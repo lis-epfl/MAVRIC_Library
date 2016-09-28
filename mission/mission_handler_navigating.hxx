@@ -44,11 +44,8 @@
 #define MISSION_HANDLER_NAVIGATING_HXX__
 
 #include "communication/mavlink_waypoint_handler.hpp"
-
-extern "C"
-{
 #include "hal/common/time_keeper.hpp"
-}
+
 
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION

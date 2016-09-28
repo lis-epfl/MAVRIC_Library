@@ -44,12 +44,6 @@
 #include "control/navigation_controller_i.hpp"
 #include "control/xyposition_zvel_controller_i.hpp"
 
-extern "C"
-{
-
-}
-
-
 
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION

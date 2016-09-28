@@ -42,11 +42,6 @@
 
 #include "mission/mission_handler_on_ground.hpp"
 
-extern "C"
-{
-
-}
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION

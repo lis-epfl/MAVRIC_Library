@@ -44,10 +44,7 @@
 #include "mission/mission_handler_registry.hpp"
 
 #include "mission/mission_handler.hpp"
- 
-extern "C"
-{
-}
+
 
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION

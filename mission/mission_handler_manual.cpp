@@ -42,11 +42,6 @@
 
 #include "mission/mission_handler_manual.hpp"
 
-extern "C"
-{
-
-}
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION

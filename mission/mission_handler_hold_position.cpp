@@ -42,10 +42,7 @@
 
 #include "mission/mission_handler_hold_position.hpp"
 #include "control/navigation_controller_i.hpp"
-extern "C"
-{
 
-}
 
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
