@@ -100,7 +100,7 @@ bool Mission_handler_land_on_tag<Navigation_controller_I, Navigation_controller_
         }
         else // Descend to ground if still healthy and above tag
         {
-            cmd.pos[Z] = offboard_tag_search_.descent_to_gnd_altitude();
+            cmd.pos[Z] = desc_to_ground_altitude_;
 
             // Set tag search altitude to current height, so it will reposition itself at this altitude if it drifts away
             tag_search_altitude_ = alt_lpf_;

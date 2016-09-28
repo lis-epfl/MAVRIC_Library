@@ -82,6 +82,8 @@ Mission_handler_land_on_tag<T1, T2, T3>::Mission_handler_land_on_tag(   T1& fly_
                             0.0f);
     auto_landing_behavior_ = DESCENT_TO_SMALL_ALTITUDE;
     LPF_gain_ = config.LPF_gain;
+    desc_to_ground_altitude_ = config.desc_to_ground_altitude;
+    desc_to_ground_range_ = config.desc_to_ground_range;
 
     bool init_success = true;
 
@@ -174,7 +176,8 @@ Mission_handler::update_status_t Mission_handler_land_on_tag<T1, T2, T3>::update
             break;
 
         case DESCENT_TO_SMALL_ALTITUDE:
-            if (maths_f_abs(ins_.position_lf()[Z] - offboard_tag_search_.descent_to_gnd_altitude()) < 0.5f)
+            if (maths_f_abs(ins_.position_lf()[Z] - desc_to_ground_altitude_) < desc_to_ground_range_ ||
+                (ins_.position_lf()[Z] > desc_to_ground_altitude_))
             {
                 next_state = true;
             }

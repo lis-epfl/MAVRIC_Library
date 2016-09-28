@@ -71,6 +71,8 @@ public:
     struct conf_t
     {
         float LPF_gain;                                     ///< The value of the low-pass filter gain
+        float desc_to_ground_altitude;                      ///< The altitude to switch to the descent to ground state
+        float desc_to_ground_range;                         ///< The range in meters that allows switching from the descent to ground
     };
 
     /**
@@ -152,6 +154,8 @@ protected:
     auto_landing_behavior_t auto_landing_behavior_;             ///< The auto landing behavior
     float alt_lpf_;                                             ///< The low-pass filtered altitude for auto-landing
     float LPF_gain_;                                            ///< The low-pass filter gain
+    float desc_to_ground_altitude_;                             ///< The altitude to switch to the descent to ground state
+    float desc_to_ground_range_;                                ///< The range in meters that allows switching from the descent to ground
     float tag_search_altitude_;                                 ///< The altitude that the drone should search for the tag at
     uint32_t tag_search_start_time_;                            ///< The start time that the offboard camera has been searching for the tag, causes a timeout if too long
 
@@ -205,6 +209,8 @@ typename Mission_handler_land_on_tag<T1, T2, T3>::conf_t Mission_handler_land_on
     conf_t conf                                      = {};
 
     conf.LPF_gain                                    = 0.9f;
+    conf.desc_to_ground_altitude                     = -1.5f;
+    conf.desc_to_ground_range                        = 0.5f;
 
     return conf;
 };
