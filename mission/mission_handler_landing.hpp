@@ -68,6 +68,7 @@ public:
     struct conf_t
     {
         float LPF_gain;                                     ///< The value of the low-pass filter gain
+        float desc_to_ground_altitude;                      ///< The altitude to switch to the descent to ground state
     };
 
     /**
@@ -139,6 +140,7 @@ protected:
     auto_landing_behavior_t auto_landing_behavior_;             ///< The auto landing behavior
     float alt_lpf_;                                             ///< The low-pass filtered altitude for auto-landing
     float LPF_gain_;                                            ///< The low-pass filter gain
+    float desc_to_ground_altitude_;                             ///< The altitude to switch to the descent to ground state
     
     T1& desc_to_small_alt_controller_;                          ///< The reference to the controller used during the descent to small altitudes phase
     T2& desc_to_ground_controller_;                             ///< The reference to the controller used during the descent to ground phase
@@ -168,6 +170,7 @@ typename Mission_handler_landing<T1, T2>::conf_t Mission_handler_landing<T1, T2>
     conf_t conf                                      = {};
 
     conf.LPF_gain                                    = 0.9f;
+    conf.desc_to_ground_altitude                     = -5.0f;
 
     return conf;
 };

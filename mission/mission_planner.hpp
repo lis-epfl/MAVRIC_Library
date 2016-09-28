@@ -316,7 +316,7 @@ Mission_planner::conf_t Mission_planner::default_config()
     conf_t conf                                                 = {};
 
     conf.safe_altitude                                          = -30.0f;
-    conf.critical_landing_altitude                              = 5.0f;
+    conf.critical_landing_altitude                              =  -5.0f;
     conf.takeoff_altitude                                       = -10.0f;
 
     return conf;

@@ -67,6 +67,7 @@ Mission_handler_landing<T1, T2>::Mission_handler_landing(   T1& desc_to_small_al
                             0.0f);
     auto_landing_behavior_ = DESCENT_TO_SMALL_ALTITUDE;
     LPF_gain_ = config.LPF_gain;
+    desc_to_ground_altitude_ = config.desc_to_ground_altitude;
 }
 
 template <class T1, class T2>
@@ -117,7 +118,7 @@ Mission_handler::update_status_t Mission_handler_landing<T1, T2>::update()
     }
     else if (auto_landing_behavior_ == DESCENT_TO_SMALL_ALTITUDE)
     {
-        if (maths_f_abs(ins_.position_lf()[Z] - waypoint_.local_pos()[Z]/2.0f) < 0.5f)
+        if (maths_f_abs(ins_.position_lf()[Z] - desc_to_ground_altitude_) < 0.5f)
         {
             next_state = true;
         }
