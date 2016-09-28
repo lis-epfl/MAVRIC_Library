@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "sample_projects/LEQuad/lequad_tag.hpp"
 #include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
@@ -88,8 +88,8 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad(board.imu,
+    LEQuad::conf_t mav_config = LEQuad_tag::default_config(MAVLINK_SYS_ID);
+    LEQuad_tag mav = LEQuad_tag(board.imu,
                         board.barometer,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:
