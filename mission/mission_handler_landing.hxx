@@ -118,7 +118,8 @@ Mission_handler::update_status_t Mission_handler_landing<T1, T2>::update()
     }
     else if (auto_landing_behavior_ == DESCENT_TO_SMALL_ALTITUDE)
     {
-        if (maths_f_abs(ins_.position_lf()[Z] - desc_to_ground_altitude_) < 0.5f)
+        if ((maths_f_abs(ins_.position_lf()[Z] - desc_to_ground_altitude_) < 0.5f) ||   // Drone is within range of desc2gnd waypoint
+            (ins_.position_lf()[Z] > desc_to_ground_altitude_))                         // Drone is below desc2gnd waypoint (for cases when we start landing below it)
         {
             next_state = true;
         }
