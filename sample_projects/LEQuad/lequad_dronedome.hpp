@@ -134,7 +134,7 @@ LEQuad::conf_t LEQuad_dronedome::default_config(uint8_t sysid)
 
     conf.mission_planner_config.safe_altitude                   =  -3.0f;
     conf.mission_planner_config.critical_landing_altitude       =  -2.0f;
-    conf.mission_planner_config.takeoff_altitude                = -10.0f;
+    conf.mission_planner_config.takeoff_altitude                =  -2.0f;
 
     return conf;
 }
