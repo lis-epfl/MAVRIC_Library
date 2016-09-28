@@ -46,6 +46,8 @@
 #include "communication/state.hpp"
 #include "control/stabilisation.hpp"
 #include "control/control_command.h"
+#include "control/attitude_controller_i.hpp"
+
 
 
 #define MAX_JOYSTICK_RANGE 0.8  ///< Scale down the joystick channel amplitude, as done in remote
@@ -243,12 +245,14 @@ public:
 
 
     /**
-     * \brief   Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)
+     * \brief   Compute attitude command from joystick input (absolute roll and pitch, relative yaw)
+     * \details Yaw is relative to current yaw (command.yaw = current.yaw + 0.5 * input.yaw)
      *
-     * \param   ki_yaw          Integration factor for yaw (0.02 is ok) (input)
-     * \param   command         Attitude command (output)
+     * \param   current_attitude    Current attitude of the vehicle
+     *
+     * \return  command
      */
-    void get_attitude_command(const float ki_yaw, attitude_command_t* command, float scale) const;
+    Attitude_controller_I::att_command_t get_attitude_command(quat_t current_attitude) const;
 
 
     /**
@@ -321,7 +325,7 @@ Joystick::conf_t Joystick::default_config()
     conf.scale_attitude.x = -0.8f;  // pitch (negativ scale to invert for QGC >= 2.9)
     conf.scale_attitude.y = 0.8f;   // roll
     conf.scale_attitude.z = 1;      // thrust
-    conf.scale_attitude.r = 0.008f;   // yaw
+    conf.scale_attitude.r = 0.8f;   // yaw
     /* velocity scales */
     conf.scale_velocity.x = 8.0f;   // x
     conf.scale_velocity.y = 8.0f;   // y

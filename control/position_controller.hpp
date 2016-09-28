@@ -60,7 +60,7 @@ public:
      */
     struct conf_t
     {
-        float max_climb_rate     = 1.0f;
+        float max_climb_rate;
 		float kp_yaw;
         pid_controller_conf_t pid_config;
         typename TVelocity_controller::conf_t velocity_controller_config;

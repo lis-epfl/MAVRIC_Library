@@ -112,6 +112,8 @@ template<class TVelocity_controller>
 void Position_controller<TVelocity_controller>::update_cascade(const pos_command_t& pos_command)
 {
     position_command_ = pos_command;
+    /* set ctrl_mode to use position in xyz as input */
+    ctrl_mode_ = ctrl_mode_t::POS_XYZ;
     typename TVelocity_controller::vel_command_t vel_command = calc_velocity_command(position_command_);
     TVelocity_controller::update_cascade(vel_command);
 }

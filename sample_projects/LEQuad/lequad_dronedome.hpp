@@ -131,6 +131,12 @@ LEQuad::conf_t LEQuad_dronedome::default_config(uint8_t sysid)
     conf.position_estimation_config.kp_alt_sonar = 0.0f;
     conf.position_estimation_config.kp_vel_sonar = 0.0f;
 
+    conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
+
+    conf.mission_planner_config.safe_altitude                   =  -3.0f;
+    conf.mission_planner_config.critical_landing_altitude       =  -2.0f;
+    conf.mission_planner_config.takeoff_altitude                =  -2.0f;
+
     return conf;
 }
 

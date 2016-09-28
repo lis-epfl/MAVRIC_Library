@@ -181,13 +181,14 @@ public:
 
 
     /**
-     * \brief   Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)
+     * \brief   Compute attitude command from manual control source (absolute roll and pitch, relative yaw)
+     * \details Yaw is relative to current yaw (command.yaw = current.yaw + 0.5 * input.yaw)
      *
-     * \param   k_yaw           Integration factor for yaw (0.02 is ok) (input)
-     * \param   command         Attitude command (output)
-     * \param   scale           Scale (maximum output / max remote input)
+     * \param   current_attitude    Current attitude of the vehicle
+     *
+     * \return  command
      */
-    void get_attitude_command(const float k_yaw, attitude_command_t* command, float scale) const;
+    Attitude_controller_I::att_command_t get_attitude_command(quat_t current_attitude) const;
 
 
     /**

@@ -156,87 +156,6 @@ Mavlink_message_handler::Mavlink_message_handler(Mavlink_stream& mavlink_stream,
 {}
 
 
-bool Mavlink_message_handler::add_msg_callback(msg_callback_t* msg_callback)
-{
-    bool add_callback_success = true;
-
-    if (msg_callback == NULL)
-    {
-        print_util_dbg_print("[MESSAGE HANDLER] Error: null pointer.\r\n");
-
-        add_callback_success &= false;
-    }
-    else
-    {
-        if (msg_callback_count_ <  msg_callback_max_count())
-        {
-            msg_callback_t* new_callback = &msg_callback_list()[msg_callback_count_];
-
-            new_callback->message_id    = msg_callback->message_id;
-            new_callback->sysid_filter  = msg_callback->sysid_filter;
-            new_callback->compid_filter = msg_callback->compid_filter;
-            new_callback->function      = msg_callback->function;
-            new_callback->module_struct = msg_callback->module_struct;
-
-            sort_latest_msg_callback();
-
-            msg_callback_count_ += 1;
-
-            add_callback_success &= true;
-        }
-        else
-        {
-            print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback\r\n");
-
-            add_callback_success &= false;
-        }
-    }
-
-    return add_callback_success;
-}
-
-
-bool Mavlink_message_handler::add_cmd_callback(cmd_callback_t* cmd_callback)
-{
-    bool add_callback_success = true;
-
-    if (cmd_callback == NULL)
-    {
-        print_util_dbg_print("[MESSAGE HANDLER] Error: null pointer.\r\n");
-
-        add_callback_success &= false;
-    }
-    else
-    {
-        if (cmd_callback_count_ <  cmd_callback_max_count())
-        {
-            cmd_callback_t* new_callback = &cmd_callback_list()[cmd_callback_count_];
-
-            new_callback->command_id    = cmd_callback->command_id;
-            new_callback->sysid_filter  = cmd_callback->sysid_filter;
-            new_callback->compid_filter = cmd_callback->compid_filter;
-            new_callback->compid_target = cmd_callback->compid_target;
-            new_callback->function      = cmd_callback->function;
-            new_callback->module_struct = cmd_callback->module_struct;
-
-            sort_latest_cmd_callback();
-
-            cmd_callback_count_ += 1;
-
-            add_callback_success &= true;
-        }
-        else
-        {
-            print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback\r\n");
-
-            add_callback_success &= false;
-        }
-    }
-
-    return add_callback_success;
-}
-
-
 void Mavlink_message_handler::msg_default_dbg(mavlink_message_t* msg)
 {
     if ((msg->sysid == MAVLINK_BASE_STATION_ID)
@@ -306,11 +225,9 @@ void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
                 {
                     if (match_cmd(&cmd_callback_list()[i], msg, &cmd))
                     {
-                        cmd_callback_func_t function             = cmd_callback_list()[i].function;
-                        handling_module_struct_t module_struct   = cmd_callback_list()[i].module_struct;
-
                         // Call appropriate function callback
-                        result = function(module_struct, &cmd);
+                        result = cmd_callback_list()[i].function( cmd_callback_list()[i].module_struct,
+                                                                  &cmd );
 
                         if (((i + 1) != cmd_callback_count_) && ((cmd_callback_list()[i + 1].command_id) > cmd.command))
                         {
@@ -342,10 +259,10 @@ void Mavlink_message_handler::receive(Mavlink_stream::msg_received_t* rec)
         {
             if (match_msg(&msg_callback_list()[i], msg))
             {
-                Mavlink_message_handler::msg_callback_func_t function        = msg_callback_list()[i].function;
-                handling_module_struct_t        module_struct   = msg_callback_list()[i].module_struct;
                 // Call appropriate function callback
-                function(module_struct, mavlink_stream_.sysid(), msg);
+                msg_callback_list()[i].function( msg_callback_list()[i].module_struct,
+                                                 mavlink_stream_.sysid(),
+                                                 msg );
 
                 if (((i + 1) != msg_callback_count_) && ((msg_callback_list()[i + 1].message_id) > msg->msgid))
                 {

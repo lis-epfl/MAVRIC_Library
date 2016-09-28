@@ -57,13 +57,13 @@
  * \param   sysid         ID of the system
  * \param   msg           Pointer to the incoming message
  */
-static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, mavlink_message_t* msg);
+static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, const mavlink_message_t* msg);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, mavlink_message_t* msg)
+static void gps_mocap_callback(Gps_mocap* gps_mocap, uint32_t sysid, const mavlink_message_t* msg)
 {
    gps_mocap->callback(sysid, msg);
 }
@@ -97,15 +97,11 @@ bool Gps_mocap::init(void)
     if (is_init_ == false)
     {
         // Add callbacks for waypoint handler messages requests
-        Mavlink_message_handler::msg_callback_t callback;
-
-        callback.message_id     = MAVLINK_MSG_ID_ATT_POS_MOCAP; // 69
-        callback.sysid_filter   = MAVLINK_BASE_STATION_ID;
-        callback.compid_filter  = MAV_COMP_ID_ALL;
-        callback.function       = (Mavlink_message_handler::msg_callback_func_t) &gps_mocap_callback;
-        callback.module_struct  = (Mavlink_message_handler::handling_module_struct_t)        this;
-
-        is_init_ = message_handler_.add_msg_callback(&callback);
+        is_init_ = message_handler_.add_msg_callback(   MAVLINK_MSG_ID_ATT_POS_MOCAP, // 69
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &gps_mocap_callback,
+                                                        this );
     }
 
     return is_init_;
@@ -113,7 +109,7 @@ bool Gps_mocap::init(void)
 }
 
 
-void Gps_mocap::callback(uint32_t __attribute__((unused)) sysid, mavlink_message_t* msg)
+void Gps_mocap::callback(uint32_t __attribute__((unused)) sysid, const mavlink_message_t* msg)
 {
     mavlink_att_pos_mocap_t packet;
     mavlink_msg_att_pos_mocap_decode(msg, &packet);

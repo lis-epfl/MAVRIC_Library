@@ -42,55 +42,25 @@
 #include "communication/periodic_telemetry.hpp"
 #include "util/print_util.hpp"
 
-Periodic_telemetry::Periodic_telemetry( Mavlink_stream& mavlink_stream, 
+Periodic_telemetry::Periodic_telemetry( Mavlink_stream& mavlink_stream,
+                                        Mavlink_message_handler& handler,
                                         conf_t __attribute__((unused)) config):
     mavlink_stream_(mavlink_stream),
     count_(0)
-{}
+{
+    // Add callback to activate / disactivate streams
+    handler.add_msg_callback(  MAVLINK_MSG_ID_REQUEST_DATA_STREAM, // 66
+                               MAVLINK_BASE_STATION_ID,
+                               MAV_COMP_ID_ALL,
+                               &toggle_telemetry_stream,
+                               this );
+}
 
 bool Periodic_telemetry::update(void)
 {
     return scheduler().update();
 }
 
-
-bool Periodic_telemetry::add(   uint32_t                        task_id,
-                                uint32_t                        repeat_period,
-                                telemetry_function_t            function,
-                                telemetry_module_t              module_structure,
-                                Scheduler_task::priority_t      priority,
-                                Scheduler_task::timing_mode_t   timing_mode,
-                                Scheduler_task::run_mode_t      run_mode)
-{
-    bool add_success = true;
-
-    if (count_ <  max_count())
-    {
-        telemetry_entry_t* new_entry = &list()[count_++];
-
-        new_entry->mavlink_stream = &mavlink_stream_;
-        new_entry->function       = function;
-        new_entry->module         = module_structure;
-
-        add_success &= true;
-
-        add_success &= scheduler().add_task(repeat_period,
-                                           (Scheduler_task::task_function_t)&send_message,
-                                           (Scheduler_task::task_argument_t)new_entry,
-                                           priority,
-                                           timing_mode,
-                                           run_mode,
-                                           task_id);
-    }
-    else
-    {
-        print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
-
-        add_success &= false;
-    }
-
-    return add_success;
-}
 
 bool Periodic_telemetry::sort(void)
 {
@@ -106,11 +76,10 @@ bool Periodic_telemetry::send_message(telemetry_entry_t* telemetry_entry)
 {
     bool success = true;
 
-    telemetry_function_t function = telemetry_entry->function;
-    telemetry_module_t   module   = telemetry_entry->module;
-
     mavlink_message_t msg;
-    function(module, telemetry_entry->mavlink_stream, &msg);
+    telemetry_entry->function(  telemetry_entry->module,
+                                telemetry_entry->mavlink_stream,
+                                &msg);
 
     success &= telemetry_entry->mavlink_stream->send(&msg);
 
@@ -118,7 +87,7 @@ bool Periodic_telemetry::send_message(telemetry_entry_t* telemetry_entry)
 }
 
 
-void Periodic_telemetry::toggle_telemetry_stream(Periodic_telemetry* telemetry, uint32_t sysid, mavlink_message_t* msg)
+void Periodic_telemetry::toggle_telemetry_stream(Periodic_telemetry* telemetry, uint32_t sysid, const mavlink_message_t* msg)
 {
     // Decode message
     mavlink_request_data_stream_t request;

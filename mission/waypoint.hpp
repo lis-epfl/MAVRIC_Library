@@ -102,7 +102,7 @@ public:
      * \param   seq                     The sequence number of the packet
      * \param   current                 States if the waypoint is the current waypoint (If is the waypoint we are heading towards and are current en route to waypoint)
      */
-    void send(const Mavlink_stream& mavlink_stream, uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current);
+    void send(const Mavlink_stream& mavlink_stream, uint32_t sysid, const mavlink_message_t* msg, uint16_t seq, uint8_t current);
 
     /**
      * \brief   Gets the frame of the waypoint

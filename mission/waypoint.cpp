@@ -116,7 +116,7 @@ Waypoint::Waypoint( uint8_t frame,
 {
 }
 
-void Waypoint::send(const Mavlink_stream& mavlink_stream, uint32_t sysid, mavlink_message_t* msg, uint16_t seq, uint8_t current)
+void Waypoint::send(const Mavlink_stream& mavlink_stream, uint32_t sysid, const mavlink_message_t* msg, uint16_t seq, uint8_t current)
 {
     //  Prototype of the function "mavlink_msg_mission_item_send" found in mavlink_msg_mission_item.h :
     // mavlink_msg_mission_item_send (  mavlink_channel_t chan, uint8_t target_system, uint8_t target_component, uint16_t seq,
