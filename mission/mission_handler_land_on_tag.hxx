@@ -85,16 +85,13 @@ Mission_handler_land_on_tag<T1, T2, T3>::Mission_handler_land_on_tag(   T1& fly_
 
     bool init_success = true;
 
-    // Add callbacks for waypoint handler commands requests
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-
-    callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
-    callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // 100
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)           &set_auto_landing_tag;
-    callbackcmd.module_struct = (Mavlink_message_handler::handling_module_struct_t) this;
-    init_success &= message_handler.add_cmd_callback(&callbackcmd);
+    // Add callbacks for landing on the tag
+    init_success &= message_handler.add_cmd_callback(   MAV_CMD_NAV_LAND, // 300
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 190
+                                                        &set_auto_landing_tag,
+                                                        this );
 
     if(!init_success)
     {

@@ -66,20 +66,20 @@ extern "C"
  * \param   sysid               The system ID
  * \param   msg                 The received MAVLink message structure
  */
-static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard_Tag_Search& offboard_tag_search, mavlink_command_long_t* packet);
+static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard_Tag_Search* offboard_tag_search, const mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard_Tag_Search& offboard_tag_search, mavlink_command_long_t* packet)
+static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard_Tag_Search* offboard_tag_search, const mavlink_command_long_t* packet)
 {
     mav_result_t result;
 
-    offboard_tag_search.increment_picture_count();
+    offboard_tag_search->increment_picture_count();
 
     int thread_index = packet->param2;
-    offboard_tag_search.set_has_photo_been_taken(thread_index, false);
+    offboard_tag_search->set_has_photo_been_taken(thread_index, false);
 
     // If a tag had actually been detected
     if ((packet->param3 > -999.0f || packet->param3 < -1001.0f) ||    // Use range due to float errors
@@ -105,15 +105,15 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
 
         // Get tag to drone distance from packet if available and reasonable
         if ((packet->param7 > 0.0f) &&                                          // Packet outputs + as up, must be greater than 0
-            (packet->param7 < offboard_tag_search.max_acc_drone_height_from_camera_mm()))   // Don't allow too high estimations as accuracy decreases with altitude
+            (packet->param7 < offboard_tag_search->max_acc_drone_height_from_camera_mm()))   // Don't allow too high estimations as accuracy decreases with altitude
         {
             drone_to_image_plane_dist = packet->param7 / 1000.0f;
         }
         else // Get drone_to_image_plane_dist from the local position and rotate and extend to account for increased distance due to ahrs
         {
             // Find vector facing down from the drone
-            float drone_height = offboard_tag_search.position_at_photo(thread_index)[2];
-            quat_t q_ahrs = offboard_tag_search.ahrs_at_photo(thread_index).qe;
+            float drone_height = offboard_tag_search->position_at_photo(thread_index)[2];
+            quat_t q_ahrs = offboard_tag_search->ahrs_at_photo(thread_index).qe;
             float drone_height_vector[3], rotated_drone_height_vector[3];
             drone_height_vector[0] = 0.0f;
             drone_height_vector[1] = 0.0f;
@@ -143,13 +143,13 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
         if (drone_to_image_plane_dist > 0.0f) // Check if the drone to tag dist is healthy
         {
             // Get tag location in m
-            float dist_to_edge_of_fov_x = drone_to_image_plane_dist * tan(offboard_tag_search.camera_x_fov() / 2); // Distance from center to x edge in m
-            float dist_to_edge_of_fov_y = drone_to_image_plane_dist * tan(offboard_tag_search.camera_y_fov() / 2); // Distance from center to y edge in m
+            float dist_to_edge_of_fov_x = drone_to_image_plane_dist * tan(offboard_tag_search->camera_x_fov() / 2); // Distance from center to x edge in m
+            float dist_to_edge_of_fov_y = drone_to_image_plane_dist * tan(offboard_tag_search->camera_y_fov() / 2); // Distance from center to y edge in m
             float picture_forward_offset = 0.0f;
             float picture_right_offset = 0.0f;
             // Attempt to get tag distance using camera approximation
             if ((packet->param7 > 0.0f) &&                                                          // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
-                (packet->param7 < offboard_tag_search.max_acc_drone_height_from_camera_mm()) &&     // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
+                (packet->param7 < offboard_tag_search->max_acc_drone_height_from_camera_mm()) &&     // Picture gave a good estimated height --> if no good height estimation, no good distance to tag estimation
                 (packet->param5 > -(dist_to_edge_of_fov_x)) &&                                      // Ensure that x distance to tag is within frame
                 (packet->param5 <  (dist_to_edge_of_fov_x)) &&                                      // Ensure that x distance to tag is within frame
                 (packet->param6 > -(dist_to_edge_of_fov_y)) &&                                      // Ensure that y distance to tag is within frame
@@ -169,8 +169,8 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
                     pixel_width = width / resolution
                     pixel_width = 2 * drone_to_image_plane_dist * tan(fov/2) / resolution
                 */
-                float pixel_width = 2 * (drone_to_image_plane_dist) * tan(offboard_tag_search.camera_x_fov() / 2) / (offboard_tag_search.camera_x_resolution());
-                float pixel_height = 2 * (drone_to_image_plane_dist) * tan(offboard_tag_search.camera_y_fov() / 2) / (offboard_tag_search.camera_y_resolution());
+                float pixel_width = 2 * (drone_to_image_plane_dist) * tan(offboard_tag_search->camera_x_fov() / 2) / (offboard_tag_search->camera_x_resolution());
+                float pixel_height = 2 * (drone_to_image_plane_dist) * tan(offboard_tag_search->camera_y_fov() / 2) / (offboard_tag_search->camera_y_resolution());
 
                 // Get drone offset
                 // Forward corresponds to param4 as the picamera code outputs (right,down)
@@ -182,10 +182,10 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
             // Rotate offset to align with drone
             quat_t q_rot;
             float v_offset[3], v_new_dir[3];
-            q_rot.s = cos(offboard_tag_search.camera_rotation()/2); // Based off how camera is mounted
+            q_rot.s = cos(offboard_tag_search->camera_rotation()/2); // Based off how camera is mounted
             q_rot.v[0] = 0.0f;
             q_rot.v[1] = 0.0f;
-            q_rot.v[2] = -1.0f*sin(offboard_tag_search.camera_rotation()/2); // Negative to rotate CW
+            q_rot.v[2] = -1.0f*sin(offboard_tag_search->camera_rotation()/2); // Negative to rotate CW
             v_offset[0] = picture_forward_offset;
             v_offset[1] = picture_right_offset;
             v_offset[2] = drone_to_image_plane_dist;
@@ -195,7 +195,7 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
             quaternions_rotate_vector(q_rot, v_offset, v_new_dir);
 
             // Convert to local coordinates due to yaw, pitch, roll
-            quat_t q_ahrs = offboard_tag_search.ahrs_at_photo(thread_index).qe;
+            quat_t q_ahrs = offboard_tag_search->ahrs_at_photo(thread_index).qe;
             float v_new_local_dir[3];
             quaternions_rotate_vector(q_ahrs, v_new_dir, v_new_local_dir);
 
@@ -204,30 +204,30 @@ static mav_result_t offboard_tag_search_telemetry_receive_camera_output(Offboard
             float drone_y_offset = v_new_local_dir[1];
 
             // Get local tag position from drone position and offset
-            float tag_x_pos = offboard_tag_search.position_at_photo(thread_index)[0] + drone_x_offset;
-            float tag_y_pos = offboard_tag_search.position_at_photo(thread_index)[1] + drone_y_offset;
+            float tag_x_pos = offboard_tag_search->position_at_photo(thread_index)[0] + drone_x_offset;
+            float tag_y_pos = offboard_tag_search->position_at_photo(thread_index)[1] + drone_y_offset;
 
             // Set hold position
-            offboard_tag_search.tag_location()[0] = tag_x_pos;
-            offboard_tag_search.tag_location()[1] = tag_y_pos;
+            offboard_tag_search->tag_location()[0] = tag_x_pos;
+            offboard_tag_search->tag_location()[1] = tag_y_pos;
 
             // Update recorded time
-            offboard_tag_search.update_last_update_us();
+            offboard_tag_search->update_last_update_us();
 
             // Increment counter
-            offboard_tag_search.increment_tag_count();
+            offboard_tag_search->increment_tag_count();
 
             // Set waypoint enum to tag found
-            offboard_tag_search.land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND);
+            offboard_tag_search->land_on_tag_behavior(Offboard_Tag_Search::land_on_tag_behavior_t::TAG_FOUND);
         }
     }
 
     // Send message to take new photo if camera is running
-    if (offboard_tag_search.is_camera_running() && !offboard_tag_search.has_photo_been_taken(thread_index))
+    if (offboard_tag_search->is_camera_running() && !offboard_tag_search->has_photo_been_taken(thread_index))
     {
         mavlink_message_t msg;
-        offboard_tag_search_telemetry_send_take_new_photo(thread_index, &offboard_tag_search, &(offboard_tag_search.mavlink_communication().mavlink_stream()), &msg);
-        offboard_tag_search.mavlink_communication().mavlink_stream().send(&msg);
+        offboard_tag_search_telemetry_send_take_new_photo(thread_index, offboard_tag_search, &(offboard_tag_search->mavlink_communication().mavlink_stream()), &msg);
+        offboard_tag_search->mavlink_communication().mavlink_stream().send(&msg);
     }
 
     result = MAV_RESULT_ACCEPTED;
@@ -250,14 +250,12 @@ bool offboard_tag_search_telemetry_init(Offboard_Tag_Search* offboard_tag_search
     offboard_tag_search->tag_location()[1] = 0.0f;
 
     // Add callbacks for cmd
-    Mavlink_message_handler::cmd_callback_t callbackcmd;
-    callbackcmd.command_id = MAV_CMD_DO_CONTROL_VIDEO; // 200
-    callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
-    callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-    callbackcmd.compid_target = MAV_COMP_ID_ALL; // WRONG 190
-    callbackcmd.function = (Mavlink_message_handler::cmd_callback_func_t)    &offboard_tag_search_telemetry_receive_camera_output;
-    callbackcmd.module_struct =                                 offboard_tag_search;
-    init_success &= message_handler->add_cmd_callback(&callbackcmd);
+    init_success &= message_handler->add_cmd_callback(  MAV_CMD_DO_CONTROL_VIDEO, // 300
+                                                        MAV_SYS_ID_ALL,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 190
+                                                        &offboard_tag_search_telemetry_receive_camera_output,
+                                                        offboard_tag_search );
     print_util_dbg_init_msg("[PICAMERA TELEMETRY INIT]", init_success);
     return init_success;
 }
