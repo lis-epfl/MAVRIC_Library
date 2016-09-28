@@ -105,38 +105,41 @@ int32_t Scheduler::update(void)
 {
     int32_t realtime_violation = 0;
 
-    // Iterate through registered tasks
-    uint32_t i = current_schedule_slot_;
-    do
+    if (task_count_ > 0)
     {
-        // If the task is active and has waited long enough...
-        if (tasks()[i].is_due())
+        // Iterate through registered tasks
+        uint32_t i = current_schedule_slot_;
+        do
         {
-            // Execute task
-            if (!tasks()[i].execute())
+            // If the task is active and has waited long enough...
+            if (tasks()[i].is_due())
             {
-                realtime_violation++; //realtime violation!!
+                // Execute task
+                if (!tasks()[i].execute())
+                {
+                    realtime_violation++; //realtime violation!!
+                }
+
+                // Depending on shceduling strategy, select next task slot
+                switch (schedule_strategy_)
+                {
+                    case FIXED_PRIORITY:
+                        // Fixed priority scheme - scheduler will start over with tasks with the highest priority
+                        current_schedule_slot_ = 0;
+                        break;
+
+                    case ROUND_ROBIN:
+                        // Round robin scheme - scheduler will pick up where it left.
+                        current_schedule_slot_ = (current_schedule_slot_+1)%task_count_;
+                        break;
+                }
+
+                return realtime_violation;
             }
+            i = (i+1)%task_count_;
 
-            // Depending on shceduling strategy, select next task slot
-            switch (schedule_strategy_)
-            {
-                case FIXED_PRIORITY:
-                    // Fixed priority scheme - scheduler will start over with tasks with the highest priority
-                    current_schedule_slot_ = 0;
-                    break;
-
-                case ROUND_ROBIN:
-                    // Round robin scheme - scheduler will pick up where it left.
-                    current_schedule_slot_ = (current_schedule_slot_+1)%task_count_;
-                    break;
-            }
-
-            return realtime_violation;
-        }
-        i = (i+1)%task_count_;
-
-    } while(i != current_schedule_slot_);
+        } while(i != current_schedule_slot_);
+    }
 
     return realtime_violation;
 }
