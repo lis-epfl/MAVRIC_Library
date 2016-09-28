@@ -84,6 +84,7 @@ Mission_handler_land_on_tag<T1, T2, T3>::Mission_handler_land_on_tag(   T1& fly_
     LPF_gain_ = config.LPF_gain;
     desc_to_ground_altitude_ = config.desc_to_ground_altitude;
     desc_to_ground_range_ = config.desc_to_ground_range;
+    min_waypoint_acceptance_radius_ = config.min_waypoint_acceptance_radius;
 
     bool init_success = true;
 
@@ -161,8 +162,8 @@ Mission_handler::update_status_t Mission_handler_land_on_tag<T1, T2, T3>::update
                 local_position_t pos = ins_.position_lf();
                 local_position_t wpt_pos = waypoint_.local_pos();
 
-                // Accept that we've arrived at waypoint if we are within 30% height or 3 meters
-                float acceptance_radius = 3.0f;
+                // Accept that we've arrived at waypoint if we are within 30% height or config.min_waypoint_acceptance_radius meters
+                float acceptance_radius = min_waypoint_acceptance_radius_;
                 if (-0.3*wpt_pos[Z] > acceptance_radius)
                 {
                     acceptance_radius = -0.3*wpt_pos[Z];

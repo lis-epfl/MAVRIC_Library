@@ -73,6 +73,7 @@ public:
         float LPF_gain;                                     ///< The value of the low-pass filter gain
         float desc_to_ground_altitude;                      ///< The altitude to switch to the descent to ground state
         float desc_to_ground_range;                         ///< The range in meters that allows switching from the descent to ground
+        float min_waypoint_acceptance_radius;               ///< The minimum acceptable radius to start the landing procedure
     };
 
     /**
@@ -156,6 +157,7 @@ protected:
     float LPF_gain_;                                            ///< The low-pass filter gain
     float desc_to_ground_altitude_;                             ///< The altitude to switch to the descent to ground state
     float desc_to_ground_range_;                                ///< The range in meters that allows switching from the descent to ground
+    float min_waypoint_acceptance_radius_;                      ///< The minimum acceptable radius to start the landing procedure
     float tag_search_altitude_;                                 ///< The altitude that the drone should search for the tag at
     uint32_t tag_search_start_time_;                            ///< The start time that the offboard camera has been searching for the tag, causes a timeout if too long
 
@@ -211,6 +213,7 @@ typename Mission_handler_land_on_tag<T1, T2, T3>::conf_t Mission_handler_land_on
     conf.LPF_gain                                    = 0.9f;
     conf.desc_to_ground_altitude                     = -1.5f;
     conf.desc_to_ground_range                        = 0.5f;
+    conf.min_waypoint_acceptance_radius              = 3.0f;
 
     return conf;
 };
