@@ -284,7 +284,7 @@ Mission_planner::internal_state_t Mission_handler_land_on_tag<T1, T2, T3>::handl
 }
 
 template <class T1, class T2, class T3>
-mav_result_t Mission_handler_land_on_tag<T1, T2, T3>::set_auto_landing_tag(Mission_handler_land_on_tag* land_on_tag_handler, mavlink_command_long_t* packet)
+mav_result_t Mission_handler_land_on_tag<T1, T2, T3>::set_auto_landing_tag(Mission_handler_land_on_tag* land_on_tag_handler, const mavlink_command_long_t* packet)
 {
     // mav_result_t result;
     mav_result_t result = MAV_RESULT_ACCEPTED; // Testing

@@ -109,8 +109,7 @@ int main(void)
                         board.servo_7,
                         file_log,
                         file_stat,
-                        board_config.offboard_tag_search_config,
-                        mav_config );
+                        mav_config);
     // initialize MAV
     init_success &= mav.init();
 

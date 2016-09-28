@@ -196,7 +196,7 @@ protected:
      *
      * \return  The MAV_RESULT of the command
      */
-    static mav_result_t set_auto_landing_tag(Mission_handler_land_on_tag* land_on_tag_handler, mavlink_command_long_t* packet);
+    static mav_result_t set_auto_landing_tag(Mission_handler_land_on_tag* land_on_tag_handler, const mavlink_command_long_t* packet);
 };
 
 template <class T1, class T2, class T3>

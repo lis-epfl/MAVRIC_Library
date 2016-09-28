@@ -59,7 +59,7 @@ class Offboard_Tag_Search;
  */
 bool offboard_tag_search_telemetry_init(Offboard_Tag_Search* offboard_tag_search, Mavlink_message_handler* message_handler);
 
-void offboard_tag_search_goal_location_telemetry_send(Offboard_Tag_Search* offboard_tag_search, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void offboard_tag_search_goal_location_telemetry_send(const Offboard_Tag_Search* offboard_tag_search, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 /**
  * \brief   Function to send the MAVLink start/stop camera do command

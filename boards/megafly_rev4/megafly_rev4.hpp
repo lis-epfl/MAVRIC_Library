@@ -103,7 +103,6 @@ typedef struct
     i2c_avr32_conf_t        i2c1_config;
     imu_conf_t              imu_config;
     servo_conf_t            servo_config[8];
-    offboard_tag_search_conf_t  offboard_tag_search_config;
 } megafly_rev4_conf_t;
 
 
@@ -391,13 +390,6 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     conf.servo_config[5] = servo_default_config_esc();
     conf.servo_config[6] = servo_default_config_esc();
     conf.servo_config[7] = servo_default_config_esc();
-
-
-    // -------------------------------------------------------------------------
-    // Offboard camera config
-    // -------------------------------------------------------------------------
-    conf.offboard_tag_search_config                                         = offboard_tag_search_conf_default();
-
 
     return conf;
 }

@@ -742,12 +742,12 @@ bool Mission_planner::init()
                                                         &nav_go_home,    // N.B. intentionally mislabelled to go to home
                                                         this );
 
-    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_LAND, // 21
+    /*init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_LAND, // 21
                                                         MAVLINK_BASE_STATION_ID,
                                                         MAV_COMP_ID_ALL,
                                                         MAV_COMP_ID_ALL, // 0
                                                         &nav_land_callback,
-                                                        this );
+                                                        this );*/
 
     init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_TAKEOFF, // 22
                                                         MAVLINK_BASE_STATION_ID,

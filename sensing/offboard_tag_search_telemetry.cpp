@@ -260,7 +260,7 @@ bool offboard_tag_search_telemetry_init(Offboard_Tag_Search* offboard_tag_search
     return init_success;
 }
 
-void offboard_tag_search_goal_location_telemetry_send(Offboard_Tag_Search* offboard_tag_search, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void offboard_tag_search_goal_location_telemetry_send(const Offboard_Tag_Search* offboard_tag_search, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     mavlink_msg_debug_vect_pack(mavlink_stream->sysid(),
                                 mavlink_stream->compid(),

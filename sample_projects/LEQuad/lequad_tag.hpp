@@ -42,9 +42,10 @@
 #ifndef LEQUAD_TAG_HPP_
 #define LEQUAD_TAG_HPP_
 
-#include "communication/mavlink_waypoint_handler_tag.hpp"
+#include "mission/mission_handler_land_on_tag.hpp"
 #include "sample_projects/LEQuad/lequad.hpp"
 #include "sensing/offboard_tag_search.hpp"
+#include "util/print_util.hpp"
 
 /**
  * \brief Central data for indoor use
@@ -64,7 +65,7 @@ public:
     /**
      * \brief   Constructor
      */
-    LEQuad_dronedome( Imu& imu,
+    LEQuad_tag( Imu& imu,
                       Barometer& barometer,
                       Gps& gps,
                       Sonar& sonar,
@@ -84,15 +85,15 @@ public:
                       Servo& servo_7,
                       File& file1,
                       File& file2,
-                      offboard_tag_search_conf_t& offboard_tag_search_conf,
-                      LEQuad::conf_t config = LEQuad::default_config() ):
+                      LEQuad::conf_t config = LEQuad::default_config(),
+                      offboard_tag_search_conf_t offboard_tag_search_conf = offboard_tag_search_conf_default()):
           LEQuad(imu, barometer, gps, sonar, serial_mavlink, satellite, state_display, file_flash, battery, 
                       servo_0, servo_1, servo_2, servo_3, servo_4, servo_5, servo_6, servo_7,
                       file1, file2, config),
           raspi_serial_mavlink(raspi_serial_mavlink),
-          raspi_mavlink_communication(raspi_serial_mavlink, state, file_flash, config.mavlink_communication_config),
-          offboard_tag_search(position_estimation, ahrs, waypoint_handler, raspi_mavlink_communication, offboard_tag_search_conf),
-          waypoint_handler(cascade_controller_, cascade_controller_, cascade_controller_, ahrs, position_estimation, state, offboard_tag_search, raspi_mavlink_communication, mission_planner, communication.handler())
+          raspi_mavlink_communication(raspi_serial_mavlink, state, file_flash, Mavlink_communication_T<10, 10, 10, 10>::default_config()),
+          offboard_tag_search(position_estimation, ahrs, raspi_mavlink_communication, offboard_tag_search_conf),
+          land_on_tag_handler(cascade_controller_, cascade_controller_, cascade_controller_, ahrs, position_estimation, state, offboard_tag_search, mission_planner, communication.handler())
       {
 
       }
@@ -107,17 +108,14 @@ public:
         bool ret = true;
 
         /* Offboard computer communication */
-        ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&Mavlink_communication_T::update, (Scheduler_task::task_argument_t)&raspi_mavlink_communication);
+        ret &= scheduler.add_task(4000, &Mavlink_communication_T<10,10,10,10>::update_task, &raspi_mavlink_communication);
 
         /* Offboard tag search */
         // UP telemetry
-        ret &= offboard_tag_search_telemetry_init(&offboard_tag_search,
-                        &raspi_mavlink_communication.message_handler());
+        ret &= offboard_tag_search_telemetry_init(&offboard_tag_search, &communication.handler());
 
         // DOWN telemetry
-        ret &= mavlink_communication_.add_msg_send( MAVLINK_MSG_ID_DEBUG_VECT,
-                                                            250000, (Mavlink_communication_T::send_msg_function_t)&offboard_tag_search_goal_location_telemetry_send,
-                                                            &offboard_tag_search);
+        ret &= communication.telemetry().add(MAVLINK_MSG_ID_DEBUG_VECT,  250000, &offboard_tag_search_goal_location_telemetry_send, &offboard_tag_search);
 
         // Data logging
         ret &= data_logging_continuous.add_field(&offboard_tag_search.tag_location()[0], "tag_x", 3);
@@ -126,7 +124,7 @@ public:
         ret &= data_logging_continuous.add_field(&offboard_tag_search.picture_count(), "pic_count");
 
         /* Land on tag handler */
-        ret &= mission_handler_registry.register_mission_handler(waypoint_handler);
+        ret &= mission_handler_registry.register_mission_handler(land_on_tag_handler);
 
         return ret;
     }
@@ -142,18 +140,19 @@ public:
         bool success = true;
         success &= LEQuad::init();
         success &= init_tag();
+        print_util_dbg_init_msg("[LEQUAD TAG]", success);
         return success;
     }
 
 private:
-    Serial& raspi_serial_mavlink;                                                                         ///< Reference to raspberry pi telemetry serial
-    Mavlink_communication_T<10, 10, 10, 10> raspi_mavlink_communication;                                                    ///< The communication between the MAVRIC board and the offboard computer
-    Offboard_Tag_Search offboard_tag_search;                                                              ///< The offboard camera control class
-    Mission_handler_land_on_tag<Navigation_controller_I, Navigation_controller_I, XYposition_Zvel_controller_I> waypoint_handler;  ///< The land on tag mission handler
+    Serial& raspi_serial_mavlink;                                                                                                     ///< Reference to raspberry pi telemetry serial
+    Mavlink_communication_T<10, 10, 10, 10> raspi_mavlink_communication;                                                              ///< The communication between the MAVRIC board and the offboard computer
+    Offboard_Tag_Search offboard_tag_search;                                                                                          ///< The offboard camera control class
+    Mission_handler_land_on_tag<Navigation_controller_I, Navigation_controller_I, XYposition_Zvel_controller_I> land_on_tag_handler;  ///< The land on tag mission handler
     
 };
 
-LEQuad::conf_t LEQuad_dronedome::default_config(uint8_t sysid)
+LEQuad::conf_t LEQuad_tag::default_config(uint8_t sysid)
 {
     conf_t conf                                                = {};
 
