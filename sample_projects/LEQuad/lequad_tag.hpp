@@ -112,7 +112,7 @@ public:
 
         /* Offboard tag search */
         // UP telemetry
-        ret &= offboard_tag_search_telemetry_init(&offboard_tag_search, &communication.handler());
+        ret &= offboard_tag_search_telemetry_init(&offboard_tag_search, &raspi_mavlink_communication.handler());
 
         // DOWN telemetry
         ret &= communication.telemetry().add(MAVLINK_MSG_ID_DEBUG_VECT,  250000, &offboard_tag_search_goal_location_telemetry_send, &offboard_tag_search);
