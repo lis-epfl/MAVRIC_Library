@@ -49,12 +49,12 @@ private:
 	bool charToIPAddress(char * ipChar, union IPAddress* ipRet);
 
 	bool initcheck;
-	Serial_avr32_gsm cell;
+	int temp;
 
 public:
 	Serial_avr32_gsm_udp(serial_avr32_conf_t config);
 
-	void initialize();
+	void initialize(uint8_t retry);
 
 
 	//////////////////////////////

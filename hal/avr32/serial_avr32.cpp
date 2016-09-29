@@ -41,6 +41,9 @@
 
 #include "serial_avr32.hpp"
 
+//Remove this
+#include "util/print_util.h"
+
 extern "C"
 {
 #include "libs/asf/avr32/drivers/gpio/gpio.h"
@@ -158,13 +161,17 @@ bool Serial_avr32::write(const uint8_t* bytes, const uint32_t size)
 {
     bool ret = false;
 
+
     // // Queue byte
     if (writeable() >= size)
     {
+    	print_util_dbg_print("Writing: ");
+    	print_util_dbg_print((char *) bytes);
         for (uint32_t i = 0; i < size; ++i)
         {
             tx_buffer_.put(bytes[i]);
         }
+        print_util_dbg_print("\n");
         ret = true;
     }
 
@@ -185,10 +192,13 @@ bool Serial_avr32::read(uint8_t* bytes, const uint32_t size)
     if (readable() >= size)
     {
         ret = true;
+        print_util_dbg_print("Reading: ");
         for (uint32_t i = 0; i < size; ++i)
         {
             ret &= rx_buffer_.get(bytes[i]);
+            print_util_dbg_print((char *) bytes+i);
         }
+        print_util_dbg_print("\n");
     }
 
     return ret;

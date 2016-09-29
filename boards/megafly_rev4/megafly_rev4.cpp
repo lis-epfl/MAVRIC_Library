@@ -375,10 +375,10 @@ bool Megafly_rev4::init(void)
     // Init sonar
     // -------------------------------------------------------------------------
     // Gives error
-    ret = sonar_i2cxl.init();
-    print_util_dbg_init_msg("[SONAR]", ret);
-    init_success &= ret;
-    time_keeper_delay_ms(50);
+    //ret = sonar_i2cxl.init();
+   // print_util_dbg_init_msg("[SONAR]", ret);
+   // init_success &= ret;
+   // time_keeper_delay_ms(50);
 
 
     print_util_dbg_sep('-');

@@ -94,7 +94,7 @@ int main(void)
                         board.bmp085,
                         board.gps_ublox,
                         board.sonar_i2cxl,      // Warning:
-                        board.uart0,
+                        board.uart4,
                         board.spektrum_satellite,
                         board.state_display_megafly_rev4_,
                         board.file_flash,

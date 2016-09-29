@@ -262,6 +262,17 @@ public:
 		unsigned char rxBuffer[RX_BUFFER_LENGTH];
 		unsigned int bufferHead; // Holds position of latest byte placed in buffer.
 
+		/**
+		 * \brief   Write bytes on the serial line
+		 *
+		 * \param   byte        Outgoing bytes
+		 * \param   size        Number of bytes to write
+		 *
+		 * \return  true        Data successfully written
+		 * \return  false       Data not written
+		 */
+		virtual bool write(const uint8_t* bytes, const uint32_t size = 1);
+
 };
 
 

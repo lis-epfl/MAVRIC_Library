@@ -26,39 +26,50 @@ Serial_avr32_gsm_udp::Serial_avr32_gsm_udp(serial_avr32_conf_t config) {
 	irq_callback = NULL;
 	_activeChannel = -1;
 	initcheck = false;
+	temp = 1;
+	//print_util_dbg_print("initializing init check");
 	//initialize();
 }
 
-void Serial_avr32_gsm_udp::initialize() {
+void Serial_avr32_gsm_udp::initialize(uint8_t retry) {
 
-	Serial_avr32::init();
+	//Serial_avr32::init();
 
-	print_util_dbg_print("Checking SIM...");
+	print_util_dbg_sep('-');
+	print_util_dbg_print("GSM Initialization\n");
+	print_util_dbg_sep('-');
 	union IPAddress myIP; // IP address to store local IP
 
 	union IPAddress serverIP;
 	serverIP.bytes= {128, 178, 46, 22};
 
-	PRINTLN("Checking SIM 2...");
-	//bool simCheck = cell.checkSIM();
-	// Call cell.begin() to turn the module on and verify
-	// communication.
+	//PRINTLN("Checking SIM 2...");
+	//bool simCheck = checkSIM();
+//	// Call  begin() to turn the module on and verify
+//	// communication.
 	//if(simCheck){
 	//	print_util_dbg_print("Starting communication with the mobile shield");
 	//}else{
 	//	print_util_dbg_print("Simcheck failed");
 	//}
 
-//	bool beginStatus = cell.begin();
-//	uint8_t retry = 0;
-//	if (beginStatus <= 0 || retry<3) {
-//		PRINT("Attempting to communicate with shield :");
-//		print_util_dbg_print_num(retry,10);
-//		beginStatus = cell.begin();
-//		retry++;
-//	}
-//	PRINTLN("Communication established with the shield. ");
-//	PRINTLN("Attempting to open mobile network and GPRS ");
+	bool beginStatus =  begin();
+	uint8_t retry_iter = retry;
+	while (beginStatus <= 0 && retry_iter>0 ) {
+		PRINT("Attempting to communicate with shield :");
+		print_util_dbg_print_num(retry-retry_iter+1,10);
+		PRINT("\n");
+		beginStatus =  begin();
+		retry_iter--;
+	}
+	if(beginStatus){
+		PRINTLN("Communication established with the shield. ");
+		PRINTLN("Attempting to open mobile network and GPRS ");
+	}
+	else{
+		PRINTLN("Communication failed ");
+	}
+
 //
 //	 // gprs.open() enables GPRS. This function should be called
 //	  // before doing any TCP stuff. It should only be necessary
@@ -104,12 +115,12 @@ void Serial_avr32_gsm_udp::initialize() {
 int Serial_avr32_gsm_udp::open() // AT+ZPPPOPEN
 {
 	int iRetVal;
-	cell.sendATCommand(OPEN_GPRS);
+	 sendATCommand(OPEN_GPRS);
 	// Should respond "+ZPPPOPEN:CONNECTED\r\n\r\nOK\r\n\r\n" or
 	//				  "+ZPPPOPEN:ESTABLISHED\r\n\r\nOK\r\n\r\n"
 	// Bad response is "+ZPPPOPEN:FAIL\r\n\r\nERROR\r\n"
 	// bad response can take ~20 seconds to occur
-	iRetVal = cell.readWaitForResponses(RESPONSE_OK, RESPONSE_ERROR,
+	iRetVal =  readWaitForResponses(RESPONSE_OK, RESPONSE_ERROR,
 			WEB_RESPONSE_TIMEOUT);
 
 	return iRetVal;
@@ -118,9 +129,9 @@ int Serial_avr32_gsm_udp::open() // AT+ZPPPOPEN
 int Serial_avr32_gsm_udp::close() //AT+ZPPPCLOSE
 {
 	int iRetVal;
-	cell.sendATCommand(CLOSE_GPRS);
+	 sendATCommand(CLOSE_GPRS);
 	// Should respond "+ZPPCLOSE:OK\r\n\r\nOK\r\n\r\n"
-	iRetVal = cell.readWaitForResponses(RESPONSE_OK, RESPONSE_ERROR,
+	iRetVal =  readWaitForResponses(RESPONSE_OK, RESPONSE_ERROR,
 			WEB_RESPONSE_TIMEOUT);
 
 	return iRetVal;
@@ -129,8 +140,8 @@ int Serial_avr32_gsm_udp::close() //AT+ZPPPCLOSE
 uint32_t Serial_avr32_gsm_udp::localIP() // AT+ZIPGETIP
 {
 	int iRetVal;
-	cell.sendATCommand(GET_IP);
-	iRetVal = cell.readWaitForResponse(RESPONSE_OK, WEB_RESPONSE_TIMEOUT);
+	 sendATCommand(GET_IP);
+	iRetVal =  readWaitForResponse(RESPONSE_OK, WEB_RESPONSE_TIMEOUT);
 	if (iRetVal < 0) {
 		return iRetVal;
 	}
@@ -142,7 +153,7 @@ uint32_t Serial_avr32_gsm_udp::localIP() // AT+ZIPGETIP
 	int len = 0;
 	char tempIP[IP_ADDRESS_LENGTH];
 	memset(tempIP, 0, IP_ADDRESS_LENGTH);
-	start = strpbrk((const char *) cell.rxBuffer, ipCharSet);
+	start = strpbrk((const char *)  rxBuffer, ipCharSet);
 	len = strspn(start, ipCharSet);
 	// Copy the string
 	if ((len > 0) && (len <= IP_ADDRESS_LENGTH))
@@ -162,8 +173,8 @@ int Serial_avr32_gsm_udp::hostByName(const char * domain, union IPAddress ipRet)
 	char dnsCommand[MAX_DOMAIN_LENGTH];
 	memset(dnsCommand, '\0', 269);
 	sprintf(dnsCommand, "%s=\"%s\"", DNS_GET_IP, domain);
-	cell.sendATCommand((const char *) dnsCommand);
-	iRetVal = cell.readWaitForResponse(RESPONSE_OK, WEB_RESPONSE_TIMEOUT);
+	 sendATCommand((const char *) dnsCommand);
+	iRetVal =  readWaitForResponse(RESPONSE_OK, WEB_RESPONSE_TIMEOUT);
 	if (iRetVal < 0) {
 		return iRetVal;
 	}
@@ -174,7 +185,7 @@ int Serial_avr32_gsm_udp::hostByName(const char * domain, union IPAddress ipRet)
 	char * start;
 	int len = 0;
 	char tempIP[IP_ADDRESS_LENGTH];
-	start = strpbrk((const char *) cell.rxBuffer, ipCharSet);
+	start = strpbrk((const char *)  rxBuffer, ipCharSet);
 	// !!! TO DO Check if we're at the edge of the ring buffer
 	// Find the length of that string:
 	len = strspn(start, ipCharSet);
@@ -211,9 +222,9 @@ int Serial_avr32_gsm_udp::connectTCP(union IPAddress ip, unsigned int port,
 	sprintf(ipSetupCmd, "%s=%d,%d.%d.%d.%d,%d", TCP_SETUP, channel, ip.bytes[0],
 			ip.bytes[1], ip.bytes[2], ip.bytes[3], port);
 	//sprintf(ipSetupCmd, "%s=%i,%s,%i", TCP_SETUP, channel, ip, port);
-	cell.sendATCommand((const char *) ipSetupCmd);
+	 sendATCommand((const char *) ipSetupCmd);
 
-	iRetVal = cell.readWaitForResponse(RESPONSE_OK, WEB_RESPONSE_TIMEOUT);
+	iRetVal =  readWaitForResponse(RESPONSE_OK, WEB_RESPONSE_TIMEOUT);
 	if (iRetVal < 0)	// If nothing was received return timeout error
 			{
 		return iRetVal;
@@ -232,9 +243,9 @@ int Serial_avr32_gsm_udp::connectUDP(union IPAddress ip, unsigned int port,
 	sprintf(ipSetupCmd, "%s=%d,%d.%d.%d.%d,%d", UDP_SETUP, channel, ip.bytes[0],
 			ip.bytes[1], ip.bytes[2], ip.bytes[3], port);
 	//sprintf(ipSetupCmd, "%s=%i,%s,%i", TCP_SETUP, channel, ip, port);
-	cell.sendATCommand((const char *) ipSetupCmd);
+	 sendATCommand((const char *) ipSetupCmd);
 
-	iRetVal = cell.readWaitForResponse(RESPONSE_OK, WEB_RESPONSE_TIMEOUT);
+	iRetVal =  readWaitForResponse(RESPONSE_OK, WEB_RESPONSE_TIMEOUT);
 	if (iRetVal < 0)	// If nothing was received return timeout error
 			{
 		return iRetVal;
@@ -247,8 +258,8 @@ int Serial_avr32_gsm_udp::connectUDP(union IPAddress ip, unsigned int port,
 
 int8_t Serial_avr32_gsm_udp::statusTCP() {
 	int iRetVal;
-	cell.sendATCommand(TCP_STATUS);
-	iRetVal = cell.readWaitForResponses("ESTABLISHED", "DISCONNECTED",
+	 sendATCommand(TCP_STATUS);
+	iRetVal =  readWaitForResponses("ESTABLISHED", "DISCONNECTED",
 			WEB_RESPONSE_TIMEOUT);
 
 	if (iRetVal > 0)
@@ -260,8 +271,8 @@ int8_t Serial_avr32_gsm_udp::statusTCP() {
 }
 int8_t Serial_avr32_gsm_udp::statusUDP() {
 	int iRetVal;
-	cell.sendATCommand(UDP_STATUS);
-	iRetVal = cell.readWaitForResponses("ESTABLISHED", "DISCONNECTED",
+	 sendATCommand(UDP_STATUS);
+	iRetVal =  readWaitForResponses("ESTABLISHED", "DISCONNECTED",
 			WEB_RESPONSE_TIMEOUT);
 
 	if (iRetVal > 0)
@@ -274,18 +285,18 @@ int8_t Serial_avr32_gsm_udp::statusUDP() {
 
 int Serial_avr32_gsm_udp::available() {
 	// Should check if we're connected & within a +ZIPRECV
-	return cell.dataAvailable();
+	return  dataAvailable();
 }
 
 int Serial_avr32_gsm_udp::readTCP() {
 	if (!available())
 		return -1;
-	return cell.uartRead();
+	return  uartRead();
 }
 int Serial_avr32_gsm_udp::readUDP() {
 	if (!available())
 		return -1;
-	return cell.uartRead();
+	return  uartRead();
 }
 
 int Serial_avr32_gsm_udp::peek() {
@@ -309,14 +320,14 @@ size_t Serial_avr32_gsm_udp::writeTCP(const uint8_t *buf, size_t size) {
 	char sendCmd[19];
 	memset(sendCmd, '\0', 19);
 	sprintf(sendCmd, "%s=%i,%i", TCP_SEND, _activeChannel, size);
-	cell.sendATCommand((const char *) sendCmd);
-	iRetVal = cell.readWaitForResponse(">", WEB_RESPONSE_TIMEOUT);
+	 sendATCommand((const char *) sendCmd);
+	iRetVal =  readWaitForResponse(">", WEB_RESPONSE_TIMEOUT);
 	if (iRetVal <= 0)
 		return -1;
 
-	cell.clearSerial();		// Clear out the serial rx buffer
-	cell.printString((const char *) buf);// Send the data string to cell module
-	iRetVal = cell.readWaitForResponse("+ZIPSEND: OK", WEB_RESPONSE_TIMEOUT);
+	 clearSerial();		// Clear out the serial rx buffer
+	 printString((const char *) buf);// Send the data string to cell module
+	iRetVal =  readWaitForResponse("+ZIPSEND: OK", WEB_RESPONSE_TIMEOUT);
 	if (iRetVal <= 0)
 		return -1;
 
@@ -329,14 +340,14 @@ size_t Serial_avr32_gsm_udp::writeUDP(const uint8_t *buf, size_t size) {
 	char sendCmd[19];
 	memset(sendCmd, '\0', 19);
 	sprintf(sendCmd, "%s=%i,%i", UDP_SEND, _activeChannel, size);
-	cell.sendATCommand((const char *) sendCmd);
-	iRetVal = cell.readWaitForResponse(">", WEB_RESPONSE_TIMEOUT);
+	 sendATCommand((const char *) sendCmd);
+	iRetVal =  readWaitForResponse(">", WEB_RESPONSE_TIMEOUT);
 	if (iRetVal <= 0)
 		return -1;
 
-	cell.clearSerial();		// Clear out the serial rx buffer
-	cell.printString((const char *) buf);// Send the data string to cell module
-	iRetVal = cell.readWaitForResponse("+ZIPSENDU: OK", WEB_RESPONSE_TIMEOUT);
+	 clearSerial();		// Clear out the serial rx buffer
+	 printString((const char *) buf);// Send the data string to cell module
+	iRetVal =  readWaitForResponse("+ZIPSENDU: OK", WEB_RESPONSE_TIMEOUT);
 	if (iRetVal <= 0)
 		return -1;
 
@@ -345,13 +356,19 @@ size_t Serial_avr32_gsm_udp::writeUDP(const uint8_t *buf, size_t size) {
 
 bool Serial_avr32_gsm_udp::write(const uint8_t* bytes, const uint32_t size){
 
+//	Serial_avr32::write((uint8_t*) bytes,size);
+	//print_util_dbg_print("Writing something");
+//	if(initcheck){
+//		print_util_dbg_print("Actually Writing");
+//		writeUDP((uint8_t*)bytes ,(uint32_t)size);
+//	}else{
+		//if(temp==1){
+			initialize(3);
+		//}
 
-	if(initcheck){
-		print_util_dbg_print("Writing something");
-		writeUDP((uint8_t*)bytes ,(uint32_t)size);
-	}else{
-		initialize();
-	}
+		//temp = 0;
+
+//	}
 
 }
 bool Serial_avr32_gsm_udp::charToIPAddress(char * ipChar,
