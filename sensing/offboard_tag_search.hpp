@@ -81,15 +81,15 @@ static inline offboard_tag_search_conf_t offboard_tag_search_conf_default() {
     offboard_tag_search_conf_t conf;
 
     conf.camera_id                               = 1;
-    conf.allowable_horizontal_tag_offset_sqr     = 0.25f;
+    conf.allowable_horizontal_tag_offset_sqr     = 1.0f;
     conf.max_acc_drone_height_from_camera_mm     = 15000.0f;
-    conf.tag_search_timeout_us                   = 5*60000000.0f;               // ? minute
+    conf.tag_search_timeout_us                   = 10*60000000.0f;               // ? minute
     conf.camera_res_x                            = 1280;                        // Suitable for picamera
     conf.camera_res_y                            = 960;                         // Suitable for picamera
     conf.camera_rotation                         = maths_deg_to_rad(90.0f);
     conf.camera_fov_x                            = maths_deg_to_rad(53.50f);    // Suitable for picamera
     conf.camera_fov_y                            = maths_deg_to_rad(41.41f);    // Suitable for picamera
-    conf.max_acc_time_since_last_detection_us    = 1500000.0f;                  // 1.5 seconds
+    conf.max_acc_time_since_last_detection_us    = 2500000.0f;                  // 2.5 seconds
 
     return conf;
 }
