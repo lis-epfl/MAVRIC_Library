@@ -154,11 +154,12 @@ Mission_handler::update_status_t Mission_handler_land_on_tag<T1, T2, T3>::update
     *****************************/
     // Determine if we should switch between the landing states
     bool next_state = false;
-    alt_lpf_ = LPF_gain_ * alt_lpf_ + (1.0f - LPF_gain_) * ins_.position_lf()[2];
     switch (auto_landing_behavior_)
     {
         case FLY_TO_LANDING_LOCATION:
             {
+                // Reset alt_lpf_ to keep it with the actual altitude
+                alt_lpf_ = ins_.position_lf()[2];
                 local_position_t pos = ins_.position_lf();
                 local_position_t wpt_pos = waypoint_.local_pos();
 
@@ -177,6 +178,8 @@ Mission_handler::update_status_t Mission_handler_land_on_tag<T1, T2, T3>::update
             break;
 
         case DESCENT_TO_SMALL_ALTITUDE:
+            // Use a different LPF gain to descend faster when tag is found
+            alt_lpf_ = 0.5f * alt_lpf_ + (1.0f - 0.5f) * ins_.position_lf()[2];
             if (maths_f_abs(ins_.position_lf()[Z] - desc_to_ground_altitude_) < desc_to_ground_range_ ||
                 (ins_.position_lf()[Z] > desc_to_ground_altitude_))
             {
@@ -185,6 +188,8 @@ Mission_handler::update_status_t Mission_handler_land_on_tag<T1, T2, T3>::update
             break;
 
         case DESCENT_TO_GND:
+            // Use a high LPF gain to descend to ground to know when we have stopped descending
+            alt_lpf_ = LPF_gain_ * alt_lpf_ + (1.0f - LPF_gain_) * ins_.position_lf()[2];
             if ((ins_.position_lf()[Z] > -0.1f) && (maths_f_abs(ins_.position_lf()[Z] - alt_lpf_) <= 0.2f))
             {
                 next_state = true;
