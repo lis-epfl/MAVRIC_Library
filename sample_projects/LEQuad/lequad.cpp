@@ -157,11 +157,11 @@ bool LEQuad::init_main_task(void)
     bool ret = true;
 
     // Task
-    ret &= scheduler.add_task(4000, (Scheduler_task::task_function_t)&LEQuad::main_task_func, (Scheduler_task::task_argument_t)this, Scheduler_task::PRIORITY_HIGHEST);
+    ret &= scheduler.add_task(4000, &LEQuad::main_task_func, this, Scheduler_task::PRIORITY_HIGHEST);
 
     // DOWN link
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, (Periodic_telemetry::telemetry_function_t)&scheduler_telemetry_send_rt_stats, &scheduler);
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, (Periodic_telemetry::telemetry_function_t)&scheduler_telemetry_send_rt_stats_all, &scheduler);
+    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, &scheduler_telemetry_send_rt_stats, &scheduler);
+    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, &scheduler_telemetry_send_rt_stats_all, &scheduler);
 
     return ret;
 }
@@ -177,17 +177,17 @@ bool LEQuad::init_state(void)
     ret &= state_telemetry_init(&state_machine, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_HEARTBEAT,  1000000, (Periodic_telemetry::telemetry_function_t)&state_telemetry_send_heartbeat, &state);
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SYS_STATUS, 1000000, (Periodic_telemetry::telemetry_function_t)&state_telemetry_send_status,    &state);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_HEARTBEAT,  1000000, &state_telemetry_send_heartbeat, &state);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SYS_STATUS, 1000000, &state_telemetry_send_status,    &state);
 
     // Data logging
     ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_,   "mav_state");
     ret &= data_logging_stat.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
 
     // Task
-    ret &= scheduler.add_task(200000, (Scheduler_task::task_function_t)&State_machine::update, (Scheduler_task::task_argument_t)&state_machine);
+    ret &= scheduler.add_task(200000, &State_machine::update, &state_machine);
     // Leds blinks at 1, 3 and 6Hz, then smallest half period is 83333us
-    ret &= scheduler.add_task( 83333, (Scheduler_task::task_function_t)&task_state_display_update, (Scheduler_task::task_argument_t)&state_display_);
+    ret &= scheduler.add_task( 83333, &task_state_display_update, &state_display_);
 
     return ret;
 }
@@ -201,7 +201,7 @@ bool LEQuad::init_communication(void)
     bool ret = true;
 
     // Task
-    ret &= scheduler.add_task(4000,  (Scheduler_task::task_function_t)&Mavlink_communication::update_task,    (Scheduler_task::task_argument_t)&communication);
+    ret &= scheduler.add_task(4000,  &Mavlink_communication::update_task, &communication);
 
     return ret;
 }
@@ -219,8 +219,8 @@ bool LEQuad::init_data_logging(void)
     ret &= data_logging_telemetry_init(&data_logging_stat, &communication.handler());
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_continuous);
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&task_data_logging_update, (Scheduler_task::task_argument_t)&data_logging_stat);
+    ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_continuous);
+    ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_stat);
 
     return ret;
 }
@@ -237,10 +237,10 @@ bool LEQuad::init_gps(void)
     ret &= gps_telemetry_init(&gps, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, (Periodic_telemetry::telemetry_function_t)&gps_telemetry_send_raw, &gps);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw, &gps);
 
     // Task
-    ret &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_gps_update, (Scheduler_task::task_argument_t)&gps, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(100000, &task_gps_update, &gps, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -257,7 +257,7 @@ bool LEQuad::init_imu(void)
     ret &= imu_telemetry_init(&imu, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_IMU, 250000, (Periodic_telemetry::telemetry_function_t)&imu_telemetry_send_scaled, &imu);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_IMU, 250000, &imu_telemetry_send_scaled, &imu);
 
     // Parameters
     ret &= communication.parameters().add(&imu.get_config()->gyroscope.bias[X],     "BIAS_GYRO_X");
@@ -285,10 +285,10 @@ bool LEQuad::init_barometer(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_PRESSURE, 100000, (Periodic_telemetry::telemetry_function_t)&barometer_telemetry_send, &barometer);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_PRESSURE, 100000, &barometer_telemetry_send, &barometer);
 
     // Task
-    ret &= scheduler.add_task(15000, (Scheduler_task::task_function_t)&task_barometer_update, (Scheduler_task::task_argument_t)&barometer, Scheduler_task::PRIORITY_HIGH, Scheduler_task::PERIODIC_RELATIVE);
+    ret &= scheduler.add_task(15000, &task_barometer_update, &barometer, Scheduler_task::PRIORITY_HIGH, Scheduler_task::PERIODIC_RELATIVE);
 
     return ret;
 }
@@ -302,11 +302,11 @@ bool LEQuad::init_sonar(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_DISTANCE_SENSOR, 200000, (Periodic_telemetry::telemetry_function_t)&sonar_telemetry_send, &sonar);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_DISTANCE_SENSOR, 200000, &sonar_telemetry_send, &sonar);
 
 
     // Task
-    ret &= scheduler.add_task(100000, (Scheduler_task::task_function_t)&task_sonar_update, (Scheduler_task::task_argument_t)&sonar, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(100000, &task_sonar_update, &sonar, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -320,8 +320,8 @@ bool LEQuad::init_attitude_estimation(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            200000, (Periodic_telemetry::telemetry_function_t)&ahrs_telemetry_send_attitude,            &ahrs);
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, (Periodic_telemetry::telemetry_function_t)&ahrs_telemetry_send_attitude_quaternion, &ahrs);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            200000, &ahrs_telemetry_send_attitude,            &ahrs);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, &ahrs_telemetry_send_attitude_quaternion, &ahrs);
 
     return ret;
 }
@@ -338,8 +338,8 @@ bool LEQuad::init_position_estimation(void)
     ret &= ins_telemetry_init(&position_estimation, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send_local_position_ned,  &position_estimation);
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send_global_position_int, &position_estimation);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, &ins_telemetry_send_local_position_ned,  &position_estimation);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, &ins_telemetry_send_global_position_int, &position_estimation);
 
     // Parameters
     ret &= communication.parameters().add(&position_estimation.kp_alt_baro,   "POS_KP_ALT_BARO" );
@@ -527,8 +527,8 @@ bool LEQuad::init_navigation(void)
     ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Navigation::update,               (Scheduler_task::task_argument_t)&navigation,       Scheduler_task::PRIORITY_HIGH);
-    ret &= scheduler.add_task(10000, (Scheduler_task::task_function_t)&Mavlink_waypoint_handler::update, (Scheduler_task::task_argument_t)&waypoint_handler, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, &Navigation::update,               &navigation,       Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, &Mavlink_waypoint_handler::update, &waypoint_handler, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -545,7 +545,7 @@ bool LEQuad::init_hud(void)
     ret &= hud_telemetry_init(&hud, &position_estimation, &controls, &ahrs);
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_VFR_HUD, 500000, (Periodic_telemetry::telemetry_function_t)&hud_telemetry_send_message, &hud);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_VFR_HUD, 500000, &hud_telemetry_send_message, &hud);
 
     return ret;
 }
@@ -567,7 +567,7 @@ bool LEQuad::init_servos(void)
     ret &= servos_telemetry_init(&servos_telemetry,
                                  &servo_0, &servo_1, &servo_2, &servo_3,
                                  &servo_4, &servo_5, &servo_6, &servo_7);
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SERVO_OUTPUT_RAW, 1000000, (Periodic_telemetry::telemetry_function_t)&servos_telemetry_mavlink_send, &servos_telemetry);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SERVO_OUTPUT_RAW, 1000000, &servos_telemetry_mavlink_send, &servos_telemetry);
 
     return ret;
 }
@@ -584,7 +584,7 @@ bool LEQuad::init_ground_control(void)
     ret &= manual_control_telemetry_init(&manual_control, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_MANUAL_CONTROL, 500000, (Periodic_telemetry::telemetry_function_t)&manual_control_telemetry_send, &manual_control);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_MANUAL_CONTROL, 500000, &manual_control_telemetry_send, &manual_control);
 
     // Parameters
     /* WARNING the following 2 cast are necessary on stm32 architecture, otherwise it leads to execution error */
@@ -592,7 +592,7 @@ bool LEQuad::init_ground_control(void)
     ret &= communication.parameters().add((int32_t*) &manual_control.mode_source_,    "COM_RC_IN_MODE");
 
     // Task
-    ret &= scheduler.add_task(20000, (Scheduler_task::task_function_t)&remote_update, (Scheduler_task::task_argument_t)&manual_control.remote, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(20000, &remote_update, &manual_control.remote, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }

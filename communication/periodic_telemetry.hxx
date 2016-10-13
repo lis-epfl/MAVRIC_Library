@@ -30,33 +30,50 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file dynamic_model_telemetry.hpp
+ * \file periodic_telemetry.hxx
  *
  * \author MAV'RIC Team
- * \author Basil Huber
+ * \author Julien Lecoeur
  *
- * \brief This module takes care of sending periodic telemetric messages for
- * the dynamic model
+ * \brief Periodic telemetry
  *
  ******************************************************************************/
 
+template<typename T>
+bool Periodic_telemetry::add(   uint32_t                        task_id,
+                                uint32_t                        repeat_period,
+                                typename function<T>::type_t    telemetry_function,
+                                T*                              telemetry_module,
+                                Scheduler_task::priority_t      priority,
+                                Scheduler_task::timing_mode_t   timing_mode,
+                                Scheduler_task::run_mode_t      run_mode)
+{
+    bool add_success = true;
 
-#ifndef DYNAMIC_MODEL_TELEMETRY_HPP_
-#define DYNAMIC_MODEL_TELEMETRY_HPP_
+    if (count_ <  max_count())
+    {
+        telemetry_entry_t* new_entry = &list()[count_++];
 
-#include "communication/mavlink_stream.hpp"
-#include "simulation/dynamic_model.hpp"
+        new_entry->mavlink_stream = &mavlink_stream_;
+        new_entry->function       = reinterpret_cast<function<void>::type_t>(telemetry_function);   // we do dangerous casting here, but it is safe because
+        new_entry->module         = reinterpret_cast<void*>(telemetry_module);                      // the types of telemetry_function and telemetry_argument are compatible
 
+        add_success &= true;
 
-/**
- * \brief   Function to send the MAVLink HIL_STATE_QUATERNION message sending the groundtruth of the simulation
- *
- * \details true airspeed and indicated airspeed currently equal ground speed
- *
- * \param   dynamic_model           Dynamic model of the simulation
- * \param   mavlink_stream          The pointer to the MAVLink stream structure
- * \param   msg                     The pointer to the MAVLink message
- */
-void dynamic_model_telemetry_send_state_quaternion(const Dynamic_model* model, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+        add_success &= scheduler().add_task(repeat_period,
+                                           &send_message,
+                                           new_entry,
+                                           priority,
+                                           timing_mode,
+                                           run_mode,
+                                           task_id);
+    }
+    else
+    {
+        print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
 
-#endif /* DYNAMIC_MODEL_TELEMETRY_HPP_ */
+        add_success &= false;
+    }
+
+    return add_success;
+}

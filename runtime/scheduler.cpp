@@ -55,57 +55,6 @@ Scheduler::Scheduler(const Scheduler::conf_t config) :
 {}
 
 
-bool Scheduler::add_task(uint32_t repeat_period,
-              Scheduler_task::task_function_t call_function,
-              Scheduler_task::task_argument_t function_argument,
-              Scheduler_task::priority_t priority,
-              Scheduler_task::timing_mode_t timing_mode,
-              Scheduler_task::run_mode_t run_mode,
-              int32_t task_id)
-{
-    bool task_successfully_added = false;
-
-    // Check if the scheduler is not full
-    if (task_count_ < max_task_count())
-    {
-        if (task_id == -1)
-        {
-           task_id = task_count_;
-        }
-
-        // Check if there is already a task with this ID
-        bool id_is_unique = true;
-        for (uint32_t i = 0; i < task_count_; ++i)
-        {
-            if (tasks()[i].get_id() == task_id)
-            {
-                id_is_unique = false;
-                break;
-            }
-        }
-
-        // Add new task
-        if (id_is_unique == true)
-        {
-            tasks()[task_count_++] = Scheduler_task(repeat_period, run_mode, timing_mode, priority, call_function, function_argument, task_id);
-            task_successfully_added = true;
-        }
-        else
-        {
-            print_util_dbg_print("[SCHEDULER] Error: There is already a task with this ID\r\n");
-            task_successfully_added = false;
-        }
-    }
-    else
-    {
-        print_util_dbg_print("[SCHEDULER] Error: Cannot add more task\r\n");
-        task_successfully_added = false;
-    }
-
-    return task_successfully_added;
-}
-
-
 bool Scheduler::sort_tasks(void)
 {
     bool sorted = false;
@@ -157,37 +106,40 @@ int32_t Scheduler::update(void)
     int32_t realtime_violation = 0;
 
     // Iterate through registered tasks
-    uint32_t i = current_schedule_slot_;
-    do
+    if (task_count_ > 0)
     {
-        // If the task is active and has waited long enough...
-        if (tasks()[i].is_due())
+        uint32_t i = current_schedule_slot_;
+        do
         {
-            // Execute task
-            if (!tasks()[i].execute())
+            // If the task is active and has waited long enough...
+            if (tasks()[i].is_due())
             {
-                realtime_violation++; //realtime violation!!
+                // Execute task
+                if (!tasks()[i].execute())
+                {
+                    realtime_violation++; //realtime violation!!
+                }
+
+                // Depending on shceduling strategy, select next task slot
+                switch (schedule_strategy_)
+                {
+                    case FIXED_PRIORITY:
+                        // Fixed priority scheme - scheduler will start over with tasks with the highest priority
+                        current_schedule_slot_ = 0;
+                        break;
+
+                    case ROUND_ROBIN:
+                        // Round robin scheme - scheduler will pick up where it left.
+                        current_schedule_slot_ = (current_schedule_slot_+1)%task_count_;
+                        break;
+                }
+
+                return realtime_violation;
             }
+            i = (i+1)%task_count_;
 
-            // Depending on shceduling strategy, select next task slot
-            switch (schedule_strategy_)
-            {
-                case FIXED_PRIORITY:
-                    // Fixed priority scheme - scheduler will start over with tasks with the highest priority
-                    current_schedule_slot_ = 0;
-                    break;
-
-                case ROUND_ROBIN:
-                    // Round robin scheme - scheduler will pick up where it left.
-                    current_schedule_slot_ = (current_schedule_slot_+1)%task_count_;
-                    break;
-            }
-
-            return realtime_violation;
-        }
-        i = (i+1)%task_count_;
-
-    } while(i != current_schedule_slot_);
+        } while(i != current_schedule_slot_);
+    }
 
     return realtime_violation;
 }

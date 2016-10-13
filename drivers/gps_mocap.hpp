@@ -93,7 +93,7 @@ public:
      * \param   sysid         ID of the system
      * \param   msg           Pointer to the incoming message
      */
-    void callback(uint32_t sysid, mavlink_message_t* msg);
+    void callback(uint32_t sysid, const mavlink_message_t* msg);
 
 
     /**
