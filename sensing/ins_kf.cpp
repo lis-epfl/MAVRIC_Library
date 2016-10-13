@@ -446,74 +446,23 @@ void INS_kf::predict_kf(void)
     float cz = q0*q0 - q1*q1 - q2*q2 + q3*q3;
 
     // Model dynamics (modify only the non-constant terms)
-    // TODO: Test block insertion method
-    // F_.insert(Mat<3,3>({ dt,  0,  0,
-    //                      0,   dt, 0,
-    //                      0,   0,  dt }),
-    //           0,
-    //           4);
-    // F_.insert(Mat<3,3>({ -ax*dt2, -bx*dt2,  -cx*dt2,
-    //                      -ay*dt2, -by*dt2,  -cy*dt2,
-    //                      -az*dt2, -bz*dt2,  -cz*dt2 }),
-    //           0,
-    //           7);
-    // F_.insert(Mat<3,3>({ -ax*dt,  -bx*dt, -cx*dt,
-    //                      -ay*dt,  -by*dt, -cy*dt,
-    //                      -az*dt,  -bz*dt, -cz*dt}),
-    //           4,
-    //           7);
-    F_(0,4) = dt;
-    F_(1,5) = dt;
-    F_(2,6) = dt;
-    F_(0,7) = -ax*dt2;
-    F_(0,8) = -bx*dt2;
-    F_(0,9) = -cx*dt2;
-    F_(1,7) = -ay*dt2;
-    F_(1,8) = -by*dt2;
-    F_(1,9) = -cy*dt2;
-    F_(2,7) = -az*dt2;
-    F_(2,8) = -bz*dt2;
-    F_(2,9) = -cz*dt2;
-    F_(4,7) = -ax*dt;
-    F_(4,8) = -bx*dt;
-    F_(4,9) = -cx*dt;
-    F_(5,7) = -ay*dt;
-    F_(5,8) = -by*dt;
-    F_(5,9) = -cy*dt;
-    F_(6,7) = -az*dt;
-    F_(6,8) = -bz*dt;
-    F_(6,9) = -cz*dt;
+    F_.insert_inplace<0,4>(Mat<3,3>({ dt,  0,  0,
+                                       0, dt,  0,
+                                       0,  0, dt }));
+    F_.insert_inplace<0,7>(Mat<3,3>({ -ax*dt2, -bx*dt2,  -cx*dt2,
+                                      -ay*dt2, -by*dt2,  -cy*dt2,
+                                      -az*dt2, -bz*dt2,  -cz*dt2 }));
+    F_.insert_inplace<4,7>(Mat<3,3>({ -ax*dt,  -bx*dt, -cx*dt,
+                                      -ay*dt,  -by*dt, -cy*dt,
+                                      -az*dt,  -bz*dt, -cz*dt}));
 
     // Input (modify only the non-constant terms)
-    // B_.insert(Mat<3,3>({ ax*dt2, bx*dt2, cx*dt2,
-    //                      ay*dt2, by*dt2, cy*dt2,
-    //                      az*dt2, bz*dt2, cz*dt2 }),
-    //           0,
-    //           0);
-    // B_.insert(Mat<3,3>({ ax*dt, bx*dt,  cx*dt,
-    //                      ay*dt, by*dt,  cy*dt,
-    //                      az*dt, bz*dt,  cz*dt }),
-    //           4,
-    //           0);
-    B_(0,0) = ax*dt2;
-    B_(0,1) = bx*dt2;
-    B_(0,2) = cx*dt2;
-    B_(1,0) = ay*dt2;
-    B_(1,1) = by*dt2;
-    B_(1,2) = cy*dt2;
-    B_(2,0) = az*dt2;
-    B_(2,1) = bz*dt2;
-    B_(2,2) = cz*dt2;
-    B_(4,0) = ax*dt;
-    B_(4,1) = bx*dt;
-    B_(4,2) = cx*dt;
-    B_(5,0) = ay*dt;
-    B_(5,1) = by*dt;
-    B_(5,2) = cy*dt;
-    B_(6,0) = az*dt;
-    B_(6,1) = bz*dt;
-    B_(6,2) = cz*dt;
-
+    B_.insert_inplace<0,0>(Mat<3,3>({ ax*dt2, bx*dt2, cx*dt2,
+                                      ay*dt2, by*dt2, cy*dt2,
+                                      az*dt2, bz*dt2, cz*dt2 }));
+    B_.insert_inplace<4,0>(Mat<3,3>({ ax*dt, bx*dt,  cx*dt,
+                                      ay*dt, by*dt,  cy*dt,
+                                      az*dt, bz*dt,  cz*dt }));
 
     // Recompute process noise matrix
     // Coefficients
@@ -549,10 +498,6 @@ void INS_kf::predict_kf(void)
                       -dt36*bx*sa2,   -dt36*by*sa2,   -dt36*bz*sa2,   0,      -dt22*bx*sa2,   -dt22*by*sa2,   -dt22*bz*sa2,   0,            dt*sa2,       0,            0,
                       -dt36*cx*sa2,   -dt36*cy*sa2,   -dt36*cz*sa2,   0,      -dt22*cx*sa2,   -dt22*cy*sa2,   -dt22*cz*sa2,   0,            0,            dt*sa2,       0,
                       0,              0,              0,              0,      0,              0,              0,              0,            0,            0,            dt*sb2 });
-
-
-
-
 
     // Compute default KF prediciton step (using local accelerations as input, warning z acceleration sign)
     predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
