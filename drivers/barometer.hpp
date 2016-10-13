@@ -151,7 +151,7 @@ public:
      *
      * \return  Altitude (global frame)
      */
-    static float compute_altitude_from_pressure(float pressure, float pressure_at_sea_level = pressure_at_sea_level());
+    static float compute_altitude_from_pressure(float pressure, float pressure_at_sea_level_ = pressure_at_sea_level());
 
 
     /**
