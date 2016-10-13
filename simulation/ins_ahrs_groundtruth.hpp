@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Basil Huber
 
- * \brief   Mockup Inertial Navigation System (INS) and Attitude Heading Reference System (AHRS) providing groundtruth 
+ * \brief   Mockup Inertial Navigation System (INS) and Attitude Heading Reference System (AHRS) providing groundtruth
  *          for position and velocity, attitude, acceleration and rates, obtained from the dynamic model
  *
  ******************************************************************************/
@@ -118,7 +118,11 @@ public:
     *
     * \return  boolean
     */
-    virtual inline bool is_healthy(INS::healthy_t type) const {return true;};
+    virtual inline bool is_healthy(INS::healthy_t type) const
+    {
+        (void) type; // unused
+        return true;
+    };
 
 
     /**
