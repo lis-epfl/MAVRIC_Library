@@ -54,6 +54,9 @@ void ins_telemetry_set_gps_global_origin_callback(INS* ins, uint32_t sysid, cons
 
 void ins_telemetry_set_gps_global_origin_callback(INS* ins, uint32_t sysid, const mavlink_message_t* msg)
 {
+    (void) ins;   // unused
+    (void) sysid; // unused
+
     /* decode message */
     mavlink_set_gps_global_origin_t set_gps_global_origin;
     mavlink_msg_set_gps_global_origin_decode(msg, &set_gps_global_origin);
@@ -94,10 +97,10 @@ void ins_telemetry_send_local_position_ned_cov(const INS* ins, const Mavlink_str
                                             0,
                                             ins->position_lf()[0],
                                             ins->position_lf()[1],
-                                            ins->position_lf()[2],
-                                            ins->velocity_lf()[0],
-                                            ins->velocity_lf()[1],
-                                            ins->velocity_lf()[2],
+                                            -1000*ins->position_lf()[2],
+                                            100*ins->velocity_lf()[0],
+                                            100*ins->velocity_lf()[1],
+                                            100*ins->velocity_lf()[2],
                                             0.0f,
                                             0.0f,
                                             ins->absolute_altitude(),
@@ -115,10 +118,10 @@ void ins_telemetry_send_local_position_ned(const INS* ins, const Mavlink_stream*
                                         time_keeper_get_ms(),
                                         pos_lf[X],
                                         pos_lf[Y],
-                                        pos_lf[Z],
-                                        vel_lf[X],
-                                        vel_lf[Y],
-                                        vel_lf[Z]);
+                                        -1000*pos_lf[Z],
+                                        100*vel_lf[X],
+                                        100*vel_lf[Y],
+                                        100*vel_lf[Z]);
 }
 
 void ins_telemetry_send_global_position_int(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
@@ -149,6 +152,8 @@ void ins_telemetry_send_global_position_int(const INS* ins, const Mavlink_stream
 
 void ins_telemetry_send_gps_global_origin(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
+    (void) ins; // unused
+
     global_position_t origin = INS::origin();
     mavlink_msg_gps_global_origin_pack( mavlink_stream->sysid(),
                                         mavlink_stream->compid(),

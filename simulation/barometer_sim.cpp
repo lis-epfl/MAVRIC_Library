@@ -116,9 +116,21 @@ float Barometer_sim::altitude_gf(void) const
 }
 
 
+float Barometer_sim::altitude_gf_raw(void) const
+{
+    return altitude_gf();
+}
+
+
 float Barometer_sim::vertical_speed_lf(void) const
 {
     return speed_lf_;
+}
+
+
+float Barometer_sim::vertical_speed_lf_raw(void) const
+{
+    return vertical_speed_lf();
 }
 
 

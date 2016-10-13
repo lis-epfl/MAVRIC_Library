@@ -127,6 +127,16 @@ public:
 
 
     /**
+     * \brief   Get the altitude in meters above sea level (not filtered)
+     *
+     * \detail  Global frame: (>0 means upward)
+     *
+     * \return  Value
+     */
+    float altitude_gf_raw(void) const;
+
+
+    /**
      * \brief   Get the vertical speed in meters/second
      *
      * \detail  NED frame: (>0 means downward)
@@ -134,6 +144,16 @@ public:
      * \return  Value
      */
     float vertical_speed_lf(void) const;
+
+
+    /**
+     * \brief   Get the vertical speed in meters/second (not filtered)
+     *
+     * \detail  NED frame: (>0 means downward)
+     *
+     * \return  Value
+     */
+    float vertical_speed_lf_raw(void) const;
 
 
     /**
@@ -161,6 +181,10 @@ private:
 
     uint8_t     raw_pressure_[3];       ///< Raw pressure contained in 3 uint8_t
     uint8_t     raw_temperature_[2];    ///< Raw temperature contained in 2 uint8_t
+
+    float   altitude_raw_;          ///< Unfiltered biased altitude (global frame)
+    float   altitude_gf_raw_;       ///< Unfiltered altitude (global frame)
+    float   speed_lf_raw_;          ///< Unfiltered vertical speed (NED frame)
 
     float   pressure_;              ///< Measured pressure (in Pa)
     float   temperature_;           ///< Measured temperature
