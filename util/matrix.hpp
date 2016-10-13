@@ -243,6 +243,87 @@ public:
      */
     template<uint32_t N, typename T>
     static bool inverse(const Mat<N,N,T>& m, Mat<N,N,T>& res);
+
+
+    /**
+     * \brief   Insert a sub matrix into another matrix
+     *
+     * \detail  Insert matrix m2 into m1, at starting index (I, J)
+     *          example:
+     *          ```cpp
+     *              // Create matrices
+     *              Mat<10,11> m;
+     *
+     *              // Will copy content of m2 into m starting at 5th row and 6th column
+     *              Mat<2,3>   m2;
+     *              Mat<10, 11> res2 = m.insert<5,6>(m2)
+     *
+     *              // This will not compile because the indeces are too large and m2 will not fit
+     *              Mat<2,3>   m3;
+     *              Mat<10, 11> res3 = m.insert<8,8>(m3)
+     *
+     *              // This will not compile because m4 is too large
+     *              Mat<100, 100> m4;
+     *              Mat<10, 11> res4 = m.insert<5,6>(m4)
+     *          ```
+     * \detail  Warning! Can NOT be used for in place operations
+     *
+     * \param   m1      Matrix in which the other matrix will be inserted
+     * \param   m2      Matrix which will be inserted
+     * \param   res     Matrix which will be inserted
+     *
+     * \tparam  N       Number of rows of 1st matrix
+     * \tparam  P       Number of columns of 1st matrix
+     * \tparam  I       Row index of the first top left element to be inserted (index in m1)
+     * \tparam  J       Column index of the first top left element to be inserted (index in m1)
+     * \tparam  Q       Number of rows of 2nd matrix
+     * \tparam  R       Number of columns of 2nd matrix
+     * \tparam  T       Type of data
+     *
+     * \return  success     Return true if the matrix was inserted correctly, false if it was too big (in this case only the part that fitted was inserted)
+     */
+    template<uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T>
+    static bool insert(const Mat<N,P,T>& m1, const Mat<Q,R,T>& m2, Mat<N,P,T>& res);
+
+    /**
+     * \brief   Insert a sub matrix into another matrix
+     *
+     * \detail  Insert matrix m2 into m1, at starting index (I, J)
+     *          example:
+     *          ```cpp
+     *              // Create matrices
+     *              Mat<10,11> m;
+     *
+     *              // Will copy content of m2 into m starting at 5th row and 6th column
+     *              Mat<2,3>   m2;
+     *              m.insert_inplace<5,6>(m2)
+     *
+     *              // This will not compile because the indeces are too large and m3 will not fit
+     *              Mat<2,3>   m3;
+     *              m.insert_inplace<8,8>(m3)
+     *
+     *              // This will not compile because m4 is too large
+     *              Mat<100, 100> m4;
+     *              m.insert_inplace<5,6>(m4)
+     *          ```
+     *
+     * \detail  Warning! Can NOT be used for in place operations
+     *
+     * \param   m1      Matrix in which the other matrix will be inserted
+     * \param   m2      Matrix which will be inserted
+     *
+     * \tparam  N       Number of rows of 1st matrix
+     * \tparam  P       Number of columns of 1st matrix
+     * \tparam  I       Row index of the first top left element to be inserted (index in m1)
+     * \tparam  J       Column index of the first top left element to be inserted (index in m1)
+     * \tparam  Q       Number of rows of 2nd matrix
+     * \tparam  R       Number of columns of 2nd matrix
+     * \tparam  T       Type of data
+     *
+     * \return  success     Return true if the matrix was inserted correctly, false if it was too big (in this case only the part that fitted was inserted)
+     */
+    template<uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T>
+    static bool insert_inplace(Mat<N,P,T>& m1, const Mat<Q,R,T>& m2);
 };
 
 }
@@ -694,6 +775,36 @@ public:
      * \return  result
      */
     Mat inv(bool& success) const;
+
+
+    /**
+     * \brief  Insert a matrix into this one
+     *
+     * \param   m           Matrix to be inserted
+     * \param   i           Row index of the first element where the matrix should be inserted
+     * \param   j           Column index of the first element where the matrix should be inserted
+     * \param   success     False if the inserted matrix was to big to fit (in this case, the elements that fits are still inserted)
+     *
+     * \return  New matrix
+     */
+    template<uint32_t I, uint32_t J, uint32_t Q, uint32_t R>
+    Mat insert(const Mat<Q,R,T>& m) const;
+
+
+    /**
+     * \brief  Insert a matrix into this one
+     *
+     * \param   m       Matrix to be inserted
+     *
+     * \tparam  I       Row index of the first top left element to be inserted (index in m1)
+     * \tparam  J       Column index of the first top left element to be inserted (index in m1)
+     * \tparam  Q       Number of rows of 2nd matrix
+     * \tparam  R       Number of columns of 2nd matrix
+     *
+     * \return  result
+     */
+    template<uint32_t I, uint32_t J, uint32_t Q, uint32_t R>
+    bool insert_inplace(const Mat<Q,R,T>& m);
 
 
 private:

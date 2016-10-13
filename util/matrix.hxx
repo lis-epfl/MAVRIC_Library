@@ -431,6 +431,25 @@ Mat<N,P,T> Mat<N,P,T>::inv(bool& success) const
 }
 
 
+template<uint32_t N, uint32_t P,  typename T>
+template<uint32_t I, uint32_t J, uint32_t Q, uint32_t R>
+Mat<N,P,T> Mat<N,P,T>::insert(const Mat<Q,R,T>& m) const
+{
+    Mat<N,P,T> res;
+    mat::op::insert<N, P, I, J, Q, R, T>(*this, m, res);
+    // mat::op::insert<I, J>(*this, m, res);
+    return res;
+}
+
+
+template<uint32_t N, uint32_t P, typename T>
+template<uint32_t I, uint32_t J, uint32_t Q, uint32_t R>
+bool Mat<N,P,T>::insert_inplace(const Mat<Q,R,T>& m)
+{
+    return mat::op::insert_inplace<N, P, I, J, Q, R, T>(*this, m);
+}
+
+
 namespace mat
 {
 
@@ -601,6 +620,36 @@ void op::dot(const Mat<N,P,T>& m1, const Mat<P,Q,T>& m2, Mat<N,Q,T>& res)
 //     return  false;
 // }
 
+template<uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T>
+bool op::insert_inplace(Mat<N,P,T>& m1, const Mat<Q,R,T>& m2)
+{
+    static_assert(I + Q <= N, "Inserted matrix does not fit (rows)");
+    static_assert(J + R <= P, "Inserted matrix does not fit (columns)");
+
+    // Insert the matrix
+    for(uint32_t i = I; i < I + Q; i++)
+    {
+        for(uint32_t j = J; j <= J + R; j++)
+        {
+            m1(i, j) = m2(i - I, j - J);
+        }
+    }
+
+    return true;
+}
+
+
+template<uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T>
+bool op::insert(const Mat<N,P,T>& m1, const Mat<Q,R,T>& m2, Mat<N,P,T>& res)
+{
+    static_assert(I + Q <= N, "Inserted matrix does not fit (rows)");
+    static_assert(J + R <= P, "Inserted matrix does not fit (columns)");
+
+    res = m1;
+    insert_inplace<N,P,I,J,Q,R,T>(res, m2);
+
+    return true;
+}
 
 }
 

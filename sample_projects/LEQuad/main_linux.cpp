@@ -119,7 +119,7 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Add simulation telemetry
     // -------------------------------------------------------------------------
-    mav.mavlink_communication().telemetry().add<Dynamic_model>(MAVLINK_MSG_ID_HIL_STATE_QUATERNION,  1000000, &dynamic_model_telemetry_send_state_quaternion, &board.dynamic_model);
+    mav.mavlink_communication().telemetry().add<Dynamic_model>(MAVLINK_MSG_ID_HIL_STATE_QUATERNION,  50000, &dynamic_model_telemetry_send_state_quaternion, &board.dynamic_model);
 
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");

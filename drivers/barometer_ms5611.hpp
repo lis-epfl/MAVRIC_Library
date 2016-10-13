@@ -172,6 +172,16 @@ public:
 
 
     /**
+     * \brief   Get the unfiltered altitude in meters above sea level
+     *
+     * \detail  Global frame: (>0 means upward)
+     *
+     * \return  Value
+     */
+    float altitude_gf_raw(void) const;
+
+
+    /**
      * \brief   Get the vertical speed in meters/second
      *
      * \detail  NED frame: (>0 means downward)
@@ -179,6 +189,16 @@ public:
      * \return  Value
      */
     float vertical_speed_lf(void) const;
+
+
+    /**
+     * \brief   Get the unfiltered vertical speed in meters/second
+     *
+     * \detail  NED frame: (>0 means downward)
+     *
+     * \return  Value
+     */
+    float vertical_speed_lf_raw(void) const;
 
 
     /**
