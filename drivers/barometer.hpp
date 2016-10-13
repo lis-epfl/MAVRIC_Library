@@ -121,7 +121,7 @@ public:
      *
      * \param   pressure_at_sea_level (in Pa)
      */
-    static float compute_pressure_at_sea_level(void);
+    static float pressure_at_sea_level(void);
 
     /**
      * \brief   Compute altitude above sea level from pressure
@@ -131,7 +131,7 @@ public:
      *
      * \return  Altitude (global frame)
      */
-    static float altitude_from_pressure(float pressure, float pressure_at_sea_level = compute_pressure_at_sea_level());
+    static float compute_altitude_from_pressure(float pressure, float pressure_at_sea_level = pressure_at_sea_level());
 
 
     /**

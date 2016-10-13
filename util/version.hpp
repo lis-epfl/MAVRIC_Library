@@ -54,9 +54,9 @@ namespace version
 
     // Git hash for MAVRIC Library
     #ifdef MAVRIC_GIT_HASH
-        const uint8_t mavric_git_hash[16] = MAVRIC_GIT_HASH;
+        const uint8_t mavric_git_hash[8] = MAVRIC_GIT_HASH;
     #else
-        const uint8_t mavric_git_hash[16] = "unknown";
+        const uint8_t mavric_git_hash[8] = "unknown";
     #endif
 
     // Version of project
@@ -68,9 +68,9 @@ namespace version
 
     // Git hash of project
     #ifdef PROJECT_GIT_HASH
-        const uint8_t project_git_hash[16] = PROJECT_GIT_HASH;
+        const uint8_t project_git_hash[8] = PROJECT_GIT_HASH;
     #else
-        const uint8_t project_git_hash[16] = "unknown";
+        const uint8_t project_git_hash[8] = "unknown";
     #endif
 
     // Project name
