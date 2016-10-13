@@ -97,7 +97,7 @@ bool Imu::update(void)
         oriented_gyro_[i] = raw_gyro[ config_.gyroscope.axis[i]     ] * config_.gyroscope.sign[i];
         oriented_mag_[i]  = raw_mag[  config_.magnetometer.axis[i]  ] * config_.magnetometer.sign[i];
     }
-    
+
     // Scale sensor values
     float new_scaled_acc[3];
     float new_scaled_gyro[3];
@@ -108,7 +108,7 @@ bool Imu::update(void)
         new_scaled_acc[i]  = oriented_acc_[i]  / config_.accelerometer.scale_factor[i] - config_.accelerometer.bias[i];
         new_scaled_gyro[i] = oriented_gyro_[i] / config_.gyroscope.scale_factor[i]     - config_.gyroscope.bias[i];
         new_scaled_mag[i]  = oriented_mag_[i]  / config_.magnetometer.scale_factor[i]  - config_.magnetometer.bias[i];
-    
+
         // Low pass filter
         scaled_acc_[i]  = config_.lpf_acc   * new_scaled_acc[i]  + (1.0f - config_.lpf_acc) * scaled_acc_[i];
         scaled_gyro_[i] = config_.lpf_gyro  * new_scaled_gyro[i] + (1.0f - config_.lpf_gyro) * scaled_gyro_[i];
@@ -143,12 +143,6 @@ const std::array<float, 3>& Imu::acc(void) const
 const std::array<float, 3>& Imu::gyro(void) const
 {
     return scaled_gyro_;
-}
-
-
-const std::array<float, 3>& Imu::gyro_raw(void) const
-{
-    return oriented_gyro_;
 }
 
 
