@@ -45,6 +45,7 @@
 #define BAROMETER_HPP_
 
 #include <cstdint>
+#include <cfloat>
 
 /**
  * \brief   Interface class for barometers
@@ -114,6 +115,13 @@ public:
      */
     virtual float temperature(void) const = 0;
 
+    /**
+     * \brief   Get the pressure at sea level
+     * \detail  The pressure at sea level is used to compute altitude from pressure
+     *
+     * \param   pressure_at_sea_level (in Pa)
+     */
+    static float compute_pressure_at_sea_level(void);
 
     /**
      * \brief   Compute altitude above sea level from pressure
@@ -123,7 +131,7 @@ public:
      *
      * \return  Altitude (global frame)
      */
-    static float altitude_from_pressure(float pressure, float pressure_at_sea_level = pressure_at_sea_level());
+    static float altitude_from_pressure(float pressure, float pressure_at_sea_level = compute_pressure_at_sea_level());
 
 
     /**
@@ -135,15 +143,6 @@ public:
      * \return  Pressure at sea level (in Pa)
      */
     static float compute_pressure_at_sea_level(float pressure, float altitude);
-
-
-    /**
-     * \brief   Get the pressure at sea level
-     * \detail  The pressure at sea level is used to compute altitude from pressure
-     *
-     * \param   pressure_at_sea_level (in Pa)
-     */
-    static float pressure_at_sea_level(void);
 
 
 protected:

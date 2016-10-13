@@ -57,7 +57,7 @@ Barometer::Barometer(float pressure_at_sea_level)
     Barometer::pressure_at_sea_level_ = pressure_at_sea_level;
 }
 
-float Barometer::pressure_at_sea_level(void)
+float Barometer::compute_pressure_at_sea_level(void)
 {
     return pressure_at_sea_level_;
 }
