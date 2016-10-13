@@ -47,8 +47,8 @@ namespace version
 {
 
     // Version of MAVRIC Library
-    const uint32_t mavric =   (1 << 24)   // major
-                            + (5 << 16)   // minor
+    const uint32_t mavric =   (2 << 24)   // major
+                            + (0 << 16)   // minor
                             + (0 << 8)    // patch
                             + (0 << 0);   // release
 
