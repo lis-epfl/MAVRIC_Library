@@ -138,6 +138,7 @@ public:
         float sigma_z_gnd;
         float sigma_bias_baro;
         float sigma_acc;
+
         // Measurement covariance
         float sigma_gps_xy;
         float sigma_gps_z;
@@ -145,11 +146,7 @@ public:
         float sigma_gps_velz;
         float sigma_baro;
         float sigma_sonar;
-        // GPS noise generation
-        float noise_gps_xy;
-        float noise_gps_z;
-        float noise_gps_velxy;
-        float noise_gps_velz;
+
         // Position of the origin
         global_position_t origin;
     };
@@ -157,7 +154,7 @@ public:
     /**
      * \brief Constructor
      */
-    INS_kf(State& state, 
+    INS_kf(State& state,
             const Gps& gps,
             const Barometer& barometer,
             const Sonar& sonar,
@@ -279,9 +276,9 @@ private:
 
     /**
      * \brief   Return a random number, simulating a uniform white noise with standard deviation sigma
-     * 
+     *
      * \param sigma     Standard deviation of the noise to simulate
-     * 
+     *
      * \return          Return the noise sample
      */
     float rand_sigma(float sigma);
@@ -295,22 +292,16 @@ INS_kf::conf_t INS_kf::default_config(void)
     // Process covariance (noise from state and input)
     conf.sigma_z_gnd        = 0.008f;
     conf.sigma_bias_acc     = 0.0001f;
-    conf.sigma_bias_baro    = 0.01f;
+    conf.sigma_bias_baro    = 0.001f;       // previously 0.01f;
     conf.sigma_acc          = 5.0f;         // Measured: 0.6f (at rest 0.032f)
 
     // Measurement covariance   (noise from measurement)
     conf.sigma_gps_xy       = 0.04f;       // Measured: 0.316f
     conf.sigma_gps_z        = 0.13f;       // Measured: 0.879f
-    conf.sigma_gps_velxy    = 0.04f;       // Measured: 0.064f
+    conf.sigma_gps_velxy    = 0.02f;       // Measured: 0.064f
     conf.sigma_gps_velz     = 0.02f;       // Measured: 0.342f
     conf.sigma_baro         = 0.50f;       // Measured: 0.310f
     conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
-
-    // Generation of GPS noise (sigma values)
-    conf.noise_gps_xy       = 0.316f;
-    conf.noise_gps_z        = 0.879f;
-    conf.noise_gps_velxy    = 0.064f;
-    conf.noise_gps_velz     = 0.342f;
 
     //default origin location (EFPL Esplanade)
     conf.origin = ORIGIN_EPFL;

@@ -87,9 +87,9 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
     ins_kf(state, gps, barometer, sonar, ahrs),
-    navigation(controls_nav, ahrs.qe, position_estimation, state, config.navigation_config),
-    waypoint_handler(position_estimation, navigation, ahrs, state, manual_control, communication.handler(), communication.mavlink_stream(), config.waypoint_handler_config),
-    state_machine(state, position_estimation, imu, ahrs, manual_control, state_display_),
+    navigation(controls_nav, ahrs.qe, ins_kf, state, config.navigation_config),
+    waypoint_handler(ins_kf, navigation, ahrs, state, manual_control, communication.handler(), communication.mavlink_stream(), config.waypoint_handler_config),
+    state_machine(state, ins_kf, imu, ahrs, manual_control, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(communication.sysid()),
@@ -338,8 +338,7 @@ bool LEQuad::init_position_estimation(void)
     ret &= ins_telemetry_init(&position_estimation, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  500000, &ins_telemetry_send_local_position_ned,  &position_estimation);
-    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, &ins_telemetry_send_global_position_int, &position_estimation);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  100000, &ins_telemetry_send_local_position_ned,  &position_estimation);
 
     // Parameters
     ret &= communication.parameters().add(&position_estimation.kp_alt_baro,   "POS_KP_ALT_BARO" );
@@ -370,7 +369,8 @@ bool LEQuad::init_ins_kf(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, &ins_telemetry_send_local_position_ned_cov, &ins_kf);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  100000, &ins_telemetry_send_local_position_ned_cov, &ins_kf);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_GLOBAL_POSITION_INT,     100000, &ins_telemetry_send_global_position_int,    &ins_kf);
 
     // Parameters
     ret &= communication.parameters().add(&ins_kf.config_.sigma_z_gnd,      "INS_X_Z_GND"       );
@@ -443,7 +443,7 @@ bool LEQuad::init_stabilisers(void)
                                     config_.stabilisation_copter_config,
                                     &controls,
                                     &ahrs,
-                                    &position_estimation,
+                                    &ins_kf,
                                     &command.torque,
                                     &command.thrust);
     ret &= stabilisation_init(&controls);
@@ -542,7 +542,7 @@ bool LEQuad::init_hud(void)
     bool ret = true;
 
     // Module
-    ret &= hud_telemetry_init(&hud, &position_estimation, &controls, &ahrs);
+    ret &= hud_telemetry_init(&hud, &ins_kf, &controls, &ahrs);
 
     // DOWN telemetry
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_VFR_HUD, 500000, &hud_telemetry_send_message, &hud);

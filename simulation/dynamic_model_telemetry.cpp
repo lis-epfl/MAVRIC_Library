@@ -67,7 +67,7 @@ void dynamic_model_telemetry_send_state_quaternion(const Dynamic_model* model, c
                                           rate[YAW],                                // Body frame yaw / psi angular speed (rad/s)
                                           (int32_t)(position.latitude  * 1e7),      // Latitude, expressed as * 1E7
                                           (int32_t)(position.longitude * 1e7),      // Longitude, expressed as * 1E7,      //
-                                          (int32_t)(position.altitude  * 1e3),      // Altitude in meters, expressed as * 1000 (millimeters)
+                                          (int32_t)(position.altitude  * 1e3 - 400000),      // Altitude in meters, expressed as * 1000 (millimeters)
                                           (int16_t)(velocity[X] * 1e2),             // Ground X Speed (Latitude), expressed as m/s * 100
                                           (int16_t)(velocity[Y] * 1e2),             // Ground Y Speed (Longitude), expressed as m/s * 100
                                           (int16_t)(velocity[Z] * 1e2),             // Ground Z Speed (Altitude), expressed as m/s * 100
