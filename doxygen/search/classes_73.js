@@ -27,6 +27,8 @@ var searchData=
   ['servo_5fmix_5fbirotor_5ft',['servo_mix_birotor_t',['../structservo__mix__birotor__t.html',1,'']]],
   ['servo_5fmix_5fywing_5fconf_5ft',['servo_mix_ywing_conf_t',['../structservo__mix__ywing__conf__t.html',1,'']]],
   ['servo_5fmix_5fywing_5ft',['servo_mix_ywing_t',['../structservo__mix__ywing__t.html',1,'']]],
+  ['servos_5fmix_5f4dof',['Servos_mix_4dof',['../classServos__mix__4dof.html',1,'']]],
+  ['servos_5fmix_5f6dof',['Servos_mix_6dof',['../classServos__mix__6dof.html',1,'']]],
   ['servos_5fmix_5fquadcopter_5fcross_5fconf_5ft',['servos_mix_quadcopter_cross_conf_t',['../structservos__mix__quadcopter__cross__conf__t.html',1,'']]],
   ['servos_5fmix_5fquadcopter_5fdiag_5fconf_5ft',['servos_mix_quadcopter_diag_conf_t',['../structservos__mix__quadcopter__diag__conf__t.html',1,'']]],
   ['servos_5fmix_5fquadcotper_5fcross_5ft',['servos_mix_quadcotper_cross_t',['../structservos__mix__quadcotper__cross__t.html',1,'']]],

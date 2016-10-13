@@ -18,6 +18,8 @@ var searchData=
   ['servo',['Servo',['../classServo.html#a2a4eacedcd7b7f4728b84e07d4645e5a',1,'Servo']]],
   ['servo_5fmax',['servo_max',['../classServo.html#adc300eff0012c5912a7bc48dcb50a743',1,'Servo']]],
   ['servo_5fmin',['servo_min',['../classServo.html#ade56632653d160c3d624dd46125cef5b',1,'Servo']]],
+  ['servos_5fmix_5f4dof',['Servos_mix_4dof',['../classServos__mix__4dof.html#a5a85341e840dc7b3aceec078c42c984d',1,'Servos_mix_4dof']]],
+  ['servos_5fmix_5f6dof',['Servos_mix_6dof',['../classServos__mix__6dof.html#a329eb973010c2a295412446551140036',1,'Servos_mix_6dof']]],
   ['set_5farmed',['set_armed',['../classState.html#a41daea810832a042add30c2c4bdbaa13',1,'State']]],
   ['set_5farmed_5fflag',['set_armed_flag',['../classMav__mode.html#a4b5399cd7da6c1decbc0c1ee2501aa2d',1,'Mav_mode']]],
   ['set_5fauto_5fflag',['set_auto_flag',['../classMav__mode.html#ae0627713cdd3c2158382ddd1af72718a',1,'Mav_mode']]],
