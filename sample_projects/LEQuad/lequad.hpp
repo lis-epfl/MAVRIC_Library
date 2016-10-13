@@ -203,9 +203,8 @@ protected:
     virtual bool init_imu(void);
     virtual bool init_barometer(void);
     virtual bool init_sonar(void);
-    virtual bool init_attitude_estimation(void);
-    virtual bool init_position_estimation(void);
-    virtual bool init_ins_kf(void);
+    virtual bool init_ahrs(void);
+    virtual bool init_ins(void);
     virtual bool init_stabilisers(void);
     virtual bool init_navigation(void);
     virtual bool init_hud(void);
@@ -248,8 +247,9 @@ protected:
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
 
+    INS*                ins_;                                   ///< Alias for the position filter in use
     Position_estimation position_estimation;                    ///< The position estimaton structure
-    INS_kf ins_kf;                                              ///< The Kalman INS structure, used for position estimation
+    INS_kf              ins_kf;                                 ///< The Kalman INS structure, used for position estimation
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
     control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
