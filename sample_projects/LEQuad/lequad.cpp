@@ -370,7 +370,7 @@ bool LEQuad::init_ins_kf(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, (Periodic_telemetry::telemetry_function_t)&ins_telemetry_send_local_position_ned_cov,   &ins_kf);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV,  50000, &ins_telemetry_send_local_position_ned_cov, &ins_kf);
 
     // Parameters
     ret &= communication.parameters().add(&ins_kf.config_.sigma_z_gnd,      "INS_X_Z_GND"       );
