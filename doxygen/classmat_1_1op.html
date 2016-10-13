@@ -153,6 +153,12 @@ Static Public Member Functions</h2></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;uint32_t N, typename T &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmat_1_1op.html#a2b5778a59c3dfb7d3167a348e55c7da2">inverse</a> (const <a class="el" href="classMat.html">Mat</a>&lt; N, N, T &gt; &amp;m, <a class="el" href="classMat.html">Mat</a>&lt; N, N, T &gt; &amp;res)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Matrix dot product.  <a href="#a2b5778a59c3dfb7d3167a348e55c7da2"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmat_1_1op.html#a38863dcf73d30e6992e88aa8065aa553">insert</a> (const <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; &amp;m1, const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;m2, <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; &amp;res)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a sub matrix into another matrix.  <a href="#a38863dcf73d30e6992e88aa8065aa553"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">static bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classmat_1_1op.html#ac76e9c8305254e6f53d75c5d33c4aee9">insert_inplace</a> (<a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; &amp;m1, const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;m2)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a sub matrix into another matrix.  <a href="#ac76e9c8305254e6f53d75c5d33c4aee9"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Perform operations on matrices. </p>
@@ -330,6 +336,125 @@ template&lt;uint32_t N, uint32_t P, uint32_t Q, typename T &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a class="anchor" id="a38863dcf73d30e6992e88aa8065aa553"></a><!-- doxytag: member="mat::op::insert" ref="a38863dcf73d30e6992e88aa8065aa553" args="(const Mat&lt; N, P, T &gt; &amp;m1, const Mat&lt; Q, R, T &gt; &amp;m2, Mat&lt; N, P, T &gt; &amp;res)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classmat_1_1op.html#a38863dcf73d30e6992e88aa8065aa553">mat::op::insert</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>res</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Insert a sub matrix into another matrix. </p>
+<p>Insert matrix m2 into m1, at starting index (I, J) example: ```cpp // Create matrices Mat&lt;10,11&gt; m;</p>
+<p>// Will copy content of m2 into m starting at 5th row and 6th column <a class="el" href="classMat.html">Mat&lt;2,3&gt;</a> m2; Mat&lt;10, 11&gt; res2 = m.insert&lt;5,6&gt;(m2)</p>
+<p>// This will not compile because the indeces are too large and m2 will not fit <a class="el" href="classMat.html">Mat&lt;2,3&gt;</a> m3; Mat&lt;10, 11&gt; res3 = m.insert&lt;8,8&gt;(m3)</p>
+<p>// This will not compile because m4 is too large Mat&lt;100, 100&gt; m4; Mat&lt;10, 11&gt; res4 = m.insert&lt;5,6&gt;(m4) ```  Warning! Can NOT be used for in place operations</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>Matrix in which the other matrix will be inserted </td></tr>
+    <tr><td class="paramname">m2</td><td>Matrix which will be inserted </td></tr>
+    <tr><td class="paramname">res</td><td>Matrix which will be inserted</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">N</td><td>Number of rows of 1st matrix </td></tr>
+    <tr><td class="paramname">P</td><td>Number of columns of 1st matrix </td></tr>
+    <tr><td class="paramname">I</td><td>Row index of the first top left element to be inserted (index in m1) </td></tr>
+    <tr><td class="paramname">J</td><td>Column index of the first top left element to be inserted (index in m1) </td></tr>
+    <tr><td class="paramname">Q</td><td>Number of rows of 2nd matrix </td></tr>
+    <tr><td class="paramname">R</td><td>Number of columns of 2nd matrix </td></tr>
+    <tr><td class="paramname">T</td><td>Type of data</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success Return true if the matrix was inserted correctly, false if it was too big (in this case only the part that fitted was inserted) </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac76e9c8305254e6f53d75c5d33c4aee9"></a><!-- doxytag: member="mat::op::insert_inplace" ref="ac76e9c8305254e6f53d75c5d33c4aee9" args="(Mat&lt; N, P, T &gt; &amp;m1, const Mat&lt; Q, R, T &gt; &amp;m2)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classmat_1_1op.html#ac76e9c8305254e6f53d75c5d33c4aee9">mat::op::insert_inplace</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m2</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Insert a sub matrix into another matrix. </p>
+<p>Insert matrix m2 into m1, at starting index (I, J) example: ```cpp // Create matrices Mat&lt;10,11&gt; m;</p>
+<p>// Will copy content of m2 into m starting at 5th row and 6th column <a class="el" href="classMat.html">Mat&lt;2,3&gt;</a> m2; m.insert_inplace&lt;5,6&gt;(m2)</p>
+<p>// This will not compile because the indeces are too large and m3 will not fit <a class="el" href="classMat.html">Mat&lt;2,3&gt;</a> m3; m.insert_inplace&lt;8,8&gt;(m3)</p>
+<p>// This will not compile because m4 is too large Mat&lt;100, 100&gt; m4; m.insert_inplace&lt;5,6&gt;(m4) ```</p>
+<p>Warning! Can NOT be used for in place operations</p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m1</td><td>Matrix in which the other matrix will be inserted </td></tr>
+    <tr><td class="paramname">m2</td><td>Matrix which will be inserted</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">N</td><td>Number of rows of 1st matrix </td></tr>
+    <tr><td class="paramname">P</td><td>Number of columns of 1st matrix </td></tr>
+    <tr><td class="paramname">I</td><td>Row index of the first top left element to be inserted (index in m1) </td></tr>
+    <tr><td class="paramname">J</td><td>Column index of the first top left element to be inserted (index in m1) </td></tr>
+    <tr><td class="paramname">Q</td><td>Number of rows of 2nd matrix </td></tr>
+    <tr><td class="paramname">R</td><td>Number of columns of 2nd matrix </td></tr>
+    <tr><td class="paramname">T</td><td>Type of data</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success Return true if the matrix was inserted correctly, false if it was too big (in this case only the part that fitted was inserted)</dd></dl>
+<p>TODO General matrix inversion using Gauss-Jordan reduction </p>
 
 </div>
 </div>
@@ -829,7 +954,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 09:16:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 13 2016 15:08:33 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

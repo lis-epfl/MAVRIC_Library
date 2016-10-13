@@ -101,7 +101,7 @@ This is the complete list of members for <a class="el" href="classLEQuad__droned
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#acdc4072d2bc5f84b926e017f95dfde28">hud</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#a39b6ed7cd474426f78bcb04db59e60a2">imu</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init</b>(void) (defined in <a class="el" href="classLEQuad__dronedome.html">LEQuad_dronedome</a>)</td><td><a class="el" href="classLEQuad__dronedome.html">LEQuad_dronedome</a></td><td><code> [inline, virtual]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>init_attitude_estimation</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>init_ahrs</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_barometer</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_communication</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_data_logging</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
@@ -109,13 +109,15 @@ This is the complete list of members for <a class="el" href="classLEQuad__droned
   <tr bgcolor="#f0f0f0"><td><b>init_ground_control</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_hud</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_imu</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>init_ins</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_main_task</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_navigation</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>init_position_estimation</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_servos</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_sonar</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_stabilisers</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>init_state</b>(void) (defined in <a class="el" href="classLEQuad.html">LEQuad</a>)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected, virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classLEQuad.html#a56b5a27d205e133bde7e041d2bd832f0">ins_</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classLEQuad.html#a78a9275df54fdd35b8a4ed093943c933">ins_kf</a></td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td><code> [protected]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#accaeed2b2f5626b45848455163998481">LEQuad</a>(Imu &amp;imu, Barometer &amp;barometer, Gps &amp;gps, Sonar &amp;sonar, Serial &amp;serial_mavlink, Satellite &amp;satellite, State_display &amp;state_display, File &amp;file_flash, Battery &amp;battery, Servo &amp;servo_0, Servo &amp;servo_1, Servo &amp;servo_2, Servo &amp;servo_3, Servo &amp;servo_4, Servo &amp;servo_5, Servo &amp;servo_6, Servo &amp;servo_7, File &amp;file1, File &amp;file2, const conf_t &amp;config=default_config())</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad__dronedome.html#a83f8b00518b8a1f5e7f00668e431ef5d">LEQuad_dronedome</a>(Imu &amp;imu, Barometer &amp;barometer, Gps &amp;gps, Sonar &amp;sonar, Serial &amp;serial_mavlink, Satellite &amp;satellite, State_display &amp;state_display, File &amp;file_flash, Battery &amp;battery, Servo &amp;servo_0, Servo &amp;servo_1, Servo &amp;servo_2, Servo &amp;servo_3, Servo &amp;servo_4, Servo &amp;servo_5, Servo &amp;servo_6, Servo &amp;servo_7, File &amp;file1, File &amp;file2, LEQuad::conf_t config=LEQuad_dronedome::default_config())</td><td><a class="el" href="classLEQuad__dronedome.html">LEQuad_dronedome</a></td><td><code> [inline]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classLEQuad.html#acc67075f90c55b09726bef35c0313cdf">loop</a>(void)</td><td><a class="el" href="classLEQuad.html">LEQuad</a></td><td></td></tr>
@@ -168,7 +170,7 @@ This is the complete list of members for <a class="el" href="classLEQuad__droned
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 09:16:40 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 13 2016 15:08:33 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

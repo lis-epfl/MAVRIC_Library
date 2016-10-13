@@ -82,12 +82,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a>  </div>
   <div class="headertitle">
 <div class="title">INS_kf Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="INS_kf" --><!-- doxytag: inherits="Kalman&lt; 8, 3, 3 &gt;,INS" -->
+<!-- doxytag: class="INS_kf" --><!-- doxytag: inherits="Kalman&lt; 11, 3, 3 &gt;,INS" -->
 <p>Altitude estimator.  
  <a href="classINS__kf.html#details">More...</a></p>
 
@@ -97,14 +99,14 @@ Inheritance diagram for INS_kf:</div>
 <div class="dyncontent">
 <div class="center"><img src="classINS__kf__inherit__graph.png" border="0" usemap="#INS__kf_inherit__map" alt="Inheritance graph"/></div>
 <map name="INS__kf_inherit__map" id="INS__kf_inherit__map">
-<area shape="rect" id="node2" href="classKalman.html" title="{Kalman\&lt; 8, 3, 3 \&gt;\n|# x_\l# P_\l# F_\l# Q_\l# H_\l# R_\l# B_\l# S_\l# I_\l# K_\l# y_\l|+ Kalman()\l+ Kalman()\l+ x()\l+ P()\l+ predict()\l+ predict()\l+ update()\l+ update()\l}" alt="" coords="5,6,131,386"/><area shape="rect" id="node4" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="155,84,293,308"/></map>
+<area shape="rect" id="node2" href="classKalman.html" title="{Kalman\&lt; 11, 3, 3 \&gt;\n|# x_\l# P_\l# F_\l# Q_\l# H_\l# R_\l# B_\l# S_\l# I_\l# K_\l# y_\l|+ Kalman()\l+ Kalman()\l+ x()\l+ P()\l+ predict()\l+ predict()\l+ update()\l+ update()\l}" alt="" coords="5,6,139,386"/><area shape="rect" id="node4" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="163,84,301,308"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for INS_kf:</div>
 <div class="dyncontent">
 <div class="center"><img src="classINS__kf__coll__graph.png" border="0" usemap="#INS__kf_coll__map" alt="Collaboration graph"/></div>
 <map name="INS__kf_coll__map" id="INS__kf_coll__map">
-<area shape="rect" id="node2" href="classKalman.html" title="{Kalman\&lt; 8, 3, 3 \&gt;\n|# x_\l# P_\l# F_\l# Q_\l# H_\l# R_\l# B_\l# S_\l# I_\l# K_\l# y_\l|+ Kalman()\l+ Kalman()\l+ x()\l+ P()\l+ predict()\l+ predict()\l+ update()\l+ update()\l}" alt="" coords="388,382,513,762"/><area shape="rect" id="node4" href="classMat.html" title="{Mat\&lt; m, n \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="5,5,112,264"/><area shape="rect" id="node6" href="classMat.html" title="{Mat\&lt; m, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="136,5,243,264"/><area shape="rect" id="node8" href="classMat.html" title="{Mat\&lt; m, m \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="267,5,373,264"/><area shape="rect" id="node10" href="classMat.html" title="{Mat\&lt; n, p \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="397,5,504,264"/><area shape="rect" id="node12" href="classMat.html" title="{Mat\&lt; n, n \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="528,5,635,264"/><area shape="rect" id="node14" href="classMat.html" title="{Mat\&lt; n, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="659,5,765,264"/><area shape="rect" id="node16" href="classMat.html" title="{Mat\&lt; n, m \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 30 more...}" alt="" coords="789,5,896,264"/><area shape="rect" id="node18" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="537,460,676,684"/></map>
+<area shape="rect" id="node2" href="classKalman.html" title="{Kalman\&lt; 11, 3, 3 \&gt;\n|# x_\l# P_\l# F_\l# Q_\l# H_\l# R_\l# B_\l# S_\l# I_\l# K_\l# y_\l|+ Kalman()\l+ Kalman()\l+ x()\l+ P()\l+ predict()\l+ predict()\l+ update()\l+ update()\l}" alt="" coords="440,382,573,762"/><area shape="rect" id="node4" href="classMat.html" title="{Mat\&lt; m, n \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 32 more...}" alt="" coords="5,5,112,264"/><area shape="rect" id="node6" href="classMat.html" title="{Mat\&lt; m, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 32 more...}" alt="" coords="136,5,243,264"/><area shape="rect" id="node8" href="classMat.html" title="{Mat\&lt; m, m \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 32 more...}" alt="" coords="267,5,373,264"/><area shape="rect" id="node10" href="classMat.html" title="{Mat\&lt; n, p \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 32 more...}" alt="" coords="397,5,504,264"/><area shape="rect" id="node12" href="classMat.html" title="{Mat\&lt; n, n \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 32 more...}" alt="" coords="528,5,635,264"/><area shape="rect" id="node14" href="classMat.html" title="{Mat\&lt; n, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 32 more...}" alt="" coords="659,5,765,264"/><area shape="rect" id="node16" href="classMat.html" title="{Mat\&lt; n, m \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 32 more...}" alt="" coords="789,5,896,264"/><area shape="rect" id="node18" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="668,460,807,684"/><area shape="rect" id="node20" href="structINS__kf_1_1conf__t.html" title="Configuration structure." alt="" coords="941,443,1075,701"/><area shape="rect" id="node22" href="structglobal__position__t.html" title="Global position structure." alt="" coords="927,75,1044,195"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classINS__kf-members.html">List of all members.</a></p>
@@ -115,8 +117,8 @@ Classes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration structure.  <a href="structINS__kf_1_1conf__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a569130c553b741888771ee4a45294ea4"></a><!-- doxytag: member="INS_kf::INS_kf" ref="a569130c553b741888771ee4a45294ea4" args="(const Gps &amp;gps, const Barometer &amp;barometer, const Sonar &amp;sonar, const Px4flow_i2c &amp;flow, const ahrs_t &amp;ahrs, const conf_t config=default_config())" -->
-&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__kf.html#a569130c553b741888771ee4a45294ea4">INS_kf</a> (const <a class="el" href="classGps.html">Gps</a> &amp;gps, const <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, const <a class="el" href="classSonar.html">Sonar</a> &amp;sonar, const <a class="el" href="classPx4flow__i2c.html">Px4flow_i2c</a> &amp;flow, const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, const <a class="el" href="structINS__kf_1_1conf__t.html">conf_t</a> config=<a class="el" href="classINS__kf.html#add15ae16d0dcff2d247771728a9c84b3">default_config</a>())</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7aa98f4da68147900231a5937ca1b5ba"></a><!-- doxytag: member="INS_kf::INS_kf" ref="a7aa98f4da68147900231a5937ca1b5ba" args="(State &amp;state, const Gps &amp;gps, const Barometer &amp;barometer, const Sonar &amp;sonar, const ahrs_t &amp;ahrs, const conf_t config=default_config())" -->
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__kf.html#a7aa98f4da68147900231a5937ca1b5ba">INS_kf</a> (<a class="el" href="classState.html">State</a> &amp;state, const <a class="el" href="classGps.html">Gps</a> &amp;gps, const <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, const <a class="el" href="classSonar.html">Sonar</a> &amp;sonar, const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, const <a class="el" href="structINS__kf_1_1conf__t.html">conf_t</a> config=<a class="el" href="classINS__kf.html#add15ae16d0dcff2d247771728a9c84b3">default_config</a>())</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function.  <a href="#a8ddaeecb2d2c100fddaa0de9dfb06967"></a><br/></td></tr>
@@ -130,37 +132,64 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Absolute altitude above sea level in meters (&gt;=0)  <a href="#ab8eaaae0714f6ce078495a2b3c8cabee"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__kf.html#a4a6f11345110e1f34c27cda5a20254ed">is_healthy</a> (<a class="el" href="classINS.html#ac9fe239752c8cce15ed745015b0a29a2">INS::healthy_t</a> type) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates which estimate can be trusted.  <a href="#a4a6f11345110e1f34c27cda5a20254ed"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abd61a51acfa3669dbc28fe865ed1491c"></a><!-- doxytag: member="INS_kf::init" ref="abd61a51acfa3669dbc28fe865ed1491c" args="(void)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__kf.html#abd61a51acfa3669dbc28fe865ed1491c">init</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize/reset the kalman filter. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add15ae16d0dcff2d247771728a9c84b3"></a><!-- doxytag: member="INS_kf::default_config" ref="add15ae16d0dcff2d247771728a9c84b3" args="(void)" -->
 static <a class="el" href="structINS__kf_1_1conf__t.html">INS_kf::conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__kf.html#add15ae16d0dcff2d247771728a9c84b3">default_config</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration structure. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aca3058181d7e10d581883f53a47abaec"></a><!-- doxytag: member="INS_kf::config_" ref="aca3058181d7e10d581883f53a47abaec" args="" -->
+<a class="el" href="structINS__kf_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__kf.html#aca3058181d7e10d581883f53a47abaec">config_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration (public, to be used as onboard param) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6b8ad67dac801cb855c572668679ade9"></a><!-- doxytag: member="INS_kf::init_flag" ref="a6b8ad67dac801cb855c572668679ade9" args="" -->
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__kf.html#a6b8ad67dac801cb855c572668679ade9">init_flag</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag used to force initialization by telemetry (0 no init, otherwise init) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5bf7cafe8c2ec650708492a35e41771a"></a><!-- doxytag: member="INS_kf::gps_global" ref="a5bf7cafe8c2ec650708492a35e41771a" args="" -->
+<a class="el" href="structglobal__position__t.html">global_position_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gps_global</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf981716320e1c6b9da66ce4aa6aa953"></a><!-- doxytag: member="INS_kf::gps_local" ref="aaf981716320e1c6b9da66ce4aa6aa953" args="" -->
+local_position_t&#160;</td><td class="memItemRight" valign="bottom"><b>gps_local</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a43893ad1b682db2a644ff6d3f9a4de5d"></a><!-- doxytag: member="INS_kf::ori" ref="a43893ad1b682db2a644ff6d3f9a4de5d" args="" -->
+<a class="el" href="structglobal__position__t.html">global_position_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>ori</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae95345ffc7bd446e42aba29e4a4bb7fd"></a><!-- doxytag: member="INS_kf::gps_velocity" ref="ae95345ffc7bd446e42aba29e4a4bb7fd" args="" -->
+std::array&lt; float, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gps_velocity</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c96a77eb105efc21e8a622acfe0d324"></a><!-- doxytag: member="INS_kf::z_baro" ref="a8c96a77eb105efc21e8a622acfe0d324" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><b>z_baro</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a66ba5c6bafdd01e1b1d4a10d1b9886dd"></a><!-- doxytag: member="INS_kf::z_sonar" ref="a66ba5c6bafdd01e1b1d4a10d1b9886dd" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><b>z_sonar</b></td></tr>
+<tr><td colspan="2"><h2><a name="friends"></a>
+Friends</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a817cb93c687f099e630d34a015041132"></a><!-- doxytag: member="INS_kf::ins_telemetry_send" ref="a817cb93c687f099e630d34a015041132" args="(const INS_kf *ins, const Mavlink_stream *mavlink_stream, mavlink_message_t *msg)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>ins_telemetry_send</b> (const <a class="el" href="classINS__kf.html">INS_kf</a> *ins, const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> *mavlink_stream, mavlink_message_t *msg)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Altitude estimator. </p>
 <ul>
-<li>state vector X (n=8): X = [ x_ned, y_ned, z_ned, z_ground_abs, vx, vy, vz, bias_baro ]</li>
+<li>state vector X (n=11): X = [ x_ned, y_ned, z_ned, z_ground_ned, vx, vy, vz, bias_accx, bias_accy, bias_accz bias_baro ]</li>
 </ul>
 <ul>
-<li>model A = [ 1, 0, 0, 0, dt, 0, 0, 0 ] // pos integrated with vel [ 0, 1, 0, 0, 0, dt, 0, 0 ] // pos integrated with vel [ 0, 0, 1, 0, 0, 0, dt, 0 ] // pos integrated with vel [ 0, 0, 0, 1, 0, 0, 0, 0 ] // cst ground alt [ 0, 0, 0, 0, 1, 0, 0, 0 ] // cst vel [ 0, 0, 0, 0, 0, 1, 0, 0 ] // cst vel [ 0, 0, 0, 0, 0, 0, 1, 0 ] // cst vel [ 0, 0, 0, 0, 0, 0, 0, 1 ] // cst baro bias</li>
+<li>model A = [ 1, 0, 0, 0, dt, 0, 0, -(1/2)*alpha_x*(dt^2), -(1/2)*beta_x*(dt^2), -(1/2)*gamma_x*(dt^2), 0 ] // Pos x integrated with vel and inclue acc biases in global ref [ 0, 1, 0, 0, 0, dt, 0, -(1/2)*alpha_y*(dt^2), -(1/2)*beta_y*(dt^2), -(1/2)*gamma_y*(dt^2), 0 ] // Pos y integrated with vel and inclue acc biases in global ref [ 0, 0, 1, 0, 0, 0, dt, -(1/2)*alpha_z*(dt^2), -(1/2)*beta_z*(dt^2), -(1/2)*gamma_z*(dt^2), 0 ] // Pos z integrated with vel and inclue acc biases in global ref [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ] // Ground alt (cst) [ 0, 0, 0, 0, 1, 0, 0, -alpha_x*dt, -beta_x*dt, -gamma_x*dt, 0 ] // Vel x include acc bias in global ref [ 0, 0, 0, 0, 0, 1, 0, -alpha_y*dt, -beta_y*dt, -gamma_y*dt, 0 ] // Vel y include acc bias in global ref [ 0, 0, 0, 0, 0, 0, 1, -alpha_z*dt, -beta_z*dt, -gamma_z*dt, 0 ] // Vel z include acc bias in global ref [ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 ] // Acc x bias (cst) [ 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 ] // Acc y bias (cst) [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 ] // Acc z bias (cst) [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 ] // baro bias (cst) with: alpha_x = q0^2 + q1^2 - q2^2 - q3^2 (using attitude quaternion q = (q0, q1, q2, q3)') beta_x = 2*(-q0*q3 + q1*q2) gamma_x = 2*(q0*q2 + q1*q3) alpha_y = 2*(q0*q3 + q1*q2) beta_y = q0^2 - q1^2 + q2^2 - q3^2 gamma_y = 2*(-q0*q1 + q2*q3) alpha_z = 2*(-q0*q2 + q1*q3) beta_z = 2*(q0*q1 + q2*q3) gamma_z = q0^2 - q1^2 - q2^2 - q3^2</li>
 </ul>
 <ul>
-<li>input u (n=3): u = [ ax, ay, az ]</li>
+<li>input u (p=3): u = [ ax, ay, az ] // Accelerations in body frame</li>
 </ul>
 <ul>
-<li>input model B = [ (dt^2)/2, 0, 0, ] [ 0, (dt^2)/2, 0, ] [ 0, 0, (dt^2)/2, ] [ 0, 0, 0, ] [dt, 0, 0, ] [ 0, dt, 0, ] [ 0, 0, dt, ] [ 0, 0, 0 ]</li>
+<li>input model B = [ (1/2)*alpha_x*(dt^2), (1/2)*beta_x*(dt^2), (1/2)*gamma_x*(dt^2) ] [ (1/2)*alpha_y*(dt^2), (1/2)*beta_y*(dt^2), (1/2)*gamma_y*(dt^2) ] [ (1/2)*alpha_z*(dt^2), (1/2)*beta_z*(dt^2), (1/2)*gamma_z*(dt^2) ] [ 0, 0, 0 ] [ alpha_x*dt, beta_x*dt, gamma_x*dt ] [ alpha_y*dt, beta_y*dt, gamma_y*dt ] [ alpha_z*dt, beta_z*dt, gamma_z*dt ] [ 0, 0, 0 ] [ 0, 0, 0 ] [ 0, 0, 0 ] [ 0, 0, 0 ]</li>
 </ul>
 <ul>
-<li>measurement 1 (gps) : z1 = [ x_ned, y_ned, z_abs ] H1 = [ 1, 0, 0, 0, 0, 0, 0, 0 ] [ 0, 1, 0, 0, 0, 0, 0, 0 ] [ 0, 0, 0, 1, 0, 0, 0, 0 ]</li>
+<li>measurement 1 (gps) : z1 = [ x_ned, y_ned, z_ned ] H1 = [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] [ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ] [ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 ]</li>
 </ul>
 <ul>
-<li>measurement 2 (gps) : z2 = [ vx, vy, vz ] H2 = [ 0, 0, 0, 0, 1, 0, 0, 0 ] [ 0, 0, 0, 0, 0, 1, 0, 0 ] [ 0, 0, 0, 0, 0, 0, 1, 0 ]</li>
+<li>measurement 2 (gps) : z2 = [ vx, vy, vz ] H2 = [ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 ] [ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ] [ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 ]</li>
 </ul>
 <ul>
-<li>measurement 3 (baro): z3 = [ z_abs + bias_baro ] H3 = [ 0, 0, 0, 1, 0, 0, 0, 1 ]</li>
+<li>measurement 3 (baro): z3 = [ -z_ned - bias_baro ] H3 = [ 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1 ]</li>
 </ul>
 <ul>
-<li>measurement 4 (sonar): z4 = [ -z_ned ] H4 = [ 0, 0, -1, 0, 0, 0, 0, 0 ] </li>
+<li>measurement 4 (sonar): z4 = [ -z_ned + z_ground_ned ] H4 = [ 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0 ] </li>
 </ul>
 </div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="ab8eaaae0714f6ce078495a2b3c8cabee"></a><!-- doxytag: member="INS_kf::absolute_altitude" ref="ab8eaaae0714f6ce078495a2b3c8cabee" args="(void) const " -->
@@ -182,6 +211,15 @@ static <a class="el" href="structINS__kf_1_1conf__t.html">INS_kf::conf_t</a>&#16
 <dl class="return"><dt><b>Returns:</b></dt><dd>altitude </dd></dl>
 
 <p>Implements <a class="el" href="classINS.html#af8a125150d36bd77f1253a700d627af7">INS</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classINS__kf_ab8eaaae0714f6ce078495a2b3c8cabee_cgraph.png" border="0" usemap="#classINS__kf_ab8eaaae0714f6ce078495a2b3c8cabee_cgraph" alt=""/></div>
+<map name="classINS__kf_ab8eaaae0714f6ce078495a2b3c8cabee_cgraph" id="classINS__kf_ab8eaaae0714f6ce078495a2b3c8cabee_cgraph">
+<area shape="rect" id="node3" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="225,5,308,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -216,7 +254,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classINS__kf_a4a6f11345110e1f34c27cda5a20254ed_cgraph.png" border="0" usemap="#classINS__kf_a4a6f11345110e1f34c27cda5a20254ed_cgraph" alt=""/></div>
 <map name="classINS__kf_a4a6f11345110e1f34c27cda5a20254ed_cgraph" id="classINS__kf_a4a6f11345110e1f34c27cda5a20254ed_cgraph">
-<area shape="rect" id="node3" href="classGps.html#a9925b04afe52bf7211cd631415606620" title="Indicates whether fix are received." alt="" coords="223,5,289,35"/><area shape="rect" id="node5" href="classPx4flow__i2c.html#a08460836c10b0f71090686429a2531ba" title="Indicates whether the measurements can be trusted." alt="" coords="185,59,327,88"/><area shape="rect" id="node7" href="classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="203,112,309,141"/></map>
+<area shape="rect" id="node3" href="classGps.html#a9925b04afe52bf7211cd631415606620" title="Indicates whether fix are received." alt="" coords="204,5,271,35"/><area shape="rect" id="node5" href="classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="184,59,291,88"/></map>
 </div>
 </p>
 
@@ -291,7 +329,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classINS__kf_a8ddaeecb2d2c100fddaa0de9dfb06967_cgraph.png" border="0" usemap="#classINS__kf_a8ddaeecb2d2c100fddaa0de9dfb06967_cgraph" alt=""/></div>
 <map name="classINS__kf_a8ddaeecb2d2c100fddaa0de9dfb06967_cgraph" id="classINS__kf_a8ddaeecb2d2c100fddaa0de9dfb06967_cgraph">
-<area shape="rect" id="node3" href="classKalman.html#a2bf20288d9e7050857ace6a70b173802" title="Predict next state without input." alt="" coords="177,5,351,35"/><area shape="rect" id="node5" href="classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="216,59,312,88"/><area shape="rect" id="node7" href="classGps.html#a26c405755338e7761cfb7fda26498aeb" title="Get last position update time in microseconds." alt="" coords="167,112,361,141"/><area shape="rect" id="node9" href="classGps.html#a3b136ce3a3b20774501a8e41098d4a6f" title="Get position in global frame." alt="" coords="205,165,323,195"/><area shape="rect" id="node11" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="223,219,305,248"/><area shape="rect" id="node13" href="classGps.html#a0d21e79e013389d93bc6b192ffdb6fc2" title="Get last velocity update time in microseconds." alt="" coords="167,272,361,301"/><area shape="rect" id="node15" href="classGps.html#a885eefcd896cea4d02d8ffdd7a5c9da0" title="Get velocity in local frame in m/s." alt="" coords="208,325,320,355"/><area shape="rect" id="node17" href="classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="211,379,317,408"/><area shape="rect" id="node19" href="classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="188,432,340,461"/><area shape="rect" id="node21" href="classSonar.html#a61279df583287149aa78c72fc4750e15" title="Get latest distance measure." alt="" coords="208,485,320,515"/><area shape="rect" id="node23" href="classPx4flow__i2c.html#a9492c325db9c5b6685ba0e5935303684" title="Get last update time in seconds." alt="" coords="173,539,355,568"/><area shape="rect" id="node25" href="classPx4flow__i2c.html#a31c1212f2d5d0f25e5ebe91c12006d68" title="Get velocity in y direction." alt="" coords="184,592,344,621"/><area shape="rect" id="node27" href="classPx4flow__i2c.html#aa94acefcb33b998427fddc9efc0b0d7f" title="Get velocity in x direction." alt="" coords="184,645,344,675"/><area shape="rect" id="node29" href="classPx4flow__i2c.html#ad40e731550a95232b7c20d4bdd92957e" title="Get ground distance." alt="" coords="167,699,361,728"/></map>
+<area shape="rect" id="node3" href="classINS__kf.html#abd61a51acfa3669dbc28fe865ed1491c" title="Initialize/reset the kalman filter." alt="" coords="219,5,307,35"/><area shape="rect" id="node5" href="classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="215,59,311,88"/><area shape="rect" id="node7" href="classGps.html#a26c405755338e7761cfb7fda26498aeb" title="Get last position update time in microseconds." alt="" coords="165,112,360,141"/><area shape="rect" id="node9" href="classGps.html#a3b136ce3a3b20774501a8e41098d4a6f" title="Get position in global frame." alt="" coords="204,165,321,195"/><area shape="rect" id="node11" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="221,219,304,248"/><area shape="rect" id="node13" href="classGps.html#a0d21e79e013389d93bc6b192ffdb6fc2" title="Get last velocity update time in microseconds." alt="" coords="165,272,360,301"/><area shape="rect" id="node15" href="classGps.html#a885eefcd896cea4d02d8ffdd7a5c9da0" title="Get velocity in local frame in m/s." alt="" coords="207,325,319,355"/><area shape="rect" id="node17" href="classBarometer.html#a0c9353d8be366f2f5eec9550ba837af3" title="Get the last update time in microseconds." alt="" coords="173,379,352,408"/><area shape="rect" id="node19" href="classBarometer.html#a9ab9518641d292bd91435fda9595e620" title="Get the altitude in meters above sea level (not filtered)" alt="" coords="173,432,352,461"/><area shape="rect" id="node21" href="classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="187,485,339,515"/><area shape="rect" id="node23" href="classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="205,539,320,568"/><area shape="rect" id="node27" href="classSonar.html#a61279df583287149aa78c72fc4750e15" title="Get latest distance measure." alt="" coords="207,592,319,621"/><area shape="rect" id="node29" href="classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="209,645,316,675"/><area shape="rect" id="node25" href="classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="408,539,555,568"/></map>
 </div>
 </p>
 
@@ -341,7 +379,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 09:16:40 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 13 2016 15:08:33 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -149,35 +149,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00097"></a>00097     <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#ab3c38d1f210a0cfaae0246c25b315f45" title="Get the altitude in meters above sea level.">altitude_gf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span> = 0;
 <a name="l00098"></a>00098 
 <a name="l00099"></a>00099 
-<a name="l00107"></a>00107     <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a198bd738afc5212b93dabdeaa4e63080" title="Get the vertical speed in meters/second.">vertical_speed_lf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span> = 0;
+<a name="l00107"></a>00107     <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a9ab9518641d292bd91435fda9595e620" title="Get the altitude in meters above sea level (not filtered)">altitude_gf_raw</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span> = 0;
 <a name="l00108"></a>00108 
 <a name="l00109"></a>00109 
-<a name="l00115"></a>00115     <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a6e087f5af86788588039474cc8c1d389" title="Get sensor temperature.">temperature</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span> = 0;
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117 
-<a name="l00126"></a>00126     <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#aebdd61556f8c58cb8a11c527896b1569" title="Compute altitude above sea level from pressure.">altitude_from_pressure</a>(<span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a811cffa4af95a25948ab5244118bd981" title="Return the pressure (in Pa)">pressure</a>, <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#af663650061973eaae325530bdd079dad" title="Get the pressure at sea level  The pressure at sea level is used to compute altitude from pressure...">pressure_at_sea_level</a> = <a class="code" href="classBarometer.html#af663650061973eaae325530bdd079dad" title="Get the pressure at sea level  The pressure at sea level is used to compute altitude from pressure...">pressure_at_sea_level</a>());
-<a name="l00127"></a>00127 
+<a name="l00117"></a>00117     <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a198bd738afc5212b93dabdeaa4e63080" title="Get the vertical speed in meters/second.">vertical_speed_lf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span> = 0;
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119 
+<a name="l00127"></a>00127     <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#afaf12a611482bf849b3c1ca2d7ebbd11" title="Get the vertical speed in meters/second (not filtered)">vertical_speed_lf_raw</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span> = 0;
 <a name="l00128"></a>00128 
-<a name="l00137"></a>00137     <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a9c0adda16abb188f353cca394dc96c53" title="Compute pressure at sea level from pressure and altitude.">compute_pressure_at_sea_level</a>(<span class="keywordtype">float</span> pressure, <span class="keywordtype">float</span> altitude);
-<a name="l00138"></a>00138 
-<a name="l00139"></a>00139 
-<a name="l00146"></a>00146     <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#af663650061973eaae325530bdd079dad" title="Get the pressure at sea level  The pressure at sea level is used to compute altitude from pressure...">pressure_at_sea_level</a>(<span class="keywordtype">void</span>);
+<a name="l00129"></a>00129 
+<a name="l00135"></a>00135     <span class="keyword">virtual</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a6e087f5af86788588039474cc8c1d389" title="Get sensor temperature.">temperature</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span> = 0;
+<a name="l00136"></a>00136 
+<a name="l00137"></a>00137 
+<a name="l00146"></a>00146     <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#aebdd61556f8c58cb8a11c527896b1569" title="Compute altitude above sea level from pressure.">altitude_from_pressure</a>(<span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a811cffa4af95a25948ab5244118bd981" title="Return the pressure (in Pa)">pressure</a>, <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#af663650061973eaae325530bdd079dad" title="Get the pressure at sea level  The pressure at sea level is used to compute altitude from pressure...">pressure_at_sea_level</a> = <a class="code" href="classBarometer.html#af663650061973eaae325530bdd079dad" title="Get the pressure at sea level  The pressure at sea level is used to compute altitude from pressure...">pressure_at_sea_level</a>());
 <a name="l00147"></a>00147 
 <a name="l00148"></a>00148 
-<a name="l00149"></a>00149 <span class="keyword">protected</span>:
-<a name="l00156"></a>00156     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classBarometer.html#ac69a5f330393973a87a175949a03ae9f" title="Update the pressure at sea level  The pressure at sea level is used to compute altitude from pressure...">set_pressure_at_sea_level</a>(<span class="keywordtype">float</span> pressure_at_sea_level);
-<a name="l00157"></a>00157 
+<a name="l00157"></a>00157     <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#a9c0adda16abb188f353cca394dc96c53" title="Compute pressure at sea level from pressure and altitude.">compute_pressure_at_sea_level</a>(<span class="keywordtype">float</span> pressure, <span class="keywordtype">float</span> altitude);
 <a name="l00158"></a>00158 
-<a name="l00159"></a>00159 <span class="keyword">private</span>:
-<a name="l00160"></a>00160     <span class="keyword">static</span> <span class="keywordtype">float</span> pressure_at_sea_level_;    
-<a name="l00161"></a>00161 };
-<a name="l00162"></a>00162 
-<a name="l00166"></a>00166 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> task_barometer_update(<a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>* barometer)
-<a name="l00167"></a>00167 {
-<a name="l00168"></a>00168     <span class="keywordflow">return</span> barometer-&gt;<a class="code" href="classBarometer.html#aba694236e900ea8bdd06aae6eda2e62d" title="Main update function  Reads new values from sensor.">update</a>();
-<a name="l00169"></a>00169 };
-<a name="l00170"></a>00170 
-<a name="l00171"></a>00171 <span class="preprocessor">#endif </span><span class="comment">/* BAROMETER_HPP_ */</span>
+<a name="l00159"></a>00159 
+<a name="l00166"></a>00166     <span class="keyword">static</span> <span class="keywordtype">float</span> <a class="code" href="classBarometer.html#af663650061973eaae325530bdd079dad" title="Get the pressure at sea level  The pressure at sea level is used to compute altitude from pressure...">pressure_at_sea_level</a>(<span class="keywordtype">void</span>);
+<a name="l00167"></a>00167 
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 <span class="keyword">protected</span>:
+<a name="l00176"></a>00176     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classBarometer.html#ac69a5f330393973a87a175949a03ae9f" title="Update the pressure at sea level  The pressure at sea level is used to compute altitude from pressure...">set_pressure_at_sea_level</a>(<span class="keywordtype">float</span> pressure_at_sea_level);
+<a name="l00177"></a>00177 
+<a name="l00178"></a>00178 
+<a name="l00179"></a>00179 <span class="keyword">private</span>:
+<a name="l00180"></a>00180     <span class="keyword">static</span> <span class="keywordtype">float</span> pressure_at_sea_level_;    
+<a name="l00181"></a>00181 };
+<a name="l00182"></a>00182 
+<a name="l00186"></a>00186 <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> task_barometer_update(<a class="code" href="classBarometer.html" title="Interface class for barometers.">Barometer</a>* barometer)
+<a name="l00187"></a>00187 {
+<a name="l00188"></a>00188     <span class="keywordflow">return</span> barometer-&gt;<a class="code" href="classBarometer.html#aba694236e900ea8bdd06aae6eda2e62d" title="Main update function  Reads new values from sensor.">update</a>();
+<a name="l00189"></a>00189 };
+<a name="l00190"></a>00190 
+<a name="l00191"></a>00191 <span class="preprocessor">#endif </span><span class="comment">/* BAROMETER_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -196,7 +202,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 09:16:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 13 2016 15:08:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

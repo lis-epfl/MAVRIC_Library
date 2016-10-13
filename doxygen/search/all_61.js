@@ -65,6 +65,7 @@ var searchData=
   ['altitude_5festimation_5fconf_5ft',['altitude_estimation_conf_t',['../structaltitude__estimation__conf__t.html',1,'']]],
   ['altitude_5ffrom_5fpressure',['altitude_from_pressure',['../classBarometer.html#aebdd61556f8c58cb8a11c527896b1569',1,'Barometer']]],
   ['altitude_5fgf',['altitude_gf',['../classBarometer.html#ab3c38d1f210a0cfaae0246c25b315f45',1,'Barometer::altitude_gf()'],['../classBarometer__BMP085.html#ac2c1e5ae5e80c530b6d9020c43edad76',1,'Barometer_BMP085::altitude_gf()'],['../classBarometer__MS5611.html#ad216194b69c06890e4b72466e2dee1b9',1,'Barometer_MS5611::altitude_gf()'],['../classBarometer__sim.html#aaa88190e8ef8a6d9b8ddf9f06c6f03fb',1,'Barometer_sim::altitude_gf()']]],
+  ['altitude_5fgf_5fraw',['altitude_gf_raw',['../classBarometer.html#a9ab9518641d292bd91435fda9595e620',1,'Barometer::altitude_gf_raw()'],['../classBarometer__BMP085.html#a6304b8982ed4123e0cf174617bae8218',1,'Barometer_BMP085::altitude_gf_raw()'],['../classBarometer__MS5611.html#a2fdc34032c8887604fdd908c6ec97424',1,'Barometer_MS5611::altitude_gf_raw()'],['../classBarometer__sim.html#a9dad1e705cbb44fa162eabb8e45eab97',1,'Barometer_sim::altitude_gf_raw()']]],
   ['altitude_5fmsl',['altitude_msl',['../structubx__nav__pos__llh__t.html#a42a2ac8104b8b9859ef03075424b6d13',1,'ubx_nav_pos_llh_t']]],
   ['altitude_5fstatus',['altitude_status',['../structgps__t.html#a735c356c141ada40ddf7d35e7bed28b7',1,'gps_t']]],
   ['altitude_5ft',['altitude_t',['../structaltitude__t.html',1,'']]],

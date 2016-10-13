@@ -150,23 +150,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00103"></a>00103     <span class="keywordtype">float</span> <a class="code" href="classBarometer__sim.html#aaa88190e8ef8a6d9b8ddf9f06c6f03fb" title="Get the altitude in meters above sea level.">altitude_gf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00104"></a>00104 
 <a name="l00105"></a>00105 
-<a name="l00113"></a>00113     <span class="keywordtype">float</span> <a class="code" href="classBarometer__sim.html#a2f6ef944062a2ddf455bcee9a9386e90" title="Get the vertical speed in meters/second.">vertical_speed_lf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00113"></a>00113     <span class="keywordtype">float</span> <a class="code" href="classBarometer__sim.html#a9dad1e705cbb44fa162eabb8e45eab97" title="Get the altitude in meters above sea level (not filtered)">altitude_gf_raw</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00114"></a>00114 
 <a name="l00115"></a>00115 
-<a name="l00121"></a>00121     <span class="keywordtype">float</span> <a class="code" href="classBarometer__sim.html#a70fb6c0fdde48cbf3d5b0ada1041112b" title="Get sensor temperature.">temperature</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00122"></a>00122 
-<a name="l00123"></a>00123 <span class="keyword">private</span>:
-<a name="l00124"></a>00124     <a class="code" href="classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model.">Dynamic_model</a>&amp;  dynamic_model_; 
+<a name="l00123"></a>00123     <span class="keywordtype">float</span> <a class="code" href="classBarometer__sim.html#a2f6ef944062a2ddf455bcee9a9386e90" title="Get the vertical speed in meters/second.">vertical_speed_lf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00124"></a>00124 
 <a name="l00125"></a>00125 
-<a name="l00126"></a>00126     uint64_t last_update_us_;   
-<a name="l00127"></a>00127     <span class="keywordtype">float</span> pressure_;            
-<a name="l00128"></a>00128     <span class="keywordtype">float</span> temperature_;         
-<a name="l00129"></a>00129     <span class="keywordtype">float</span> altitude_gf_;         
-<a name="l00130"></a>00130     <span class="keywordtype">float</span> altitude_filtered;    
-<a name="l00131"></a>00131     <span class="keywordtype">float</span> speed_lf_;            
-<a name="l00132"></a>00132 };
-<a name="l00133"></a>00133 
-<a name="l00134"></a>00134 <span class="preprocessor">#endif </span><span class="comment">/* BAROMETER_SIM_HPP_ */</span>
+<a name="l00133"></a>00133     <span class="keywordtype">float</span> <a class="code" href="classBarometer__sim.html#ac73b2e0b9033518049b936b0c30ebe0c" title="Get the vertical speed in meters/second (not filtered)">vertical_speed_lf_raw</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135 
+<a name="l00141"></a>00141     <span class="keywordtype">float</span> <a class="code" href="classBarometer__sim.html#a70fb6c0fdde48cbf3d5b0ada1041112b" title="Get sensor temperature.">temperature</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00142"></a>00142 
+<a name="l00143"></a>00143 <span class="keyword">private</span>:
+<a name="l00144"></a>00144     <a class="code" href="classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model.">Dynamic_model</a>&amp;  dynamic_model_; 
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146     uint64_t last_update_us_;   
+<a name="l00147"></a>00147     <span class="keywordtype">float</span> pressure_;            
+<a name="l00148"></a>00148     <span class="keywordtype">float</span> temperature_;         
+<a name="l00149"></a>00149     <span class="keywordtype">float</span> altitude_gf_;         
+<a name="l00150"></a>00150     <span class="keywordtype">float</span> altitude_filtered;    
+<a name="l00151"></a>00151     <span class="keywordtype">float</span> speed_lf_;            
+<a name="l00152"></a>00152 };
+<a name="l00153"></a>00153 
+<a name="l00154"></a>00154 <span class="preprocessor">#endif </span><span class="comment">/* BAROMETER_SIM_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -185,7 +191,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 09:16:40 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 13 2016 15:08:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -20,6 +20,7 @@ var searchData=
   ['line_5fdirection',['line_direction',['../structdubin__t.html#a53d375531336f607ab33aa11858dcdb9',1,'dubin_t']]],
   ['linear_5facc',['linear_acc',['../structahrs__t.html#aa0ecddf93d45bcecd956a0196326de72',1,'ahrs_t']]],
   ['load_5fmask',['load_mask',['../structubx__cfg__cfg__t.html#ac479907f07f496fbc9325f9c3d181576',1,'ubx_cfg_cfg_t']]],
+  ['local_5fposition',['local_position',['../classPosition__estimation.html#a8f0c9743ec556fa02af892f3888315a4',1,'Position_estimation']]],
   ['log_5fdata',['log_data',['../structData__logging_1_1conf__t.html#a1c656085606d2d466dcf6d3da1baa9e1',1,'Data_logging::conf_t']]],
   ['loiter_5ftime',['loiter_time',['../structwaypoint__local__struct__t.html#af4b1775a89d44e0230bf6e5af3c1d27f',1,'waypoint_local_struct_t']]],
   ['longitude',['longitude',['../structubx__nav__pos__llh__t.html#add75ad81a71d1afee4db2c031b8a073e',1,'ubx_nav_pos_llh_t::longitude()'],['../structgps__t.html#ad705360e2144f17add716374c5d0395f',1,'gps_t::longitude()'],['../structglobal__position__t.html#a2f4e4f669c4a6dadda04d953eaa1c6b8',1,'global_position_t::longitude()']]],

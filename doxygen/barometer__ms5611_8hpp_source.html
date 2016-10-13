@@ -201,57 +201,63 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00171"></a>00171     <span class="keywordtype">float</span> <a class="code" href="classBarometer__MS5611.html#ad216194b69c06890e4b72466e2dee1b9" title="Get the altitude in meters above sea level.">altitude_gf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00172"></a>00172 
 <a name="l00173"></a>00173 
-<a name="l00181"></a>00181     <span class="keywordtype">float</span> <a class="code" href="classBarometer__MS5611.html#a621e378f2d0d35c8963d6e7c7f00fbad" title="Get the vertical speed in meters/second.">vertical_speed_lf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00181"></a>00181     <span class="keywordtype">float</span> <a class="code" href="classBarometer__MS5611.html#a2fdc34032c8887604fdd908c6ec97424" title="Get the unfiltered altitude in meters above sea level.">altitude_gf_raw</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
 <a name="l00182"></a>00182 
 <a name="l00183"></a>00183 
-<a name="l00189"></a>00189     <span class="keywordtype">float</span> <a class="code" href="classBarometer__MS5611.html#aad65bbe4723644f0f0f213bca6b50579" title="Get sensor temperature.">temperature</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00190"></a>00190 
-<a name="l00191"></a>00191 
-<a name="l00192"></a>00192 <span class="keyword">private</span>:
-<a name="l00193"></a>00193     <a class="code" href="classI2c.html">I2c</a>&amp;        i2c_;                   
-<a name="l00194"></a>00194     <a class="code" href="structBarometer__MS5611_1_1conf__t.html" title="Configuration structure.">conf_t</a>      config_;                
-<a name="l00195"></a>00195     <a class="code" href="classBarometer__MS5611.html#a6c6a20257f8295c8054a1ad43176961a" title="Sensor state.">state_t</a>     state_;                 
-<a name="l00196"></a>00196 
-<a name="l00197"></a>00197     <a class="code" href="structBarometer__MS5611_1_1calibration__data__t.html">calibration_data_t</a>  calib_;          
-<a name="l00198"></a>00198     uint8_t             i2c_address;     
-<a name="l00199"></a>00199 
-<a name="l00200"></a>00200     uint32_t time_sampling_start_ms_;   
-<a name="l00201"></a>00201 
-<a name="l00202"></a>00202     <span class="keywordtype">float</span>       last_state_update_us_;  
-<a name="l00203"></a>00203     <span class="keywordtype">float</span>       last_update_us_;        
-<a name="l00204"></a>00204     <span class="keywordtype">float</span>       dt_s_;                  
-<a name="l00205"></a>00205     <span class="keywordtype">float</span>   pressure_;              
-<a name="l00206"></a>00206     <span class="keywordtype">float</span>   temperature_;           
-<a name="l00207"></a>00207     <span class="keywordtype">float</span>   altitude_gf_;           
-<a name="l00208"></a>00208     <span class="keywordtype">float</span>   speed_lf_;              
-<a name="l00209"></a>00209 
-<a name="l00210"></a>00210     <span class="keywordtype">float</span>       last_altitudes_[3];     
+<a name="l00191"></a>00191     <span class="keywordtype">float</span> <a class="code" href="classBarometer__MS5611.html#a621e378f2d0d35c8963d6e7c7f00fbad" title="Get the vertical speed in meters/second.">vertical_speed_lf</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00192"></a>00192 
+<a name="l00193"></a>00193 
+<a name="l00201"></a>00201     <span class="keywordtype">float</span> <a class="code" href="classBarometer__MS5611.html#a296c5682a224c0ce74083cc800a9680b" title="Get the unfiltered vertical speed in meters/second.">vertical_speed_lf_raw</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00202"></a>00202 
+<a name="l00203"></a>00203 
+<a name="l00209"></a>00209     <span class="keywordtype">float</span> <a class="code" href="classBarometer__MS5611.html#aad65bbe4723644f0f0f213bca6b50579" title="Get sensor temperature.">temperature</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
+<a name="l00210"></a>00210 
 <a name="l00211"></a>00211 
-<a name="l00217"></a>00217     <span class="keywordtype">bool</span> start_temperature_sampling(<span class="keywordtype">void</span>);
-<a name="l00218"></a>00218 
-<a name="l00224"></a>00224     <span class="keywordtype">bool</span> read_temperature(<span class="keywordtype">void</span>);
-<a name="l00225"></a>00225 
-<a name="l00231"></a>00231     <span class="keywordtype">bool</span> start_pressure_sampling(<span class="keywordtype">void</span>);
-<a name="l00232"></a>00232 
-<a name="l00238"></a>00238     <span class="keywordtype">bool</span> read_pressure(<span class="keywordtype">void</span>);
-<a name="l00239"></a>00239 };
-<a name="l00240"></a>00240 
-<a name="l00241"></a>00241 
-<a name="l00247"></a><a class="code" href="classBarometer__MS5611.html#aa0e7c3c9502c0884b08c5d649982d94f">00247</a> <a class="code" href="structBarometer__MS5611_1_1conf__t.html" title="Configuration structure.">Barometer_MS5611::conf_t</a> <a class="code" href="classBarometer__MS5611.html#aa0e7c3c9502c0884b08c5d649982d94f" title="Default Configuration.">Barometer_MS5611::default_config</a>(<span class="keywordtype">void</span>)
-<a name="l00248"></a>00248 {
-<a name="l00249"></a>00249     <a class="code" href="structBarometer__MS5611_1_1conf__t.html" title="Configuration structure.">Barometer_MS5611::conf_t</a> config = {};
-<a name="l00250"></a>00250 
-<a name="l00251"></a>00251     config.address                         = <a class="code" href="classBarometer__MS5611.html#ac829c5645412309cc010814e087eddc3a52cb7501d4577c9cbbe7b46ef40587b5" title="I2C address when CSB pin is connected to GND.">address_t::ADDR_CSBLOW</a>;
-<a name="l00252"></a>00252     <span class="comment">// config.oversampling_ratio_pressure     = oversampling_ratio_t::OSR_4096;</span>
-<a name="l00253"></a>00253     <span class="comment">// config.oversampling_ratio_temperature  = oversampling_ratio_t::OSR_4096;</span>
-<a name="l00254"></a>00254 
-<a name="l00255"></a>00255     config.oversampling_ratio_pressure     = <a class="code" href="classBarometer__MS5611.html#af9c83133eecb987ccfc0f0c7e179f199ad4fab34fac1653c014829aa94f41bc92" title="256 : resolution 0.065mbar, sampling time 0.54ms">oversampling_ratio_t::OSR_256</a>;
-<a name="l00256"></a>00256     config.oversampling_ratio_temperature  = <a class="code" href="classBarometer__MS5611.html#af9c83133eecb987ccfc0f0c7e179f199ad4fab34fac1653c014829aa94f41bc92" title="256 : resolution 0.065mbar, sampling time 0.54ms">oversampling_ratio_t::OSR_256</a>;
-<a name="l00257"></a>00257 
-<a name="l00258"></a>00258     <span class="keywordflow">return</span> config;
-<a name="l00259"></a>00259 }
+<a name="l00212"></a>00212 <span class="keyword">private</span>:
+<a name="l00213"></a>00213     <a class="code" href="classI2c.html">I2c</a>&amp;        i2c_;                   
+<a name="l00214"></a>00214     <a class="code" href="structBarometer__MS5611_1_1conf__t.html" title="Configuration structure.">conf_t</a>      config_;                
+<a name="l00215"></a>00215     <a class="code" href="classBarometer__MS5611.html#a6c6a20257f8295c8054a1ad43176961a" title="Sensor state.">state_t</a>     state_;                 
+<a name="l00216"></a>00216 
+<a name="l00217"></a>00217     <a class="code" href="structBarometer__MS5611_1_1calibration__data__t.html">calibration_data_t</a>  calib_;          
+<a name="l00218"></a>00218     uint8_t             i2c_address;     
+<a name="l00219"></a>00219 
+<a name="l00220"></a>00220     uint32_t time_sampling_start_ms_;   
+<a name="l00221"></a>00221 
+<a name="l00222"></a>00222     <span class="keywordtype">float</span>       last_state_update_us_;  
+<a name="l00223"></a>00223     <span class="keywordtype">float</span>       last_update_us_;        
+<a name="l00224"></a>00224     <span class="keywordtype">float</span>       dt_s_;                  
+<a name="l00225"></a>00225     <span class="keywordtype">float</span>   pressure_;              
+<a name="l00226"></a>00226     <span class="keywordtype">float</span>   temperature_;           
+<a name="l00227"></a>00227     <span class="keywordtype">float</span>   altitude_gf_;           
+<a name="l00228"></a>00228     <span class="keywordtype">float</span>   speed_lf_;              
+<a name="l00229"></a>00229 
+<a name="l00230"></a>00230     <span class="keywordtype">float</span>       last_altitudes_[3];     
+<a name="l00231"></a>00231 
+<a name="l00237"></a>00237     <span class="keywordtype">bool</span> start_temperature_sampling(<span class="keywordtype">void</span>);
+<a name="l00238"></a>00238 
+<a name="l00244"></a>00244     <span class="keywordtype">bool</span> read_temperature(<span class="keywordtype">void</span>);
+<a name="l00245"></a>00245 
+<a name="l00251"></a>00251     <span class="keywordtype">bool</span> start_pressure_sampling(<span class="keywordtype">void</span>);
+<a name="l00252"></a>00252 
+<a name="l00258"></a>00258     <span class="keywordtype">bool</span> read_pressure(<span class="keywordtype">void</span>);
+<a name="l00259"></a>00259 };
 <a name="l00260"></a>00260 
-<a name="l00261"></a>00261 <span class="preprocessor">#endif </span><span class="comment">/* BMP085_HPP_ */</span>
+<a name="l00261"></a>00261 
+<a name="l00267"></a><a class="code" href="classBarometer__MS5611.html#aa0e7c3c9502c0884b08c5d649982d94f">00267</a> <a class="code" href="structBarometer__MS5611_1_1conf__t.html" title="Configuration structure.">Barometer_MS5611::conf_t</a> <a class="code" href="classBarometer__MS5611.html#aa0e7c3c9502c0884b08c5d649982d94f" title="Default Configuration.">Barometer_MS5611::default_config</a>(<span class="keywordtype">void</span>)
+<a name="l00268"></a>00268 {
+<a name="l00269"></a>00269     <a class="code" href="structBarometer__MS5611_1_1conf__t.html" title="Configuration structure.">Barometer_MS5611::conf_t</a> config = {};
+<a name="l00270"></a>00270 
+<a name="l00271"></a>00271     config.address                         = <a class="code" href="classBarometer__MS5611.html#ac829c5645412309cc010814e087eddc3a52cb7501d4577c9cbbe7b46ef40587b5" title="I2C address when CSB pin is connected to GND.">address_t::ADDR_CSBLOW</a>;
+<a name="l00272"></a>00272     <span class="comment">// config.oversampling_ratio_pressure     = oversampling_ratio_t::OSR_4096;</span>
+<a name="l00273"></a>00273     <span class="comment">// config.oversampling_ratio_temperature  = oversampling_ratio_t::OSR_4096;</span>
+<a name="l00274"></a>00274 
+<a name="l00275"></a>00275     config.oversampling_ratio_pressure     = <a class="code" href="classBarometer__MS5611.html#af9c83133eecb987ccfc0f0c7e179f199ad4fab34fac1653c014829aa94f41bc92" title="256 : resolution 0.065mbar, sampling time 0.54ms">oversampling_ratio_t::OSR_256</a>;
+<a name="l00276"></a>00276     config.oversampling_ratio_temperature  = <a class="code" href="classBarometer__MS5611.html#af9c83133eecb987ccfc0f0c7e179f199ad4fab34fac1653c014829aa94f41bc92" title="256 : resolution 0.065mbar, sampling time 0.54ms">oversampling_ratio_t::OSR_256</a>;
+<a name="l00277"></a>00277 
+<a name="l00278"></a>00278     <span class="keywordflow">return</span> config;
+<a name="l00279"></a>00279 }
+<a name="l00280"></a>00280 
+<a name="l00281"></a>00281 <span class="preprocessor">#endif </span><span class="comment">/* BMP085_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -270,7 +276,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 09:16:39 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 13 2016 15:08:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

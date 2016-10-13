@@ -180,6 +180,12 @@ T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (co
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get inversed matrix.  <a href="#a546d0408c1b17f00a7176dcd3e6c10ed"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMat.html">Mat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMat.html#a44ec1c22b000eaf908df319d85eb211e">inv</a> (bool &amp;success) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get inversed matrix.  <a href="#a44ec1c22b000eaf908df319d85eb211e"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;uint32_t I, uint32_t J, uint32_t Q, uint32_t R&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classMat.html">Mat</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classMat.html#aa36f21f36d3c755434c49b39652101dd">insert</a> (const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;m) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a matrix into this one.  <a href="#aa36f21f36d3c755434c49b39652101dd"></a><br/></td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;uint32_t I, uint32_t J, uint32_t Q, uint32_t R&gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classMat.html#ac715327d75ee8129295e0c5f814a56a2">insert_inplace</a> (const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;m)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a matrix into this one.  <a href="#ac715327d75ee8129295e0c5f814a56a2"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMat.html#a587cc7480e4fe018f43e60b8bc20265e">mat::op</a></td></tr>
@@ -574,6 +580,78 @@ template&lt;uint32_t N, uint32_t P, typename T &gt; </div>
 
 <p>Return index in internal data array from row/column. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>index </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa36f21f36d3c755434c49b39652101dd"></a><!-- doxytag: member="Mat::insert" ref="aa36f21f36d3c755434c49b39652101dd" args="(const Mat&lt; Q, R, T &gt; &amp;m) const " -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N, uint32_t P, typename T&gt; </div>
+<div class="memtemplate">
+template&lt;uint32_t I, uint32_t J, uint32_t Q, uint32_t R&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt;::<a class="el" href="classMat.html#aa36f21f36d3c755434c49b39652101dd">insert</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Insert a matrix into this one. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>Matrix to be inserted </td></tr>
+    <tr><td class="paramname">i</td><td>Row index of the first element where the matrix should be inserted </td></tr>
+    <tr><td class="paramname">j</td><td>Column index of the first element where the matrix should be inserted </td></tr>
+    <tr><td class="paramname">success</td><td>False if the inserted matrix was to big to fit (in this case, the elements that fits are still inserted)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>New matrix </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac715327d75ee8129295e0c5f814a56a2"></a><!-- doxytag: member="Mat::insert_inplace" ref="ac715327d75ee8129295e0c5f814a56a2" args="(const Mat&lt; Q, R, T &gt; &amp;m)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N, uint32_t P, typename T&gt; </div>
+<div class="memtemplate">
+template&lt;uint32_t I, uint32_t J, uint32_t Q, uint32_t R&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt;::<a class="el" href="classMat.html#ac715327d75ee8129295e0c5f814a56a2">insert_inplace</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Insert a matrix into this one. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>Matrix to be inserted</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">I</td><td>Row index of the first top left element to be inserted (index in m1) </td></tr>
+    <tr><td class="paramname">J</td><td>Column index of the first top left element to be inserted (index in m1) </td></tr>
+    <tr><td class="paramname">Q</td><td>Number of rows of 2nd matrix </td></tr>
+    <tr><td class="paramname">R</td><td>Number of columns of 2nd matrix</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>result </dd></dl>
 
 </div>
 </div>
@@ -1695,7 +1773,7 @@ template&lt;typename TT &gt; </div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 09:16:40 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 13 2016 15:08:33 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

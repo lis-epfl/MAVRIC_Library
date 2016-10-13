@@ -97,7 +97,7 @@ Inheritance diagram for Barometer:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBarometer__inherit__graph.png" border="0" usemap="#Barometer_inherit__map" alt="Inheritance graph"/></div>
 <map name="Barometer_inherit__map" id="Barometer_inherit__map">
-<area shape="rect" id="node3" href="classBarometer__BMP085.html" title="Driver for the BMP085 barometer." alt="" coords="5,365,181,589"/><area shape="rect" id="node5" href="classBarometer__MS5611.html" title="Driver for the MS5611 barometer." alt="" coords="205,331,515,624"/><area shape="rect" id="node7" href="classBarometer__sim.html" title="Simulation for barometers." alt="" coords="539,374,677,581"/></map>
+<area shape="rect" id="node3" href="classBarometer__BMP085.html" title="Driver for the BMP085 barometer." alt="" coords="5,400,181,659"/><area shape="rect" id="node5" href="classBarometer__MS5611.html" title="Driver for the MS5611 barometer." alt="" coords="205,365,515,693"/><area shape="rect" id="node7" href="classBarometer__sim.html" title="Simulation for barometers." alt="" coords="539,409,707,650"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classBarometer-members.html">List of all members.</a></p>
@@ -116,8 +116,12 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the pressure (in Pa)  <a href="#a811cffa4af95a25948ab5244118bd981"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#ab3c38d1f210a0cfaae0246c25b315f45">altitude_gf</a> (void) const =0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the altitude in meters above sea level.  <a href="#ab3c38d1f210a0cfaae0246c25b315f45"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a9ab9518641d292bd91435fda9595e620">altitude_gf_raw</a> (void) const =0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the altitude in meters above sea level (not filtered)  <a href="#a9ab9518641d292bd91435fda9595e620"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a198bd738afc5212b93dabdeaa4e63080">vertical_speed_lf</a> (void) const =0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the vertical speed in meters/second.  <a href="#a198bd738afc5212b93dabdeaa4e63080"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#afaf12a611482bf849b3c1ca2d7ebbd11">vertical_speed_lf_raw</a> (void) const =0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the vertical speed in meters/second (not filtered)  <a href="#afaf12a611482bf849b3c1ca2d7ebbd11"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBarometer.html#a6e087f5af86788588039474cc8c1d389">temperature</a> (void) const =0</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Get sensor temperature.  <a href="#a6e087f5af86788588039474cc8c1d389"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
@@ -205,6 +209,38 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="a9ab9518641d292bd91435fda9595e620"></a><!-- doxytag: member="Barometer::altitude_gf_raw" ref="a9ab9518641d292bd91435fda9595e620" args="(void) const =0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual float <a class="el" href="classBarometer.html#a9ab9518641d292bd91435fda9595e620">Barometer::altitude_gf_raw</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get the altitude in meters above sea level (not filtered) </p>
+<p>Global frame: (&gt;0 means upward)</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
+
+<p>Implemented in <a class="el" href="classBarometer__MS5611.html#a2fdc34032c8887604fdd908c6ec97424">Barometer_MS5611</a>, <a class="el" href="classBarometer__BMP085.html#a6304b8982ed4123e0cf174617bae8218">Barometer_BMP085</a>, and <a class="el" href="classBarometer__sim.html#a9dad1e705cbb44fa162eabb8e45eab97">Barometer_sim</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBarometer_a9ab9518641d292bd91435fda9595e620_icgraph.png" border="0" usemap="#classBarometer_a9ab9518641d292bd91435fda9595e620_icgraph" alt=""/></div>
+<map name="classBarometer_a9ab9518641d292bd91435fda9595e620_icgraph" id="classBarometer_a9ab9518641d292bd91435fda9595e620_icgraph">
+<area shape="rect" id="node3" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="233,5,343,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
 <a class="anchor" id="a9c0adda16abb188f353cca394dc96c53"></a><!-- doxytag: member="Barometer::compute_pressure_at_sea_level" ref="a9c0adda16abb188f353cca394dc96c53" args="(float pressure, float altitude)" -->
 <div class="memitem">
 <div class="memproto">
@@ -283,6 +319,15 @@ Here is the caller graph for this function:</div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
 <p>Implemented in <a class="el" href="classBarometer__MS5611.html#abd7d6accbf0db0150bf79c576958e6f2">Barometer_MS5611</a>, <a class="el" href="classBarometer__BMP085.html#a1b2834fbedb1d3ec3801bbc9c20ae18b">Barometer_BMP085</a>, and <a class="el" href="classBarometer__sim.html#aa5d7e0035b8063274fb077d341201f07">Barometer_sim</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBarometer_a0c9353d8be366f2f5eec9550ba837af3_icgraph.png" border="0" usemap="#classBarometer_a0c9353d8be366f2f5eec9550ba837af3_icgraph" alt=""/></div>
+<map name="classBarometer_a0c9353d8be366f2f5eec9550ba837af3_icgraph" id="classBarometer_a0c9353d8be366f2f5eec9550ba837af3_icgraph">
+<area shape="rect" id="node3" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="233,5,343,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -443,6 +488,29 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="afaf12a611482bf849b3c1ca2d7ebbd11"></a><!-- doxytag: member="Barometer::vertical_speed_lf_raw" ref="afaf12a611482bf849b3c1ca2d7ebbd11" args="(void) const =0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual float <a class="el" href="classBarometer.html#afaf12a611482bf849b3c1ca2d7ebbd11">Barometer::vertical_speed_lf_raw</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get the vertical speed in meters/second (not filtered) </p>
+<p>NED frame: (&gt;0 means downward)</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
+
+<p>Implemented in <a class="el" href="classBarometer__MS5611.html#a296c5682a224c0ce74083cc800a9680b">Barometer_MS5611</a>, <a class="el" href="classBarometer__BMP085.html#a9f1ebb88778e10ab4b6af04faceeeced">Barometer_BMP085</a>, and <a class="el" href="classBarometer__sim.html#ac73b2e0b9033518049b936b0c30ebe0c">Barometer_sim</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/drivers/<a class="el" href="barometer_8hpp_source.html">barometer.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/drivers/barometer.cpp</li>
@@ -465,7 +533,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 09:16:40 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Oct 13 2016 15:08:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

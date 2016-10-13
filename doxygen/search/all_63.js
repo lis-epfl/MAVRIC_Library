@@ -104,7 +104,7 @@ var searchData=
   ['conf_5fusb_2eh',['conf_usb.h',['../conf__usb_8h.html',1,'']]],
   ['config',['config',['../structservos__mix__wing__t.html#ac992d1349e5c75d0551f749aa13bbc89',1,'servos_mix_wing_t::config()'],['../structubx__cfg__itfm__t.html#a544b3d77d3234a5a9f2e253fe9221f94',1,'ubx_cfg_itfm_t::config()'],['../structPwm__chibios_1_1conf__t.html#acfc3e1ce599031758ff11cf6e09edda2',1,'Pwm_chibios::conf_t::config()']]],
   ['config2',['config2',['../structubx__cfg__itfm__t.html#a31e1221e8f20bbb48977ca68a0b51e1e',1,'ubx_cfg_itfm_t']]],
-  ['config_5f',['config_',['../classLEQuad.html#a6ac149d4dbcc27c9afeae31da7776a24',1,'LEQuad::config_()'],['../classAhrs__ekf.html#a4397f86d12af33aff0cf75f2bbf2e493',1,'Ahrs_ekf::config_()'],['../classAhrs__ekf__mocap.html#a8fd4644f73f813bcf55637580f1926cf',1,'Ahrs_ekf_mocap::config_()']]],
+  ['config_5f',['config_',['../classLEQuad.html#a6ac149d4dbcc27c9afeae31da7776a24',1,'LEQuad::config_()'],['../classAhrs__ekf.html#a4397f86d12af33aff0cf75f2bbf2e493',1,'Ahrs_ekf::config_()'],['../classAhrs__ekf__mocap.html#a8fd4644f73f813bcf55637580f1926cf',1,'Ahrs_ekf_mocap::config_()'],['../classINS__kf.html#aca3058181d7e10d581883f53a47abaec',1,'INS_kf::config_()']]],
   ['config_5floop_5fcount',['config_loop_count',['../structgps__t.html#a9e3703e92346430a6af6b68466349662',1,'gps_t']]],
   ['config_5fnav_5fmsg_5fcount',['config_nav_msg_count',['../structgps__t.html#a41ef74d49b843d935ebca133d0fe4025',1,'gps_t']]],
   ['config_5fsleepmgr_5fenable',['CONFIG_SLEEPMGR_ENABLE',['../conf__sleepmgr_8h.html#ad8e649a9d53092c580960f2f9886ee98',1,'conf_sleepmgr.h']]],
