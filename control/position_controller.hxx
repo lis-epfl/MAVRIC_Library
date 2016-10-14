@@ -100,7 +100,7 @@ bool Position_controller<TVelocity_controller>::set_xyposition_zvel_command(cons
     ctrl_mode_ = ctrl_mode_t::POS_XY_VEL_Z;
     /* set this as input cascade level */
     TVelocity_controller::cascade_command_ = &position_command_;
-    return true;   
+    return true;
 }
 
 
@@ -153,16 +153,19 @@ typename TVelocity_controller::vel_command_t Position_controller<TVelocity_contr
     attitude_yaw.rpy[1] = 0.0f;
     attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
     q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
-	
+
 	typename TVelocity_controller::vel_command_t velocity_command;
     velocity_command.vel[X] = goal_dir[X] * v_desired;
     velocity_command.vel[Y] = goal_dir[Y] * v_desired;
     velocity_command.vel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
 
     // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
-    float rel_heading;
-    rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - coord_conventions_get_yaw(ahrs_.qe));
-    velocity_command.yaw = kp_yaw_ * rel_heading;
+    if (goal_distance > 5.0f)
+    {
+        float yaw_current = coord_conventions_get_yaw(ahrs_.qe);
+        float rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - yaw_current);
+        velocity_command.yaw = yaw_current + kp_yaw_ * rel_heading;
+    }
 
 	return velocity_command;
 }

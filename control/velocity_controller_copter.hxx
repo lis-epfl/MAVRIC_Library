@@ -114,18 +114,14 @@ void Velocity_controller_copter<TAttitude_controller>::update_cascade(const vel_
 template<class TAttitude_controller>
 typename TAttitude_controller::att_command_t Velocity_controller_copter<TAttitude_controller>::calc_attitude_command(const vel_command_t& vel_command)
 {
-    // Get rotation quaternion from local frame to semilocal frame
-    float rpy_semilocal[3] = {0.0f, 0.0f, coord_conventions_get_yaw(ahrs_.qe)};
-    quat_t q_semilocal = coord_conventions_quaternion_from_rpy(rpy_semilocal);
-
-    // Compute current velocity
+    // Get current velocity
     std::array<float,3> velocity = ins_.velocity_lf();
 
     // Compute errors in local NED frame
     float errors[3];
-    errors[X] = velocity_command_.vel[X] - velocity[X];
-    errors[Y] = velocity_command_.vel[Y] - velocity[Y];
-    errors[Z] = velocity_command_.vel[Z] - velocity[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
+    errors[X] = vel_command.vel[X] - velocity[X];
+    errors[Y] = vel_command.vel[Y] - velocity[Y];
+    errors[Z] = vel_command.vel[Z] - velocity[Z];       // WARNING: it was multiplied by (-1) in stabilisation_copter.c
 
     // Update PID
     float thrust_vector[3];
@@ -133,21 +129,20 @@ typename TAttitude_controller::att_command_t Velocity_controller_copter<TAttitud
     thrust_vector[Y] = pid_controller_update(&pid_[Y], errors[Y]);                // should be multiplied by mass
     thrust_vector[Z] = pid_controller_update(&pid_[Z], errors[Z]);                // should be multiplied by mass
 
-    /* transform thrust_vector to semi-local frame */
-    quaternions_rotate_vector(quaternions_inverse(q_semilocal), thrust_vector, thrust_vector);
+    // Desired attitude with yaw facing north
+    quat_t qrollpitch = coord_conventions_quaternion_from_rpy(    maths_clip(thrust_vector[Y], 1),
+                                                                - maths_clip(thrust_vector[X], 1),
+                                                                  0.0f                             );
 
-    // TODO: calc desired yaw
+    // Rotation to face the goal
+    quat_t qyaw = coord_conventions_quaternion_from_rpy( 0.0f,
+                                                          0.0f,
+                                                          velocity_command_.yaw   );
 
-    // Map thrust dir to attitude
+    // Output
     typename TAttitude_controller::att_command_t attitude_command;
-    float rpy[3];
-    rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
-    rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
-    rpy[YAW]   = 0; //UNTOUCHED;
-    attitude_command.att = coord_conventions_quaternion_from_rpy(rpy);
-
-    // Map PID output to thrust
-    attitude_command.thrust  = thrust_hover_point_ - thrust_vector[Z];
+    attitude_command.att    = quaternions_multiply(qrollpitch, qyaw);
+    attitude_command.thrust = thrust_hover_point_ - thrust_vector[Z];
 
     return attitude_command;
 }

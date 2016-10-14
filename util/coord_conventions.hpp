@@ -134,6 +134,7 @@ quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero);
  * \return      Attitude quaternion
  */
 quat_t coord_conventions_quaternion_from_rpy(const float rpy[3]);
+quat_t coord_conventions_quaternion_from_rpy(float roll, float pitch, float yaw);
 
 
 /**

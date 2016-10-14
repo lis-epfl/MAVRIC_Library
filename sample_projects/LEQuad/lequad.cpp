@@ -562,9 +562,6 @@ bool LEQuad::main_task(void)
     ahrs_ekf.update();
     ins_->update();
 
-    /* temporary to deal with relative yaw commands from manual control */
-    float yaw = coord_conventions_get_yaw(cascade_controller_.attitude_command().att);
-
     bool failsafe = false;
 
     // Do control

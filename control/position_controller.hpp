@@ -151,7 +151,7 @@ typename Position_controller<TVelocity_controller>::conf_t Position_controller<T
 {
     conf_t conf;
     conf.max_climb_rate     = 1.0f;
-    conf.kp_yaw             = 0.2f;
+    conf.kp_yaw             = 0.5f;
 
     conf.pid_config.p_gain                  = 0.4f;
     conf.pid_config.clip_min                = 0.0f;
