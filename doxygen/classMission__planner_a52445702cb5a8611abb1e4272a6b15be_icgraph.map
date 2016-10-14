@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold." alt="" coords="344,5,549,35"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="319,59,575,88"/>
+<area shape="rect" id="node7" href="$classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto&#45;takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF." alt="" coords="324,112,569,141"/>
+<area shape="rect" id="node9" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="332,165,561,195"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="343,219,551,248"/>
+<area shape="rect" id="node13" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="624,219,787,248"/>
+</map>

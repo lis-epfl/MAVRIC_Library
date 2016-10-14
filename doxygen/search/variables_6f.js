@@ -4,7 +4,6 @@ var searchData=
   ['of_5fcount',['of_count',['../classFlow.html#a7863ea43464518fd30ee304402be0ea7',1,'Flow']]],
   ['of_5floc',['of_loc',['../classFlow.html#a5f7666054c014a911bd4ca8f694ce987',1,'Flow']]],
   ['on_5ftime',['on_time',['../structubx__cfg__pm__t.html#ad2cd93e453954b80aa08f2ba45be5522',1,'ubx_cfg_pm_t::on_time()'],['../structubx__cfg__pm2__t.html#aa28a87305691aa097474d961f9321c9e',1,'ubx_cfg_pm2_t::on_time()']]],
-  ['one_5fover_5fscaling',['one_over_scaling',['../structNavigation_1_1conf__t.html#a65c691550295fc4f2ae0dd4735e22588',1,'Navigation::conf_t::one_over_scaling()'],['../classNavigation.html#a40ff9fa9408b9f8694657ffe49ffcc0f',1,'Navigation::one_over_scaling()']]],
   ['orientation',['orientation',['../structcurvace__t.html#a5ecffdd9f761ddb86eaa81512911f9b3',1,'curvace_t']]],
   ['orientation_5fbf',['orientation_bf',['../structsonar__i2cxl__conf__t.html#a352bb2169accb4128183d7cbc784f5a2',1,'sonar_i2cxl_conf_t::orientation_bf()'],['../structsonar__sim__conf__t.html#ab3ab14858c0195b0b2370e3ef99b7128',1,'sonar_sim_conf_t::orientation_bf()']]],
   ['origin',['origin',['../structPosition__estimation_1_1conf__t.html#ad5e9611b0650f0b17d45027090fadc41',1,'Position_estimation::conf_t::origin()'],['../structINS__AHRS__groundtruth_1_1conf__t.html#ad921c4a36a9c86fc44ae4df2ea138730',1,'INS_AHRS_groundtruth::conf_t::origin()']]],

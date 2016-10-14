@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__waypoint__handler.html#a23814033f5fbe4c2fc7b94e18ee17f32" title="Gets the current waypoint." alt="" coords="340,105,623,135"/>
+<area shape="rect" id="node17" href="$classMavlink__waypoint__handler.html#ac3647278a7a120112d6910f986be9049" title="Gets the next waypoint if available." alt="" coords="348,159,615,188"/>
+<area shape="rect" id="node19" href="$classMavlink__waypoint__handler.html#a4a87dad6380f894d3fe7967bfcf408b8" title="Returns a waypoint from the list from a specific index." alt="" coords="328,212,635,241"/>
+<area shape="rect" id="node21" href="$classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold." alt="" coords="379,265,584,295"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="683,72,931,101"/>
+<area shape="rect" id="node13" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="703,139,911,168"/>
+<area shape="rect" id="node7" href="$classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="999,5,1255,35"/>
+<area shape="rect" id="node9" href="$classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="979,59,1275,88"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="999,112,1255,141"/>
+<area shape="rect" id="node15" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="1045,165,1208,195"/>
+</map>

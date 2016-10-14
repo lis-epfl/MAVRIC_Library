@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: Velocity_controller_copter Class Reference</title>
+<title>MAV&#39;RIC: Velocity_controller_copter&lt; TAttitude_controller &gt; Class Template Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -81,110 +81,83 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Velocity_controller_copter Class Reference</div>  </div>
+<div class="title">Velocity_controller_copter&lt; TAttitude_controller &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Velocity_controller_copter" -->
+<!-- doxytag: class="Velocity_controller_copter" --><!-- doxytag: inherits="Velocity_controller_I" -->
 <p>Velocity controller for hovering platforms.  
  <a href="classVelocity__controller__copter.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="velocity__controller__copter_8hpp_source.html">velocity_controller_copter.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Inheritance diagram for Velocity_controller_copter&lt; TAttitude_controller &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classVelocity__controller__copter__inherit__graph.png" border="0" usemap="#Velocity__controller__copter_3_01TAttitude__controller_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="Velocity__controller__copter_3_01TAttitude__controller_01_4_inherit__map" id="Velocity__controller__copter_3_01TAttitude__controller_01_4_inherit__map">
+<area shape="rect" id="node2" href="classVelocity__controller__I.html" title="{Velocity_controller_I\n||+ update()\l+ set_velocity_command()\l}" alt="" coords="72,6,248,109"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for Velocity_controller_copter&lt; TAttitude_controller &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classVelocity__controller__copter__coll__graph.png" border="0" usemap="#Velocity__controller__copter_3_01TAttitude__controller_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="Velocity__controller__copter_3_01TAttitude__controller_01_4_coll__map" id="Velocity__controller__copter_3_01TAttitude__controller_01_4_coll__map">
+<area shape="rect" id="node2" href="classVelocity__controller__I.html" title="{Velocity_controller_I\n||+ update()\l+ set_velocity_command()\l}" alt="" coords="72,6,248,109"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classVelocity__controller__copter-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structVelocity__controller__copter_1_1args__t.html">args_t</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity controller constructor arguments.  <a href="structVelocity__controller__copter_1_1args__t.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structVelocity__controller__copter_1_1conf__t.html">conf_t</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Controller configuration.  <a href="structVelocity__controller__copter_1_1conf__t.html#details">More...</a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__copter.html#adbe488f24c0b6cf1829a1388b2a6a445">control_frame_t</a> { <a class="el" href="classVelocity__controller__copter.html#adbe488f24c0b6cf1829a1388b2a6a445aafd1713914c5ccd85bc921cf2f7f5933">VEL_CTRL_LOCAL</a>, 
-<a class="el" href="classVelocity__controller__copter.html#adbe488f24c0b6cf1829a1388b2a6a445a27ca520297f0e634c912c8bc601ccb57">VEL_CTRL_SEMI_LOCAL</a>
- }</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference frame in which control is done.  <a href="classVelocity__controller__copter.html#adbe488f24c0b6cf1829a1388b2a6a445">More...</a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity controller configuration.  <a href="structVelocity__controller__copter_1_1conf__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__copter.html#a2ba583388f9c146e7bc9a6831f6d1598">Velocity_controller_copter</a> (const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;velocity_command, <a class="el" href="structattitude__command__t.html">attitude_command_t</a> &amp;attitude_command, <a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;thrust_command, <a class="el" href="structVelocity__controller__copter_1_1conf__t.html">conf_t</a> config=<a class="el" href="classVelocity__controller__copter.html#ad224948baf1ad774fb4518acce93a90f">default_config</a>())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a2ba583388f9c146e7bc9a6831f6d1598"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__copter.html#ad8e1dae39f82575faa1661f26d87e14c">update</a> (void)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function.  <a href="#ad8e1dae39f82575faa1661f26d87e14c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__copter.html#a8cec52143eac76ddab8946674d1ce583">Velocity_controller_copter</a> (<a class="el" href="structVelocity__controller__copter_1_1args__t.html">args_t</a> args, const <a class="el" href="structVelocity__controller__copter_1_1conf__t.html">conf_t</a> &amp;config=<a class="el" href="classVelocity__controller__copter.html#ad1a5b4cde5a7afd5436d1b8dd7bc9b7c">default_config</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a8cec52143eac76ddab8946674d1ce583"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__copter.html#a530968c7374c8c7f13c5683ef9fe6f2f">update</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function.  <a href="#a530968c7374c8c7f13c5683ef9fe6f2f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__copter.html#a989eba73d8a33a767b44faf219e5d166">set_velocity_command</a> (const <a class="el" href="structVelocity__controller__I_1_1vel__command__t.html">vel_command_t</a> &amp;vel_command)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the velocity command (desired velocity)  <a href="#a989eba73d8a33a767b44faf219e5d166"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structVelocity__controller__copter_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__copter.html#ad224948baf1ad774fb4518acce93a90f">default_config</a> (void)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Configuration.  <a href="#ad224948baf1ad774fb4518acce93a90f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structVelocity__controller__copter_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__copter.html#ad1a5b4cde5a7afd5436d1b8dd7bc9b7c">default_config</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Configuration.  <a href="#ad1a5b4cde5a7afd5436d1b8dd7bc9b7c"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af342ebc63cd0948573d8f6867b9926ba"></a><!-- doxytag: member="Velocity_controller_copter::update_cascade" ref="af342ebc63cd0948573d8f6867b9926ba" args="(const vel_command_t &amp;vel_command)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update_cascade</b> (const <a class="el" href="structVelocity__controller__I_1_1vel__command__t.html">vel_command_t</a> &amp;vel_command)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa83c9249ea52a32e9a20793adc28d345"></a><!-- doxytag: member="Velocity_controller_copter::calc_attitude_command" ref="aa83c9249ea52a32e9a20793adc28d345" args="(const vel_command_t &amp;vel_command)" -->
+TAttitude_controller::att_command_t&#160;</td><td class="memItemRight" valign="bottom"><b>calc_attitude_command</b> (const <a class="el" href="structVelocity__controller__I_1_1vel__command__t.html">vel_command_t</a> &amp;vel_command)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Velocity controller for hovering platforms. </p>
-</div><hr/><h2>Member Enumeration Documentation</h2>
-<a class="anchor" id="adbe488f24c0b6cf1829a1388b2a6a445"></a><!-- doxytag: member="Velocity_controller_copter::control_frame_t" ref="adbe488f24c0b6cf1829a1388b2a6a445" args="" -->
+<div class="textblock"><h3>template&lt;class TAttitude_controller&gt;<br/>
+class Velocity_controller_copter&lt; TAttitude_controller &gt;</h3>
+
+<p>Velocity controller for hovering platforms. </p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a8cec52143eac76ddab8946674d1ce583"></a><!-- doxytag: member="Velocity_controller_copter::Velocity_controller_copter" ref="a8cec52143eac76ddab8946674d1ce583" args="(args_t args, const conf_t &amp;config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class TAttitude_controller &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="classVelocity__controller__copter.html#adbe488f24c0b6cf1829a1388b2a6a445">Velocity_controller_copter::control_frame_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Reference frame in which control is done. </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="adbe488f24c0b6cf1829a1388b2a6a445aafd1713914c5ccd85bc921cf2f7f5933"></a><!-- doxytag: member="VEL_CTRL_LOCAL" ref="adbe488f24c0b6cf1829a1388b2a6a445aafd1713914c5ccd85bc921cf2f7f5933" args="" -->VEL_CTRL_LOCAL</em>&nbsp;</td><td>
-<p>Local frame. </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="adbe488f24c0b6cf1829a1388b2a6a445a27ca520297f0e634c912c8bc601ccb57"></a><!-- doxytag: member="VEL_CTRL_SEMI_LOCAL" ref="adbe488f24c0b6cf1829a1388b2a6a445a27ca520297f0e634c912c8bc601ccb57" args="" -->VEL_CTRL_SEMI_LOCAL</em>&nbsp;</td><td>
-<p>Semi-local frame. </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a2ba583388f9c146e7bc9a6831f6d1598"></a><!-- doxytag: member="Velocity_controller_copter::Velocity_controller_copter" ref="a2ba583388f9c146e7bc9a6831f6d1598" args="(const ahrs_t &amp;ahrs, const INS &amp;ins, const velocity_command_t &amp;velocity_command, attitude_command_t &amp;attitude_command, thrust_command_t &amp;thrust_command, conf_t config=default_config())" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classVelocity__controller__copter.html#a2ba583388f9c146e7bc9a6831f6d1598">Velocity_controller_copter::Velocity_controller_copter</a> </td>
+          <td class="memname"><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>&lt; TAttitude_controller &gt;::<a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>ahrs</em>, </td>
+          <td class="paramtype"><a class="el" href="structVelocity__controller__copter_1_1args__t.html">args_t</a>&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classINS.html">INS</a> &amp;&#160;</td>
-          <td class="paramname"><em>ins</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>velocity_command</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structattitude__command__t.html">attitude_command_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>attitude_command</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>thrust_command</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structVelocity__controller__copter_1_1conf__t.html">conf_t</a>&#160;</td>
-          <td class="paramname"><em>config</em> = <code><a class="el" href="classVelocity__controller__copter.html#ad224948baf1ad774fb4518acce93a90f">default_config</a>()</code>&#160;</td>
+          <td class="paramtype">const <a class="el" href="structVelocity__controller__copter_1_1conf__t.html">conf_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>config</em> = <code><a class="el" href="classVelocity__controller__copter.html#ad1a5b4cde5a7afd5436d1b8dd7bc9b7c">default_config</a>()</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -198,25 +171,32 @@ Static Public Member Functions</h2></td></tr>
 <p>Constructor. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">ahrs</td><td>Estimated attitude </td></tr>
-    <tr><td class="paramname">ins</td><td>Estimated speed and position </td></tr>
-    <tr><td class="paramname">velocity_command</td><td>Velocity command (input) </td></tr>
-    <tr><td class="paramname">attitude_command</td><td>Attitude command (output) </td></tr>
-    <tr><td class="paramname">thrust_command</td><td>Thrust command (output) </td></tr>
+    <tr><td class="paramname">args</td><td>Constructor arguments </td></tr>
     <tr><td class="paramname">config</td><td>Configuration </td></tr>
   </table>
   </dd>
 </dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classVelocity__controller__copter_a8cec52143eac76ddab8946674d1ce583_cgraph.png" border="0" usemap="#classVelocity__controller__copter_a8cec52143eac76ddab8946674d1ce583_cgraph" alt=""/></div>
+<map name="classVelocity__controller__copter_a8cec52143eac76ddab8946674d1ce583_cgraph" id="classVelocity__controller__copter_a8cec52143eac76ddab8946674d1ce583_cgraph">
+<area shape="rect" id="node3" href="classVelocity__controller__copter.html#a989eba73d8a33a767b44faf219e5d166" title="sets the velocity command (desired velocity)" alt="" coords="384,5,699,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ad224948baf1ad774fb4518acce93a90f"></a><!-- doxytag: member="Velocity_controller_copter::default_config" ref="ad224948baf1ad774fb4518acce93a90f" args="(void)" -->
+<a class="anchor" id="ad1a5b4cde5a7afd5436d1b8dd7bc9b7c"></a><!-- doxytag: member="Velocity_controller_copter::default_config" ref="ad1a5b4cde5a7afd5436d1b8dd7bc9b7c" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class TAttitude_controller &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structVelocity__controller__copter_1_1conf__t.html">Velocity_controller_copter::conf_t</a> <a class="el" href="classVelocity__controller__copter.html#ad224948baf1ad774fb4518acce93a90f">Velocity_controller_copter::default_config</a> </td>
+          <td class="memname"><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>&lt; TAttitude_controller &gt;::<a class="el" href="structVelocity__controller__copter_1_1conf__t.html">conf_t</a> <a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>&lt; TAttitude_controller &gt;::<a class="el" href="classVelocity__controller__copter.html#ad1a5b4cde5a7afd5436d1b8dd7bc9b7c">default_config</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -229,18 +209,61 @@ Static Public Member Functions</h2></td></tr>
 <p>Default Configuration. </p>
 <p>/return config </p>
 
+<p>Reimplemented in <a class="el" href="classNavigation__directto.html#a5a2bc2f4d6371803566a2ee75eb604ac">Navigation_directto&lt; Position_controller&lt; Velocity_controller_copter&lt; Attitude_controller&lt; Rate_controller&lt; Servos_mix_quadcopter_diag &gt; &gt; &gt; &gt; &gt;</a>, and <a class="el" href="classPosition__controller.html#a67383438ca115539dbdb3cbd9d4ae784">Position_controller&lt; Velocity_controller_copter&lt; Attitude_controller&lt; Rate_controller&lt; Servos_mix_quadcopter_diag &gt; &gt; &gt; &gt;</a>.</p>
+
 </div>
 </div>
-<a class="anchor" id="ad8e1dae39f82575faa1661f26d87e14c"></a><!-- doxytag: member="Velocity_controller_copter::update" ref="ad8e1dae39f82575faa1661f26d87e14c" args="(void)" -->
+<a class="anchor" id="a989eba73d8a33a767b44faf219e5d166"></a><!-- doxytag: member="Velocity_controller_copter::set_velocity_command" ref="a989eba73d8a33a767b44faf219e5d166" args="(const vel_command_t &amp;vel_command)" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class TAttitude_controller &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classVelocity__controller__copter.html#ad8e1dae39f82575faa1661f26d87e14c">Velocity_controller_copter::update</a> </td>
+          <td class="memname">bool <a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>&lt; TAttitude_controller &gt;::<a class="el" href="classVelocity__controller__copter.html#a989eba73d8a33a767b44faf219e5d166">set_velocity_command</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structVelocity__controller__I_1_1vel__command__t.html">vel_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>command</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sets the velocity command (desired velocity) </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>velocity command indicating desired velocity in local frame</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success whether command was accepted </dd></dl>
+
+<p>Implements <a class="el" href="classVelocity__controller__I.html#a8706be5440402786e3e06ed82a477a58">Velocity_controller_I</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classVelocity__controller__copter_a989eba73d8a33a767b44faf219e5d166_icgraph.png" border="0" usemap="#classVelocity__controller__copter_a989eba73d8a33a767b44faf219e5d166_icgraph" alt=""/></div>
+<map name="classVelocity__controller__copter_a989eba73d8a33a767b44faf219e5d166_icgraph" id="classVelocity__controller__copter_a989eba73d8a33a767b44faf219e5d166_icgraph">
+<area shape="rect" id="node3" href="classVelocity__controller__copter.html#a8cec52143eac76ddab8946674d1ce583" title="Constructor." alt="" coords="368,5,699,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a530968c7374c8c7f13c5683ef9fe6f2f"></a><!-- doxytag: member="Velocity_controller_copter::update" ref="a530968c7374c8c7f13c5683ef9fe6f2f" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TAttitude_controller &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>&lt; TAttitude_controller &gt;::<a class="el" href="classVelocity__controller__copter.html#a530968c7374c8c7f13c5683ef9fe6f2f">update</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -249,20 +272,15 @@ Static Public Member Functions</h2></td></tr>
 <p>Main update function. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
 
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classVelocity__controller__copter_ad8e1dae39f82575faa1661f26d87e14c_cgraph.png" border="0" usemap="#classVelocity__controller__copter_ad8e1dae39f82575faa1661f26d87e14c_cgraph" alt=""/></div>
-<map name="classVelocity__controller__copter_ad8e1dae39f82575faa1661f26d87e14c_cgraph" id="classVelocity__controller__copter_ad8e1dae39f82575faa1661f26d87e14c_cgraph">
-<area shape="rect" id="node3" href="classINS.html#a6be12f73aed4742471ff86bd045f3630" title="Velocity in meters/seconds in NED frame." alt="" coords="272,5,384,35"/></map>
-</div>
-</p>
+<p>Implements <a class="el" href="classVelocity__controller__I.html#a64d3623593b1aada549fa1283a8a4664">Velocity_controller_I</a>.</p>
+
+<p>Reimplemented in <a class="el" href="classPosition__controller.html#a82f9eebcbd1fa20d7fb1cb740b68c3bb">Position_controller&lt; Velocity_controller_copter&lt; Attitude_controller&lt; Rate_controller&lt; Servos_mix_quadcopter_diag &gt; &gt; &gt; &gt;</a>, and <a class="el" href="classNavigation__directto.html#ac0c81d48284c4753191b2547efed53aa">Navigation_directto&lt; Position_controller&lt; Velocity_controller_copter&lt; Attitude_controller&lt; Rate_controller&lt; Servos_mix_quadcopter_diag &gt; &gt; &gt; &gt; &gt;</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="velocity__controller__copter_8hpp_source.html">velocity_controller_copter.hpp</a></li>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/velocity_controller_copter.cpp</li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="velocity__controller__copter_8hxx_source.html">velocity_controller_copter.hxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -282,7 +300,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2016 08:25:18 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 09:24:30 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -4,6 +4,8 @@ var searchData=
   ['barometer_5fbmp085',['Barometer_BMP085',['../classBarometer__BMP085.html',1,'']]],
   ['barometer_5fms5611',['Barometer_MS5611',['../classBarometer__MS5611.html',1,'']]],
   ['barometer_5fsim',['Barometer_sim',['../classBarometer__sim.html',1,'']]],
+  ['base_5fcascade_5fcontroller',['Base_cascade_controller',['../classBase__cascade__controller.html',1,'']]],
+  ['base_5fcommand_5ft',['base_command_t',['../structbase__command__t.html',1,'']]],
   ['battery',['Battery',['../classBattery.html',1,'']]],
   ['battery_5fconf_5ft',['battery_conf_t',['../structbattery__conf__t.html',1,'']]],
   ['buffer_5ft',['Buffer_T',['../classBuffer__T.html',1,'']]],

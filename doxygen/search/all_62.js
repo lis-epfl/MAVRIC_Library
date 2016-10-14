@@ -5,6 +5,8 @@ var searchData=
   ['barometer_5fbmp085',['Barometer_BMP085',['../classBarometer__BMP085.html',1,'Barometer_BMP085'],['../classBarometer__BMP085.html#a4c01183bdda76c70ab2af4c8d19ad86c',1,'Barometer_BMP085::Barometer_BMP085()']]],
   ['barometer_5fms5611',['Barometer_MS5611',['../classBarometer__MS5611.html',1,'Barometer_MS5611'],['../classBarometer__MS5611.html#a864d13342e2da35e4d4f679c2bd62e62',1,'Barometer_MS5611::Barometer_MS5611()']]],
   ['barometer_5fsim',['Barometer_sim',['../classBarometer__sim.html',1,'Barometer_sim'],['../classBarometer__sim.html#a8cb0b945413cb2c0be355240648dd56a',1,'Barometer_sim::Barometer_sim()']]],
+  ['base_5fcascade_5fcontroller',['Base_cascade_controller',['../classBase__cascade__controller.html',1,'']]],
+  ['base_5fcommand_5ft',['base_command_t',['../structbase__command__t.html',1,'']]],
   ['base_5fhealth',['base_health',['../structubx__nav__dgps__t.html#ae32b24ce493c04451063f95f7c8e5c0d',1,'ubx_nav_dgps_t']]],
   ['base_5fid',['base_id',['../structubx__nav__dgps__t.html#a943b371eb1753d81aeaf082310b2a407',1,'ubx_nav_dgps_t']]],
   ['base_5ftow',['base_tow',['../structubx__cfg__fxn__t.html#ad67f012b730f61443ffba40bda2c5755',1,'ubx_cfg_fxn_t']]],

@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream." alt="" coords="169,5,332,35"/>
+<area shape="rect" id="node5" href="$classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="176,59,325,88"/>
+<area shape="rect" id="node7" href="$classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="381,32,496,61"/>
+<area shape="rect" id="node9" href="$classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="393,85,484,115"/>
+</map>

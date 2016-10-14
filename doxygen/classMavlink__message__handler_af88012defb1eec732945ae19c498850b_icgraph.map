@@ -1,5 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a75064672275e4187f71185925b0cf247" title="Registers a new callback for a command." alt="" coords="391,32,681,61"/>
-<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="731,5,1067,35"/>
-<area shape="rect" id="node7" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="763,59,1035,88"/>
+<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a75064672275e4187f71185925b0cf247" title="Registers a new callback for a command." alt="" coords="391,5,681,35"/>
+<area shape="rect" id="node5" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="731,5,1003,35"/>
 </map>

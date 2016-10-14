@@ -125,8 +125,20 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structaltitude__t.html">altitude_t</a></li>
 <li><a class="el" href="structanalog__monitor__conf__t.html">analog_monitor_conf_t</a></li>
 <li><a class="el" href="structanalog__monitor__t.html">analog_monitor_t</a></li>
+<li><a class="el" href="structVelocity__controller__copter_1_1args__t.html">Velocity_controller_copter&lt; TAttitude_controller &gt;::args_t</a></li>
+<li><a class="el" href="structNavigation__directto_1_1args__t.html">Navigation_directto&lt; TPosition_controller &gt;::args_t</a></li>
+<li><a class="el" href="structPosition__controller_1_1args__t.html">Position_controller&lt; TVelocity_controller &gt;::args_t</a></li>
+<li><a class="el" href="structRate__controller_1_1args__t.html">Rate_controller&lt; TServos_mix &gt;::args_t</a></li>
+<li><a class="el" href="structAttitude__controller_1_1args__t.html">Attitude_controller&lt; TRate_controller &gt;::args_t</a></li>
+<li><a class="el" href="structServos__mix__quadcopter__diag_1_1args__t.html">Servos_mix_quadcopter_diag::args_t</a></li>
+<li><a class="el" href="structServos__mix__quadcopter__cross_1_1args__t.html">Servos_mix_quadcopter_cross::args_t</a></li>
+<li><a class="el" href="structServos__mix__wing_1_1args__t.html">Servos_mix_wing::args_t</a></li>
+<li><a class="el" href="structServos__mix__ywing_1_1args__t.html">Servos_mix_ywing::args_t</a></li>
 <li><a class="el" href="structattitude__command__t.html">attitude_command_t</a></li>
-<li><a class="el" href="classAttitude__controller.html">Attitude_controller</a></li>
+<li><a class="el" href="classAttitude__controller__I.html">Attitude_controller_I</a><ul>
+<li><a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a></li>
+</ul>
+</li>
 <li><a class="el" href="structattitude__controller__p2__conf__t.html">attitude_controller_p2_conf_t</a></li>
 <li><a class="el" href="structattitude__controller__p2__t.html">attitude_controller_p2_t</a></li>
 <li><a class="el" href="structattitude__error__estimator__t.html">attitude_error_estimator_t</a></li>
@@ -135,6 +147,21 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="classBarometer__BMP085.html">Barometer_BMP085</a></li>
 <li><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></li>
 <li><a class="el" href="classBarometer__sim.html">Barometer_sim</a></li>
+</ul>
+</li>
+<li><a class="el" href="classBase__cascade__controller.html">Base_cascade_controller</a><ul>
+<li><a class="el" href="classRate__controller.html">Rate_controller&lt; TServos_mix &gt;</a></li>
+</ul>
+</li>
+<li><a class="el" href="structbase__command__t.html">base_command_t</a><ul>
+<li><a class="el" href="structAttitude__controller__I_1_1att__command__t.html">Attitude_controller_I::att_command_t</a></li>
+<li><a class="el" href="structIVelocity__yaw__controller_1_1vel__yaw__command__t.html">IVelocity_yaw_controller::vel_yaw_command_t</a></li>
+<li><a class="el" href="structNavigation__controller__I_1_1nav__command__t.html">Navigation_controller_I::nav_command_t</a></li>
+<li><a class="el" href="structPosition__controller__I_1_1pos__command__t.html">Position_controller_I::pos_command_t</a></li>
+<li><a class="el" href="structRate__controller__I_1_1rate__command__t.html">Rate_controller_I::rate_command_t</a></li>
+<li><a class="el" href="structServos__mix__I_1_1torq__command__t.html">Servos_mix_I::torq_command_t</a></li>
+<li><a class="el" href="structVelocity__controller__I_1_1vel__command__t.html">Velocity_controller_I::vel_command_t</a></li>
+<li><a class="el" href="structXYposition__Zvel__controller__I_1_1xypos__zvel__command__t.html">XYposition_Zvel_controller_I::xypos_zvel_command_t</a></li>
 </ul>
 </li>
 <li><a class="el" href="classBattery.html">Battery</a></li>
@@ -147,39 +174,47 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structMavlink__message__handler_1_1cmd__callback__t.html">Mavlink_message_handler::cmd_callback_t</a></li>
 <li><a class="el" href="structMavlink__message__handler_1_1cmd__function.html">Mavlink_message_handler::cmd_function&lt; T &gt;</a></li>
 <li><a class="el" href="structcommand__t.html">command_t</a></li>
+<li><a class="el" href="structSparky__chibi_1_1conf__t.html">Sparky_chibi::conf_t</a></li>
+<li><a class="el" href="structVelocity__controller__copter_1_1conf__t.html">Velocity_controller_copter&lt; TAttitude_controller &gt;::conf_t</a></li>
 <li><a class="el" href="structOnboard__parameters_1_1conf__t.html">Onboard_parameters::conf_t</a></li>
+<li><a class="el" href="structMavlink__communication__T_1_1conf__t.html">Mavlink_communication_T&lt; N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM &gt;::conf_t</a></li>
+<li><a class="el" href="structGpio__chibios_1_1conf__t.html">Gpio_chibios::conf_t</a></li>
 <li><a class="el" href="structI2c__chibios_1_1conf__t.html">I2c_chibios::conf_t</a></li>
 <li><a class="el" href="structPwm__chibios_1_1conf__t.html">Pwm_chibios::conf_t</a></li>
-<li><a class="el" href="structGps__mocap_1_1conf__t.html">Gps_mocap::conf_t</a></li>
 <li><a class="el" href="structSerial__chibios_1_1conf__t.html">Serial_chibios::conf_t</a></li>
 <li><a class="el" href="structSpi__chibios_1_1conf__t.html">Spi_chibios::conf_t</a></li>
-<li><a class="el" href="structSparky__chibi_1_1conf__t.html">Sparky_chibi::conf_t</a></li>
-<li><a class="el" href="structMavlink__communication__T_1_1conf__t.html">Mavlink_communication_T&lt; N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM &gt;::conf_t</a></li>
+<li><a class="el" href="structBarometer__MS5611_1_1conf__t.html">Barometer_MS5611::conf_t</a></li>
 <li><a class="el" href="structPeriodic__telemetry_1_1conf__t.html">Periodic_telemetry::conf_t</a></li>
-<li><a class="el" href="structJoystick_1_1conf__t.html">Joystick::conf_t</a></li>
+<li><a class="el" href="structGps__mocap_1_1conf__t.html">Gps_mocap::conf_t</a></li>
+<li><a class="el" href="structSparky__v2_1_1conf__t.html">Sparky_v2::conf_t</a></li>
+<li><a class="el" href="structManual__control_1_1conf__t.html">Manual_control::conf_t</a></li>
 <li><a class="el" href="structSerial__usb__stm32_1_1conf__t.html">Serial_usb_stm32::conf_t</a></li>
+<li><a class="el" href="structMission__handler__landing_1_1conf__t.html">Mission_handler_landing&lt; T1, T2 &gt;::conf_t</a></li>
+<li><a class="el" href="structMission__planner_1_1conf__t.html">Mission_planner::conf_t</a></li>
+<li><a class="el" href="structJoystick_1_1conf__t.html">Joystick::conf_t</a></li>
 <li><a class="el" href="structScheduler_1_1conf__t.html">Scheduler::conf_t</a></li>
+<li><a class="el" href="structNavigation__directto_1_1conf__t.html">Navigation_directto&lt; TPosition_controller &gt;::conf_t</a></li>
 <li><a class="el" href="structLEQuad_1_1conf__t.html">LEQuad::conf_t</a></li>
 <li><a class="el" href="structAhrs__ekf_1_1conf__t.html">Ahrs_ekf::conf_t</a></li>
 <li><a class="el" href="structAhrs__ekf__mocap_1_1conf__t.html">Ahrs_ekf_mocap::conf_t</a></li>
-<li><a class="el" href="structManual__control_1_1conf__t.html">Manual_control::conf_t</a></li>
-<li><a class="el" href="structNavigation_1_1conf__t.html">Navigation::conf_t</a></li>
 <li><a class="el" href="structINS__kf_1_1conf__t.html">INS_kf::conf_t</a></li>
-<li><a class="el" href="structPosition__estimation_1_1conf__t.html">Position_estimation::conf_t</a></li>
-<li><a class="el" href="structSparky__v2_1_1conf__t.html">Sparky_v2::conf_t</a></li>
-<li><a class="el" href="structServos__mix__4dof_1_1conf__t.html">Servos_mix_4dof&lt; N &gt;::conf_t</a></li>
-<li><a class="el" href="structINS__AHRS__groundtruth_1_1conf__t.html">INS_AHRS_groundtruth::conf_t</a></li>
-<li><a class="el" href="structServos__mix__6dof_1_1conf__t.html">Servos_mix_6dof&lt; N &gt;::conf_t</a></li>
 <li><a class="el" href="structMavlink__message__handler_1_1conf__t.html">Mavlink_message_handler::conf_t</a></li>
-<li><a class="el" href="structMpu__9250_1_1conf__t.html">Mpu_9250::conf_t</a></li>
+<li><a class="el" href="structPosition__estimation_1_1conf__t.html">Position_estimation::conf_t</a></li>
+<li><a class="el" href="structPosition__controller_1_1conf__t.html">Position_controller&lt; TVelocity_controller &gt;::conf_t</a></li>
 <li><a class="el" href="structState_1_1conf__t.html">State::conf_t</a></li>
+<li><a class="el" href="structINS__AHRS__groundtruth_1_1conf__t.html">INS_AHRS_groundtruth::conf_t</a></li>
 <li><a class="el" href="structData__logging_1_1conf__t.html">Data_logging::conf_t</a></li>
-<li><a class="el" href="structAttitude__controller_1_1conf__t.html">Attitude_controller::conf_t</a></li>
-<li><a class="el" href="structVelocity__controller__copter_1_1conf__t.html">Velocity_controller_copter::conf_t</a></li>
+<li><a class="el" href="structRate__controller_1_1conf__t.html">Rate_controller&lt; TServos_mix &gt;::conf_t</a></li>
+<li><a class="el" href="structAttitude__controller_1_1conf__t.html">Attitude_controller&lt; TRate_controller &gt;::conf_t</a></li>
+<li><a class="el" href="structServos__mix__4dof_1_1conf__t.html">Servos_mix_4dof&lt; N &gt;::conf_t</a></li>
+<li><a class="el" href="structMpu__9250_1_1conf__t.html">Mpu_9250::conf_t</a></li>
+<li><a class="el" href="structServos__mix__6dof_1_1conf__t.html">Servos_mix_6dof&lt; N &gt;::conf_t</a></li>
+<li><a class="el" href="structServos__mix__quadcopter__cross_1_1conf__t.html">Servos_mix_quadcopter_cross::conf_t</a></li>
 <li><a class="el" href="structMavlink__stream_1_1conf__t.html">Mavlink_stream::conf_t</a></li>
-<li><a class="el" href="structBarometer__MS5611_1_1conf__t.html">Barometer_MS5611::conf_t</a></li>
+<li><a class="el" href="structServos__mix__quadcopter__diag_1_1conf__t.html">Servos_mix_quadcopter_diag::conf_t</a></li>
+<li><a class="el" href="structServos__mix__wing_1_1conf__t.html">Servos_mix_wing::conf_t</a></li>
 <li><a class="el" href="structMavlink__waypoint__handler_1_1conf__t.html">Mavlink_waypoint_handler::conf_t</a></li>
-<li><a class="el" href="structGpio__chibios_1_1conf__t.html">Gpio_chibios::conf_t</a></li>
+<li><a class="el" href="structServos__mix__ywing_1_1conf__t.html">Servos_mix_ywing::conf_t</a></li>
 <li><a class="el" href="structPwm__stm32_1_1config__t.html">Pwm_stm32::config_t</a></li>
 <li><a class="el" href="classConsole.html">Console&lt; Writeable &gt;</a></li>
 <li><a class="el" href="structcontrol__command__t.html">control_command_t</a></li>
@@ -285,6 +320,7 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 </li>
 <li><a class="el" href="structintegrator__t.html">integrator_t</a></li>
 <li><a class="el" href="classraytracing_1_1Intersection.html">raytracing::Intersection</a></li>
+<li><a class="el" href="classIVelocity__yaw__controller.html">IVelocity_yaw_controller</a></li>
 <li><a class="el" href="classJoystick.html">Joystick</a></li>
 <li><a class="el" href="structjoystick__event.html">joystick_event</a></li>
 <li><a class="el" href="classKalman.html">Kalman&lt; n, p, m, T &gt;</a></li>
@@ -346,10 +382,30 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structmavrinux__conf__t.html">mavrinux_conf_t</a></li>
 <li><a class="el" href="classMegafly__rev4.html">Megafly_rev4</a></li>
 <li><a class="el" href="structmegafly__rev4__conf__t.html">megafly_rev4_conf_t</a></li>
+<li><a class="el" href="classMission__handler.html">Mission_handler</a><ul>
+<li><a class="el" href="classMission__handler__hold__position.html">Mission_handler_hold_position&lt; T &gt;</a></li>
+<li><a class="el" href="classMission__handler__landing.html">Mission_handler_landing&lt; T1, T2 &gt;</a><ul>
+<li><a class="el" href="classMission__handler__critical__landing.html">Mission_handler_critical_landing&lt; T1, T2 &gt;</a></li>
+</ul>
+</li>
+<li><a class="el" href="classMission__handler__manual.html">Mission_handler_manual</a></li>
+<li><a class="el" href="classMission__handler__navigating.html">Mission_handler_navigating&lt; T &gt;</a><ul>
+<li><a class="el" href="classMission__handler__critical__navigating.html">Mission_handler_critical_navigating&lt; T &gt;</a></li>
+</ul>
+</li>
+<li><a class="el" href="classMission__handler__on__ground.html">Mission_handler_on_ground</a></li>
+<li><a class="el" href="classMission__handler__takeoff.html">Mission_handler_takeoff&lt; T &gt;</a></li>
+</ul>
+</li>
+<li><a class="el" href="classMission__handler__registry.html">Mission_handler_registry</a></li>
+<li><a class="el" href="classMission__planner.html">Mission_planner</a></li>
 <li><a class="el" href="structMavlink__message__handler_1_1msg__callback__t.html">Mavlink_message_handler::msg_callback_t</a></li>
 <li><a class="el" href="structMavlink__message__handler_1_1msg__function.html">Mavlink_message_handler::msg_function&lt; T &gt;</a></li>
 <li><a class="el" href="structMavlink__stream_1_1msg__received__t.html">Mavlink_stream::msg_received_t</a></li>
-<li><a class="el" href="classNavigation.html">Navigation</a></li>
+<li><a class="el" href="classNavigation__controller__I.html">Navigation_controller_I</a><ul>
+<li><a class="el" href="classNavigation__directto.html">Navigation_directto&lt; TPosition_controller &gt;</a></li>
+</ul>
+</li>
 <li><a class="el" href="structnvram__data__t.html">nvram_data_t</a></li>
 <li><a class="el" href="classraytracing_1_1Object.html">raytracing::Object</a><ul>
 <li><a class="el" href="classraytracing_1_1Cylinder.html">raytracing::Cylinder</a></li>
@@ -371,6 +427,10 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structpid__controller__conf__t.html">pid_controller_conf_t</a></li>
 <li><a class="el" href="structpid__controller__t.html">pid_controller_t</a></li>
 <li><a class="el" href="structposition__command__t.html">position_command_t</a></li>
+<li><a class="el" href="classPosition__controller__I.html">Position_controller_I</a><ul>
+<li><a class="el" href="classPosition__controller.html">Position_controller&lt; TVelocity_controller &gt;</a></li>
+</ul>
+</li>
 <li><a class="el" href="classPwm.html">Pwm</a><ul>
 <li><a class="el" href="classPwm__avr32.html">Pwm_avr32</a></li>
 <li><a class="el" href="classPwm__chibios.html">Pwm_chibios</a></li>
@@ -383,6 +443,10 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structqfilter__t.html">qfilter_t</a></li>
 <li><a class="el" href="structquat__t.html">quat_t</a></li>
 <li><a class="el" href="structrate__command__t.html">rate_command_t</a></li>
+<li><a class="el" href="classRate__controller__I.html">Rate_controller_I</a><ul>
+<li><a class="el" href="classRate__controller.html">Rate_controller&lt; TServos_mix &gt;</a></li>
+</ul>
+</li>
 <li><a class="el" href="structraw__of__vector__t.html">raw_of_vector_t</a></li>
 <li><a class="el" href="classraytracing_1_1Ray.html">raytracing::Ray</a></li>
 <li><a class="el" href="structremote__conf__t.html">remote_conf_t</a></li>
@@ -418,18 +482,19 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structserial__usb__avr32__conf__t.html">serial_usb_avr32_conf_t</a></li>
 <li><a class="el" href="classServo.html">Servo</a></li>
 <li><a class="el" href="structservo__conf__t.html">servo_conf_t</a></li>
-<li><a class="el" href="structservo__mix__birotor__conf__t.html">servo_mix_birotor_conf_t</a></li>
-<li><a class="el" href="structservo__mix__birotor__t.html">servo_mix_birotor_t</a></li>
-<li><a class="el" href="structservo__mix__ywing__conf__t.html">servo_mix_ywing_conf_t</a></li>
-<li><a class="el" href="structservo__mix__ywing__t.html">servo_mix_ywing_t</a></li>
 <li><a class="el" href="classServos__mix__4dof.html">Servos_mix_4dof&lt; N &gt;</a></li>
 <li><a class="el" href="classServos__mix__6dof.html">Servos_mix_6dof&lt; N &gt;</a></li>
-<li><a class="el" href="structservos__mix__quadcopter__cross__conf__t.html">servos_mix_quadcopter_cross_conf_t</a></li>
-<li><a class="el" href="structservos__mix__quadcopter__diag__conf__t.html">servos_mix_quadcopter_diag_conf_t</a></li>
-<li><a class="el" href="structservos__mix__quadcotper__cross__t.html">servos_mix_quadcotper_cross_t</a></li>
-<li><a class="el" href="structservos__mix__quadcotper__diag__t.html">servos_mix_quadcotper_diag_t</a></li>
-<li><a class="el" href="structservos__mix__wing__conf__t.html">servos_mix_wing_conf_t</a></li>
-<li><a class="el" href="structservos__mix__wing__t.html">servos_mix_wing_t</a></li>
+<li><a class="el" href="classServos__mix__I.html">Servos_mix_I</a><ul>
+<li><a class="el" href="classServos__mix.html">Servos_mix</a><ul>
+<li><a class="el" href="classServos__mix__birotor.html">Servos_mix_birotor</a></li>
+<li><a class="el" href="classServos__mix__quadcopter__cross.html">Servos_mix_quadcopter_cross</a></li>
+<li><a class="el" href="classServos__mix__quadcopter__diag.html">Servos_mix_quadcopter_diag</a></li>
+<li><a class="el" href="classServos__mix__wing.html">Servos_mix_wing</a></li>
+<li><a class="el" href="classServos__mix__ywing.html">Servos_mix_ywing</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="el" href="structservos__telemetry__t.html">servos_telemetry_t</a></li>
 <li><a class="el" href="classSimulation.html">Simulation</a></li>
 <li><a class="el" href="structsimulation__conf__t.html">simulation_conf_t</a></li>
@@ -452,13 +517,10 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structspi__avr32__gpio__map__t.html">spi_avr32_gpio_map_t</a></li>
 <li><a class="el" href="structspi__buffer__t.html">spi_buffer_t</a></li>
 <li><a class="el" href="structspi__stm32__conf__t.html">spi_stm32_conf_t</a></li>
-<li><a class="el" href="structstabilisation__copter__conf__t.html">stabilisation_copter_conf_t</a></li>
-<li><a class="el" href="structstabilisation__copter__t.html">stabilisation_copter_t</a></li>
 <li><a class="el" href="structstabilisation__wing__conf__t.html">stabilisation_wing_conf_t</a></li>
 <li><a class="el" href="structstabilisation__wing__t.html">stabilisation_wing_t</a></li>
 <li><a class="el" href="structstabilisation__ywing__conf__t.html">stabilisation_ywing_conf_t</a></li>
 <li><a class="el" href="structstabilisation__ywing__t.html">stabilisation_ywing_t</a></li>
-<li><a class="el" href="structstabiliser__stack__copter__t.html">stabiliser_stack_copter_t</a></li>
 <li><a class="el" href="structstabiliser__stack__wing__t.html">stabiliser_stack_wing_t</a></li>
 <li><a class="el" href="structstabiliser__t.html">stabiliser_t</a></li>
 <li><a class="el" href="classState.html">State</a></li>
@@ -513,11 +575,17 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 <li><a class="el" href="structvector__field__waypoint__conf__t.html">vector_field_waypoint_conf_t</a></li>
 <li><a class="el" href="structvector__field__waypoint__t.html">vector_field_waypoint_t</a></li>
 <li><a class="el" href="structvelocity__command__t.html">velocity_command_t</a></li>
-<li><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a></li>
+<li><a class="el" href="classVelocity__controller__I.html">Velocity_controller_I</a><ul>
+<li><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a></li>
+</ul>
+</li>
 <li><a class="el" href="structviewing__direction__t.html">viewing_direction_t</a></li>
-<li><a class="el" href="structwaypoint__local__struct__t.html">waypoint_local_struct_t</a></li>
-<li><a class="el" href="structMavlink__waypoint__handler_1_1waypoint__struct__t.html">Mavlink_waypoint_handler::waypoint_struct_t</a></li>
+<li><a class="el" href="classWaypoint.html">Waypoint</a></li>
 <li><a class="el" href="classraytracing_1_1World.html">raytracing::World</a></li>
+<li><a class="el" href="classXYposition__Zvel__controller__I.html">XYposition_Zvel_controller_I</a><ul>
+<li><a class="el" href="classPosition__controller.html">Position_controller&lt; TVelocity_controller &gt;</a></li>
+</ul>
+</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -537,7 +605,7 @@ This inheritance list is sorted roughly, but not completely, alphabetically:</di
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2016 08:25:18 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 09:24:30 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

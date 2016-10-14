@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,92,136,177"/>
-<area shape="rect" id="node4" href="$classServo.html" title="Driver for servomotors using PWM." alt="" coords="160,5,307,264"/>
-<area shape="rect" id="node6" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="331,92,464,177"/>
-</map>

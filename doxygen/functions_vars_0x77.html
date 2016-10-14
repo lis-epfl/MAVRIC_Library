@@ -123,18 +123,28 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 &#160;
 
 <h3><a class="anchor" id="index_w"></a>- w -</h3><ul>
+<li>waypoint_
+: <a class="el" href="classMission__handler__hold__position.html#a5abd22de64c8fe571868d370e434804f">Mission_handler_hold_position&lt; T &gt;</a>
+, <a class="el" href="classMission__handler__landing.html#ab3abe0827c5e12729621890b4bee2c21">Mission_handler_landing&lt; T1, T2 &gt;</a>
+, <a class="el" href="classMission__handler__navigating.html#a3635f3c6d933b9d913994f7e72eaafd8">Mission_handler_navigating&lt; T &gt;</a>
+</li>
 <li>waypoint_count_
 : <a class="el" href="classMavlink__waypoint__handler.html#ad51da8037c94579106d1c8ed0229e12b">Mavlink_waypoint_handler</a>
 </li>
 <li>waypoint_handler
 : <a class="el" href="structvector__field__waypoint__t.html#a615d14139918184f6f586a0e5f5e5fb6">vector_field_waypoint_t</a>
 , <a class="el" href="structaudio__t.html#a215990230451a63cf5461974e3a1a2f0">audio_t</a>
+, <a class="el" href="classLEQuad.html#a51cb7a893a422524a78a86de5d5a159d">LEQuad</a>
 </li>
-<li>waypoint_hold_coordinates
-: <a class="el" href="classMavlink__waypoint__handler.html#a46d0ab0d22e138e9e9030e1596a6719b">Mavlink_waypoint_handler</a>
+<li>waypoint_handler_
+: <a class="el" href="classMission__handler__navigating.html#a08d8e0a6e7a676d0d95472e2c4df714c">Mission_handler_navigating&lt; T &gt;</a>
+, <a class="el" href="classMission__planner.html#adb1edefe6643ec575ce4396070b89da1">Mission_planner</a>
 </li>
-<li>waypoint_list
-: <a class="el" href="classMavlink__waypoint__handler.html#aab8b98bef18a65ffe7be5e57c1f9e483">Mavlink_waypoint_handler</a>
+<li>waypoint_list_
+: <a class="el" href="classMavlink__waypoint__handler.html#afc890a4f98e1ed61ad24aabaebc5237b">Mavlink_waypoint_handler</a>
+</li>
+<li>waypoint_reached_
+: <a class="el" href="classMission__handler__navigating.html#a2d54070d40a8f552b0c58a18a1bc59a0">Mission_handler_navigating&lt; T &gt;</a>
 </li>
 <li>week
 : <a class="el" href="structubx__nav__solution__t.html#a5ecd80df74ccec2c61041adfa564d1db">ubx_nav_solution_t</a>
@@ -152,15 +162,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>wingrons_speed
 : <a class="el" href="structdaler__dc__motor__ctrl__t.html#a39d83528092d2002d2d7db11952ed61b">daler_dc_motor_ctrl_t</a>
 </li>
+<li>within_radius_
+: <a class="el" href="classMission__handler__hold__position.html#a0edfc0c5aaa2ca31004d10c83232ea25">Mission_handler_hold_position&lt; T &gt;</a>
+</li>
 <li>wkn_roll_over
 : <a class="el" href="structubx__cfg__nav__expert__settings__t.html#acab543c702746905d21e55a01b482220">ubx_cfg_nav_expert_settings_t</a>
 </li>
 <li>wno
 : <a class="el" href="structubx__tim__vrfy__t.html#aee8d79b409dab55d7ca9b7979e92103d">ubx_tim_vrfy_t</a>
-</li>
-<li>wpt_nav_controller
-: <a class="el" href="classNavigation.html#a73f50fdab3d62cf1115d73fd644f5d3c">Navigation</a>
-, <a class="el" href="structNavigation_1_1conf__t.html#ac9fcde552aa37b23a744e18db328e840">Navigation::conf_t</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -181,7 +190,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2016 08:25:19 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 09:24:30 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

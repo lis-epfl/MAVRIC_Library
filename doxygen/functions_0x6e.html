@@ -126,12 +126,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>nano
 : <a class="el" href="structubx__nav__timeutc__t.html#a6f0751fa5a7e3e94a791988fe7e63e12">ubx_nav_timeutc_t</a>
 </li>
-<li>nav_plan_active
-: <a class="el" href="structState_1_1conf__t.html#a642167d02c7020ba4367b21509dc663c">State::conf_t</a>
-, <a class="el" href="classState.html#a326e60a03ccb49d621d1156beecc00af">State</a>
+<li>nav_go_home()
+: <a class="el" href="classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3">Mission_planner</a>
 </li>
-<li>nav_plan_init()
-: <a class="el" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640">Mavlink_waypoint_handler</a>
+<li>nav_land_callback()
+: <a class="el" href="classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514">Mission_planner</a>
 </li>
 <li>nav_rate
 : <a class="el" href="structubx__cfg__nav__rate__t.html#a26a4f63336ab89b1f29b3f3d4803a219">ubx_cfg_nav_rate_t</a>
@@ -141,20 +140,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>nav_settings
 : <a class="el" href="structgps__t.html#a6709cde6bb4ed3a5915d4b7fff9e4b5b">gps_t</a>
 </li>
+<li>nav_takeoff_callback()
+: <a class="el" href="classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc">Mission_planner</a>
+</li>
 <li>navigation
 : <a class="el" href="structstabilisation__wing__t.html#abd512b6e07b4eb72114b1877950dc19e">stabilisation_wing_t</a>
 , <a class="el" href="structaudio__t.html#a447eb7c039465b9ea4cf36599b17406f">audio_t</a>
-, <a class="el" href="classLEQuad.html#a6348e3194cd2ca65550fefcd0411b20c">LEQuad</a>
-</li>
-<li>Navigation()
-: <a class="el" href="classNavigation.html#aa478814cb3d76104f7ddbe1fe3d7bb96">Navigation</a>
-</li>
-<li>navigation_
-: <a class="el" href="classMavlink__waypoint__handler.html#a49c94e8188e6d382bf977fc6f8d7d7b4">Mavlink_waypoint_handler</a>
-</li>
-<li>navigation_strategy
-: <a class="el" href="structNavigation_1_1conf__t.html#a25f246b7356b3a298d0245e5e85ddddc">Navigation::conf_t</a>
-, <a class="el" href="classNavigation.html#afbc0befd80d6fe3973e3dbfb5274f54e">Navigation</a>
 </li>
 <li>nb_setpoints
 : <a class="el" href="structadaptive__parameter__t.html#a210c6c63169d594762b9a87329bab5b0">adaptive_parameter_t</a>
@@ -189,9 +180,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>next_run
 : <a class="el" href="classScheduler__task.html#ad1ed6dd2f1dd137b05a81b808fd97e0e">Scheduler_task</a>
 </li>
+<li>next_waypoint()
+: <a class="el" href="classMavlink__waypoint__handler.html#ac3647278a7a120112d6910f986be9049">Mavlink_waypoint_handler</a>
+</li>
 <li>normal()
-: <a class="el" href="classraytracing_1_1Plane.html#ac51a3082ac1da2a7262e3397680adb8d">raytracing::Plane</a>
-, <a class="el" href="classraytracing_1_1Intersection.html#a108a955f2a46b82101cdbb5e2aa8bf15">raytracing::Intersection</a>
+: <a class="el" href="classraytracing_1_1Intersection.html#a108a955f2a46b82101cdbb5e2aa8bf15">raytracing::Intersection</a>
+, <a class="el" href="classraytracing_1_1Plane.html#ac51a3082ac1da2a7262e3397680adb8d">raytracing::Plane</a>
 </li>
 <li>north_speed
 : <a class="el" href="structgps__t.html#aa6ae22c930094f8374a745d83b8e901f">gps_t</a>
@@ -208,11 +202,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>num_file_opened
 : <a class="el" href="structfat__fs__mounting__t.html#a15d4ee7f7cb176bd2a5422adffb34a98">fat_fs_mounting_t</a>
 </li>
-<li>num_sats()
-: <a class="el" href="classGps__ublox.html#af364cae5c2979d869f01f8e4e7c67438">Gps_ublox</a>
-, <a class="el" href="structgps__t.html#a1a0590caa447cc0c5e8537dac9262516">gps_t</a>
-, <a class="el" href="classGps.html#a822845dd9115f020731d70b53586f18e">Gps</a>
+<li>num_sats
+: <a class="el" href="structgps__t.html#a1a0590caa447cc0c5e8537dac9262516">gps_t</a>
 , <a class="el" href="classGps__sim.html#aac30f5f67a06c2d26c269e8164cefc2d">Gps_sim</a>
+, <a class="el" href="classGps__ublox.html#af364cae5c2979d869f01f8e4e7c67438">Gps_ublox</a>
+, <a class="el" href="classGps.html#a822845dd9115f020731d70b53586f18e">Gps</a>
 , <a class="el" href="classGps__mocap.html#a4ebaf0c404834c1b541007d7bb296181">Gps_mocap</a>
 </li>
 <li>num_skipped_msg
@@ -237,7 +231,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2016 08:25:18 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 09:24:30 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classMission__handler__landing.html" title="{Mission_handler_landing\&lt; T1, T2 \&gt;\n|# waypoint_\l# is_landed_\l# auto_landing_behavior_\l# alt_lpf_\l# LPF_gain_\l# desc_to_ground_altitude_\l# desc_to_ground_range_\l# desc_to_small_alt_controller_\l# desc_to_ground_controller_\l# ins_\l# state_\l|+ Mission_handler_landing()\l+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l+ default_config()\l# set_desc_to_small_alt_control_command()\l# set_desc_to_ground_control_command()\l}" alt="" coords="5,193,285,573"/>
+<area shape="rect" id="node4" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="60,6,231,143"/>
+</map>

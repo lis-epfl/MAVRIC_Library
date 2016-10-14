@@ -1,5 +1,8 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="165,32,424,61"/>
-<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="472,5,808,35"/>
-<area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="529,59,751,88"/>
+<area shape="rect" id="node3" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="167,5,423,35"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto&#45;takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF." alt="" coords="172,59,417,88"/>
+<area shape="rect" id="node7" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="180,112,409,141"/>
+<area shape="rect" id="node9" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="191,165,399,195"/>
+<area shape="rect" id="node13" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="189,219,400,248"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="472,192,635,221"/>
 </map>

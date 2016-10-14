@@ -129,7 +129,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00046"></a>00046 
 <a name="l00047"></a>00047 <span class="preprocessor">#include &quot;simulation/dynamic_model.hpp&quot;</span>
 <a name="l00048"></a>00048 <span class="preprocessor">#include &quot;drivers/servo.hpp&quot;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;control/servos_mix_quadcopter_diag_default_config.hpp&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;control/servos_mix_quadcopter_diag.hpp&quot;</span>
 <a name="l00050"></a>00050 <span class="preprocessor">#include &quot;util/constants.hpp&quot;</span>
 <a name="l00051"></a>00051 
 <a name="l00052"></a>00052 
@@ -159,7 +159,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00079"></a><a class="code" href="structdynamic__model__quad__diag__conf__t.html#a1db6a3df9d4d5e7d8e7ac23614ea24a6">00079</a>     <span class="keywordtype">float</span> <a class="code" href="structdynamic__model__quad__diag__conf__t.html#a1db6a3df9d4d5e7d8e7ac23614ea24a6" title="Gravity value used for the simulated forces.">gravity</a>;                      
 <a name="l00080"></a><a class="code" href="structdynamic__model__quad__diag__conf__t.html#a3e15fab9940be3c8ca4106708604e337">00080</a>     <span class="keywordtype">float</span> <a class="code" href="structdynamic__model__quad__diag__conf__t.html#a3e15fab9940be3c8ca4106708604e337" title="Air density in kg/m3.">air_density</a>;                  
 <a name="l00081"></a>00081 
-<a name="l00082"></a>00082     <a class="code" href="structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape.">servos_mix_quadcopter_diag_conf_t</a>  servos_mix_config;
+<a name="l00082"></a>00082     <a class="code" href="structServos__mix__quadcopter__diag_1_1conf__t.html" title="Configuration.">Servos_mix_quadcopter_diag::conf_t</a>  servos_mix_config;
 <a name="l00083"></a>00083 
 <a name="l00084"></a>00084 } <a class="code" href="structdynamic__model__quad__diag__conf__t.html" title="Configuration for quad dynamic model.">dynamic_model_quad_diag_conf_t</a>;
 <a name="l00085"></a>00085 
@@ -255,7 +255,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00246"></a>00246     conf.<a class="code" href="structdynamic__model__quad__diag__conf__t.html#a1db6a3df9d4d5e7d8e7ac23614ea24a6" title="Gravity value used for the simulated forces.">gravity</a>                = 9.8f;                 
 <a name="l00247"></a>00247     conf.<a class="code" href="structdynamic__model__quad__diag__conf__t.html#a3e15fab9940be3c8ca4106708604e337" title="Air density in kg/m3.">air_density</a>            = 1.2f;                 
 <a name="l00248"></a>00248 
-<a name="l00249"></a>00249     conf.servos_mix_config = servos_mix_quadcopter_diag_default_config();
+<a name="l00249"></a>00249     conf.servos_mix_config = Servos_mix_quadcopter_diag::default_config();
 <a name="l00250"></a>00250 
 <a name="l00251"></a>00251     <span class="keywordflow">return</span> conf;
 <a name="l00252"></a>00252 }
@@ -280,7 +280,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2016 08:25:17 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 09:24:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

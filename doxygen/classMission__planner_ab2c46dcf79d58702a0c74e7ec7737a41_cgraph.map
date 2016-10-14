@@ -1,0 +1,19 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classState.html#af426e69418fcda56e04b37ad489d9969" title="returns whether in auto mode" alt="" coords="731,5,832,35"/>
+<area shape="rect" id="node7" href="$classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="312,139,560,168"/>
+<area shape="rect" id="node5" href="$classMav__mode.html#a4cfa294420a4f7c293ff1675dea8eb00" title="returns whether in auto mode (MAV_MODE_FLAG_AUTO_ENABLED set)" alt="" coords="1081,5,1217,35"/>
+<area shape="rect" id="node9" href="$classMavlink__waypoint__handler.html#a95350e0c2a032342b8c7bf7ac864f2df" title="Sets the current waypoint index if possible." alt="" coords="609,59,953,88"/>
+<area shape="rect" id="node11" href="$classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream." alt="" coords="705,112,857,141"/>
+<area shape="rect" id="node13" href="$classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream." alt="" coords="700,165,863,195"/>
+<area shape="rect" id="node15" href="$classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="707,219,856,248"/>
+<area shape="rect" id="node22" href="$classMission__planner.html#adb37dab461884be985fa9dce1f759e3a" title="Switches the mission handler to the inputted waypoint." alt="" coords="651,325,912,355"/>
+<area shape="rect" id="node34" href="$classMavlink__waypoint__handler.html#a23814033f5fbe4c2fc7b94e18ee17f32" title="Gets the current waypoint." alt="" coords="640,432,923,461"/>
+<area shape="rect" id="node17" href="$classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="1092,139,1207,168"/>
+<area shape="rect" id="node19" href="$classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="1104,192,1195,221"/>
+<area shape="rect" id="node24" href="$classMission__handler__registry.html#a5428f49305b49474957ef5c8dcc3ceff" title="Attempts to get the mission handler form the registry." alt="" coords="1003,245,1296,275"/>
+<area shape="rect" id="node26" href="$classMission__handler.html#a4c558404def1712147a21591969ba8e4" title="Sets up this handler class for a first time initialization." alt="" coords="1072,299,1227,328"/>
+<area shape="rect" id="node28" href="$classMission__planner.html#a3fb54cbdd4762beb6795083b4ddc1c58" title="Sets the internal state based on default waypoints." alt="" coords="1036,352,1263,381"/>
+<area shape="rect" id="node30" href="$classMission__handler.html#aa7716da4cc0508f4f78719c4f8194b3f" title="Gets the mission state of this handler." alt="" coords="1023,405,1276,435"/>
+<area shape="rect" id="node32" href="$classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365" title="Gets the command of the waypoint." alt="" coords="1079,459,1220,488"/>
+<area shape="rect" id="node36" href="$classMavlink__waypoint__handler.html#aaa7dbb155e0281aec3c59b429c47a4d1" title="Returns the home waypoint." alt="" coords="1012,512,1287,541"/>
+</map>

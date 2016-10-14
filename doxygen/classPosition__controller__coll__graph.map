@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classPosition__controller__I.html" title="{Position_controller_I\n||+ update()\l+ set_position_command()\l}" alt="" coords="5,281,181,383"/>
+<area shape="rect" id="node4" href="$classXYposition__Zvel__controller__I.html" title="{XYposition_Zvel_controller_I\n||+ update()\l+ set_xyposition_zvel_command()\l}" alt="" coords="205,281,427,383"/>
+<area shape="rect" id="node6" href="$structpid__controller__t.html" title="PID controller." alt="" coords="451,211,579,453"/>
+<area shape="rect" id="node8" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="399,15,503,135"/>
+<area shape="rect" id="node10" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="527,6,631,143"/>
+</map>

@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classScheduler__task.html" title="Task entry." alt="" coords="5,5,117,35"/>
+<area shape="rect" id="node1" href="$classBase__cascade__controller.html" title="Base_cascade_controller" alt="" coords="5,5,173,35"/>
+<area shape="rect" id="node3" href="$classRate__controller.html" title="Rate_controller\&lt; TServos_mix \&gt;" alt="" coords="221,32,432,61"/>
+<area shape="rect" id="node4" href="$classRate__controller__I.html" title="Rate_controller_I" alt="" coords="29,59,149,88"/>
 </map>

@@ -1,5 +1,13 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="219,5,445,35"/>
-<area shape="rect" id="node5" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="493,5,717,35"/>
-<area shape="rect" id="node7" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="765,5,1021,35"/>
+<area shape="rect" id="node3" href="$classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="245,5,472,35"/>
+<area shape="rect" id="node9" href="$classMission__handler__navigating.html#a57062182daea4a3bb0d902b161815653" title="Sends the travel time between the last two waypoints." alt="" coords="220,59,497,88"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="235,112,483,141"/>
+<area shape="rect" id="node19" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="255,165,463,195"/>
+<area shape="rect" id="node23" href="$classWaypoint.html#ac2767526fb35af27c0fee97019ab53c9" title="Sends a given waypoint via a MAVLink message." alt="" coords="303,219,415,248"/>
+<area shape="rect" id="node5" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="583,5,807,35"/>
+<area shape="rect" id="node7" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="891,5,1147,35"/>
+<area shape="rect" id="node13" href="$classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="567,59,823,88"/>
+<area shape="rect" id="node15" href="$classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="547,112,843,141"/>
+<area shape="rect" id="node17" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="567,165,823,195"/>
+<area shape="rect" id="node21" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="613,219,776,248"/>
 </map>

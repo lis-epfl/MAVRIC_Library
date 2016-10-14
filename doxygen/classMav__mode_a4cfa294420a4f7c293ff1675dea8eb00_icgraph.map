@@ -1,3 +1,11 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#af426e69418fcda56e04b37ad489d9969" title="returns whether in auto mode" alt="" coords="191,5,292,35"/>
+<area shape="rect" id="node3" href="$classState.html#af426e69418fcda56e04b37ad489d9969" title="returns whether in auto mode" alt="" coords="244,109,345,139"/>
+<area shape="rect" id="node17" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="191,163,399,192"/>
+<area shape="rect" id="node21" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="189,216,400,245"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="448,59,696,88"/>
+<area shape="rect" id="node7" href="$classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="764,5,1020,35"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="764,112,1020,141"/>
+<area shape="rect" id="node13" href="$classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold." alt="" coords="469,163,675,192"/>
+<area shape="rect" id="node9" href="$classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="744,59,1040,88"/>
+<area shape="rect" id="node19" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="491,216,653,245"/>
 </map>

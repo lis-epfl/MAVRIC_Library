@@ -17,6 +17,7 @@ var searchData=
   ['add_5fmsg_5fcallback',['add_msg_callback',['../classMavlink__message__handler.html#a1f977e1892b567c50d64c19e20b6ea00',1,'Mavlink_message_handler']]],
   ['add_5fobject',['add_object',['../classraytracing_1_1World.html#ae9621d28190959a3ed338bf677d36061',1,'raytracing::World']]],
   ['add_5ftask',['add_task',['../classScheduler.html#a0c94779cd53b5df92e48ff321d0954a3',1,'Scheduler']]],
+  ['advance_5fto_5fnext_5fwaypoint',['advance_to_next_waypoint',['../classMavlink__waypoint__handler.html#a073aa02dbd36c45fcb4fd6f1887d4f25',1,'Mavlink_waypoint_handler']]],
   ['ahrs',['ahrs',['../classINS__AHRS__groundtruth.html#a687c44c6afbe9109fcf8a38d6a356a9e',1,'INS_AHRS_groundtruth']]],
   ['ahrs_5fekf',['Ahrs_ekf',['../classAhrs__ekf.html#a567f82bf68fc47184b925469682842df',1,'Ahrs_ekf']]],
   ['ahrs_5fekf_5fmocap',['Ahrs_ekf_mocap',['../classAhrs__ekf__mocap.html#ad4fe1366dcf1d5c15392bb7dfef409cf',1,'Ahrs_ekf_mocap']]],
@@ -26,6 +27,7 @@ var searchData=
   ['angular_5fvelocity_5fbf',['angular_velocity_bf',['../classDynamic__model.html#a0908d95a8aa41d9223259a54243e6455',1,'Dynamic_model::angular_velocity_bf()'],['../classDynamic__model__quad__diag.html#a47dc971126863903dcdb31c38d062f38',1,'Dynamic_model_quad_diag::angular_velocity_bf()']]],
   ['attach',['attach',['../classSerial__avr32.html#a8e4c8096f42bee9019832e79251bac4a',1,'Serial_avr32::attach()'],['../classSerial__usb__avr32.html#aad76baf4c47fcdb7162d57b69cb37f12',1,'Serial_usb_avr32::attach()'],['../classSerial__chibios.html#a1b3ea83fe0e8cd8bcc1ddf3be0a9b470',1,'Serial_chibios::attach()'],['../classSerial.html#a6828a2d281fc081b0f87dc41782610f8',1,'Serial::attach()'],['../classSerial__dummy.html#a0dba21ef8cdde171598a82d59c04c644',1,'Serial_dummy::attach()'],['../classSerial__linux__io.html#add9d5a92540beace4af02a37ccc17c2e',1,'Serial_linux_io::attach()'],['../classSerial__udp.html#a38d75a506a699c4d289a806e40bd197a',1,'Serial_udp::attach()'],['../classSerial__stm32.html#aa435ed0428ae9eecd57cbeb38de2f7a9',1,'Serial_stm32::attach()'],['../classSerial__usb__stm32.html#a23f13209093335602801270e5904d9f7',1,'Serial_usb_stm32::attach()']]],
   ['attitude',['attitude',['../classDynamic__model.html#a94d2db69b0f3d3c6d95bc9f80339093a',1,'Dynamic_model::attitude()'],['../classDynamic__model__quad__diag.html#a9f3bb259ebeb979f7de0cf6a644d59cf',1,'Dynamic_model_quad_diag::attitude()']]],
-  ['attitude_5fcontroller',['Attitude_controller',['../classAttitude__controller.html#aed216d0f29a9d915601760025403432e',1,'Attitude_controller']]],
+  ['attitude_5fcontroller',['Attitude_controller',['../classAttitude__controller.html#a74be4927cc540ffe5075e421eb9268f0',1,'Attitude_controller']]],
+  ['autocontinue',['autocontinue',['../classWaypoint.html#a7bc118bf70a2f2017d2ae4ca8e0916b7',1,'Waypoint']]],
   ['axis',['axis',['../classraytracing_1_1Cylinder.html#a61254e730138baf9c404656410d069b4',1,'raytracing::Cylinder']]]
 ];

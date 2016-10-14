@@ -3,6 +3,7 @@ var searchData=
   ['calibrate_5fesc',['calibrate_esc',['../classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a',1,'Servo']]],
   ['calibrating_5fnorth_5fvector',['calibrating_north_vector',['../classAhrs__ekf.html#a4cec1cbd87e6f6b2798ce3a8d925d92a',1,'Ahrs_ekf']]],
   ['callback',['callback',['../classGps__mocap.html#a6c7014122cf33718aa966bd6d69661d1',1,'Gps_mocap::callback()'],['../classAhrs__ekf__mocap.html#a8fb8e88f98724821d32b5b6a51638abf',1,'Ahrs_ekf_mocap::callback()']]],
+  ['can_5fhandle',['can_handle',['../classMission__handler.html#a2a347324deef313dc6dab35cbf6e05d3',1,'Mission_handler::can_handle()'],['../classMission__handler__critical__landing.html#a377b6f352203fcdc88611a39373ab9a9',1,'Mission_handler_critical_landing::can_handle()'],['../classMission__handler__critical__navigating.html#aa9b1340302ebc4dbc2a09ebf039cbe56',1,'Mission_handler_critical_navigating::can_handle()'],['../classMission__handler__hold__position.html#ac7c7d5be558fed573be3478dc9173fca',1,'Mission_handler_hold_position::can_handle()'],['../classMission__handler__landing.html#a8f548b5ae8105f6021932cf4622e7305',1,'Mission_handler_landing::can_handle()'],['../classMission__handler__manual.html#aa644fc1d73e7a56835a49df70efdb4c5',1,'Mission_handler_manual::can_handle()'],['../classMission__handler__navigating.html#ab7e644547b58bee1b986bf8f55e1381c',1,'Mission_handler_navigating::can_handle()'],['../classMission__handler__on__ground.html#ac17c38f64a6b20546a6bf97bc1e29f44',1,'Mission_handler_on_ground::can_handle()'],['../classMission__handler__takeoff.html#ae67db1a43b81ab42caaa962ad1d570d1',1,'Mission_handler_takeoff::can_handle()']]],
   ['center',['center',['../classraytracing_1_1Plane.html#a2b714d84cebdd158bf7ec596372be49e',1,'raytracing::Plane::center()'],['../classraytracing_1_1Sphere.html#a7f3f5de13589628033f6f579c030ab29',1,'raytracing::Sphere::center()'],['../classraytracing_1_1Cylinder.html#a75c08f3a0c0aa3e8a262d7df86692692',1,'raytracing::Cylinder::center()']]],
   ['change_5fperiod',['change_period',['../classScheduler__task.html#a449429f9de097c6b16d13b2c32cb02b5',1,'Scheduler_task']]],
   ['channel',['channel',['../classSatellite.html#a1258b0b911e76664aaada2bf18cd3ee4',1,'Satellite::channel()'],['../classSpektrum__satellite.html#aecc1c81c4700538c31ebe9c6739fe137',1,'Spektrum_satellite::channel()']]],
@@ -12,6 +13,7 @@ var searchData=
   ['cmd_5fcallback_5fmax_5fcount',['cmd_callback_max_count',['../classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b',1,'Mavlink_message_handler::cmd_callback_max_count()'],['../classMavlink__message__handler__T.html#a176b7fc7494ed5ee8209fcf0ad3371a7',1,'Mavlink_message_handler_T::cmd_callback_max_count()']]],
   ['cmd_5fdefault_5fdbg',['cmd_default_dbg',['../classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16',1,'Mavlink_message_handler']]],
   ['cols',['cols',['../classMat.html#a4ef77ff6c7056d1e33ed9cdc22d8ad61',1,'Mat']]],
+  ['command',['command',['../classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365',1,'Waypoint']]],
   ['compid',['compid',['../classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441',1,'Mavlink_stream']]],
   ['compute_5faltitude_5ffrom_5fpressure',['compute_altitude_from_pressure',['../classBarometer.html#a376b868d1eae6d9698e5f20834cc391e',1,'Barometer']]],
   ['compute_5fpressure_5fat_5fsea_5flevel',['compute_pressure_at_sea_level',['../classBarometer.html#a9c0adda16abb188f353cca394dc96c53',1,'Barometer']]],
@@ -20,6 +22,10 @@ var searchData=
   ['console',['Console',['../classConsole.html#a17ca5bcb69c15274ddfcaa4d7b6f8057',1,'Console']]],
   ['control_5fsource',['control_source',['../classManual__control.html#aa736bf1b2d93755ce757ed1bf65bd9a0',1,'Manual_control']]],
   ['create_5fnew_5flog_5ffile',['create_new_log_file',['../classData__logging.html#aab519927c1b4a2ef2dac643b7615794f',1,'Data_logging']]],
+  ['critical_5fbehavior',['critical_behavior',['../classMission__planner.html#a88786fa08b97e4d7f326410ad8ce8b20',1,'Mission_planner']]],
+  ['critical_5fhandler',['critical_handler',['../classMission__planner.html#a161071abd5d807890c20f14386472303',1,'Mission_planner']]],
   ['ctrl_5fmode',['ctrl_mode',['../classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a',1,'Mav_mode']]],
+  ['current_5fwaypoint',['current_waypoint',['../classMavlink__waypoint__handler.html#a23814033f5fbe4c2fc7b94e18ee17f32',1,'Mavlink_waypoint_handler']]],
+  ['current_5fwaypoint_5findex',['current_waypoint_index',['../classMavlink__waypoint__handler.html#ab728a8c4758a7afcbe08a28e8c06a2c8',1,'Mavlink_waypoint_handler']]],
   ['cylinder',['Cylinder',['../classraytracing_1_1Cylinder.html#a0d9540b848c9340baf3ed1dbbfc2855b',1,'raytracing::Cylinder']]]
 ];

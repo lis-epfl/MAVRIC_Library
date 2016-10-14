@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node5" href="$classMission__handler__critical__navigating.html" title="{Mission_handler_critical_navigating\&lt; T \&gt;\n||+ Mission_handler_critical_navigating()\l+ can_handle()\l}" alt="" coords="5,553,264,655"/>
+<area shape="rect" id="node2" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="49,6,220,143"/>
+</map>

@@ -1,7 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="347,5,683,35"/>
-<area shape="rect" id="node5" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="379,59,651,88"/>
-<area shape="rect" id="node7" href="$classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c" title="Constructor." alt="" coords="392,112,637,141"/>
-<area shape="rect" id="node9" href="$classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="456,165,573,195"/>
-<area shape="rect" id="node11" href="$classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="443,219,587,248"/>
+<area shape="rect" id="node3" href="$classOnboard__parameters.html#a97d633ccd3799d614a1d236df39e5331" title="Constructor: Initialisation of the Parameter_Set structure by setting the number of onboard parameter..." alt="" coords="347,5,619,35"/>
+<area shape="rect" id="node5" href="$classPeriodic__telemetry.html#a04a68e559575833958821d5ea624695c" title="Constructor." alt="" coords="360,59,605,88"/>
+<area shape="rect" id="node7" href="$classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880" title="Initializes callback to mavlink messages." alt="" coords="424,112,541,141"/>
+<area shape="rect" id="node9" href="$classAhrs__ekf__mocap.html#a63cb640f4e7d5cb19d91c04351084c67" title="Initializes the mocap telemetry message and callback." alt="" coords="411,165,555,195"/>
 </map>

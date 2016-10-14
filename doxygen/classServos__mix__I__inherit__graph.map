@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classServos__mix.html" title="{Servos_mix\n|# torq_command_\l|+ Servos_mix()\l+ update()\l+ set_torque_command()\l}" alt="" coords="432,157,597,277"/>
+<area shape="rect" id="node5" href="$classServos__mix__birotor.html" title="{Servos_mix_birotor\n||}" alt="" coords="5,343,139,428"/>
+<area shape="rect" id="node7" href="$classServos__mix__quadcopter__cross.html" title="{Servos_mix_quadcopter_cross\n||+ Servos_mix_quadcopter_cross()\l+ update()\l}" alt="" coords="163,334,384,437"/>
+<area shape="rect" id="node9" href="$classServos__mix__quadcopter__diag.html" title="{Servos_mix_quadcopter_diag\n||+ Servos_mix_quadcopter_diag()\l+ update()\l+ default_config()\l}" alt="" coords="408,325,621,445"/>
+<area shape="rect" id="node11" href="$classServos__mix__wing.html" title="{Servos_mix_wing\n||+ Servos_mix_wing()\l+ update()\l+ default_config()\l}" alt="" coords="645,325,789,445"/>
+<area shape="rect" id="node13" href="$classServos__mix__ywing.html" title="{Servos_mix_ywing\n||+ Servos_mix_ywing()\l+ update()\l+ default_config()\l}" alt="" coords="813,325,965,445"/>
+</map>

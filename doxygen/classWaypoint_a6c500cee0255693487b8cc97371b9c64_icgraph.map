@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMission__handler__hold__position.html#afffb500321fe25a141ac222c62cc5371" title="Function to set the controller specific command." alt="" coords="321,6,812,35"/>
+<area shape="rect" id="node5" href="$classMission__handler__landing.html#ac869d2bd10336643b38d1c9c7b7777ec" title="Function to set the controller specific command for the descent to small altitude state..." alt="" coords="196,59,937,88"/>
+<area shape="rect" id="node7" href="$classMission__handler__landing.html#a20eec885dad664b9a532c5486c6abae7" title="Function to set the controller specific command for the descent to ground state." alt="" coords="201,112,932,142"/>
+<area shape="rect" id="node9" href="$classMission__handler__navigating.html#aec16a6a8a763d6459786f900d2ce4efd" title="Function to set the controller specific command." alt="" coords="329,166,804,195"/>
+<area shape="rect" id="node11" href="$classMission__handler__takeoff.html#ab570f242f871dd9df40b9a6583facbfd" title="Function to set the controller specific command." alt="" coords="339,219,795,248"/>
+<area shape="rect" id="node13" href="$classMission__handler__takeoff.html#acfe121fe25652d7d0cb2351a9996a8ac" title="Sets up this handler class for a first time initialization." alt="" coords="465,272,668,302"/>
+<area shape="rect" id="node15" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="452,326,681,355"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMission__planner.html#adb37dab461884be985fa9dce1f759e3a" title="Switches the mission handler to the inputted waypoint." alt="" coords="348,269,609,299"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="667,59,915,88"/>
+<area shape="rect" id="node13" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="1015,376,1223,405"/>
+<area shape="rect" id="node15" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="1315,376,1477,405"/>
+<area shape="rect" id="node17" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="685,413,896,443"/>
+<area shape="rect" id="node21" href="$classMission__planner.html#a52445702cb5a8611abb1e4272a6b15be" title="Inserts the inputted waypoint into the mission." alt="" coords="659,269,923,299"/>
+<area shape="rect" id="node7" href="$classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="991,59,1247,88"/>
+<area shape="rect" id="node9" href="$classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="971,5,1267,35"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="991,163,1247,192"/>
+<area shape="rect" id="node23" href="$classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold." alt="" coords="1016,216,1221,245"/>
+<area shape="rect" id="node26" href="$classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto&#45;takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF." alt="" coords="996,269,1241,299"/>
+<area shape="rect" id="node28" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="1004,323,1233,352"/>
+</map>

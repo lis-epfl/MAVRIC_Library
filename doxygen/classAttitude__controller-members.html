@@ -80,16 +80,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">Attitude_controller Member List</div>  </div>
+<div class="title">Attitude_controller&lt; TRate_controller &gt; Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-This is the complete list of members for <a class="el" href="classAttitude__controller.html">Attitude_controller</a>, including all inherited members.<table>
-  <tr class="memlist"><td><a class="el" href="classAttitude__controller.html#aed216d0f29a9d915601760025403432e">Attitude_controller</a>(const ahrs_t &amp;ahrs, const attitude_command_t &amp;attitude_command, rate_command_t &amp;rate_command, torque_command_t &amp;torque_command, conf_t config=default_config())</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76a6b134333cc8ffad95f7f6faf6a79cb1d">ATTITUDE_RATE</a> enum value</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller</a></td><td></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>default_config</b>() (defined in <a class="el" href="classAttitude__controller.html">Attitude_controller</a>)</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller</a></td><td><code> [inline, static]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76">mode_t</a> enum name</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76acca25b3c2ec0cdd34c9961f11b9cbdc1">RATE</a> enum value</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller</a></td><td></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>update</b>() (defined in <a class="el" href="classAttitude__controller.html">Attitude_controller</a>)</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller</a></td><td></td></tr>
+This is the complete list of members for <a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a>, including all inherited members.<table>
+  <tr bgcolor="#f0f0f0"><td><b>attitude_command</b>() (defined in <a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a>)</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a></td><td><code> [inline]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAttitude__controller.html#a74be4927cc540ffe5075e421eb9268f0">Attitude_controller</a>(args_t args, const conf_t &amp;config=default_config())</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>calc_rate_command</b>(const att_command_t &amp;att_command) (defined in <a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a>)</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a></td><td><code> [protected]</code></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>default_config</b>() (defined in <a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a>)</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a></td><td><code> [inline, static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAttitude__controller.html#a59ffb8c71f8552f9c2e6aec11620eca7">set_attitude_command</a>(const att_command_t &amp;att_command)</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classAttitude__controller.html#af22cc40c5c770104c84f62fd3f9433ab">update</a>()</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a></td><td><code> [virtual]</code></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>update_cascade</b>(const att_command_t &amp;att_command) (defined in <a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a>)</td><td><a class="el" href="classAttitude__controller.html">Attitude_controller&lt; TRate_controller &gt;</a></td><td><code> [protected]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -108,7 +109,7 @@ This is the complete list of members for <a class="el" href="classAttitude__cont
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2016 08:25:18 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 09:24:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

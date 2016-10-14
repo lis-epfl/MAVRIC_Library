@@ -3,7 +3,6 @@ var searchData=
   ['gain',['gain',['../structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f',1,'integrator_t::gain()'],['../structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5',1,'differentiator_t::gain()']]],
   ['get',['get',['../structbyte__stream__t.html#a1b4773a56e152e914c7c65b2ea4bef52',1,'byte_stream_t']]],
   ['global_5fflags',['global_flags',['../structubx__nav__sv__info__t.html#a4f6be11008e81dcc8c64c9f69681ba11',1,'ubx_nav_sv_info_t']]],
-  ['goal',['goal',['../classNavigation.html#a8ff2b341a251241942aa81d76fdc9130',1,'Navigation']]],
   ['gpio',['GPIO',['../structtLED__DESCRIPTOR.html#a6e21a978853dbc4a72033e2c058c4a27',1,'tLED_DESCRIPTOR']]],
   ['gpio_5fconfig',['gpio_config',['../structPwm__stm32_1_1config__t.html#a71787f0c8205688b9be5a7b07f0724ab',1,'Pwm_stm32::config_t']]],
   ['gpio_5fled_5ferr_5f',['gpio_led_err_',['../classSparky__chibi.html#ad72e00857ec579dafd4f35fce90cce14',1,'Sparky_chibi']]],

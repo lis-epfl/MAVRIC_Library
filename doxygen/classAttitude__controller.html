@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: Attitude_controller Class Reference</title>
+<title>MAV&#39;RIC: Attitude_controller&lt; TRate_controller &gt; Class Template Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -81,96 +81,78 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Attitude_controller Class Reference</div>  </div>
+<div class="title">Attitude_controller&lt; TRate_controller &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Attitude_controller" -->
+<!-- doxytag: class="Attitude_controller" --><!-- doxytag: inherits="Attitude_controller_I" --><div class="dynheader">
+Inheritance diagram for Attitude_controller&lt; TRate_controller &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classAttitude__controller__inherit__graph.png" border="0" usemap="#Attitude__controller_3_01TRate__controller_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="Attitude__controller_3_01TRate__controller_01_4_inherit__map" id="Attitude__controller_3_01TRate__controller_01_4_inherit__map">
+<area shape="rect" id="node2" href="classAttitude__controller__I.html" title="{Attitude_controller_I\n||+ update()\l+ set_attitude_command()\l}" alt="" coords="41,6,215,109"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for Attitude_controller&lt; TRate_controller &gt;:</div>
+<div class="dyncontent">
+<div class="center"><img src="classAttitude__controller__coll__graph.png" border="0" usemap="#Attitude__controller_3_01TRate__controller_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="Attitude__controller_3_01TRate__controller_01_4_coll__map" id="Attitude__controller_3_01TRate__controller_01_4_coll__map">
+<area shape="rect" id="node2" href="classAttitude__controller__I.html" title="{Attitude_controller_I\n||+ update()\l+ set_attitude_command()\l}" alt="" coords="41,6,215,109"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+
 <p><a href="classAttitude__controller-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAttitude__controller_1_1args__t.html">args_t</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Attitude controller constructor arguments.  <a href="structAttitude__controller_1_1args__t.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAttitude__controller_1_1conf__t.html">conf_t</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Attitude controller configuration.  <a href="structAttitude__controller_1_1conf__t.html#details">More...</a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76">mode_t</a> { <a class="el" href="classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76a6b134333cc8ffad95f7f6faf6a79cb1d">ATTITUDE_RATE</a> =  0, 
-<a class="el" href="classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76acca25b3c2ec0cdd34c9961f11b9cbdc1">RATE</a> =  1
- }</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Control mode (attitude or rate)  <a href="classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttitude__controller.html#aed216d0f29a9d915601760025403432e">Attitude_controller</a> (const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, const <a class="el" href="structattitude__command__t.html">attitude_command_t</a> &amp;attitude_command, <a class="el" href="structrate__command__t.html">rate_command_t</a> &amp;rate_command, <a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;torque_command, <a class="el" href="structAttitude__controller_1_1conf__t.html">conf_t</a> config=default_config())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#aed216d0f29a9d915601760025403432e"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a633d0bc5c7ced6ac86c24fd6c5bf9540"></a><!-- doxytag: member="Attitude_controller::update" ref="a633d0bc5c7ced6ac86c24fd6c5bf9540" args="()" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update</b> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttitude__controller.html#a74be4927cc540ffe5075e421eb9268f0">Attitude_controller</a> (<a class="el" href="structAttitude__controller_1_1args__t.html">args_t</a> args, const <a class="el" href="structAttitude__controller_1_1conf__t.html">conf_t</a> &amp;config=default_config())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a74be4927cc540ffe5075e421eb9268f0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af22cc40c5c770104c84f62fd3f9433ab"></a><!-- doxytag: member="Attitude_controller::update" ref="af22cc40c5c770104c84f62fd3f9433ab" args="()" -->
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttitude__controller.html#af22cc40c5c770104c84f62fd3f9433ab">update</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Update controller;. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAttitude__controller.html#a59ffb8c71f8552f9c2e6aec11620eca7">set_attitude_command</a> (const <a class="el" href="structAttitude__controller__I_1_1att__command__t.html">att_command_t</a> &amp;att_command)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the attitude command (desired attitude and thrust)  <a href="#a59ffb8c71f8552f9c2e6aec11620eca7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aca4211e83dcaabb361083c2dae1f1d9c"></a><!-- doxytag: member="Attitude_controller::attitude_command" ref="aca4211e83dcaabb361083c2dae1f1d9c" args="()" -->
+<a class="el" href="structAttitude__controller__I_1_1att__command__t.html">att_command_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>attitude_command</b> ()</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd2648ec63771158ae369f0a771c18b8"></a><!-- doxytag: member="Attitude_controller::default_config" ref="acd2648ec63771158ae369f0a771c18b8" args="()" -->
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5e8afa295e15eb2b42d4292b9c18f0f5"></a><!-- doxytag: member="Attitude_controller::default_config" ref="a5e8afa295e15eb2b42d4292b9c18f0f5" args="()" -->
 static <a class="el" href="structAttitude__controller_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>default_config</b> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3b26a1f2352f5021e1f49a0b596d14e0"></a><!-- doxytag: member="Attitude_controller::update_cascade" ref="a3b26a1f2352f5021e1f49a0b596d14e0" args="(const att_command_t &amp;att_command)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update_cascade</b> (const <a class="el" href="structAttitude__controller__I_1_1att__command__t.html">att_command_t</a> &amp;att_command)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aec333dc729cdb1f53b09f22abc430e62"></a><!-- doxytag: member="Attitude_controller::calc_rate_command" ref="aec333dc729cdb1f53b09f22abc430e62" args="(const att_command_t &amp;att_command)" -->
+TRate_controller::rate_command_t&#160;</td><td class="memItemRight" valign="bottom"><b>calc_rate_command</b> (const <a class="el" href="structAttitude__controller__I_1_1att__command__t.html">att_command_t</a> &amp;att_command)</td></tr>
 </table>
-<hr/><h2>Member Enumeration Documentation</h2>
-<a class="anchor" id="a67326779bdb24d3d25782a82d1050f76"></a><!-- doxytag: member="Attitude_controller::mode_t" ref="a67326779bdb24d3d25782a82d1050f76" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classAttitude__controller.html#a67326779bdb24d3d25782a82d1050f76">Attitude_controller::mode_t</a></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
+<h3>template&lt;class TRate_controller&gt;<br/>
+ class Attitude_controller&lt; TRate_controller &gt;</h3>
 
-<p>Control mode (attitude or rate) </p>
-<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="a67326779bdb24d3d25782a82d1050f76a6b134333cc8ffad95f7f6faf6a79cb1d"></a><!-- doxytag: member="ATTITUDE_RATE" ref="a67326779bdb24d3d25782a82d1050f76a6b134333cc8ffad95f7f6faf6a79cb1d" args="" -->ATTITUDE_RATE</em>&nbsp;</td><td>
-<p>Angles + rate control. </p>
-</td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a67326779bdb24d3d25782a82d1050f76acca25b3c2ec0cdd34c9961f11b9cbdc1"></a><!-- doxytag: member="RATE" ref="a67326779bdb24d3d25782a82d1050f76acca25b3c2ec0cdd34c9961f11b9cbdc1" args="" -->RATE</em>&nbsp;</td><td>
-<p>Rate control only. </p>
-</td></tr>
-</table>
-</dd>
-</dl>
-
-</div>
-</div>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aed216d0f29a9d915601760025403432e"></a><!-- doxytag: member="Attitude_controller::Attitude_controller" ref="aed216d0f29a9d915601760025403432e" args="(const ahrs_t &amp;ahrs, const attitude_command_t &amp;attitude_command, rate_command_t &amp;rate_command, torque_command_t &amp;torque_command, conf_t config=default_config())" -->
+<a class="anchor" id="a74be4927cc540ffe5075e421eb9268f0"></a><!-- doxytag: member="Attitude_controller::Attitude_controller" ref="a74be4927cc540ffe5075e421eb9268f0" args="(args_t args, const conf_t &amp;config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;class TRate_controller &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classAttitude__controller.html#aed216d0f29a9d915601760025403432e">Attitude_controller::Attitude_controller</a> </td>
+          <td class="memname"><a class="el" href="classAttitude__controller.html">Attitude_controller</a>&lt; TRate_controller &gt;::<a class="el" href="classAttitude__controller.html">Attitude_controller</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>ahrs</em>, </td>
+          <td class="paramtype"><a class="el" href="structAttitude__controller_1_1args__t.html">args_t</a>&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structattitude__command__t.html">attitude_command_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>attitude_command</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structrate__command__t.html">rate_command_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>rate_command</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>torque_command</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structAttitude__controller_1_1conf__t.html">conf_t</a>&#160;</td>
+          <td class="paramtype">const <a class="el" href="structAttitude__controller_1_1conf__t.html">conf_t</a> &amp;&#160;</td>
           <td class="paramname"><em>config</em> = <code>default_config()</code>&#160;</td>
         </tr>
         <tr>
@@ -185,17 +167,66 @@ static <a class="el" href="structAttitude__controller_1_1conf__t.html">conf_t</a
 <p>Constructor. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">ahrs</td><td>Pointer to the estimated attitude </td></tr>
+    <tr><td class="paramname">args</td><td>Constructor arguments </td></tr>
     <tr><td class="paramname">config</td><td>Configuration </td></tr>
   </table>
   </dd>
 </dl>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classAttitude__controller_a74be4927cc540ffe5075e421eb9268f0_cgraph.png" border="0" usemap="#classAttitude__controller_a74be4927cc540ffe5075e421eb9268f0_cgraph" alt=""/></div>
+<map name="classAttitude__controller_a74be4927cc540ffe5075e421eb9268f0_cgraph" id="classAttitude__controller_a74be4927cc540ffe5075e421eb9268f0_cgraph">
+<area shape="rect" id="node3" href="classAttitude__controller.html#a59ffb8c71f8552f9c2e6aec11620eca7" title="sets the attitude command (desired attitude and thrust)" alt="" coords="293,5,560,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a59ffb8c71f8552f9c2e6aec11620eca7"></a><!-- doxytag: member="Attitude_controller::set_attitude_command" ref="a59ffb8c71f8552f9c2e6aec11620eca7" args="(const att_command_t &amp;att_command)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TRate_controller &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classAttitude__controller.html">Attitude_controller</a>&lt; TRate_controller &gt;::<a class="el" href="classAttitude__controller.html#a59ffb8c71f8552f9c2e6aec11620eca7">set_attitude_command</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structAttitude__controller__I_1_1att__command__t.html">att_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>command</em></td><td>)</td>
+          <td><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sets the attitude command (desired attitude and thrust) </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>attitude command indicating desired attitude and thrust in local frame</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success whether command was accepted </dd></dl>
+
+<p>Implements <a class="el" href="classAttitude__controller__I.html#aead96add4ae3e6f30bf7ee19b5fc1daf">Attitude_controller_I</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classAttitude__controller_a59ffb8c71f8552f9c2e6aec11620eca7_icgraph.png" border="0" usemap="#classAttitude__controller_a59ffb8c71f8552f9c2e6aec11620eca7_icgraph" alt=""/></div>
+<map name="classAttitude__controller_a59ffb8c71f8552f9c2e6aec11620eca7_icgraph" id="classAttitude__controller_a59ffb8c71f8552f9c2e6aec11620eca7_icgraph">
+<area shape="rect" id="node3" href="classAttitude__controller.html#a74be4927cc540ffe5075e421eb9268f0" title="Constructor." alt="" coords="320,5,560,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="attitude__controller_8hpp_source.html">attitude_controller.hpp</a></li>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/attitude_controller.cpp</li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="attitude__controller_8hxx_source.html">attitude_controller.hxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -215,7 +246,7 @@ static <a class="el" href="structAttitude__controller_1_1conf__t.html">conf_t</a
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2016 08:25:18 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 09:24:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

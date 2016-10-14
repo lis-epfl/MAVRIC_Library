@@ -1,3 +1,11 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structNavigation_1_1conf__t.html" title="The navigation configuration structure." alt="" coords="5,5,133,35"/>
+<area shape="rect" id="node1" href="$classMission__handler.html" title="Mission_handler" alt="" coords="7,139,121,168"/>
+<area shape="rect" id="node3" href="$classMission__handler__hold__position.html" title="Mission_handler_hold_position\&lt; T \&gt;" alt="" coords="172,5,401,35"/>
+<area shape="rect" id="node5" href="$classMission__handler__landing.html" title="Mission_handler_landing\&lt; T1, T2 \&gt;" alt="" coords="173,59,400,88"/>
+<area shape="rect" id="node9" href="$classMission__handler__manual.html" title="Mission_handler_manual" alt="" coords="204,112,369,141"/>
+<area shape="rect" id="node11" href="$classMission__handler__navigating.html" title="Mission_handler_navigating\&lt; T \&gt;" alt="" coords="180,165,393,195"/>
+<area shape="rect" id="node15" href="$classMission__handler__on__ground.html" title="Mission_handler_on_ground" alt="" coords="196,219,377,248"/>
+<area shape="rect" id="node17" href="$classMission__handler__takeoff.html" title="Mission_handler_takeoff\&lt; T \&gt;" alt="" coords="189,272,384,301"/>
+<area shape="rect" id="node7" href="$classMission__handler__critical__landing.html" title="Mission_handler_critical_landing\&lt; T1, T2 \&gt;" alt="" coords="452,59,721,88"/>
+<area shape="rect" id="node13" href="$classMission__handler__critical__navigating.html" title="Mission_handler_critical_navigating\&lt; T \&gt;" alt="" coords="457,165,716,195"/>
 </map>

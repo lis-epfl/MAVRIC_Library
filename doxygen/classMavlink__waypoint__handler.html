@@ -83,7 +83,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">Mavlink_waypoint_handler Class Reference</div>  </div>
@@ -94,14 +93,14 @@ Inheritance diagram for Mavlink_waypoint_handler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__waypoint__handler__inherit__graph.png" border="0" usemap="#Mavlink__waypoint__handler_inherit__map" alt="Inheritance graph"/></div>
 <map name="Mavlink__waypoint__handler_inherit__map" id="Mavlink__waypoint__handler_inherit__map">
-<area shape="rect" id="node3" href="classMavlink__waypoint__handler__swarm.html" title="{Mavlink_waypoint_handler_swarm\n||}" alt="" coords="5,400,227,485"/></map>
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler__swarm.html" title="{Mavlink_waypoint_handler_swarm\n||}" alt="" coords="5,451,227,536"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Mavlink_waypoint_handler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMavlink__waypoint__handler__coll__graph.png" border="0" usemap="#Mavlink__waypoint__handler_coll__map" alt="Collaboration graph"/></div>
 <map name="Mavlink__waypoint__handler_coll__map" id="Mavlink__waypoint__handler_coll__map">
-<area shape="rect" id="node2" href="structwaypoint__local__struct__t.html" title="The MAV&#39;RIC waypoint structure." alt="" coords="265,332,423,487"/><area shape="rect" id="node12" href="classNavigation.html" title="The navigation structure." alt="" coords="104,717,261,1027"/><area shape="rect" id="node4" href="structdubin__t.html" title="{dubin_t\n|+ circle_center_1\l+ tangent_point_1\l+ sense_1\l+ radius_1\l+ circle_center_2\l+ tangent_point_2\l+ line_direction\l+ length\l|}" alt="" coords="281,6,407,213"/><area shape="rect" id="node6" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="536,777,669,967"/><area shape="rect" id="node8" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="693,760,832,984"/><area shape="rect" id="node10" href="structMavlink__waypoint__handler_1_1waypoint__struct__t.html" title="The MAVLink waypoint structure." alt="" coords="856,743,1141,1001"/><area shape="rect" id="node15" href="structquat__t.html" title="Unit quaternion." alt="" coords="17,358,76,461"/><area shape="rect" id="node17" href="structpid__controller__t.html" title="PID controller." alt="" coords="100,289,228,530"/><area shape="rect" id="node19" href="structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="5,49,109,169"/><area shape="rect" id="node21" href="structintegrator__t.html" title="Integrator part of PID." alt="" coords="133,41,237,178"/><area shape="rect" id="node23" href="classState.html" title="The MAV state." alt="" coords="1165,621,1344,1123"/><area shape="rect" id="node25" href="classBattery.html" title="Battery voltage monitor." alt="" coords="1135,332,1217,487"/><area shape="rect" id="node27" href="classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="1241,280,1423,539"/></map>
+<area shape="rect" id="node2" href="classMission__handler__registry.html" title="{Mission_handler_registry\n||+ Mission_handler_registry()\l+ register_mission_handler()\l+ get_mission_handler()\l}" alt="" coords="5,153,192,273"/><area shape="rect" id="node4" href="classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="221,6,336,421"/><area shape="rect" id="node6" href="classMavlink__message__handler.html" title="Message handler base class." alt="" coords="360,84,555,343"/><area shape="rect" id="node8" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="579,119,712,308"/><area shape="rect" id="node10" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="736,101,875,325"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classMavlink__waypoint__handler-members.html">List of all members.</a></p>
@@ -109,95 +108,72 @@ Collaboration diagram for Mavlink_waypoint_handler:</div>
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMavlink__waypoint__handler_1_1conf__t.html">conf_t</a></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structMavlink__waypoint__handler_1_1waypoint__struct__t.html">waypoint_struct_t</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The MAVLink waypoint structure.  <a href="structMavlink__waypoint__handler_1_1waypoint__struct__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579">Mavlink_waypoint_handler</a> (<a class="el" href="classINS.html">INS</a> &amp;ins, <a class="el" href="classNavigation.html">Navigation</a> &amp;navigation, const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, <a class="el" href="classState.html">State</a> &amp;state, const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control, <a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> &amp;message_handler, const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="structMavlink__waypoint__handler_1_1conf__t.html">conf_t</a> config=<a class="el" href="classMavlink__waypoint__handler.html#afde7d13a029d93d5a7dfaa4a034684d7">default_config</a>())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the waypoint handler.  <a href="#a398d34a4dec2d2c34fbca65998fbd579"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a6e65a0cfc44b105f003a62c4790348ab">init_homing_waypoint</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a home waypoint at (0,0,0) at start up.  <a href="#a6e65a0cfc44b105f003a62c4790348ab"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640">nav_plan_init</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a first waypoint if a flight plan is set.  <a href="#a7cd9b0900f4aa77c8ce3f1d3dc7c5640"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#ac05cdec6fc03627312b32ab260f60f73">hold_init</a> (local_position_t local_pos)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise the position hold mode.  <a href="#ac05cdec6fc03627312b32ab260f60f73"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a345943c34c5d95d39cf78211ccc5a92a">Mavlink_waypoint_handler</a> (const <a class="el" href="classINS.html">INS</a> &amp;ins, <a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> &amp;message_handler, const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="classMission__handler__registry.html">Mission_handler_registry</a> &amp;mission_handler_registry, <a class="el" href="structMavlink__waypoint__handler_1_1conf__t.html">conf_t</a> config=<a class="el" href="classMavlink__waypoint__handler.html#afde7d13a029d93d5a7dfaa4a034684d7">default_config</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the waypoint handler.  <a href="#a345943c34c5d95d39cf78211ccc5a92a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1f3c93a2efffbe7d5738f4313a04f1d7"></a><!-- doxytag: member="Mavlink_waypoint_handler::init" ref="a1f3c93a2efffbe7d5738f4313a04f1d7" args="()" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#aefe41b70a4df4ac22a038a4537e84bbc">waypoint_count</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of waypoints.  <a href="#aefe41b70a4df4ac22a038a4537e84bbc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a568d0dae778487081ff3b48a3e7a612d">waypoint_received_time_ms</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the time that the waypoint list was received.  <a href="#a568d0dae778487081ff3b48a3e7a612d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a23814033f5fbe4c2fc7b94e18ee17f32">current_waypoint</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current waypoint.  <a href="#a23814033f5fbe4c2fc7b94e18ee17f32"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#ac3647278a7a120112d6910f986be9049">next_waypoint</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the next waypoint if available.  <a href="#ac3647278a7a120112d6910f986be9049"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a4a87dad6380f894d3fe7967bfcf408b8">waypoint_from_index</a> (int i) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a waypoint from the list from a specific index.  <a href="#a4a87dad6380f894d3fe7967bfcf408b8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#aaa7dbb155e0281aec3c59b429c47a4d1">home_waypoint</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the home waypoint.  <a href="#aaa7dbb155e0281aec3c59b429c47a4d1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a073aa02dbd36c45fcb4fd6f1887d4f25"></a><!-- doxytag: member="Mavlink_waypoint_handler::advance_to_next_waypoint" ref="a073aa02dbd36c45fcb4fd6f1887d4f25" args="()" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a073aa02dbd36c45fcb4fd6f1887d4f25">advance_to_next_waypoint</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the next waypoint as the current one. Should be called when the current waypoint has been reached. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#ab728a8c4758a7afcbe08a28e8c06a2c8">current_waypoint_index</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current waypoint index.  <a href="#ab728a8c4758a7afcbe08a28e8c06a2c8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a95350e0c2a032342b8c7bf7ac864f2df">set_current_waypoint_index</a> (int index)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current waypoint index if possible.  <a href="#a95350e0c2a032342b8c7bf7ac864f2df"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84">update</a> (<a class="el" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a> *waypoint_handler)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The waypoint handler tasks, gives a goal for the navigation module.  <a href="#a20d96cd522c40d00f247babe1dcedd84"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structMavlink__waypoint__handler_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#afde7d13a029d93d5a7dfaa4a034684d7">default_config</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration.  <a href="#afde7d13a029d93d5a7dfaa4a034684d7"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46d0ab0d22e138e9e9030e1596a6719b"></a><!-- doxytag: member="Mavlink_waypoint_handler::waypoint_hold_coordinates" ref="a46d0ab0d22e138e9e9030e1596a6719b" args="" -->
-<a class="el" href="structwaypoint__local__struct__t.html">waypoint_local_struct_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a46d0ab0d22e138e9e9030e1596a6719b">waypoint_hold_coordinates</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED) <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab8b98bef18a65ffe7be5e57c1f9e483"></a><!-- doxytag: member="Mavlink_waypoint_handler::waypoint_list" ref="aab8b98bef18a65ffe7be5e57c1f9e483" args="[MAX_WAYPOINTS]" -->
-<a class="el" href="structMavlink__waypoint__handler_1_1waypoint__struct__t.html">waypoint_struct_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#aab8b98bef18a65ffe7be5e57c1f9e483">waypoint_list</a> [MAX_WAYPOINTS]</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The array of all waypoints (max MAX_WAYPOINTS) <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afc890a4f98e1ed61ad24aabaebc5237b"></a><!-- doxytag: member="Mavlink_waypoint_handler::waypoint_list_" ref="afc890a4f98e1ed61ad24aabaebc5237b" args="[MAX_WAYPOINTS]" -->
+<a class="el" href="classWaypoint.html">Waypoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#afc890a4f98e1ed61ad24aabaebc5237b">waypoint_list_</a> [MAX_WAYPOINTS]</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The array of all waypoints (max MAX_WAYPOINTS) <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad51da8037c94579106d1c8ed0229e12b"></a><!-- doxytag: member="Mavlink_waypoint_handler::waypoint_count_" ref="ad51da8037c94579106d1c8ed0229e12b" args="" -->
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#ad51da8037c94579106d1c8ed0229e12b">waypoint_count_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The total number of waypoints. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af281c84c7d1a51dd845caa2d9e48a7a2"></a><!-- doxytag: member="Mavlink_waypoint_handler::current_waypoint_index_" ref="af281c84c7d1a51dd845caa2d9e48a7a2" args="" -->
-int8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#af281c84c7d1a51dd845caa2d9e48a7a2">current_waypoint_index_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of the current waypoint. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a133c84082db029768e132ecb54ba8515"></a><!-- doxytag: member="Mavlink_waypoint_handler::hold_waypoint_set_" ref="a133c84082db029768e132ecb54ba8515" args="" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a133c84082db029768e132ecb54ba8515">hold_waypoint_set_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to tell if the hold position waypoint is set. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f44517f0fb1efd1956073076b959ba8"></a><!-- doxytag: member="Mavlink_waypoint_handler::start_wpt_time_" ref="a2f44517f0fb1efd1956073076b959ba8" args="" -->
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a2f44517f0fb1efd1956073076b959ba8">start_wpt_time_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The time at which the MAV starts to travel towards its waypoint. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad9a80bd181bce4e65770e4ca88f04e67"></a><!-- doxytag: member="Mavlink_waypoint_handler::current_waypoint_index_" ref="ad9a80bd181bce4e65770e4ca88f04e67" args="" -->
+uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#ad9a80bd181bce4e65770e4ca88f04e67">current_waypoint_index_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The current waypoint index. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38b08be09fa4aa2eae78e878d7c54ecc"></a><!-- doxytag: member="Mavlink_waypoint_handler::home_waypoint_" ref="a38b08be09fa4aa2eae78e878d7c54ecc" args="" -->
+<a class="el" href="classWaypoint.html">Waypoint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a38b08be09fa4aa2eae78e878d7c54ecc">home_waypoint_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The home waypoint. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0bf5554cb1e38fd1e588ffc45400bee4"></a><!-- doxytag: member="Mavlink_waypoint_handler::mavlink_stream_" ref="a0bf5554cb1e38fd1e588ffc45400bee4" args="" -->
 const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a0bf5554cb1e38fd1e588ffc45400bee4">mavlink_stream_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to MAVLink stream. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8f6d41542592069ceed685f693efc2d0"></a><!-- doxytag: member="Mavlink_waypoint_handler::state_" ref="a8f6d41542592069ceed685f693efc2d0" args="" -->
-<a class="el" href="classState.html">State</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a8f6d41542592069ceed685f693efc2d0">state_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to the state structure. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49c94e8188e6d382bf977fc6f8d7d7b4"></a><!-- doxytag: member="Mavlink_waypoint_handler::navigation_" ref="a49c94e8188e6d382bf977fc6f8d7d7b4" args="" -->
-<a class="el" href="classNavigation.html">Navigation</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a49c94e8188e6d382bf977fc6f8d7d7b4">navigation_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to the navigation structure. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6fd5cd678d57cbb3ae7b9446e1c924ce"></a><!-- doxytag: member="Mavlink_waypoint_handler::ins_" ref="a6fd5cd678d57cbb3ae7b9446e1c924ce" args="" -->
-<a class="el" href="classINS.html">INS</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a6fd5cd678d57cbb3ae7b9446e1c924ce">ins_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to the Inertial <a class="el" href="classNavigation.html" title="The navigation structure.">Navigation</a> System. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The reference to MAVLink stream object. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab83ca67203970d7ec82331fbb9561e92"></a><!-- doxytag: member="Mavlink_waypoint_handler::ins_" ref="ab83ca67203970d7ec82331fbb9561e92" args="" -->
+const <a class="el" href="classINS.html">INS</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#ab83ca67203970d7ec82331fbb9561e92">ins_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer to the position estimation structure. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46e10f8d4ef8f5aa0fce5e1a5c07cd5e"></a><!-- doxytag: member="Mavlink_waypoint_handler::message_handler_" ref="a46e10f8d4ef8f5aa0fce5e1a5c07cd5e" args="" -->
+<a class="el" href="classMavlink__message__handler.html">Mavlink_message_handler</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#a46e10f8d4ef8f5aa0fce5e1a5c07cd5e">message_handler_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The reference to the mavlink message handler. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af5b1b7f462377b3c500a046bb9007418"></a><!-- doxytag: member="Mavlink_waypoint_handler::mission_handler_registry_" ref="af5b1b7f462377b3c500a046bb9007418" args="" -->
+<a class="el" href="classMission__handler__registry.html">Mission_handler_registry</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMavlink__waypoint__handler.html#af5b1b7f462377b3c500a046bb9007418">mission_handler_registry_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The reference to the mission handler registry. <br/></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a398d34a4dec2d2c34fbca65998fbd579"></a><!-- doxytag: member="Mavlink_waypoint_handler::Mavlink_waypoint_handler" ref="a398d34a4dec2d2c34fbca65998fbd579" args="(INS &amp;ins, Navigation &amp;navigation, const ahrs_t &amp;ahrs, State &amp;state, const Manual_control &amp;manual_control, Mavlink_message_handler &amp;message_handler, const Mavlink_stream &amp;mavlink_stream, conf_t config=default_config())" -->
+<a class="anchor" id="a345943c34c5d95d39cf78211ccc5a92a"></a><!-- doxytag: member="Mavlink_waypoint_handler::Mavlink_waypoint_handler" ref="a345943c34c5d95d39cf78211ccc5a92a" args="(const INS &amp;ins, Mavlink_message_handler &amp;message_handler, const Mavlink_stream &amp;mavlink_stream, Mission_handler_registry &amp;mission_handler_registry, conf_t config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579">Mavlink_waypoint_handler::Mavlink_waypoint_handler</a> </td>
+          <td class="memname"><a class="el" href="classMavlink__waypoint__handler.html#a345943c34c5d95d39cf78211ccc5a92a">Mavlink_waypoint_handler::Mavlink_waypoint_handler</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classINS.html">INS</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classINS.html">INS</a> &amp;&#160;</td>
           <td class="paramname"><em>ins</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classNavigation.html">Navigation</a> &amp;&#160;</td>
-          <td class="paramname"><em>navigation</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>ahrs</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classState.html">State</a> &amp;&#160;</td>
-          <td class="paramname"><em>state</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classManual__control.html">Manual_control</a> &amp;&#160;</td>
-          <td class="paramname"><em>manual_control</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -210,6 +186,12 @@ const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#1
           <td></td>
           <td class="paramtype">const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#160;</td>
           <td class="paramname"><em>mavlink_stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classMission__handler__registry.html">Mission_handler_registry</a> &amp;&#160;</td>
+          <td class="paramname"><em>mission_handler_registry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -229,31 +211,85 @@ const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;&#1
 <p>Initialize the waypoint handler. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">ins</td><td>The pointer to the Inertial <a class="el" href="classNavigation.html" title="The navigation structure.">Navigation</a> System </td></tr>
-    <tr><td class="paramname">navigation</td><td>The pointer to the navigation structure </td></tr>
-    <tr><td class="paramname">ahrs</td><td>The pointer to the attitude estimation structure </td></tr>
-    <tr><td class="paramname">state</td><td>The pointer to the state structure </td></tr>
-    <tr><td class="paramname">manual_control</td><td>The pointer to the manual control structure </td></tr>
-    <tr><td class="paramname">message_handler</td><td>The pointer to the MAVLink message_handler structure </td></tr>
-    <tr><td class="paramname">mavlink_stream</td><td>The pointer to the MAVLink stream structure </td></tr>
-    <tr><td class="paramname">config</td><td>The configuration of the mavlink_waypoint handler structure</td></tr>
+    <tr><td class="paramname">ins</td><td>The reference to the Inertial Navigation System </td></tr>
+    <tr><td class="paramname">message_handler</td><td>The reference to the message handler </td></tr>
+    <tr><td class="paramname">mavlink_stream</td><td>The reference to the MAVLink stream structure </td></tr>
+    <tr><td class="paramname">mission_handler_registry</td><td>The reference to the mission handler registry </td></tr>
+    <tr><td class="paramname">config</td><td>The config structure (optional)</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the init succeed, false otherwise </dd></dl>
 
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a23814033f5fbe4c2fc7b94e18ee17f32"></a><!-- doxytag: member="Mavlink_waypoint_handler::current_waypoint" ref="a23814033f5fbe4c2fc7b94e18ee17f32" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp; <a class="el" href="classMavlink__waypoint__handler.html#a23814033f5fbe4c2fc7b94e18ee17f32">Mavlink_waypoint_handler::current_waypoint</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the current waypoint. </p>
+<p>If there is no waypoints in the list, creates a hold position waypoint as the first index in the list and returns it</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>current waypoint </dd></dl>
+
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMavlink__waypoint__handler_a398d34a4dec2d2c34fbca65998fbd579_cgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a398d34a4dec2d2c34fbca65998fbd579_cgraph" alt=""/></div>
-<map name="classMavlink__waypoint__handler_a398d34a4dec2d2c34fbca65998fbd579_cgraph" id="classMavlink__waypoint__handler_a398d34a4dec2d2c34fbca65998fbd579_cgraph">
-<area shape="rect" id="node3" href="classMavlink__message__handler.html#a1f977e1892b567c50d64c19e20b6ea00" title="Registers a new callback for a message." alt="" coords="399,59,689,88"/><area shape="rect" id="node9" href="classMavlink__message__handler.html#a75064672275e4187f71185925b0cf247" title="Registers a new callback for a command." alt="" coords="399,152,689,181"/><area shape="rect" id="node15" href="classMavlink__waypoint__handler.html#a6e65a0cfc44b105f003a62c4790348ab" title="Initialize a home waypoint at (0,0,0) at start up." alt="" coords="391,205,697,235"/><area shape="rect" id="node17" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="415,285,673,315"/><area shape="rect" id="node5" href="classMavlink__message__handler.html#a50e5155200109a40a5030781cbdb1928" title="Get maximum number of message callbacks." alt="" coords="748,5,1081,35"/><area shape="rect" id="node7" href="classMavlink__message__handler.html#aa76cb2bed5e2212176570c3011209abc" title="Get list of message callbacks." alt="" coords="771,59,1059,88"/><area shape="rect" id="node11" href="classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b" title="Get maximum number of command callbacks." alt="" coords="748,112,1081,141"/><area shape="rect" id="node13" href="classMavlink__message__handler.html#a1588d09f61e258dd8a7f5c1e8fb92e45" title="Get list of command callbacks." alt="" coords="771,165,1059,195"/><area shape="rect" id="node19" href="classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="859,219,971,248"/><area shape="rect" id="node21" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="852,272,977,301"/><area shape="rect" id="node23" href="classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="853,325,976,355"/><area shape="rect" id="node25" href="classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="859,379,971,408"/><area shape="rect" id="node27" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="873,432,956,461"/></map>
+<div class="center"><img src="classMavlink__waypoint__handler_a23814033f5fbe4c2fc7b94e18ee17f32_cgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a23814033f5fbe4c2fc7b94e18ee17f32_cgraph" alt=""/></div>
+<map name="classMavlink__waypoint__handler_a23814033f5fbe4c2fc7b94e18ee17f32_cgraph" id="classMavlink__waypoint__handler_a23814033f5fbe4c2fc7b94e18ee17f32_cgraph">
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#aaa7dbb155e0281aec3c59b429c47a4d1" title="Returns the home waypoint." alt="" coords="336,5,611,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__waypoint__handler_a23814033f5fbe4c2fc7b94e18ee17f32_icgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a23814033f5fbe4c2fc7b94e18ee17f32_icgraph" alt=""/></div>
+<map name="classMavlink__waypoint__handler_a23814033f5fbe4c2fc7b94e18ee17f32_icgraph" id="classMavlink__waypoint__handler_a23814033f5fbe4c2fc7b94e18ee17f32_icgraph">
+<area shape="rect" id="node3" href="classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="336,72,584,101"/><area shape="rect" id="node11" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="356,139,564,168"/><area shape="rect" id="node5" href="classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="652,5,908,35"/><area shape="rect" id="node7" href="classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="632,59,928,88"/><area shape="rect" id="node9" href="classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="652,112,908,141"/><area shape="rect" id="node13" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="699,165,861,195"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="ab728a8c4758a7afcbe08a28e8c06a2c8"></a><!-- doxytag: member="Mavlink_waypoint_handler::current_waypoint_index" ref="ab728a8c4758a7afcbe08a28e8c06a2c8" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t <a class="el" href="classMavlink__waypoint__handler.html#ab728a8c4758a7afcbe08a28e8c06a2c8">Mavlink_waypoint_handler::current_waypoint_index</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the current waypoint index. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Current waypoint index </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__waypoint__handler_ab728a8c4758a7afcbe08a28e8c06a2c8_icgraph.png" border="0" usemap="#classMavlink__waypoint__handler_ab728a8c4758a7afcbe08a28e8c06a2c8_icgraph" alt=""/></div>
+<map name="classMavlink__waypoint__handler_ab728a8c4758a7afcbe08a28e8c06a2c8_icgraph" id="classMavlink__waypoint__handler_ab728a8c4758a7afcbe08a28e8c06a2c8_icgraph">
+<area shape="rect" id="node3" href="classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="375,5,631,35"/><area shape="rect" id="node5" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="399,59,607,88"/><area shape="rect" id="node7" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="680,59,843,88"/></map>
+</div>
+</p>
+
+</div>
+</div>
 <a class="anchor" id="afde7d13a029d93d5a7dfaa4a034684d7"></a><!-- doxytag: member="Mavlink_waypoint_handler::default_config" ref="afde7d13a029d93d5a7dfaa4a034684d7" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -274,125 +310,94 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="ac05cdec6fc03627312b32ab260f60f73"></a><!-- doxytag: member="Mavlink_waypoint_handler::hold_init" ref="ac05cdec6fc03627312b32ab260f60f73" args="(local_position_t local_pos)" -->
+<a class="anchor" id="aaa7dbb155e0281aec3c59b429c47a4d1"></a><!-- doxytag: member="Mavlink_waypoint_handler::home_waypoint" ref="aaa7dbb155e0281aec3c59b429c47a4d1" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classMavlink__waypoint__handler.html#ac05cdec6fc03627312b32ab260f60f73">Mavlink_waypoint_handler::hold_init</a> </td>
-          <td>(</td>
-          <td class="paramtype">local_position_t&#160;</td>
-          <td class="paramname"><em>local_pos</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Initialise the position hold mode. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">local_pos</td><td>The position where the position will be held </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="a6e65a0cfc44b105f003a62c4790348ab"></a><!-- doxytag: member="Mavlink_waypoint_handler::init_homing_waypoint" ref="a6e65a0cfc44b105f003a62c4790348ab" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classMavlink__waypoint__handler.html#a6e65a0cfc44b105f003a62c4790348ab">Mavlink_waypoint_handler::init_homing_waypoint</a> </td>
+          <td class="memname">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp; <a class="el" href="classMavlink__waypoint__handler.html#aaa7dbb155e0281aec3c59b429c47a4d1">Mavlink_waypoint_handler::home_waypoint</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Initialize a home waypoint at (0,0,0) at start up. </p>
-<p>Is called by the constructor </p>
+<p>Returns the home waypoint. </p>
+<p>Recreates the home waypoint if it has not been manually set as the takeoff altitude could have changed from the onboard parameters</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Home </dd></dl>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMavlink__waypoint__handler_a6e65a0cfc44b105f003a62c4790348ab_icgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a6e65a0cfc44b105f003a62c4790348ab_icgraph" alt=""/></div>
-<map name="classMavlink__waypoint__handler_a6e65a0cfc44b105f003a62c4790348ab_icgraph" id="classMavlink__waypoint__handler_a6e65a0cfc44b105f003a62c4790348ab_icgraph">
-<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="363,5,699,35"/></map>
+<div class="center"><img src="classMavlink__waypoint__handler_aaa7dbb155e0281aec3c59b429c47a4d1_icgraph.png" border="0" usemap="#classMavlink__waypoint__handler_aaa7dbb155e0281aec3c59b429c47a4d1_icgraph" alt=""/></div>
+<map name="classMavlink__waypoint__handler_aaa7dbb155e0281aec3c59b429c47a4d1_icgraph" id="classMavlink__waypoint__handler_aaa7dbb155e0281aec3c59b429c47a4d1_icgraph">
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a23814033f5fbe4c2fc7b94e18ee17f32" title="Gets the current waypoint." alt="" coords="340,105,623,135"/><area shape="rect" id="node17" href="classMavlink__waypoint__handler.html#ac3647278a7a120112d6910f986be9049" title="Gets the next waypoint if available." alt="" coords="348,159,615,188"/><area shape="rect" id="node19" href="classMavlink__waypoint__handler.html#a4a87dad6380f894d3fe7967bfcf408b8" title="Returns a waypoint from the list from a specific index." alt="" coords="328,212,635,241"/><area shape="rect" id="node21" href="classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold." alt="" coords="379,265,584,295"/><area shape="rect" id="node5" href="classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="683,72,931,101"/><area shape="rect" id="node13" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="703,139,911,168"/><area shape="rect" id="node7" href="classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="999,5,1255,35"/><area shape="rect" id="node9" href="classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="979,59,1275,88"/><area shape="rect" id="node11" href="classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="999,112,1255,141"/><area shape="rect" id="node15" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="1045,165,1208,195"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a7cd9b0900f4aa77c8ce3f1d3dc7c5640"></a><!-- doxytag: member="Mavlink_waypoint_handler::nav_plan_init" ref="a7cd9b0900f4aa77c8ce3f1d3dc7c5640" args="()" -->
+<a class="anchor" id="ac3647278a7a120112d6910f986be9049"></a><!-- doxytag: member="Mavlink_waypoint_handler::next_waypoint" ref="ac3647278a7a120112d6910f986be9049" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640">Mavlink_waypoint_handler::nav_plan_init</a> </td>
+          <td class="memname">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp; <a class="el" href="classMavlink__waypoint__handler.html#ac3647278a7a120112d6910f986be9049">Mavlink_waypoint_handler::next_waypoint</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets the next waypoint if available. </p>
+<p>If there is no waypoints in the list, creates a hold position waypoint as the first index in the list and returns it</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>next waypoint </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__waypoint__handler_ac3647278a7a120112d6910f986be9049_cgraph.png" border="0" usemap="#classMavlink__waypoint__handler_ac3647278a7a120112d6910f986be9049_cgraph" alt=""/></div>
+<map name="classMavlink__waypoint__handler_ac3647278a7a120112d6910f986be9049_cgraph" id="classMavlink__waypoint__handler_ac3647278a7a120112d6910f986be9049_cgraph">
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#aaa7dbb155e0281aec3c59b429c47a4d1" title="Returns the home waypoint." alt="" coords="320,5,595,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a95350e0c2a032342b8c7bf7ac864f2df"></a><!-- doxytag: member="Mavlink_waypoint_handler::set_current_waypoint_index" ref="a95350e0c2a032342b8c7bf7ac864f2df" args="(int index)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classMavlink__waypoint__handler.html#a95350e0c2a032342b8c7bf7ac864f2df">Mavlink_waypoint_handler::set_current_waypoint_index</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Initialize a first waypoint if a flight plan is set. </p>
-<p>Is called by the constructor </p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classMavlink__waypoint__handler_a7cd9b0900f4aa77c8ce3f1d3dc7c5640_cgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a7cd9b0900f4aa77c8ce3f1d3dc7c5640_cgraph" alt=""/></div>
-<map name="classMavlink__waypoint__handler_a7cd9b0900f4aa77c8ce3f1d3dc7c5640_cgraph" id="classMavlink__waypoint__handler_a7cd9b0900f4aa77c8ce3f1d3dc7c5640_cgraph">
-<area shape="rect" id="node3" href="classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="319,5,431,35"/><area shape="rect" id="node5" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="312,59,437,88"/><area shape="rect" id="node7" href="classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="313,112,436,141"/><area shape="rect" id="node9" href="classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="319,165,431,195"/><area shape="rect" id="node11" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="333,219,416,248"/></map>
-</div>
-</p>
+<p>Sets the current waypoint index if possible. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The new waypoint index</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMavlink__waypoint__handler_a7cd9b0900f4aa77c8ce3f1d3dc7c5640_icgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a7cd9b0900f4aa77c8ce3f1d3dc7c5640_icgraph" alt=""/></div>
-<map name="classMavlink__waypoint__handler_a7cd9b0900f4aa77c8ce3f1d3dc7c5640_icgraph" id="classMavlink__waypoint__handler_a7cd9b0900f4aa77c8ce3f1d3dc7c5640_icgraph">
-<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="312,5,648,35"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="369,59,591,88"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a20d96cd522c40d00f247babe1dcedd84"></a><!-- doxytag: member="Mavlink_waypoint_handler::update" ref="a20d96cd522c40d00f247babe1dcedd84" args="(Mavlink_waypoint_handler *waypoint_handler)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84">Mavlink_waypoint_handler::update</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a> *&#160;</td>
-          <td class="paramname"><em>waypoint_handler</em></td><td>)</td>
-          <td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>The waypoint handler tasks, gives a goal for the navigation module. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">waypoint_handler</td><td>The pointer to the waypoint handler structure </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classMavlink__waypoint__handler_a20d96cd522c40d00f247babe1dcedd84_cgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a20d96cd522c40d00f247babe1dcedd84_cgraph" alt=""/></div>
-<map name="classMavlink__waypoint__handler_a20d96cd522c40d00f247babe1dcedd84_cgraph" id="classMavlink__waypoint__handler_a20d96cd522c40d00f247babe1dcedd84_cgraph">
-<area shape="rect" id="node3" href="classState.html#a9bf37e3784367761637c2c5a7c2b1b16" title="returns mav_mode (copy)" alt="" coords="584,5,709,35"/><area shape="rect" id="node5" href="classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="277,99,536,128"/><area shape="rect" id="node16" href="classMav__mode.html#a340912312da4dcabccb7ed218644bf0b" title="returns whether in guided mode (MAV_MODE_FLAG_GUIDED_ENABLED set)" alt="" coords="332,152,481,181"/><area shape="rect" id="node7" href="classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="591,59,703,88"/><area shape="rect" id="node10" href="classMav__mode.html#a354984f5aa2a209450379d2139639692" title="returns whether in HIL mode (MAV_MODE_FLAG_HIL_ENABLED set)" alt="" coords="585,112,708,141"/><area shape="rect" id="node12" href="classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="591,165,703,195"/><area shape="rect" id="node14" href="classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="605,219,688,248"/></map>
+<div class="center"><img src="classMavlink__waypoint__handler_a95350e0c2a032342b8c7bf7ac864f2df_icgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a95350e0c2a032342b8c7bf7ac864f2df_icgraph" alt=""/></div>
+<map name="classMavlink__waypoint__handler_a95350e0c2a032342b8c7bf7ac864f2df_icgraph" id="classMavlink__waypoint__handler_a95350e0c2a032342b8c7bf7ac864f2df_icgraph">
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#a073aa02dbd36c45fcb4fd6f1887d4f25" title="Sets the next waypoint as the current one. Should be called when the current waypoint has been reache..." alt="" coords="400,19,741,48"/><area shape="rect" id="node9" href="classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="447,99,695,128"/><area shape="rect" id="node5" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="833,5,1041,35"/><area shape="rect" id="node7" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="1133,5,1296,35"/><area shape="rect" id="node11" href="classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="809,59,1065,88"/><area shape="rect" id="node13" href="classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="789,112,1085,141"/><area shape="rect" id="node15" href="classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="809,165,1065,195"/></map>
 </div>
 </p>
 
@@ -414,6 +419,64 @@ Here is the call graph for this function:</div>
 
 <p>Returns the number of waypoints. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>number of waypoints </dd></dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__waypoint__handler_aefe41b70a4df4ac22a038a4537e84bbc_icgraph.png" border="0" usemap="#classMavlink__waypoint__handler_aefe41b70a4df4ac22a038a4537e84bbc_icgraph" alt=""/></div>
+<map name="classMavlink__waypoint__handler_aefe41b70a4df4ac22a038a4537e84bbc_icgraph" id="classMavlink__waypoint__handler_aefe41b70a4df4ac22a038a4537e84bbc_icgraph">
+<area shape="rect" id="node3" href="classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="329,5,585,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a4a87dad6380f894d3fe7967bfcf408b8"></a><!-- doxytag: member="Mavlink_waypoint_handler::waypoint_from_index" ref="a4a87dad6380f894d3fe7967bfcf408b8" args="(int i) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp; <a class="el" href="classMavlink__waypoint__handler.html#a4a87dad6380f894d3fe7967bfcf408b8">Mavlink_waypoint_handler::waypoint_from_index</a> </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns a waypoint from the list from a specific index. </p>
+<p>If there is no waypoints in the list, creates a hold position waypoint as the first index in the list and returns it</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>waypoint_list_[i] </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMavlink__waypoint__handler_a4a87dad6380f894d3fe7967bfcf408b8_cgraph.png" border="0" usemap="#classMavlink__waypoint__handler_a4a87dad6380f894d3fe7967bfcf408b8_cgraph" alt=""/></div>
+<map name="classMavlink__waypoint__handler_a4a87dad6380f894d3fe7967bfcf408b8_cgraph" id="classMavlink__waypoint__handler_a4a87dad6380f894d3fe7967bfcf408b8_cgraph">
+<area shape="rect" id="node3" href="classMavlink__waypoint__handler.html#aaa7dbb155e0281aec3c59b429c47a4d1" title="Returns the home waypoint." alt="" coords="360,5,635,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a568d0dae778487081ff3b48a3e7a612d"></a><!-- doxytag: member="Mavlink_waypoint_handler::waypoint_received_time_ms" ref="a568d0dae778487081ff3b48a3e7a612d" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t <a class="el" href="classMavlink__waypoint__handler.html#a568d0dae778487081ff3b48a3e7a612d">Mavlink_waypoint_handler::waypoint_received_time_ms</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns the time that the waypoint list was received. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd><a class="el" href="classWaypoint.html">Waypoint</a> list reception time </dd></dl>
 
 </div>
 </div>
@@ -439,7 +502,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Oct 14 2016 08:25:18 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 09:24:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

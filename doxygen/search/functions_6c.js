@@ -24,6 +24,7 @@ var searchData=
   ['lequad_5fdronedome',['LEQuad_dronedome',['../classLEQuad__dronedome.html#a83f8b00518b8a1f5e7f00668e431ef5d',1,'LEQuad_dronedome']]],
   ['level',['level',['../classBattery.html#a13fa2e56c1eb27945cfd604e8a03dc5b',1,'Battery']]],
   ['list',['list',['../classData__logging.html#ad09987371f50a7d0c8df8b2325ec313c',1,'Data_logging::list()'],['../classData__logging__T.html#a17d4ced71918c8a9fb62b0c10bd1fc37',1,'Data_logging_T::list()'],['../classPeriodic__telemetry.html#a7b04804a2df353a39d21f31d7992560e',1,'Periodic_telemetry::list()'],['../classPeriodic__telemetry__T.html#a9166ab0121e615e649e47ab8270a3b30',1,'Periodic_telemetry_T::list()']]],
+  ['local_5fpos',['local_pos',['../classWaypoint.html#a6c500cee0255693487b8cc97371b9c64',1,'Waypoint']]],
   ['loop',['loop',['../classLEQuad.html#acc67075f90c55b09726bef35c0313cdf',1,'LEQuad']]],
   ['lsm330dlc',['Lsm330dlc',['../classLsm330dlc.html#a060e3760ea5392904a28e604b3ba78aa',1,'Lsm330dlc']]]
 ];

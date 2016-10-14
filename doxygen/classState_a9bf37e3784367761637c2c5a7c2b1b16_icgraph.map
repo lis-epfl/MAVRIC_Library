@@ -1,7 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMavlink__waypoint__handler.html#a20d96cd522c40d00f247babe1dcedd84" title="The waypoint handler tasks, gives a goal for the navigation module." alt="" coords="543,5,764,35"/>
-<area shape="rect" id="node5" href="$classMavlink__waypoint__handler.html#a7cd9b0900f4aa77c8ce3f1d3dc7c5640" title="Initialize a first waypoint if a flight plan is set." alt="" coords="179,57,437,87"/>
-<area shape="rect" id="node10" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="231,111,385,140"/>
-<area shape="rect" id="node12" href="$classNavigation.html#ade9f978504febc6325012ae8bf5ff19f" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode." alt="" coords="243,164,373,193"/>
-<area shape="rect" id="node7" href="$classMavlink__waypoint__handler.html#a398d34a4dec2d2c34fbca65998fbd579" title="Initialize the waypoint handler." alt="" coords="485,59,821,88"/>
+<area shape="rect" id="node3" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="207,5,361,35"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="180,59,388,88"/>
+<area shape="rect" id="node7" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="437,111,600,140"/>
+<area shape="rect" id="node9" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="179,163,389,192"/>
 </map>

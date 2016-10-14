@@ -2,6 +2,6 @@
 <area shape="rect" id="node2" href="$structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="5,305,205,546"/>
 <area shape="rect" id="node4" href="$structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="35,5,176,195"/>
 <area shape="rect" id="node6" href="$structdynamic__model__quad__diag__conf__t.html" title="Configuration for quad dynamic model." alt="" coords="229,296,451,555"/>
-<area shape="rect" id="node8" href="$structservos__mix__quadcopter__diag__conf__t.html" title="The servo mix structure for a quad in cross shape." alt="" coords="223,14,457,186"/>
+<area shape="rect" id="node8" href="$structServos__mix__quadcopter__diag_1_1conf__t.html" title="Configuration." alt="" coords="221,14,459,186"/>
 <area shape="rect" id="node10" href="$structserial__udp__conf__t.html" title="{serial_udp_conf_t\n|+ target_ip\l+ target_port\l+ local_port\l|}" alt="" coords="475,365,597,485"/>
 </map>

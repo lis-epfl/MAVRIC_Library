@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classMission__handler__navigating.html" title="{Mission_handler_navigating\&lt; T \&gt;\n|# controller_\l# ins_\l# mavlink_stream_\l# waypoint_handler_\l# waypoint_\l# waypoint_reached_\l# start_time_\l# travel_time_\l|+ Mission_handler_navigating()\l+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l# set_control_command()\l# send_nav_time()\l}" alt="" coords="28,193,241,503"/>
+<area shape="rect" id="node4" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="49,6,220,143"/>
+</map>
