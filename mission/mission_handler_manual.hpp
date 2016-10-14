@@ -30,41 +30,83 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_ywing_default_config.h
+ * \file mission_handler_manual.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Matthew Douglas
  *
- * \brief Default configuration for Ywing servo mix
+ * \brief The MAVLink mission planner handler for the manual control state
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
+#ifndef MISSION_HANDLER_MANUAL__
+#define MISSION_HANDLER_MANUAL__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "mission/mission_handler.hpp"
 
+/*
+ * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
+ */
 
-#include "servos_mix_ywing.h"
-
-
-servo_mix_ywing_conf_t servo_mix_ywing_default_config =
+class Mission_handler_manual : public Mission_handler
 {
-    .flap_top_dir   = FLAP_INVERTED,
-    .flap_right_dir = FLAP_INVERTED,
-    .flap_left_dir  = FLAP_INVERTED,
-    .min_thrust     = -0.9f,
-    .max_thrust     = 1.0f,
-    .min_deflection = -1.0f,
-    .max_deflection = 1.0f,
+public:
+
+
+    /**
+     * \brief   Initialize the manual mission planner handler
+     */
+     Mission_handler_manual();
+
+
+    /**
+     * \brief   Checks if the waypoint is on the ground
+     *
+     * \details     Checks if the inputted waypoint is a:
+     *                  MAV_CMD_NAV_MANUAL_CTRL
+     *
+     * \param   wpt                 The waypoint class
+     *
+     * \return  Can handle
+     */
+    virtual bool can_handle(const Waypoint& wpt) const;
+
+    /**
+     * \brief   Does nothing
+     *
+     * \details     Does nothing
+     *
+     * \param   wpt                 The waypoint class
+     *
+     * \return  True
+     */
+    virtual bool setup(const Waypoint& wpt);
+
+    /**
+     * \brief   Handles the mission every iteration
+     *  
+     * \details     Does nothing and returns MISSION_FINISHED for the status code.
+     *
+     * \return  Status code
+     */
+    virtual Mission_handler::update_status_t update();
+
+    /**
+     * \brief   Returns that the mission state is in MANUAL_CTRL
+     *
+     * \return  Mission handler's mission state
+     */
+    virtual Mission_planner::internal_state_t handler_mission_state() const;
+
+protected:
+    
 };
 
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif // SERVOS_MIX_YWING_DEFAULT_CONFIG_H_
+
+
+
+
+#endif // MISSION_HANDLER_MANUAL__

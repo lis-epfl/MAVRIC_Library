@@ -55,16 +55,6 @@ extern "C"
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-/**
- * \brief   Converts GPS Waypoint coordinates to local NED frame
- *
- * \param   waypoint    Input waypoint
- * \param   origin      Origin of the local NED frame
- *
- * \return              waypoint in NED coordinates
- */
-static Mavlink_waypoint_handler::waypoint_struct_t convert_waypoint_to_local_ned(const Mavlink_waypoint_handler::waypoint_struct_t* waypoint, const global_position_t* origin);
-
 
 /**
  * \brief       Vector field for floor avoidance
@@ -139,52 +129,6 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-static Mavlink_waypoint_handler::waypoint_struct_t convert_waypoint_to_local_ned(const Mavlink_waypoint_handler::waypoint_struct_t* waypoint_in, const global_position_t* origin)
-{
-    global_position_t waypoint_global;
-    local_position_t waypoint_local;
-
-    // Init new waypoint
-    Mavlink_waypoint_handler::waypoint_struct_t waypoint = *waypoint_in;
-    waypoint.command    = waypoint_in->command;
-    waypoint.param1     = waypoint_in->param1;
-    waypoint.param2     = waypoint_in->param2;
-    waypoint.param3     = waypoint_in->param3;
-    waypoint.param4     = waypoint_in->param4;
-
-    switch (waypoint_in->frame)
-    {
-        case MAV_FRAME_GLOBAL:                  /* Global coordinate frame, WGS84 coordinate system. First value / x: latitude, second value / y: longitude, third value / z: positive altitude over mean sea level (MSL) | */
-
-            waypoint_global.latitude    = waypoint_in->x;
-            waypoint_global.longitude   = waypoint_in->y;
-            waypoint_global.altitude    = waypoint_in->z;
-            coord_conventions_global_to_local_position(waypoint_global, *origin, waypoint_local);
-
-            waypoint.frame  = MAV_FRAME_LOCAL_NED;
-            waypoint.x      = waypoint_local[X];
-            waypoint.y      = waypoint_local[Y];
-            waypoint.z      = waypoint_local[Z];
-
-            break;
-
-        case MAV_FRAME_LOCAL_NED:               /* Local coordinate frame, Z-up (x: north, y: east, z: down). | */
-        case MAV_FRAME_MISSION:                 /* NOT a coordinate frame, indicates a mission command. | */
-        case MAV_FRAME_GLOBAL_RELATIVE_ALT:     /* Global coordinate frame, WGS84 coordinate system, relative altitude over ground with respect to the home position. First value / x: latitude, second value / y: longitude, third value / z: positive altitude with 0 being at the altitude of the home location. | */
-        case MAV_FRAME_LOCAL_ENU:               /* Local coordinate frame, Z-down (x: east, y: north, z: up) | */
-        case MAV_FRAME_LOCAL_OFFSET_NED:        /* Offset to the current local frame. Anything expressed in this frame should be added to the current local frame position. | */
-        case MAV_FRAME_BODY_NED:                /* Setpoint in body NED frame. This makes sense if all position control is externalized - e.g. useful to command 2 m/s^2 acceleration to the right. | */
-        case MAV_FRAME_BODY_OFFSET_NED:         /* Offset in body NED frame. This makes sense if adding setpoints to the current flight path, to avoid an obstacle - e.g. useful to command 2 m/s^2 acceleration to the east. | */
-        case MAV_FRAME_GLOBAL_TERRAIN_ALT:      /* Global coordinate frame with above terrain level altitude. WGS84 coordinate system, relative altitude over terrain with respect to the waypoint coordinate. First value / x: latitude in degrees, second value / y: longitude in degrees, third value / z: positive altitude in meters with 0 being at ground level in terrain model. | */
-        case MAV_FRAME_ENUM_END:
-            // do not use this waypoint
-            waypoint.command = 0;
-            break;
-    }
-
-    return waypoint;
-}
 
 
 /**
@@ -442,7 +386,7 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t __attribute__((unused)) * config, const Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command)
+bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command, const vector_field_waypoint_conf_t* config)
 {
     // Init dependencies
     vector_field->waypoint_handler  = waypoint_handler;
@@ -477,21 +421,21 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     // Go through waypoint list
     for (uint16_t i = 0; i < vector_field->waypoint_handler->waypoint_count(); ++i)
     {
-        // Get waypoint in NED coordinates
-        Mavlink_waypoint_handler::waypoint_struct_t waypoint = convert_waypoint_to_local_ned(&vector_field->waypoint_handler->waypoint_list[i], &vector_field->ins->origin());
+        const Waypoint& waypoint = vector_field->waypoint_handler->waypoint_from_index(i);
+        local_position_t local_wpt = waypoint.local_pos();
 
         // Get object position
-        pos_obj[X] = waypoint.x;
-        pos_obj[Y] = waypoint.y;
-        pos_obj[Z] = waypoint.z;
+        pos_obj[X] = local_wpt[X];
+        pos_obj[Y] = local_wpt[Y];
+        pos_obj[Z] = local_wpt[Z];
 
-        switch (waypoint.command)
+        switch (waypoint.command())
         {
             // Attractive object
             case 22:
                 vector_field_attractor(vector_field->ins->position_lf().data(),
                                        pos_obj,
-                                       waypoint.param1,     // attractiveness
+                                       waypoint.param1(),     // attractiveness
                                        tmp_vector);
                 break;
 
@@ -499,9 +443,9 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
             case 17:
                 vector_field_repulsor_cylinder(vector_field->ins->position_lf().data(),
                                                pos_obj,
-                                               waypoint.param1,     // repulsiveness
-                                               waypoint.param2,     // max_range
-                                               waypoint.param3,     // safety_radius
+                                               waypoint.param1(),     // repulsiveness
+                                               waypoint.param2(),     // max_range
+                                               waypoint.param3(),     // safety_radius
                                                tmp_vector);
                 break;
 
@@ -509,9 +453,9 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
             case 18:
                 vector_field_repulsor_sphere(vector_field->ins->position_lf().data(),
                                              pos_obj,
-                                             waypoint.param1,   // repulsiveness
-                                             waypoint.param2,   // max_range
-                                             waypoint.param3,   // safety_radius
+                                             waypoint.param1(),   // repulsiveness
+                                             waypoint.param2(),   // max_range
+                                             waypoint.param3(),   // safety_radius
                                              tmp_vector);
                 break;
 
@@ -519,9 +463,9 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
           case 16:
                 vector_field_circular_waypoint(vector_field->ins->position_lf().data(),
                                                pos_obj,
-                                               waypoint.param1,     // attractiveness
-                                               waypoint.param2,     // cruise_speed
-                                               waypoint.param3, // radius
+                                               waypoint.param1(),     // attractiveness
+                                               waypoint.param2(),     // cruise_speed
+                                               waypoint.param3(), // radius
                                                tmp_vector);
                 break;
 

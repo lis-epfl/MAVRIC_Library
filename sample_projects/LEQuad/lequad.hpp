@@ -58,15 +58,16 @@
 #include "communication/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
+#include "control/position_controller.hpp"
+#include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/manual_control.hpp"
-#include "control/navigation.hpp"
+#include "control/navigation_directto.hpp"
+#include "control/rate_controller.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
-#include "control/servos_mix_quadcopter_diag_default_config.hpp"
+#include "control/manual_control.hpp"
 #include "control/stabilisation.hpp"
-#include "control/stabilisation_copter.hpp"
-#include "control/stabilisation_copter_default_config.hpp"
-#include "control/velocity_controller_copter.hpp"
+
 #include "control/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
@@ -77,6 +78,16 @@
 
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"
+
+#include "mission/mission_planner.hpp"
+#include "mission/mission_handler_critical_landing.hpp"
+#include "mission/mission_handler_critical_navigating.hpp"
+#include "mission/mission_handler_hold_position.hpp"
+#include "mission/mission_handler_landing.hpp"
+#include "mission/mission_handler_manual.hpp"
+#include "mission/mission_handler_navigating.hpp"
+#include "mission/mission_handler_on_ground.hpp"
+#include "mission/mission_handler_takeoff.hpp"
 
 #include "simulation/simulation.hpp"
 
@@ -97,7 +108,7 @@ extern "C"
 #include "sensing/altitude.h"
 }
 
-
+typedef Navigation_directto<Position_controller<Velocity_controller_copter<Attitude_controller<Rate_controller<Servos_mix_quadcopter_diag> > > > > Cascade_controller;
 
 /**
  * \brief MAV class
@@ -122,17 +133,15 @@ public:
         Data_logging::conf_t data_logging_stat_config;
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
-        Navigation::conf_t navigation_config;
         Mavlink_waypoint_handler::conf_t waypoint_handler_config;
+        Mission_planner::conf_t mission_planner_config;
+        Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::conf_t mission_handler_landing_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         Position_estimation::conf_t position_estimation_config;
-        stabilisation_copter_conf_t stabilisation_copter_config;
-        servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        Attitude_controller::conf_t attitude_controller_config;
-        Velocity_controller_copter::conf_t velocity_controller_copter_config;
+        Cascade_controller::conf_t cascade_controller_config;
     };
 
     /**
@@ -206,7 +215,7 @@ protected:
     virtual bool init_ahrs(void);
     virtual bool init_ins(void);
     virtual bool init_stabilisers(void);
-    virtual bool init_navigation(void);
+    virtual bool init_mission_planning(void);
     virtual bool init_hud(void);
     virtual bool init_servos(void);
     virtual bool init_ground_control(void);
@@ -242,8 +251,6 @@ protected:
     Scheduler_T<20>       scheduler;
     Mavlink_communication   communication;
 
-    servos_mix_quadcotper_diag_t servo_mix;
-
     ahrs_t ahrs;                                                ///< The attitude estimation structure
     Ahrs_ekf ahrs_ekf;
 
@@ -252,12 +259,22 @@ protected:
     INS_kf              ins_kf;                                 ///< The Kalman INS structure, used for position estimation
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
-    control_command_t controls_nav;                             ///< The control nav structure used for velocity modes
 
-    stabilisation_copter_t stabilisation_copter;                ///< The stabilisation structure for copter
+    Cascade_controller cascade_controller_;
 
-    Navigation navigation;                                      ///< The structure to perform GPS navigation
-    Mavlink_waypoint_handler waypoint_handler;
+    Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
+    Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
+    Mission_handler_hold_position<Navigation_controller_I> hold_position_handler;
+    Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I> landing_handler;
+    Mission_handler_navigating<Navigation_controller_I> navigating_handler;
+    Mission_handler_on_ground on_ground_handler;
+    Mission_handler_manual manual_ctrl_handler;
+    Mission_handler_takeoff<Navigation_controller_I> takeoff_handler;
+    Mission_handler_critical_landing<Navigation_controller_I, XYposition_Zvel_controller_I> critical_landing_handler;
+    Mission_handler_critical_navigating<Navigation_controller_I> critical_navigating_handler;
+    Mission_planner mission_planner;                            ///< Controls the mission plan
+
+
 
     State_machine state_machine;                                ///< The structure for the state machine
 
@@ -293,9 +310,10 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.scheduler_config = Scheduler::default_config();
 
-    conf.navigation_config = Navigation::default_config();
-
     conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
+
+    conf.mission_planner_config = Mission_planner::default_config();
+    conf.mission_handler_landing_config = Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::default_config();
 
     conf.qfilter_config = qfilter_default_config();
 
@@ -303,17 +321,11 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.position_estimation_config = Position_estimation::default_config();
 
-    conf.stabilisation_copter_config = stabilisation_copter_default_config();
-
-    conf.servos_mix_quadcopter_diag_config = servos_mix_quadcopter_diag_default_config();
-
     conf.manual_control_config = Manual_control::default_config();
 
     conf.remote_config = remote_default_config();
 
-    conf.attitude_controller_config = Attitude_controller::default_config();
-
-    conf.velocity_controller_copter_config = Velocity_controller_copter::default_config();
+    conf.cascade_controller_config = Cascade_controller::default_config();
 
     /* Mavlink communication config */
     conf.mavlink_communication_config                        = Mavlink_communication::default_config(sysid);

@@ -43,7 +43,7 @@ LIB_SRCS += communication/hud_telemetry.cpp
 LIB_SRCS += communication/mavlink_message_handler.cpp
 LIB_SRCS += communication/mavlink_stream.cpp
 LIB_SRCS += communication/mavlink_waypoint_handler.cpp
-LIB_SRCS += communication/mavlink_waypoint_handler_swarm.cpp
+#LIB_SRCS += communication/mavlink_waypoint_handler_swarm.cpp
 LIB_SRCS += communication/onboard_parameters.cpp
 LIB_SRCS += communication/periodic_telemetry.cpp
 LIB_SRCS += communication/remote.cpp
@@ -54,7 +54,6 @@ LIB_SRCS += communication/state_telemetry.cpp
 
 
 LIB_SRCS += control/altitude_controller.cpp
-LIB_SRCS += control/attitude_controller.cpp
 LIB_SRCS += control/attitude_controller_p2.cpp
 LIB_SRCS += control/attitude_error_estimator.cpp
 LIB_SRCS += control/dubin.cpp
@@ -62,17 +61,15 @@ LIB_SRCS += control/joystick.cpp
 LIB_SRCS += control/joystick_telemetry.cpp
 LIB_SRCS += control/manual_control.cpp
 LIB_SRCS += control/manual_control_telemetry.cpp
-LIB_SRCS += control/navigation.cpp
 LIB_SRCS += control/pid_controller.cpp
-LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
-LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
-LIB_SRCS += control/servos_mix_wing.cpp
 LIB_SRCS += control/stabilisation.cpp
-LIB_SRCS += control/stabilisation_copter.cpp
-LIB_SRCS += control/stabilisation_wing.cpp
-LIB_SRCS += control/stabilisation_telemetry.cpp
+#LIB_SRCS += control/stabilisation_wing.cpp
+LIB_SRCS += control/servos_mix.cpp
+LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
+LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
+LIB_SRCS += control/servos_mix_wing.cpp
+LIB_SRCS += control/servos_mix_ywing.cpp
 LIB_SRCS += control/vector_field_waypoint.cpp
-LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/gimbal_controller.cpp
 LIB_SRCS += control/gimbal_controller_telemetry.cpp
 
@@ -105,6 +102,16 @@ LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
+
+LIB_SRCS += mission/mission_planner.cpp
+LIB_SRCS += mission/mission_handler_hold_position.cpp
+LIB_SRCS += mission/mission_handler_landing.cpp
+LIB_SRCS += mission/mission_handler_manual.cpp
+LIB_SRCS += mission/mission_handler_navigating.cpp
+LIB_SRCS += mission/mission_handler_on_ground.cpp
+LIB_SRCS += mission/mission_handler_registry.cpp
+LIB_SRCS += mission/mission_handler_takeoff.cpp
+LIB_SRCS += mission/waypoint.cpp
 
 LIB_SRCS += runtime/scheduler.cpp
 LIB_SRCS += runtime/scheduler_task.cpp

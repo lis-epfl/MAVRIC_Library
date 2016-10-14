@@ -67,6 +67,8 @@ typedef struct
 
 typedef std::array<float,3> local_position_t;
 
+typedef std::array<float,3> local_velocity_t;
+
 /*
  * \brief       Attitude with aeronautics convention
  *
@@ -132,6 +134,7 @@ quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero);
  * \return      Attitude quaternion
  */
 quat_t coord_conventions_quaternion_from_rpy(const float rpy[3]);
+quat_t coord_conventions_quaternion_from_rpy(float roll, float pitch, float yaw);
 
 
 /**

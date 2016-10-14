@@ -30,44 +30,25 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_wing_default_config.hpp
+ * \file servos_mix.cpp
  *
  * \author MAV'RIC Team
- * \author Simon Pyroth
+ * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * \author Basil Huber
  *
- * \brief Default configuration for the servo_mix for the MAVRIC wing
+ * \brief Links between torque commands and servos PWM command for quadcopters
+ * in diagonal configuration
  *
  ******************************************************************************/
 
+#include "control/servos_mix.hpp"
 
-#ifndef SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
-#define SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
-
-
-#include "control/servos_mix_wing.hpp"
-#include "util/constants.hpp"
-
-
-static inline servos_mix_wing_conf_t servos_mix_wing_default_config()
+Servos_mix::Servos_mix()
 {
-	servos_mix_wing_conf_t conf;
-
-	conf.servo_right = 2;
-	conf.servo_left = 1;
-	conf.motor = 0;
-
-	conf.servo_right_dir = FLAP_INVERTED;
-	conf.servo_left_dir = FLAP_NORMAL;
-
-	conf.min_amplitude = -1.0f;
-	conf.max_amplitude = 1.0f;
-	conf.min_thrust = -0.9f;
-	conf.max_thrust = 1.0f;
-
-	conf.trim_roll = 0.252273f;
-	conf.trim_pitch = 0.0090908f;
-
-	return conf;
-};
-
-#endif // SERVOS_MIX_WING_DEFAULT_CONFIG_HPP_
+    /* set initial torque command */
+    torq_command_t initial_torque_command;
+    initial_torque_command.torq = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
+    initial_torque_command.thrust = {-1.0f};
+    set_torque_command(initial_torque_command);
+}

@@ -34,6 +34,7 @@
  *
  * \author MAV'RIC Team
  * \author Simon Pyroth
+ * \author Basil Huber
  *
  * \brief Links between regulation output and PWM commands for a wing aircraft
  *
@@ -41,87 +42,52 @@
 
 
 #include "control/servos_mix_wing.hpp"
-#include "util/constants.hpp"
-#include "util/print_util.hpp"
+
+Servos_mix_wing::Servos_mix_wing(args_t& args, const conf_t& config) :
+    config_(config),
+    servo_left_(args.servo_left),
+    servo_right_(args.servo_right),
+    motor_(args.motor)
+    {}
 
 
-bool servos_mix_wing_init(servos_mix_wing_t* mix,
-                            const servos_mix_wing_conf_t config,
-                            const torque_command_t* torque_command,
-                            const thrust_command_t* thrust_command,
-                            Servo* servo_left,
-                            Servo* servo_right,
-                            Servo* motor)
-{
-    bool init_success = true;
-
-    // Init dependencies
-    mix->torque_command     = torque_command;
-    mix->thrust_command     = thrust_command;
-    mix->servo_left         = servo_left;
-    mix->servo_right        = servo_right;
-    mix->motor          = motor;
-
-    // Init parameters
-    mix->config.servo_right     = config.servo_right;
-    mix->config.servo_left      = config.servo_left;
-    mix->config.motor           = config.motor;
-
-    mix->config.servo_right_dir = config.servo_right_dir;
-    mix->config.servo_left_dir  = config.servo_left_dir;
-
-    mix->config.min_amplitude   = config.min_amplitude;
-    mix->config.max_amplitude   = config.max_amplitude;
-    mix->config.min_thrust      = config.min_thrust;
-    mix->config.max_thrust      = config.max_thrust;
-
-    mix->config.trim_roll       = config.trim_roll;
-    mix->config.trim_pitch      = config.trim_pitch;
-
-    // Debug and return
-    print_util_dbg_print("[SERVOS MIX WING] initialised \r\n");
-    return init_success;
-}
-
-
-void servos_mix_wing_update(servos_mix_wing_t* mix)
+void Servos_mix_wing::update()
 {
     // Calculate value to be sent to the motors
-    float tmp_right_servo   = mix->config.servo_right_dir * ( (mix->torque_command->xyz[1] + mix->config.trim_pitch) + (mix->torque_command->xyz[0] + mix->config.trim_roll) );
-    float tmp_left_servo    = mix->config.servo_left_dir  * ( (mix->torque_command->xyz[1] + mix->config.trim_pitch) - (mix->torque_command->xyz[0] + mix->config.trim_roll) );
-    float tmp_motor         = mix->thrust_command->thrust;
+    float tmp_right_servo   = config_.servo_right_dir * ( (torq_command_.torq[1] + config_.trim_pitch) + (torq_command_.torq[0] + config_.trim_roll) );
+    float tmp_left_servo    = config_.servo_left_dir  * ( (torq_command_.torq[1] + config_.trim_pitch) - (torq_command_.torq[0] + config_.trim_roll) );
+    float tmp_motor         = torq_command_.thrust;
 
     // Clip values
-    if (tmp_right_servo < mix->config.min_amplitude)
+    if (tmp_right_servo < config_.min_amplitude)
     {
-        tmp_right_servo = mix->config.min_amplitude;
+        tmp_right_servo = config_.min_amplitude;
     }
-    else if (tmp_right_servo > mix->config.max_amplitude)
+    else if (tmp_right_servo > config_.max_amplitude)
     {
-        tmp_right_servo = mix->config.max_amplitude;
-    }
-
-    if (tmp_left_servo < mix->config.min_amplitude)
-    {
-        tmp_left_servo = mix->config.min_amplitude;
-    }
-    else if (tmp_left_servo > mix->config.max_amplitude)
-    {
-        tmp_left_servo = mix->config.max_amplitude;
+        tmp_right_servo = config_.max_amplitude;
     }
 
-    if (tmp_motor < mix->config.min_thrust)
+    if (tmp_left_servo < config_.min_amplitude)
     {
-        tmp_motor = mix->config.min_thrust;
+        tmp_left_servo = config_.min_amplitude;
     }
-    else if (tmp_motor > mix->config.max_thrust)
+    else if (tmp_left_servo > config_.max_amplitude)
     {
-        tmp_motor = mix->config.max_thrust;
+        tmp_left_servo = config_.max_amplitude;
+    }
+
+    if (tmp_motor < config_.min_thrust)
+    {
+        tmp_motor = config_.min_thrust;
+    }
+    else if (tmp_motor > config_.max_thrust)
+    {
+        tmp_motor = config_.max_thrust;
     }
 
     // Set the calculated values to each motors
-    mix->servo_left->write(tmp_left_servo);
-    mix->servo_right->write(tmp_right_servo);
-    mix->motor->write(tmp_motor);
-
+    servo_left_.write(tmp_left_servo);
+    servo_right_.write(tmp_right_servo);
+    motor_.write(tmp_motor);
 }

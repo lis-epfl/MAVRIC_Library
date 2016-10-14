@@ -136,6 +136,13 @@ quat_t coord_conventions_quaternion_from_rpy(const float rpy[3])
 }
 
 
+quat_t coord_conventions_quaternion_from_rpy(float roll, float pitch, float yaw)
+{
+    float rpy[3] = {roll, pitch, yaw};
+    return coord_conventions_quaternion_from_rpy(rpy);
+}
+
+
 void coord_conventions_rpy_from_quaternion(const quat_t& qe, float rpy[3])
 {
     rpy[0] = atan2(2 * (qe.s * qe.v[0] + qe.v[1] * qe.v[2]) , (qe.s * qe.s - qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] + qe.v[2] * qe.v[2]));

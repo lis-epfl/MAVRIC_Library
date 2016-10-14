@@ -34,6 +34,8 @@
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Nicolas Dousse
+ * \author Basil Huber
  *
  * \brief Links between torque commands and servos PWM command for quadcopters
  * in cross configuration
@@ -44,81 +46,62 @@
 #ifndef SERVOS_MIX_QUADCOPTER_CROSS_HPP_
 #define SERVOS_MIX_QUADCOPTER_CROSS_HPP_
 
-#include "drivers/servo.hpp"
-#include "util/constants.hpp"
+#include "control/servos_mix.hpp"
 
-extern "C"
+
+class Servos_mix_quadcopter_cross : public Servos_mix
 {
-#include "control/control_command.h"
-}
+public:
+
+    /**
+     * \brief Configuration
+     */
+    struct conf_t
+    {
+        rot_dir_t   motor_front_dir;              ///< Front  motor turning direction
+        rot_dir_t   motor_left_dir;               ///< Left  motor turning direction
+        rot_dir_t   motor_right_dir;              ///< Front motor turning direction
+        rot_dir_t   motor_rear_dir;               ///< Right motor turning direction
+        float       min_thrust;                   ///< Minimal thrust
+        float       max_thrust;                   ///< Maxmal thrust
+    };
+
+    /**
+     * \brief Constructor arguments
+     */
+    struct args_t
+    {
+        Servo& motor_front;
+        Servo& motor_left;
+        Servo& motor_right;
+        Servo& motor_rear;
+    };   
+
+    /**
+     * \brief                   Constructor
+     *
+     * \param args              Constructor arguments
+     * \param config            configuration
+     */
+    Servos_mix_quadcopter_cross(args_t args, const conf_t& config);
 
 
-/**
- * \brief The servo mix structure for a quad in cross shape
- */
-typedef struct
-{
-    rot_dir_t   motor_front_dir;    ///< Front motor turning direction
-    rot_dir_t   motor_left_dir;     ///< Left  motor turning direction
-    rot_dir_t   motor_right_dir;    ///< Right motor turning direction
-    rot_dir_t   motor_rear_dir;     ///< Rear  motor turning direction
-    float       min_thrust;         ///< Minimum thrust
-    float       max_thrust;         ///< Maximum thrust
-} servos_mix_quadcopter_cross_conf_t;
+    /*
+     * \brief   Write motor commands to servo structure based on torque command
+     */
+    virtual void update();
 
-
-/**
- * \brief   servos mix structure
- */
-typedef struct
-{
-    rot_dir_t   motor_front_dir;                ///< Front motor turning direction
-    rot_dir_t   motor_left_dir;                 ///< Left  motor turning direction
-    rot_dir_t   motor_right_dir;                ///< Right motor turning direction
-    rot_dir_t   motor_rear_dir;                 ///< Rear  motor turning direction
-    float       min_thrust;                     ///< Minimum thrust
-    float       max_thrust;                     ///< Maximum thrust
-    const torque_command_t* torque_command;     ///< Pointer to the torque command structure
-    const thrust_command_t* thrust_command;     ///< Pointer to the thrust command structure
-    Servo*                  motor_front;        ///< Pointer to the servos structure
-    Servo*                  motor_left;         ///< Pointer to the servos structure
-    Servo*                  motor_right;        ///< Pointer to the servos structure
-    Servo*                  motor_rear;         ///< Pointer to the servos structure
-} servos_mix_quadcotper_cross_t;
-
-
-/**
- * \brief       Initialize the servo mix
- *
- * \param mix               Pointer to the servo mix structure of the quad in cross shape
- * \param config            Pointer to the configuration of servo mix structure
- * \param torque_command    Pointer to the torque command structure
- * \param thrust_command    Pointer to the thrust command structure
- * \param motor_front       Pointer to the servos structure
- * \param motor_left        Pointer to the servos structure
- * \param motor_right       Pointer to the servos structure
- * \param motor_rear        Pointer to the servos structure
- *
- * \return  success
- */
-bool servos_mix_quadcotper_cross_init(servos_mix_quadcotper_cross_t* mix,
-                                      const servos_mix_quadcopter_cross_conf_t* config,
-                                      const torque_command_t* torque_command,
-                                      const thrust_command_t* thrust_command,
-                                      Servo*                motor_front,
-                                      Servo*                motor_left,
-                                      Servo*                motor_right,
-                                      Servo*                motor_rear);
-
-
-/**
- * \brief           Update des servos mix
- *
- * \param mix       Pointer to the servos mix structure
- *
- * \return          success
- */
-bool servos_mix_quadcopter_cross_update(servos_mix_quadcotper_cross_t* mix);
-
+private:
+    rot_dir_t   motor_front_dir_;              ///< Front  motor turning direction
+    rot_dir_t   motor_left_dir_;               ///< Left  motor turning direction
+    rot_dir_t   motor_right_dir_;              ///< Right motor turning direction
+    rot_dir_t   motor_rear_dir_;               ///< Rear motor turning direction
+    float       min_thrust_;                   ///< Minimal thrust
+    float       max_thrust_;                   ///< Maxmal thrust
+    Servo&      motor_front_;                  ///< Servo for front motor
+    Servo&      motor_left_;                   ///< Servo for left left motor
+    Servo&      motor_right_;                  ///< Servo for right right motor
+    Servo&      motor_rear_;                   ///< Servo for rear right motor
+};
 
 #endif /* SERVOS_MIX_QUADCOPTER_CROSS_HPP_ */

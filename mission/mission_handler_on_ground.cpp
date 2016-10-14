@@ -30,35 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_default_config.hpp
+ * \file mission_handler_on_ground.cpp
  *
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Matthew Douglas
  *
- * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
+ * \brief The MAVLink mission planner handler for the on ground state
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
-#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_
-
-#include "control/servos_mix_quadcopter_diag.hpp"
+#include "mission/mission_handler_on_ground.hpp"
 
 
-static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Mission_handler_on_ground::Mission_handler_on_ground(Rate_controller_I& rate_controller):
+            Mission_handler(),
+            rate_controller_(rate_controller)
 {
-    servos_mix_quadcopter_diag_conf_t conf  = {};
 
-    conf.motor_front_right_dir              = CCW;
-    conf.motor_front_left_dir               = CW;
-    conf.motor_rear_right_dir               = CW;
-    conf.motor_rear_left_dir                = CCW;
-    conf.min_thrust                         = -0.9f;
-    conf.max_thrust                         = 1.0f;
+}
 
-    return conf;
-};
+bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
+{
+    // TODO: Check if actually on ground
+    return wpt.command() == MAV_CMD_NAV_ON_GROUND;
+}
 
+bool Mission_handler_on_ground::setup(const Waypoint& wpt)
+{
+    return true;
+}
 
-#endif /* SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_HPP_ */
+Mission_handler::update_status_t Mission_handler_on_ground::update()
+{
+	// Set prop speeds to lowest setting
+	Rate_controller_I::rate_command_t cmd;
+	cmd.rates = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
+    cmd.thrust = -1.0f;
+	rate_controller_.set_rate_command(cmd);
+	
+    return MISSION_IN_PROGRESS;
+}
+
+Mission_planner::internal_state_t Mission_handler_on_ground::handler_mission_state() const
+{
+    return Mission_planner::STANDBY;
+}
