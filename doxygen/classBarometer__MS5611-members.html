@@ -87,7 +87,6 @@ This is the complete list of members for <a class="el" href="classBarometer__MS5
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#ac829c5645412309cc010814e087eddc3af153bfc348643e3e714380c6085c1dbd">ADDR_CSBHIGH</a> enum value</td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#ac829c5645412309cc010814e087eddc3a52cb7501d4577c9cbbe7b46ef40587b5">ADDR_CSBLOW</a> enum value</td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#ac829c5645412309cc010814e087eddc3">address_t</a> enum name</td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classBarometer.html#aebdd61556f8c58cb8a11c527896b1569">altitude_from_pressure</a>(float pressure, float pressure_at_sea_level=pressure_at_sea_level())</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#ad216194b69c06890e4b72466e2dee1b9">altitude_gf</a>(void) const </td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#a2fdc34032c8887604fdd908c6ec97424">altitude_gf_raw</a>(void) const </td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>Barometer</b>(float pressure_at_sea_level=101325.0f) (defined in <a class="el" href="classBarometer.html">Barometer</a>)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td></td></tr>
@@ -97,6 +96,7 @@ This is the complete list of members for <a class="el" href="classBarometer__MS5
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#a407f83f874560c0a1546f0c72bc24b3e">COMMAND_RESET</a></td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#a6cf12aaa4031d7c8313c8c5694acf23a">COMMAND_START_PRESSURE_CONV</a></td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#a89c4204756e8b1f3f5e35cd4a89d3987">COMMAND_START_TEMPERATURE_CONV</a></td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td><code> [static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classBarometer.html#a376b868d1eae6d9698e5f20834cc391e">compute_altitude_from_pressure</a>(float pressure, float pressure_at_sea_level_=pressure_at_sea_level())</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer.html#a9c0adda16abb188f353cca394dc96c53">compute_pressure_at_sea_level</a>(float pressure, float altitude)</td><td><a class="el" href="classBarometer.html">Barometer</a></td><td><code> [static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#aa0e7c3c9502c0884b08c5d649982d94f">default_config</a>(void)</td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td><code> [inline, static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classBarometer__MS5611.html#a6c6a20257f8295c8054a1ad43176961aad800ccdfd34e531f7d029eaba97bff58">GET_PRESSURE</a> enum value</td><td><a class="el" href="classBarometer__MS5611.html">Barometer_MS5611</a></td><td></td></tr>
@@ -137,7 +137,7 @@ This is the complete list of members for <a class="el" href="classBarometer__MS5
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 13 2016 15:54:02 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Oct 14 2016 08:25:18 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
