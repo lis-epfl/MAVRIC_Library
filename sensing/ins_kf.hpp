@@ -147,6 +147,7 @@ public:
         float sigma_gps_velz;
         float sigma_gps_mocap;
         float sigma_baro;
+        float sigma_flow;
         float sigma_sonar;
 
         // Position of the origin
@@ -328,7 +329,8 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_gps_velz     = 0.02f;       // Measured: 0.342f
     conf.sigma_gps_mocap    = 0.0001f;
     conf.sigma_baro         = 0.50f;       // Measured: 0.310f
-    conf.sigma_sonar        = 0.002f;      // Measured: 0.002f
+    conf.sigma_flow         = 0.1f;
+    conf.sigma_sonar        = 0.02f;       // Measured: 0.002f
 
     //default origin location (EFPL Esplanade)
     conf.origin = ORIGIN_EPFL;

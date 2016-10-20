@@ -102,9 +102,9 @@ INS_kf::INS_kf( State& state,
     H_flow_({0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0,
             0, 0, 0,  0, 0, 1, 0, 0, 0, 0, 0,
             0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
-    R_flow_({ 0.0001f, 0,       0,
-             0,       0.0001f, 0,
-             0,       0,       0.00001f}),
+    R_flow_({ SQR(config.sigma_flow), 0,       0,
+             0,       SQR(config.sigma_flow), 0,
+             0,       0,       SQR(config.sigma_sonar)}),
     last_accel_update_s_(0.0f),
     last_sonar_update_s_(0.0f),
     last_flow_update_s_(0.0f),
@@ -539,10 +539,33 @@ void INS_kf::update_sonar(void)
 
 void INS_kf::update_flow(void)
 {
+    // Get XY velocity in NED frame
     float vel_lf[3];
     float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
     quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
-    Kalman<11,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
+
+    float sigma_sonar;
+    float z_sonar;
+    if (state_.is_armed())
+    {
+        // If armed, use real measurement and adapt sigma in function of healthiness
+        z_sonar = flow_.ground_distance();
+        sigma_sonar = config_.sigma_sonar;
+    }
+    else
+    {
+        // If unarmed, force measurement to 0, with very good confidence
+        z_sonar = 0.0f;
+        sigma_sonar = 0.0001f;
+    }
+
+    // Recompute the measurement noise matrix
+    R_flow_(0,0) = SQR(config_.sigma_flow);
+    R_flow_(1,1) = SQR(config_.sigma_flow);
+    R_flow_(2,2) = SQR(sigma_sonar);
+
+    // Do update
+    Kalman<11,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], z_sonar}),
                            H_flow_,
                            R_flow_);
 }

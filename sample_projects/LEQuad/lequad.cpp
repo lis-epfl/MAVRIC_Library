@@ -406,6 +406,7 @@ bool LEQuad::init_ins(void)
     ret &= communication.parameters().add(&ins_kf.config_.sigma_gps_velxy,  "INS_Z_VEL_XY"      );
     ret &= communication.parameters().add(&ins_kf.config_.sigma_gps_velz,   "INS_Z_VEL_Z"       );
     ret &= communication.parameters().add(&ins_kf.config_.sigma_baro,       "INS_Z_BARO"        );
+    ret &= communication.parameters().add(&ins_kf.config_.sigma_flow,       "INS_Z_FLOW"        );
     ret &= communication.parameters().add(&ins_kf.config_.sigma_sonar,      "INS_Z_SONAR"       );
     ret &= communication.parameters().add(&ins_kf.init_flag,                "INS_INIT"          );
 
