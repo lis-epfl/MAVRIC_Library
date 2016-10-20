@@ -159,7 +159,8 @@ typename Position_controller<TVelocity_controller>::conf_t Position_controller<T
     conf.pid_config.integrator.gain         = 0.0f;
     conf.pid_config.integrator.clip_pre     = 0.0f;
     conf.pid_config.integrator.clip         = 0.0f;
-    conf.pid_config.differentiator.gain     = 0.28f;
+    //conf.pid_config.differentiator.gain     = 0.28f;
+    conf.pid_config.differentiator.gain     = 0.0f;
     conf.pid_config.differentiator.clip     = 0.46f;
     conf.pid_config.soft_zone_width         = 0.0f;
 

@@ -128,44 +128,52 @@ typename TVelocity_controller::vel_command_t Position_controller<TVelocity_contr
     float rel_goal_pos[3];
     rel_goal_pos[X] = pos_command.pos[X] - local_pos[X];
     rel_goal_pos[Y] = pos_command.pos[Y] - local_pos[Y];
-    rel_goal_pos[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ?  0.0f : pos_command.pos[Z] - local_pos[Z];
+    if (ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z)
+    {
+        rel_goal_pos[Z] = 0.0f;
+    }
+    else
+    {
+        rel_goal_pos[Z] = pos_command.pos[Z] - local_pos[Z];
+    }
 
     // Normalize relative goal position to get desired direction (unit vector)
     float goal_distance = vectors_norm(rel_goal_pos);
-    float scale = maths_f_min(1.0f/goal_distance, 2000.0f); // avoid division by 0
+    float scale = maths_f_min(1.0f / goal_distance, 2000.0f); // avoid division by 0
     float goal_dir[3];
     goal_dir[X] = rel_goal_pos[X] * scale;
     goal_dir[Y] = rel_goal_pos[Y] * scale;
     goal_dir[Z] = rel_goal_pos[Z] * scale;
 
-    /* get desired speed from pid controller */
+    // get desired speed from pid controller
     float v_desired = pid_controller_update(&pid_controller_, goal_distance);
+
     // make sure maximal climb rate is not exceeded, reduce v_desired if necessary
     if (v_desired *  maths_f_abs(goal_dir[Z]) > max_climb_rate_)
     {
         v_desired = max_climb_rate_ / maths_f_abs(goal_dir[Z]);
     }
 
-    quat_t q_rot;
-    aero_attitude_t attitude_yaw;
-    attitude_yaw = coord_conventions_quat_to_aero(ahrs_.qe);
-    attitude_yaw.rpy[0] = 0.0f;
-    attitude_yaw.rpy[1] = 0.0f;
-    attitude_yaw.rpy[2] = -attitude_yaw.rpy[2];
-    q_rot = coord_conventions_quaternion_from_aero(attitude_yaw);
-
+    // Compute desired velocity command
 	typename TVelocity_controller::vel_command_t velocity_command;
     velocity_command.vel[X] = goal_dir[X] * v_desired;
     velocity_command.vel[Y] = goal_dir[Y] * v_desired;
     velocity_command.vel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
 
+
     // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
+    float yaw_current = coord_conventions_get_yaw(ahrs_.qe);
     if (goal_distance > 5.0f)
     {
-        float yaw_current = coord_conventions_get_yaw(ahrs_.qe);
-        float rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - yaw_current);
+        float rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y], goal_dir[X]) - yaw_current);
         velocity_command.yaw = yaw_current + kp_yaw_ * rel_heading;
     }
 
-	return velocity_command;
+    // Reduce XY velocity according to yaw error: this gives time to align to next waypoint before accelerating
+    float yaw_error_factor = 1.0f - maths_f_abs(maths_clip(maths_calc_smaller_angle(velocity_command.yaw - yaw_current), 1.0f));
+    velocity_command.vel[X] *= yaw_error_factor;
+    velocity_command.vel[Y] *= yaw_error_factor;
+
+
+	  return velocity_command;
 }

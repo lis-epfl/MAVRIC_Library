@@ -144,7 +144,7 @@ typename Velocity_controller_copter<TAttitude_controller>::conf_t Velocity_contr
     conf_t conf = {};
 
     conf.thrust_hover_point                    = -0.26f;
-    
+
     // -----------------------------------------------------------------
     // ------ X PID ----------------------------------------------------
     // -----------------------------------------------------------------
@@ -158,10 +158,10 @@ typename Velocity_controller_copter<TAttitude_controller>::conf_t Velocity_contr
     conf.pid_config[X].integrator.accumulator  = 0.0f;
     conf.pid_config[X].integrator.clip         = 0.5f;
     conf.pid_config[X].differentiator          = {};
-    conf.pid_config[X].differentiator.gain     = 0.001f;
+    conf.pid_config[X].differentiator.gain     = 0.0f;
     conf.pid_config[X].differentiator.previous = 0.0f;
     conf.pid_config[X].differentiator.clip     = 1.0f;
-    conf.pid_config[X].soft_zone_width         = 0.2f;
+    conf.pid_config[X].soft_zone_width         = 0.0f;
 
     // -----------------------------------------------------------------
     // ------ Y PID ----------------------------------------------------
@@ -176,10 +176,10 @@ typename Velocity_controller_copter<TAttitude_controller>::conf_t Velocity_contr
     conf.pid_config[Y].integrator.accumulator  = 0.0f;
     conf.pid_config[Y].integrator.clip         = 0.5f;
     conf.pid_config[Y].differentiator          = {};
-    conf.pid_config[Y].differentiator.gain     = 0.001f;
+    conf.pid_config[Y].differentiator.gain     = 0.0f;
     conf.pid_config[Y].differentiator.previous = 0.0f;
     conf.pid_config[Y].differentiator.clip     = 1.0f;
-    conf.pid_config[Y].soft_zone_width         = 0.2f;
+    conf.pid_config[Y].soft_zone_width         = 0.0f;
 
     // ---------------------------------------------------------------------
     // ------ Z PID --------------------------------------------------------
