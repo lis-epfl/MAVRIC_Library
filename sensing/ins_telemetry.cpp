@@ -97,10 +97,10 @@ void ins_telemetry_send_local_position_ned_cov(const INS* ins, const Mavlink_str
                                             0,
                                             ins->position_lf()[0],
                                             ins->position_lf()[1],
-                                            -1000*ins->position_lf()[2],
-                                            100*ins->velocity_lf()[0],
-                                            100*ins->velocity_lf()[1],
-                                            100*ins->velocity_lf()[2],
+                                            ins->position_lf()[2],
+                                            ins->velocity_lf()[0],
+                                            ins->velocity_lf()[1],
+                                            ins->velocity_lf()[2],
                                             0.0f,
                                             0.0f,
                                             ins->absolute_altitude(),
@@ -118,10 +118,10 @@ void ins_telemetry_send_local_position_ned(const INS* ins, const Mavlink_stream*
                                         time_keeper_get_ms(),
                                         pos_lf[X],
                                         pos_lf[Y],
-                                        -1000*pos_lf[Z],
-                                        100*vel_lf[X],
-                                        100*vel_lf[Y],
-                                        100*vel_lf[Z]);
+                                        pos_lf[Z],
+                                        vel_lf[X],
+                                        vel_lf[Y],
+                                        vel_lf[Z]);
 }
 
 void ins_telemetry_send_global_position_int(const INS* ins, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
