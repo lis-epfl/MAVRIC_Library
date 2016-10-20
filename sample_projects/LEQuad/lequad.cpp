@@ -47,6 +47,7 @@
 #include "drivers/barometer_telemetry.hpp"
 #include "drivers/gps_telemetry.hpp"
 #include "drivers/sonar_telemetry.hpp"
+#include "drivers/px4flow_telemetry.hpp"
 
 #include "sensing/imu_telemetry.hpp"
 #include "sensing/ins_telemetry.hpp"
@@ -149,6 +150,7 @@ bool LEQuad::init(void)
     success &= init_ahrs();
     success &= init_ins();
     success &= init_mocap();
+    success &= init_flow();
     success &= init_mission_planning();
     success &= init_stabilisers();
     success &= init_hud();
@@ -423,6 +425,26 @@ bool LEQuad::init_mocap(void)
 
     return ret;
 }
+
+
+
+// -------------------------------------------------------------------------
+// FLOW
+// -------------------------------------------------------------------------
+bool LEQuad::init_flow(void)
+{
+    bool ret = true;
+
+    // DOWN telemetry
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_OPTICAL_FLOW, 200000, &px4flow_telemetry_send, &flow);
+
+    // Task
+    ret &= scheduler.add_task(100000, &Px4flow_i2c::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
+
+
+    return ret;
+}
+
 
 // -------------------------------------------------------------------------
 // Stabilisers

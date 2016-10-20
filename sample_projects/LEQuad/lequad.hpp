@@ -228,6 +228,7 @@ protected:
     virtual bool init_ahrs(void);
     virtual bool init_ins(void);
     virtual bool init_mocap(void);
+    virtual bool init_flow(void);
     virtual bool init_stabilisers(void);
     virtual bool init_mission_planning(void);
     virtual bool init_hud(void);
