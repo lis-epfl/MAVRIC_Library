@@ -92,7 +92,7 @@ var searchData=
   ['state_5fdisplay_5fmavrinux',['State_display_mavrinux',['../classState__display__mavrinux.html#ac8ec11ae6e10845528744660c7e6ae60',1,'State_display_mavrinux']]],
   ['state_5fdisplay_5fmegafly_5frev4',['State_display_megafly_rev4',['../classState__display__megafly__rev4.html#a5c3a612dad23522ec65a1069f56284ef',1,'State_display_megafly_rev4']]],
   ['state_5fdisplay_5fsparky_5fv2',['State_display_sparky_v2',['../classState__display__sparky__v2.html#a7493f1949dbfbfd1de55591880896d41',1,'State_display_sparky_v2']]],
-  ['state_5fmachine',['State_machine',['../classState__machine.html#a73a6e58474acb69fd01d89fd706d86f2',1,'State_machine::State_machine()'],['../classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753',1,'Mission_planner::state_machine()']]],
+  ['state_5fmachine',['state_machine',['../classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753',1,'Mission_planner::state_machine()'],['../classState__machine.html#a73a6e58474acb69fd01d89fd706d86f2',1,'State_machine::State_machine()']]],
   ['stop',['stop',['../classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253',1,'Data_logging']]],
   ['stop_5faccelerometer_5fbias_5fcalibration',['stop_accelerometer_bias_calibration',['../classImu.html#a5455d91545d19a136b5cf92519daeec1',1,'Imu']]],
   ['stop_5fcalibration',['stop_calibration',['../classAirspeed__analog.html#a19d0d9e7bf93e6b8815444e2c209ca2d',1,'Airspeed_analog']]],

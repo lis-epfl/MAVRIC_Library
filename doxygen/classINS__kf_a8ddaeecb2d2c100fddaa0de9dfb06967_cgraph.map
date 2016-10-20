@@ -1,16 +1,13 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classINS__kf.html#abd61a51acfa3669dbc28fe865ed1491c" title="Initialize/reset the kalman filter." alt="" coords="219,5,307,35"/>
-<area shape="rect" id="node5" href="$classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="215,59,311,88"/>
-<area shape="rect" id="node7" href="$classGps.html#a26c405755338e7761cfb7fda26498aeb" title="Get last position update time in microseconds." alt="" coords="165,112,360,141"/>
-<area shape="rect" id="node9" href="$classGps.html#a3b136ce3a3b20774501a8e41098d4a6f" title="Get position in global frame." alt="" coords="204,165,321,195"/>
-<area shape="rect" id="node11" href="$classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="221,219,304,248"/>
-<area shape="rect" id="node13" href="$classGps.html#a0d21e79e013389d93bc6b192ffdb6fc2" title="Get last velocity update time in microseconds." alt="" coords="165,272,360,301"/>
-<area shape="rect" id="node15" href="$classGps.html#a885eefcd896cea4d02d8ffdd7a5c9da0" title="Get velocity in local frame in m/s." alt="" coords="207,325,319,355"/>
-<area shape="rect" id="node17" href="$classBarometer.html#a0c9353d8be366f2f5eec9550ba837af3" title="Get the last update time in microseconds." alt="" coords="173,379,352,408"/>
-<area shape="rect" id="node19" href="$classBarometer.html#a9ab9518641d292bd91435fda9595e620" title="Get the altitude in meters above sea level (not filtered)" alt="" coords="173,432,352,461"/>
-<area shape="rect" id="node21" href="$classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="187,485,339,515"/>
-<area shape="rect" id="node23" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="205,539,320,568"/>
-<area shape="rect" id="node27" href="$classSonar.html#a61279df583287149aa78c72fc4750e15" title="Get latest distance measure." alt="" coords="207,592,319,621"/>
-<area shape="rect" id="node29" href="$classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="209,645,316,675"/>
-<area shape="rect" id="node25" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="408,539,555,568"/>
+<area shape="rect" id="node3" href="$classGps.html#a6253f14dbd270f3b24b677cdab6d1c49" title="Indicates whether the measurements can be trusted." alt="" coords="237,5,333,35"/>
+<area shape="rect" id="node5" href="$classGps__mocap.html#a57badda9413a04af15384c2e2f8ee6bc" title="Indicates whether the measurements can be trusted." alt="" coords="215,59,356,88"/>
+<area shape="rect" id="node9" href="$classINS__kf.html#abd61a51acfa3669dbc28fe865ed1491c" title="Initialize/reset the kalman filter." alt="" coords="241,112,329,141"/>
+<area shape="rect" id="node11" href="$classGps.html#a26c405755338e7761cfb7fda26498aeb" title="Get last position update time in microseconds." alt="" coords="188,165,383,195"/>
+<area shape="rect" id="node13" href="$classGps.html#a0d21e79e013389d93bc6b192ffdb6fc2" title="Get last velocity update time in microseconds." alt="" coords="188,219,383,248"/>
+<area shape="rect" id="node15" href="$classGps__mocap.html#ac50e80848470f5dd76a47963e3176ff0" title="Get last position update time in microseconds." alt="" coords="165,272,405,301"/>
+<area shape="rect" id="node17" href="$classBarometer.html#a0c9353d8be366f2f5eec9550ba837af3" title="Get the last update time in microseconds." alt="" coords="196,325,375,355"/>
+<area shape="rect" id="node19" href="$classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="209,379,361,408"/>
+<area shape="rect" id="node21" href="$classPx4flow__i2c.html#a08460836c10b0f71090686429a2531ba" title="Indicates whether the measurements can be trusted." alt="" coords="215,432,356,461"/>
+<area shape="rect" id="node23" href="$classPx4flow__i2c.html#a9492c325db9c5b6685ba0e5935303684" title="Get last update time in seconds." alt="" coords="195,485,376,515"/>
+<area shape="rect" id="node7" href="$classGps__mocap.html#a4c99f6c501479c24bfdbac6a3ccc2310" title="Get last update time in microseconds." alt="" coords="455,59,641,88"/>
 </map>

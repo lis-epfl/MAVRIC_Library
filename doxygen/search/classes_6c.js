@@ -5,7 +5,6 @@ var searchData=
   ['led_5fdummy',['Led_dummy',['../classLed__dummy.html',1,'']]],
   ['led_5fgpio',['Led_gpio',['../classLed__gpio.html',1,'']]],
   ['lequad',['LEQuad',['../classLEQuad.html',1,'']]],
-  ['lequad_5fdronedome',['LEQuad_dronedome',['../classLEQuad__dronedome.html',1,'']]],
   ['lsm330dlc',['Lsm330dlc',['../classLsm330dlc.html',1,'']]],
   ['lsm330dlc_5facc',['Lsm330dlc_acc',['../classLsm330dlc__acc.html',1,'']]],
   ['lsm330dlc_5fgyr',['Lsm330dlc_gyr',['../classLsm330dlc__gyr.html',1,'']]],

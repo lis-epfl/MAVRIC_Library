@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classGps__mocap.html#a9f541133d4ee0322a2af688cc4846d7a" title="Main update function &#160;Reads new values from sensor." alt="" coords="243,5,381,35"/>
+<area shape="rect" id="node3" href="$classGps__mocap.html#a57badda9413a04af15384c2e2f8ee6bc" title="Indicates whether the measurements can be trusted." alt="" coords="244,32,385,61"/>
+<area shape="rect" id="node5" href="$classGps__mocap.html#a74fa682f99a804f7d1882993aa11a28e" title="Indicates whether fix are received." alt="" coords="435,5,549,35"/>
+<area shape="rect" id="node7" href="$classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="437,59,547,88"/>
 </map>

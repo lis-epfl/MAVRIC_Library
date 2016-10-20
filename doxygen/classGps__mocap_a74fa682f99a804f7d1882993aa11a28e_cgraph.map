@@ -1,3 +1,4 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classGps__mocap.html#a57badda9413a04af15384c2e2f8ee6bc" title="Indicates whether the measurements can be trusted." alt="" coords="169,5,311,35"/>
+<area shape="rect" id="node5" href="$classGps__mocap.html#a4c99f6c501479c24bfdbac6a3ccc2310" title="Get last update time in microseconds." alt="" coords="361,5,548,35"/>
 </map>
