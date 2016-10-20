@@ -63,7 +63,8 @@ bool gps_telemetry_init(Gps* gps, Mavlink_message_handler* message_handler);
  * \param   mavlink_stream          Pointer to the MAVLink stream structure
  * \param   msg                     Pointer to the MAVLink message
  */
-void gps_telemetry_send_raw(const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void gps_telemetry_send_raw( const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void gps_telemetry_send_raw2(const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif /* GPS_TELEMETRY_HPP_ */

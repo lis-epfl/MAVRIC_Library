@@ -106,6 +106,7 @@ void gps_telemetry_send_raw(const Gps* gps, const Mavlink_stream* mavlink_stream
     float ground_speed = maths_fast_sqrt(gps->velocity_lf()[X] * gps->velocity_lf()[X]
                                          + gps->velocity_lf()[Y] * gps->velocity_lf()[Y]
                                          + gps->velocity_lf()[Z] * gps->velocity_lf()[Z]);
+
     mavlink_msg_gps_raw_int_pack(mavlink_stream->sysid(),
                                  mavlink_stream->compid(),
                                  msg,
@@ -119,4 +120,29 @@ void gps_telemetry_send_raw(const Gps* gps, const Mavlink_stream* mavlink_stream
                                  ground_speed * 100.0f,
                                  gps->heading() * 100.0f,
                                  gps->num_sats());
+}
+
+
+void gps_telemetry_send_raw2(const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    global_position_t global_position = gps->position_gf();
+    float ground_speed = maths_fast_sqrt(gps->velocity_lf()[X] * gps->velocity_lf()[X]
+                                         + gps->velocity_lf()[Y] * gps->velocity_lf()[Y]
+                                         + gps->velocity_lf()[Z] * gps->velocity_lf()[Z]);
+
+     mavlink_msg_gps2_raw_pack(mavlink_stream->sysid(),
+                                  mavlink_stream->compid(),
+                                  msg,
+                                  gps->last_update_us(),
+                                  gps->fix(),
+                                  global_position.latitude  * 10000000.0f,
+                                  global_position.longitude * 10000000.0f,
+                                  global_position.altitude  * 1000.0f,
+                                  gps->horizontal_position_accuracy() * 100.0f,
+                                  gps->vertical_position_accuracy() * 100.0f,
+                                  ground_speed * 100.0f,
+                                  gps->heading() * 100.0f,
+                                  gps->num_sats(),
+                                  0,
+                                  0);
 }

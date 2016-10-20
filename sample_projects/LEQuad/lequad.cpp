@@ -271,7 +271,8 @@ bool LEQuad::init_gps(void)
     ret &= gps_telemetry_init(&gps, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw, &gps);
+    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw,  &gps);
+    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS2_RAW,    1000000, &gps_telemetry_send_raw2, &gps_mocap);
 
     // Task
     ret &= scheduler.add_task(100000, &task_gps_update, &gps, Scheduler_task::PRIORITY_HIGH);
