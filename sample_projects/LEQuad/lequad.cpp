@@ -61,11 +61,32 @@
 #include "util/print_util.hpp"
 
 
-LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& serial_mavlink, Satellite& satellite, State_display& state_display, File& file_flash, Battery& battery, Servo& servo_0, Servo& servo_1, Servo& servo_2, Servo& servo_3, Servo& servo_4, Servo& servo_5, Servo& servo_6, Servo& servo_7, File& file1, File& file2, const conf_t& config):
+LEQuad::LEQuad(Imu& imu,
+               Barometer& barometer,
+               Gps& gps,
+               Sonar& sonar,
+               Px4flow_i2c& flow,
+               Serial& serial_mavlink,
+               Satellite& satellite,
+               State_display& state_display,
+               File& file_flash,
+               Battery& battery,
+               Servo& servo_0,
+               Servo& servo_1,
+               Servo& servo_2,
+               Servo& servo_3,
+               Servo& servo_4,
+               Servo& servo_5,
+               Servo& servo_6,
+               Servo& servo_7,
+               File& file1,
+               File& file2,
+               const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
     sonar(sonar),
+    flow(flow),
     serial_mavlink(serial_mavlink),
     satellite(satellite),
     state_display_(state_display),
@@ -79,6 +100,8 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     servo_5(servo_5),
     servo_6(servo_6),
     servo_7(servo_7),
+    gps_mocap(communication.handler()),
+    ahrs_ekf_mocap(communication.handler(), ahrs_ekf),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(communication.mavlink_stream(), battery, config.state_config),
     scheduler(config.scheduler_config),
@@ -87,7 +110,7 @@ LEQuad::LEQuad(Imu& imu, Barometer& barometer, Gps& gps, Sonar& sonar, Serial& s
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     ins_(&ins_kf),
     position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
-    ins_kf(state, gps, barometer, sonar, ahrs),
+    ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs),
     cascade_controller_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.cascade_controller_config),
     mission_handler_registry(),
     waypoint_handler(*ins_, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
@@ -125,6 +148,7 @@ bool LEQuad::init(void)
     success &= init_sonar();
     success &= init_ahrs();
     success &= init_ins();
+    success &= init_mocap();
     success &= init_mission_planning();
     success &= init_stabilisers();
     success &= init_hud();
@@ -385,6 +409,19 @@ bool LEQuad::init_ins(void)
     return ret;
 }
 
+
+// -------------------------------------------------------------------------
+// MOCAP
+// -------------------------------------------------------------------------
+bool LEQuad::init_mocap(void)
+{
+    bool ret = true;
+
+    ret &= gps_mocap.init();
+    ret &= ahrs_ekf_mocap.init();
+
+    return ret;
+}
 
 // -------------------------------------------------------------------------
 // Stabilisers

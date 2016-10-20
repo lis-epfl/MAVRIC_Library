@@ -77,7 +77,6 @@ Gps_mocap::Gps_mocap(Mavlink_message_handler& message_handler, conf_t config):
     message_handler_(message_handler),
     config_(config),
     is_init_(false),
-    is_healthy_(false),
     last_update_us_(0.0f)
 {
     local_position_[X]  = 0.0f;
@@ -143,17 +142,6 @@ void Gps_mocap::callback(uint32_t __attribute__((unused)) sysid, const mavlink_m
 
 bool Gps_mocap::update(void)
 {
-    float t = time_keeper_get_us();
-
-    if ( (t - last_update_us()) > 1000000 )
-    {
-         is_healthy_ = false;
-    }
-    else
-    {
-        is_healthy_ = true;
-    }
-
     return true;
 }
 
@@ -246,5 +234,13 @@ gps_fix_t Gps_mocap::fix(void) const
 
 bool Gps_mocap::healthy(void) const
 {
-    return is_healthy_;
+    bool  is_healthy = true;
+
+    float t          = time_keeper_get_us();
+    if ( (t - last_update_us()) > 1000000 )
+    {
+         is_healthy = false;
+    }
+
+    return is_healthy;
 }

@@ -96,6 +96,7 @@ int main(int argc, char** argv)
                         board.sim.barometer(),
                         board.sim.gps(),
                         board.sim.sonar(),
+                        board.flow,
                         board.mavlink_serial,
                         board.spektrum_satellite,
                         board.state_display_mavrinux_,

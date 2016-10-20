@@ -58,7 +58,6 @@
 #include "hal/stm32/spi_stm32.hpp"
 
 #include "sample_projects/LEQuad/lequad.hpp"
-#include "sample_projects/LEQuad/lequad_dronedome.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
@@ -110,6 +109,7 @@ int main(int argc, char** argv)
     File_dummy          file_dummy;
     Gpio_dummy          gpio_dummy;
     Spektrum_satellite  satellite_dummy(serial_dummy, gpio_dummy, gpio_dummy);
+    Px4flow_i2c         flow_dummy(i2c_dummy);
 
     // -------------------------------------------------------------------------
     // Create simulation
@@ -144,6 +144,7 @@ int main(int argc, char** argv)
     //                      sim.barometer(),
     //                      sim.gps(),
     //                      sim.sonar(),
+    //                      flow_dummy,
     //                      board.serial_,                // mavlink serial
     //                      satellite_dummy,
     //                      board.state_display_sparky_v2_,
@@ -165,7 +166,8 @@ int main(int argc, char** argv)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    LEQuad::conf_t mav_config = LEQuad_dronedome::default_config(MAVLINK_SYS_ID);
+    //LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
+    LEQuad::conf_t mav_config = LEQuad::dronedome_config(MAVLINK_SYS_ID);
 
     //use joystick by default
     mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_JOYSTICK;
@@ -178,10 +180,11 @@ int main(int argc, char** argv)
     // mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator.gain      = 0.025f;
     // mav_config.stabilisation_copter_config.thrust_hover_point      = 0.0f;
 
-    LEQuad_dronedome mav = LEQuad_dronedome(board.imu_,
+    LEQuad mav = LEQuad(board.imu_,
                         sim.barometer(),
                         sim.gps(),
                         sim.sonar(),
+                        flow_dummy,
                         // board.bmp085,
                         // board.gps_ublox,
                         // board.sonar_i2cxl,

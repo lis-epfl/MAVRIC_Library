@@ -63,9 +63,11 @@ int main(int argc, char** argv)
     // Board initialisation
     init_success &= board.init();
 
-    // Create dummy files
+    // Dummy objects
     File_dummy dummy_file_log;
     File_dummy dummy_file_stat;
+    I2c_dummy  i2c_dummy;
+    Px4flow_i2c flow_dummy(i2c_dummy);
 
     // -------------------------------------------------------------------------
     // Create MAV
@@ -76,6 +78,7 @@ int main(int argc, char** argv)
                         board.sim.barometer(),
                         board.sim.gps(),
                         board.sonar_i2cxl,
+                        flow_dummy,
                         board.serial_1,
                         // board.serial_2,
                         board.spektrum_satellite,

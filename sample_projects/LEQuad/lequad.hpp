@@ -72,6 +72,7 @@
 
 #include "drivers/battery.hpp"
 #include "drivers/gps.hpp"
+#include "drivers/gps_mocap.hpp"
 #include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
 #include "drivers/state_display.hpp"
@@ -96,9 +97,10 @@
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/position_estimation.hpp"
- #include "sensing/ins_kf.hpp"
+#include "sensing/ins_kf.hpp"
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
+#include "sensing/ahrs_ekf_mocap.hpp"
 
 #include "util/coord_conventions.hpp"
 #include "util/print_util.hpp"
@@ -155,28 +157,39 @@ public:
 
 
     /**
+     * \brief   Configuration for use in drone dome
+     *
+     * \param   sysid       System id (default value = 1)
+     *
+     * \return  Config structure
+     */
+    static inline conf_t dronedome_config(uint8_t sysid = 1);
+
+
+    /**
      * \brief   Constructor
      */
     LEQuad( Imu& imu,
-                  Barometer& barometer,
-                  Gps& gps,
-                  Sonar& sonar,
-                  Serial& serial_mavlink,
-                  Satellite& satellite,
-                  State_display& state_display,
-                  File& file_flash,
-                  Battery& battery,
-                  Servo& servo_0,
-                  Servo& servo_1,
-                  Servo& servo_2,
-                  Servo& servo_3,
-                  Servo& servo_4,
-                  Servo& servo_5,
-                  Servo& servo_6,
-                  Servo& servo_7,
-                  File& file1,
-                  File& file2,
-                  const conf_t& config = default_config());
+            Barometer& barometer,
+            Gps& gps,
+            Sonar& sonar,
+            Px4flow_i2c& flow,
+            Serial& serial_mavlink,
+            Satellite& satellite,
+            State_display& state_display,
+            File& file_flash,
+            Battery& battery,
+            Servo& servo_0,
+            Servo& servo_1,
+            Servo& servo_2,
+            Servo& servo_3,
+            Servo& servo_4,
+            Servo& servo_5,
+            Servo& servo_6,
+            Servo& servo_7,
+            File& file1,
+            File& file2,
+            const conf_t& config = default_config());
 
     /*
      * \brief   Initializes LEQuad
@@ -214,6 +227,7 @@ protected:
     virtual bool init_sonar(void);
     virtual bool init_ahrs(void);
     virtual bool init_ins(void);
+    virtual bool init_mocap(void);
     virtual bool init_stabilisers(void);
     virtual bool init_mission_planning(void);
     virtual bool init_hud(void);
@@ -230,6 +244,7 @@ protected:
     Barometer&      barometer;          ///< Reference to barometer
     Gps&            gps;                ///< Reference to GPS
     Sonar&          sonar;              ///< Reference to sonar
+    Px4flow_i2c&    flow;              ///< Optic flow sensor
     Serial&         serial_mavlink;     ///< Reference to telemetry serial
     Satellite&      satellite;          ///< Reference to remote control satellite
     State_display&  state_display_;     ///< Reference to the state display
@@ -243,6 +258,11 @@ protected:
     Servo&          servo_5;            ///< Reference to servos structure
     Servo&          servo_6;            ///< Reference to servos structure
     Servo&          servo_7;            ///< Reference to servos structure
+
+
+    // Motion capture
+    Gps_mocap       gps_mocap;       ///< Position measure using mocap information
+    Ahrs_ekf_mocap  ahrs_ekf_mocap;     ///< Attitude measure from mocap information
 
     Manual_control manual_control;                              ///< The joystick parsing structure
 
@@ -335,5 +355,32 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     return conf;
 };
+
+
+LEQuad::conf_t LEQuad::dronedome_config(uint8_t sysid)
+{
+    conf_t conf                                                = {};
+
+    conf = LEQuad::default_config(sysid);
+
+    //adapt gain for the drone dome
+    for (int i = 0; i < 3; ++i)
+    {
+        conf.position_estimation_config.kp_pos_gps[i] = 100.0f;
+        conf.position_estimation_config.kp_vel_gps[i] = 100.0f;
+    }
+    conf.position_estimation_config.kp_alt_baro = 0.0f;
+    conf.position_estimation_config.kp_vel_baro = 0.0f;
+    conf.position_estimation_config.kp_alt_sonar = 0.0f;
+    conf.position_estimation_config.kp_vel_sonar = 0.0f;
+
+    conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
+
+    conf.mission_planner_config.safe_altitude                   =  -3.0f;
+    conf.mission_planner_config.critical_landing_altitude       =  -2.0f;
+    conf.mission_planner_config.takeoff_altitude                =  -2.0f;
+
+    return conf;
+}
 
 #endif /* LEQUAD_HPP_ */
