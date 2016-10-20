@@ -112,6 +112,7 @@ INS_kf::INS_kf( State& state,
     last_gps_pos_update_s_(0.0f),
     last_gps_vel_update_s_(0.0f),
     last_gps_mocap_update_s_(0.0f),
+    first_fix_received_(false),
     dt_(0.0f),
     last_update_(0.0f)
 {
@@ -236,113 +237,119 @@ bool INS_kf::is_healthy(INS::healthy_t type) const
 
 bool INS_kf::update(void)
 {
-    // Check if an initialization has to be done
-    if(init_flag == 1)
+    // Check if an initialization has to be done because we just received a fix
+    if (   (gps_.healthy() || gps_mocap_.healthy())
+        && (first_fix_received_ == false) )
+    {
+        first_fix_received_ = true;
+        init();
+    }
+
+    // Check is an initialization was issued via telemetry
+    if (init_flag == 1)
     {
         init();
     }
+
+    // Prediction step
+    if (ahrs_.internal_state == AHRS_READY)
+    {
+        if (last_accel_update_s_ < ahrs_.last_update_s)
+        {
+            // Update the delta time (in second)
+            float now       = time_keeper_get_s();
+            dt_             = now - last_update_;
+            last_update_    = now;
+
+            // Make the prediciton
+            predict_kf();
+
+            // update timimg
+            last_accel_update_s_ = ahrs_.last_update_s;
+        }
+    }
     else
     {
-        // Prediction step
-        if (ahrs_.internal_state == AHRS_READY)
-        {
-            if (last_accel_update_s_ < ahrs_.last_update_s)
-            {
-                // Update the delta time (in second)
-                float now       = time_keeper_get_s();
-                dt_             = now - last_update_;
-                last_update_    = now;
+        init();
+    }
 
-                // Make the prediciton
-                predict_kf();
 
-                // update timimg
-                last_accel_update_s_ = ahrs_.last_update_s;
-            }
-        }
-        else
+    // Measure from gps
+    if (gps_.healthy())
+    {
+        // GPS Position
+        if (last_gps_pos_update_s_ < (float)(gps_.last_position_update_us())/1e6f)
         {
-            init();
+            // Do kalman update
+            update_gps_pos();
+
+            // Update timing
+            last_gps_pos_update_s_ = (float)(gps_.last_position_update_us())/1e6f;
         }
 
-
-        // Measure from gps
-        if (gps_.healthy())
+        // GPS velocity
+        if (last_gps_vel_update_s_ < (float)(gps_.last_velocity_update_us())/1e6f)
         {
-            // GPS Position
-            if (last_gps_pos_update_s_ < (float)(gps_.last_position_update_us())/1e6f)
-            {
-                // Do kalman update
-                update_gps_pos();
+            // Do kalman update
+            update_gps_vel();
 
-                // Update timing
-                last_gps_pos_update_s_ = (float)(gps_.last_position_update_us())/1e6f;
-            }
-
-            // GPS velocity
-            if (last_gps_vel_update_s_ < (float)(gps_.last_velocity_update_us())/1e6f)
-            {
-                // Do kalman update
-                update_gps_vel();
-
-                // Update timing
-                last_gps_vel_update_s_ = (float)(gps_.last_velocity_update_us())/1e6f;
-            }
+            // Update timing
+            last_gps_vel_update_s_ = (float)(gps_.last_velocity_update_us())/1e6f;
         }
+    }
 
-        // Measure from gps moacp
-        if (gps_mocap_.healthy())
+    // Measure from gps moacp
+    if (gps_mocap_.healthy())
+    {
+        if (last_gps_mocap_update_s_ < (float)(gps_mocap_.last_position_update_us())/1e6f)
         {
-            if (last_gps_mocap_update_s_ < (float)(gps_mocap_.last_position_update_us())/1e6f)
-            {
-                // Do kalman update
-                update_gps_mocap();
+            // Do kalman update
+            update_gps_mocap();
 
-                // Update timing
-                last_gps_mocap_update_s_ = (float)(gps_mocap_.last_position_update_us())/1e6f;
-            }
+            // Update timing
+            last_gps_mocap_update_s_ = (float)(gps_mocap_.last_position_update_us())/1e6f;
         }
+    }
 
-        // Measure from barometer
-        if(true) // TODO: Add healthy function into barometer
+    // Measure from barometer
+    if(true) // TODO: Add healthy function into barometer
+    {
+       if (last_baro_update_s_ < (float)(barometer_.last_update_us())/1e6f)
+       {
+          // Do kalman update
+          update_barometer();
+
+          // Update timing
+          last_baro_update_s_ = (float)(barometer_.last_update_us())/1e6f;
+       }
+    }
+
+
+    // Measure from sonar (only if small angles, to avoid peaks)
+    aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
+    if ( (maths_f_abs(current_attitude.rpy[ROLL])  < PI / 9.0f) &&
+         (maths_f_abs(current_attitude.rpy[PITCH]) < PI / 9.0f)    )
+    {
+        if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
         {
-           if (last_baro_update_s_ < (float)(barometer_.last_update_us())/1e6f)
-           {
-              // Do kalman update
-              update_barometer();
+            // Do kalman update
+            update_sonar();
 
-              // Update timing
-              last_baro_update_s_ = (float)(barometer_.last_update_us())/1e6f;
-           }
+            // Update timing
+            last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
         }
+    }
 
-
-        // Measure from sonar (only if small angles, to avoid peaks)
-        aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        if ( (maths_f_abs(current_attitude.rpy[ROLL])  < PI / 9.0f) &&
-             (maths_f_abs(current_attitude.rpy[PITCH]) < PI / 9.0f)    )
+    // Measure from optic-flow
+    if (flow_.healthy())
+    {
+        if (last_flow_update_s_ < flow_.last_update_s())
         {
-            if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
-            {
-                // Do kalman update
-                update_sonar();
+            // Do kalman update
+            update_flow();
 
-                // Update timing
-                last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
-            }
-        }
-
-        // Measure from optic-flow
-        if (flow_.healthy())
-        {
-            if (last_flow_update_s_ < flow_.last_update_s())
-            {
-                // Do kalman update
-                update_flow();
-
-                // Update timing
-                last_flow_update_s_ = flow_.last_update_s();
-            }
+            // Update timing
+            last_flow_update_s_ = flow_.last_update_s();
         }
     }
 

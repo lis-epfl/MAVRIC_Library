@@ -264,6 +264,8 @@ private:
     float last_gps_pos_update_s_;           ///< Last time we updated the estimate using gps position
     float last_gps_vel_update_s_;           ///< Last time we updated the estimate using gps velocity
     float last_gps_mocap_update_s_;         ///< Last time we updated the estimate using motion capture system
+    bool  first_fix_received_;              ///< Indicates if a fix was received (false at startup, true after first fix from gps or mocap)
+
 
     float dt_;                              ///< Time interval since last update in seconds
     float last_update_;                     ///< Last update time in seconds
