@@ -63,6 +63,8 @@ Mavrinux::Mavrinux(mavrinux_conf_t config):
     dynamic_model(servo_0, servo_1, servo_2, servo_3, config.dynamic_model_config),
     sim(dynamic_model),
     imu(sim.accelerometer(), sim.gyroscope(), sim.magnetometer(), config.imu_config),
+    i2c_dummy({false}),
+    flow(i2c_dummy),
     adc_battery(12.34f),
     battery(adc_battery),
     adc_airspeed(12.0f),

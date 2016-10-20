@@ -92,7 +92,8 @@ int main(void)
     LEQuad mav = LEQuad(board.imu,
                         board.barometer,
                         board.gps_ublox,
-                        board.sonar_i2cxl,      // Warning:
+                        board.sonar_i2cxl,
+                        board.flow,
                         board.uart0,
                         board.spektrum_satellite,
                         board.state_display_megafly_rev4_,

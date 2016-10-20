@@ -60,6 +60,7 @@
 #include "drivers/lsm330dlc.hpp"
 #include "drivers/servo.hpp"
 #include "drivers/sonar_i2cxl.hpp"
+#include "drivers/px4flow_i2c.hpp"
 #include "drivers/spektrum_satellite.hpp"
 #include "drivers/state_display_megafly_rev4.hpp"
 
@@ -155,6 +156,7 @@ public:
     File_flash_avr32            file_flash;
     Gps_ublox                   gps_ublox;
     Sonar_i2cxl                 sonar_i2cxl;
+    Px4flow_i2c                 flow;
     analog_monitor_t            analog_monitor;
     Adc_avr32                   adc_battery;
     Adc_avr32                   adc_airspeed;

@@ -47,22 +47,24 @@
 
 #include "hal/dummy/gpio_dummy.hpp"
 #include "hal/dummy/serial_dummy.hpp"
-#include "drivers/spektrum_satellite.hpp"
-#include "drivers/state_display_mavrinux.hpp"
-
-#include "simulation/simulation.hpp"
-#include "simulation/dynamic_model_quad_diag.hpp"
+#include "hal/dummy/adc_dummy.hpp"
+#include "hal/dummy/pwm_dummy.hpp"
+#include "hal/dummy/led_dummy.hpp"
+#include "hal/dummy/i2c_dummy.hpp"
 
 #include "hal/linux/serial_linux_io.hpp"
 #include "hal/linux/serial_udp.hpp"
 #include "hal/linux/file_linux.hpp"
 
-#include "hal/dummy/adc_dummy.hpp"
-#include "drivers/battery.hpp"
-#include "hal/dummy/pwm_dummy.hpp"
-#include "drivers/servo.hpp"
-#include "hal/dummy/led_dummy.hpp"
+#include "drivers/spektrum_satellite.hpp"
+#include "drivers/state_display_mavrinux.hpp"
 #include "drivers/airspeed_analog.hpp"
+#include "drivers/battery.hpp"
+#include "drivers/servo.hpp"
+#include "drivers/px4flow_i2c.hpp"
+
+#include "simulation/simulation.hpp"
+#include "simulation/dynamic_model_quad_diag.hpp"
 
 extern "C"
 {
@@ -128,13 +130,17 @@ public:
     Servo       servo_1;
     Servo       servo_2;
     Servo       servo_3;
-    Servo		servo_4;
-	Servo		servo_5;
+    Servo		    servo_4;
+	  Servo		    servo_5;
     Servo       servo_6;
     Servo       servo_7;
-    Dynamic_model_quad_diag dynamic_model;
-    Simulation              sim;
-    Imu                     imu;
+
+    Dynamic_model_quad_diag   dynamic_model;
+    Simulation                sim;
+    Imu                       imu;
+
+    I2c_dummy           i2c_dummy;
+    Px4flow_i2c         flow;
 
     Adc_dummy           adc_battery;
     Battery             battery;
@@ -179,7 +185,7 @@ static inline mavrinux_conf_t mavrinux_default_config()
     // UDP config
     // -------------------------------------------------------------------------
     conf.serial_udp_config  = serial_udp_default_config();
-    
+
     // -------------------------------------------------------------------------
     // Flash config
     // -------------------------------------------------------------------------

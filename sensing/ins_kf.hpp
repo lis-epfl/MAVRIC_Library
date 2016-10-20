@@ -47,6 +47,7 @@
 
 #include "communication/state.hpp"
 #include "drivers/gps.hpp"
+#include "drivers/gps_mocap.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
 #include "drivers/px4flow_i2c.hpp"
@@ -144,21 +145,25 @@ public:
         float sigma_gps_z;
         float sigma_gps_velxy;
         float sigma_gps_velz;
+        float sigma_gps_mocap;
         float sigma_baro;
+        float sigma_flow;
         float sigma_sonar;
 
         // Position of the origin
         global_position_t origin;
     };
 
+
     /**
      * \brief Constructor
      */
-    INS_kf(State& state,
+    INS_kf( State& state,
             const Gps& gps,
+            const Gps_mocap& gps_mocap,
             const Barometer& barometer,
             const Sonar& sonar,
-            // const Px4flow_i2c& flow,
+            const Px4flow_i2c& flow,
             const ahrs_t& ahrs,
             const conf_t config = default_config() );
 
@@ -228,21 +233,14 @@ public:
     conf_t config_;                     ///< Configuration (public, to be used as onboard param)
     uint32_t init_flag;                 ///< Flag used to force initialization by telemetry (0 no init, otherwise init)
 
-    // Measurements (used for data logging, or telemetry)
-    global_position_t gps_global;
-    local_position_t gps_local;
-    global_position_t ori;
-    std::array<float,3> gps_velocity;
-    float z_baro;
-    float z_sonar;
-
 
 private:
     State&              state_;             ///< Reference to the state structure
     const Gps&          gps_;               ///< Gps (input)
+    const Gps_mocap&    gps_mocap_;         ///< Gps from motion capture system (input)
     const Barometer&    barometer_;         ///< Barometer (input)
     const Sonar&        sonar_;             ///< Sonar, must be downward facing (input)
-    //const Px4flow_i2c&  flow_;            ///< Optical flow sensor (input)
+    const Px4flow_i2c&  flow_;              ///< Optical flow sensor (input)
     const ahrs_t&       ahrs_;              ///< Attitude and acceleration (input)
 
     std::array<float,3> pos_;
@@ -251,22 +249,27 @@ private:
 
     Mat<3,11> H_gpsvel_;
     Mat<3,3> R_gpsvel_;
+    Mat<3,3> R_mocap_;
     Mat<1,11> H_baro_;
     Mat<1,1> R_baro_;
     Mat<1,11> H_sonar_;
     Mat<1,1> R_sonar_;
-    //Mat<3,11> H_flow_;
-    //Mat<3,3> R_flow_;
+    Mat<3,11> H_flow_;
+    Mat<3,3> R_flow_;
 
     float last_accel_update_s_;             ///< Last time we updated the estimate using accelerometer
     float last_sonar_update_s_;             ///< Last time we updated the estimate using sonar
-    //float last_flow_update_s_;            ///< Last time we updated the estimate using optical flow
+    float last_flow_update_s_;              ///< Last time we updated the estimate using optical flow
     float last_baro_update_s_;              ///< Last time we updated the estimate using barometer
     float last_gps_pos_update_s_;           ///< Last time we updated the estimate using gps position
     float last_gps_vel_update_s_;           ///< Last time we updated the estimate using gps velocity
+    float last_gps_mocap_update_s_;         ///< Last time we updated the estimate using motion capture system
+    bool  first_fix_received_;              ///< Indicates if a fix was received (false at startup, true after first fix from gps or mocap)
+
 
     float dt_;                              ///< Time interval since last update in seconds
     float last_update_;                     ///< Last update time in seconds
+
 
     /**
      * \brief   Performs the prediction step of the Kalman filter, using linear formulation (KF, non-constant matrices)
@@ -275,13 +278,39 @@ private:
 
 
     /**
-     * \brief   Return a random number, simulating a uniform white noise with standard deviation sigma
-     *
-     * \param sigma     Standard deviation of the noise to simulate
-     *
-     * \return          Return the noise sample
+     * \brief   Performs the update step of the Kalman filter, using gps position
      */
-    float rand_sigma(float sigma);
+    void update_gps_pos(void);
+
+
+    /**
+     * \brief   Performs the update step of the Kalman filter, using gps velocity
+     */
+    void update_gps_vel(void);
+
+
+    /**
+     * \brief   Performs the update step of the Kalman filter, using motion capture system
+     */
+    void update_gps_mocap(void);
+
+
+    /**
+     * \brief   Performs the update step of the Kalman filter, using barometer
+     */
+    void update_barometer(void);
+
+
+    /**
+     * \brief   Performs the update step of the Kalman filter, using sonar
+     */
+    void update_sonar(void);
+
+
+    /**
+     * \brief   Performs the update step of the Kalman filter, using optic flow
+     */
+    void update_flow(void);
 };
 
 
@@ -300,8 +329,10 @@ INS_kf::conf_t INS_kf::default_config(void)
     conf.sigma_gps_z        = 0.13f;       // Measured: 0.879f
     conf.sigma_gps_velxy    = 0.02f;       // Measured: 0.064f
     conf.sigma_gps_velz     = 0.02f;       // Measured: 0.342f
+    conf.sigma_gps_mocap    = 0.0001f;
     conf.sigma_baro         = 0.50f;       // Measured: 0.310f
-    conf.sigma_sonar        = 0.002f;       // Measured: 0.002f
+    conf.sigma_flow         = 0.1f;
+    conf.sigma_sonar        = 0.02f;       // Measured: 0.002f
 
     //default origin location (EFPL Esplanade)
     conf.origin = ORIGIN_EPFL;

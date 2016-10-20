@@ -42,27 +42,20 @@
 
 
 #include "sensing/ins_kf.hpp"
-
-// #include <cstdlib>
-// #include <ctime>
 #include "util/coord_conventions.hpp"
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-INS_kf::INS_kf(State& state,
-                    const Gps& gps,
-                    const Barometer& barometer,
-                    const Sonar& sonar,
-                    // const Px4flow_i2c& flow,
-                    const ahrs_t& ahrs,
-                    const conf_t config):
+INS_kf::INS_kf( State& state,
+                const Gps& gps,
+                const Gps_mocap& gps_mocap,
+                const Barometer& barometer,
+                const Sonar& sonar,
+                const Px4flow_i2c& flow,
+                const ahrs_t& ahrs,
+                const conf_t config):
     Kalman<11,3,3>( {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},                                              // x
                     Mat<11,11>(100, true),                                                          // P
                     { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                                              // F (will be updated)
@@ -88,9 +81,10 @@ INS_kf::INS_kf(State& state,
     config_(config),
     state_(state),
     gps_(gps),
+    gps_mocap_(gps_mocap),
     barometer_(barometer),
     sonar_(sonar),
-    //flow_(flow),
+    flow_(flow),
     ahrs_(ahrs),
     H_gpsvel_({ 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
@@ -98,22 +92,27 @@ INS_kf::INS_kf(State& state,
     R_gpsvel_({ SQR(config.sigma_gps_velxy),  0,                            0,
                 0,                            SQR(config.sigma_gps_velxy),  0,
                 0,                            0,                            SQR(config.sigma_gps_velz)}),
+    R_mocap_({  SQR(config.sigma_gps_mocap),  0,                            0,
+                0,                            SQR(config.sigma_gps_mocap),  0,
+                0,                            0,                            SQR(config.sigma_gps_mocap)}),
     H_baro_({0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1}),
     R_baro_({ SQR(config.sigma_baro) }),
     H_sonar_({0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
     R_sonar_({ SQR(config.sigma_sonar) }),
-    //H_flow_({0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0,
-    //         0, 0, 0,  0, 0, 1, 0, 0, 0, 0, 0,
-    //         0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
-    //R_flow_({ 0.0001f, 0,       0,
-    //          0,       0.0001f, 0,
-     //         0,       0,       0.00001f}),
+    H_flow_({0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0,
+            0, 0, 0,  0, 0, 1, 0, 0, 0, 0, 0,
+            0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
+    R_flow_({ SQR(config.sigma_flow), 0,                        0,
+             0,                       SQR(config.sigma_flow),   0,
+             0,                       0,                        SQR(config.sigma_sonar)}),
     last_accel_update_s_(0.0f),
     last_sonar_update_s_(0.0f),
-    //last_flow_update_s_(0.0f),
+    last_flow_update_s_(0.0f),
     last_baro_update_s_(0.0f),
     last_gps_pos_update_s_(0.0f),
     last_gps_vel_update_s_(0.0f),
+    last_gps_mocap_update_s_(0.0f),
+    first_fix_received_(false),
     dt_(0.0f),
     last_update_(0.0f)
 {
@@ -238,186 +237,128 @@ bool INS_kf::is_healthy(INS::healthy_t type) const
 
 bool INS_kf::update(void)
 {
-    // Check if an initialization has to be done
-    if(init_flag == 0)
+    // Check if an initialization has to be done because we just received a fix
+    if (   (gps_.healthy() || gps_mocap_.healthy())
+        && (first_fix_received_ == false) )
     {
-        // Prediction step
-        if (ahrs_.internal_state == AHRS_READY)
+        first_fix_received_ = true;
+        init();
+    }
+
+    // Check is an initialization was issued via telemetry
+    if (init_flag == 1)
+    {
+        init();
+    }
+
+    // Prediction step
+    if (ahrs_.internal_state == AHRS_READY)
+    {
+        if (last_accel_update_s_ < ahrs_.last_update_s)
         {
-            if (last_accel_update_s_ < ahrs_.last_update_s)
-            {
-                // Update the delta time (in second)
-                float now       = time_keeper_get_s();
-                dt_             = now - last_update_;
-                last_update_    = now;
+            // Update the delta time (in second)
+            float now       = time_keeper_get_s();
+            dt_             = now - last_update_;
+            last_update_    = now;
 
-                // Make the prediciton
-                predict_kf();
+            // Make the prediciton
+            predict_kf();
 
-                // update timimg
-                last_accel_update_s_ = ahrs_.last_update_s;
-            }
+            // update timimg
+            last_accel_update_s_ = ahrs_.last_update_s;
         }
-        else
-        {
-            init();
-        }
-
-
-        // Update step
-        // Measure from gps
-        if (gps_.healthy())
-        {
-            // GPS Position
-            if (last_gps_pos_update_s_ < (float)(gps_.last_position_update_us())/1e6f)
-            {
-                // Get local position from gps
-                //local_position_t gps_local;
-                gps_global = gps_.position_gf();
-                ori = origin();
-                coord_conventions_global_to_local_position(gps_global, origin(), gps_local);
-
-                // Recompute the measurement noise matrix
-                R_ = Mat<3,3>({ SQR(config_.sigma_gps_xy), 0,                         0,
-                                0,                         SQR(config_.sigma_gps_xy), 0,
-                                0,                         0,                         SQR(config_.sigma_gps_z)});
-
-                // Run kalman update using default matrices
-                Kalman<11,3,3>::update({gps_local[0], gps_local[1], gps_local[2]});
-
-                // Update timing
-                last_gps_pos_update_s_ = (float)(gps_.last_position_update_us())/1e6f;
-            }
-
-            // GPS velocity
-            if (last_gps_vel_update_s_ < (float)(gps_.last_velocity_update_us())/1e6f)
-            {
-                // Get velocity from GPS
-                gps_velocity = gps_.velocity_lf();
-
-                // Recompute the measurement noise matrix
-                R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velxy),  0,                            0,
-                                       0,                             SQR(config_.sigma_gps_velxy), 0,
-                                       0,                             0,                            SQR(config_.sigma_gps_velz)});
-
-                // Run kalman update
-                Kalman<11,3,3>::update(Mat<3,1>(gps_velocity),
-                                       H_gpsvel_,
-                                       R_gpsvel_);
-
-                // Update timing
-                last_gps_vel_update_s_ = (float)(gps_.last_velocity_update_us())/1e6f;
-            }
-        }
-
-        // // Measure from barometer
-        // TODO: Add healthy function into barometer
-        if(true)
-        {
-           if (last_baro_update_s_ < (float)(barometer_.last_update_us())/1e6f)
-           {
-              // Recompute the measurement noise matrix
-              R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
-
-              // Run kalman Update
-              z_baro = barometer_.altitude_gf_raw() - origin().altitude;
-              Kalman<11,3,3>::update(Mat<1,1>(z_baro),
-                                     H_baro_,
-                                     R_baro_);
-
-              // Update timing
-              last_baro_update_s_ = (float)(barometer_.last_update_us())/1e6f;
-           }
-        }
-
-        // Measure from sonar (use measurement only if healthy and if attiude smaller than 20° to avoid peaks)
-        // aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        // if ( sonar_.healthy() && (abs(current_attitude.rpy[ROLL]) < PI/9.0f) && (abs(current_attitude.rpy[PITCH]) < PI/9.0f) )
-        // {
-        //    if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
-        //    {
-        //       // Recompute the measurement noise matrix
-        //       R_sonar_ = Mat<1,1>({ SQR(config_.sigma_sonar) });
-
-        //       // Run kalman Update
-        //       z_sonar = sonar_.distance();
-        //       Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
-        //                              H_sonar_,
-        //                              R_sonar_);
-
-        //       // Update timing
-        //       last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
-        //    }
-        // }
-
-
-        // Measure from sonar (only if small angles, to avoid peaks)
-        float sigma_sonar;
-        aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
-        if ( (maths_f_abs(current_attitude.rpy[ROLL]) < PI/9.0f) && (maths_f_abs(current_attitude.rpy[PITCH]) < PI/9.0f) )
-        {
-            if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
-            {
-                // If armed, use real measurement and adapt sigma in function of healthiness
-                if(state_.is_armed())
-                {
-                    z_sonar = sonar_.distance();
-                    if(sonar_.healthy())
-                    {
-                        sigma_sonar = config_.sigma_sonar;
-                    }
-                    else
-                    {
-                        sigma_sonar = 0.3f;
-                    }
-                }
-                // If unarmed, force measurement to 0, with very good confidence
-                else
-                {
-                    z_sonar = 0.0f;
-                    sigma_sonar = 0.0001f;
-                }
-
-                // Recompute the measurement noise matrix
-                R_sonar_ = Mat<1,1>({ SQR(sigma_sonar) });
-
-                // Run kalman Update
-                Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
-                                       H_sonar_,
-                                       R_sonar_);
-
-                // Update timing
-                last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
-            }
-        }
-
-        /*// Measure from optic-flow
-        if (flow.healthy())
-        {
-            if (last_flow_update_s_ < flow_.last_update_s())
-            {
-                // run kalman update on velocity
-                float vel_lf[3];
-                float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
-                quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
-                Kalman<11,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], flow_.ground_distance()}),
-                // Kalman11,3,3>::update(Mat<3,1>({vel_bf[0], vel_bf[1], flow_.ground_distance()}),
-                                       H_flow_,
-                                       R_flow_);
-
-                // Update timing
-                last_flow_update_s_ = flow_.last_update_s();
-            }
-        }*/
     }
     else
     {
-      init();
+        init();
+    }
+
+
+    // Measure from gps
+    if (gps_.healthy())
+    {
+        // GPS Position
+        if (last_gps_pos_update_s_ < (float)(gps_.last_position_update_us())/1e6f)
+        {
+            // Do kalman update
+            update_gps_pos();
+
+            // Update timing
+            last_gps_pos_update_s_ = (float)(gps_.last_position_update_us())/1e6f;
+        }
+
+        // GPS velocity
+        if (last_gps_vel_update_s_ < (float)(gps_.last_velocity_update_us())/1e6f)
+        {
+            // Do kalman update
+            update_gps_vel();
+
+            // Update timing
+            last_gps_vel_update_s_ = (float)(gps_.last_velocity_update_us())/1e6f;
+        }
+    }
+
+    // Measure from gps moacp
+    if (gps_mocap_.healthy())
+    {
+        if (last_gps_mocap_update_s_ < (float)(gps_mocap_.last_position_update_us())/1e6f)
+        {
+            // Do kalman update
+            update_gps_mocap();
+
+            // Update timing
+            last_gps_mocap_update_s_ = (float)(gps_mocap_.last_position_update_us())/1e6f;
+        }
+    }
+
+    // Measure from barometer
+    if(true) // TODO: Add healthy function into barometer
+    {
+       if (last_baro_update_s_ < (float)(barometer_.last_update_us())/1e6f)
+       {
+          // Do kalman update
+          update_barometer();
+
+          // Update timing
+          last_baro_update_s_ = (float)(barometer_.last_update_us())/1e6f;
+       }
+    }
+
+
+    // Measure from sonar (only if small angles, to avoid peaks)
+    aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
+    if ( (maths_f_abs(current_attitude.rpy[ROLL])  < PI / 9.0f) &&
+         (maths_f_abs(current_attitude.rpy[PITCH]) < PI / 9.0f)    )
+    {
+        if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
+        {
+            // Do kalman update
+            update_sonar();
+
+            // Update timing
+            last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
+        }
+    }
+
+    // Measure from optic-flow
+    if (flow_.healthy())
+    {
+        if (last_flow_update_s_ < flow_.last_update_s())
+        {
+            // Do kalman update
+            update_flow();
+
+            // Update timing
+            last_flow_update_s_ = flow_.last_update_s();
+        }
     }
 
     return true;
 }
 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 void INS_kf::predict_kf(void)
 {
@@ -501,4 +442,137 @@ void INS_kf::predict_kf(void)
 
     // Compute default KF prediciton step (using local accelerations as input, warning z acceleration sign)
     predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
+}
+
+
+void INS_kf::update_gps_pos(void)
+{
+    // Get local position from gps
+    local_position_t  gps_local;
+    global_position_t gps_global = gps_.position_gf();
+    coord_conventions_global_to_local_position(gps_global, origin(), gps_local);
+
+    // Recompute the measurement noise matrix
+    R_ = Mat<3,3>({ SQR(config_.sigma_gps_xy), 0,                         0,
+                    0,                         SQR(config_.sigma_gps_xy), 0,
+                    0,                         0,                         SQR(config_.sigma_gps_z)});
+
+    // Run kalman update using default matrices
+    Kalman<11,3,3>::update({gps_local[0], gps_local[1], gps_local[2]});
+}
+
+
+void INS_kf::update_gps_vel(void)
+{
+    // Get velocity from GPS
+    std::array<float,3> gps_velocity = gps_.velocity_lf();
+
+    // Recompute the measurement noise matrix
+    R_gpsvel_ = Mat<3,3>({ SQR(config_.sigma_gps_velxy),  0,                            0,
+                           0,                             SQR(config_.sigma_gps_velxy), 0,
+                           0,                             0,                            SQR(config_.sigma_gps_velz)});
+
+    // Run kalman update
+    Kalman<11,3,3>::update(Mat<3,1>(gps_velocity),
+                           H_gpsvel_,
+                           R_gpsvel_);
+}
+
+
+void INS_kf::update_gps_mocap(void)
+{
+    // Get local position from gps
+    local_position_t  gps_local;
+    global_position_t gps_global = gps_mocap_.position_gf();
+    coord_conventions_global_to_local_position(gps_global, origin(), gps_local);
+
+    // Recompute the measurement noise matrix
+    R_ = Mat<3,3>({ SQR(config_.sigma_gps_mocap), 0,                         0,
+                    0,                         SQR(config_.sigma_gps_mocap), 0,
+                    0,                         0,                         SQR(config_.sigma_gps_mocap)});
+
+    // Run kalman update using default matrices
+    Kalman<11,3,3>::update({gps_local[0], gps_local[1], gps_local[2]});
+}
+
+
+void INS_kf::update_barometer(void)
+{
+    // Recompute the measurement noise matrix
+    R_baro_ = Mat<1,1>({ SQR(config_.sigma_baro) });
+
+    // Run kalman Update
+    float z_baro = barometer_.altitude_gf_raw() - origin().altitude;
+    Kalman<11,3,3>::update(Mat<1,1>(z_baro),
+                           H_baro_,
+                           R_baro_);
+}
+
+
+void INS_kf::update_sonar(void)
+{
+    float sigma_sonar;
+    float z_sonar;
+
+    // If armed, use real measurement and adapt sigma in function of healthiness
+    if(state_.is_armed())
+    {
+        z_sonar = sonar_.distance();
+        if(sonar_.healthy())
+        {
+            sigma_sonar = config_.sigma_sonar;
+        }
+        else
+        {
+            sigma_sonar = 0.3f;
+        }
+    }
+    // If unarmed, force measurement to 0, with very good confidence
+    else
+    {
+        z_sonar = 0.0f;
+        sigma_sonar = 0.0001f;
+    }
+
+    // Recompute the measurement noise matrix
+    R_sonar_ = Mat<1,1>({ SQR(sigma_sonar) });
+
+    // Run kalman Update
+    Kalman<11,3,3>::update(Mat<1,1>(z_sonar),
+                           H_sonar_,
+                           R_sonar_);
+}
+
+
+void INS_kf::update_flow(void)
+{
+    // Get XY velocity in NED frame
+    float vel_lf[3];
+    float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
+    quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
+
+    float sigma_sonar;
+    float z_sonar;
+    if (state_.is_armed())
+    {
+        // If armed, use real measurement and adapt sigma in function of healthiness
+        z_sonar = flow_.ground_distance();
+        sigma_sonar = config_.sigma_sonar;
+    }
+    else
+    {
+        // If unarmed, force measurement to 0, with very good confidence
+        z_sonar = 0.0f;
+        sigma_sonar = 0.0001f;
+    }
+
+    // Recompute the measurement noise matrix
+    R_flow_(0,0) = SQR(config_.sigma_flow);
+    R_flow_(1,1) = SQR(config_.sigma_flow);
+    R_flow_(2,2) = SQR(sigma_sonar);
+
+    // Do update
+    Kalman<11,3,3>::update(Mat<3,1>({vel_lf[0], vel_lf[1], z_sonar}),
+                           H_flow_,
+                           R_flow_);
 }

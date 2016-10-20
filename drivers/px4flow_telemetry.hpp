@@ -30,41 +30,30 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_telemetry.hpp
+ * \file px4flow_telemetry.hpp
  *
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *
- * \brief GPS telemetry
+ * \brief Periodic telemetry for optic flow
  *
  ******************************************************************************/
 
-#ifndef GPS_TELEMETRY_HPP_
-#define GPS_TELEMETRY_HPP_
 
+#ifndef PX4FLOW_TELEMETRY_HPP_
+#define PX4FLOW_TELEMETRY_HPP_
+
+
+#include "drivers/px4flow_i2c.hpp"
 #include "communication/mavlink_stream.hpp"
-#include "communication/mavlink_message_handler.hpp"
-#include "drivers/gps.hpp"
 
 /**
- * \brief   Initialize the MAVLink communication module for the GPS
+ * \brief   Task to send the MAVLink optic flow message
  *
- * \param   gps                     The pointer to the gps structure
- * \param   message_handler         The pointer to the MAVLink message handler
- *
- * \return  True if the init succeed, false otherwise
+ * \param   flow            Pointer to flow object
+ * \param   mavlink_stream  The pointer to the MAVLink stream structure
+ * \param   msg             The pointer to the MAVLink message
  */
-bool gps_telemetry_init(Gps* gps, Mavlink_message_handler* message_handler);
+void px4flow_telemetry_send(const Px4flow_i2c* flow, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-/**
- * \brief   Function to send the MAVLink gps raw message
- *
- * \param   gps                     Pointer to the GPS
- * \param   mavlink_stream          Pointer to the MAVLink stream structure
- * \param   msg                     Pointer to the MAVLink message
- */
-void gps_telemetry_send_raw( const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-void gps_telemetry_send_raw2(const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-
-
-#endif /* GPS_TELEMETRY_HPP_ */
+#endif /* PX4FLOW_TELEMETRY_HPP_ */

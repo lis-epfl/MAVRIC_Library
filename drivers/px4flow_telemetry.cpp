@@ -30,41 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_telemetry.hpp
- *
- * \author MAV'RIC Team
- * \author Nicolas Dousse
- *
- * \brief GPS telemetry
+* \file px4flow_telemetry.cpp
+*
+* \author MAV'RIC Team
+* \author Julien Lecoeur
+*
+* \brief Periodic telemetry for optic flow
  *
  ******************************************************************************/
 
-#ifndef GPS_TELEMETRY_HPP_
-#define GPS_TELEMETRY_HPP_
 
-#include "communication/mavlink_stream.hpp"
-#include "communication/mavlink_message_handler.hpp"
-#include "drivers/gps.hpp"
-
-/**
- * \brief   Initialize the MAVLink communication module for the GPS
- *
- * \param   gps                     The pointer to the gps structure
- * \param   message_handler         The pointer to the MAVLink message handler
- *
- * \return  True if the init succeed, false otherwise
- */
-bool gps_telemetry_init(Gps* gps, Mavlink_message_handler* message_handler);
-
-/**
- * \brief   Function to send the MAVLink gps raw message
- *
- * \param   gps                     Pointer to the GPS
- * \param   mavlink_stream          Pointer to the MAVLink stream structure
- * \param   msg                     Pointer to the MAVLink message
- */
-void gps_telemetry_send_raw( const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-void gps_telemetry_send_raw2(const Gps* gps, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+#include "drivers/px4flow_telemetry.hpp"
+#include "hal/common/time_keeper.hpp"
 
 
-#endif /* GPS_TELEMETRY_HPP_ */
+void px4flow_telemetry_send(const Px4flow_i2c* flow, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+{
+    mavlink_msg_optical_flow_pack(   mavlink_stream->sysid(),
+                                     mavlink_stream->compid(),
+                                     msg,
+                                     time_keeper_get_us(),
+                                     flow->healthy(),
+                                     100 * flow->flow_x(),
+                                     100 * flow->flow_y(),
+                                     flow->velocity_x(),
+                                     flow->velocity_y(),
+                                     flow->flow_quality(),
+                                     flow->ground_distance());
+}
