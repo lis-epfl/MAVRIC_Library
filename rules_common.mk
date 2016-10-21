@@ -127,9 +127,9 @@ LIB_SRCS += sensing/altitude_estimation.cpp
 LIB_SRCS += sensing/imu.cpp
 LIB_SRCS += sensing/imu_telemetry.cpp
 LIB_SRCS += sensing/ins.cpp
+LIB_SRCS += sensing/ins_complementary.cpp
 LIB_SRCS += sensing/ins_kf.cpp
 LIB_SRCS += sensing/ins_telemetry.cpp
-LIB_SRCS += sensing/position_estimation.cpp
 LIB_SRCS += sensing/qfilter.cpp
 
 LIB_SRCS += simulation/accelerometer_sim.cpp

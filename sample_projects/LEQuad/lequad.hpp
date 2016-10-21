@@ -96,7 +96,7 @@
 #include "sensing/ahrs_ekf.hpp"
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins_complementary.hpp"
 #include "sensing/ins_kf.hpp"
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
@@ -140,7 +140,7 @@ public:
         Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::conf_t mission_handler_landing_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
-        Position_estimation::conf_t position_estimation_config;
+        INS_complementary::conf_t ins_complementary_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
         Cascade_controller::conf_t cascade_controller_config;
@@ -276,7 +276,7 @@ protected:
     Ahrs_ekf ahrs_ekf;
 
     INS*                ins_;                                   ///< Alias for the position filter in use
-    Position_estimation position_estimation;                    ///< The position estimaton structure
+    INS_complementary   ins_complementary;                      ///< The position estimaton structure
     INS_kf              ins_kf;                                 ///< The Kalman INS structure, used for position estimation
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
@@ -340,7 +340,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.ahrs_ekf_config = Ahrs_ekf::default_config();
 
-    conf.position_estimation_config = Position_estimation::default_config();
+    conf.ins_complementary_config = INS_complementary::default_config();
 
     conf.manual_control_config = Manual_control::default_config();
 
@@ -367,13 +367,13 @@ LEQuad::conf_t LEQuad::dronedome_config(uint8_t sysid)
     //adapt gain for the drone dome
     for (int i = 0; i < 3; ++i)
     {
-        conf.position_estimation_config.kp_gps_pos[i] = 100.0f;
-        conf.position_estimation_config.kp_gps_vel[i] = 100.0f;
+        conf.ins_complementary_config.kp_gps_pos[i] = 100.0f;
+        conf.ins_complementary_config.kp_gps_vel[i] = 100.0f;
     }
-    conf.position_estimation_config.kp_baro_alt = 0.0f;
-    conf.position_estimation_config.kp_baro_vel = 0.0f;
-    conf.position_estimation_config.kp_sonar_alt = 0.0f;
-    conf.position_estimation_config.kp_sonar_vel = 0.0f;
+    conf.ins_complementary_config.kp_baro_alt = 0.0f;
+    conf.ins_complementary_config.kp_baro_vel = 0.0f;
+    conf.ins_complementary_config.kp_sonar_alt = 0.0f;
+    conf.ins_complementary_config.kp_sonar_vel = 0.0f;
 
     conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
 

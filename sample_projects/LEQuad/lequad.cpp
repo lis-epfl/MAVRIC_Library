@@ -110,8 +110,8 @@ LEQuad::LEQuad(Imu& imu,
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     // ins_(&ins_kf),
-    ins_(&position_estimation),
-    position_estimation(state, barometer, sonar, gps, flow, ahrs, config.position_estimation_config),
+    ins_(&ins_complementary),
+    ins_complementary(state, barometer, sonar, gps, flow, ahrs, config.ins_complementary_config),
     ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs),
     cascade_controller_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.cascade_controller_config),
     mission_handler_registry(),
@@ -383,23 +383,23 @@ bool LEQuad::init_ins(void)
     // Position estimation specfic
     // -------------------------------------------------------------------------
     // UP telemetry
-    ret &= ins_telemetry_init(&position_estimation, &communication.handler());
+    ret &= ins_telemetry_init(&ins_complementary, &communication.handler());
     // Parameters
-    ret &= communication.parameters().add(&position_estimation.config_.kp_gps_pos[0], "POS_K_GPS_X"     );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_gps_pos[1], "POS_K_GPS_Y"     );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_gps_pos[2], "POS_K_GPS_Z"     );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_gps_vel[0], "POS_K_GPS_V_X"   );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_gps_vel[1], "POS_K_GPS_V_Y"   );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_gps_vel[2], "POS_K_GPS_V_Z"   );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_baro_alt,   "POS_K_BARO_Z"    );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_baro_vel,   "POS_K_BARO_V_Z"  );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_sonar_alt,  "POS_K_SONAR_Z"   );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_sonar_vel,  "POS_K_SONAR_V_Z" );
-    ret &= communication.parameters().add(&position_estimation.config_.kp_flow_vel,   "POS_K_OF_V_XY"   );
-    ret &= communication.parameters().add(&position_estimation.config_.use_gps,       "POS_USE_GPS"     );
-    ret &= communication.parameters().add(&position_estimation.config_.use_baro,      "POS_USE_BARO"    );
-    ret &= communication.parameters().add(&position_estimation.config_.use_sonar,     "POS_USE_SONAR"   );
-    ret &= communication.parameters().add(&position_estimation.config_.use_flow,      "POS_USE_FLOW"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_pos[0], "POS_K_GPS_X"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_pos[1], "POS_K_GPS_Y"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_pos[2], "POS_K_GPS_Z"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_vel[0], "POS_K_GPS_V_X"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_vel[1], "POS_K_GPS_V_Y"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_vel[2], "POS_K_GPS_V_Z"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_baro_alt,   "POS_K_BARO_Z"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_baro_vel,   "POS_K_BARO_V_Z"  );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_alt,  "POS_K_SONAR_Z"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_vel,  "POS_K_SONAR_V_Z" );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_flow_vel,   "POS_K_OF_V_XY"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_gps,       "POS_USE_GPS"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_baro,      "POS_USE_BARO"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_sonar,     "POS_USE_SONAR"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_flow,      "POS_USE_FLOW"    );
 
     // -------------------------------------------------------------------------
     // Kalman INS specifi
@@ -704,5 +704,5 @@ bool LEQuad::main_task(void)
   // ret &= vector_field_waypoint_init(&vector_field_waypoint,
   //                                   {},
   //                                   &waypoint_handler,
-  //                                   &position_estimation,
+  //                                   &ins_complementary,
   //                                   &command.velocity);

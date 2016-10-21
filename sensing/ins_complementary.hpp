@@ -30,9 +30,10 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation.hpp
+ * \file ins_complementary.hpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *
  * \brief This file performs the 3D position estimation, either by direct
  * integration or with correction with the GPS and pos_est->barometer
@@ -40,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef POSITION_ESTIMATION_HPP__
-#define POSITION_ESTIMATION_HPP__
+#ifndef INS_COMPLEMENTARY_HPP__
+#define INS_COMPLEMENTARY_HPP__
 
 #include <cstdbool>
 
@@ -56,14 +57,14 @@
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
 
-class Position_estimation: public INS
+class INS_complementary: public INS
 {
 public:
 
     friend class Mavlink_waypoint_handler;
 
     /**
-     * \brief The position estimator structure
+     * \brief   Configuration structure
      */
     struct conf_t
     {
@@ -89,6 +90,7 @@ public:
         uint32_t use_flow;                      ///< Boolean that indicates if the sensor must be used
     };
 
+
     enum fence_violation_state_t
     {
         IN_FENCE = 0,
@@ -98,7 +100,7 @@ public:
 
 
     /**
-     * \brief   Initialize the position estimation module
+     * \brief   Initialize the module
      *
      * \param   state           state structure
      * \param   barometer       barometer structure
@@ -110,7 +112,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    Position_estimation(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const ahrs_t& ahrs, const conf_t config = default_config());
+    INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const ahrs_t& ahrs, const conf_t config = default_config());
 
 
     /**
@@ -279,7 +281,7 @@ private:
 
 };
 
-Position_estimation::conf_t Position_estimation::default_config()
+INS_complementary::conf_t INS_complementary::default_config()
 {
     conf_t conf = {};
 
@@ -312,4 +314,4 @@ Position_estimation::conf_t Position_estimation::default_config()
     return conf;
 };
 
-#endif // POSITION_ESTIMATION_HPP__
+#endif // INS_COMPLEMENTARY_HPP__

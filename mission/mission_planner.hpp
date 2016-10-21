@@ -46,7 +46,7 @@
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins.hpp"
 #include "communication/mavlink_message_handler.hpp"
 #include "communication/state.hpp"
 #include "sensing/qfilter.hpp"

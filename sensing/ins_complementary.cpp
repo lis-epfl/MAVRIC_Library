@@ -30,9 +30,10 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation.cpp
+ * \file ins_complementary.cpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *
  * \brief This file performs the 3D position estimation, either by direct
  * integration or with correction with the GPS and pos_est->barometer
@@ -40,7 +41,7 @@
  ******************************************************************************/
 
 
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins_complementary.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.hpp"
 
@@ -53,7 +54,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Position_estimation::Position_estimation(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const ahrs_t& ahrs, const conf_t config) :
+INS_complementary::INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const ahrs_t& ahrs, const conf_t config) :
     local_position_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     vel_{0.0f,0.0f,0.0f},
     config_(config),
@@ -80,7 +81,7 @@ Position_estimation::Position_estimation(State& state, const Barometer& baromete
 }
 
 
-bool Position_estimation::update(void)
+bool INS_complementary::update(void)
 {
     // Updat timing
     float now      = time_keeper_get_s();
@@ -135,7 +136,7 @@ bool Position_estimation::update(void)
 }
 
 
-void Position_estimation::reset_velocity_altitude()
+void INS_complementary::reset_velocity_altitude()
 {
     // Correct barometer bias
     if (is_gps_pos_initialized_)
@@ -159,7 +160,7 @@ void Position_estimation::reset_velocity_altitude()
 }
 
 
-Position_estimation::fence_violation_state_t Position_estimation::get_fence_violation_state() const
+INS_complementary::fence_violation_state_t INS_complementary::get_fence_violation_state() const
 {
     fence_violation_state_t fence_violation_state = IN_FENCE;
     if(state_.out_of_fence_2)
@@ -174,31 +175,31 @@ Position_estimation::fence_violation_state_t Position_estimation::get_fence_viol
 }
 
 
-float Position_estimation::last_update_s(void) const
+float INS_complementary::last_update_s(void) const
 {
     return last_update_s_;
 }
 
 
-std::array<float,3> Position_estimation::position_lf(void) const
+std::array<float,3> INS_complementary::position_lf(void) const
 {
     return local_position_;
 }
 
 
-std::array<float,3> Position_estimation::velocity_lf(void) const
+std::array<float,3> INS_complementary::velocity_lf(void) const
 {
     return std::array<float, 3>{{vel_[0], vel_[1], vel_[2]}};
 }
 
 
-float Position_estimation::absolute_altitude(void) const
+float INS_complementary::absolute_altitude(void) const
 {
     return (origin().altitude - local_position_[Z]);
 }
 
 
-bool Position_estimation::is_healthy(INS::healthy_t __attribute__((unused)) type) const
+bool INS_complementary::is_healthy(INS::healthy_t __attribute__((unused)) type) const
 {
     return true;
 }
@@ -208,7 +209,7 @@ bool Position_estimation::is_healthy(INS::healthy_t __attribute__((unused)) type
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Position_estimation::integration()
+void INS_complementary::integration()
 {
     // Get velocity in body frame
     float vel_bf[3];
@@ -231,7 +232,7 @@ void Position_estimation::integration()
 }
 
 
-void Position_estimation::correction_from_gps_pos(void)
+void INS_complementary::correction_from_gps_pos(void)
 {
     float gps_gain     = 0.0f;
     float pos_error[3] = { 0.0f, 0.0f, 0.0f };
@@ -270,7 +271,7 @@ void Position_estimation::correction_from_gps_pos(void)
 }
 
 
-void Position_estimation::correction_from_gps_vel(void)
+void INS_complementary::correction_from_gps_vel(void)
 {
     float gain         = 0.0f;
     float vel_error[3] = { 0.0f, 0.0f, 0.0f };
@@ -305,7 +306,7 @@ void Position_estimation::correction_from_gps_vel(void)
 }
 
 
-void Position_estimation::correction_from_barometer(void)
+void INS_complementary::correction_from_barometer(void)
 {
     float baro_alt_error = 0.0f;
     float baro_vel_error = 0.0f;
@@ -347,7 +348,7 @@ void Position_estimation::correction_from_barometer(void)
 }
 
 
-void Position_estimation::correction_from_sonar(void)
+void INS_complementary::correction_from_sonar(void)
 {
     float sonar_alt_error = 0.0f;
     float sonar_vel_error = 0.0f;
@@ -371,7 +372,7 @@ void Position_estimation::correction_from_sonar(void)
 }
 
 
-void Position_estimation::correction_from_flow(void)
+void INS_complementary::correction_from_flow(void)
 {
     float vel_error[3] = {0.0f, 0.0f, 0.0f};
     float alt_error    = 0.0f;
@@ -409,7 +410,7 @@ void Position_estimation::correction_from_flow(void)
 }
 
 
-void Position_estimation::check_first_gps_fix()
+void INS_complementary::check_first_gps_fix()
 {
     if ((is_gps_pos_initialized_ == false) && (gps_.healthy() == true))
     {
@@ -430,7 +431,7 @@ void Position_estimation::check_first_gps_fix()
     }
 }
 
-void Position_estimation::fence_control()
+void INS_complementary::fence_control()
 {
     float dist_xy_sqr, dist_z_sqr;
     dist_xy_sqr = SQR(local_position_[X] - fence_position_[X]) + SQR(local_position_[Y] - fence_position_[Y]);
@@ -454,7 +455,7 @@ void Position_estimation::fence_control()
     }
 }
 
-void Position_estimation::calibrate_barometer()
+void INS_complementary::calibrate_barometer()
 {
     barometer_bias_ = barometer_.altitude_gf() - (- local_position_[Z] + origin().altitude);
     is_barometer_calibrated_ = true;
