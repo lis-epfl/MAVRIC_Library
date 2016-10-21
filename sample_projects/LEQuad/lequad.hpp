@@ -367,13 +367,13 @@ LEQuad::conf_t LEQuad::dronedome_config(uint8_t sysid)
     //adapt gain for the drone dome
     for (int i = 0; i < 3; ++i)
     {
-        conf.position_estimation_config.kp_pos_gps[i] = 100.0f;
-        conf.position_estimation_config.kp_vel_gps[i] = 100.0f;
+        conf.position_estimation_config.kp_gps_pos[i] = 100.0f;
+        conf.position_estimation_config.kp_gps_vel[i] = 100.0f;
     }
-    conf.position_estimation_config.kp_alt_baro = 0.0f;
-    conf.position_estimation_config.kp_vel_baro = 0.0f;
-    conf.position_estimation_config.kp_alt_sonar = 0.0f;
-    conf.position_estimation_config.kp_vel_sonar = 0.0f;
+    conf.position_estimation_config.kp_baro_alt = 0.0f;
+    conf.position_estimation_config.kp_baro_vel = 0.0f;
+    conf.position_estimation_config.kp_sonar_alt = 0.0f;
+    conf.position_estimation_config.kp_sonar_vel = 0.0f;
 
     conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
 

@@ -49,8 +49,10 @@ Px4flow_i2c::Px4flow_i2c(I2c& i2c, conf_t config):
   flow_quality_(0),
   velocity_x_(0.0f),
   velocity_y_(0.0f),
+  velocity_z_(0.0f),
   ground_distance_(0.0f),
   last_update_s_(0.0f),
+  is_healthy_(false),
   i2c_(i2c),
   config_(config)
 {
@@ -61,7 +63,7 @@ Px4flow_i2c::Px4flow_i2c(I2c& i2c, conf_t config):
 
 bool Px4flow_i2c::healthy(void) const
 {
-    return (flow_quality_ > 50) && (ground_distance_ < 5.0f);
+    return is_healthy_;
 }
 
 bool Px4flow_i2c::update(void)
@@ -86,16 +88,35 @@ bool Px4flow_i2c::update(void)
         velocity_y_ = 0.001f * (float)((int16_t)(rec[9] << 8 | rec[8]));
         flow_quality_ = (uint8_t)((int16_t)(rec[11] << 8 | rec[10]));
 
-        ground_distance_buffer_.put_lossy(0.001f * (float)((int16_t)(rec[21] << 8 | rec[20])));
+        float new_distance = 0.001f * (float)((int16_t)(rec[21] << 8 | rec[20]));
 
+        if ((flow_quality_ > 50) && (new_distance < 4.5f))
+        {
+            is_healthy_ = true;
+            ground_distance_buffer_.put_lossy(new_distance);
+        }
+        else
+        {
+            is_healthy_ = false;
+        }
+
+        // Get new filtered ground distance from 3 last measures
         float gd[3] = {0.0f, 0.0f, 0.0f};
         ground_distance_buffer_.get_element(0, gd[0]);
         ground_distance_buffer_.get_element(1, gd[1]);
         ground_distance_buffer_.get_element(2, gd[2]);
-        ground_distance_ = 0.2f * ground_distance_ + 0.8f * maths_median_filter_3x(gd[0], gd[1], gd[2]);
+        float new_distance_filtered = 0.2f * ground_distance_ + 0.8f * maths_median_filter_3x(gd[0], gd[1], gd[2]);
 
-        last_update_s_ = time_keeper_get_s();
+        // Kepp values
+        velocity_z_      = - (new_distance_filtered - ground_distance_) / (time_keeper_get_s() - last_update_s_);
+        ground_distance_ = new_distance_filtered;
     }
+    else
+    {
+        is_healthy_ = false;
+    }
+
+    last_update_s_ = time_keeper_get_s();
 
     return res;
 }
@@ -123,6 +144,11 @@ float Px4flow_i2c::velocity_x(void) const
 float Px4flow_i2c::velocity_y(void) const
 {
     return velocity_y_;
+}
+
+float Px4flow_i2c::velocity_z(void) const
+{
+    return velocity_z_;
 }
 
 float Px4flow_i2c::ground_distance(void) const

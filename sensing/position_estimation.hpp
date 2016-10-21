@@ -49,17 +49,12 @@
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
+#include "drivers/px4flow_i2c.hpp"
 
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
-
-// leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
-#define VEL_DECAY 0.0f
-#define POS_DECAY 0.0f
-
-
 
 class Position_estimation: public INS
 {
@@ -73,16 +68,25 @@ public:
     struct conf_t
     {
         global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
-        float gravity;              ///<    value of the Gravity for position estimation correction
 
-        float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
-        float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
+        float kp_gps_pos[3];                    ///< Gain to correct the position estimation from the GPS
+        float kp_gps_vel[3];                    ///< Gain to correct the velocity estimation from the GPS
+        float timeout_gps_us;                   ///< Time after witch a measure stops being used
+        uint32_t use_gps;                       ///< Boolean that indicates if the sensor must be used
 
-        float kp_alt_sonar;                     ///< Gain to correct the Z position estimation from the sonar
-        float kp_vel_sonar;                     ///< Gain to correct the Z velocity estimation from the sonar
+        float kp_sonar_alt;                     ///< Gain to correct the Z position estimation from the sonar
+        float kp_sonar_vel;                     ///< Gain to correct the Z velocity estimation from the sonar
+        float timeout_sonar_us;                 ///< Time after witch a measure stops being used
+        uint32_t use_sonar;                     ///< Boolean that indicates if the sensor must be used
 
-        float kp_alt_baro;                      ///< Gain to correct the Z position estimation from the barometer
-        float kp_vel_baro;                      ///< Gain to correct the Z velocity estimation from the barometer
+        float kp_baro_alt;                      ///< Gain to correct the Z position estimation from the barometer
+        float kp_baro_vel;                      ///< Gain to correct the Z velocity estimation from the barometer
+        float timeout_baro_us;                  ///< Time after witch a measure stops being used
+        uint32_t use_baro;                      ///< Boolean that indicates if the sensor must be used
+
+        float kp_flow_vel;                      ///< Gain to correct the XY velocity estimation from optical flow
+        float timeout_flow_us;                  ///< Time after witch a measure stops being used
+        uint32_t use_flow;                      ///< Boolean that indicates if the sensor must be used
     };
 
     enum fence_violation_state_t
@@ -100,12 +104,13 @@ public:
      * \param   barometer       barometer structure
      * \param   sonar           sonar structure
      * \param   gps             GPS structure
+     * \param   flow            Optic flow structure
      * \param   ahrs            attitude estimation structure
-     * \param   config          default origin position and gravity value
+     * \param   config          configuration
      *
      * \return  True if the init succeed, false otherwise
      */
-    Position_estimation(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const ahrs_t& ahrs, const conf_t config = default_config());
+    Position_estimation(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const ahrs_t& ahrs, const conf_t config = default_config());
 
 
     /**
@@ -127,7 +132,7 @@ public:
      */
     fence_violation_state_t get_fence_violation_state() const;
 
-    static conf_t default_config();
+    static inline conf_t default_config();
 
     /**
      * \brief     Last update in seconds
@@ -171,63 +176,81 @@ public:
     bool is_healthy(INS::healthy_t type) const;
 
 
+    local_position_t local_position_;        ///< Local position
+    float vel_[3];                           ///< 3D velocity in ned frame
+    conf_t config_;                          ///< Configuration containing gains
 
-    float kp_alt_baro;                      ///< Gain to correct the Z position estimation from the barometer
-    float kp_vel_baro;                      ///< Gain to correct the Z velocity estimation from the barometer
-    float kp_pos_gps[3];                    ///< Gain to correct the position estimation from the GPS
-    float kp_vel_gps[3];                    ///< Gain to correct the velocity estimation from the GPS
-    float kp_alt_sonar;                     ///< Gain to correct the Z position estimation from the sonar
-    float kp_vel_sonar;                     ///< Gain to correct the Z velocity estimation from the sonar
-
-
-    local_position_t local_position;        ///< Local position
 private:
-    std::array<float,3> vel;                ///< 3D velocity in ned frame
-    std::array<float,3> vel_bf;             ///< 3D velocity in body frame
+    const ahrs_t& ahrs_;                     ///< Reference to the attitude estimation structure
+    State& state_;                           ///< Reference to the state structure
+    const Gps& gps_;                         ///< Reference to the GPS structure
+    const Barometer& barometer_;             ///< Reference to the barometer structure
+    const Sonar& sonar_;                     ///< Reference to the sonar structure
+    const Px4flow_i2c& flow_;                ///< Reference to the flow structure
 
-    uint32_t time_last_gps_posllh_msg;      ///< Time at which we received the last GPS POSLLH message in ms
-    uint32_t time_last_gps_velned_msg;      ///< Time at which we received the last GPS VELNED message in ms
-    uint32_t time_last_barometer_msg;       ///< Time at which we received the last barometer message in ms
     float dt_s_;                            ///< Time interval between updates
     float last_update_s_;                   ///< Last update time in seconds
+    uint64_t last_gps_pos_update_us_;       ///< Time at which we did correction using GPS position in us
+    uint64_t last_gps_vel_update_us_;       ///< Time at which we did correction using GPS velocity in us
+    uint64_t last_barometer_update_us_;     ///< Time at which we did correction using barometer in us
+    uint64_t last_sonar_update_us_;         ///< Time at which we did correction using sonar in us
+    uint64_t last_flow_update_us_;          ///< Time at which we did correction using optic flow in us
+
     bool is_gps_pos_initialized_;           ///< Boolean flag ensuring that the GPS was initialized
+    local_position_t fence_position_;        ///< Position of the fence
 
-
-    float last_alt;                         ///< Value of the last altitude estimation
-    float last_vel[3];                      ///< Last 3D velocity
-
-    local_position_t last_gps_pos;          ///< Coordinates of the last GPS position
-
-    local_position_t fence_position;        ///< Position of the fence
-
-    float gravity;                          ///< Value of the gravity
-
-    float barometer_bias;                   ///< Altitude bias between actual altitude and altitude given by the barometer
-    bool barometer_calibrated;              ///< Flag that indicates if the barometer was calibrated
-
-    const ahrs_t& ahrs;                     ///< Reference to the attitude estimation structure
-    State& state;                           ///< Reference to the state structure
-    const Gps& gps;                         ///< Reference to the GPS structure
-    const Barometer& barometer;             ///< Reference to the barometer structure
-    const Sonar& sonar;                     ///< Reference to the sonar structure
+    float barometer_bias_;                   ///< Altitude bias between actual altitude and altitude given by the barometer
+    bool is_barometer_calibrated_;           ///< Flag that indicates if the barometer was calibrated
 
     /**
      * \brief   Reset the velocity and altitude estimation to 0 and corrects barometer bias
      *
      */
-    void reset_velocity_altitude();
+    void reset_velocity_altitude(void);
+
 
     /**
      * \brief   Direct integration of the position with the IMU data
      *
      */
-    void position_integration();
+    void integration(void);
+
 
     /**
-     * \brief   Position correction with the GPS and the barometer
-     *
+     * \brief   State correction with gps position
      */
-    void position_correction();
+    void correction_from_gps_pos(void);
+
+
+    /**
+     * \brief   State correction with gps velocity
+     */
+    void correction_from_gps_vel(void);
+
+
+    /**
+     * \brief   State correction with gps
+     */
+    void correction_from_gps(void);
+
+
+    /**
+     * \brief   State correction with barometer
+     */
+    void correction_from_barometer(void);
+
+
+    /**
+     * \brief   State correction with sonar
+     */
+    void correction_from_sonar(void);
+
+
+    /**
+     * \brief   State correction with optic flow
+     */
+    void correction_from_flow(void);
+
 
     /**
      * \brief   Initialization of the position estimation from the GPS position
@@ -236,21 +259,57 @@ private:
      *
      * \return  void
      */
-    void gps_position_init();
+    void check_first_gps_fix(void);
+
 
     /**
      * \brief   Check if the robot is going further from the working radius, delimited by those fences
      *
      * \return  void
      */
-    void fence_control();
+    void fence_control(void);
+
 
     /**
      * \brief   Calibrate the barometer (update the bias)
      *
      * \return  void
      */
-    void calibrate_barometer();
+    void calibrate_barometer(void);
 
 };
+
+Position_estimation::conf_t Position_estimation::default_config()
+{
+    conf_t conf = {};
+
+    // default origin location (EFPL Esplanade)
+    conf.origin        = ORIGIN_EPFL;
+
+    conf.kp_gps_pos[X]  = 2.0f;
+    conf.kp_gps_pos[Y]  = 2.0f;
+    conf.kp_gps_pos[Z]  = 1.0f;
+    conf.kp_gps_vel[X]  = 2.0f;
+    conf.kp_gps_vel[Y]  = 2.0f;
+    conf.kp_gps_vel[Z]  = 1.0f;
+    conf.timeout_gps_us = 1e6f;
+    conf.use_gps        = 1;
+
+    conf.kp_baro_alt     = 2.0f;
+    conf.kp_baro_vel     = 0.5f;
+    conf.timeout_baro_us = 1e6f;
+    conf.use_baro        = 1;
+
+    conf.kp_sonar_alt       = 5.0f;
+    conf.kp_sonar_vel       = 3.0f;
+    conf.timeout_sonar_us   = 1e6f;
+    conf.use_sonar          = 1;
+
+    conf.kp_flow_vel     = 4.0f;
+    conf.timeout_flow_us = 1e6f;
+    conf.use_flow        = 1;
+
+    return conf;
+};
+
 #endif // POSITION_ESTIMATION_HPP__
