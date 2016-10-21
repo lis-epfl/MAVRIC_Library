@@ -51,7 +51,7 @@
 #include "control/stabilisation.hpp"
 #include "mission/navigation.hpp"
 #include "sensing/ahrs.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins.hpp"
 #include "communication/remote.hpp"
 
 extern "C"
@@ -83,7 +83,7 @@ typedef struct
     //byte_stream_t* audio_stream_out;                  ///< Acoustic out coming stream
 
     ahrs_t*                     ahrs;                   ///< The pointer to the attitude estimation structure
-    Position_estimation*        position_estimation;    ///< The pointer to the position estimation structure
+    INS*                        position_estimation;    ///< The pointer to the position estimation structure
     remote_t*                   remote;                 ///< The pointer to the remote structure
     navigation_t*               navigation;             ///< The pointer to the navigation control structure
     stabilisation_copter_t*     stabilisation_copter;   ///< The pointer to the stabilization copter structure

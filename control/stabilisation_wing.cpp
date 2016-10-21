@@ -76,7 +76,7 @@ float heading_from_velocity_vector(float *input_vel)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const Position_estimation* pos_est, const Airspeed_analog* airspeed_analog, const Navigation* navigation, const Gps* gps)
+bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const stabilisation_wing_conf_t stabiliser_conf, control_command_t* controls, torque_command_t* torque_command, thrust_command_t* thrust_command, const Imu* imu, const ahrs_t* ahrs, const INS* ins, const Airspeed_analog* airspeed_analog, const Navigation* navigation, const Gps* gps)
 {
     bool init_success = true;
 
@@ -87,7 +87,7 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, const sta
     stabilisation_wing->thrust_command = thrust_command;
     stabilisation_wing->imu = imu;
     stabilisation_wing->ahrs = ahrs;
-    stabilisation_wing->pos_est = pos_est;
+    stabilisation_wing->ins = ins;
     stabilisation_wing->airspeed_analog = airspeed_analog;
     stabilisation_wing->navigation = navigation;
     stabilisation_wing->gps = gps;
@@ -166,9 +166,9 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
         }
 
         // Compute current heading
-        gps_speed_global[X] = stabilisation_wing->pos_est->velocity_lf()[0];
-        gps_speed_global[Y] = stabilisation_wing->pos_est->velocity_lf()[1];
-        gps_speed_global[Z] = stabilisation_wing->pos_est->velocity_lf()[Z];
+        gps_speed_global[X] = stabilisation_wing->ins->velocity_lf()[0];
+        gps_speed_global[Y] = stabilisation_wing->ins->velocity_lf()[1];
+        gps_speed_global[Z] = stabilisation_wing->ins->velocity_lf()[Z];
 
         // Transform global to semi-local
         attitude_yaw.rpy[0] = 0.0f;

@@ -46,7 +46,7 @@
 #include "mission/navigation.hpp"
 #include "control/stabilisation.hpp"
 #include "sensing/imu.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins.hpp"
 #include "drivers/airspeed_analog.hpp"
 
 extern "C"
@@ -77,7 +77,7 @@ typedef struct
     thrust_command_t* thrust_command;                           ///< The pointer to the thrust command (output)
     const Imu* imu;                                             ///< The pointer to the IMU structure
     const ahrs_t* ahrs;                                         ///< The pointer to the attitude estimation structure
-    const Position_estimation* pos_est;                         ///< The pointer to the position estimation structure
+    const INS* ins;                                             ///< The pointer to the position estimation structure
     const Airspeed_analog* airspeed_analog;                     ///< The pointer to the analog airspeed sensor structure
     const Navigation* navigation;                               ///< The pointer to the navigation structure
     const Gps* gps;                                             ///< The pointer to the GPS structure

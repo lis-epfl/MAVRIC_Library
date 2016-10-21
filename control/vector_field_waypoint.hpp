@@ -45,7 +45,7 @@
 
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "mission/waypoint.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins.hpp"
 
 extern "C"
 {
