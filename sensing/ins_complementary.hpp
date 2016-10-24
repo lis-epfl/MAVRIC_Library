@@ -132,17 +132,6 @@ public:
      */
     bool update(void);
 
-    /**
-     * \brief   Returns fence violation state
-     *
-     * \details temporary solution to make fence private
-     *          uses state->out_of_fence_1 and state->out_of_fence_2
-     *
-     * \return  fence violation state   IN_FENCE if inside of fence,
-                                        OUTSIDE_FENCE1 if outside of inner fence
-                                        OUTSIDE_FENCE2 if outside outer fence (and inner fence)
-     */
-    fence_violation_state_t get_fence_violation_state() const;
 
     static inline conf_t default_config();
 
@@ -272,14 +261,6 @@ private:
      * \return  void
      */
     void check_first_gps_fix(void);
-
-
-    /**
-     * \brief   Check if the robot is going further from the working radius, delimited by those fences
-     *
-     * \return  void
-     */
-    void fence_control(void);
 
 
     /**

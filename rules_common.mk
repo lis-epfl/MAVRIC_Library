@@ -142,6 +142,7 @@ LIB_SRCS += simulation/magnetometer_sim.cpp
 LIB_SRCS += simulation/simulation.cpp
 LIB_SRCS += simulation/sonar_sim.cpp
 
+LIB_SRCS += status/geofence_cylinder.cpp
 LIB_SRCS += status/state.cpp
 LIB_SRCS += status/state_machine.cpp
 LIB_SRCS += status/state_telemetry.cpp

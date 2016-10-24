@@ -122,11 +122,6 @@ bool INS_complementary::update(void)
             correction_from_flow();
         }
 
-        if (state_.is_armed())
-        {
-            fence_control();
-        }
-
         return true;
     }
     else
@@ -157,21 +152,6 @@ void INS_complementary::reset_velocity_altitude()
     {
         vel_[i] = 0.0f;
     }
-}
-
-
-INS_complementary::fence_violation_state_t INS_complementary::get_fence_violation_state() const
-{
-    fence_violation_state_t fence_violation_state = IN_FENCE;
-    if(state_.out_of_fence_2)
-    {
-        fence_violation_state = OUTSIDE_FENCE2;
-    }
-    else if(state_.out_of_fence_1)
-    {
-        fence_violation_state = OUTSIDE_FENCE1;
-    }
-    return fence_violation_state;
 }
 
 
@@ -447,29 +427,6 @@ void INS_complementary::check_first_gps_fix()
     }
 }
 
-void INS_complementary::fence_control()
-{
-    float dist_xy_sqr, dist_z_sqr;
-    dist_xy_sqr = SQR(local_position_[X] - fence_position_[X]) + SQR(local_position_[Y] - fence_position_[Y]);
-    dist_z_sqr = SQR(local_position_[Z] - fence_position_[Z]);
-
-    if (dist_xy_sqr > SQR(state_.fence_2_xy))
-    {
-        state_.out_of_fence_2 = true;
-    }
-    else if (dist_z_sqr > SQR(state_.fence_2_z))
-    {
-        state_.out_of_fence_2 = true;
-    }
-    else if (dist_xy_sqr > SQR(state_.fence_1_xy))
-    {
-        state_.out_of_fence_1 = true;
-    }
-    else if (dist_z_sqr > SQR(state_.fence_1_z))
-    {
-        state_.out_of_fence_1 = true;
-    }
-}
 
 void INS_complementary::calibrate_barometer()
 {

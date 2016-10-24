@@ -45,6 +45,7 @@
 #define STATE_MACHINE_HPP_
 
 #include "status/state.hpp"
+#include "status/geofence.hpp"
 #include "manual_control/manual_control.hpp"
 #include "manual_control/remote.hpp"
 #include "drivers/state_display.hpp"
@@ -67,6 +68,8 @@ public:
      * \param imu                       Reference to the imu
      * \param ahrs                      Reference to the ahrs
      * \param manual_control            Reference to the manual_control
+     * \param safety_geofence           Reference to the geofence the MAV should not cross
+     * \param emergency_geofence        Reference to the geofence outside which emergency landing is performed
      * \param state_display             Reference to the state display
      */
     State_machine(  State& state,
@@ -74,6 +77,8 @@ public:
                     const Imu& imu,
                     const ahrs_t& ahrs,
                     Manual_control& manual_control,
+                    Geofence& safety_geofence,
+                    Geofence& emergency_geofence,
                     State_display& state_display);
 
     /**
@@ -83,7 +88,8 @@ public:
      *
      * \return Returns the result of the task
      */
-    static bool update(State_machine* state_machine);
+    bool update(void);
+    static bool update_task(State_machine* state_machine);
 
     /**
      * \brief
@@ -95,6 +101,8 @@ public:
     const Imu& imu_;                                     ///< Inertial measurement unit
     const ahrs_t& ahrs_;                                 ///< Attitude estimation
     Manual_control& manual_control_;                     ///< Manual_control
+    Geofence& safety_geofence_;                          ///< Geofence the MAV should not cross
+    Geofence& emergency_geofence_;                       ///< Geofence outside which emergency landing is performed
     State_display& state_display_;                       ///< Reference to the state display
 
 private:

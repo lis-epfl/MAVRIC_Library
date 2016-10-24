@@ -51,6 +51,7 @@
 #include "status/state.hpp"
 #include "sensing/qfilter.hpp"
 #include "manual_control/manual_control.hpp"
+#include "status/geofence.hpp"
 #include "mission/mission_handler_registry.hpp"
 #include "navigation/dubin.hpp"
 
@@ -99,6 +100,7 @@ public:
      * \param   ahrs                        The reference to the attitude estimation structure
      * \param   state                       The reference to the state structure
      * \param   manual_control              The reference to the manual control structure
+     * \param   geofence                    The reference to the geofence structure
      * \param   mavlink_communication       The reference to the MAVLink communication structure
      * \param   mavlink_stream              The reference to the MAVLink stream structure
      * \param   waypoint_handler            The handler for the waypoints
@@ -110,6 +112,7 @@ public:
                         const ahrs_t& ahrs,
                         State& state,
                         const Manual_control& manual_control,
+                        const Geofence& geofence,
                         Mavlink_message_handler& message_handler,
                         const Mavlink_stream& mavlink_stream,
                         Mavlink_waypoint_handler& waypoint_handler,
@@ -204,6 +207,7 @@ protected:
     INS& ins_;                                                  ///< The reference to the ins structure
     const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
     const Manual_control& manual_control_;                      ///< The reference to the manual_control structure
+    const Geofence& geofence_;                                  ///< The reference to the geofence structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
 
     conf_t config_;
