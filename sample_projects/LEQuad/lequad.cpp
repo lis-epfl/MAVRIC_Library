@@ -102,6 +102,7 @@ LEQuad::LEQuad(Imu& imu,
     servo_6(servo_6),
     servo_7(servo_7),
     gps_mocap(communication.handler()),
+    gps_hub({&gps, &gps_mocap}),
     ahrs_ekf_mocap(communication.handler(), ahrs_ekf),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(communication.mavlink_stream(), battery, config.state_config),
@@ -271,14 +272,14 @@ bool LEQuad::init_gps(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= gps_telemetry_init(&gps, &communication.handler());
+    ret &= gps_telemetry_init(&gps_hub, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw,  &gps);
-    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS2_RAW,    1000000, &gps_telemetry_send_raw2, &gps_mocap);
+    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw,  &gps_hub);
+    // ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS2_RAW,    1000000, &gps_telemetry_send_raw2, &gps_mocap);
 
     // Task
-    ret &= scheduler.add_task(100000, &task_gps_update, &gps, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task<Gps>(100000, &task_gps_update, &gps_hub, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }

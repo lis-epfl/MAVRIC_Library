@@ -73,6 +73,7 @@
 #include "drivers/battery.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/gps_mocap.hpp"
+#include "drivers/gps_hub.hpp"
 #include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
 #include "drivers/state_display.hpp"
@@ -261,8 +262,11 @@ protected:
     Servo&          servo_7;            ///< Reference to servos structure
 
 
-    // Motion capture
-    Gps_mocap       gps_mocap;       ///< Position measure using mocap information
+    // Motion capture, position
+    Gps_mocap       gps_mocap;          ///< Position measure using mocap information
+    Gps_hub<2>      gps_hub;            ///< Gps hub
+
+    // Motion capture, orientation
     Ahrs_ekf_mocap  ahrs_ekf_mocap;     ///< Attitude measure from mocap information
 
     Manual_control manual_control;                              ///< The joystick parsing structure
