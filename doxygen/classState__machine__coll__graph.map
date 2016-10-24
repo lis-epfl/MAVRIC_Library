@@ -1,17 +1,18 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="316,1278,521,1589"/>
-<area shape="rect" id="node4" href="$classJoystick.html" title="{Joystick\n|+ buttons_\l+ channels_\l+ mav_mode_desired_\l|+ Joystick()\l+ throttle()\l+ roll()\l+ pitch()\l+ yaw()\l+ get_mode()\l+ get_velocity_vector()\l+ get_rate_command_wing()\l+ get_control_command()\l+ button_update()\land 8 more...+ default_config()\l}" alt="" coords="91,504,291,797"/>
+<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="319,1278,524,1589"/>
+<area shape="rect" id="node4" href="$classJoystick.html" title="{Joystick\n|+ buttons_\l+ channels_\l+ mav_mode_desired_\l|+ Joystick()\l+ throttle()\l+ roll()\l+ pitch()\l+ yaw()\l+ get_mode()\l+ get_velocity_vector()\l+ get_rate_command_wing()\l+ get_control_command()\l+ button_update()\land 8 more...+ default_config()\l}" alt="" coords="93,504,293,797"/>
 <area shape="rect" id="node6" href="$structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="5,66,147,203"/>
 <area shape="rect" id="node8" href="$unionJoystick_1_1button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="171,5,296,264"/>
-<area shape="rect" id="node10" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="456,5,637,264"/>
-<area shape="rect" id="node14" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="448,495,683,806"/>
-<area shape="rect" id="node29" href="$classState.html" title="The MAV state." alt="" coords="707,400,885,901"/>
-<area shape="rect" id="node12" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="343,969,495,1210"/>
-<area shape="rect" id="node17" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="315,573,424,728"/>
-<area shape="rect" id="node19" href="$classState__display.html" title="Interface class for state display." alt="" coords="652,1365,753,1502"/>
-<area shape="rect" id="node21" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="777,1321,916,1545"/>
-<area shape="rect" id="node23" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="940,1356,1057,1511"/>
-<area shape="rect" id="node25" href="$structquat__t.html" title="Unit quaternion." alt="" coords="969,1038,1028,1141"/>
-<area shape="rect" id="node27" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1081,1304,1212,1563"/>
-<area shape="rect" id="node31" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="772,57,855,212"/>
+<area shape="rect" id="node10" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="464,5,645,264"/>
+<area shape="rect" id="node14" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="451,495,685,806"/>
+<area shape="rect" id="node31" href="$classState.html" title="The MAV state." alt="" coords="709,400,909,901"/>
+<area shape="rect" id="node12" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="345,969,497,1210"/>
+<area shape="rect" id="node17" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="317,573,427,728"/>
+<area shape="rect" id="node19" href="$classState__display.html" title="Interface class for state display." alt="" coords="655,1365,756,1502"/>
+<area shape="rect" id="node21" href="$classGeofence.html" title="Interface for Geofence." alt="" coords="780,1382,905,1485"/>
+<area shape="rect" id="node23" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="929,1313,1068,1554"/>
+<area shape="rect" id="node25" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1092,1356,1209,1511"/>
+<area shape="rect" id="node27" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1121,1038,1180,1141"/>
+<area shape="rect" id="node29" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1233,1304,1364,1563"/>
+<area shape="rect" id="node33" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="780,57,863,212"/>
 </map>

@@ -1,11 +1,14 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="193,165,332,195"/>
-<area shape="rect" id="node19" href="$classINS.html#a72b551f6ce6cf46b33d1699618b44937" title="Constructor." alt="" coords="225,219,300,248"/>
-<area shape="rect" id="node21" href="$classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9" title="set the origin of the local (NED) coordinate system" alt="" coords="208,272,317,301"/>
-<area shape="rect" id="node23" href="$classINS__complementary.html#ab647bbb3968c81393f7f143e2e9aaaa9" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="140,325,385,355"/>
-<area shape="rect" id="node25" href="$classINS__kf.html#ab8eaaae0714f6ce078495a2b3c8cabee" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="179,379,347,408"/>
-<area shape="rect" id="node27" href="$classDynamic__model__quad__diag.html#ac4fe34730b0cf423f9f478a3749374bd" title="Main update function &#160;Reads new values from sensor." alt="" coords="148,432,377,461"/>
-<area shape="rect" id="node29" href="$classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="159,485,367,515"/>
+<area shape="rect" id="node3" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="193,179,332,208"/>
+<area shape="rect" id="node19" href="$classINS.html#a72b551f6ce6cf46b33d1699618b44937" title="Constructor." alt="" coords="225,259,300,288"/>
+<area shape="rect" id="node21" href="$classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9" title="set the origin of the local (NED) coordinate system" alt="" coords="208,312,317,341"/>
+<area shape="rect" id="node23" href="$classINS.html#ae3635c2574df207f492208b14c7d1cbb" title="3D Position in global frame" alt="" coords="205,365,320,395"/>
+<area shape="rect" id="node27" href="$classINS__complementary.html#ab647bbb3968c81393f7f143e2e9aaaa9" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="140,419,385,448"/>
+<area shape="rect" id="node29" href="$classINS__kf.html#ab8eaaae0714f6ce078495a2b3c8cabee" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="179,472,347,501"/>
+<area shape="rect" id="node31" href="$classDynamic__model__quad__diag.html#ac4fe34730b0cf423f9f478a3749374bd" title="Main update function &#160;Reads new values from sensor." alt="" coords="148,525,377,555"/>
+<area shape="rect" id="node33" href="$classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="159,579,367,608"/>
+<area shape="rect" id="node37" href="$classGeofence__cylinder.html#a3d24674fc2daacddeb0d65157227dbe2" title="Indicates if the position is allowed by the geofence." alt="" coords="164,632,361,661"/>
+<area shape="rect" id="node39" href="$classGeofence__cylinder.html#ad63086f08942388a644c7099ee527685" title="Computes the closest border between allowed and disallowed space." alt="" coords="152,685,373,715"/>
 <area shape="rect" id="node5" href="$classMission__handler__hold__position.html#afffb500321fe25a141ac222c62cc5371" title="Function to set the controller specific command." alt="" coords="561,5,1052,35"/>
 <area shape="rect" id="node7" href="$classMission__handler__landing.html#ac869d2bd10336643b38d1c9c7b7777ec" title="Function to set the controller specific command for the descent to small altitude state..." alt="" coords="436,59,1177,88"/>
 <area shape="rect" id="node9" href="$classMission__handler__landing.html#a20eec885dad664b9a532c5486c6abae7" title="Function to set the controller specific command for the descent to ground state." alt="" coords="441,112,1172,141"/>
@@ -13,5 +16,6 @@
 <area shape="rect" id="node13" href="$classMission__handler__takeoff.html#ab570f242f871dd9df40b9a6583facbfd" title="Function to set the controller specific command." alt="" coords="579,219,1035,248"/>
 <area shape="rect" id="node15" href="$classMission__handler__takeoff.html#acfe121fe25652d7d0cb2351a9996a8ac" title="Sets up this handler class for a first time initialization." alt="" coords="705,272,908,301"/>
 <area shape="rect" id="node17" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="692,325,921,355"/>
-<area shape="rect" id="node31" href="$classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="652,485,961,515"/>
+<area shape="rect" id="node25" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="729,379,884,408"/>
+<area shape="rect" id="node35" href="$classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="652,579,961,608"/>
 </map>

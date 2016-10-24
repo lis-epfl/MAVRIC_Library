@@ -9,6 +9,7 @@ var searchData=
   ['ecef_5fz_5fvelocity',['ecef_z_velocity',['../structubx__nav__solution__t.html#a93cb5cec6c8c82ca7910b864d842874f',1,'ubx_nav_solution_t']]],
   ['elev',['elev',['../structubx__nav__sv__info__t.html#aa876e1007c29e5c102a2c32999cd07a3',1,'ubx_nav_sv_info_t']]],
   ['elevation',['elevation',['../structviewing__direction__t.html#a57ae63a263affe5de4385f768b25d76b',1,'viewing_direction_t::elevation()'],['../structaudio__t.html#a4251c822048470d7684bff0b64f1560c',1,'audio_t::elevation()'],['../structcurvace__scale__factor__t.html#a1c8be1117ba84ab8548a26ba8a7585e2',1,'curvace_scale_factor_t::elevation()']]],
+  ['emergency_5fgeofence_5f',['emergency_geofence_',['../classLEQuad.html#a651aa0f45abedbbe99115f18500eeeaa',1,'LEQuad::emergency_geofence_()'],['../classState__machine.html#a0175f7aeb5364aee282a2c859f91f832',1,'State_machine::emergency_geofence_()']]],
   ['empty',['empty',['../classBuffer__T.html#aaa477d75c14cc187d2314b0e04382227',1,'Buffer_T']]],
   ['enable',['enable',['../structanalog__monitor__conf__t.html#a03d0657cc12ebd127127f8c9c2c751f2',1,'analog_monitor_conf_t::enable()'],['../structanalog__monitor__t.html#acb2b73fae9665a9df79dc81fe13bfa32',1,'analog_monitor_t::enable()']]],
   ['enable_5fvbus_5fdetection',['enable_vbus_detection',['../structSerial__usb__stm32_1_1conf__t.html#a0f87551b4b65647cf803bb8f8ef72735',1,'Serial_usb_stm32::conf_t']]],

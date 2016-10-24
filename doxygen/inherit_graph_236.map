@@ -1,3 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structthrust3D__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="5,5,152,35"/>
+<area shape="rect" id="node1" href="$classState__display.html" title="Interface class for state display." alt="" coords="5,85,107,115"/>
+<area shape="rect" id="node3" href="$classState__display__mavrimini.html" title="State_display_mavrimini" alt="" coords="167,5,329,35"/>
+<area shape="rect" id="node5" href="$classState__display__mavrinux.html" title="State_display_mavrinux" alt="" coords="168,59,328,88"/>
+<area shape="rect" id="node7" href="$classState__display__megafly__rev4.html" title="State_display_megafly_rev4" alt="" coords="155,112,341,141"/>
+<area shape="rect" id="node9" href="$classState__display__sparky__v2.html" title="State_display_sparky_v2" alt="" coords="164,165,332,195"/>
 </map>

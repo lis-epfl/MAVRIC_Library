@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['geofence_5fcylinder',['Geofence_cylinder',['../classGeofence__cylinder.html#a80ccbf7992d4f6c1bd47db3a52d60fe3',1,'Geofence_cylinder']]],
   ['get',['get',['../classBuffer__T.html#a6c1d3989f4fe7a9f1960fd473d2c398f',1,'Buffer_T']]],
   ['get_5fairspeed',['get_airspeed',['../classAirspeed__analog.html#ac29ad00452a0785e8d0856fbbbb0bbd8',1,'Airspeed_analog']]],
   ['get_5fangle_5fcommand_5fwing',['get_angle_command_wing',['../classJoystick.html#a00fba7082240c85900d7eb035eb2a337',1,'Joystick::get_angle_command_wing()'],['../classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7',1,'Manual_control::get_angle_command_wing()']]],
@@ -9,7 +10,6 @@ var searchData=
   ['get_5fconfig',['get_config',['../classImu.html#adc14809ab2886ccadeb35f9ede31a1fb',1,'Imu']]],
   ['get_5fcontrol_5fcommand',['get_control_command',['../classJoystick.html#ab9c9dd860b3b1556b1ffc99493b64e44',1,'Joystick::get_control_command()'],['../classManual__control.html#aecfe45d5c88670a64d775c9345db42b4',1,'Manual_control::get_control_command()']]],
   ['get_5felement',['get_element',['../classBuffer__T.html#ab02b06e057265507e5e5d9e5d8e87d1e',1,'Buffer_T']]],
-  ['get_5ffence_5fviolation_5fstate',['get_fence_violation_state',['../classINS__complementary.html#a1b73ebf3c442d97c29d4e853e3463824',1,'INS_complementary']]],
   ['get_5fid',['get_id',['../classScheduler__task.html#ad61e4f6787ec2333183eab8bc8137cb9',1,'Scheduler_task']]],
   ['get_5flast_5fairspeed',['get_last_airspeed',['../classAirspeed__analog.html#a3003842d71e4c1ac5707fd5782c8d40b',1,'Airspeed_analog']]],
   ['get_5fmission_5fhandler',['get_mission_handler',['../classMission__handler__registry.html#a5428f49305b49474957ef5c8dcc3ceff',1,'Mission_handler_registry']]],

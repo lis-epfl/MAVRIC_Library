@@ -7,6 +7,7 @@ var searchData=
   ['r_5fmag_5f',['R_mag_',['../classAhrs__ekf.html#a9e938afcc9a479378e43a951beb2ab39',1,'Ahrs_ekf']]],
   ['r_5fmocap',['R_mocap',['../structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5',1,'Ahrs_ekf_mocap::conf_t']]],
   ['r_5fmocap_5f',['R_mocap_',['../classAhrs__ekf__mocap.html#a6699c1dfcf24e77b31a8b423764dadfb',1,'Ahrs_ekf_mocap']]],
+  ['radius',['radius',['../structGeofence__cylinder_1_1conf__t.html#aaa187095d2eff8115c7d5d104e1dde46',1,'Geofence_cylinder::conf_t']]],
   ['radius_5f1',['radius_1',['../structdubin__t.html#a2e9f423fa3774c096274457aacb44a1e',1,'dubin_t']]],
   ['rail',['rail',['../structadc__avr32__conf__t.html#a44f8dc5f2edc74a7235cdc06a245ac09',1,'adc_avr32_conf_t']]],
   ['rate',['rate',['../structcommand__t.html#abe03f9ba4c033a2c08b6a8238ae290dc',1,'command_t::rate()'],['../structubx__cfg__msg__rate__t.html#a67ce70a804cdc9898a00e0fbcd3ca63a',1,'ubx_cfg_msg_rate_t::rate()'],['../structubx__cfg__msg__rate__send__t.html#a1a8425c3eff13f17b0028d435eca3885',1,'ubx_cfg_msg_rate_send_t::rate()']]],

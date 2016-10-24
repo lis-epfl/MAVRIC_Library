@@ -1,3 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="31,5,169,229"/>
+<area shape="rect" id="node2" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="16,6,155,247"/>
 </map>

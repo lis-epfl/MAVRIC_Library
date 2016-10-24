@@ -54,6 +54,7 @@ var searchData=
   ['airspeed_5fanalog_5fconf_5ft',['airspeed_analog_conf_t',['../structairspeed__analog__conf__t.html',1,'']]],
   ['airspeed_5fanalog_5ft',['airspeed_analog_t',['../structairspeed__analog__t.html',1,'']]],
   ['all',['all',['../unioncurvace__raw__data__t.html#a03210fd50774dd5539b8bc126d0925d7',1,'curvace_raw_data_t::all()'],['../unioncurvace__data__t.html#ac2ba3b8564151852ba29aec89105402a',1,'curvace_data_t::all()'],['../unioncurvace__roi__coord__t.html#a5d75a63997f4b5801918e58a9e4c4049',1,'curvace_roi_coord_t::all()'],['../unioncurvace__calibration__matrix__t.html#a0c3dbf977ea12aa00c7f2dfcf8aa7e6c',1,'curvace_calibration_matrix_t::all()']]],
+  ['allowed_5finside',['allowed_inside',['../structGeofence__cylinder_1_1conf__t.html#a54189c4cb4cd3108138e4480b124a4b8',1,'Geofence_cylinder::conf_t']]],
   ['alpha',['alpha',['../structairspeed__analog__t.html#a551310dd9931259c75cdce610416fe09',1,'airspeed_analog_t']]],
   ['alt_5felips',['alt_elips',['../structgps__t.html#a7ce84b87b2d3cbc7d6458e3734cc78e6',1,'gps_t']]],
   ['alt_5ffct',['alt_fct',['../structgpio__stm32__conf__t.html#af996ddd28cecf26ce19eb83bb0a42c4a',1,'gpio_stm32_conf_t']]],

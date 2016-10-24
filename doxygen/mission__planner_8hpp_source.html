@@ -134,145 +134,148 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00051"></a>00051 <span class="preprocessor">#include &quot;status/state.hpp&quot;</span>
 <a name="l00052"></a>00052 <span class="preprocessor">#include &quot;sensing/qfilter.hpp&quot;</span>
 <a name="l00053"></a>00053 <span class="preprocessor">#include &quot;manual_control/manual_control.hpp&quot;</span>
-<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;mission/mission_handler_registry.hpp&quot;</span>
-<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;navigation/dubin.hpp&quot;</span>
-<a name="l00056"></a>00056 
-<a name="l00057"></a>00057 <span class="keyword">class </span><a class="code" href="classMission__handler.html">Mission_handler</a>;
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="comment">/*</span>
-<a name="l00060"></a>00060 <span class="comment"> * N.B.: Reference Frames and MAV_CMD_NAV are defined in &quot;maveric.h&quot;</span>
-<a name="l00061"></a>00061 <span class="comment"> */</span>
-<a name="l00062"></a>00062 
-<a name="l00063"></a><a class="code" href="classMission__planner.html">00063</a> <span class="keyword">class </span><a class="code" href="classMission__planner.html">Mission_planner</a>
-<a name="l00064"></a>00064 {
-<a name="l00065"></a>00065 <span class="keyword">public</span>:
-<a name="l00066"></a>00066     <span class="keyword">enum</span> internal_state_t
-<a name="l00067"></a>00067     {
-<a name="l00068"></a>00068         STANDBY,
-<a name="l00069"></a>00069         PREMISSION,
-<a name="l00070"></a>00070         MISSION,
-<a name="l00071"></a>00071         POSTMISSION,
-<a name="l00072"></a>00072         PAUSED,
-<a name="l00073"></a>00073         MANUAL_CTRL
-<a name="l00074"></a>00074     };
-<a name="l00075"></a>00075 
-<a name="l00079"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cd">00079</a>     <span class="keyword">enum</span> <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cd" title="The critical behavior enum.">critical_behavior_enum</a>
-<a name="l00080"></a>00080     {
-<a name="l00081"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda44def7680c01521f45ab6c9eee4a3783">00081</a>         <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda44def7680c01521f45ab6c9eee4a3783" title="First critical behavior.">CLIMB_TO_SAFE_ALT</a>,                                  
-<a name="l00082"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cdab6316289cb71c4280ee5bfbda3e9734d">00082</a>         <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cdab6316289cb71c4280ee5bfbda3e9734d" title="Second critical behavior, comes after Navigation::CLIMB_TO_SAFE_ALT.">FLY_TO_HOME_WP</a>,                                     
-<a name="l00083"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda937dd094af1b717f0e0ae3a1e3eba17b">00083</a>         <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda937dd094af1b717f0e0ae3a1e3eba17b" title="Third critical behavior, comes after Navigation::FLY_TO_HOME_WP.">HOME_LAND</a>,                                          
-<a name="l00084"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda8ca06791f08a046cbbfafaab4c3322aa">00084</a>         <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda8ca06791f08a046cbbfafaab4c3322aa" title="Fourth critical behavior.">CRITICAL_LAND</a>                                       
-<a name="l00085"></a>00085     };
-<a name="l00086"></a>00086 
-<a name="l00087"></a><a class="code" href="structMission__planner_1_1conf__t.html">00087</a>     <span class="keyword">struct </span><a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a>
-<a name="l00088"></a>00088     {
-<a name="l00089"></a><a class="code" href="structMission__planner_1_1conf__t.html#ab82913cc0eed1ddbe435420b35c39532">00089</a>         <span class="keywordtype">float</span> <a class="code" href="structMission__planner_1_1conf__t.html#ab82913cc0eed1ddbe435420b35c39532" title="The altitude at which the robot will fly in critical mode.">safe_altitude</a>;                                
-<a name="l00090"></a><a class="code" href="structMission__planner_1_1conf__t.html#a938c32721f13aaa378cd3d6dd35db640">00090</a>         <span class="keywordtype">float</span> <a class="code" href="structMission__planner_1_1conf__t.html#a938c32721f13aaa378cd3d6dd35db640" title="The altitude at which the drone will try to land in the critical state.">critical_landing_altitude</a>;                    
-<a name="l00091"></a><a class="code" href="structMission__planner_1_1conf__t.html#a6ab04b2a16c8d707812477421fb4d3cf">00091</a>         <span class="keywordtype">float</span> <a class="code" href="structMission__planner_1_1conf__t.html#a6ab04b2a16c8d707812477421fb4d3cf" title="Local altitude at which the take-off procedure should stop, for a fixed-wing.">takeoff_altitude</a>;                             
-<a name="l00092"></a>00092     };
-<a name="l00093"></a>00093 
+<a name="l00054"></a>00054 <span class="preprocessor">#include &quot;status/geofence.hpp&quot;</span>
+<a name="l00055"></a>00055 <span class="preprocessor">#include &quot;mission/mission_handler_registry.hpp&quot;</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;navigation/dubin.hpp&quot;</span>
+<a name="l00057"></a>00057 
+<a name="l00058"></a>00058 <span class="keyword">class </span><a class="code" href="classMission__handler.html">Mission_handler</a>;
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060 <span class="comment">/*</span>
+<a name="l00061"></a>00061 <span class="comment"> * N.B.: Reference Frames and MAV_CMD_NAV are defined in &quot;maveric.h&quot;</span>
+<a name="l00062"></a>00062 <span class="comment"> */</span>
+<a name="l00063"></a>00063 
+<a name="l00064"></a><a class="code" href="classMission__planner.html">00064</a> <span class="keyword">class </span><a class="code" href="classMission__planner.html">Mission_planner</a>
+<a name="l00065"></a>00065 {
+<a name="l00066"></a>00066 <span class="keyword">public</span>:
+<a name="l00067"></a>00067     <span class="keyword">enum</span> internal_state_t
+<a name="l00068"></a>00068     {
+<a name="l00069"></a>00069         STANDBY,
+<a name="l00070"></a>00070         PREMISSION,
+<a name="l00071"></a>00071         MISSION,
+<a name="l00072"></a>00072         POSTMISSION,
+<a name="l00073"></a>00073         PAUSED,
+<a name="l00074"></a>00074         MANUAL_CTRL
+<a name="l00075"></a>00075     };
+<a name="l00076"></a>00076 
+<a name="l00080"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cd">00080</a>     <span class="keyword">enum</span> <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cd" title="The critical behavior enum.">critical_behavior_enum</a>
+<a name="l00081"></a>00081     {
+<a name="l00082"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda44def7680c01521f45ab6c9eee4a3783">00082</a>         <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda44def7680c01521f45ab6c9eee4a3783" title="First critical behavior.">CLIMB_TO_SAFE_ALT</a>,                                  
+<a name="l00083"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cdab6316289cb71c4280ee5bfbda3e9734d">00083</a>         <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cdab6316289cb71c4280ee5bfbda3e9734d" title="Second critical behavior, comes after Navigation::CLIMB_TO_SAFE_ALT.">FLY_TO_HOME_WP</a>,                                     
+<a name="l00084"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda937dd094af1b717f0e0ae3a1e3eba17b">00084</a>         <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda937dd094af1b717f0e0ae3a1e3eba17b" title="Third critical behavior, comes after Navigation::FLY_TO_HOME_WP.">HOME_LAND</a>,                                          
+<a name="l00085"></a><a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda8ca06791f08a046cbbfafaab4c3322aa">00085</a>         <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cda8ca06791f08a046cbbfafaab4c3322aa" title="Fourth critical behavior.">CRITICAL_LAND</a>                                       
+<a name="l00086"></a>00086     };
+<a name="l00087"></a>00087 
+<a name="l00088"></a><a class="code" href="structMission__planner_1_1conf__t.html">00088</a>     <span class="keyword">struct </span><a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a>
+<a name="l00089"></a>00089     {
+<a name="l00090"></a><a class="code" href="structMission__planner_1_1conf__t.html#ab82913cc0eed1ddbe435420b35c39532">00090</a>         <span class="keywordtype">float</span> <a class="code" href="structMission__planner_1_1conf__t.html#ab82913cc0eed1ddbe435420b35c39532" title="The altitude at which the robot will fly in critical mode.">safe_altitude</a>;                                
+<a name="l00091"></a><a class="code" href="structMission__planner_1_1conf__t.html#a938c32721f13aaa378cd3d6dd35db640">00091</a>         <span class="keywordtype">float</span> <a class="code" href="structMission__planner_1_1conf__t.html#a938c32721f13aaa378cd3d6dd35db640" title="The altitude at which the drone will try to land in the critical state.">critical_landing_altitude</a>;                    
+<a name="l00092"></a><a class="code" href="structMission__planner_1_1conf__t.html#a6ab04b2a16c8d707812477421fb4d3cf">00092</a>         <span class="keywordtype">float</span> <a class="code" href="structMission__planner_1_1conf__t.html#a6ab04b2a16c8d707812477421fb4d3cf" title="Local altitude at which the take-off procedure should stop, for a fixed-wing.">takeoff_altitude</a>;                             
+<a name="l00093"></a>00093     };
 <a name="l00094"></a>00094 
-<a name="l00109"></a>00109     <a class="code" href="classMission__planner.html#a32a43a94bc73eadabb560cdafd61314a" title="Initialize the waypoint handler.">Mission_planner</a>(    <a class="code" href="classINS.html">INS</a>&amp; ins,
-<a name="l00110"></a>00110                         <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; ahrs,
-<a name="l00111"></a>00111                         <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state,
-<a name="l00112"></a>00112                         <span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control,
-<a name="l00113"></a>00113                         <a class="code" href="classMavlink__message__handler.html" title="Message handler base class.">Mavlink_message_handler</a>&amp; message_handler,
-<a name="l00114"></a>00114                         <span class="keyword">const</span> <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream,
-<a name="l00115"></a>00115                         <a class="code" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a>&amp; waypoint_handler,
-<a name="l00116"></a>00116                         <a class="code" href="classMission__handler__registry.html">Mission_handler_registry</a>&amp; mission_handler_registry,
-<a name="l00117"></a>00117                         <a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a> config = <a class="code" href="classMission__planner.html#aeddb63656f617e21f1174e3f17873a1c" title="Default configuration.">default_config</a>());
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119     <span class="keywordtype">bool</span> init();
-<a name="l00120"></a>00120 
-<a name="l00126"></a>00126     <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module.">update</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner);
-<a name="l00127"></a>00127 
-<a name="l00133"></a>00133     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a> <a class="code" href="classMission__planner.html#aeddb63656f617e21f1174e3f17873a1c" title="Default configuration.">default_config</a>();
-<a name="l00134"></a>00134 
-<a name="l00135"></a>00135     <span class="keywordtype">void</span> set_critical_next_state(<span class="keywordtype">bool</span> critical_next_state);
-<a name="l00136"></a>00136 
-<a name="l00142"></a>00142     internal_state_t <a class="code" href="classMission__planner.html#a8e6878d0f506132add3403b81b08e83b" title="Gets the internal state.">internal_state</a>() <span class="keyword">const</span>;
-<a name="l00143"></a>00143 
-<a name="l00149"></a>00149     <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cd" title="The critical behavior enum.">critical_behavior_enum</a> <a class="code" href="classMission__planner.html#a88786fa08b97e4d7f326410ad8ce8b20" title="Returns the critical behavior.">critical_behavior</a>() <span class="keyword">const</span>;
-<a name="l00150"></a>00150 
-<a name="l00163"></a>00163     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#adb37dab461884be985fa9dce1f759e3a" title="Switches the mission handler to the inputted waypoint.">switch_mission_handler</a>(<span class="keyword">const</span> <a class="code" href="classWaypoint.html">Waypoint</a>&amp; waypoint);
-<a name="l00164"></a>00164 
-<a name="l00177"></a>00177     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#a52445702cb5a8611abb1e4272a6b15be" title="Inserts the inputted waypoint into the mission.">insert_ad_hoc_waypoint</a>(<a class="code" href="classWaypoint.html">Waypoint</a> wpt);
-<a name="l00178"></a>00178 
-<a name="l00184"></a><a class="code" href="classMission__planner.html#ae00736d50bdf6b79784973e90cfe206f">00184</a>     <span class="keyword">inline</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classMission__planner.html#ae00736d50bdf6b79784973e90cfe206f" title="Gets the reference to the takeoff altitude.">takeoff_altitude</a>() { <span class="keywordflow">return</span> config_.<a class="code" href="structMission__planner_1_1conf__t.html#a6ab04b2a16c8d707812477421fb4d3cf" title="Local altitude at which the take-off procedure should stop, for a fixed-wing.">takeoff_altitude</a>; }
-<a name="l00185"></a>00185 
-<a name="l00186"></a>00186 <span class="keyword">protected</span>:
-<a name="l00187"></a><a class="code" href="classMission__planner.html#a1205ac5ef99e053dbdfd70907fb84355">00187</a>     <a class="code" href="classMission__handler.html">Mission_handler</a>* <a class="code" href="classMission__planner.html#a1205ac5ef99e053dbdfd70907fb84355" title="The currently used mission handler.">current_mission_handler_</a>;                  
-<a name="l00188"></a><a class="code" href="classMission__planner.html#a0b79e4e40ceb3779253c1eaa9edbddd0">00188</a>     <a class="code" href="classWaypoint.html">Waypoint</a> <a class="code" href="classMission__planner.html#a0b79e4e40ceb3779253c1eaa9edbddd0" title="A waypoint that is inserted into the plan outside of the normal mission.">inserted_waypoint_</a>;                                
-<a name="l00189"></a>00189 
-<a name="l00190"></a><a class="code" href="classMission__planner.html#a80180808b196d0c748c928356f967e22">00190</a>     internal_state_t <a class="code" href="classMission__planner.html#a80180808b196d0c748c928356f967e22" title="The internal state of the navigation module.">internal_state_</a>;                           
-<a name="l00191"></a><a class="code" href="classMission__planner.html#ab5a701dd09c2e6447387d850ca87eb6d">00191</a>     <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cd" title="The critical behavior enum.">critical_behavior_enum</a> <a class="code" href="classMission__planner.html#ab5a701dd09c2e6447387d850ca87eb6d" title="The critical behavior enum.">critical_behavior_</a>;                   
+<a name="l00095"></a>00095 
+<a name="l00111"></a>00111     <a class="code" href="classMission__planner.html#afc5e3654c3a4468f50b30b0b1c2226d2" title="Initialize the waypoint handler.">Mission_planner</a>(    <a class="code" href="classINS.html">INS</a>&amp; ins,
+<a name="l00112"></a>00112                         <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; ahrs,
+<a name="l00113"></a>00113                         <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state,
+<a name="l00114"></a>00114                         <span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control,
+<a name="l00115"></a>00115                         <span class="keyword">const</span> <a class="code" href="classGeofence.html" title="Interface for Geofence.">Geofence</a>&amp; geofence,
+<a name="l00116"></a>00116                         <a class="code" href="classMavlink__message__handler.html" title="Message handler base class.">Mavlink_message_handler</a>&amp; message_handler,
+<a name="l00117"></a>00117                         <span class="keyword">const</span> <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; mavlink_stream,
+<a name="l00118"></a>00118                         <a class="code" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a>&amp; waypoint_handler,
+<a name="l00119"></a>00119                         <a class="code" href="classMission__handler__registry.html">Mission_handler_registry</a>&amp; mission_handler_registry,
+<a name="l00120"></a>00120                         <a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a> config = <a class="code" href="classMission__planner.html#aeddb63656f617e21f1174e3f17873a1c" title="Default configuration.">default_config</a>());
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122     <span class="keywordtype">bool</span> init();
+<a name="l00123"></a>00123 
+<a name="l00129"></a>00129     <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module.">update</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner);
+<a name="l00130"></a>00130 
+<a name="l00136"></a>00136     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a> <a class="code" href="classMission__planner.html#aeddb63656f617e21f1174e3f17873a1c" title="Default configuration.">default_config</a>();
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138     <span class="keywordtype">void</span> set_critical_next_state(<span class="keywordtype">bool</span> critical_next_state);
+<a name="l00139"></a>00139 
+<a name="l00145"></a>00145     internal_state_t <a class="code" href="classMission__planner.html#a8e6878d0f506132add3403b81b08e83b" title="Gets the internal state.">internal_state</a>() <span class="keyword">const</span>;
+<a name="l00146"></a>00146 
+<a name="l00152"></a>00152     <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cd" title="The critical behavior enum.">critical_behavior_enum</a> <a class="code" href="classMission__planner.html#a88786fa08b97e4d7f326410ad8ce8b20" title="Returns the critical behavior.">critical_behavior</a>() <span class="keyword">const</span>;
+<a name="l00153"></a>00153 
+<a name="l00166"></a>00166     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#adb37dab461884be985fa9dce1f759e3a" title="Switches the mission handler to the inputted waypoint.">switch_mission_handler</a>(<span class="keyword">const</span> <a class="code" href="classWaypoint.html">Waypoint</a>&amp; waypoint);
+<a name="l00167"></a>00167 
+<a name="l00180"></a>00180     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#a52445702cb5a8611abb1e4272a6b15be" title="Inserts the inputted waypoint into the mission.">insert_ad_hoc_waypoint</a>(<a class="code" href="classWaypoint.html">Waypoint</a> wpt);
+<a name="l00181"></a>00181 
+<a name="l00187"></a><a class="code" href="classMission__planner.html#ae00736d50bdf6b79784973e90cfe206f">00187</a>     <span class="keyword">inline</span> <span class="keywordtype">float</span>&amp; <a class="code" href="classMission__planner.html#ae00736d50bdf6b79784973e90cfe206f" title="Gets the reference to the takeoff altitude.">takeoff_altitude</a>() { <span class="keywordflow">return</span> config_.<a class="code" href="structMission__planner_1_1conf__t.html#a6ab04b2a16c8d707812477421fb4d3cf" title="Local altitude at which the take-off procedure should stop, for a fixed-wing.">takeoff_altitude</a>; }
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189 <span class="keyword">protected</span>:
+<a name="l00190"></a><a class="code" href="classMission__planner.html#a1205ac5ef99e053dbdfd70907fb84355">00190</a>     <a class="code" href="classMission__handler.html">Mission_handler</a>* <a class="code" href="classMission__planner.html#a1205ac5ef99e053dbdfd70907fb84355" title="The currently used mission handler.">current_mission_handler_</a>;                  
+<a name="l00191"></a><a class="code" href="classMission__planner.html#a0b79e4e40ceb3779253c1eaa9edbddd0">00191</a>     <a class="code" href="classWaypoint.html">Waypoint</a> <a class="code" href="classMission__planner.html#a0b79e4e40ceb3779253c1eaa9edbddd0" title="A waypoint that is inserted into the plan outside of the normal mission.">inserted_waypoint_</a>;                                
 <a name="l00192"></a>00192 
-<a name="l00193"></a><a class="code" href="classMission__planner.html#adb1edefe6643ec575ce4396070b89da1">00193</a>     <a class="code" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a>&amp; <a class="code" href="classMission__planner.html#adb1edefe6643ec575ce4396070b89da1" title="The reference to the mavlink waypoint handler.">waypoint_handler_</a>;                
-<a name="l00194"></a><a class="code" href="classMission__planner.html#a83fece756b93b8986eb0ded219629805">00194</a>     <a class="code" href="classMission__handler__registry.html">Mission_handler_registry</a>&amp; <a class="code" href="classMission__planner.html#a83fece756b93b8986eb0ded219629805" title="The reference to the mission handler registry.">mission_handler_registry_</a>;        
+<a name="l00193"></a><a class="code" href="classMission__planner.html#a80180808b196d0c748c928356f967e22">00193</a>     internal_state_t <a class="code" href="classMission__planner.html#a80180808b196d0c748c928356f967e22" title="The internal state of the navigation module.">internal_state_</a>;                           
+<a name="l00194"></a><a class="code" href="classMission__planner.html#ab5a701dd09c2e6447387d850ca87eb6d">00194</a>     <a class="code" href="classMission__planner.html#a3e4e06d9c93b418487ab260abd9d62cd" title="The critical behavior enum.">critical_behavior_enum</a> <a class="code" href="classMission__planner.html#ab5a701dd09c2e6447387d850ca87eb6d" title="The critical behavior enum.">critical_behavior_</a>;                   
 <a name="l00195"></a>00195 
-<a name="l00196"></a><a class="code" href="classMission__planner.html#a17a1a09e53b55129a13d41040e8cfb47">00196</a>     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#a17a1a09e53b55129a13d41040e8cfb47" title="Flag stating if we require takeoff when switching to auto, set when not auto.">require_takeoff_</a>;                                      
-<a name="l00197"></a><a class="code" href="classMission__planner.html#a97353ea245d448f86017c29a825b672a">00197</a>     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#a97353ea245d448f86017c29a825b672a" title="Flag stating if the pilot has specifically switched to hold position.">hold_position_set_</a>;                                    
+<a name="l00196"></a><a class="code" href="classMission__planner.html#adb1edefe6643ec575ce4396070b89da1">00196</a>     <a class="code" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a>&amp; <a class="code" href="classMission__planner.html#adb1edefe6643ec575ce4396070b89da1" title="The reference to the mavlink waypoint handler.">waypoint_handler_</a>;                
+<a name="l00197"></a><a class="code" href="classMission__planner.html#a83fece756b93b8986eb0ded219629805">00197</a>     <a class="code" href="classMission__handler__registry.html">Mission_handler_registry</a>&amp; <a class="code" href="classMission__planner.html#a83fece756b93b8986eb0ded219629805" title="The reference to the mission handler registry.">mission_handler_registry_</a>;        
 <a name="l00198"></a>00198 
-<a name="l00199"></a><a class="code" href="classMission__planner.html#ae0b30f337b8909885c3dbf8383549a5b">00199</a>     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#ae0b30f337b8909885c3dbf8383549a5b" title="Flag to change critical state in its dedicated state machine.">critical_next_state_</a>;                                  
-<a name="l00200"></a><a class="code" href="classMission__planner.html#af393a7e3f8e042d55b0402a47c4725d3">00200</a>     <a class="code" href="classWaypoint.html">Waypoint</a> <a class="code" href="classMission__planner.html#af393a7e3f8e042d55b0402a47c4725d3" title="Waypoint for the critical state.">critical_waypoint_</a>;                                
+<a name="l00199"></a><a class="code" href="classMission__planner.html#a17a1a09e53b55129a13d41040e8cfb47">00199</a>     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#a17a1a09e53b55129a13d41040e8cfb47" title="Flag stating if we require takeoff when switching to auto, set when not auto.">require_takeoff_</a>;                                      
+<a name="l00200"></a><a class="code" href="classMission__planner.html#a97353ea245d448f86017c29a825b672a">00200</a>     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#a97353ea245d448f86017c29a825b672a" title="Flag stating if the pilot has specifically switched to hold position.">hold_position_set_</a>;                                    
 <a name="l00201"></a>00201 
-<a name="l00202"></a><a class="code" href="classMission__planner.html#a1c2ed6c332af66daa3288ce0bedc39f3">00202</a>     <span class="keyword">const</span> <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; <a class="code" href="classMission__planner.html#a1c2ed6c332af66daa3288ce0bedc39f3" title="The reference to MAVLink stream.">mavlink_stream_</a>;                      
-<a name="l00203"></a><a class="code" href="classMission__planner.html#ae3af70b0041d494d828373a06ac710bd">00203</a>     <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; <a class="code" href="classMission__planner.html#ae3af70b0041d494d828373a06ac710bd" title="The reference to the state structure.">state_</a>;                                              
-<a name="l00204"></a><a class="code" href="classMission__planner.html#a7cf7a9c69dda85f87d016c62c7b8dd1b">00204</a>     <a class="code" href="classINS.html">INS</a>&amp; <a class="code" href="classMission__planner.html#a7cf7a9c69dda85f87d016c62c7b8dd1b" title="The reference to the ins structure.">ins_</a>;                                                  
-<a name="l00205"></a><a class="code" href="classMission__planner.html#a62b71be6d9a426a90cb591c666a23e01">00205</a>     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; <a class="code" href="classMission__planner.html#a62b71be6d9a426a90cb591c666a23e01" title="The reference to the attitude estimation structure.">ahrs_</a>;                                        
-<a name="l00206"></a><a class="code" href="classMission__planner.html#abbbeb6aa5e784036299a002db9968bf5">00206</a>     <span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; <a class="code" href="classMission__planner.html#abbbeb6aa5e784036299a002db9968bf5" title="The reference to the manual_control structure.">manual_control_</a>;                      
-<a name="l00207"></a><a class="code" href="classMission__planner.html#a976ec5b568dfd38add1a0f2a9a3d6e9a">00207</a>     <a class="code" href="classMavlink__message__handler.html" title="Message handler base class.">Mavlink_message_handler</a>&amp; <a class="code" href="classMission__planner.html#a976ec5b568dfd38add1a0f2a9a3d6e9a" title="The reference to the mavlink message handler.">message_handler_</a>;                  
-<a name="l00208"></a>00208 
-<a name="l00209"></a>00209     <a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a> config_;
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211 
+<a name="l00202"></a><a class="code" href="classMission__planner.html#ae0b30f337b8909885c3dbf8383549a5b">00202</a>     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#ae0b30f337b8909885c3dbf8383549a5b" title="Flag to change critical state in its dedicated state machine.">critical_next_state_</a>;                                  
+<a name="l00203"></a><a class="code" href="classMission__planner.html#af393a7e3f8e042d55b0402a47c4725d3">00203</a>     <a class="code" href="classWaypoint.html">Waypoint</a> <a class="code" href="classMission__planner.html#af393a7e3f8e042d55b0402a47c4725d3" title="Waypoint for the critical state.">critical_waypoint_</a>;                                
+<a name="l00204"></a>00204 
+<a name="l00205"></a><a class="code" href="classMission__planner.html#a1c2ed6c332af66daa3288ce0bedc39f3">00205</a>     <span class="keyword">const</span> <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; <a class="code" href="classMission__planner.html#a1c2ed6c332af66daa3288ce0bedc39f3" title="The reference to MAVLink stream.">mavlink_stream_</a>;                      
+<a name="l00206"></a><a class="code" href="classMission__planner.html#ae3af70b0041d494d828373a06ac710bd">00206</a>     <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; <a class="code" href="classMission__planner.html#ae3af70b0041d494d828373a06ac710bd" title="The reference to the state structure.">state_</a>;                                              
+<a name="l00207"></a><a class="code" href="classMission__planner.html#a7cf7a9c69dda85f87d016c62c7b8dd1b">00207</a>     <a class="code" href="classINS.html">INS</a>&amp; <a class="code" href="classMission__planner.html#a7cf7a9c69dda85f87d016c62c7b8dd1b" title="The reference to the ins structure.">ins_</a>;                                                  
+<a name="l00208"></a><a class="code" href="classMission__planner.html#a62b71be6d9a426a90cb591c666a23e01">00208</a>     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; <a class="code" href="classMission__planner.html#a62b71be6d9a426a90cb591c666a23e01" title="The reference to the attitude estimation structure.">ahrs_</a>;                                        
+<a name="l00209"></a><a class="code" href="classMission__planner.html#abbbeb6aa5e784036299a002db9968bf5">00209</a>     <span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; <a class="code" href="classMission__planner.html#abbbeb6aa5e784036299a002db9968bf5" title="The reference to the manual_control structure.">manual_control_</a>;                      
+<a name="l00210"></a><a class="code" href="classMission__planner.html#a07c89e1375f5617fdfaa31cfe5100f0a">00210</a>     <span class="keyword">const</span> <a class="code" href="classGeofence.html" title="Interface for Geofence.">Geofence</a>&amp; <a class="code" href="classMission__planner.html#a07c89e1375f5617fdfaa31cfe5100f0a" title="The reference to the geofence structure.">geofence_</a>;                                  
+<a name="l00211"></a><a class="code" href="classMission__planner.html#a976ec5b568dfd38add1a0f2a9a3d6e9a">00211</a>     <a class="code" href="classMavlink__message__handler.html" title="Message handler base class.">Mavlink_message_handler</a>&amp; <a class="code" href="classMission__planner.html#a976ec5b568dfd38add1a0f2a9a3d6e9a" title="The reference to the mavlink message handler.">message_handler_</a>;                  
 <a name="l00212"></a>00212 
-<a name="l00217"></a>00217     <span class="keywordtype">void</span> <a class="code" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module.">state_machine</a>();
-<a name="l00218"></a>00218 
-<a name="l00223"></a>00223     <span class="keywordtype">void</span> <a class="code" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior.">critical_handler</a>();
-<a name="l00224"></a>00224 
-<a name="l00234"></a>00234     <span class="keywordtype">void</span> <a class="code" href="classMission__planner.html#a3fb54cbdd4762beb6795083b4ddc1c58" title="Sets the internal state based on default waypoints.">set_internal_state</a>(internal_state_t new_internal_state);
-<a name="l00235"></a>00235 
-<a name="l00236"></a>00236     <span class="comment">/************************************************</span>
-<a name="l00237"></a>00237 <span class="comment">     *      static member functions (callbacks)     *</span>
-<a name="l00238"></a>00238 <span class="comment">     ************************************************/</span>
+<a name="l00213"></a>00213     <a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a> config_;
+<a name="l00214"></a>00214 
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216 
+<a name="l00221"></a>00221     <span class="keywordtype">void</span> <a class="code" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module.">state_machine</a>();
+<a name="l00222"></a>00222 
+<a name="l00227"></a>00227     <span class="keywordtype">void</span> <a class="code" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior.">critical_handler</a>();
+<a name="l00228"></a>00228 
+<a name="l00238"></a>00238     <span class="keywordtype">void</span> <a class="code" href="classMission__planner.html#a3fb54cbdd4762beb6795083b4ddc1c58" title="Sets the internal state based on default waypoints.">set_internal_state</a>(internal_state_t new_internal_state);
 <a name="l00239"></a>00239 
-<a name="l00246"></a>00246     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint.">set_current_waypoint</a>(uint16_t index);
-<a name="l00247"></a>00247 
-<a name="l00248"></a>00248 
-<a name="l00257"></a>00257     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current.">mission_set_current_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, uint32_t sysid, <span class="keyword">const</span> mavlink_message_t* msg);
-<a name="l00258"></a>00258 
-<a name="l00269"></a>00269     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold.">nav_go_home</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
-<a name="l00270"></a>00270 
-<a name="l00279"></a>00279     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission.">mission_start_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
-<a name="l00280"></a>00280 
-<a name="l00281"></a>00281 
-<a name="l00290"></a>00290     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF.">nav_takeoff_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
-<a name="l00291"></a>00291 
-<a name="l00300"></a>00300     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long.">nav_land_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
-<a name="l00301"></a>00301 
-<a name="l00310"></a>00310     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint.">override_goto_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
-<a name="l00311"></a>00311 };
-<a name="l00312"></a>00312 
-<a name="l00313"></a>00313 
-<a name="l00314"></a><a class="code" href="classMission__planner.html#aeddb63656f617e21f1174e3f17873a1c">00314</a> <a class="code" href="structMission__planner_1_1conf__t.html">Mission_planner::conf_t</a> <a class="code" href="classMission__planner.html#aeddb63656f617e21f1174e3f17873a1c" title="Default configuration.">Mission_planner::default_config</a>()
-<a name="l00315"></a>00315 {
-<a name="l00316"></a>00316     <a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a> conf                                                 = {};
+<a name="l00240"></a>00240     <span class="comment">/************************************************</span>
+<a name="l00241"></a>00241 <span class="comment">     *      static member functions (callbacks)     *</span>
+<a name="l00242"></a>00242 <span class="comment">     ************************************************/</span>
+<a name="l00243"></a>00243 
+<a name="l00250"></a>00250     <span class="keywordtype">bool</span> <a class="code" href="classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint.">set_current_waypoint</a>(uint16_t index);
+<a name="l00251"></a>00251 
+<a name="l00252"></a>00252 
+<a name="l00261"></a>00261     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current.">mission_set_current_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, uint32_t sysid, <span class="keyword">const</span> mavlink_message_t* msg);
+<a name="l00262"></a>00262 
+<a name="l00273"></a>00273     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold.">nav_go_home</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
+<a name="l00274"></a>00274 
+<a name="l00283"></a>00283     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission.">mission_start_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
+<a name="l00284"></a>00284 
+<a name="l00285"></a>00285 
+<a name="l00294"></a>00294     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF.">nav_takeoff_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
+<a name="l00295"></a>00295 
+<a name="l00304"></a>00304     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long.">nav_land_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
+<a name="l00305"></a>00305 
+<a name="l00314"></a>00314     <span class="keyword">static</span> mav_result_t <a class="code" href="classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint.">override_goto_callback</a>(<a class="code" href="classMission__planner.html">Mission_planner</a>* mission_planner, <span class="keyword">const</span> mavlink_command_long_t* packet);
+<a name="l00315"></a>00315 };
+<a name="l00316"></a>00316 
 <a name="l00317"></a>00317 
-<a name="l00318"></a>00318     conf.<a class="code" href="structMission__planner_1_1conf__t.html#ab82913cc0eed1ddbe435420b35c39532" title="The altitude at which the robot will fly in critical mode.">safe_altitude</a>                                          = -30.0f;
-<a name="l00319"></a>00319     conf.<a class="code" href="structMission__planner_1_1conf__t.html#a938c32721f13aaa378cd3d6dd35db640" title="The altitude at which the drone will try to land in the critical state.">critical_landing_altitude</a>                              =  -5.0f;
-<a name="l00320"></a>00320     conf.<a class="code" href="structMission__planner_1_1conf__t.html#a6ab04b2a16c8d707812477421fb4d3cf" title="Local altitude at which the take-off procedure should stop, for a fixed-wing.">takeoff_altitude</a>                                       = -10.0f;
+<a name="l00318"></a><a class="code" href="classMission__planner.html#aeddb63656f617e21f1174e3f17873a1c">00318</a> <a class="code" href="structMission__planner_1_1conf__t.html">Mission_planner::conf_t</a> <a class="code" href="classMission__planner.html#aeddb63656f617e21f1174e3f17873a1c" title="Default configuration.">Mission_planner::default_config</a>()
+<a name="l00319"></a>00319 {
+<a name="l00320"></a>00320     <a class="code" href="structMission__planner_1_1conf__t.html">conf_t</a> conf                                                 = {};
 <a name="l00321"></a>00321 
-<a name="l00322"></a>00322     <span class="keywordflow">return</span> conf;
-<a name="l00323"></a>00323 };
-<a name="l00324"></a>00324 
+<a name="l00322"></a>00322     conf.<a class="code" href="structMission__planner_1_1conf__t.html#ab82913cc0eed1ddbe435420b35c39532" title="The altitude at which the robot will fly in critical mode.">safe_altitude</a>                                          = -30.0f;
+<a name="l00323"></a>00323     conf.<a class="code" href="structMission__planner_1_1conf__t.html#a938c32721f13aaa378cd3d6dd35db640" title="The altitude at which the drone will try to land in the critical state.">critical_landing_altitude</a>                              =  -5.0f;
+<a name="l00324"></a>00324     conf.<a class="code" href="structMission__planner_1_1conf__t.html#a6ab04b2a16c8d707812477421fb4d3cf" title="Local altitude at which the take-off procedure should stop, for a fixed-wing.">takeoff_altitude</a>                                       = -10.0f;
 <a name="l00325"></a>00325 
-<a name="l00326"></a>00326 
-<a name="l00327"></a>00327 
+<a name="l00326"></a>00326     <span class="keywordflow">return</span> conf;
+<a name="l00327"></a>00327 };
 <a name="l00328"></a>00328 
 <a name="l00329"></a>00329 
 <a name="l00330"></a>00330 
-<a name="l00331"></a>00331 <span class="preprocessor">#endif // MISSION_PLANNER__</span>
+<a name="l00331"></a>00331 
+<a name="l00332"></a>00332 
+<a name="l00333"></a>00333 
+<a name="l00334"></a>00334 
+<a name="l00335"></a>00335 <span class="preprocessor">#endif // MISSION_PLANNER__</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -291,7 +294,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 24 2016 10:15:52 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 24 2016 13:44:34 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

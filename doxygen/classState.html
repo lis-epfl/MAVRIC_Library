@@ -169,23 +169,11 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2e9aa6811920f686f167fdd091287810"></a><!-- doxytag: member="State::sensor_health" ref="a2e9aa6811920f686f167fdd091287810" args="" -->
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a2e9aa6811920f686f167fdd091287810">sensor_health</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control) <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afd5e38f8723362798fcff3bb9abd5c64"></a><!-- doxytag: member="State::fence_1_xy" ref="afd5e38f8723362798fcff3bb9abd5c64" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#afd5e38f8723362798fcff3bb9abd5c64">fence_1_xy</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of fence 1 in the XY plane, in meters. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01fe52db49b657ad2af5493db8599043"></a><!-- doxytag: member="State::fence_1_z" ref="a01fe52db49b657ad2af5493db8599043" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a01fe52db49b657ad2af5493db8599043">fence_1_z</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of fence 1 in the Z direction, in meters. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af58a6be64539bc5d7e897c49411895e0"></a><!-- doxytag: member="State::fence_2_xy" ref="af58a6be64539bc5d7e897c49411895e0" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#af58a6be64539bc5d7e897c49411895e0">fence_2_xy</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of fence 2 in the XY plane, in meters. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aaf21576c878c62405a7928b7ecb10a2d"></a><!-- doxytag: member="State::fence_2_z" ref="aaf21576c878c62405a7928b7ecb10a2d" args="" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#aaf21576c878c62405a7928b7ecb10a2d">fence_2_z</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of fence 2 in the Z direction, in meters. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb09d2da7b0c2869d093a44e8b451daf"></a><!-- doxytag: member="State::out_of_fence_1" ref="abb09d2da7b0c2869d093a44e8b451daf" args="" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#abb09d2da7b0c2869d093a44e8b451daf">out_of_fence_1</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a8992aa83ac4d04a992614511a7aba0"></a><!-- doxytag: member="State::out_of_safety_geofence" ref="a6a8992aa83ac4d04a992614511a7aba0" args="" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a6a8992aa83ac4d04a992614511a7aba0">out_of_safety_geofence</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to tell whether we are out the first fence or not. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afb2b944fd84462f85c6a8dd32e546e19"></a><!-- doxytag: member="State::out_of_fence_2" ref="afb2b944fd84462f85c6a8dd32e546e19" args="" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#afb2b944fd84462f85c6a8dd32e546e19">out_of_fence_2</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4eb1f5fe35077b6011ac385795b27786"></a><!-- doxytag: member="State::out_of_emergency_geofence" ref="a4eb1f5fe35077b6011ac385795b27786" args="" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a4eb1f5fe35077b6011ac385795b27786">out_of_emergency_geofence</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag to tell whether we are out the second fence or not. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4f26f45df1ca725c68e8ba73bd99db17"></a><!-- doxytag: member="State::reset_position" ref="a4f26f45df1ca725c68e8ba73bd99db17" args="" -->
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classState.html#a4f26f45df1ca725c68e8ba73bd99db17">reset_position</a></td></tr>
@@ -324,7 +312,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState_aed82df84db5ad27e500e51d212ba051d_icgraph.png" border="0" usemap="#classState_aed82df84db5ad27e500e51d212ba051d_icgraph" alt=""/></div>
 <map name="classState_aed82df84db5ad27e500e51d212ba051d_icgraph" id="classState_aed82df84db5ad27e500e51d212ba051d_icgraph">
-<area shape="rect" id="node3" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card." alt="" coords="191,5,335,35"/><area shape="rect" id="node5" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data." alt="" coords="197,59,328,88"/><area shape="rect" id="node7" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data." alt="" coords="197,112,328,141"/><area shape="rect" id="node9" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="664,191,827,220"/><area shape="rect" id="node11" href="classINS__complementary.html#a86550a7d52bbeeef30a9ffb1be4ebbb4" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="169,216,356,245"/><area shape="rect" id="node13" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="201,269,324,299"/><area shape="rect" id="node15" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="405,216,616,245"/><area shape="rect" id="node18" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="433,269,588,299"/></map>
+<area shape="rect" id="node3" href="classData__logging.html#a75a2133aee0ce0794119f57e911ca9ff" title="The task to log the data to the SD card." alt="" coords="169,5,313,35"/><area shape="rect" id="node5" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072" title="Start logging data." alt="" coords="176,59,307,88"/><area shape="rect" id="node7" href="classData__logging.html#a8b1e84ee48d0b93c80182bf0bb648253" title="Stop logging data." alt="" coords="176,112,307,141"/><area shape="rect" id="node9" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="621,191,784,220"/><area shape="rect" id="node11" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="180,216,303,245"/><area shape="rect" id="node13" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="363,216,573,245"/><area shape="rect" id="node16" href="classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="391,269,545,299"/></map>
 </div>
 </p>
 
@@ -557,7 +545,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState_a9bf37e3784367761637c2c5a7c2b1b16_icgraph.png" border="0" usemap="#classState_a9bf37e3784367761637c2c5a7c2b1b16_icgraph" alt=""/></div>
 <map name="classState_a9bf37e3784367761637c2c5a7c2b1b16_icgraph" id="classState_a9bf37e3784367761637c2c5a7c2b1b16_icgraph">
-<area shape="rect" id="node3" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="180,5,388,35"/><area shape="rect" id="node5" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="437,57,600,87"/><area shape="rect" id="node7" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="179,109,389,139"/><area shape="rect" id="node11" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="207,163,361,192"/></map>
+<area shape="rect" id="node3" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="437,28,600,58"/><area shape="rect" id="node5" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="180,28,388,58"/><area shape="rect" id="node8" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="179,82,389,111"/><area shape="rect" id="node11" href="classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="207,135,361,164"/></map>
 </div>
 </p>
 
@@ -607,7 +595,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState_a41daea810832a042add30c2c4bdbaa13_icgraph.png" border="0" usemap="#classState_a41daea810832a042add30c2c4bdbaa13_icgraph" alt=""/></div>
 <map name="classState_a41daea810832a042add30c2c4bdbaa13_icgraph" id="classState_a41daea810832a042add30c2c4bdbaa13_icgraph">
-<area shape="rect" id="node3" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="176,5,387,35"/><area shape="rect" id="node7" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="204,59,359,88"/><area shape="rect" id="node5" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="435,5,597,35"/></map>
+<area shape="rect" id="node3" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="176,5,387,35"/><area shape="rect" id="node7" href="classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="204,59,359,88"/><area shape="rect" id="node5" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="435,5,597,35"/></map>
 </div>
 </p>
 
@@ -641,7 +629,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classState_a24a57c4fe42e2f8d7d3fb4601e9ac437_icgraph.png" border="0" usemap="#classState_a24a57c4fe42e2f8d7d3fb4601e9ac437_icgraph" alt=""/></div>
 <map name="classState_a24a57c4fe42e2f8d7d3fb4601e9ac437_icgraph" id="classState_a24a57c4fe42e2f8d7d3fb4601e9ac437_icgraph">
-<area shape="rect" id="node3" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="253,7,376,36"/><area shape="rect" id="node9" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="452,59,607,88"/><area shape="rect" id="node5" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="424,5,635,35"/><area shape="rect" id="node7" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="683,5,845,35"/></map>
+<area shape="rect" id="node3" href="classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="253,7,376,36"/><area shape="rect" id="node9" href="classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="452,59,607,88"/><area shape="rect" id="node5" href="classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="424,5,635,35"/><area shape="rect" id="node7" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="683,5,845,35"/></map>
 </div>
 </p>
 
@@ -726,7 +714,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 24 2016 10:15:54 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 24 2016 13:44:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

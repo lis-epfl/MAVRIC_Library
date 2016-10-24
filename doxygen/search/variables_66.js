@@ -2,10 +2,6 @@ var searchData=
 [
   ['f_5f',['F_',['../classKalman.html#a3e44fd095eced8ba2ee14037df601788',1,'Kalman']]],
   ['failsafe',['failsafe',['../structservo__conf__t.html#a8a120c6a6429a5070a2aaa63274b7eb0',1,'servo_conf_t']]],
-  ['fence_5f1_5fxy',['fence_1_xy',['../structState_1_1conf__t.html#aa352fbf3d8277028018363e286b03d4c',1,'State::conf_t::fence_1_xy()'],['../classState.html#afd5e38f8723362798fcff3bb9abd5c64',1,'State::fence_1_xy()']]],
-  ['fence_5f1_5fz',['fence_1_z',['../structState_1_1conf__t.html#ac76bccef7b58fea0ecd0f0d6ac81d7d6',1,'State::conf_t::fence_1_z()'],['../classState.html#a01fe52db49b657ad2af5493db8599043',1,'State::fence_1_z()']]],
-  ['fence_5f2_5fxy',['fence_2_xy',['../structState_1_1conf__t.html#af6e0b97d9259b618a09bd89ca3cd52dc',1,'State::conf_t::fence_2_xy()'],['../classState.html#af58a6be64539bc5d7e897c49411895e0',1,'State::fence_2_xy()']]],
-  ['fence_5f2_5fz',['fence_2_z',['../structState_1_1conf__t.html#ab401ae8821d8a4108a9f5fbbcee74871',1,'State::conf_t::fence_2_z()'],['../classState.html#aaf21576c878c62405a7928b7ecb10a2d',1,'State::fence_2_z()']]],
   ['fifo_5ffill',['fifo_fill',['../structlsm__read__fifo__fill__t.html#a9f787be7c7d76a77cc3748f2e2e744f6',1,'lsm_read_fifo_fill_t']]],
   ['file_5fflash',['file_flash',['../classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5',1,'LEQuad']]],
   ['filter_5fgain',['filter_gain',['../structairspeed__analog__conf__t.html#a306b4fb409d629ef51f60b7e0e841608',1,'airspeed_analog_conf_t']]],

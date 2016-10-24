@@ -3,10 +3,6 @@ var searchData=
   ['f_5f',['F_',['../classKalman.html#a3e44fd095eced8ba2ee14037df601788',1,'Kalman']]],
   ['failsafe',['failsafe',['../structservo__conf__t.html#a8a120c6a6429a5070a2aaa63274b7eb0',1,'servo_conf_t::failsafe()'],['../classServo.html#a2b5d2ce904f65a74afad4e62c49938bf',1,'Servo::failsafe()']]],
   ['fat_5ffs_5fmounting_5ft',['fat_fs_mounting_t',['../structfat__fs__mounting__t.html',1,'']]],
-  ['fence_5f1_5fxy',['fence_1_xy',['../structState_1_1conf__t.html#aa352fbf3d8277028018363e286b03d4c',1,'State::conf_t::fence_1_xy()'],['../classState.html#afd5e38f8723362798fcff3bb9abd5c64',1,'State::fence_1_xy()']]],
-  ['fence_5f1_5fz',['fence_1_z',['../structState_1_1conf__t.html#ac76bccef7b58fea0ecd0f0d6ac81d7d6',1,'State::conf_t::fence_1_z()'],['../classState.html#a01fe52db49b657ad2af5493db8599043',1,'State::fence_1_z()']]],
-  ['fence_5f2_5fxy',['fence_2_xy',['../structState_1_1conf__t.html#af6e0b97d9259b618a09bd89ca3cd52dc',1,'State::conf_t::fence_2_xy()'],['../classState.html#af58a6be64539bc5d7e897c49411895e0',1,'State::fence_2_xy()']]],
-  ['fence_5f2_5fz',['fence_2_z',['../structState_1_1conf__t.html#ab401ae8821d8a4108a9f5fbbcee74871',1,'State::conf_t::fence_2_z()'],['../classState.html#aaf21576c878c62405a7928b7ecb10a2d',1,'State::fence_2_z()']]],
   ['fifo_5ffill',['fifo_fill',['../structlsm__read__fifo__fill__t.html#a9f787be7c7d76a77cc3748f2e2e744f6',1,'lsm_read_fifo_fill_t']]],
   ['file',['File',['../classFile.html',1,'']]],
   ['file_5fdummy',['File_dummy',['../classFile__dummy.html',1,'File_dummy'],['../classFile__dummy.html#a276ebac56da140011a18239514e8e9e0',1,'File_dummy::File_dummy()']]],
@@ -46,8 +42,8 @@ var searchData=
   ['freq_5fperiod',['freq_period',['../structubx__cfg__tp5__t.html#a56d67441fdba5e011aded8f204b0729e',1,'ubx_cfg_tp5_t']]],
   ['fs',['fs',['../structfat__fs__mounting__t.html#a6559a26f8510813780bb53fad8260d02',1,'fat_fs_mounting_t']]],
   ['full',['full',['../classBuffer__T.html#a015a62a50cd6931d44e4d6b3176fcc94',1,'Buffer_T']]],
-  ['function',['function',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry']]],
-  ['function',['function',['../structScheduler__task_1_1function.html',1,'Scheduler_task']]],
   ['function',['function',['../structMavlink__message__handler_1_1msg__callback__t.html#a15b1ca8eacaa9fba1eb12d53b160059f',1,'Mavlink_message_handler::msg_callback_t::function()'],['../structMavlink__message__handler_1_1cmd__callback__t.html#af0714c3bc1479f7e97a8a12f00a4751e',1,'Mavlink_message_handler::cmd_callback_t::function()'],['../structPeriodic__telemetry_1_1telemetry__entry__t.html#ac251a3ef6f3cc6e1888840a7e6d1b878',1,'Periodic_telemetry::telemetry_entry_t::function()'],['../structserial__avr32__gpio__map__t.html#afea7a90cb66b46621468f5b52d477b13',1,'serial_avr32_gpio_map_t::function()'],['../structspi__avr32__gpio__map__t.html#a045cd6b7ffd9b71b75fa4aaa42fb0b3d',1,'spi_avr32_gpio_map_t::function()'],['../structtLED__DESCRIPTOR.html#aa887761788f738fa9e3962ff3d550d68',1,'tLED_DESCRIPTOR::FUNCTION()']]],
-  ['function_3c_20void_20_3e',['function< void >',['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;'],['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;']]]
+  ['function',['function',['../structScheduler__task_1_1function.html',1,'Scheduler_task']]],
+  ['function',['function',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry']]],
+  ['function_3c_20void_20_3e',['function< void >',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;'],['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;']]]
 ];

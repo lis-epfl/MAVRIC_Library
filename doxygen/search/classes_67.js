@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['geofence',['Geofence',['../classGeofence.html',1,'']]],
+  ['geofence_5fcylinder',['Geofence_cylinder',['../classGeofence__cylinder.html',1,'']]],
   ['gimbal_5fcontroller',['Gimbal_controller',['../classGimbal__controller.html',1,'']]],
   ['gimbal_5fcontroller_5fconf_5ft',['gimbal_controller_conf_t',['../structgimbal__controller__conf__t.html',1,'']]],
   ['global_5fposition_5ft',['global_position_t',['../structglobal__position__t.html',1,'']]],

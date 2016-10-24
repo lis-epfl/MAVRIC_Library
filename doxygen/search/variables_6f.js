@@ -7,8 +7,8 @@ var searchData=
   ['orientation',['orientation',['../structcurvace__t.html#a5ecffdd9f761ddb86eaa81512911f9b3',1,'curvace_t']]],
   ['orientation_5fbf',['orientation_bf',['../structsonar__i2cxl__conf__t.html#a352bb2169accb4128183d7cbc784f5a2',1,'sonar_i2cxl_conf_t::orientation_bf()'],['../structsonar__sim__conf__t.html#ab3ab14858c0195b0b2370e3ef99b7128',1,'sonar_sim_conf_t::orientation_bf()']]],
   ['origin',['origin',['../structINS__complementary_1_1conf__t.html#a9ac28ad5013b1ea16e9b6f308c95c6ac',1,'INS_complementary::conf_t::origin()'],['../structINS__AHRS__groundtruth_1_1conf__t.html#ad921c4a36a9c86fc44ae4df2ea138730',1,'INS_AHRS_groundtruth::conf_t::origin()']]],
-  ['out_5fof_5ffence_5f1',['out_of_fence_1',['../structState_1_1conf__t.html#ad70791e77772ffbc8dc26b843ff8902d',1,'State::conf_t::out_of_fence_1()'],['../classState.html#abb09d2da7b0c2869d093a44e8b451daf',1,'State::out_of_fence_1()']]],
-  ['out_5fof_5ffence_5f2',['out_of_fence_2',['../structState_1_1conf__t.html#a70275f29fa17cf424be1cd7e118cc2bf',1,'State::conf_t::out_of_fence_2()'],['../classState.html#afb2b944fd84462f85c6a8dd32e546e19',1,'State::out_of_fence_2()']]],
+  ['out_5fof_5femergency_5fgeofence',['out_of_emergency_geofence',['../structState_1_1conf__t.html#a3a8de53a47f1d957aa73890f6e2a5cde',1,'State::conf_t::out_of_emergency_geofence()'],['../classState.html#a4eb1f5fe35077b6011ac385795b27786',1,'State::out_of_emergency_geofence()']]],
+  ['out_5fof_5fsafety_5fgeofence',['out_of_safety_geofence',['../structState_1_1conf__t.html#aaad76ff9bd553c9a6d9f940ac519e62e',1,'State::conf_t::out_of_safety_geofence()'],['../classState.html#a6a8992aa83ac4d04a992614511a7aba0',1,'State::out_of_safety_geofence()']]],
   ['out_5fproto_5fmask',['out_proto_mask',['../structubx__cfg__prt__t.html#abb8c62055d04283ffd56be043ffe3f9f',1,'ubx_cfg_prt_t']]],
   ['output',['output',['../structpid__controller__t.html#a4182e2bb4ba081c05f33e3205615420b',1,'pid_controller_t::output()'],['../structstabiliser__t.html#a418cfe8be6eb5a4c622079b1d5274332',1,'stabiliser_t::output()']]]
 ];

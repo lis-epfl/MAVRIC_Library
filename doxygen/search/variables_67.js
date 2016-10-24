@@ -1,6 +1,7 @@
 var searchData=
 [
   ['gain',['gain',['../structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f',1,'integrator_t::gain()'],['../structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5',1,'differentiator_t::gain()']]],
+  ['geofence_5f',['geofence_',['../classMission__planner.html#a07c89e1375f5617fdfaa31cfe5100f0a',1,'Mission_planner']]],
   ['get',['get',['../structbyte__stream__t.html#a1b4773a56e152e914c7c65b2ea4bef52',1,'byte_stream_t']]],
   ['global_5fflags',['global_flags',['../structubx__nav__sv__info__t.html#a4f6be11008e81dcc8c64c9f69681ba11',1,'ubx_nav_sv_info_t']]],
   ['gpio',['GPIO',['../structtLED__DESCRIPTOR.html#a8afd7b37bb964b2f14113152d88fbbbf',1,'tLED_DESCRIPTOR']]],

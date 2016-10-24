@@ -85,14 +85,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 This is the complete list of members for <a class="el" href="classState__machine.html">State_machine</a>, including all inherited members.<table>
   <tr class="memlist"><td><a class="el" href="classState__machine.html#a99e83dd9aaaf364aefb1fbd1f0aff8db">ahrs_</a></td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classState__machine.html#a0175f7aeb5364aee282a2c859f91f832">emergency_geofence_</a></td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classState__machine.html#a02adec4dd6e2b86ce915cd8c09b07788">imu_</a></td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classState__machine.html#a51239d573ed43470ad330e91a7fa640c">ins_</a></td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classState__machine.html#a77bc60b6c71ba27ef92ccf021de2d17f">manual_control_</a></td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classState__machine.html#ac51ca6fcb5c730b35ecb870dce9c7f28">safety_geofence_</a></td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>set_ctrl_mode</b>(Mav_mode mode) (defined in <a class="el" href="classState__machine.html">State_machine</a>)</td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classState__machine.html#a1d458bc645f27269f102e6048d122e91">state_</a></td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classState__machine.html#a1b3b4a239057c04e71bbcc54acd71dbd">state_display_</a></td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classState__machine.html#a73a6e58474acb69fd01d89fd706d86f2">State_machine</a>(State &amp;state, const INS &amp;ins, const Imu &amp;imu, const ahrs_t &amp;ahrs, Manual_control &amp;manual_control, State_display &amp;state_display)</td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classState__machine.html#adc9937097ff3a01676c57836ed8dd522">update</a>(State_machine *state_machine)</td><td><a class="el" href="classState__machine.html">State_machine</a></td><td><code> [static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classState__machine.html#a57f24b6f11100ab904a7b0d856c22a0a">State_machine</a>(State &amp;state, const INS &amp;ins, const Imu &amp;imu, const ahrs_t &amp;ahrs, Manual_control &amp;manual_control, Geofence &amp;safety_geofence, Geofence &amp;emergency_geofence, State_display &amp;state_display)</td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classState__machine.html#a76607bdfa0400d58c776d50e57008d99">update</a>(void)</td><td><a class="el" href="classState__machine.html">State_machine</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>update_task</b>(State_machine *state_machine) (defined in <a class="el" href="classState__machine.html">State_machine</a>)</td><td><a class="el" href="classState__machine.html">State_machine</a></td><td><code> [static]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -111,7 +114,7 @@ This is the complete list of members for <a class="el" href="classState__machine
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 24 2016 10:15:54 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 24 2016 13:44:36 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
