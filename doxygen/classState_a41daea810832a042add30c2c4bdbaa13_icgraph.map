@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="204,5,359,35"/>
-<area shape="rect" id="node5" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="176,59,387,88"/>
-<area shape="rect" id="node7" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="435,59,597,88"/>
+<area shape="rect" id="node3" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="176,5,387,35"/>
+<area shape="rect" id="node7" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="204,59,359,88"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="435,5,597,35"/>
 </map>

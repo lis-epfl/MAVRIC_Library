@@ -27,7 +27,7 @@ var searchData=
   ['reliabe_5faz',['reliabe_az',['../structaudio__t.html#a1d0d8d52ccfd9b919b9bb53e3df5a889',1,'audio_t']]],
   ['reliabe_5fdata',['reliabe_data',['../structaudio__t.html#abd11e340a752a768249599c299d7f643',1,'audio_t']]],
   ['reliabe_5fel',['reliabe_el',['../structaudio__t.html#afd2ba2d13bc699e9419743ed2cdb6e53',1,'audio_t']]],
-  ['remote',['remote',['../classManual__control.html#ac5bd8680fbda07384a88506d44f163f7',1,'Manual_control::remote()'],['../structstabilisation__ywing__t.html#a621f36c226787bdffc4f82d322cc55d9',1,'stabilisation_ywing_t::remote()'],['../structaudio__t.html#a1c1ef0bc7df83d2e362d4c5258b6be3a',1,'audio_t::remote()'],['../structepuck__communication__t.html#a3566893ee9f99ac473995d8d87b8fc40',1,'epuck_communication_t::remote()']]],
+  ['remote',['remote',['../structstabilisation__ywing__t.html#a621f36c226787bdffc4f82d322cc55d9',1,'stabilisation_ywing_t::remote()'],['../structaudio__t.html#a1c1ef0bc7df83d2e362d4c5258b6be3a',1,'audio_t::remote()'],['../structepuck__communication__t.html#a3566893ee9f99ac473995d8d87b8fc40',1,'epuck_communication_t::remote()'],['../classManual__control.html#ac5bd8680fbda07384a88506d44f163f7',1,'Manual_control::remote()']]],
   ['repeat_5ffreq',['repeat_freq',['../structservo__conf__t.html#a4e89b131e5441c7a2aa19b2167729d0b',1,'servo_conf_t']]],
   ['repeat_5fperiod',['repeat_period',['../classScheduler__task.html#a4b550f312817a08e5956cf7e9e2084ed',1,'Scheduler_task']]],
   ['require_5ftakeoff_5f',['require_takeoff_',['../classMission__planner.html#a17a1a09e53b55129a13d41040e8cfb47',1,'Mission_planner']]],

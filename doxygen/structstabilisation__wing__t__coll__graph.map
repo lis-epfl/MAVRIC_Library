@@ -1,17 +1,16 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,999,136,1084"/>
-<area shape="rect" id="node4" href="$classPosition__estimation.html" title="{Position_estimation\n|+ kp_alt_baro\l+ kp_vel_baro\l+ kp_pos_gps\l+ kp_vel_gps\l+ kp_alt_sonar\l+ kp_vel_sonar\l+ local_position\l|+ Position_estimation()\l+ update()\l+ get_fence_violation_state()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ default_config()\l}" alt="" coords="160,877,349,1205"/>
-<area shape="rect" id="node6" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="185,536,324,760"/>
-<area shape="rect" id="node8" href="$classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="373,955,517,1127"/>
-<area shape="rect" id="node10" href="$structstabiliser__stack__wing__t.html" title="Structure containing the stacked controller." alt="" coords="596,973,753,1110"/>
-<area shape="rect" id="node12" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs." alt="" coords="612,588,737,708"/>
-<area shape="rect" id="node14" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="491,246,627,418"/>
-<area shape="rect" id="node16" href="$structpid__controller__t.html" title="PID controller." alt="" coords="651,211,779,453"/>
-<area shape="rect" id="node18" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="599,15,703,135"/>
-<area shape="rect" id="node20" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="727,6,831,143"/>
-<area shape="rect" id="node22" href="$classGps.html" title="Abstract class for GPS." alt="" coords="777,912,988,1171"/>
-<area shape="rect" id="node24" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="1012,999,1145,1084"/>
-<area shape="rect" id="node27" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1169,964,1287,1119"/>
-<area shape="rect" id="node29" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1199,597,1257,699"/>
-<area shape="rect" id="node31" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1311,912,1441,1171"/>
+<area shape="rect" id="node2" href="$structthrust__command__t.html" title="Thrust command type." alt="" coords="5,860,136,945"/>
+<area shape="rect" id="node4" href="$classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="160,817,304,989"/>
+<area shape="rect" id="node6" href="$structstabiliser__stack__wing__t.html" title="Structure containing the stacked controller." alt="" coords="388,834,545,971"/>
+<area shape="rect" id="node8" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs." alt="" coords="404,536,529,656"/>
+<area shape="rect" id="node10" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="283,246,419,418"/>
+<area shape="rect" id="node12" href="$structpid__controller__t.html" title="PID controller." alt="" coords="443,211,571,453"/>
+<area shape="rect" id="node14" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="391,15,495,135"/>
+<area shape="rect" id="node16" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="519,6,623,143"/>
+<area shape="rect" id="node18" href="$classGps.html" title="Abstract class for GPS." alt="" coords="569,773,780,1032"/>
+<area shape="rect" id="node20" href="$structtorque__command__t.html" title="Torque command structure." alt="" coords="804,860,937,945"/>
+<area shape="rect" id="node23" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ origin()\l# set_origin()\l}" alt="" coords="961,791,1100,1015"/>
+<area shape="rect" id="node25" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1124,825,1241,980"/>
+<area shape="rect" id="node27" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1153,545,1212,647"/>
+<area shape="rect" id="node29" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1265,773,1396,1032"/>
 </map>

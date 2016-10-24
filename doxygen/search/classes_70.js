@@ -12,7 +12,6 @@ var searchData=
   ['position_5fcontroller',['Position_controller',['../classPosition__controller.html',1,'']]],
   ['position_5fcontroller_3c_20velocity_5fcontroller_5fcopter_3c_20attitude_5fcontroller_3c_20rate_5fcontroller_3c_20servos_5fmix_5fquadcopter_5fdiag_20_3e_20_3e_20_3e_20_3e',['Position_controller< Velocity_controller_copter< Attitude_controller< Rate_controller< Servos_mix_quadcopter_diag > > > >',['../classPosition__controller.html',1,'']]],
   ['position_5fcontroller_5fi',['Position_controller_I',['../classPosition__controller__I.html',1,'']]],
-  ['position_5festimation',['Position_estimation',['../classPosition__estimation.html',1,'']]],
   ['pwm',['Pwm',['../classPwm.html',1,'']]],
   ['pwm_5favr32',['Pwm_avr32',['../classPwm__avr32.html',1,'']]],
   ['pwm_5fchibios',['Pwm_chibios',['../classPwm__chibios.html',1,'']]],

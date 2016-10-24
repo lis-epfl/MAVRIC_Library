@@ -128,7 +128,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00045"></a>00045 <span class="preprocessor"></span><span class="preprocessor">#define INS_KF_HPP_</span>
 <a name="l00046"></a>00046 <span class="preprocessor"></span>
 <a name="l00047"></a>00047 
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;communication/state.hpp&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;status/state.hpp&quot;</span>
 <a name="l00049"></a>00049 <span class="preprocessor">#include &quot;drivers/gps.hpp&quot;</span>
 <a name="l00050"></a>00050 <span class="preprocessor">#include &quot;drivers/gps_mocap.hpp&quot;</span>
 <a name="l00051"></a>00051 <span class="preprocessor">#include &quot;drivers/barometer.hpp&quot;</span>
@@ -276,20 +276,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00319"></a>00319     <a class="code" href="structINS__kf_1_1conf__t.html" title="Configuration structure.">INS_kf::conf_t</a> conf = {};
 <a name="l00320"></a>00320 
 <a name="l00321"></a>00321     <span class="comment">// Process covariance (noise from state and input)</span>
-<a name="l00322"></a>00322     conf.sigma_z_gnd        = 0.008f;
-<a name="l00323"></a>00323     conf.sigma_bias_acc     = 0.0001f;
-<a name="l00324"></a>00324     conf.sigma_bias_baro    = 0.001f;       <span class="comment">// previously 0.01f;</span>
-<a name="l00325"></a>00325     conf.sigma_acc          = 5.0f;         <span class="comment">// Measured: 0.6f (at rest 0.032f)</span>
+<a name="l00322"></a>00322     conf.sigma_z_gnd        = 0.0f;        <span class="comment">// previously 0.008f</span>
+<a name="l00323"></a>00323     conf.sigma_bias_acc     = 0.00001f;
+<a name="l00324"></a>00324     conf.sigma_bias_baro    = 0.01f;       <span class="comment">// previously 0.01f;</span>
+<a name="l00325"></a>00325     conf.sigma_acc          = 5.0f;       <span class="comment">// Measured: 0.6f (at rest 0.032f)</span>
 <a name="l00326"></a>00326 
 <a name="l00327"></a>00327     <span class="comment">// Measurement covariance   (noise from measurement)</span>
 <a name="l00328"></a>00328     conf.sigma_gps_xy       = 0.04f;       <span class="comment">// Measured: 0.316f</span>
 <a name="l00329"></a>00329     conf.sigma_gps_z        = 0.13f;       <span class="comment">// Measured: 0.879f</span>
 <a name="l00330"></a>00330     conf.sigma_gps_velxy    = 0.02f;       <span class="comment">// Measured: 0.064f</span>
 <a name="l00331"></a>00331     conf.sigma_gps_velz     = 0.02f;       <span class="comment">// Measured: 0.342f</span>
-<a name="l00332"></a>00332     conf.sigma_gps_mocap    = 0.0001f;
+<a name="l00332"></a>00332     conf.sigma_gps_mocap    = 0.00001f;
 <a name="l00333"></a>00333     conf.sigma_baro         = 0.50f;       <span class="comment">// Measured: 0.310f</span>
-<a name="l00334"></a>00334     conf.sigma_flow         = 0.1f;
-<a name="l00335"></a>00335     conf.sigma_sonar        = 0.02f;       <span class="comment">// Measured: 0.002f</span>
+<a name="l00334"></a>00334     conf.sigma_flow         = 0.002f;
+<a name="l00335"></a>00335     conf.sigma_sonar        = 0.002f;       <span class="comment">// Measured: 0.002f</span>
 <a name="l00336"></a>00336 
 <a name="l00337"></a>00337     <span class="comment">//default origin location (EFPL Esplanade)</span>
 <a name="l00338"></a>00338     conf.origin = ORIGIN_EPFL;
@@ -323,7 +323,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 20 2016 16:25:07 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 24 2016 08:56:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -13,6 +13,7 @@ var searchData=
   ['imu_5fsensor_5fconfig_5ft',['imu_sensor_config_t',['../structimu__sensor__config__t.html',1,'']]],
   ['ins',['INS',['../classINS.html',1,'']]],
   ['ins_5fahrs_5fgroundtruth',['INS_AHRS_groundtruth',['../classINS__AHRS__groundtruth.html',1,'']]],
+  ['ins_5fcomplementary',['INS_complementary',['../classINS__complementary.html',1,'']]],
   ['ins_5fkf',['INS_kf',['../classINS__kf.html',1,'']]],
   ['integrator_5ft',['integrator_t',['../structintegrator__t.html',1,'']]],
   ['intersection',['Intersection',['../classraytracing_1_1Intersection.html',1,'raytracing']]],

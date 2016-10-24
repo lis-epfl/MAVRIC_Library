@@ -1,6 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="253,57,376,87"/>
-<area shape="rect" id="node5" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="452,5,607,35"/>
-<area shape="rect" id="node7" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="424,59,635,88"/>
-<area shape="rect" id="node9" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="683,59,845,88"/>
+<area shape="rect" id="node3" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="253,7,376,36"/>
+<area shape="rect" id="node9" href="$classState__machine.html#adc9937097ff3a01676c57836ed8dd522" title="Updates the state machine." alt="" coords="452,59,607,88"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="424,5,635,35"/>
+<area shape="rect" id="node7" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="683,5,845,35"/>
 </map>

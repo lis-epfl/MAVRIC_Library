@@ -136,22 +136,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00053"></a>00053 <span class="preprocessor">#include &quot;communication/mavlink_stream.hpp&quot;</span>
 <a name="l00054"></a>00054 <span class="preprocessor">#include &quot;communication/mavlink_waypoint_handler.hpp&quot;</span>
 <a name="l00055"></a>00055 <span class="preprocessor">#include &quot;communication/onboard_parameters.hpp&quot;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;communication/state.hpp&quot;</span>
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;communication/state_machine.hpp&quot;</span>
-<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;communication/remote_default_config.hpp&quot;</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;status/state.hpp&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;status/state_machine.hpp&quot;</span>
+<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;manual_control/remote_default_config.hpp&quot;</span>
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060 <span class="preprocessor">#include &quot;control/altitude_controller.hpp&quot;</span>
 <a name="l00061"></a>00061 <span class="preprocessor">#include &quot;control/position_controller.hpp&quot;</span>
 <a name="l00062"></a>00062 <span class="preprocessor">#include &quot;control/velocity_controller_copter.hpp&quot;</span>
 <a name="l00063"></a>00063 <span class="preprocessor">#include &quot;control/attitude_controller.hpp&quot;</span>
-<a name="l00064"></a>00064 <span class="preprocessor">#include &quot;control/manual_control.hpp&quot;</span>
-<a name="l00065"></a>00065 <span class="preprocessor">#include &quot;control/navigation_directto.hpp&quot;</span>
+<a name="l00064"></a>00064 <span class="preprocessor">#include &quot;manual_control/manual_control.hpp&quot;</span>
+<a name="l00065"></a>00065 <span class="preprocessor">#include &quot;navigation/navigation_directto.hpp&quot;</span>
 <a name="l00066"></a>00066 <span class="preprocessor">#include &quot;control/rate_controller.hpp&quot;</span>
 <a name="l00067"></a>00067 <span class="preprocessor">#include &quot;control/servos_mix_quadcopter_diag.hpp&quot;</span>
-<a name="l00068"></a>00068 <span class="preprocessor">#include &quot;control/manual_control.hpp&quot;</span>
+<a name="l00068"></a>00068 <span class="preprocessor">#include &quot;manual_control/manual_control.hpp&quot;</span>
 <a name="l00069"></a>00069 <span class="preprocessor">#include &quot;control/stabilisation.hpp&quot;</span>
 <a name="l00070"></a>00070 
-<a name="l00071"></a>00071 <span class="preprocessor">#include &quot;control/vector_field_waypoint.hpp&quot;</span>
+<a name="l00071"></a>00071 <span class="preprocessor">#include &quot;navigation/vector_field_waypoint.hpp&quot;</span>
 <a name="l00072"></a>00072 
 <a name="l00073"></a>00073 <span class="preprocessor">#include &quot;drivers/battery.hpp&quot;</span>
 <a name="l00074"></a>00074 <span class="preprocessor">#include &quot;drivers/gps.hpp&quot;</span>
@@ -179,7 +179,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00096"></a>00096 <span class="preprocessor">#include &quot;sensing/ahrs_ekf.hpp&quot;</span>
 <a name="l00097"></a>00097 <span class="preprocessor">#include &quot;sensing/altitude_estimation.hpp&quot;</span>
 <a name="l00098"></a>00098 <span class="preprocessor">#include &quot;sensing/imu.hpp&quot;</span>
-<a name="l00099"></a>00099 <span class="preprocessor">#include &quot;sensing/position_estimation.hpp&quot;</span>
+<a name="l00099"></a>00099 <span class="preprocessor">#include &quot;sensing/ins_complementary.hpp&quot;</span>
 <a name="l00100"></a>00100 <span class="preprocessor">#include &quot;sensing/ins_kf.hpp&quot;</span>
 <a name="l00101"></a>00101 <span class="preprocessor">#include &quot;sensing/qfilter.hpp&quot;</span>
 <a name="l00102"></a>00102 <span class="preprocessor">#include &quot;sensing/qfilter_default_config.hpp&quot;</span>
@@ -217,7 +217,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00140"></a>00140         <a class="code" href="classMission__handler__landing.html">Mission_handler_landing&lt;Navigation_controller_I, XYposition_Zvel_controller_I&gt;::conf_t</a> mission_handler_landing_config;
 <a name="l00141"></a>00141         <a class="code" href="structqfilter__conf__t.html" title="The structure for configuring the quaternion-based attitude estimation.">qfilter_conf_t</a> qfilter_config;
 <a name="l00142"></a>00142         <a class="code" href="structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure.">Ahrs_ekf::conf_t</a> ahrs_ekf_config;
-<a name="l00143"></a>00143         <a class="code" href="structPosition__estimation_1_1conf__t.html" title="The position estimator structure.">Position_estimation::conf_t</a> position_estimation_config;
+<a name="l00143"></a>00143         <a class="code" href="structINS__complementary_1_1conf__t.html" title="Configuration structure.">INS_complementary::conf_t</a> ins_complementary_config;
 <a name="l00144"></a>00144         <a class="code" href="structManual__control_1_1conf__t.html" title="Configuration for manual control.">Manual_control::conf_t</a> manual_control_config;
 <a name="l00145"></a>00145         <a class="code" href="structremote__conf__t.html" title="The configuration structure of the remote.">remote_conf_t</a> remote_config;
 <a name="l00146"></a>00146         Cascade_controller::conf_t cascade_controller_config;
@@ -326,7 +326,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00276"></a>00276     <a class="code" href="classAhrs__ekf.html" title="The AHRS EKF class.">Ahrs_ekf</a> ahrs_ekf;
 <a name="l00277"></a>00277 
 <a name="l00278"></a><a class="code" href="classLEQuad.html#a56b5a27d205e133bde7e041d2bd832f0">00278</a>     <a class="code" href="classINS.html">INS</a>*                <a class="code" href="classLEQuad.html#a56b5a27d205e133bde7e041d2bd832f0" title="Alias for the position filter in use.">ins_</a>;                                   
-<a name="l00279"></a><a class="code" href="classLEQuad.html#af64cf6fcf6709d160a5525decb0ae56e">00279</a>     <a class="code" href="classPosition__estimation.html">Position_estimation</a> <a class="code" href="classLEQuad.html#af64cf6fcf6709d160a5525decb0ae56e" title="The position estimaton structure.">position_estimation</a>;                    
+<a name="l00279"></a><a class="code" href="classLEQuad.html#ad46ff61277db8cb2ba2856d51e9ef3ee">00279</a>     <a class="code" href="classINS__complementary.html">INS_complementary</a>   <a class="code" href="classLEQuad.html#ad46ff61277db8cb2ba2856d51e9ef3ee" title="The position estimaton structure.">ins_complementary</a>;                      
 <a name="l00280"></a><a class="code" href="classLEQuad.html#a78a9275df54fdd35b8a4ed093943c933">00280</a>     <a class="code" href="classINS__kf.html" title="Altitude estimator.">INS_kf</a>              <a class="code" href="classLEQuad.html#a78a9275df54fdd35b8a4ed093943c933" title="The Kalman INS structure, used for position estimation.">ins_kf</a>;                                 
 <a name="l00281"></a>00281 
 <a name="l00282"></a><a class="code" href="classLEQuad.html#aab475348ea9a0b5902650881129a1d19">00282</a>     <a class="code" href="structcontrol__command__t.html" title="The control command typedef.">control_command_t</a> <a class="code" href="classLEQuad.html#aab475348ea9a0b5902650881129a1d19" title="The control structure used for rate and attitude modes.">controls</a>;                                 
@@ -390,7 +390,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00340"></a>00340 
 <a name="l00341"></a>00341     conf.ahrs_ekf_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Ahrs_ekf::default_config</a>();
 <a name="l00342"></a>00342 
-<a name="l00343"></a>00343     conf.position_estimation_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Position_estimation::default_config</a>();
+<a name="l00343"></a>00343     conf.ins_complementary_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">INS_complementary::default_config</a>();
 <a name="l00344"></a>00344 
 <a name="l00345"></a>00345     conf.manual_control_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Manual_control::default_config</a>();
 <a name="l00346"></a>00346 
@@ -417,13 +417,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00367"></a>00367     <span class="comment">//adapt gain for the drone dome</span>
 <a name="l00368"></a>00368     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 3; ++i)
 <a name="l00369"></a>00369     {
-<a name="l00370"></a>00370         conf.position_estimation_config.<a class="code" href="structPosition__estimation_1_1conf__t.html#a7de2808c1c75952e93c4caadb52251ab" title="Gain to correct the position estimation from the GPS.">kp_pos_gps</a>[i] = 100.0f;
-<a name="l00371"></a>00371         conf.position_estimation_config.<a class="code" href="structPosition__estimation_1_1conf__t.html#abc56da847d44a054c250019219920a88" title="Gain to correct the velocity estimation from the GPS.">kp_vel_gps</a>[i] = 100.0f;
+<a name="l00370"></a>00370         conf.ins_complementary_config.<a class="code" href="structINS__complementary_1_1conf__t.html#aa39accf5d07f76c993602f63ee64cb93" title="Gain to correct the position estimation from the GPS.">kp_gps_pos</a>[i] = 100.0f;
+<a name="l00371"></a>00371         conf.ins_complementary_config.<a class="code" href="structINS__complementary_1_1conf__t.html#a45ebc6cb84d6c5f1a6645a1f7d146466" title="Gain to correct the velocity estimation from the GPS.">kp_gps_vel</a>[i] = 100.0f;
 <a name="l00372"></a>00372     }
-<a name="l00373"></a>00373     conf.position_estimation_config.<a class="code" href="structPosition__estimation_1_1conf__t.html#ae7501898524b314da28cf60734a5d107" title="Gain to correct the Z position estimation from the barometer.">kp_alt_baro</a> = 0.0f;
-<a name="l00374"></a>00374     conf.position_estimation_config.<a class="code" href="structPosition__estimation_1_1conf__t.html#a09b8a5184bee8122c2073d3b18d2d85f" title="Gain to correct the Z velocity estimation from the barometer.">kp_vel_baro</a> = 0.0f;
-<a name="l00375"></a>00375     conf.position_estimation_config.<a class="code" href="structPosition__estimation_1_1conf__t.html#a97c014556c163a8df4b81f1c4ea7e5ca" title="Gain to correct the Z position estimation from the sonar.">kp_alt_sonar</a> = 0.0f;
-<a name="l00376"></a>00376     conf.position_estimation_config.<a class="code" href="structPosition__estimation_1_1conf__t.html#a8a7c4d5f4b3d1faa42a96e3ecfa502c1" title="Gain to correct the Z velocity estimation from the sonar.">kp_vel_sonar</a> = 0.0f;
+<a name="l00373"></a>00373     conf.ins_complementary_config.<a class="code" href="structINS__complementary_1_1conf__t.html#af1d1c5e718608278483001dca6ff8194" title="Gain to correct the Z position estimation from the barometer.">kp_baro_alt</a> = 0.0f;
+<a name="l00374"></a>00374     conf.ins_complementary_config.<a class="code" href="structINS__complementary_1_1conf__t.html#a65446109c4fb64828fc31cbcf910d6a5" title="Gain to correct the Z velocity estimation from the barometer.">kp_baro_vel</a> = 0.0f;
+<a name="l00375"></a>00375     conf.ins_complementary_config.<a class="code" href="structINS__complementary_1_1conf__t.html#a71d1797760501b428e7544823d83e9ce" title="Gain to correct the Z position estimation from the sonar.">kp_sonar_alt</a> = 0.0f;
+<a name="l00376"></a>00376     conf.ins_complementary_config.<a class="code" href="structINS__complementary_1_1conf__t.html#af84020cb925dac97b10a9d60d8a845be" title="Gain to correct the Z velocity estimation from the sonar.">kp_sonar_vel</a> = 0.0f;
 <a name="l00377"></a>00377 
 <a name="l00378"></a>00378     conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
 <a name="l00379"></a>00379 
@@ -453,7 +453,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Oct 20 2016 16:25:07 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 24 2016 08:56:43 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

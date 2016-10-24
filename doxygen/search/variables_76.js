@@ -5,6 +5,7 @@ var searchData=
   ['validity',['validity',['../structdate__time__t.html#a99bbc0ec72327b004d7eea070ae1c14b',1,'date_time_t']]],
   ['vehicle_5fdrag',['vehicle_drag',['../structdynamic__model__quad__diag__conf__t.html#aca09aa9cb9752ebd5a00355586ec73fe',1,'dynamic_model_quad_diag_conf_t']]],
   ['vel',['vel',['../structIVelocity__yaw__controller_1_1vel__yaw__command__t.html#a65f2a4d3fa99b49e57775b423ae9e5af',1,'IVelocity_yaw_controller::vel_yaw_command_t::vel()'],['../structVelocity__controller__I_1_1vel__command__t.html#a6891fc05a358a42d24227d5404dfd71c',1,'Velocity_controller_I::vel_command_t::vel()']]],
+  ['vel_5f',['vel_',['../classINS__complementary.html#af7fb50518c901bc0d42db2e06d904d75',1,'INS_complementary']]],
   ['vel_5fz',['vel_z',['../structXYposition__Zvel__controller__I_1_1xypos__zvel__command__t.html#aa6bff4570a633fbe1c37b3703f9751e4',1,'XYposition_Zvel_controller_I::xypos_zvel_command_t']]],
   ['velocity',['velocity',['../structcommand__t.html#afa35a9fcb7d7ff418fc77466429e17a4',1,'command_t']]],
   ['velocity_5fcommand',['velocity_command',['../structvector__field__waypoint__t.html#aad0f05784741fd6318d77fe2f4ef66d2',1,'vector_field_waypoint_t']]],

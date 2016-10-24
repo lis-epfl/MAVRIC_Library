@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['rate_5fcommand_5ft',['rate_command_t',['../structrate__command__t.html',1,'']]],
   ['rate_5fcommand_5ft',['rate_command_t',['../structRate__controller__I_1_1rate__command__t.html',1,'Rate_controller_I']]],
+  ['rate_5fcommand_5ft',['rate_command_t',['../structrate__command__t.html',1,'']]],
   ['rate_5fcontroller',['Rate_controller',['../classRate__controller.html',1,'']]],
   ['rate_5fcontroller_3c_20servos_5fmix_5fquadcopter_5fdiag_20_3e',['Rate_controller< Servos_mix_quadcopter_diag >',['../classRate__controller.html',1,'']]],
   ['rate_5fcontroller_5fi',['Rate_controller_I',['../classRate__controller__I.html',1,'']]],

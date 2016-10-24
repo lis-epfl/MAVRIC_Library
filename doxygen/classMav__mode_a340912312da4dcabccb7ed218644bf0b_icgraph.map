@@ -1,4 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classState.html#ae26f0aab78aa060c68533bf3a05476a9" title="returns whether in guided mode" alt="" coords="227,5,341,35"/>
-<area shape="rect" id="node5" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="203,59,365,88"/>
+<area shape="rect" id="node3" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="203,5,365,35"/>
+<area shape="rect" id="node5" href="$classState.html#ae26f0aab78aa060c68533bf3a05476a9" title="returns whether in guided mode" alt="" coords="227,59,341,88"/>
 </map>
