@@ -52,7 +52,7 @@
 #include "mission/navigation.hpp"
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
-#include "communication/remote.hpp"
+#include "manual_control/remote.hpp"
 
 extern "C"
 {

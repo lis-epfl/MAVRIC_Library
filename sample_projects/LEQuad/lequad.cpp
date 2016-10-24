@@ -42,7 +42,7 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 
 #include "communication/data_logging_telemetry.hpp"
-#include "communication/state_telemetry.hpp"
+#include "status/state_telemetry.hpp"
 
 #include "drivers/barometer_telemetry.hpp"
 #include "drivers/gps_telemetry.hpp"
@@ -53,7 +53,7 @@
 #include "sensing/ins_telemetry.hpp"
 #include "sensing/ahrs_telemetry.hpp"
 
-#include "control/manual_control_telemetry.hpp"
+#include "manual_control/manual_control_telemetry.hpp"
 
 #include "runtime/scheduler_telemetry.hpp"
 

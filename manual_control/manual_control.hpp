@@ -43,9 +43,9 @@
 #ifndef MANUAL_CONTROL_HPP_
 #define MANUAL_CONTROL_HPP_
 
-#include "communication/remote.hpp"
-#include "control/joystick.hpp"
-#include "communication/state.hpp"
+#include "manual_control/remote.hpp"
+#include "manual_control/joystick.hpp"
+#include "status/state.hpp"
 #include "control/stabilisation.hpp"
 
 

@@ -43,7 +43,7 @@
 #ifndef REMOTE_DEFAULT_CONFIG_HPP_
 #define REMOTE_DEFAULT_CONFIG_HPP_
 
-#include "communication/remote.hpp"
+#include "manual_control/remote.hpp"
 
 static inline remote_conf_t remote_default_config()
 {

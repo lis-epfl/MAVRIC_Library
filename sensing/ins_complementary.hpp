@@ -46,7 +46,7 @@
 
 #include <cstdbool>
 
-#include "communication/state.hpp"
+#include "status/state.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"

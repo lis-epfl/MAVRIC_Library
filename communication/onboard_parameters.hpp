@@ -47,7 +47,7 @@
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/state.hpp"
+#include "status/state.hpp"
 #include "hal/common/file.hpp"
 
 

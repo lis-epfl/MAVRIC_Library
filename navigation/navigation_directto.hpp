@@ -45,7 +45,7 @@
 #ifndef NAVIGATION_DIRECTTO_HPP_
 #define NAVIGATION_DIRECTTO_HPP_
 
-#include "control/navigation_controller_i.hpp"
+#include "navigation/navigation_controller_i.hpp"
 #include "control/position_controller.hpp"
 
 template<class TPosition_controller>
@@ -184,7 +184,7 @@ typename Navigation_directto<TPosition_controller>::conf_t Navigation_directto<T
 {
     conf_t conf;
     conf.min_cruise_dist_sqr                        = 4.0f;
-    
+
     /* config of the cruise pid controller */
     conf.cruise_pid_config.p_gain                   = 0.7f;
     conf.cruise_pid_config.clip_min                 = 0.0f;
@@ -213,6 +213,6 @@ typename Navigation_directto<TPosition_controller>::conf_t Navigation_directto<T
 };
 
 
-#include "control/navigation_directto.hxx"
+#include "navigation/navigation_directto.hxx"
 
 #endif /* NAVIGATION_DIRECTTO_HPP_ */

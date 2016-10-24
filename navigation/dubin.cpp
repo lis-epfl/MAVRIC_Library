@@ -39,7 +39,7 @@
  *
  ******************************************************************************/
 
-#include "control/dubin.hpp"
+#include "navigation/dubin.hpp"
 #include "util/print_util.hpp"
 #include "util/quick_trig.hpp"
 
