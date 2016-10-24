@@ -53,8 +53,6 @@
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/onboard_parameters.hpp"
-#include "status/state.hpp"
-#include "status/state_machine.hpp"
 #include "manual_control/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
@@ -103,6 +101,11 @@
 #include "sensing/qfilter_default_config.hpp"
 #include "sensing/ahrs_ekf_mocap.hpp"
 
+#include "status/geofence.hpp"
+#include "status/geofence_cylinder.hpp"
+#include "status/state.hpp"
+#include "status/state_machine.hpp"
+
 #include "util/coord_conventions.hpp"
 #include "util/print_util.hpp"
 
@@ -145,6 +148,8 @@ public:
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
         Cascade_controller::conf_t cascade_controller_config;
+        Geofence_cylinder::conf_t safety_geofence_config;
+        Geofence_cylinder::conf_t emergency_geofence_config;
     };
 
     /**
@@ -299,7 +304,8 @@ protected:
     Mission_handler_critical_navigating<Navigation_controller_I> critical_navigating_handler;
     Mission_planner mission_planner;                            ///< Controls the mission plan
 
-
+    Geofence_cylinder safety_geofence_;                         ///< Geofence
+    Geofence_cylinder emergency_geofence_;                      ///< Geofence
 
     State_machine state_machine;                                ///< The structure for the state machine
 
@@ -351,6 +357,11 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.remote_config = remote_default_config();
 
     conf.cascade_controller_config = Cascade_controller::default_config();
+
+    conf.safety_geofence_config     = Geofence_cylinder::default_config();
+    conf.emergency_geofence_config  = Geofence_cylinder::default_config();
+    conf.emergency_geofence_config.radius = 1000.0f;
+    conf.emergency_geofence_config.height = 500.0f;
 
     /* Mavlink communication config */
     conf.mavlink_communication_config                        = Mavlink_communication::default_config(sysid);

@@ -68,12 +68,8 @@ State::State(Mavlink_stream& mavlink_stream, Battery& battery, State::conf_t con
     sensor_enabled = config.sensor_enabled;
     sensor_health = config.sensor_health;
 
-    fence_1_xy = config.fence_1_xy;
-    fence_1_z = config.fence_1_z;
-    fence_2_xy = config.fence_2_xy;
-    fence_2_z = config.fence_2_z;
-    out_of_fence_1 = false;
-    out_of_fence_2 = false;
+    out_of_safety_geofence = false;
+    out_of_emergency_geofence = false;
 
     reset_position = false;
 

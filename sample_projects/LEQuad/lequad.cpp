@@ -125,8 +125,10 @@ LEQuad::LEQuad(Imu& imu,
     takeoff_handler(cascade_controller_, *ins_, state),
     critical_landing_handler(cascade_controller_, cascade_controller_, *ins_, state),
     critical_navigating_handler(cascade_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
-    mission_planner(*ins_, ahrs, state, manual_control, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
-    state_machine(state, *ins_, imu, ahrs, manual_control, state_display_),
+    mission_planner(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
+    safety_geofence_(config.safety_geofence_config),
+    emergency_geofence_(config.emergency_geofence_config),
+    state_machine(state, *ins_, imu, ahrs, manual_control, safety_geofence_, emergency_geofence_, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(communication.sysid()),
@@ -223,7 +225,7 @@ bool LEQuad::init_state(void)
     ret &= data_logging_stat.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
 
     // Task
-    ret &= scheduler.add_task(200000, &State_machine::update, &state_machine);
+    ret &= scheduler.add_task(200000, &State_machine::update_task, &state_machine);
     // Leds blinks at 1, 3 and 6Hz, then smallest half period is 83333us
     ret &= scheduler.add_task( 83333, &task_state_display_update, &state_display_);
 
