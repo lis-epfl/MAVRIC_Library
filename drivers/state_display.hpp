@@ -42,7 +42,7 @@
 #ifndef STATE_DISPLAY_HPP_
 #define STATE_DISPLAY_HPP_
 
-#include "communication/mav_modes.hpp"
+#include "status/mav_modes.hpp"
 
 /**
  * \brief   Interface class for state display

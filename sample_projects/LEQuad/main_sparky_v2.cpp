@@ -40,7 +40,7 @@
 
 #include "boards/sparky_v2.hpp"
 
-#include "control/manual_control.hpp"
+#include "manual_control/manual_control.hpp"
 
 #include "drivers/gps_ublox.hpp"
 #include "drivers/hmc5883l.hpp"

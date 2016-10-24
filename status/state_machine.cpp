@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#include "communication/state_machine.hpp"
-#include "communication/state.hpp"
+#include "status/state_machine.hpp"
+#include "status/state.hpp"
 #include "drivers/spektrum_satellite.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.hpp"

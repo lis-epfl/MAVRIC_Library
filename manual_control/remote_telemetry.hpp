@@ -30,65 +30,54 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file vector_field_waypoint.hpp
+ * \file remote_telemetry.hpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Nicolas Dousse
  *
- * \brief Vector field navigation using repulsors and attractors set through GPS waypoints
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the remote controller
  *
  ******************************************************************************/
 
 
-#ifndef VECTOR_FIELD_WAYPOINT_HPP_
-#define VECTOR_FIELD_WAYPOINT_HPP_
+#ifndef REMOTE_TELEMETRY_HPP_
+#define REMOTE_TELEMETRY_HPP_
 
-#include "communication/mavlink_waypoint_handler.hpp"
-#include "mission/waypoint.hpp"
-#include "sensing/position_estimation.hpp"
+#include "communication/mavlink_stream.hpp"
+#include "communication/mavlink_message_handler.hpp"
+#include "manual_control/remote.hpp"
 
-extern "C"
-{
-#include "control/control_command.h"
-}
-
-/**
- * \brief Vector field navigation
- */
-typedef struct
-{
-    const Mavlink_waypoint_handler*   waypoint_handler;         ///< Waypoint list (input)
-    const INS*                        ins;                      ///< Estimated position and speed (input)
-    velocity_command_t*               velocity_command;         ///< Velocity command (output)
-} vector_field_waypoint_t;
 
 
 /**
- * \brief Attitude controller configuration
- */
-typedef struct
-{
-} vector_field_waypoint_conf_t;
-
-
-/**
- * \brief                       Initialises the attitude controller structure
+ * \brief   Initialize the MAVLink communication module for the remote
  *
- * \param   vector_field        Pointer to data structure
- * \param   waypoint_handler    Pointer to waypoint list (input)
- * \param   ins                 Pointer to the Inertial Navigation System (input)
- * \param   velocity_command    Pointer to velocity command (output)
- * \param   config              Pointer to configuration
+ * \param   remote                  The pointer to the remote structure
+ * \param   mavlink_handler         The pointer to the MAVLink message handler
+ *
+ * \return  True if the init succeed, false otherwise
  */
-bool vector_field_waypoint_init(vector_field_waypoint_t* vector_field, Mavlink_waypoint_handler* waypoint_handler, const INS* ins, velocity_command_t* velocity_command, const vector_field_waypoint_conf_t* config);
+bool remote_telemetry_init(remote_t* remote, Mavlink_message_handler* mavlink_handler);
 
 
 /**
- * \brief                   Main update function
+ * \brief   Sends the raw remote values via MAVLink
  *
- * \param   vector_field    Pointer to data structure
+ * \param   remote                  The pointer to the remote structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
  */
-bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field);
+void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* VECTOR_FIELD_WAYPOINT_HPP_ */
+/**
+ * \brief   Sends the scaled remote values via MAVLink
+ *
+ * \param   remote                  The pointer to the remote structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
+#endif /* REMOTE_TELEMETRY_HPP_ */

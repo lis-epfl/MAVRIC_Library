@@ -43,7 +43,7 @@
 #ifndef MISSION_HANDLER_TAKEOFF__
 #define MISSION_HANDLER_TAKEOFF__
 
-#include "communication/state.hpp"
+#include "status/state.hpp"
 #include "mission/mission_handler.hpp"
 
 /*

@@ -40,7 +40,7 @@
  *
  ******************************************************************************/
 
-#include "communication/remote_telemetry.hpp"
+#include "manual_control/remote_telemetry.hpp"
 #include "drivers/satellite.hpp"
 #include "hal/common/time_keeper.hpp"
 

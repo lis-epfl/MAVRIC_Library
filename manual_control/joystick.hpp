@@ -43,7 +43,7 @@
 #ifndef JOYSTICK_HPP_
 #define JOYSTICK_HPP_
 
-#include "communication/state.hpp"
+#include "status/state.hpp"
 #include "control/stabilisation.hpp"
 #include "control/control_command.h"
 #include "control/attitude_controller_i.hpp"

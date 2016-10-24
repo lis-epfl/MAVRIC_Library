@@ -44,9 +44,9 @@
 #ifndef STATE_MACHINE_HPP_
 #define STATE_MACHINE_HPP_
 
-#include "communication/state.hpp"
-#include "control/manual_control.hpp"
-#include "communication/remote.hpp"
+#include "status/state.hpp"
+#include "manual_control/manual_control.hpp"
+#include "manual_control/remote.hpp"
 #include "drivers/state_display.hpp"
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
