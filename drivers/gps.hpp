@@ -52,12 +52,12 @@
 
 typedef enum
 {
-    NO_GPS = 0,
-    NO_FIX = 1,
-    FIX_2D = 2,
-    FIX_3D = 3,
-    DGPS = 4,
-    RTK = 5,
+    FIX_ERR  = 0,
+    FIX_NONE = 1,
+    FIX_2D   = 2,
+    FIX_3D   = 3,
+    FIX_DGPS = 4,
+    FIX_RTK  = 5,
 } gps_fix_t;
 
 /**

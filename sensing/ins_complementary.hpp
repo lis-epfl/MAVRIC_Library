@@ -70,8 +70,18 @@ public:
     {
         global_position_t origin;   ///<    Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
 
-        float kp_gps_pos[3];                    ///< Gain to correct the position estimation from the GPS
-        float kp_gps_vel[3];                    ///< Gain to correct the velocity estimation from the GPS
+        float kp_gps_XY_pos;                    ///< Gain to correct the XY position estimation from the GPS
+        float kp_gps_Z_pos;                     ///< Gain to correct the Z position estimation from the GPS
+        float kp_gps_XY_vel;                    ///< Gain to correct the XY velocity estimation from the GPS
+        float kp_gps_Z_vel;                     ///< Gain to correct the Z velocity estimation from the GPS
+        float kp_gps_XY_pos_dgps;               ///< Gain to correct the XY position estimation from the GPS when it has DPGS fix
+        float kp_gps_Z_pos_dgps;                ///< Gain to correct the Z position estimation from the GPS when it has DPGS fix
+        float kp_gps_XY_vel_dgps;               ///< Gain to correct the XY velocity estimation from the GPS when it has DPGS fix
+        float kp_gps_Z_vel_dgps;                ///< Gain to correct the Z velocity estimation from the GPS when it has DPGS fix
+        float kp_gps_XY_pos_rtk;                ///< Gain to correct the XY position estimation from the GPS when it has RTK fix
+        float kp_gps_Z_pos_rtk;                 ///< Gain to correct the Z position estimation from the GPS when it has RTK fix
+        float kp_gps_XY_vel_rtk;                ///< Gain to correct the XY velocity estimation from the GPS when it has RTK fix
+        float kp_gps_Z_vel_rtk;                 ///< Gain to correct the Z velocity estimation from the GPS when it has RTK fix
         float timeout_gps_us;                   ///< Time after witch a measure stops being used
         uint32_t use_gps;                       ///< Boolean that indicates if the sensor must be used
 
@@ -288,25 +298,40 @@ INS_complementary::conf_t INS_complementary::default_config()
     // default origin location (EFPL Esplanade)
     conf.origin        = ORIGIN_EPFL;
 
-    conf.kp_gps_pos[X]  = 2.0f;
-    conf.kp_gps_pos[Y]  = 2.0f;
-    conf.kp_gps_pos[Z]  = 1.0f;
-    conf.kp_gps_vel[X]  = 2.0f;
-    conf.kp_gps_vel[Y]  = 2.0f;
-    conf.kp_gps_vel[Z]  = 1.0f;
+    // GPS with 3d fix
+    conf.kp_gps_XY_pos  = 2.0f;
+    conf.kp_gps_Z_pos   = 1.0f;
+    conf.kp_gps_XY_vel  = 2.0f;
+    conf.kp_gps_Z_vel   = 1.0f;
     conf.timeout_gps_us = 1e6f;
     conf.use_gps        = 1;
 
+    // GPS with DGPS fix
+    conf.kp_gps_XY_pos  = 20.0f;
+    conf.kp_gps_Z_pos   = 10.0f;
+    conf.kp_gps_XY_vel  = 20.0f;
+    conf.kp_gps_Z_vel   = 10.0f;
+
+    // GPS with RTK fix
+    conf.kp_gps_XY_pos  = 200.0f;
+    conf.kp_gps_Z_pos   = 100.0f;
+    conf.kp_gps_XY_vel  = 200.0f;
+    conf.kp_gps_Z_vel   = 100.0f;
+
+
+    // Barometer
     conf.kp_baro_alt     = 2.0f;
     conf.kp_baro_vel     = 0.5f;
     conf.timeout_baro_us = 1e6f;
     conf.use_baro        = 1;
 
+    // Sonar
     conf.kp_sonar_alt       = 5.0f;
     conf.kp_sonar_vel       = 3.0f;
     conf.timeout_sonar_us   = 1e6f;
     conf.use_sonar          = 1;
 
+    // Optic flow
     conf.kp_flow_vel     = 4.0f;
     conf.timeout_flow_us = 1e6f;
     conf.use_flow        = 1;

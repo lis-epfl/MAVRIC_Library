@@ -2192,7 +2192,7 @@ static void gps_ublox_init(gps_t* gps, Serial* serial)
 
     gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
 
-    gps->status = NO_GPS;
+    gps->status = FIX_ERR;
     gps->healthy = false;
 
     gps->configure_gps = false;
@@ -2939,7 +2939,7 @@ static void gps_ublox_update(gps_t* gps)
     {
         if ((tnow - gps->idle_timer) > gps->idle_timeout)
         {
-            gps->status = NO_FIX;
+            gps->status = FIX_NONE;
 
             gps->healthy = false;
 
@@ -3992,11 +3992,11 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                 switch(gps_status->fix_type)
                 {
                     case GPS_FIX_TYPE_NOFIX :
-                        gps->status = NO_FIX;
+                        gps->status = FIX_NONE;
                         break;
 
                     case GPS_FIX_TYPE_DEADRECK :
-                        gps->status = NO_FIX;
+                        gps->status = FIX_NONE;
                         break;
 
                     case GPS_FIX_TYPE_2DFIX:
@@ -4009,7 +4009,7 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                         {
                             if (gps_status->flags & 0x02)
                             {
-                                gps->status = DGPS;
+                                gps->status = FIX_DGPS;
                             }
                             else
                             {
@@ -4019,12 +4019,12 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                         else
                         {
                             // DOP is not sufficient to be used
-                            gps->status = NO_FIX;
+                            gps->status = FIX_NONE;
                         }
                         break;
 
                     case GPS_FIX_TYPE_TIMEONLY:
-                        gps->status = NO_FIX;
+                        gps->status = FIX_NONE;
                     break;
                 }
 
@@ -4064,11 +4064,11 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                 switch(gps_solution->fix_type)
                 {
                     case GPS_FIX_TYPE_NOFIX :
-                        gps->status = NO_FIX;
+                        gps->status = FIX_NONE;
                         break;
 
                     case GPS_FIX_TYPE_DEADRECK :
-                        gps->status = NO_FIX;
+                        gps->status = FIX_NONE;
                         break;
 
                     case GPS_FIX_TYPE_2DFIX:
@@ -4081,7 +4081,7 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                         {
                             if (gps_solution->fix_status & 0x02)
                             {
-                                gps->status = DGPS;
+                                gps->status = FIX_DGPS;
                             }
                             else
                             {
@@ -4091,12 +4091,12 @@ static bool gps_ublox_process_data(gps_t* gps, uint8_t ubx_class, uint8_t msg_id
                         else
                         {
                             // DOP is not sufficient to be used
-                            gps->status = NO_FIX;
+                            gps->status = FIX_NONE;
                         }
                         break;
 
                     case GPS_FIX_TYPE_TIMEONLY:
-                        gps->status = NO_FIX;
+                        gps->status = FIX_NONE;
                     break;
                 }
 
@@ -5303,7 +5303,7 @@ Gps_ublox::Gps_ublox(Serial& serial):
     heading_(0.0f),
     heading_accuracy_(0.0f),
     num_sats_(0),
-    fix_(NO_FIX),
+    fix_(FIX_NONE),
     healthy_(false)
 {
     gps_ublox_init(&gps, &serial_);
