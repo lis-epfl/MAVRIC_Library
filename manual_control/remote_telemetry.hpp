@@ -30,52 +30,54 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_telemetry.hpp
+ * \file remote_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *
  * \brief This module takes care of sending periodic telemetric messages for
- * the state
+ * the remote controller
  *
  ******************************************************************************/
 
 
-#ifndef STATE_TELEMETRY_HPP_
-#define STATE_TELEMETRY_HPP_
+#ifndef REMOTE_TELEMETRY_HPP_
+#define REMOTE_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/state_machine.hpp"
+#include "manual_control/remote.hpp"
+
+
 
 /**
- * \brief   Initialise the state telemetry module
+ * \brief   Initialize the MAVLink communication module for the remote
  *
- * \param   state       The pointer to the state structure
- * \param   mavlink_stream      The pointer to the MAVLink stream structure
- * \param   message_handler     The pointer to the message handler
+ * \param   remote                  The pointer to the remote structure
+ * \param   mavlink_handler         The pointer to the MAVLink message handler
  *
  * \return  True if the init succeed, false otherwise
  */
-bool state_telemetry_init(State_machine* state_machine, Mavlink_message_handler* message_handler);
-
-/**
- * \brief   Function to send the MAVLink heartbeat message
- *
- * \param   state       The pointer to the state structure
- * \param   mavlink_stream          The pointer to the MAVLink stream structure
- * \param   msg                     The pointer to the MAVLink message
- */
-void state_telemetry_send_heartbeat(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+bool remote_telemetry_init(remote_t* remote, Mavlink_message_handler* mavlink_handler);
 
 
 /**
- * \brief   Function to send the MAVLink system status message, project specific message!
+ * \brief   Sends the raw remote values via MAVLink
  *
- * \param   state       The pointer to the state structure
+ * \param   remote                  The pointer to the remote structure
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void state_telemetry_send_status(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* STATE_TELEMETRY_HPP_ */
+
+/**
+ * \brief   Sends the scaled remote values via MAVLink
+ *
+ * \param   remote                  The pointer to the remote structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
+#endif /* REMOTE_TELEMETRY_HPP_ */

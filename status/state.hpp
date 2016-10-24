@@ -46,10 +46,10 @@
 #include "cstdint"
 #include <cstdbool>
 
-#include "communication/mav_modes.hpp"
+#include "status/mav_modes.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "drivers/battery.hpp"
-#include "mavlink_message_handler.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 
 /**

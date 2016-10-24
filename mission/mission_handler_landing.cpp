@@ -41,7 +41,7 @@
 
 
 #include "mission/mission_handler_landing.hpp"
-#include "control/navigation_controller_i.hpp"
+#include "navigation/navigation_controller_i.hpp"
 #include "control/xyposition_zvel_controller_i.hpp"
 
 

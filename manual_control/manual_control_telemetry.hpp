@@ -30,54 +30,43 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file remote_telemetry.hpp
+ * \file manual_control_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *
  * \brief This module takes care of sending periodic telemetric messages for
- * the remote controller
+ * the state
  *
  ******************************************************************************/
 
 
-#ifndef REMOTE_TELEMETRY_HPP_
-#define REMOTE_TELEMETRY_HPP_
+#ifndef MANUAL_CONTROL_TELEMETRY_HPP_
+#define MANUAL_CONTROL_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/remote.hpp"
-
-
+#include "manual_control/manual_control.hpp"
 
 /**
- * \brief   Initialize the MAVLink communication module for the remote
+ * \brief   Initialise the manual_control telemetry module
  *
- * \param   remote                  The pointer to the remote structure
- * \param   mavlink_handler         The pointer to the MAVLink message handler
+ * \param   manual_control      The pointer to the manual_control structure
+ * \param   mavlink_stream      The pointer to the MAVLink stream structure
+ * \param   message_handler     The pointer to the message handler
  *
  * \return  True if the init succeed, false otherwise
  */
-bool remote_telemetry_init(remote_t* remote, Mavlink_message_handler* mavlink_handler);
+bool manual_control_telemetry_init(Manual_control* manual_control, Mavlink_message_handler* message_handler);
 
 
 /**
- * \brief   Sends the raw remote values via MAVLink
+ * \brief   Sends the manual control values via MAVLink
  *
- * \param   remote                  The pointer to the remote structure
+ * \param   manual_control          The pointer to the manual control structure
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void remote_telemetry_send_raw(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void manual_control_telemetry_send(const Manual_control* manual_control, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-
-/**
- * \brief   Sends the scaled remote values via MAVLink
- *
- * \param   remote                  The pointer to the remote structure
- * \param   mavlink_stream          The pointer to the MAVLink stream structure
- * \param   msg                     The pointer to the MAVLink message
- */
-void remote_telemetry_send_scaled(const remote_t* remote, Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
-
-#endif /* REMOTE_TELEMETRY_HPP_ */
+#endif /* MANUAL_CONTROL_TELEMETRY_HPP_ */

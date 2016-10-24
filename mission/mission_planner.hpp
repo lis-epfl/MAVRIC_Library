@@ -48,11 +48,11 @@
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "sensing/ins.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/state.hpp"
+#include "status/state.hpp"
 #include "sensing/qfilter.hpp"
-#include "control/manual_control.hpp"
+#include "manual_control/manual_control.hpp"
 #include "mission/mission_handler_registry.hpp"
-#include "control/dubin.hpp"
+#include "navigation/dubin.hpp"
 
 class Mission_handler;
 

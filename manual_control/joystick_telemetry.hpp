@@ -30,43 +30,42 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control_telemetry.hpp
+ * \file joystick_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *
  * \brief This module takes care of sending periodic telemetric messages for
- * the state
+ * the joystick controller
  *
  ******************************************************************************/
 
-
-#ifndef MANUAL_CONTROL_TELEMETRY_HPP_
-#define MANUAL_CONTROL_TELEMETRY_HPP_
+#ifndef JOYSTICK_TELEMETRY_HPP_
+#define JOYSTICK_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "control/manual_control.hpp"
+#include "manual_control/joystick.hpp"
+
 
 /**
- * \brief   Initialise the manual_control telemetry module
+ * \brief   Initialisation of the joystick telemetry module
  *
- * \param   manual_control      The pointer to the manual_control structure
- * \param   mavlink_stream      The pointer to the MAVLink stream structure
- * \param   message_handler     The pointer to the message handler
+ * \param   joystick            The pointer to the joystick parsing structure
+ * \param   message_handler     The pointer to the MAVLink communication structure
  *
  * \return  True if the init succeed, false otherwise
  */
-bool manual_control_telemetry_init(Manual_control* manual_control, Mavlink_message_handler* message_handler);
-
+bool joystick_telemetry_init(Joystick* joystick, Mavlink_message_handler* message_handler);
 
 /**
- * \brief   Sends the manual control values via MAVLink
+ * \brief   Parse received MAVLink message in structure
  *
- * \param   manual_control          The pointer to the manual control structure
+ * \param   joystick                The pointer to the joystick parsing structure
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void manual_control_telemetry_send(const Manual_control* manual_control, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void joystick_telemetry_send_manual_ctrl_msg(const Joystick* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* MANUAL_CONTROL_TELEMETRY_HPP_ */
+
+#endif /* JOYSTICK_TELEMETRY_HPP_ */

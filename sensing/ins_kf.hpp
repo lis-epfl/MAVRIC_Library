@@ -45,7 +45,7 @@
 #define INS_KF_HPP_
 
 
-#include "communication/state.hpp"
+#include "status/state.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/gps_mocap.hpp"
 #include "drivers/barometer.hpp"

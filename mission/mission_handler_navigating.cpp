@@ -41,7 +41,7 @@
 
 
 #include "mission/mission_handler_navigating.hpp"
-#include "control/navigation_controller_i.hpp"
+#include "navigation/navigation_controller_i.hpp"
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------

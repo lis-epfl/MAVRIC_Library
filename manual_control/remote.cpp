@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "communication/remote.hpp"
+#include "manual_control/remote.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
@@ -520,7 +520,7 @@ Attitude_controller_I::att_command_t remote_get_attitude_command(const remote_t*
     rpy[YAW] = coord_conventions_get_yaw(current_attitude) + 0.5f * remote_get_yaw(remote);
     rpy[ROLL] = remote_get_roll(remote);
     rpy[PITCH] = remote_get_pitch(remote);
-    
+
     Attitude_controller_I::att_command_t command;
     command.att = coord_conventions_quaternion_from_rpy(rpy);
     command.thrust = remote_get_throttle(remote);

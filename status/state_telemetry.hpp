@@ -30,42 +30,52 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_telemetry.hpp
+ * \file state_telemetry.hpp
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *
  * \brief This module takes care of sending periodic telemetric messages for
- * the joystick controller
+ * the state
  *
  ******************************************************************************/
 
-#ifndef JOYSTICK_TELEMETRY_HPP_
-#define JOYSTICK_TELEMETRY_HPP_
+
+#ifndef STATE_TELEMETRY_HPP_
+#define STATE_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "control/joystick.hpp"
-
+#include "status/state_machine.hpp"
 
 /**
- * \brief   Initialisation of the joystick telemetry module
+ * \brief   Initialise the state telemetry module
  *
- * \param   joystick            The pointer to the joystick parsing structure
- * \param   message_handler     The pointer to the MAVLink communication structure
+ * \param   state       The pointer to the state structure
+ * \param   mavlink_stream      The pointer to the MAVLink stream structure
+ * \param   message_handler     The pointer to the message handler
  *
  * \return  True if the init succeed, false otherwise
  */
-bool joystick_telemetry_init(Joystick* joystick, Mavlink_message_handler* message_handler);
+bool state_telemetry_init(State_machine* state_machine, Mavlink_message_handler* message_handler);
 
 /**
- * \brief   Parse received MAVLink message in structure
+ * \brief   Function to send the MAVLink heartbeat message
  *
- * \param   joystick                The pointer to the joystick parsing structure
+ * \param   state       The pointer to the state structure
  * \param   mavlink_stream          The pointer to the MAVLink stream structure
  * \param   msg                     The pointer to the MAVLink message
  */
-void joystick_telemetry_send_manual_ctrl_msg(const Joystick* joystick, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void state_telemetry_send_heartbeat(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* JOYSTICK_TELEMETRY_HPP_ */
+/**
+ * \brief   Function to send the MAVLink system status message, project specific message!
+ *
+ * \param   state       The pointer to the state structure
+ * \param   mavlink_stream          The pointer to the MAVLink stream structure
+ * \param   msg                     The pointer to the MAVLink message
+ */
+void state_telemetry_send_status(const State* state, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+
+#endif /* STATE_TELEMETRY_HPP_ */

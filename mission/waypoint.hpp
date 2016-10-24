@@ -43,7 +43,7 @@
 #ifndef WAYPOINT__
 #define WAYPOINT__
 
-#include "control/dubin.hpp"
+#include "navigation/dubin.hpp"
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
