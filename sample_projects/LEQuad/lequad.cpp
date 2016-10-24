@@ -102,6 +102,7 @@ LEQuad::LEQuad(Imu& imu,
     servo_6(servo_6),
     servo_7(servo_7),
     gps_mocap(communication.handler()),
+    gps_hub(std::array<Gps*,2>{{&gps, &gps_mocap}}),
     ahrs_ekf_mocap(communication.handler(), ahrs_ekf),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(communication.mavlink_stream(), battery, config.state_config),
@@ -271,14 +272,13 @@ bool LEQuad::init_gps(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= gps_telemetry_init(&gps, &communication.handler());
+    ret &= gps_telemetry_init(&gps_hub, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw,  &gps);
-    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS2_RAW,    1000000, &gps_telemetry_send_raw2, &gps_mocap);
+    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw,  &gps_hub);
 
     // Task
-    ret &= scheduler.add_task(100000, &task_gps_update, &gps, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task<Gps>(100000, &task_gps_update, &gps_hub, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -385,21 +385,23 @@ bool LEQuad::init_ins(void)
     // UP telemetry
     ret &= ins_telemetry_init(&ins_complementary, &communication.handler());
     // Parameters
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_pos[0], "POS_K_GPS_X"     );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_pos[1], "POS_K_GPS_Y"     );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_pos[2], "POS_K_GPS_Z"     );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_vel[0], "POS_K_GPS_V_X"   );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_vel[1], "POS_K_GPS_V_Y"   );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_vel[2], "POS_K_GPS_V_Z"   );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_baro_alt,   "POS_K_BARO_Z"    );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_baro_vel,   "POS_K_BARO_V_Z"  );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_alt,  "POS_K_SONAR_Z"   );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_vel,  "POS_K_SONAR_V_Z" );
-    ret &= communication.parameters().add(&ins_complementary.config_.kp_flow_vel,   "POS_K_OF_V_XY"   );
-    ret &= communication.parameters().add(&ins_complementary.config_.use_gps,       "POS_USE_GPS"     );
-    ret &= communication.parameters().add(&ins_complementary.config_.use_baro,      "POS_USE_BARO"    );
-    ret &= communication.parameters().add(&ins_complementary.config_.use_sonar,     "POS_USE_SONAR"   );
-    ret &= communication.parameters().add(&ins_complementary.config_.use_flow,      "POS_USE_FLOW"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_XY_pos,     "POS_K_GPS_XY"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_Z_pos,      "POS_K_GPS_Z"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_XY_vel,     "POS_K_GPS_V_XY"  );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_Z_vel,      "POS_K_GPS_V_Z"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_XY_pos_rtk, "POS_K_RTK_XY"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_Z_pos_rtk,  "POS_K_RTK_Z"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_XY_vel_rtk, "POS_K_RTK_V_XY"  );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_Z_vel_rtk,  "POS_K_RTK_V_Z"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_baro_alt,       "POS_K_BARO_Z"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_baro_vel,       "POS_K_BARO_V_Z"  );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_alt,      "POS_K_SONAR_Z"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_vel,      "POS_K_SONAR_V_Z" );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_flow_vel,       "POS_K_OF_V_XY"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_gps,           "POS_USE_GPS"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_baro,          "POS_USE_BARO"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_sonar,         "POS_USE_SONAR"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_flow,          "POS_USE_FLOW"    );
 
     // -------------------------------------------------------------------------
     // Kalman INS specifi

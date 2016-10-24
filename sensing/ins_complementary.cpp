@@ -234,14 +234,8 @@ void INS_complementary::integration()
 
 void INS_complementary::correction_from_gps_pos(void)
 {
-    float gps_gain     = 0.0f;
-    float pos_error[3] = { 0.0f, 0.0f, 0.0f };
-
     if (gps_.healthy() == true)
     {
-        // Enable gps correction
-        gps_gain = 1.0f;
-
         if (last_gps_pos_update_us_ < gps_.last_position_update_us() + config_.timeout_gps_us)
         {
             last_gps_pos_update_us_ = gps_.last_position_update_us();
@@ -251,57 +245,79 @@ void INS_complementary::correction_from_gps_pos(void)
             coord_conventions_global_to_local_position(gps_.position_gf(), origin(), gps_pos);
 
             // Compute position error and velocity error from gps
+            float pos_error[3];
             for (uint32_t i = 0; i < 3; i++)
             {
                 pos_error[i] = gps_pos[i] - local_position_[i];
             }
-        }
-    }
-    else
-    {
-        // Disable gps correction
-        gps_gain = 0.0f;
-    }
 
-    // Apply error correction to position estimates
-    for (uint32_t i = 0; i < 3; i++)
-    {
-        local_position_[i] += config_.kp_gps_pos[i] * gps_gain * pos_error[i] * dt_s_;
+            // Get correct gain
+            float gain_XY = 0.0f;
+            float gain_Z  = 0.0f;
+            if (gps_.fix() == FIX_RTK)
+            {
+                gain_XY = config_.kp_gps_XY_pos_rtk;
+                gain_Z  = config_.kp_gps_Z_pos_rtk;
+            }
+            else if (gps_.fix() == FIX_DGPS)
+            {
+                gain_XY = config_.kp_gps_XY_pos_dgps;
+                gain_Z  = config_.kp_gps_Z_pos_dgps;
+            }
+            else if (gps_.fix() == FIX_3D)
+            {
+                gain_XY = config_.kp_gps_XY_pos;
+                gain_Z  = config_.kp_gps_Z_pos;
+            }
+
+            // Apply error correction to position estimates
+            local_position_[X] += gain_XY * pos_error[X] * dt_s_;
+            local_position_[Y] += gain_XY * pos_error[Y] * dt_s_;
+            local_position_[Z] += gain_Z  * pos_error[Z] * dt_s_;
+        }
     }
 }
 
 
 void INS_complementary::correction_from_gps_vel(void)
 {
-    float gain         = 0.0f;
-    float vel_error[3] = { 0.0f, 0.0f, 0.0f };
-
     if (gps_.healthy() == true)
     {
-        // Enable gps correction
-        gain = 1.0f;
-
         if (last_gps_vel_update_us_ < gps_.last_velocity_update_us() + config_.timeout_gps_us)
         {
             last_gps_vel_update_us_ = gps_.last_velocity_update_us();
 
             // Compute position error and velocity error from gps
+            float vel_error[3];
             for (uint32_t i = 0; i < 3; i++)
             {
                 vel_error[i] = gps_.velocity_lf()[i] - vel_[i];
             }
-        }
-    }
-    else
-    {
-        // Disable gps correction
-        gain = 0.0f;
-    }
 
-    // Apply error correction to velocity estimates
-    for (uint32_t i = 0; i < 3; i++)
-    {
-        vel_[i] += config_.kp_gps_vel[i] * gain * vel_error[i] * dt_s_;
+            // Get correct gain
+            float gain_XY = 0.0f;
+            float gain_Z  = 0.0f;
+            if (gps_.fix() == FIX_RTK)
+            {
+                gain_XY = config_.kp_gps_XY_vel_rtk;
+                gain_Z  = config_.kp_gps_Z_vel_rtk;
+            }
+            else if (gps_.fix() == FIX_DGPS)
+            {
+                gain_XY = config_.kp_gps_XY_vel_dgps;
+                gain_Z  = config_.kp_gps_Z_vel_dgps;
+            }
+            else if (gps_.fix() == FIX_3D)
+            {
+                gain_XY = config_.kp_gps_XY_vel;
+                gain_Z  = config_.kp_gps_Z_vel;
+            }
+
+            // Apply error correction to velocity estimates
+            vel_[X] += gain_XY * vel_error[X] * dt_s_;
+            vel_[Y] += gain_XY * vel_error[Y] * dt_s_;
+            vel_[Z] += gain_Z  * vel_error[Z] * dt_s_;
+        }
     }
 }
 

@@ -30,62 +30,103 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps.hpp
+ * \file gps_hub.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief Abstract class for GPS
+ * \brief Hub for GPS redundancy
  *
  ******************************************************************************/
 
 
-#ifndef GPS_HPP_
-#define GPS_HPP_
+#ifndef GPS_HUB_HPP_
+#define GPS_HUB_HPP_
 
-#include <cstdint>
-#include <cstdbool>
-#include <array>
+#include "drivers/gps.hpp"
 
-#include "util/coord_conventions.hpp"
-
-
-typedef enum
-{
-    FIX_ERR  = 0,
-    FIX_NONE = 1,
-    FIX_2D   = 2,
-    FIX_3D   = 3,
-    FIX_DGPS = 4,
-    FIX_RTK  = 5,
-} gps_fix_t;
 
 /**
- * \brief Abstract class for GPS
+ * \brief       Hub for GPS redundancy
+ *
+ * \tparam  N   Number of GPS connected to hub
  */
-class Gps
+template<uint32_t N>
+class Gps_hub: public Gps
 {
 public:
+    static_assert(N >= 1, "Need at least one GPS");
+
+    /**
+     * \brief Constructor
+     */
+    Gps_hub(std::array<Gps*, N> gps_list):
+        gps_list_(gps_list),
+        current_gps_(gps_list_[0])
+    {};
+
     /**
      * \brief   Main update function
      * \detail  Reads new values from sensor
      *
      * \return  Success
      */
-    virtual bool update(void) = 0;
+    bool update(void)
+    {
+        bool ret = false;
+
+        // Update all gps
+        for (size_t i = 0; i < N; i++)
+        {
+            ret |= gps_list_[i]->update();
+        }
+
+        // Choose which one is best
+        for (size_t i = 0; i < N; i++)
+        {
+            if (gps_list_[i]->healthy())
+            {
+                if ((gps_list_[i]->fix() > current_gps_->fix())
+                || ((gps_list_[i]->fix() == current_gps_->fix()) && (gps_list_[i]->num_sats() > current_gps_->num_sats())))
+                {
+                    current_gps_ = gps_list_[i];
+                }
+            }
+        }
+
+        return ret;
+    };
 
     /**
      * \brief   Initializes the gps
      *
      * \return  Success
      */
-    virtual bool init(void) = 0;
+    bool init(void)
+    {
+        bool ret = false;
+
+        // Init all gps
+        for (size_t i = 0; i < N; i++)
+        {
+            ret |= gps_list_[i]->init();
+        }
+
+        return ret;
+    };
 
 
     /**
      * \brief   (re)Configure the GPS
      */
-    virtual void configure(void) = 0;
+    void configure(void)
+    {
+        // Configure all gps
+        for (size_t i = 0; i < N; i++)
+        {
+            gps_list_[i]->configure();
+        }
+    };
 
 
     /**
@@ -93,7 +134,10 @@ public:
      *
      * \return  Update time
      */
-    virtual float last_update_us(void) const = 0;
+    float last_update_us(void) const
+    {
+        return current_gps_->last_update_us();
+    };
 
 
     /**
@@ -101,7 +145,10 @@ public:
      *
      * \return  Update time
      */
-    virtual float last_position_update_us(void) const = 0;
+    float last_position_update_us(void) const
+    {
+        return current_gps_->last_position_update_us();
+    };
 
 
     /**
@@ -109,7 +156,10 @@ public:
      *
      * \return  Update time
      */
-    virtual float last_velocity_update_us(void) const = 0;
+    float last_velocity_update_us(void) const
+    {
+        return current_gps_->last_velocity_update_us();
+    };
 
 
     /**
@@ -117,7 +167,10 @@ public:
      *
      * \return  position
      */
-    virtual global_position_t position_gf(void) const = 0;
+    global_position_t position_gf(void) const
+    {
+        return current_gps_->position_gf();
+    };
 
 
     /**
@@ -125,7 +178,10 @@ public:
      *
      * \return  accuracy
      */
-    virtual float horizontal_position_accuracy(void) const = 0;
+    float horizontal_position_accuracy(void) const
+    {
+        return current_gps_->horizontal_position_accuracy();
+    };
 
 
     /**
@@ -133,7 +189,10 @@ public:
      *
      * \return  accuracy
      */
-    virtual float vertical_position_accuracy(void) const = 0;
+    float vertical_position_accuracy(void) const
+    {
+        return current_gps_->vertical_position_accuracy();
+    };
 
 
     /**
@@ -141,7 +200,10 @@ public:
      *
      * \return  3D velocity
      */
-    virtual std::array<float, 3> velocity_lf(void) const = 0;
+    std::array<float, 3> velocity_lf(void) const
+    {
+        return current_gps_->velocity_lf();
+    };
 
 
     /**
@@ -149,7 +211,10 @@ public:
      *
      * \return  velocity accuracy
      */
-    virtual float velocity_accuracy(void) const = 0;
+    float velocity_accuracy(void) const
+    {
+        return current_gps_->velocity_accuracy();
+    };
 
 
     /**
@@ -157,7 +222,10 @@ public:
      *
      * \return  heading
      */
-    virtual float heading(void) const = 0;
+    float heading(void) const
+    {
+        return current_gps_->heading();
+    };
 
 
     /**
@@ -165,7 +233,10 @@ public:
      *
      * \return  accuracy
      */
-    virtual float heading_accuracy(void) const = 0;
+    float heading_accuracy(void) const
+    {
+        return current_gps_->heading_accuracy();
+    };
 
 
     /**
@@ -173,7 +244,10 @@ public:
      *
      * \return  Value
      */
-    virtual uint8_t num_sats(void) const = 0;
+    uint8_t num_sats(void) const
+    {
+        return current_gps_->num_sats();
+    };
 
 
     /**
@@ -181,7 +255,10 @@ public:
      *
      * \return  Value
      */
-    virtual gps_fix_t fix(void) const = 0;
+    gps_fix_t fix(void) const
+    {
+        return current_gps_->fix();
+    };
 
 
     /**
@@ -189,16 +266,15 @@ public:
      *
      * \return  Value
      */
-    virtual bool healthy(void) const = 0;
+    bool healthy(void) const
+    {
+        return current_gps_->healthy();
+    };
+
+protected:
+    std::array<Gps*, N> gps_list_;
+    Gps*                current_gps_;
 };
 
 
-/**
- * \brief  Glue method for scheduler
- */
-static inline bool task_gps_update(Gps* gps)
-{
-    return gps->update();
-};
-
-#endif /* GPS_HPP_ */
+#endif /* GPS_HUB_HPP_ */

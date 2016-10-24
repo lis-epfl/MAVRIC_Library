@@ -222,10 +222,10 @@ uint8_t Gps_mocap::num_sats(void) const
 
 gps_fix_t Gps_mocap::fix(void) const
 {
-    gps_fix_t fix = NO_GPS;
+    gps_fix_t fix = FIX_ERR;
     if (healthy())
     {
-        fix = RTK;
+        fix = FIX_RTK;
     }
 
     return fix;
