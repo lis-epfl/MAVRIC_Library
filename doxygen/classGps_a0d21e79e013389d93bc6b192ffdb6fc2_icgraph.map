@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="249,5,359,35"/>
+<area shape="rect" id="node3" href="$classGps__hub.html#aa8bbcdd599286713ec07e4dcb86b97c5" title="Get last velocity update time in microseconds." alt="" coords="248,5,501,35"/>
+<area shape="rect" id="node5" href="$classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="320,59,429,88"/>
 </map>

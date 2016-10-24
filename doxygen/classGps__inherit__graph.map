@@ -1,5 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classGps__mocap.html" title="Class to expose data received from motion capture system as GPS data." alt="" coords="5,312,216,571"/>
-<area shape="rect" id="node5" href="$classGps__sim.html" title="Simulation for GPS." alt="" coords="240,312,451,571"/>
-<area shape="rect" id="node7" href="$classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="475,312,685,571"/>
+<area shape="rect" id="node3" href="$classGps__hub.html" title="Hub for GPS redundancy." alt="" coords="5,313,216,589"/>
+<area shape="rect" id="node5" href="$classGps__hub.html" title="{Gps_hub\&lt; 2 \&gt;\n|# gps_list_\l# current_gps_\l|+ static_assert()\l+ Gps_hub()\l+ update()\l+ init()\l+ configure()\l+ last_update_us()\l+ last_position_update_us()\l+ last_velocity_update_us()\l+ position_gf()\l+ horizontal_position_accuracy()\land 7 more...}" alt="" coords="240,313,451,589"/>
+<area shape="rect" id="node7" href="$classGps__mocap.html" title="Class to expose data received from motion capture system as GPS data." alt="" coords="475,321,685,580"/>
+<area shape="rect" id="node9" href="$classGps__sim.html" title="Simulation for GPS." alt="" coords="709,321,920,580"/>
+<area shape="rect" id="node11" href="$classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="944,321,1155,580"/>
 </map>

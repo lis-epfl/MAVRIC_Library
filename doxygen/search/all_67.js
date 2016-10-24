@@ -46,6 +46,8 @@ var searchData=
   ['gpio_5fstm32',['Gpio_stm32',['../classGpio__stm32.html',1,'Gpio_stm32'],['../classGpio__stm32.html#a50ce4c4150c0ce83ecc2fa8e6a3b785d',1,'Gpio_stm32::Gpio_stm32()']]],
   ['gpio_5fstm32_5fconf_5ft',['gpio_stm32_conf_t',['../structgpio__stm32__conf__t.html',1,'']]],
   ['gps',['Gps',['../classGps.html',1,'Gps'],['../structstabilisation__wing__t.html#a6ab2d21d876f5c5d6041d050b30d6c0c',1,'stabilisation_wing_t::gps()'],['../classLEQuad.html#af8f1e0d634fe8d4405af52a8b61ee704',1,'LEQuad::gps()'],['../classSimulation.html#a2b299a8bca9fda856b3f24fb5073b072',1,'Simulation::gps()']]],
+  ['gps_5fhub',['Gps_hub',['../classGps__hub.html',1,'Gps_hub&lt; N &gt;'],['../classLEQuad.html#a9bb37a106bd3b10989885581d0146c84',1,'LEQuad::gps_hub()'],['../classGps__hub.html#aa6d8154e976870df523cb03c6b88e590',1,'Gps_hub::Gps_hub()']]],
+  ['gps_5fhub_3c_202_20_3e',['Gps_hub< 2 >',['../classGps__hub.html',1,'']]],
   ['gps_5fmocap',['Gps_mocap',['../classGps__mocap.html',1,'Gps_mocap'],['../classLEQuad.html#a46d27a6759faa7b06e19575e29d20c0a',1,'LEQuad::gps_mocap()'],['../classGps__mocap.html#a1525d1410dbed378f2052c70b9c6bc62',1,'Gps_mocap::Gps_mocap()']]],
   ['gps_5fsim',['Gps_sim',['../classGps__sim.html',1,'Gps_sim'],['../classGps__sim.html#ad9bbdb231ef9310c787fb0fa41c675a5',1,'Gps_sim::Gps_sim()']]],
   ['gps_5ft',['gps_t',['../structgps__t.html',1,'']]],

@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="151,5,260,35"/>
+<area shape="rect" id="node3" href="$classGps__hub.html#a84a9fc62dc732939ac00d0c63a21db31" title="Indicates whether the measurements can be trusted." alt="" coords="149,5,304,35"/>
+<area shape="rect" id="node5" href="$classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="172,59,281,88"/>
 </map>

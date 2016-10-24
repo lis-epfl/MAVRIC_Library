@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classINS__kf.html#a4a6f11345110e1f34c27cda5a20254ed" title="Indicates which estimate can be trusted." alt="" coords="123,5,253,35"/>
+<area shape="rect" id="node3" href="$classGps__hub.html#ac836cc5e4d9c3c98617a4483b85a9148" title="Main update function &#160;Reads new values from sensor." alt="" coords="123,5,275,35"/>
+<area shape="rect" id="node5" href="$classGps__hub.html#ae8fddeeb22a2e93e80e31d1cedd528c7" title="Indicates whether fix are received." alt="" coords="136,59,261,88"/>
+<area shape="rect" id="node7" href="$classINS__kf.html#a4a6f11345110e1f34c27cda5a20254ed" title="Indicates which estimate can be trusted." alt="" coords="133,112,264,141"/>
 </map>

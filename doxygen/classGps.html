@@ -95,7 +95,7 @@ Inheritance diagram for Gps:</div>
 <div class="dyncontent">
 <div class="center"><img src="classGps__inherit__graph.png" border="0" usemap="#Gps_inherit__map" alt="Inheritance graph"/></div>
 <map name="Gps_inherit__map" id="Gps_inherit__map">
-<area shape="rect" id="node3" href="classGps__mocap.html" title="Class to expose data received from motion capture system as GPS data." alt="" coords="5,312,216,571"/><area shape="rect" id="node5" href="classGps__sim.html" title="Simulation for GPS." alt="" coords="240,312,451,571"/><area shape="rect" id="node7" href="classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="475,312,685,571"/></map>
+<area shape="rect" id="node3" href="classGps__hub.html" title="Hub for GPS redundancy." alt="" coords="5,313,216,589"/><area shape="rect" id="node5" href="classGps__hub.html" title="{Gps_hub\&lt; 2 \&gt;\n|# gps_list_\l# current_gps_\l|+ static_assert()\l+ Gps_hub()\l+ update()\l+ init()\l+ configure()\l+ last_update_us()\l+ last_position_update_us()\l+ last_velocity_update_us()\l+ position_gf()\l+ horizontal_position_accuracy()\land 7 more...}" alt="" coords="240,313,451,589"/><area shape="rect" id="node7" href="classGps__mocap.html" title="Class to expose data received from motion capture system as GPS data." alt="" coords="475,321,685,580"/><area shape="rect" id="node9" href="classGps__sim.html" title="Simulation for GPS." alt="" coords="709,321,920,580"/><area shape="rect" id="node11" href="classGps__ublox.html" title="Driver for UBLOX GPS." alt="" coords="944,321,1155,580"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classGps-members.html">List of all members.</a></p>
@@ -157,14 +157,14 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <p>Indicates whether fix are received. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a74fa682f99a804f7d1882993aa11a28e">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a332e9c3a2330285359cc4b460a6518df">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a2540e33d4cd0a6c525a5f11c9f43c1b3">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#ae8fddeeb22a2e93e80e31d1cedd528c7">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#ae8fddeeb22a2e93e80e31d1cedd528c7">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a74fa682f99a804f7d1882993aa11a28e">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a332e9c3a2330285359cc4b460a6518df">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a2540e33d4cd0a6c525a5f11c9f43c1b3">Gps_ublox</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classGps_a9925b04afe52bf7211cd631415606620_icgraph.png" border="0" usemap="#classGps_a9925b04afe52bf7211cd631415606620_icgraph" alt=""/></div>
 <map name="classGps_a9925b04afe52bf7211cd631415606620_icgraph" id="classGps_a9925b04afe52bf7211cd631415606620_icgraph">
-<area shape="rect" id="node3" href="classINS__kf.html#a4a6f11345110e1f34c27cda5a20254ed" title="Indicates which estimate can be trusted." alt="" coords="123,5,253,35"/></map>
+<area shape="rect" id="node3" href="classGps__hub.html#ac836cc5e4d9c3c98617a4483b85a9148" title="Main update function &#160;Reads new values from sensor." alt="" coords="123,5,275,35"/><area shape="rect" id="node5" href="classGps__hub.html#ae8fddeeb22a2e93e80e31d1cedd528c7" title="Indicates whether fix are received." alt="" coords="136,59,261,88"/><area shape="rect" id="node7" href="classINS__kf.html#a4a6f11345110e1f34c27cda5a20254ed" title="Indicates which estimate can be trusted." alt="" coords="133,112,264,141"/></map>
 </div>
 </p>
 
@@ -188,7 +188,16 @@ Here is the caller graph for this function:</div>
 <p>Get heading in degrees. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>heading </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a16a46208a1037375c770e8ddd6c01c98">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a14082c6b42eb22acfe776785b9706750">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#aa748d29ce10b257803fd78200e9d8b8e">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a2a94cc6e2a63051f0f551cc4c83e5694">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a2a94cc6e2a63051f0f551cc4c83e5694">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a16a46208a1037375c770e8ddd6c01c98">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a14082c6b42eb22acfe776785b9706750">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#aa748d29ce10b257803fd78200e9d8b8e">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_a833417f127535daf8b319bee46e6febb_icgraph.png" border="0" usemap="#classGps_a833417f127535daf8b319bee46e6febb_icgraph" alt=""/></div>
+<map name="classGps_a833417f127535daf8b319bee46e6febb_icgraph" id="classGps_a833417f127535daf8b319bee46e6febb_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#a2a94cc6e2a63051f0f551cc4c83e5694" title="Get heading in degrees." alt="" coords="153,5,311,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -210,7 +219,16 @@ Here is the caller graph for this function:</div>
 <p>Get heading accuracy in degrees. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a462b8f5bb75c79c7af8baadf23b9fe81">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a81478ea53d08fb457829b6e129cef395">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a3f8ca34c39ecb3f19604e5f03d026c0f">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a894df6249257fa865158e04c6f59f30b">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a894df6249257fa865158e04c6f59f30b">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a462b8f5bb75c79c7af8baadf23b9fe81">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a81478ea53d08fb457829b6e129cef395">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a3f8ca34c39ecb3f19604e5f03d026c0f">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_a82cc78973ecd4b737d99ca4650500293_icgraph.png" border="0" usemap="#classGps_a82cc78973ecd4b737d99ca4650500293_icgraph" alt=""/></div>
+<map name="classGps_a82cc78973ecd4b737d99ca4650500293_icgraph" id="classGps_a82cc78973ecd4b737d99ca4650500293_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#a894df6249257fa865158e04c6f59f30b" title="Get heading accuracy in degrees." alt="" coords="213,5,432,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -232,14 +250,14 @@ Here is the caller graph for this function:</div>
 <p>Indicates whether the measurements can be trusted. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a57badda9413a04af15384c2e2f8ee6bc">Gps_mocap</a>, <a class="el" href="classGps__sim.html#aac6db316677674f1bc6c07d8b9ae184c">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#acaefaba418b0cef1b01cbe70fa87a115">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a84a9fc62dc732939ac00d0c63a21db31">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a84a9fc62dc732939ac00d0c63a21db31">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a57badda9413a04af15384c2e2f8ee6bc">Gps_mocap</a>, <a class="el" href="classGps__sim.html#aac6db316677674f1bc6c07d8b9ae184c">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#acaefaba418b0cef1b01cbe70fa87a115">Gps_ublox</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classGps_a6253f14dbd270f3b24b677cdab6d1c49_icgraph.png" border="0" usemap="#classGps_a6253f14dbd270f3b24b677cdab6d1c49_icgraph" alt=""/></div>
 <map name="classGps_a6253f14dbd270f3b24b677cdab6d1c49_icgraph" id="classGps_a6253f14dbd270f3b24b677cdab6d1c49_icgraph">
-<area shape="rect" id="node3" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="151,5,260,35"/></map>
+<area shape="rect" id="node3" href="classGps__hub.html#a84a9fc62dc732939ac00d0c63a21db31" title="Indicates whether the measurements can be trusted." alt="" coords="149,5,304,35"/><area shape="rect" id="node5" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="172,59,281,88"/></map>
 </div>
 </p>
 
@@ -263,7 +281,16 @@ Here is the caller graph for this function:</div>
 <p>Get horizontal position accuracy in m. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a29c373fb7dd755bf02e5a970cad36ce6">Gps_mocap</a>, <a class="el" href="classGps__sim.html#aab941a901c24b96070bc990450921d88">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a06c0d58120d27a7d07d5340df84889e0">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a8c13b31988c5af7a5f39f13c6e2fcc6b">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a8c13b31988c5af7a5f39f13c6e2fcc6b">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a29c373fb7dd755bf02e5a970cad36ce6">Gps_mocap</a>, <a class="el" href="classGps__sim.html#aab941a901c24b96070bc990450921d88">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a06c0d58120d27a7d07d5340df84889e0">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_af565be90e7e55181001a39682054b324_icgraph.png" border="0" usemap="#classGps_af565be90e7e55181001a39682054b324_icgraph" alt=""/></div>
+<map name="classGps_af565be90e7e55181001a39682054b324_icgraph" id="classGps_af565be90e7e55181001a39682054b324_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#a8c13b31988c5af7a5f39f13c6e2fcc6b" title="Get horizontal position accuracy in m." alt="" coords="279,5,559,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -285,7 +312,7 @@ Here is the caller graph for this function:</div>
 <p>Initializes the gps. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880">Gps_mocap</a>, <a class="el" href="classGps__ublox.html#ad4e2aaeb5458bb2aeb031eac77d0d9cb">Gps_ublox</a>, and <a class="el" href="classGps__sim.html#a5a0f8cc60e1abe43405a1fa1659ac62a">Gps_sim</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a17ecd0eb0e2d790ddd4a7658e8eb667a">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a17ecd0eb0e2d790ddd4a7658e8eb667a">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a05223fc2ab26f0f24bfde738ef97a880">Gps_mocap</a>, <a class="el" href="classGps__ublox.html#ad4e2aaeb5458bb2aeb031eac77d0d9cb">Gps_ublox</a>, and <a class="el" href="classGps__sim.html#a5a0f8cc60e1abe43405a1fa1659ac62a">Gps_sim</a>.</p>
 
 </div>
 </div>
@@ -307,14 +334,14 @@ Here is the caller graph for this function:</div>
 <p>Get last position update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#ac50e80848470f5dd76a47963e3176ff0">Gps_mocap</a>, <a class="el" href="classGps__sim.html#ac5e559b53f97bcadff1b84a25c2f3968">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a9f2ad5a4024b4b55c58c0fc1ef0c1b4f">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#aaa0c594944a683e501bc814449a9da96">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#aaa0c594944a683e501bc814449a9da96">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#ac50e80848470f5dd76a47963e3176ff0">Gps_mocap</a>, <a class="el" href="classGps__sim.html#ac5e559b53f97bcadff1b84a25c2f3968">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a9f2ad5a4024b4b55c58c0fc1ef0c1b4f">Gps_ublox</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classGps_a26c405755338e7761cfb7fda26498aeb_icgraph.png" border="0" usemap="#classGps_a26c405755338e7761cfb7fda26498aeb_icgraph" alt=""/></div>
 <map name="classGps_a26c405755338e7761cfb7fda26498aeb_icgraph" id="classGps_a26c405755338e7761cfb7fda26498aeb_icgraph">
-<area shape="rect" id="node3" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="249,5,359,35"/></map>
+<area shape="rect" id="node3" href="classGps__hub.html#aaa0c594944a683e501bc814449a9da96" title="Get last position update time in microseconds." alt="" coords="248,5,501,35"/><area shape="rect" id="node5" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="320,59,429,88"/></map>
 </div>
 </p>
 
@@ -338,7 +365,16 @@ Here is the caller graph for this function:</div>
 <p>Get last update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a4c99f6c501479c24bfdbac6a3ccc2310">Gps_mocap</a>, <a class="el" href="classGps__sim.html#ab808dddd0d156dae82c6081dc211034e">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a2ab8d3cbefca58eaadc546c9cff9951a">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#ac26c91545122c4445eb74e3f1fb1f9ff">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#ac26c91545122c4445eb74e3f1fb1f9ff">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a4c99f6c501479c24bfdbac6a3ccc2310">Gps_mocap</a>, <a class="el" href="classGps__sim.html#ab808dddd0d156dae82c6081dc211034e">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a2ab8d3cbefca58eaadc546c9cff9951a">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_a6bd2da1a614b642e86f64f08e5e793a7_icgraph.png" border="0" usemap="#classGps_a6bd2da1a614b642e86f64f08e5e793a7_icgraph" alt=""/></div>
+<map name="classGps_a6bd2da1a614b642e86f64f08e5e793a7_icgraph" id="classGps_a6bd2da1a614b642e86f64f08e5e793a7_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#ac26c91545122c4445eb74e3f1fb1f9ff" title="Get last update time in microseconds." alt="" coords="199,5,399,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -360,14 +396,14 @@ Here is the caller graph for this function:</div>
 <p>Get last velocity update time in microseconds. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Update time </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a56c399a3dc35717f3e46714da5b57c57">Gps_mocap</a>, <a class="el" href="classGps__sim.html#af59b06895d39422309e1c1ab57f6ae7f">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#abe3a3b32063170355e59e8d5b3182fa9">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#aa8bbcdd599286713ec07e4dcb86b97c5">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#aa8bbcdd599286713ec07e4dcb86b97c5">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a56c399a3dc35717f3e46714da5b57c57">Gps_mocap</a>, <a class="el" href="classGps__sim.html#af59b06895d39422309e1c1ab57f6ae7f">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#abe3a3b32063170355e59e8d5b3182fa9">Gps_ublox</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classGps_a0d21e79e013389d93bc6b192ffdb6fc2_icgraph.png" border="0" usemap="#classGps_a0d21e79e013389d93bc6b192ffdb6fc2_icgraph" alt=""/></div>
 <map name="classGps_a0d21e79e013389d93bc6b192ffdb6fc2_icgraph" id="classGps_a0d21e79e013389d93bc6b192ffdb6fc2_icgraph">
-<area shape="rect" id="node3" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="249,5,359,35"/></map>
+<area shape="rect" id="node3" href="classGps__hub.html#aa8bbcdd599286713ec07e4dcb86b97c5" title="Get last velocity update time in microseconds." alt="" coords="248,5,501,35"/><area shape="rect" id="node5" href="classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="320,59,429,88"/></map>
 </div>
 </p>
 
@@ -391,7 +427,16 @@ Here is the caller graph for this function:</div>
 <p>Get the number of satellites. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Value </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a4ebaf0c404834c1b541007d7bb296181">Gps_mocap</a>, <a class="el" href="classGps__sim.html#aac30f5f67a06c2d26c269e8164cefc2d">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#af364cae5c2979d869f01f8e4e7c67438">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a25465d64c09f16ed2b12427162231c6a">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a25465d64c09f16ed2b12427162231c6a">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a4ebaf0c404834c1b541007d7bb296181">Gps_mocap</a>, <a class="el" href="classGps__sim.html#aac30f5f67a06c2d26c269e8164cefc2d">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#af364cae5c2979d869f01f8e4e7c67438">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_a822845dd9115f020731d70b53586f18e_icgraph.png" border="0" usemap="#classGps_a822845dd9115f020731d70b53586f18e_icgraph" alt=""/></div>
+<map name="classGps_a822845dd9115f020731d70b53586f18e_icgraph" id="classGps_a822845dd9115f020731d70b53586f18e_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#ac836cc5e4d9c3c98617a4483b85a9148" title="Main update function &#160;Reads new values from sensor." alt="" coords="175,5,327,35"/><area shape="rect" id="node5" href="classGps__hub.html#a25465d64c09f16ed2b12427162231c6a" title="Get the number of satellites." alt="" coords="165,59,336,88"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -413,7 +458,16 @@ Here is the caller graph for this function:</div>
 <p>Get position in global frame. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>position </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a8bae4906f96b4b0facee11032efdce4f">Gps_mocap</a>, <a class="el" href="classGps__sim.html#abb928470a925ec14ab126485fd4eff24">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a03a615e1090549329a11095f5bacfadd">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a06e0296b77e8df2bb3a52f88959be8e5">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a06e0296b77e8df2bb3a52f88959be8e5">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a8bae4906f96b4b0facee11032efdce4f">Gps_mocap</a>, <a class="el" href="classGps__sim.html#abb928470a925ec14ab126485fd4eff24">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a03a615e1090549329a11095f5bacfadd">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_a3b136ce3a3b20774501a8e41098d4a6f_icgraph.png" border="0" usemap="#classGps_a3b136ce3a3b20774501a8e41098d4a6f_icgraph" alt=""/></div>
+<map name="classGps_a3b136ce3a3b20774501a8e41098d4a6f_icgraph" id="classGps_a3b136ce3a3b20774501a8e41098d4a6f_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#a06e0296b77e8df2bb3a52f88959be8e5" title="Get position in global frame." alt="" coords="171,5,347,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -435,7 +489,7 @@ Here is the caller graph for this function:</div>
 <p>Main update function  Reads new values from sensor. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Success </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a9f541133d4ee0322a2af688cc4846d7a">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a31264788b969fe38e96bc71e830ad0de">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#ac56256107fbd58173f4233f268eace2a">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__mocap.html#a9f541133d4ee0322a2af688cc4846d7a">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a31264788b969fe38e96bc71e830ad0de">Gps_sim</a>, <a class="el" href="classGps__ublox.html#ac56256107fbd58173f4233f268eace2a">Gps_ublox</a>, <a class="el" href="classGps__hub.html#ac836cc5e4d9c3c98617a4483b85a9148">Gps_hub&lt; N &gt;</a>, and <a class="el" href="classGps__hub.html#ac836cc5e4d9c3c98617a4483b85a9148">Gps_hub&lt; 2 &gt;</a>.</p>
 
 </div>
 </div>
@@ -457,7 +511,16 @@ Here is the caller graph for this function:</div>
 <p>Get velocity accuracy in m/s. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>velocity accuracy </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#aa7c111b8b3c48f4f4d1211dbb9e4449d">Gps_mocap</a>, <a class="el" href="classGps__sim.html#aeab8eacedd21f2b77753070385c821a2">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a67cdcafea59a97fdf39cf2a4f645a992">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#af1afb2f52335e86a39829fc944e374b8">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#af1afb2f52335e86a39829fc944e374b8">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#aa7c111b8b3c48f4f4d1211dbb9e4449d">Gps_mocap</a>, <a class="el" href="classGps__sim.html#aeab8eacedd21f2b77753070385c821a2">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a67cdcafea59a97fdf39cf2a4f645a992">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_ab6a1ca8a6c01164ffab3fb98bb69435b_icgraph.png" border="0" usemap="#classGps_ab6a1ca8a6c01164ffab3fb98bb69435b_icgraph" alt=""/></div>
+<map name="classGps_ab6a1ca8a6c01164ffab3fb98bb69435b_icgraph" id="classGps_ab6a1ca8a6c01164ffab3fb98bb69435b_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#af1afb2f52335e86a39829fc944e374b8" title="Get velocity accuracy in m/s." alt="" coords="213,5,432,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -479,7 +542,16 @@ Here is the caller graph for this function:</div>
 <p>Get velocity in local frame in m/s. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>3D velocity </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#a09b93b40bfe428c2818cea5276314470">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a2275541d19cd9551f5dc868496d7066a">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#acca984954f781b16f3bfa16aed7191b2">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a0c03bf2b668d6cb8ad16816e6fbabf8d">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a0c03bf2b668d6cb8ad16816e6fbabf8d">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#a09b93b40bfe428c2818cea5276314470">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a2275541d19cd9551f5dc868496d7066a">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#acca984954f781b16f3bfa16aed7191b2">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_a885eefcd896cea4d02d8ffdd7a5c9da0_icgraph.png" border="0" usemap="#classGps_a885eefcd896cea4d02d8ffdd7a5c9da0_icgraph" alt=""/></div>
+<map name="classGps_a885eefcd896cea4d02d8ffdd7a5c9da0_icgraph" id="classGps_a885eefcd896cea4d02d8ffdd7a5c9da0_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#a0c03bf2b668d6cb8ad16816e6fbabf8d" title="Get velocity in local frame in m/s." alt="" coords="169,5,340,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -501,7 +573,16 @@ Here is the caller graph for this function:</div>
 <p>Get vertical position accuracy in m. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>accuracy </dd></dl>
 
-<p>Implemented in <a class="el" href="classGps__mocap.html#ae292ac7a436f06c02588ac56af8cebcd">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a9c82a0097d3bde5bc813de2758602cbd">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a5f153c5721d5a2f421319d1ba370937d">Gps_ublox</a>.</p>
+<p>Implemented in <a class="el" href="classGps__hub.html#a755c5c253ec06cfe637d50e4b6f867b1">Gps_hub&lt; N &gt;</a>, <a class="el" href="classGps__hub.html#a755c5c253ec06cfe637d50e4b6f867b1">Gps_hub&lt; 2 &gt;</a>, <a class="el" href="classGps__mocap.html#ae292ac7a436f06c02588ac56af8cebcd">Gps_mocap</a>, <a class="el" href="classGps__sim.html#a9c82a0097d3bde5bc813de2758602cbd">Gps_sim</a>, and <a class="el" href="classGps__ublox.html#a5f153c5721d5a2f421319d1ba370937d">Gps_ublox</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classGps_ad23c9fcb2031882092069d06e5fcb14d_icgraph.png" border="0" usemap="#classGps_ad23c9fcb2031882092069d06e5fcb14d_icgraph" alt=""/></div>
+<map name="classGps_ad23c9fcb2031882092069d06e5fcb14d_icgraph" id="classGps_ad23c9fcb2031882092069d06e5fcb14d_icgraph">
+<area shape="rect" id="node3" href="classGps__hub.html#a755c5c253ec06cfe637d50e4b6f867b1" title="Get vertical position accuracy in m." alt="" coords="261,5,528,35"/></map>
+</div>
+</p>
 
 </div>
 </div>
@@ -526,7 +607,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Oct 24 2016 08:56:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Oct 24 2016 10:15:53 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
