@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#include "communication/state_machine.hpp"
-#include "communication/state.hpp"
+#include "status/state_machine.hpp"
+#include "status/state.hpp"
 #include "drivers/spektrum_satellite.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.hpp"
@@ -93,8 +93,8 @@ void State_machine::set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode
         mode_custom_new &= ~Mav_mode::CUST_HEARTBEAT_LOST;
     }
 
-    // check whether out_of_fence_1
-    if (state_.out_of_fence_1)
+    // check whether out_of_safety_geofence
+    if (state_.out_of_safety_geofence)
     {
         if (state_.mav_state_ == MAV_STATE_ACTIVE)
         {
@@ -108,8 +108,8 @@ void State_machine::set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode
         mode_custom_new &= ~Mav_mode::CUST_FENCE_1;
     }
 
-    // check whether out_of_fence_2
-    if (state_.out_of_fence_2)
+    // check whether out_of_emergency_geofence
+    if (state_.out_of_emergency_geofence)
     {
         if (state_.mav_state_ == MAV_STATE_ACTIVE)
         {
@@ -151,46 +151,59 @@ State_machine::State_machine(State& state,
                             const Imu& imu,
                             const ahrs_t& ahrs,
                             Manual_control& manual_control,
+                            Geofence& safety_geofence,
+                            Geofence& emergency_geofence,
                             State_display& state_display) :
     state_(state),
     ins_(ins),
     imu_(imu),
     ahrs_(ahrs),
     manual_control_(manual_control),
+    safety_geofence_(safety_geofence),
+    emergency_geofence_(emergency_geofence),
     state_display_(state_display)
 {}
 
-bool State_machine::update(State_machine* state_machine)
+bool State_machine::update_task(State_machine* state_machine)
+{
+    return state_machine->update();
+}
+
+bool State_machine::update(void)
 {
     Mav_mode mode_new;
     signal_quality_t rc_check;
 
     // Get current mode and state
-    const Mav_mode mode_current = state_machine->state_.mav_mode();
-    const mav_state_t state_current = state_machine->state_.mav_state_;
+    const Mav_mode mode_current = state_.mav_mode();
+    const mav_state_t state_current = state_.mav_state_;
 
     // By default, set new state equal to current state
     mav_state_t state_new = state_current;
-    Mav_mode::custom_mode_t mode_custom_new = state_machine->state_.mav_mode_custom;
+    Mav_mode::custom_mode_t mode_custom_new = state_.mav_mode_custom;
 
+    // Check geofence breach
+    state_.out_of_safety_geofence    = !safety_geofence_.is_allowed(ins_.position_gf());
+    state_.out_of_emergency_geofence = !emergency_geofence_.is_allowed(ins_.position_gf());
 
     // Get remote signal strength
-    rc_check = state_machine->manual_control_.get_signal_strength();
+    rc_check = manual_control_.get_signal_strength();
 
-    mode_new = state_machine->manual_control_.get_mode_from_source(mode_current);
+    mode_new = manual_control_.get_mode_from_source(mode_current);
 
-    state_machine->state_.battery_.update();
+    // Update battery state
+    state_.battery_.update();
 
-    state_machine->state_.connection_status();
+    state_.connection_status();
 
     // try changing the control mode, if not allowed, reset flags of mode_new
-    if(!state_machine->set_ctrl_mode(mode_new))
+    if(!set_ctrl_mode(mode_new))
     {
         mode_new.set_ctrl_mode(mode_current.ctrl_mode());
     }
 
     // try arming/disarming, if not allowed, reset flag in mode_new
-    if(!state_machine->state_.set_armed(mode_new.is_armed()))
+    if(!state_.set_armed(mode_new.is_armed()))
     {
         mode_new.set_armed_flag(!mode_new.is_armed()); // toggle armed flag
     }
@@ -207,7 +220,7 @@ bool State_machine::update(State_machine* state_machine)
             break;
 
         case MAV_STATE_CALIBRATING:
-            if (state_machine->imu_.is_ready() && (state_machine->ahrs_.internal_state == AHRS_READY))
+            if (imu_.is_ready() && (ahrs_.internal_state == AHRS_READY))
             {
                 state_new = MAV_STATE_STANDBY;
             }
@@ -215,18 +228,18 @@ bool State_machine::update(State_machine* state_machine)
 
         case MAV_STATE_STANDBY:
             //disable out of fence checks
-            state_machine->state_.out_of_fence_1 = false;
-            state_machine->state_.out_of_fence_2 = false;
+            state_.out_of_safety_geofence = false;
+            state_.out_of_emergency_geofence = false;
 
             if (mode_new.is_armed())
             {
                 print_util_dbg_print("Switching from state_machine.\r\n");
-                state_machine->state_.switch_to_active_mode(&state_new);
+                state_.switch_to_active_mode(&state_new);
 
                 mode_custom_new = Mav_mode::CUSTOM_BASE_MODE;
             }
 
-            if (!state_machine->imu_.is_ready() || !(state_machine->ahrs_.internal_state == AHRS_READY))
+            if (!imu_.is_ready() || !(ahrs_.internal_state == AHRS_READY))
             {
                 state_new = MAV_STATE_CALIBRATING;
             }
@@ -234,10 +247,10 @@ bool State_machine::update(State_machine* state_machine)
             break;
 
         case MAV_STATE_ACTIVE:
-            if ((state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) || (state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_JOYSTICK))
+            if ((manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) || (manual_control_.mode_source() == Manual_control::MODE_SOURCE_JOYSTICK))
             {
                 // check connection with remote
-                if ((state_machine->manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
+                if ((manual_control_.mode_source() == Manual_control::MODE_SOURCE_REMOTE) && (rc_check != SIGNAL_GOOD))
                 {
                     print_util_dbg_print("Remote control signal lost! Returning to home and land.\r\n");
                     state_new = MAV_STATE_CRITICAL;
@@ -255,7 +268,7 @@ bool State_machine::update(State_machine* state_machine)
                 }
             }
 
-            state_machine->set_custom_mode(&mode_custom_new, &state_new);
+            set_custom_mode(&mode_custom_new, &state_new);
 
             break;
 
@@ -263,11 +276,11 @@ bool State_machine::update(State_machine* state_machine)
             switch (rc_check)
             {
                 case SIGNAL_GOOD:
-                    if (!state_machine->state_.battery_.is_low() &&
-                            !state_machine->state_.connection_lost &&
-                            !state_machine->state_.out_of_fence_1 &&
-                            !state_machine->state_.out_of_fence_2 &&
-                            state_machine->ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION))
+                    if (!state_.battery_.is_low() &&
+                            !state_.connection_lost &&
+                            !state_.out_of_safety_geofence &&
+                            !state_.out_of_emergency_geofence &&
+                            ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION))
                     {
                         state_new = MAV_STATE_ACTIVE;
                         // Reset all custom flags except collision avoidance flag
@@ -291,7 +304,7 @@ bool State_machine::update(State_machine* state_machine)
                     break;
             }
 
-            state_machine->set_custom_mode(&mode_custom_new, &state_new);
+            set_custom_mode(&mode_custom_new, &state_new);
 
             if (!mode_new.is_armed())
             {
@@ -301,12 +314,12 @@ bool State_machine::update(State_machine* state_machine)
 
         case MAV_STATE_EMERGENCY:
             // Recovery is not possible -> switch off motors
-            state_machine->state_.mav_mode().set_armed_flag(false);
+            state_.mav_mode().set_armed_flag(false);
 
-            if (!state_machine->state_.battery_.is_low())
+            if (!state_.battery_.is_low())
             {
                 // To get out of this state, if we are in the wrong use_mode_from_remote
-                if (state_machine->manual_control_.mode_source() != Manual_control::MODE_SOURCE_REMOTE)
+                if (manual_control_.mode_source() != Manual_control::MODE_SOURCE_REMOTE)
                 {
                     state_new = MAV_STATE_STANDBY;
                 }
@@ -330,12 +343,12 @@ bool State_machine::update(State_machine* state_machine)
     }
 
     // Finally, write new modes and states
-    state_machine->state_.mav_state_       = state_new;
-    state_machine->state_.mav_mode_custom = mode_custom_new;
-    state_machine->state_display_.set_state(state_new);
+    state_.mav_state_       = state_new;
+    state_.mav_mode_custom = mode_custom_new;
+    state_display_.set_state(state_new);
 
     // overwrite internal state of joystick
-    state_machine->manual_control_.set_mode_of_source(state_machine->state_.mav_mode_);
+    manual_control_.set_mode_of_source(state_.mav_mode_);
 
     return true;
 }

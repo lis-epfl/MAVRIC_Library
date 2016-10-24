@@ -43,7 +43,7 @@
 #ifndef REMOTE_HPP__
 #define REMOTE_HPP__
 
-#include "communication/mav_modes.hpp"
+#include "status/mav_modes.hpp"
 #include "drivers/satellite.hpp"
 #include "control/stabilisation.hpp"
 #include "control/attitude_controller_i.hpp"

@@ -58,6 +58,230 @@ extern "C"
 #include "util/maths.h"
 }
 
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Mission_planner::Mission_planner(   INS& ins,
+                                    const ahrs_t& ahrs,
+                                    State& state,
+                                    const Manual_control& manual_control,
+                                    const Geofence& geofence,
+                                    Mavlink_message_handler& message_handler,
+                                    const Mavlink_stream& mavlink_stream,
+                                    Mavlink_waypoint_handler& waypoint_handler,
+                                    Mission_handler_registry& mission_handler_registry,
+                                    conf_t config):
+    waypoint_handler_(waypoint_handler),
+    mission_handler_registry_(mission_handler_registry),
+    critical_next_state_(false),
+    mavlink_stream_(mavlink_stream),
+    state_(state),
+    ins_(ins),
+    ahrs_(ahrs),
+    manual_control_(manual_control),
+    geofence_(geofence),
+    message_handler_(message_handler),
+    config_(config)
+{
+    critical_behavior_ = CLIMB_TO_SAFE_ALT;
+}
+
+bool Mission_planner::init()
+{
+    bool init_success = true;
+
+    // Set initial standby mission handler
+    inserted_waypoint_ = Waypoint();
+    switch_mission_handler(inserted_waypoint_);
+
+    // Create blank critical waypoint
+    critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
+                                    MAV_CMD_NAV_LAND,
+                                    0,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    0.0f,
+                                    config_.critical_landing_altitude);
+
+    // Manual hold position information
+    require_takeoff_ = true;
+    hold_position_set_ = false;
+
+    // Add callbacks for waypoint handler messages requests
+    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_SET_CURRENT, // 41
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        &mission_set_current_callback,
+                                                        this );
+
+    // Add callbacks for waypoint handler commands requests
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_RETURN_TO_LAUNCH, // 20
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &nav_go_home,    // N.B. intentionally mislabelled to go to home
+                                                        this );
+
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_LAND, // 21
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &nav_land_callback,
+                                                        this );
+
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_TAKEOFF, // 22
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &nav_takeoff_callback,
+                                                        this );
+
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_OVERRIDE_GOTO, // 252
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 0
+                                                        &override_goto_callback,
+                                                        this );
+
+    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_MISSION_START, // 300
+                                                        MAVLINK_BASE_STATION_ID,
+                                                        MAV_COMP_ID_ALL,
+                                                        MAV_COMP_ID_ALL, // 190
+                                                        &mission_start_callback,
+                                                        this );
+
+    if(!init_success)
+    {
+        print_util_dbg_print("[MISSION_PLANNER] constructor: ERROR\r\n");
+    }
+
+    return init_success;
+}
+
+bool Mission_planner::update(Mission_planner* mission_planner)
+{
+    Mav_mode mode_local = mission_planner->state_.mav_mode();
+
+    // Reset to standby if disarmed
+    if (!mission_planner->state_.is_armed() && mission_planner->internal_state() != STANDBY)
+    {
+        mission_planner->inserted_waypoint_ = Waypoint();
+        mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
+    }
+
+    switch (mission_planner->state_.mav_state_)
+    {
+    case MAV_STATE_STANDBY:
+        if (mission_planner->internal_state() != STANDBY)
+        {
+            mission_planner->inserted_waypoint_ = Waypoint();
+            // Switch, don't insert as the mission isn't paused
+            mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
+        }
+        mission_planner->critical_behavior_ = CLIMB_TO_SAFE_ALT;
+        mission_planner->critical_next_state_ = false;
+        break;
+
+    case MAV_STATE_ACTIVE:
+        mission_planner->critical_behavior_ = CLIMB_TO_SAFE_ALT;
+        mission_planner->critical_next_state_ = false;
+
+        mission_planner->state_machine();
+        break;
+
+    case MAV_STATE_CRITICAL:
+        // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
+        if (mode_local.is_guided())
+        {
+            mission_planner->critical_handler();
+        }
+        break;
+
+    default:
+        if (mission_planner->internal_state() != STANDBY)
+        {
+            mission_planner->inserted_waypoint_ = Waypoint();
+            // Switch, don't insert as the mission isn't paused
+            mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
+        }
+        break;
+    }
+
+    return true;
+}
+
+void Mission_planner::set_critical_next_state(bool critical_next_state)
+{
+    critical_next_state_ = critical_next_state;
+}
+
+Mission_planner::internal_state_t Mission_planner::internal_state() const
+{
+    return internal_state_;
+}
+
+Mission_planner::critical_behavior_enum Mission_planner::critical_behavior() const
+{
+    return critical_behavior_;
+}
+
+bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
+{
+    Mission_handler* handler = mission_handler_registry_.get_mission_handler(waypoint);
+    if (handler == NULL)
+    {
+        return false;
+    }
+
+    // Set current handler
+    bool ret = handler->setup(waypoint);
+
+    if (ret)
+    {
+        // Success, set mission state and current mission handler
+        set_internal_state(handler->handler_mission_state());
+        current_mission_handler_ = handler;
+
+        // Output debug message
+        print_util_dbg_print("Switching to waypoint command: ");
+        print_util_dbg_print_num(waypoint.command(), 10);
+        print_util_dbg_print("\r\n");
+    }
+    else
+    {
+        print_util_dbg_print("Cannot setup mission handler\r\n");
+    }
+
+    return ret;
+}
+
+bool Mission_planner::insert_ad_hoc_waypoint(Waypoint wpt)
+{
+    bool ret = true;
+
+    // Copy waypoint state in case of failure
+    Waypoint old = inserted_waypoint_;
+    inserted_waypoint_ = wpt;
+
+    ret &= switch_mission_handler(inserted_waypoint_);
+
+    if (ret)
+    {
+        // Override what the mission handler set to PAUSED
+        set_internal_state(PAUSED);
+    }
+    else
+    {
+        // Failed, revert internal state waypoint
+        inserted_waypoint_ = old;
+    }
+
+    return ret;
+}
 
 
 //------------------------------------------------------------------------------
@@ -494,7 +718,7 @@ void Mission_planner::critical_handler()
         // If one of these happens, we need to land RIGHT NOW
         if (state_.battery_.is_low() ||
             state_.connection_lost ||
-            state_.out_of_fence_2 ||
+            state_.out_of_emergency_geofence ||
             ins_.is_healthy(INS::healthy_t::XYZ_REL_POSITION) == false)
         {
             if (critical_behavior_ != CRITICAL_LAND)
@@ -598,9 +822,9 @@ void Mission_planner::critical_handler()
                     break;
 
                 case FLY_TO_HOME_WP:
-                    if (state_.out_of_fence_1)
+                    if (state_.out_of_safety_geofence)
                     {
-                        state_.out_of_fence_1 = false;
+                        state_.out_of_safety_geofence = false;
                         critical_behavior_ = CLIMB_TO_SAFE_ALT;
                         state_.mav_state_ = MAV_STATE_ACTIVE;
                         state_.mav_mode_custom &= ~Mav_mode::CUST_CRITICAL_FLY_TO_HOME_WP;
@@ -682,219 +906,4 @@ void Mission_planner::set_internal_state(internal_state_t new_internal_state)
         // Update internal state
         internal_state_ = new_internal_state;
     }
-}
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-Mission_planner::Mission_planner(INS& ins, const ahrs_t& ahrs, State& state, const Manual_control& manual_control, Mavlink_message_handler& message_handler, const Mavlink_stream& mavlink_stream, Mavlink_waypoint_handler& waypoint_handler, Mission_handler_registry& mission_handler_registry, conf_t config):
-            waypoint_handler_(waypoint_handler),
-            mission_handler_registry_(mission_handler_registry),
-            critical_next_state_(false),
-            mavlink_stream_(mavlink_stream),
-            state_(state),
-            ins_(ins),
-            ahrs_(ahrs),
-            manual_control_(manual_control),
-            message_handler_(message_handler),
-            config_(config)
-{
-    critical_behavior_ = CLIMB_TO_SAFE_ALT;
-}
-
-bool Mission_planner::init()
-{
-    bool init_success = true;
-
-    // Set initial standby mission handler
-    inserted_waypoint_ = Waypoint();
-    switch_mission_handler(inserted_waypoint_);
-
-    // Create blank critical waypoint
-    critical_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
-                                    MAV_CMD_NAV_LAND,
-                                    0,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
-                                    0.0f,
-                                    config_.critical_landing_altitude);
-
-    // Manual hold position information
-    require_takeoff_ = true;
-    hold_position_set_ = false;
-
-    // Add callbacks for waypoint handler messages requests
-    init_success &= message_handler_.add_msg_callback(  MAVLINK_MSG_ID_MISSION_SET_CURRENT, // 41
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        &mission_set_current_callback,
-                                                        this );
-
-    // Add callbacks for waypoint handler commands requests
-    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_RETURN_TO_LAUNCH, // 20
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        MAV_COMP_ID_ALL, // 0
-                                                        &nav_go_home,    // N.B. intentionally mislabelled to go to home
-                                                        this );
-
-    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_LAND, // 21
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        MAV_COMP_ID_ALL, // 0
-                                                        &nav_land_callback,
-                                                        this );
-
-    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_NAV_TAKEOFF, // 22
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        MAV_COMP_ID_ALL, // 0
-                                                        &nav_takeoff_callback,
-                                                        this );
-
-    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_OVERRIDE_GOTO, // 252
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        MAV_COMP_ID_ALL, // 0
-                                                        &override_goto_callback,
-                                                        this );
-
-    init_success &= message_handler_.add_cmd_callback(  MAV_CMD_MISSION_START, // 300
-                                                        MAVLINK_BASE_STATION_ID,
-                                                        MAV_COMP_ID_ALL,
-                                                        MAV_COMP_ID_ALL, // 190
-                                                        &mission_start_callback,
-                                                        this );
-
-    if(!init_success)
-    {
-        print_util_dbg_print("[MISSION_PLANNER] constructor: ERROR\r\n");
-    }
-
-    return init_success;
-}
-
-bool Mission_planner::update(Mission_planner* mission_planner)
-{
-    Mav_mode mode_local = mission_planner->state_.mav_mode();
-
-    // Reset to standby if disarmed
-    if (!mission_planner->state_.is_armed() && mission_planner->internal_state() != STANDBY)
-    {
-        mission_planner->inserted_waypoint_ = Waypoint();
-        mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
-    }
-
-    switch (mission_planner->state_.mav_state_)
-    {
-    case MAV_STATE_STANDBY:
-        if (mission_planner->internal_state() != STANDBY)
-        {
-            mission_planner->inserted_waypoint_ = Waypoint();
-            // Switch, don't insert as the mission isn't paused
-            mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
-        }
-        mission_planner->critical_behavior_ = CLIMB_TO_SAFE_ALT;
-        mission_planner->critical_next_state_ = false;
-        break;
-
-    case MAV_STATE_ACTIVE:
-        mission_planner->critical_behavior_ = CLIMB_TO_SAFE_ALT;
-        mission_planner->critical_next_state_ = false;
-
-        mission_planner->state_machine();
-        break;
-
-    case MAV_STATE_CRITICAL:
-        // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-        if (mode_local.is_guided())
-        {
-            mission_planner->critical_handler();
-        }
-        break;
-
-    default:
-        if (mission_planner->internal_state() != STANDBY)
-        {
-            mission_planner->inserted_waypoint_ = Waypoint();
-            // Switch, don't insert as the mission isn't paused
-            mission_planner->switch_mission_handler(mission_planner->inserted_waypoint_);
-        }
-        break;
-    }
-
-    return true;
-}
-
-void Mission_planner::set_critical_next_state(bool critical_next_state)
-{
-    critical_next_state_ = critical_next_state;
-}
-
-Mission_planner::internal_state_t Mission_planner::internal_state() const
-{
-    return internal_state_;
-}
-
-Mission_planner::critical_behavior_enum Mission_planner::critical_behavior() const
-{
-    return critical_behavior_;
-}
-
-bool Mission_planner::switch_mission_handler(const Waypoint& waypoint)
-{
-    Mission_handler* handler = mission_handler_registry_.get_mission_handler(waypoint);
-    if (handler == NULL)
-    {
-        return false;
-    }
-
-    // Set current handler
-    bool ret = handler->setup(waypoint);
-
-    if (ret)
-    {
-        // Success, set mission state and current mission handler
-        set_internal_state(handler->handler_mission_state());
-        current_mission_handler_ = handler;
-
-        // Output debug message
-        print_util_dbg_print("Switching to waypoint command: ");
-        print_util_dbg_print_num(waypoint.command(), 10);
-        print_util_dbg_print("\r\n");
-    }
-    else
-    {
-        print_util_dbg_print("Cannot setup mission handler\r\n");
-    }
-
-    return ret;
-}
-
-bool Mission_planner::insert_ad_hoc_waypoint(Waypoint wpt)
-{
-    bool ret = true;
-
-    // Copy waypoint state in case of failure
-    Waypoint old = inserted_waypoint_;
-    inserted_waypoint_ = wpt;
-
-    ret &= switch_mission_handler(inserted_waypoint_);
-
-    if (ret)
-    {
-        // Override what the mission handler set to PAUSED
-        set_internal_state(PAUSED);
-    }
-    else
-    {
-        // Failed, revert internal state waypoint
-        inserted_waypoint_ = old;
-    }
-
-    return ret;
 }

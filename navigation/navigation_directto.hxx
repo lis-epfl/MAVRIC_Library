@@ -41,7 +41,7 @@
  *
  ******************************************************************************/
 
-#include "control/navigation_directto.hpp"
+#include "navigation/navigation_directto.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION

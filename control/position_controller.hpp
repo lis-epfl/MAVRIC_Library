@@ -45,7 +45,7 @@
 
 #include "control/position_controller_i.hpp"
 #include "control/xyposition_zvel_controller_i.hpp"
-#include "control/navigation_controller_i.hpp"
+#include "navigation/navigation_controller_i.hpp"
 #include "control/pid_controller.hpp"
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"

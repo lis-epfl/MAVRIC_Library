@@ -30,32 +30,46 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_takeoff.cpp
+ * \file geofence.hpp
  *
  * \author MAV'RIC Team
- * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the takeoff state
+ * \brief   Interface for Geofence
  *
  ******************************************************************************/
 
 
-#include "mission/mission_handler_takeoff.hpp"
-#include "navigation/navigation_controller_i.hpp"
+#ifndef GEOFENCE_HPP_
+#define GEOFENCE_HPP_
 
+#include "util/coord_conventions.hpp"
 
-//------------------------------------------------------------------------------
-// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-template <>
-bool Mission_handler_takeoff<Navigation_controller_I>::set_control_command()
+/**
+ * \brief   Interface for Geofence
+ */
+class Geofence
 {
-    Navigation_controller_I::nav_command_t cmd;
-	cmd.pos = waypoint_.local_pos();
-	return controller_.set_navigation_command(cmd);
-}
+public:
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+    /**
+     * \brief     Indicates if the position is allowed by the geofence
+     *
+     * \return    boolean (true if allowed, false if not)
+     */
+    virtual bool is_allowed(const global_position_t& position) const = 0;
+
+
+    /**
+     * \brief     Computes the closest border between allowed and disallowed space
+     *
+     * \param     current_position      Current position of the MAV (input)
+     * \param     border_position       Closest position at the border (output)
+     * \param     distance              Distance to closest border (output)
+     *
+     * \return    success               If false, no border_position and/or distance could be computed
+     */
+    virtual bool closest_border(const global_position_t& current_position, global_position_t& border_position, float& distance) const = 0;
+};
+
+#endif /* GEOFENCE_HPP_ */

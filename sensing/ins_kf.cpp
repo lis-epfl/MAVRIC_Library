@@ -101,7 +101,8 @@ INS_kf::INS_kf( State& state,
     R_sonar_({ SQR(config.sigma_sonar) }),
     H_flow_({0, 0, 0,  0, 1, 0, 0, 0, 0, 0, 0,
             0, 0, 0,  0, 0, 1, 0, 0, 0, 0, 0,
-            0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
+            // 0, 0, -1, 1, 0, 0, 0, 0, 0, 0, 0}),
+            0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0}),
     R_flow_({ SQR(config.sigma_flow), 0,                        0,
              0,                       SQR(config.sigma_flow),   0,
              0,                       0,                        SQR(config.sigma_sonar)}),
@@ -131,7 +132,7 @@ void INS_kf::init(void)
     x_ = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // Init covariance
-    P_ = Mat<11,11>(100, true);
+    P_ = Mat<11,11>(1000.0f, true);
 
 
     // Update last time to avoid glitches at initilaization
@@ -547,28 +548,34 @@ void INS_kf::update_sonar(void)
 void INS_kf::update_flow(void)
 {
     // Get XY velocity in NED frame
+    float sigma_flow = config_.sigma_flow;
     float vel_lf[3];
-    float vel_bf[3] = {-flow_.velocity_y(), flow_.velocity_x(), 0.0f};
-    quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_lf);
+    float vel_bf[3] = {flow_.velocity_x(), flow_.velocity_y(), 0.0f};
+    quaternions_rotate_vector(coord_conventions_quaternion_from_rpy(0.0f,
+                                                                    0.0f,
+                                                                    coord_conventions_get_yaw(ahrs_.qe)),
+                              vel_bf,
+                              vel_lf);
 
-    float sigma_sonar;
-    float z_sonar;
-    if (state_.is_armed())
-    {
-        // If armed, use real measurement and adapt sigma in function of healthiness
-        z_sonar = flow_.ground_distance();
-        sigma_sonar = config_.sigma_sonar;
-    }
-    else
+    // Get sonar measure
+    float sigma_sonar = config_.sigma_sonar;
+    float z_sonar     = flow_.ground_distance();
+    if (state_.is_armed() == false)
     {
         // If unarmed, force measurement to 0, with very good confidence
-        z_sonar = 0.0f;
-        sigma_sonar = 0.0001f;
+        if (z_sonar <= 0.32f)
+        {
+            z_sonar     = 0.0f;
+            vel_lf[0]   = 0.0f;
+            vel_lf[1]   = 0.0f;
+            // sigma_sonar = 0.0001f;
+            // sigma_flow  = 0.0001f;
+        }
     }
 
     // Recompute the measurement noise matrix
-    R_flow_(0,0) = SQR(config_.sigma_flow);
-    R_flow_(1,1) = SQR(config_.sigma_flow);
+    R_flow_(0,0) = SQR(sigma_flow);
+    R_flow_(1,1) = SQR(sigma_flow);
     R_flow_(2,2) = SQR(sigma_sonar);
 
     // Do update

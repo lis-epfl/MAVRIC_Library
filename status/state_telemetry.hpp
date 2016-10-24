@@ -46,7 +46,7 @@
 
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_message_handler.hpp"
-#include "communication/state_machine.hpp"
+#include "status/state_machine.hpp"
 
 /**
  * \brief   Initialise the state telemetry module

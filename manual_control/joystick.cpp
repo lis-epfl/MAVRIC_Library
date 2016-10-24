@@ -40,7 +40,7 @@
  ******************************************************************************/
 
 
-#include "control/joystick.hpp"
+#include "manual_control/joystick.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
 #include "util/print_util.hpp"

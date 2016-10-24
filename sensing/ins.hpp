@@ -131,6 +131,19 @@ public:
      */
     static inline const global_position_t& origin(void) {return origin_;};
 
+
+    /**
+     * \brief     3D Position in global frame
+     *
+     * \return    position
+     */
+    virtual global_position_t position_gf(void) const
+    {
+        global_position_t position_gf;
+        coord_conventions_local_to_global_position(position_lf(), origin(), position_gf);
+        return position_gf;
+    };
+
 protected:
 
     /**

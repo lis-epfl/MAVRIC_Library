@@ -41,7 +41,7 @@
  ******************************************************************************/
 
 
-#include "control/manual_control.hpp"
+#include "manual_control/manual_control.hpp"
 #include "util/constants.hpp"
 #include "util/print_util.hpp"
 

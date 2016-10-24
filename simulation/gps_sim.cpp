@@ -58,7 +58,7 @@ Gps_sim::Gps_sim(Dynamic_model& dynamic_model):
     heading_(0.0f),
     heading_accuracy_(0.0f),
     num_sats_(0),
-    fix_(NO_GPS),
+    fix_(FIX_ERR),
     healthy_(false)
 {}
 

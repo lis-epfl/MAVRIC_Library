@@ -46,10 +46,10 @@
 #include "cstdint"
 #include <cstdbool>
 
-#include "communication/mav_modes.hpp"
+#include "status/mav_modes.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "drivers/battery.hpp"
-#include "mavlink_message_handler.hpp"
+#include "communication/mavlink_message_handler.hpp"
 
 
 /**
@@ -80,12 +80,8 @@ public:
         uint32_t sensor_enabled;                            ///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
         uint32_t sensor_health;                             ///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 
-        float fence_1_xy;                                   ///< Size of fence 1 in the XY plane, in meters
-        float fence_1_z;                                    ///< Size of fence 1 in the Z direction, in meters
-        float fence_2_xy;                                   ///< Size of fence 2 in the XY plane, in meters
-        float fence_2_z;                                    ///< Size of fence 2 in the Z direction, in meters
-        bool out_of_fence_1;                                ///< Flag to tell whether we are out the first fence or not
-        bool out_of_fence_2;                                ///< Flag to tell whether we are out the second fence or not
+        bool out_of_safety_geofence;                        ///< Flag to tell whether we are out the first fence or not
+        bool out_of_emergency_geofence;                     ///< Flag to tell whether we are out the second fence or not
 
         bool reset_position;                                ///< Flag to enable the reset of the position estimation
 
@@ -241,12 +237,8 @@ public:
     uint32_t sensor_enabled;                            ///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
     uint32_t sensor_health;                             ///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 
-    float fence_1_xy;                                   ///< Size of fence 1 in the XY plane, in meters
-    float fence_1_z;                                    ///< Size of fence 1 in the Z direction, in meters
-    float fence_2_xy;                                   ///< Size of fence 2 in the XY plane, in meters
-    float fence_2_z;                                    ///< Size of fence 2 in the Z direction, in meters
-    bool out_of_fence_1;                                ///< Flag to tell whether we are out the first fence or not
-    bool out_of_fence_2;                                ///< Flag to tell whether we are out the second fence or not
+    bool out_of_safety_geofence;                                ///< Flag to tell whether we are out the first fence or not
+    bool out_of_emergency_geofence;                                ///< Flag to tell whether we are out the second fence or not
 
     bool reset_position;                                ///< Flag to enable the reset of the position estimation
 
@@ -278,10 +270,6 @@ State::conf_t State::default_config()
     conf.sensor_enabled          = 0b1111110000100111;
     conf.sensor_health           = 0b1111110000100111;
     conf.max_lost_connection     = 60.0f;
-    conf.fence_1_xy              = 100.0f;
-    conf.fence_1_z               = 75.0f;
-    conf.fence_2_xy              = 125.0f;
-    conf.fence_2_z               = 100.0f;
 
     return conf;
 }
@@ -300,10 +288,6 @@ State::conf_t State::wing_default_config()
     conf.sensor_enabled          = 0b1111110000100111;
     conf.sensor_health           = 0b1111110000100111;
     conf.max_lost_connection     = 60.0f;
-    conf.fence_1_xy              = 500.0f;
-    conf.fence_1_z               = 150.0f;
-    conf.fence_2_xy              = 600.0f;
-    conf.fence_2_z               = 200.0f;
 
     return conf;
 }

@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#include "communication/state_telemetry.hpp"
-#include "communication/state.hpp"
+#include "status/state_telemetry.hpp"
+#include "status/state.hpp"
 #include "util/version.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.hpp"

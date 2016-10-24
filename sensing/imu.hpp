@@ -52,7 +52,7 @@
 #include "drivers/accelerometer.hpp"
 #include "drivers/gyroscope.hpp"
 #include "drivers/magnetometer.hpp"
-#include "communication/state.hpp"
+#include "status/state.hpp"
 
 extern "C"
 {

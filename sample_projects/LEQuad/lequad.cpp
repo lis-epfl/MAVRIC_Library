@@ -42,7 +42,7 @@
 #include "sample_projects/LEQuad/lequad.hpp"
 
 #include "communication/data_logging_telemetry.hpp"
-#include "communication/state_telemetry.hpp"
+#include "status/state_telemetry.hpp"
 
 #include "drivers/barometer_telemetry.hpp"
 #include "drivers/gps_telemetry.hpp"
@@ -53,7 +53,7 @@
 #include "sensing/ins_telemetry.hpp"
 #include "sensing/ahrs_telemetry.hpp"
 
-#include "control/manual_control_telemetry.hpp"
+#include "manual_control/manual_control_telemetry.hpp"
 
 #include "runtime/scheduler_telemetry.hpp"
 
@@ -102,6 +102,7 @@ LEQuad::LEQuad(Imu& imu,
     servo_6(servo_6),
     servo_7(servo_7),
     gps_mocap(communication.handler()),
+    gps_hub(std::array<Gps*,2>{{&gps, &gps_mocap}}),
     ahrs_ekf_mocap(communication.handler(), ahrs_ekf),
     manual_control(&satellite, config.manual_control_config, config.remote_config),
     state(communication.mavlink_stream(), battery, config.state_config),
@@ -109,8 +110,9 @@ LEQuad::LEQuad(Imu& imu,
     communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
-    ins_(&ins_kf),
-    position_estimation(state, barometer, sonar, gps, ahrs, config.position_estimation_config),
+    // ins_(&ins_kf),
+    ins_(&ins_complementary),
+    ins_complementary(state, barometer, sonar, gps, flow, ahrs, config.ins_complementary_config),
     ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs),
     cascade_controller_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.cascade_controller_config),
     mission_handler_registry(),
@@ -123,8 +125,10 @@ LEQuad::LEQuad(Imu& imu,
     takeoff_handler(cascade_controller_, *ins_, state),
     critical_landing_handler(cascade_controller_, cascade_controller_, *ins_, state),
     critical_navigating_handler(cascade_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
-    mission_planner(*ins_, ahrs, state, manual_control, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
-    state_machine(state, *ins_, imu, ahrs, manual_control, state_display_),
+    mission_planner(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
+    safety_geofence_(config.safety_geofence_config),
+    emergency_geofence_(config.emergency_geofence_config),
+    state_machine(state, *ins_, imu, ahrs, manual_control, safety_geofence_, emergency_geofence_, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(communication.sysid()),
@@ -221,7 +225,7 @@ bool LEQuad::init_state(void)
     ret &= data_logging_stat.add_field((state.mav_mode_.bits_ptr()),   "mav_mode");
 
     // Task
-    ret &= scheduler.add_task(200000, &State_machine::update, &state_machine);
+    ret &= scheduler.add_task(200000, &State_machine::update_task, &state_machine);
     // Leds blinks at 1, 3 and 6Hz, then smallest half period is 83333us
     ret &= scheduler.add_task( 83333, &task_state_display_update, &state_display_);
 
@@ -270,14 +274,13 @@ bool LEQuad::init_gps(void)
     bool ret = true;
 
     // UP telemetry
-    ret &= gps_telemetry_init(&gps, &communication.handler());
+    ret &= gps_telemetry_init(&gps_hub, &communication.handler());
 
     // DOWN telemetry
-    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw,  &gps);
-    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS2_RAW,    1000000, &gps_telemetry_send_raw2, &gps_mocap);
+    ret &= communication.telemetry().add<Gps>(MAVLINK_MSG_ID_GPS_RAW_INT, 1000000, &gps_telemetry_send_raw,  &gps_hub);
 
     // Task
-    ret &= scheduler.add_task(100000, &task_gps_update, &gps, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task<Gps>(100000, &task_gps_update, &gps_hub, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -375,23 +378,32 @@ bool LEQuad::init_ins(void)
     // Via ins_ alias
     // -------------------------------------------------------------------------
     // DOWN telemetry
-    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  100000, &ins_telemetry_send_local_position_ned,  ins_);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  10000, &ins_telemetry_send_local_position_ned,  ins_);
     ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 100000, &ins_telemetry_send_global_position_int, ins_);
 
     // -------------------------------------------------------------------------
     // Position estimation specfic
     // -------------------------------------------------------------------------
     // UP telemetry
-    ret &= ins_telemetry_init(&position_estimation, &communication.handler());
+    ret &= ins_telemetry_init(&ins_complementary, &communication.handler());
     // Parameters
-    ret &= communication.parameters().add(&position_estimation.kp_alt_baro,   "POS_KP_ALT_BARO" );
-    ret &= communication.parameters().add(&position_estimation.kp_vel_baro,   "POS_KP_VELB"     );
-    ret &= communication.parameters().add(&position_estimation.kp_pos_gps[0], "POS_KP_POS0"     );
-    ret &= communication.parameters().add(&position_estimation.kp_pos_gps[1], "POS_KP_POS1"     );
-    ret &= communication.parameters().add(&position_estimation.kp_pos_gps[2], "POS_KP_POS2"     );
-    ret &= communication.parameters().add(&position_estimation.kp_vel_gps[0], "POS_KP_VEL0"     );
-    ret &= communication.parameters().add(&position_estimation.kp_vel_gps[1], "POS_KP_VEL1"     );
-    ret &= communication.parameters().add(&position_estimation.kp_vel_gps[2], "POS_KP_VEL2"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_XY_pos,     "POS_K_GPS_XY"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_Z_pos,      "POS_K_GPS_Z"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_XY_vel,     "POS_K_GPS_V_XY"  );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_Z_vel,      "POS_K_GPS_V_Z"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_XY_pos_rtk, "POS_K_RTK_XY"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_Z_pos_rtk,  "POS_K_RTK_Z"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_XY_vel_rtk, "POS_K_RTK_V_XY"  );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_gps_Z_vel_rtk,  "POS_K_RTK_V_Z"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_baro_alt,       "POS_K_BARO_Z"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_baro_vel,       "POS_K_BARO_V_Z"  );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_alt,      "POS_K_SONAR_Z"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_vel,      "POS_K_SONAR_V_Z" );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_flow_vel,       "POS_K_OF_V_XY"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_gps,           "POS_USE_GPS"     );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_baro,          "POS_USE_BARO"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_sonar,         "POS_USE_SONAR"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_flow,          "POS_USE_FLOW"    );
 
     // -------------------------------------------------------------------------
     // Kalman INS specifi
@@ -405,6 +417,7 @@ bool LEQuad::init_ins(void)
     ret &= communication.parameters().add(&ins_kf.config_.sigma_gps_z,      "INS_Z_POS_Z"       );
     ret &= communication.parameters().add(&ins_kf.config_.sigma_gps_velxy,  "INS_Z_VEL_XY"      );
     ret &= communication.parameters().add(&ins_kf.config_.sigma_gps_velz,   "INS_Z_VEL_Z"       );
+    ret &= communication.parameters().add(&ins_kf.config_.sigma_gps_mocap,  "INS_Z_MOCAP"       );
     ret &= communication.parameters().add(&ins_kf.config_.sigma_baro,       "INS_Z_BARO"        );
     ret &= communication.parameters().add(&ins_kf.config_.sigma_flow,       "INS_Z_FLOW"        );
     ret &= communication.parameters().add(&ins_kf.config_.sigma_sonar,      "INS_Z_SONAR"       );
@@ -440,7 +453,7 @@ bool LEQuad::init_flow(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_OPTICAL_FLOW, 200000, &px4flow_telemetry_send, &flow);
 
     // Task
-    ret &= scheduler.add_task(100000, &Px4flow_i2c::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, &Px4flow_i2c::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
 
 
     return ret;
@@ -695,5 +708,5 @@ bool LEQuad::main_task(void)
   // ret &= vector_field_waypoint_init(&vector_field_waypoint,
   //                                   {},
   //                                   &waypoint_handler,
-  //                                   &position_estimation,
+  //                                   &ins_complementary,
   //                                   &command.velocity);

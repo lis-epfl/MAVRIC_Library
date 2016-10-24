@@ -53,26 +53,25 @@
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/onboard_parameters.hpp"
-#include "communication/state.hpp"
-#include "communication/state_machine.hpp"
-#include "communication/remote_default_config.hpp"
+#include "manual_control/remote_default_config.hpp"
 
 #include "control/altitude_controller.hpp"
 #include "control/position_controller.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
-#include "control/manual_control.hpp"
-#include "control/navigation_directto.hpp"
+#include "manual_control/manual_control.hpp"
+#include "navigation/navigation_directto.hpp"
 #include "control/rate_controller.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
-#include "control/manual_control.hpp"
+#include "manual_control/manual_control.hpp"
 #include "control/stabilisation.hpp"
 
-#include "control/vector_field_waypoint.hpp"
+#include "navigation/vector_field_waypoint.hpp"
 
 #include "drivers/battery.hpp"
 #include "drivers/gps.hpp"
 #include "drivers/gps_mocap.hpp"
+#include "drivers/gps_hub.hpp"
 #include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
 #include "drivers/state_display.hpp"
@@ -96,11 +95,16 @@
 #include "sensing/ahrs_ekf.hpp"
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
-#include "sensing/position_estimation.hpp"
+#include "sensing/ins_complementary.hpp"
 #include "sensing/ins_kf.hpp"
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
 #include "sensing/ahrs_ekf_mocap.hpp"
+
+#include "status/geofence.hpp"
+#include "status/geofence_cylinder.hpp"
+#include "status/state.hpp"
+#include "status/state_machine.hpp"
 
 #include "util/coord_conventions.hpp"
 #include "util/print_util.hpp"
@@ -140,10 +144,12 @@ public:
         Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::conf_t mission_handler_landing_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
-        Position_estimation::conf_t position_estimation_config;
+        INS_complementary::conf_t ins_complementary_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
         Cascade_controller::conf_t cascade_controller_config;
+        Geofence_cylinder::conf_t safety_geofence_config;
+        Geofence_cylinder::conf_t emergency_geofence_config;
     };
 
     /**
@@ -261,8 +267,11 @@ protected:
     Servo&          servo_7;            ///< Reference to servos structure
 
 
-    // Motion capture
-    Gps_mocap       gps_mocap;       ///< Position measure using mocap information
+    // Motion capture, position
+    Gps_mocap       gps_mocap;          ///< Position measure using mocap information
+    Gps_hub<2>      gps_hub;            ///< Gps hub
+
+    // Motion capture, orientation
     Ahrs_ekf_mocap  ahrs_ekf_mocap;     ///< Attitude measure from mocap information
 
     Manual_control manual_control;                              ///< The joystick parsing structure
@@ -276,7 +285,7 @@ protected:
     Ahrs_ekf ahrs_ekf;
 
     INS*                ins_;                                   ///< Alias for the position filter in use
-    Position_estimation position_estimation;                    ///< The position estimaton structure
+    INS_complementary   ins_complementary;                      ///< The position estimaton structure
     INS_kf              ins_kf;                                 ///< The Kalman INS structure, used for position estimation
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
@@ -295,7 +304,8 @@ protected:
     Mission_handler_critical_navigating<Navigation_controller_I> critical_navigating_handler;
     Mission_planner mission_planner;                            ///< Controls the mission plan
 
-
+    Geofence_cylinder safety_geofence_;                         ///< Geofence
+    Geofence_cylinder emergency_geofence_;                      ///< Geofence
 
     State_machine state_machine;                                ///< The structure for the state machine
 
@@ -340,13 +350,18 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.ahrs_ekf_config = Ahrs_ekf::default_config();
 
-    conf.position_estimation_config = Position_estimation::default_config();
+    conf.ins_complementary_config = INS_complementary::default_config();
 
     conf.manual_control_config = Manual_control::default_config();
 
     conf.remote_config = remote_default_config();
 
     conf.cascade_controller_config = Cascade_controller::default_config();
+
+    conf.safety_geofence_config     = Geofence_cylinder::default_config();
+    conf.emergency_geofence_config  = Geofence_cylinder::default_config();
+    conf.emergency_geofence_config.radius = 1000.0f;
+    conf.emergency_geofence_config.height = 500.0f;
 
     /* Mavlink communication config */
     conf.mavlink_communication_config                        = Mavlink_communication::default_config(sysid);
@@ -364,16 +379,11 @@ LEQuad::conf_t LEQuad::dronedome_config(uint8_t sysid)
 
     conf = LEQuad::default_config(sysid);
 
-    //adapt gain for the drone dome
-    for (int i = 0; i < 3; ++i)
-    {
-        conf.position_estimation_config.kp_pos_gps[i] = 100.0f;
-        conf.position_estimation_config.kp_vel_gps[i] = 100.0f;
-    }
-    conf.position_estimation_config.kp_alt_baro = 0.0f;
-    conf.position_estimation_config.kp_vel_baro = 0.0f;
-    conf.position_estimation_config.kp_alt_sonar = 0.0f;
-    conf.position_estimation_config.kp_vel_sonar = 0.0f;
+    // adapt gains for the drone dome
+    conf.ins_complementary_config.kp_baro_alt = 0.0f;
+    conf.ins_complementary_config.kp_baro_vel = 0.0f;
+    conf.ins_complementary_config.kp_sonar_alt = 0.0f;
+    conf.ins_complementary_config.kp_sonar_vel = 0.0f;
 
     conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
 

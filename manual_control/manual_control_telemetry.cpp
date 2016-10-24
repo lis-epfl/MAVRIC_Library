@@ -41,10 +41,10 @@
  ******************************************************************************/
 
 
-#include "control/manual_control_telemetry.hpp"
-#include "control/manual_control.hpp"
-#include "communication/remote_telemetry.hpp"
-#include "control/joystick_telemetry.hpp"
+#include "manual_control/manual_control_telemetry.hpp"
+#include "manual_control/manual_control.hpp"
+#include "manual_control/remote_telemetry.hpp"
+#include "manual_control/joystick_telemetry.hpp"
 #include "hal/common/time_keeper.hpp"
 #include "util/print_util.hpp"
 
