@@ -78,12 +78,15 @@ public:
 
     Servos_mix_ywing(args_t& args, const conf_t& config = default_config());
 
-    virtual void update();
+    virtual bool update();
 
 
     static inline conf_t default_config();
 
 private:
+    torque_command_t torque_command_;
+    thrust_command_t thrust_command_;
+
     flap_dir_t  flap_top_dir_;       ///< Left  flap turning direction
     flap_dir_t  flap_right_dir_;     ///< Right flap turning direction
     flap_dir_t  flap_left_dir_;      ///< Rear  flap turning direction

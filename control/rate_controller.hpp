@@ -36,7 +36,7 @@
  * \author Julien Lecoeur
  * \author Basil Huber
  *
- * \brief A controller for rate control, to be use within a cascade controller structure
+ * \brief A controller for rate control
  *
  * TODO: update this text
  * \details It takes a command in attitude (roll/pitch/yaw or quaternion) as
@@ -53,15 +53,13 @@
 #ifndef RATE_CONTROLLER_HPP_
 #define RATE_CONTROLLER_HPP_
 
-#include "control/base_cascade_controller.hpp"
-#include "control/rate_controller_i.hpp"
+#include "control/controller.hpp"
 #include "control/pid_controller.hpp"
 #include "util/constants.hpp"
 #include "sensing/ahrs.hpp"
 
 
-template<class TServos_mix>
-class Rate_controller : public Rate_controller_I, public Base_cascade_controller
+class Rate_controller : public Controller<rate_command_t, torque_command_t>
 {
 public:
 
@@ -71,70 +69,75 @@ public:
     struct conf_t
     {
         pid_controller_conf_t pid_config[3];   ///< Angular rate PID controller for roll, pitch and yaw
-        typename TServos_mix::conf_t servos_mix_config;
     };
 
     /**
-     * \brief Rate controller constructor arguments
+     * \brief   Default Configuration
+     *
+     * /return  config
      */
-    struct args_t
-    {
-        const ahrs_t& ahrs;
-        typename TServos_mix::args_t servos_mix_args;
-    };    
+    static inline conf_t default_config();
+
 
     /**
-     * \brief                       Constructor
+     * \brief                 Constructor
      *
-     * \param   args                containing constructor arguments for rate controller and TServos_mix
-     * \param   config              Configuration     
+     * \param   ahrs          Reference to estimated attitude
+     * \param   config        Configuration
      */
-    Rate_controller(args_t args, const conf_t& config = default_config());
+    Rate_controller(const ahrs_t& ahrs, const conf_t& config = default_config());
 
-    virtual void update();
 
-    /*
-     * \brief   Set rate command and set controller cascade to "rate mode" 
-     * \details Sets the rate_command_ and sets cascade_command_ to point to rate_command, signaling that this is the command mode
-     *          This function should NOT be called from higher level controllers if they provide a command, use update_cascade instead
-     * \param rate_command  rate command to be set and used to calculate the torque command
-     * 
-     * \return  success     indicates whether the command was accepted
+    /**
+     * \brief   Main update function
+     *
+     * \return  success
      */
-    bool set_rate_command(const rate_command_t& rate_command);
+    bool update(void);
 
-    static conf_t default_config();
 
-protected:
-    /*
-     * \brief   calc torque commands based on given rate command and update underlaying cascade level (TTorque)
-     * \details Sets the internal rate_command_ to the provided one, without modifiying cascade_command_
-     *          Calls calc_torque_command followed by TTorque::update_cascade
-     *          This function should be called from higher level controllers if they provide a command
-     * \param rate_command  rate command to be set
+    /**
+     * \brief   Sets the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
      */
-    void update_cascade(const rate_command_t& rate_command);
+    bool set_command(const rate_command_t& command);
 
-    /*
-     * \brief   calc torque commands based on given rate command
-     * \details Sets the internal rate_command_ to the provided one, without modifiying cascade_command_
-     *          This function should be called from higher level controllers if they provide a command
-     * \param rate_command  rate_command
+
+    /**
+     * \brief   Returns the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
      */
-    typename TServos_mix::torq_command_t calc_torque_command(const rate_command_t& rate_command);
+    bool get_command(rate_command_t& command) const;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    bool get_output(torque_command_t& command) const;
 
 
 private:
+    const ahrs_t&               ahrs_;                  ///< Ref to attitude estimation (input)
+
+    rate_command_t              rate_command_;          ///< Rate command (input)
+    torque_command_t            torque_command_;        ///< Torque command (output)
+
     pid_controller_t            pid_[3];                ///< Angular rate PID controller for roll, pitch and yaw
     float                       dt_s_;                  ///< The time interval between two updates
     float                       last_update_s_;         ///< The time of the last update in s
-    const ahrs_t&               ahrs_;                  ///< Ref to attitude estimation (input)
-    rate_command_t              rate_command_;          ///< Rate command (input/output)
-    TServos_mix                 servos_mix_;            ///< Servos_mix
 };
 
-template<class TServos_mix>
-typename Rate_controller<TServos_mix>::conf_t Rate_controller<TServos_mix>::default_config()
+typename Rate_controller::conf_t Rate_controller::default_config()
 {
     conf_t conf = {};
 
@@ -184,11 +187,7 @@ typename Rate_controller<TServos_mix>::conf_t Rate_controller<TServos_mix>::defa
     conf.pid_config[YAW].differentiator.clip        = 0.0f;
     conf.pid_config[YAW].soft_zone_width            = 0.0;
 
-    conf.servos_mix_config = TServos_mix::default_config();
-
     return conf;
 };
-
-#include "control/rate_controller.hxx"
 
 #endif /* RATE_CONTROLLER_HPP_ */

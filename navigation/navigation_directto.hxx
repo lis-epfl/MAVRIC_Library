@@ -95,7 +95,7 @@ bool Navigation_directto<TPosition_controller>::set_xyposition_zvel_command(cons
 {
     /* set pid controller to standard parameters */
     //pid_controller_apply_config(&(TPosition_controller::pid_controller_), &std_pid_config_);
-    
+
     /* call parent class method */
     return TPosition_controller::set_xyposition_zvel_command(command);
 }
@@ -126,11 +126,11 @@ template<class TPosition_controller>
 typename TPosition_controller::pos_command_t Navigation_directto<TPosition_controller>::calc_position_command(const nav_command_t& nav_command)
 {
     pos_command_t pos_command;
-    pos_command.pos = nav_command.pos;
+    pos_command.xyz = nav_command.xyz;
 
     // calculate distance to goal squared
     const local_position_t& pos = ins_.position_lf();
-    const local_position_t& goal_pos = nav_command.pos;
+    const local_position_t& goal_pos = nav_command.xyz;
     float dist[3] = {pos[X] - goal_pos[X], pos[Y] - goal_pos[Y], pos[Z] - goal_pos[Z]};
     distance_to_goal_sqr_ = vectors_norm_sqr(dist);
 

@@ -71,7 +71,7 @@
 #include <stdint.h>
 
 #include "drivers/servo.hpp"
-#include "control/control_command.h"
+#include "control/control_command.hpp"
 #include "util/matrix.hpp"
 
 /**

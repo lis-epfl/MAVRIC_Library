@@ -45,8 +45,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-template<class TVelocity_controller>
-Position_controller<TVelocity_controller>::Position_controller(args_t args, const conf_t& config) :
+Position_controller::Position_controller(args_t args, const conf_t& config) :
     TVelocity_controller(args.velocity_controller_args, config.velocity_controller_config),
     ins_(args.ins),
     ahrs_(args.ahrs),
@@ -61,65 +60,7 @@ Position_controller<TVelocity_controller>::Position_controller(args_t args, cons
     set_position_command(pos_command);
 }
 
-template<class TVelocity_controller>
-void Position_controller<TVelocity_controller>::update()
-{
-    /* check whether this is the highest active level of the cascade */
-    if(TVelocity_controller::cascade_command_ == &position_command_)
-    {
-        /* calculate torque_command and propagate down the cascade */
-        typename TVelocity_controller::vel_command_t vel_command = calc_velocity_command(position_command_);
-        TVelocity_controller::update_cascade(vel_command);
-    }
-    else
-    {
-        /* propagate update() down the cascade until reaching the highest active level */
-        TVelocity_controller::update();
-    }
-}
-
-
-template<class TVelocity_controller>
-bool Position_controller<TVelocity_controller>::set_position_command(const pos_command_t& pos_command)
-{
-    position_command_ = pos_command;
-    /* set ctrl_mode to use position in xyz as input */
-    ctrl_mode_ = ctrl_mode_t::POS_XYZ;
-    /* set this as input cascade level */
-    TVelocity_controller::cascade_command_ = &position_command_;
-    return true;
-}
-
-
-template<class TVelocity_controller>
-bool Position_controller<TVelocity_controller>::set_xyposition_zvel_command(const xypos_zvel_command_t& command)
-{
-    position_command_.pos = static_cast<local_position_t>(std::array<float,3>{{command.pos_x, command.pos_y, 0}});
-    zvel_command_ = command.vel_z;
-    /* set ctrl_mode to use position in xy and velocity in z as input */
-    ctrl_mode_ = ctrl_mode_t::POS_XY_VEL_Z;
-    /* set this as input cascade level */
-    TVelocity_controller::cascade_command_ = &position_command_;
-    return true;
-}
-
-
-//------------------------------------------------------------------------------
-// PROTECTED FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-template<class TVelocity_controller>
-void Position_controller<TVelocity_controller>::update_cascade(const pos_command_t& pos_command)
-{
-    position_command_ = pos_command;
-    /* set ctrl_mode to use position in xyz as input */
-    ctrl_mode_ = ctrl_mode_t::POS_XYZ;
-    typename TVelocity_controller::vel_command_t vel_command = calc_velocity_command(position_command_);
-    TVelocity_controller::update_cascade(vel_command);
-}
-
-template<class TVelocity_controller>
-typename TVelocity_controller::vel_command_t Position_controller<TVelocity_controller>::calc_velocity_command(const pos_command_t& pos_command)
+bool Position_controller::update()
 {
     /* get current vehicle position in local frame */
     local_position_t local_pos = ins_.position_lf();
@@ -175,5 +116,5 @@ typename TVelocity_controller::vel_command_t Position_controller<TVelocity_contr
     velocity_command.vel[Y] *= yaw_error_factor;
 
 
-	  return velocity_command;
+	return true;
 }

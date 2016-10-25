@@ -34,10 +34,10 @@
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief A controller for attitude control, to be use within a cascade controller structure
+ * \brief A controller for attitude control
  *
- * TODO: update this text
  * \details It takes a command in attitude (roll/pitch/yaw or quaternion) as
  * input, and computes a torque command on roll pitch and yaw.
  * The inner PID loop controls the angular speed around the 3 axis. This inner
@@ -56,12 +56,11 @@
 #include "control/pid_controller.hpp"
 #include "sensing/ahrs.hpp"
 #include "util/constants.hpp"
-#include "control/control_command.h"
-#include "control/attitude_controller_i.hpp"
+#include "control/control_command.hpp"
+#include "control/controller.hpp"
 
 
-template<class TRate_controller>
-class Attitude_controller : public Attitude_controller_I, public TRate_controller
+class Attitude_controller : public Controller<attitude_command_t, rate_command_t>
 {
 public:
 
@@ -70,64 +69,79 @@ public:
      */
     struct conf_t
     {
-        pid_controller_conf_t                pid_config[3];   ///< Attitude PID controller for roll, pitch and yaw
-        typename TRate_controller::conf_t    rate_controller_config;    ///< Config for rate control which this controller inherits from
+        pid_controller_conf_t pid_config[3];   ///< Attitude PID controller for roll, pitch and yaw
     };
 
+
     /**
-     * \brief Attitude controller constructor arguments
+     * \brief   Default Configuration
+     *
+     * /return  config
      */
-    struct args_t
-    {
-        const ahrs_t&                     ahrs;
-        typename TRate_controller::args_t rate_controller_args;
-    };    
+    static inline conf_t default_config();
+
 
     /**
      * \brief                       Constructor
      *
-     * \param   args                Constructor arguments
-     * \param   config              Configuration     
+     * \param   ahrs                Reference to estimated attitude
+     * \param   config              Configuration
      */
-    Attitude_controller(args_t args, const conf_t& config = default_config());
+    Attitude_controller(const ahrs_t& ahrs, const conf_t& config = default_config());
 
-    virtual void update();
 
-    bool set_attitude_command(const att_command_t& att_command);
+    /**
+     * \brief   Main update function
+     *
+     * \return  success
+     */
+    bool update();
 
-    inline att_command_t attitude_command(){return att_command_;};
 
-    static inline conf_t default_config();
+    /**
+     * \brief   Sets the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    bool set_command(const attitude_command_t& command);
+
+
+    /**
+     * \brief   Returns the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    bool get_command(attitude_command_t& command) const;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    bool get_output(rate_command_t& command) const;
+
 
 protected:
-    /*
-     * \brief   calc rate commands based on given attitude command and update underlaying cascade level (TRate)
-     * \details Sets the internal attitude_command_ to the provided one, without modifiying cascade_command_
-     *          Calls calc_rate_command followed by TRate::update_cascade
-     *          This function should be called from higher level controllers if they provide a command
-     * \param   attitude_command  attitude command to be set
-     */
-    void update_cascade(const att_command_t& att_command);
+    const ahrs_t&               ahrs_;                       ///< Ref to attitude estimation (input)
 
-    /*
-     * \brief   calc rate commands based on given attitude command
-     * \details Sets the internal attitude_command_ to the provided one, without modifiying cascade_command_
-     *          This function should be called from higher level controllers if they provide a command
-     * \param attitude_command  attitude command
-     */
-    typename TRate_controller::rate_command_t calc_rate_command(const att_command_t& att_command);
+    attitude_command_t          attitude_command_;           ///< Attitude command
+    rate_command_t              rate_command_;               ///< Attitude command
 
-private:
     attitude_error_estimator_t  attitude_error_estimator_;   ///< Attitude error estimator
     pid_controller_t            pid_[3];                     ///< Attitude PID controller for roll, pitch and yaw
     float                       dt_s_;                       ///< The time interval between two updates
     float                       last_update_s_;              ///< The time of the last update in s
-    const ahrs_t&               ahrs_;                       ///< Ref to attitude estimation (input)
-    att_command_t               att_command_;                  ///< Ref to attitude command (input)
 };
 
-template<class TRate_controller>
-typename Attitude_controller<TRate_controller>::conf_t Attitude_controller<TRate_controller>::default_config()
+
+Attitude_controller::conf_t Attitude_controller::default_config()
 {
     conf_t conf = {};
 
@@ -177,11 +191,7 @@ typename Attitude_controller<TRate_controller>::conf_t Attitude_controller<TRate
     conf.pid_config[YAW].differentiator.clip       = 0.0f;
     conf.pid_config[YAW].soft_zone_width           = 0.0f;
 
-    conf.rate_controller_config = TRate_controller::default_config();
-
     return conf;
 };
-
-#include "control/attitude_controller.hxx"
 
 #endif /* ATTITUDE_CONTROLLER_HPP_ */

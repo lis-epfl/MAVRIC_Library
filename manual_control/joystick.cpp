@@ -229,22 +229,29 @@ void Joystick::get_rate_command(rate_command_t* command, float scale) const
 }
 
 
-void Joystick::get_thrust_command(thrust_command_t* command) const
+void Joystick::get_thrust_command_copter(thrust_command_t* command) const
 {
-    command->thrust = throttle();
+    command->xyz[X] = 0.0f;
+    command->xyz[Y] = 0.0f;
+    command->xyz[Z] = - throttle();
+}
+
+void Joystick::get_thrust_command_wing(thrust_command_t* command) const
+{
+    command->xyz[X] = throttle();
+    command->xyz[Y] = 0.0f;
+    command->xyz[Z] = 0.0f;
 }
 
 
-Attitude_controller_I::att_command_t Joystick::get_attitude_command(quat_t current_attitude) const
+attitude_command_t Joystick::get_attitude_command(quat_t current_attitude) const
 {
     float rpy[3];
     rpy[ROLL]  = scale_attitude_.x * roll();
     rpy[PITCH] = scale_attitude_.y * pitch();
     rpy[YAW]   = scale_attitude_.r * yaw() + coord_conventions_get_yaw(current_attitude);
 
-    Attitude_controller_I::att_command_t command;
-    command.att = coord_conventions_quaternion_from_rpy(rpy);
-    command.thrust = throttle();
+    attitude_command_t command = coord_conventions_quaternion_from_rpy(rpy);
     return command;
 }
 
@@ -254,66 +261,34 @@ void Joystick::get_velocity_command(velocity_command_t* command, float scale) co
     command->xyz[X] = -10.0f * scale * pitch();
     command->xyz[Y] =  10.0f * scale * roll();
     command->xyz[Z] = -1.5f  * scale * throttle();
-    command->mode = VELOCITY_COMMAND_MODE_SEMI_LOCAL;
-}
-
-
-void Joystick::get_angle_command_wing(control_command_t* controls) const
-{
-    controls->rpy[ROLL] = asinf(roll());   // arcsin()
-    controls->rpy[PITCH] = asinf(pitch()); // arcsin()
-    controls->rpy[YAW] = asinf(yaw());     // arcsin()
-    controls->thrust = throttle();
-}
-
-
-void Joystick::get_velocity_wing(const float ki_yaw, control_command_t* controls) const
-{
-    controls->tvel[X] = 10.0f * (1.0f + channels_.z * MAX_JOYSTICK_RANGE);
-    controls->tvel[Y] = 0.0f;
-    controls->tvel[Z] = -6.0f * channels_.x * MAX_JOYSTICK_RANGE;
-    controls->rpy[YAW] += ki_yaw * 0.2f * channels_.y * MAX_JOYSTICK_RANGE; // Turn rate
 }
 
 
 void Joystick::get_attitude_command_absolute_yaw(attitude_command_t* command, float scale) const
 {
-    command->rpy[ROLL]  = scale * roll();
-    command->rpy[PITCH] = scale * pitch();
-    command->rpy[YAW]   = scale * yaw();
-
-    aero_attitude_t attitude;
-    attitude.rpy[ROLL]  = command->rpy[ROLL];
-    attitude.rpy[PITCH] = command->rpy[PITCH];
-    attitude.rpy[YAW]   = command->rpy[YAW];
-    command->quat = coord_conventions_quaternion_from_aero(attitude);
+    *command = coord_conventions_quaternion_from_rpy(scale * roll(), scale * pitch(), scale * yaw());
 }
 
 
 void Joystick::get_attitude_command_vtol(const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch) const
 {
-    // Get Roll Pitch and Yaw from joystick
-    command->rpy[ROLL]  = scale * roll();
-    command->rpy[PITCH] = scale * pitch() + reference_pitch;
-    command->rpy[YAW]   += ki_yaw * scale * yaw();
-
     // Apply yaw and pitch first
     aero_attitude_t attitude;
     attitude.rpy[ROLL]  = 0.0f;
-    attitude.rpy[PITCH] = command->rpy[PITCH];
-    attitude.rpy[YAW]   = command->rpy[YAW];
-    command->quat = coord_conventions_quaternion_from_aero(attitude);
+    attitude.rpy[PITCH] = scale * pitch() + reference_pitch;
+    attitude.rpy[YAW]   = coord_conventions_get_yaw(*command) + ki_yaw * scale * yaw();
+    quat_t q_yawpitch = coord_conventions_quaternion_from_aero(attitude);
 
 
     // Apply roll according to transition factor
-    quat_t q_roll = { quick_trig_cos(0.5f * command->rpy[ROLL]),
+    quat_t q_roll = { quick_trig_cos(0.5f * scale * roll()),
         {
-            quick_trig_cos(reference_pitch)* quick_trig_sin(0.5f * command->rpy[ROLL]),
+            quick_trig_cos(reference_pitch) * quick_trig_sin(0.5f * scale * roll()),
             0.0f,
-            quick_trig_sin(reference_pitch)* quick_trig_sin(0.5f * command->rpy[ROLL])
+            quick_trig_sin(reference_pitch) * quick_trig_sin(0.5f * scale * roll())
         }
     };
 
     // q := q . q_rh . q_rf
-    command->quat = quaternions_multiply(command->quat, q_roll);
+    *command = quaternions_multiply(q_yawpitch, q_roll);
 }

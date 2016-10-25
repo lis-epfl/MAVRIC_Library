@@ -44,7 +44,7 @@
 
 #include "control/servos_mix_quadcopter_diag.hpp"
 
-Servos_mix_quadcopter_diag::Servos_mix_quadcopter_diag(args_t args, const conf_t& config) : 
+Servos_mix_quadcopter_diag::Servos_mix_quadcopter_diag(args_t args, const conf_t& config) :
     motor_rear_left_dir_(config.motor_rear_left_dir),
     motor_front_left_dir_(config.motor_front_left_dir),
     motor_front_right_dir_(config.motor_front_right_dir),
@@ -58,33 +58,33 @@ Servos_mix_quadcopter_diag::Servos_mix_quadcopter_diag(args_t args, const conf_t
 {
 }
 
-void Servos_mix_quadcopter_diag::update()
+bool Servos_mix_quadcopter_diag::update()
 {
     float motor[4];
 
     // Front Right motor
-    motor[0] =  torq_command_.thrust +
-                (- torq_command_.torq[0]) +
-                (+ torq_command_.torq[1]) +
-                motor_front_right_dir_ * torq_command_.torq[2];
+    motor[0] =  thrust_command_.xyz[Z] +
+                (- torque_command_.xyz[X]) +
+                (+ torque_command_.xyz[Y]) +
+                motor_front_right_dir_ * torque_command_.xyz[Z];
 
     // Front Left motor
-    motor[1] =  torq_command_.thrust +
-                (+ torq_command_.torq[0]) +
-                (+ torq_command_.torq[1]) +
-                motor_front_left_dir_ * torq_command_.torq[2];
+    motor[1] =  thrust_command_.xyz[Z] +
+                (+ torque_command_.xyz[X]) +
+                (+ torque_command_.xyz[Y]) +
+                motor_front_left_dir_ * torque_command_.xyz[Z];
 
     // Rear Right motor
-    motor[2]  = torq_command_.thrust +
-                (- torq_command_.torq[0]) +
-                (- torq_command_.torq[1]) +
-                motor_rear_right_dir_ * torq_command_.torq[2];
+    motor[2]  = thrust_command_.xyz[Z] +
+                (- torque_command_.xyz[X]) +
+                (- torque_command_.xyz[Y]) +
+                motor_rear_right_dir_ * torque_command_.xyz[Z];
 
     // Rear Left motor
-    motor[3]  = torq_command_.thrust +
-                (+ torq_command_.torq[0]) +
-                (- torq_command_.torq[1]) +
-                motor_rear_left_dir_ * torq_command_.torq[2];
+    motor[3]  = thrust_command_.xyz[Z] +
+                (+ torque_command_.xyz[X]) +
+                (- torque_command_.xyz[Y]) +
+                motor_rear_left_dir_ * torque_command_.xyz[Z];
 
     // Clip values
     for (int8_t i = 0; i < 4; i++)
@@ -99,10 +99,10 @@ void Servos_mix_quadcopter_diag::update()
         }
     }
 
-
-
     motor_front_right_.write(motor[0]);
     motor_front_left_.write(motor[1]);
     motor_rear_right_.write(motor[2]);
     motor_rear_left_.write(motor[3]);
+
+    return true;
 }

@@ -43,7 +43,7 @@
 #ifndef MISSION_HANDLER_ON_GROUND__
 #define MISSION_HANDLER_ON_GROUND__
 
-#include "control/rate_controller_i.hpp"
+#include "control/controller.hpp"
 #include "mission/mission_handler.hpp"
 
 /*
@@ -60,7 +60,7 @@ public:
      *
      * \param   rate_controller     The reference to the attitude controls
      */
-     Mission_handler_on_ground(Rate_controller_I& rate_controller);
+     Mission_handler_on_ground(Controller<rate_command_t>& rate_controller);
 
 
     /**
@@ -102,7 +102,7 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    Rate_controller_I& rate_controller_;                    ///< The reference to the rate controller
+    Controller<rate_command_t>& rate_controller_;                    ///< The reference to the rate controller
 };
 
 

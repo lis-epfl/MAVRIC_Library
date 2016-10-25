@@ -30,47 +30,71 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ivelocity_yaw_controller.hpp
+ * \file controller.hpp
  *
  * \author MAV'RIC Team
- * \author Basil Huber
+ * \author Julien Lecoeur
  *
- * \brief Interface for velocity controller taking also a yaw command
+ * \brief   Interface for controllers
  *
  ******************************************************************************/
 
+#ifndef CONTROLLER_HPP_
+#define CONTROLLER_HPP_
 
-#ifndef IVELOCITY_CONTROLLER_YAW_HPP_
-#define IVELOCITY_CONTROLLER_YAW_HPP_
+#include "control/control_command.hpp"
 
-#include "util/coord_conventions.hpp"
-#include "control/control_command.h"
-
-class IVelocity_yaw_controller
+template<typename in_command_T, typename out_command_T = empty_command_t>
+class Controller
 {
 public:
-    /*
-     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
-     */
-    struct vel_yaw_command_t : base_command_t
-    {
-        local_velocity_t    vel;        ///< desired velocity in local frame
-        float               yaw;        ///< desired absolute yaw in local frame
-    };
+    // typedef Controller<in_command_T, out_command_T> Ctlr_t;
+    typedef in_command_T in_command_t;
+    typedef out_command_T out_command_t;
 
     /**
-     * \brief   Update controller;
+     * \brief   Main update function
+     *
+     * \return  success
      */
-    virtual void update() = 0;
+    virtual bool update(void) = 0;
+
+
+    // template<typename T>
+    // bool set_command(T command)
+    // {
+    //     return false;
+    // };
+
 
     /**
-     * \brief           sets the velocity yaw command (desired velocity and desired yaw)
+     * \brief   Sets the input command
      *
-     * \param command   velocity command indicating desired velocity and yaw in local frame
+     * \param   command   Input command
      *
-     * \return success  whether command was accepted
+     * \return  success
      */
-    inline virtual bool set_velocity_yaw_command(const vel_yaw_command_t& command) = 0;
+    virtual bool set_command(const in_command_t& command) = 0;
+
+
+    /**
+     * \brief   Returns the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool get_command(in_command_t& command) const = 0;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    virtual bool get_output(out_command_t& command) const = 0;
 };
 
-#endif /* IVELOCITY_CONTROLLER_YAW_HPP_ */
+#endif  // CONTROLLER_HPP_

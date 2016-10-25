@@ -403,7 +403,6 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     float pos_obj[3];
 
     // Re-init velocity command
-    vector_field->velocity_command->mode    = VELOCITY_COMMAND_MODE_LOCAL;
     vector_field->velocity_command->xyz[X]  = 0.0f;
     vector_field->velocity_command->xyz[Y]  = 0.0f;
     vector_field->velocity_command->xyz[Z]  = 0.0f;
@@ -484,7 +483,7 @@ bool vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
     }
 
     // Limit velocity
-    float vel_norm = vectors_norm(vector_field->velocity_command->xyz);
+    float vel_norm = vectors_norm(vector_field->velocity_command->xyz.data());
     if (vel_norm > 5.0f)
     {
         vector_field->velocity_command->xyz[X] = 5.0f * vector_field->velocity_command->xyz[X] / vel_norm;

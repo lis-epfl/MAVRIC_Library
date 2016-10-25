@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file control_command.h
+ * \file control_command.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,8 +40,11 @@
  *
  ******************************************************************************/
 
-#ifndef CONTROL_COMMAND_H_
-#define CONTROL_COMMAND_H_
+#ifndef CONTROL_COMMAND_HPP_
+#define CONTROL_COMMAND_HPP_
+
+
+#include "util/coord_conventions.hpp"
 
 extern "C"
 {
@@ -66,7 +69,7 @@ typedef enum
  */
 typedef struct
 {
-    local_velocity_t vel;           ///<    Velocity on X, Y and Z axis (NED frame)
+    local_velocity_t xyz;           ///<    Velocity on X, Y and Z axis (NED frame)
     float heading;                  ///<    Heading (can be ignored for fixed wing)
 } velocity_command_t;
 
@@ -76,7 +79,7 @@ typedef struct
  */
 typedef struct
 {
-    local_position_t pos;       ///<    Position in NED frame
+    local_position_t xyz;       ///<    Position in NED frame
     float heading;              ///<    Heading (can be ignored for fixed wing)
 } position_command_t;
 
@@ -90,20 +93,37 @@ typedef quat_t attitude_command_t;
 /**
  * \brief   Rate command structure (expressed in body frame)
  */
-typedef std::array<float,3> rate_command_t;
-
+// class rate_command_t: public std::array<float,3>{};
+// typedef std::array<float,3> rate_command_t;
+typedef struct
+{
+    std::array<float,3> xyz;
+} rate_command_t;
 
 /**
  * \brief   Torque command structure (expressed in body frame)
  */
-typedef typedef std::array<float,3> torque_command_t;
+// class torque_command_t: public std::array<float,3>{};
+// typedef std::array<float,3> torque_command_t;
+typedef struct
+{
+    std::array<float,3> xyz;
+} torque_command_t;
 
 
 /**
  * \brief   Thrust command type for vehicles with multi-lifting devices
  */
-typedef typedef std::array<float,3> thrust_command_t;
+typedef struct
+{
+    std::array<float,3> xyz;
+} thrust_command_t;
 
+
+/**
+ * \brief   End command type, contains nothing
+ */
+typedef struct {} empty_command_t;
 
 /**
  * \brief   Global command structure
@@ -119,4 +139,4 @@ typedef struct
     thrust_command_t        thrust3D;   ///< Thrust command
 } command_t;
 
-#endif
+#endif // CONTROL_COMMAND_HPP_

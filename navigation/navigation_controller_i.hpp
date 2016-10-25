@@ -44,18 +44,13 @@
 #define NAVIGATION_CONTROLLER_I_HPP_
 
 #include "util/coord_conventions.hpp"
-#include "control/control_command.h"
+#include "control/control_command.hpp"
 
 class Navigation_controller_I
 {
 public:
-    /*
-     * \brief   structure representing a navigation command; contains desired position in local frame
-     */
-    struct nav_command_t : base_command_t
-    {
-        local_position_t    pos;        ///< desired position in local frame
-    };
+
+    typedef position_command_t nav_command_t;
 
     /**
      * \brief   Update controller;

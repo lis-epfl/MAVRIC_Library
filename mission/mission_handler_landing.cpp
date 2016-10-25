@@ -42,28 +42,27 @@
 
 #include "mission/mission_handler_landing.hpp"
 #include "navigation/navigation_controller_i.hpp"
-#include "control/xyposition_zvel_controller_i.hpp"
 
 
 //------------------------------------------------------------------------------
 // PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-template <>
-bool Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::set_desc_to_small_alt_control_command()
-{
-	Navigation_controller_I::nav_command_t cmd;
-	cmd.pos = waypoint_.local_pos();
-	cmd.pos[Z] = desc_to_ground_altitude_;
-    return desc_to_small_alt_controller_.set_navigation_command(cmd);
-}
-
-template <>
-bool Mission_handler_landing<Navigation_controller_I,XYposition_Zvel_controller_I>::set_desc_to_ground_control_command()
-{
-	XYposition_Zvel_controller_I::xypos_zvel_command_t cmd;
-	cmd.pos_x = waypoint_.local_pos()[X];
-	cmd.pos_y = waypoint_.local_pos()[Y];
-	cmd.vel_z = 0.3f;
-    return desc_to_ground_controller_.set_xyposition_zvel_command(cmd);
-}
+// template <>
+// bool Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::set_desc_to_small_alt_control_command()
+// {
+// 	Navigation_controller_I::nav_command_t cmd;
+// 	cmd.xyz    = waypoint_.local_pos();
+// 	cmd.xyz[Z] = desc_to_ground_altitude_;
+//     return desc_to_small_alt_controller_.set_navigation_command(cmd);
+// }
+//
+// template <>
+// bool Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::set_desc_to_ground_control_command()
+// {
+// 	XYposition_Zvel_controller_I::xypos_zvel_command_t cmd;
+// 	cmd.pos_x = waypoint_.local_pos()[X];
+// 	cmd.pos_y = waypoint_.local_pos()[Y];
+// 	cmd.vel_z = 0.3f;
+//     return desc_to_ground_controller_.set_xyposition_zvel_command(cmd);
+// }

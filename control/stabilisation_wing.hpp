@@ -48,11 +48,7 @@
 #include "sensing/imu.hpp"
 #include "sensing/ins.hpp"
 #include "drivers/airspeed_analog.hpp"
-
-extern "C"
-{
-#include "control/control_command.h"
-}
+#include "control/control_command.hpp"
 
 
 /**

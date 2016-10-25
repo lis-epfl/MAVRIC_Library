@@ -418,63 +418,6 @@ Mav_mode remote_mode_get(remote_t* remote, Mav_mode current_mode)
     return new_mode;
 }
 
-void remote_get_control_command(remote_t* remote, control_command_t* controls)
-{
-    remote_update(remote);
-
-    controls->rpy[ROLL]     = remote_get_roll(remote);
-    controls->rpy[PITCH]    = remote_get_pitch(remote);
-    controls->rpy[YAW]      = remote_get_yaw(remote);
-    controls->thrust        = remote_get_throttle(remote);
-}
-
-void remote_get_velocity_vector(remote_t* remote, control_command_t* controls)
-{
-    remote_update(remote);
-
-    controls->tvel[X]   = - 10.0f * remote_get_pitch(remote);
-    controls->tvel[Y]   = 10.0f * remote_get_roll(remote);
-    controls->tvel[Z]   = - 1.5f * remote_get_throttle(remote);
-    controls->rpy[YAW]  = remote_get_yaw(remote);
-}
-
-void remote_get_rate_command_wing(remote_t* remote, control_command_t* controls)
-{
-    remote_update(remote);
-
-    /*  We want to obtain same results as with full manual control.
-        So, we want the output of the regulator to go from -1 to +1 on each axis
-        (if scaling is applied on manual mode by the remote, it will also be applied on the rate, so the remote scaling doesn't matter)
-        Assuming the regulators are only P, if the current rate is 0, we have at the output of the regulator: u = Kp*r = Kp * scaler * remoteInput
-        ==> we want u = remoteInput to have the same behavior
-        ==> scaler = 1/Kp
-    */
-
-    controls->rpy[ROLL] = 15.4f * remote_get_roll(remote);
-    controls->rpy[PITCH] = 18.2f * remote_get_pitch(remote);
-    controls->rpy[YAW] = remote_get_yaw(remote);
-    controls->thrust = remote_get_throttle(remote);
-}
-
-void remote_get_angle_command_wing(remote_t* remote, control_command_t* controls)
-{
-    remote_update(remote);
-
-    controls->rpy[ROLL] = asinf(remote_get_roll(remote));
-    controls->rpy[PITCH] = asinf(remote_get_pitch(remote));
-    controls->rpy[YAW] = asinf(remote_get_yaw(remote));
-    controls->thrust = remote_get_throttle(remote);
-}
-
-void remote_get_velocity_wing(remote_t* remote, const float ki_yaw, control_command_t* controls)
-{
-    remote_update(remote);
-
-    controls->tvel[X] = 10.0f * (1.0f + remote_get_throttle(remote));
-    controls->tvel[Y] = 0.0f;
-    controls->tvel[Z] = -6.0f * remote_get_pitch(remote);
-    controls->rpy[YAW] += ki_yaw * 0.2f * remote_get_roll(remote); // Turn rate
-}
 
 void remote_get_torque_command(const remote_t* remote, torque_command_t* command, float scale)
 {
@@ -492,68 +435,62 @@ void remote_get_rate_command(const remote_t* remote, rate_command_t* command, fl
 }
 
 
-void remote_get_thrust_command(const remote_t* remote, thrust_command_t* command)
+void remote_get_thrust_command_copter(const remote_t* remote, thrust_command_t* command)
 {
-    command->thrust = remote_get_throttle(remote);
+    command->xyz[X] = 0.0f;
+    command->xyz[Y] = 0.0f;
+    command->xyz[Z] = - remote_get_throttle(remote);
 }
 
+
+void remote_get_thrust_command_wing(const remote_t* remote, thrust_command_t* command)
+{
+    command->xyz[X] = remote_get_throttle(remote);
+    command->xyz[Y] = 0.0f;
+    command->xyz[Z] = 0.0f;
+}
 
 void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_command_t* command, float scale)
 {
-    command->rpy[ROLL]  = scale * remote_get_roll(remote);
-    command->rpy[PITCH] = scale * remote_get_pitch(remote);
-    command->rpy[YAW]   = scale * remote_get_yaw(remote);
-
-    aero_attitude_t attitude;
-    attitude.rpy[ROLL]  = command->rpy[ROLL];
-    attitude.rpy[PITCH] = command->rpy[PITCH];
-    attitude.rpy[YAW]   = command->rpy[YAW];
-    command->quat = coord_conventions_quaternion_from_aero(attitude);
+    *command = coord_conventions_quaternion_from_rpy(scale * remote_get_roll(remote),
+                                                     scale * remote_get_pitch(remote),
+                                                     scale * remote_get_yaw(remote));
 }
 
 
-Attitude_controller_I::att_command_t remote_get_attitude_command(const remote_t* remote, quat_t current_attitude)
+attitude_command_t remote_get_attitude_command(const remote_t* remote, quat_t current_attitude)
 {
-    // TODO: work directly on quaternion
-    // TODO: add scale as config member
     float rpy[3];
     rpy[YAW] = coord_conventions_get_yaw(current_attitude) + 0.5f * remote_get_yaw(remote);
     rpy[ROLL] = remote_get_roll(remote);
     rpy[PITCH] = remote_get_pitch(remote);
 
-    Attitude_controller_I::att_command_t command;
-    command.att = coord_conventions_quaternion_from_rpy(rpy);
-    command.thrust = remote_get_throttle(remote);
+    attitude_command_t command = coord_conventions_quaternion_from_rpy(rpy);
     return command;
 }
 
 
 void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch)
 {
-    // Get Roll Pitch and Yaw from remote
-    command->rpy[ROLL]  = scale * remote_get_roll(remote);
-    command->rpy[PITCH] = scale * remote_get_pitch(remote) + reference_pitch;
-    command->rpy[YAW]   += ki_yaw * scale * remote_get_yaw(remote);
-
     // Apply yaw and pitch first
     aero_attitude_t attitude;
     attitude.rpy[ROLL]  = 0.0f;
-    attitude.rpy[PITCH] = command->rpy[PITCH];
-    attitude.rpy[YAW]   = command->rpy[YAW];
-    command->quat = coord_conventions_quaternion_from_aero(attitude);
+    attitude.rpy[PITCH] = scale * remote_get_pitch(remote) + reference_pitch;
+    attitude.rpy[YAW]   = coord_conventions_get_yaw(*command) + ki_yaw * scale * remote_get_yaw(remote);
+    quat_t q_yawpitch = coord_conventions_quaternion_from_aero(attitude);
 
 
     // Apply roll according to transition factor
-    quat_t q_roll = { quick_trig_cos(0.5f * command->rpy[ROLL]),
+    quat_t q_roll = { quick_trig_cos(0.5f * scale * remote_get_roll(remote)),
         {
-            quick_trig_cos(reference_pitch)* quick_trig_sin(0.5f * command->rpy[ROLL]),
+            quick_trig_cos(reference_pitch) * quick_trig_sin(0.5f * scale * remote_get_roll(remote)),
             0.0f,
-            quick_trig_sin(reference_pitch)* quick_trig_sin(0.5f * command->rpy[ROLL])
+            quick_trig_sin(reference_pitch) * quick_trig_sin(0.5f * scale * remote_get_roll(remote))
         }
     };
 
     // q := q . q_rh . q_rf
-    command->quat = quaternions_multiply(command->quat, q_roll);
+    *command = quaternions_multiply(q_yawpitch, q_roll);
 }
 
 
@@ -562,5 +499,4 @@ void remote_get_velocity_command(const remote_t* remote, velocity_command_t* com
     command->xyz[X] = - 10.0f * scale * remote_get_pitch(remote);
     command->xyz[Y] =   10.0f * scale * remote_get_roll(remote);
     command->xyz[Z] = - 1.5f  * scale * remote_get_throttle(remote);
-    command->mode = VELOCITY_COMMAND_MODE_SEMI_LOCAL;
 }

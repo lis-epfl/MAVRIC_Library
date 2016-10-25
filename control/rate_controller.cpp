@@ -30,63 +30,82 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller.cpp
+ * \file rate_controller.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *
- * \brief   A simple altitude controller for copter
+ * \brief A controller for rate control
+ *
+ * \details It takes a command in attitude (roll/pitch/yaw or quaternion) as
+ * input, and computes a torque command on roll pitch and yaw.
+ * The inner PID loop controls the angular speed around the 3 axis. This inner
+ * loop is fed by the outer PID loop which controls the attitude.
+ * The error of the outer loop is computed using quaternion arithmetic, and thus
+ * avoids gimbal locks as long as the attitude error is smaller than 90 degrees
+ * on the pitch axis.
  *
  ******************************************************************************/
 
-
-#include "control/altitude_controller.hpp"
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
+#include "control/rate_controller.hpp"
+#include "hal/common/time_keeper.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Altitude_controller::Altitude_controller(const position_command_t& position_command, 
-                                         const altitude_t& altitude, 
-                                         thrust_command_t& thrust_command,
-                                         altitude_controller_conf_t config):
-    position_command_(position_command),
-    altitude_(altitude),
-    thrust_command_(thrust_command)
+Rate_controller::Rate_controller(const ahrs_t& ahrs, const conf_t& config) :
+    ahrs_(ahrs),
+    rate_command_({0.0f, 0.0f, 0.0f}),
+    torque_command_({0.0f, 0.0f, 0.0f}),
+    dt_s_(0.0f),
+    last_update_s_(0.0f)
 {
-    hover_point_ = config.hover_point;
-    pid_controller_init(&pid_, &config.pid_config);
+    // Init rate gains
+    pid_controller_init(&pid_[ROLL],  &config.pid_config[ROLL]);
+    pid_controller_init(&pid_[PITCH], &config.pid_config[PITCH]);
+    pid_controller_init(&pid_[YAW],   &config.pid_config[YAW]);
 }
 
 
-bool Altitude_controller::init(void)
-{   
+bool Rate_controller::update(void)
+{
+    float now      = time_keeper_get_s();
+    dt_s_          = now - last_update_s_;
+    last_update_s_ = now;
+
+    // Get errors on rate
+    float errors[3];
+    errors[ROLL]  = rate_command_.xyz[ROLL]  - ahrs_.angular_speed[ROLL];
+    errors[PITCH] = rate_command_.xyz[PITCH] - ahrs_.angular_speed[PITCH];
+    errors[YAW]   = rate_command_.xyz[YAW]   - ahrs_.angular_speed[YAW];
+
+    // Update PIDs
+    torque_command_.xyz[ROLL]  = pid_controller_update_dt(&pid_[ROLL],  errors[ROLL],  dt_s_);
+    torque_command_.xyz[PITCH] = pid_controller_update_dt(&pid_[PITCH], errors[PITCH], dt_s_);
+    torque_command_.xyz[YAW]   = pid_controller_update_dt(&pid_[YAW],   errors[YAW],   dt_s_);
+
     return true;
 }
 
 
-bool Altitude_controller::update(void)
+bool Rate_controller::set_command(const rate_command_t& command)
 {
-    float error = 0.0f;
+    rate_command_ = command;
+    return true;
+}
 
-    switch (position_command_.mode)
-    {
-        case POSITION_COMMAND_MODE_LOCAL:
-            error = position_command_.xyz[2] - (-altitude_.above_ground);
-            break;
 
-        case POSITION_COMMAND_MODE_GLOBAL:
-            error = position_command_.xyz[2] - (-altitude_.above_sea);
-            break;
-    }
+bool Rate_controller::get_command(rate_command_t& command) const
+{
+    command = rate_command_;
+    return true;
+}
 
-    thrust_command_.thrust = hover_point_ - pid_controller_update(&pid_, error);
 
+bool Rate_controller::get_output(torque_command_t& command) const
+{
+    command = torque_command_;
     return true;
 }

@@ -114,18 +114,19 @@ LEQuad::LEQuad(Imu& imu,
     ins_(&ins_complementary),
     ins_complementary(state, barometer, sonar, gps, flow, ahrs, config.ins_complementary_config),
     ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs),
-    cascade_controller_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.cascade_controller_config),
+    // cascade_controller_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.cascade_controller_config),
+    cascade_controller_(),
     mission_handler_registry(),
     waypoint_handler(*ins_, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
-    hold_position_handler(cascade_controller_, *ins_),
-    landing_handler(cascade_controller_, cascade_controller_, *ins_, state),
-    navigating_handler(cascade_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
-    on_ground_handler(cascade_controller_),
-    manual_ctrl_handler(),
-    takeoff_handler(cascade_controller_, *ins_, state),
-    critical_landing_handler(cascade_controller_, cascade_controller_, *ins_, state),
-    critical_navigating_handler(cascade_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
-    mission_planner(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
+    // hold_position_handler(cascade_controller_, *ins_),
+    // landing_handler(cascade_controller_, cascade_controller_, *ins_, state),
+    // navigating_handler(cascade_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
+    // on_ground_handler(cascade_controller_),
+    // manual_ctrl_handler(),
+    // takeoff_handler(cascade_controller_, *ins_, state),
+    // critical_landing_handler(cascade_controller_, cascade_controller_, *ins_, state),
+    // critical_navigating_handler(cascade_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
+    // mission_planner(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     safety_geofence_(config.safety_geofence_config),
     emergency_geofence_(config.emergency_geofence_config),
     state_machine(state, *ins_, imu, ahrs, manual_control, safety_geofence_, emergency_geofence_, state_display_),
@@ -540,21 +541,23 @@ bool LEQuad::init_mission_planning(void)
     bool ret = true;
 
     // Initialize
-    ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
-    ret &= mission_handler_registry.register_mission_handler(landing_handler);
-    ret &= mission_handler_registry.register_mission_handler(manual_ctrl_handler);
-    ret &= mission_handler_registry.register_mission_handler(navigating_handler);
-    ret &= mission_handler_registry.register_mission_handler(on_ground_handler);
-    ret &= mission_handler_registry.register_mission_handler(takeoff_handler);
-    ret &= mission_handler_registry.register_mission_handler(critical_landing_handler);
-    ret &= mission_handler_registry.register_mission_handler(critical_navigating_handler);
+    // ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
+    // ret &= mission_handler_registry.register_mission_handler(landing_handler);
+    // ret &= mission_handler_registry.register_mission_handler(manual_ctrl_handler);
+    // ret &= mission_handler_registry.register_mission_handler(navigating_handler);
+    // ret &= mission_handler_registry.register_mission_handler(on_ground_handler);
+    // ret &= mission_handler_registry.register_mission_handler(takeoff_handler);
+    // ret &= mission_handler_registry.register_mission_handler(critical_landing_handler);
+    // ret &= mission_handler_registry.register_mission_handler(critical_navigating_handler);
     ret &= waypoint_handler.init();
-    ret &= mission_planner.init();
+    // ret &= mission_planner.init();
 
     // Parameters
     //ret &= communication.parameters().add(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
     //ret &= communication.parameters().add(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
-    ret &= communication.parameters().add(&mission_planner.takeoff_altitude(),                 "NAV_TAKEOFF_ALT" );
+
+    // ret &= communication.parameters().add(&mission_planner.takeoff_altitude(),                 "NAV_TAKEOFF_ALT" );
+
     //ret &= communication.parameters().add(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
     //ret &= communication.parameters().add(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
     //ret &= communication.parameters().add(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
@@ -563,7 +566,7 @@ bool LEQuad::init_mission_planning(void)
     //ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
-    ret &= scheduler.add_task(10000, &Mission_planner::update, &mission_planner, Scheduler_task::PRIORITY_HIGH);
+    // ret &= scheduler.add_task(10000, &Mission_planner::update, &mission_planner, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -649,20 +652,16 @@ bool LEQuad::main_task(void)
                 break;
             case Mav_mode::VELOCITY:
             {
-                if(state.mav_mode().ctrl_mode() == Mav_mode::VELOCITY)
-                {
-                    manual_control.get_velocity_vector(&controls);
-                }
-                Cascade_controller::vel_command_t vel_command;
-                vel_command.vel = std::array<float,3>{{controls.tvel[0], controls.tvel[1], controls.tvel[2]}};
-                cascade_controller_.set_velocity_command(vel_command);
+                velocity_command_t vel_command;
+                manual_control.get_velocity_command(&vel_command, 1.0f);
+                cascade_controller_.set_command(vel_command);
             }
                 break;
 
             case Mav_mode::ATTITUDE:
             {
-                Attitude_controller_I::att_command_t command = manual_control.get_attitude_command(ahrs.qe);
-                cascade_controller_.set_attitude_command(command);
+                attitude_command_t command = manual_control.get_attitude_command(ahrs.qe);
+                cascade_controller_.set_command(command);
             }
                 break;
 

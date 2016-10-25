@@ -45,7 +45,7 @@
 #include "control/servos_mix_quadcopter_cross.hpp"
 
 
-Servos_mix_quadcopter_cross::Servos_mix_quadcopter_cross(args_t args, const conf_t& config) : 
+Servos_mix_quadcopter_cross::Servos_mix_quadcopter_cross(args_t args, const conf_t& config) :
     motor_front_dir_(config.motor_front_dir),
     motor_left_dir_(config.motor_left_dir),
     motor_right_dir_(config.motor_front_dir),
@@ -60,30 +60,30 @@ Servos_mix_quadcopter_cross::Servos_mix_quadcopter_cross(args_t args, const conf
 
 }
 
-void Servos_mix_quadcopter_cross::update()
+bool Servos_mix_quadcopter_cross::update()
 {
     float motor[4];
 
     // Front Right motor
-    motor[0] =  torq_command_.thrust +
-                torq_command_.torq[1] +
-                motor_front_dir_ * torq_command_.torq[2];
+    motor[0] =  thrust_command_.xyz[Z] +
+                torque_command_.xyz[Y] +
+                motor_front_dir_ * torque_command_.xyz[Z];
 
     // Front Left motor
-    motor[1] =  torq_command_.thrust +
-                (- torq_command_.torq[0]) +
-                motor_right_dir_ * torq_command_.torq[2];
+    motor[1] =  thrust_command_.xyz[Z] +
+                (- torque_command_.xyz[X]) +
+                motor_right_dir_ * torque_command_.xyz[Z];
 
     // Rear Right motor
-    motor[2]  = torq_command_.thrust +
-                (- torq_command_.torq[1]) +
-                torq_command_.torq[1] +
-                motor_rear_dir_ * torq_command_.torq[2];
+    motor[2]  = thrust_command_.xyz[Z] +
+                (- torque_command_.xyz[Y]) +
+                torque_command_.xyz[Y] +
+                motor_rear_dir_ * torque_command_.xyz[Z];
 
     // Rear Left motor
-    motor[3]  = torq_command_.thrust +
-                torq_command_.torq[0] +
-                motor_left_dir_ * torq_command_.torq[2];
+    motor[3]  = thrust_command_.xyz[Z] +
+                torque_command_.xyz[X] +
+                motor_left_dir_ * torque_command_.xyz[Z];
 
     // Clip values
     for (int32_t i = 0; i < 4; i++)
@@ -102,4 +102,6 @@ void Servos_mix_quadcopter_cross::update()
     motor_right_.write(motor[1]);
     motor_rear_.write(motor[2]);
     motor_left_.write(motor[3]);
+
+    return true;
 }

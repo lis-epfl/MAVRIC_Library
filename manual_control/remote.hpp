@@ -46,12 +46,9 @@
 #include "status/mav_modes.hpp"
 #include "drivers/satellite.hpp"
 #include "control/stabilisation.hpp"
-#include "control/attitude_controller_i.hpp"
+#include "control/controller.hpp"
+#include "control/control_command.hpp"
 
-extern "C"
-{
-#include "control/control_command.h"
-}
 
 #define REMOTE_CHANNEL_COUNT 14
 
@@ -300,48 +297,6 @@ Mav_mode remote_mode_get(remote_t* remote, Mav_mode mode_current);
 
 
 /**
- * \brief   Sets the attitude command from the remote (rpy and thrust values)
- *
- * \param   remote              The pointer to the remote structure
- * \param   controls            The pointer to the controls structure
- */
-void remote_get_control_command(remote_t* remote, control_command_t* controls);
-
-
-/**
- * \brief   Sets the velocity command vector from the remote
- *
- * \param   remote              The pointer to the remote structure
- * \param   controls            The pointer to the controls structure
- */
-void remote_get_velocity_vector(remote_t* remote, control_command_t* controls);
-
-/**
- * \brief   Sets the rate command from the remote (rpy and thrust values)
- *
- * \param   remote              The pointer to the remote structure
- * \param   controls            The pointer to the controls structure
- */
- void remote_get_rate_command_wing(remote_t* remote, control_command_t* controls);
-
-/**
- * \brief   Sets the attitude (angles) command from the remote for the wing
- *
- * \param   remote              The pointer to the remote structure
- * \param   controls            The pointer to the controls structure
- */
-void remote_get_angle_command_wing(remote_t* remote, control_command_t* controls);
-
-/**
- * \brief   Sets the velocity command vector from the remote for the wing
- *
- * \param   remote              The pointer to the remote structure
- * \param   ki_yaw              The yaw integrator gain
- * \param   controls            The pointer to the controls structure
- */
-void remote_get_velocity_wing(remote_t* remote, const float ki_yaw, control_command_t* controls);
-
-/**
  * \brief   Compute torque command from the remote
  *
  * \param   remote          Remote structure (input)
@@ -367,7 +322,16 @@ void remote_get_rate_command(const remote_t* remote, rate_command_t* command, fl
  * \param   remote          Remote structure (input)
  * \param   command         Thrust command (output)
  */
-void remote_get_thrust_command(const remote_t* remote, thrust_command_t* command);
+void remote_get_thrust_command_copter(const remote_t* remote, thrust_command_t* command);
+
+
+/**
+ * \brief   Compute thrust command from the remote
+ *
+ * \param   remote          Remote structure (input)
+ * \param   command         Thrust command (output)
+ */
+void remote_get_thrust_command_wing(const remote_t* remote, thrust_command_t* command);
 
 
 /**
@@ -389,7 +353,7 @@ void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_c
  *
  * \return  command
  */
-Attitude_controller_I::att_command_t remote_get_attitude_command(const remote_t* remote, quat_t current_attitude);
+attitude_command_t remote_get_attitude_command(const remote_t* remote, quat_t current_attitude);
 
 
 /**

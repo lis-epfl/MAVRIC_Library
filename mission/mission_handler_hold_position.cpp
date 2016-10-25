@@ -52,8 +52,13 @@ template <>
 bool Mission_handler_hold_position<Navigation_controller_I>::set_control_command()
 {
 	Navigation_controller_I::nav_command_t cmd;
-	cmd.pos = waypoint_.local_pos();
-	return controller_.set_navigation_command(cmd);
+    float heading = 0.0f;
+    waypoint_.heading(heading);
+
+    cmd.xyz     = waypoint_.local_pos();
+	cmd.heading = heading;
+
+    return controller_.set_navigation_command(cmd);
 }
 
 //------------------------------------------------------------------------------

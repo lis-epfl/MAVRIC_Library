@@ -48,19 +48,19 @@ LIB_SRCS += communication/onboard_parameters.cpp
 LIB_SRCS += communication/periodic_telemetry.cpp
 
 
-LIB_SRCS += control/altitude_controller.cpp
 LIB_SRCS += control/attitude_controller_p2.cpp
 LIB_SRCS += control/attitude_error_estimator.cpp
+LIB_SRCS += control/rate_controller.cpp
+LIB_SRCS += control/attitude_controller.cpp
 LIB_SRCS += control/pid_controller.cpp
 LIB_SRCS += control/stabilisation.cpp
+LIB_SRCS += control/velocity_controller.cpp
+LIB_SRCS += control/velocity_controller_copter.cpp
 # LIB_SRCS += control/stabilisation_wing.cpp
-LIB_SRCS += control/servos_mix.cpp
 LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
 LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
 LIB_SRCS += control/servos_mix_wing.cpp
 LIB_SRCS += control/servos_mix_ywing.cpp
-LIB_SRCS += control/gimbal_controller.cpp
-LIB_SRCS += control/gimbal_controller_telemetry.cpp
 
 LIB_SRCS += drivers/airspeed_analog.cpp
 LIB_SRCS += drivers/battery.cpp

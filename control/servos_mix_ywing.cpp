@@ -60,12 +60,12 @@ Servos_mix_ywing::Servos_mix_ywing(args_t& args, const conf_t& config) :
 }
 
 
-void Servos_mix_ywing::update()
+bool Servos_mix_ywing::update()
 {
     float servos[4];
 
     // Main motor
-    servos[0] = torq_command_.thrust;
+    servos[0] = thrust_command_.xyz[X];
 
     // Clip values
     if (servos[0] < min_thrust_)
@@ -78,18 +78,18 @@ void Servos_mix_ywing::update()
     }
 
     // Top flap
-    servos[1] = flap_top_dir_ * (torq_command_.torq[ROLL]
-                                     - torq_command_.torq[YAW]);
+    servos[1] = flap_top_dir_ * (torque_command_.xyz[ROLL]
+                                     - torque_command_.xyz[YAW]);
 
     // Right flap
-    servos[2]  = flap_right_dir_ * (torq_command_.torq[ROLL]
-                                        + 0.86f * torq_command_.torq[PITCH]
-                                        + 0.50f * torq_command_.torq[YAW]);
+    servos[2]  = flap_right_dir_ * (torque_command_.xyz[ROLL]
+                                        + 0.86f * torque_command_.xyz[PITCH]
+                                        + 0.50f * torque_command_.xyz[YAW]);
 
     // Left flap
-    servos[3]  = flap_left_dir_ * (torq_command_.torq[ROLL]
-                                       - 0.86f * torq_command_.torq[PITCH]
-                                       + 0.50f * torq_command_.torq[YAW]);
+    servos[3]  = flap_left_dir_ * (torque_command_.xyz[ROLL]
+                                       - 0.86f * torque_command_.xyz[PITCH]
+                                       + 0.50f * torque_command_.xyz[YAW]);
 
     // Clip values
     for (int32_t i = 1; i < 4; i++)
@@ -108,4 +108,6 @@ void Servos_mix_ywing::update()
     flap_top_.write(servos[1]);
     flap_right_.write(servos[2]);
     flap_left_.write(servos[3]);
+
+    return true;
 }

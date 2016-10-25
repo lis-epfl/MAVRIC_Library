@@ -45,8 +45,8 @@
 
 #include "status/state.hpp"
 #include "control/stabilisation.hpp"
-#include "control/control_command.h"
-#include "control/attitude_controller_i.hpp"
+#include "control/control_command.hpp"
+#include "control/controller.hpp"
 
 
 
@@ -56,7 +56,7 @@
 class Joystick
 {
 public:
-    
+
     /**
      * \brief button enumeration
      */
@@ -241,7 +241,16 @@ public:
      *
      * \param   command         Thrust command (output)
      */
-    void get_thrust_command(thrust_command_t* command) const;
+    void get_thrust_command_copter(thrust_command_t* command) const;
+
+
+    /**
+     * \brief   Compute thrust command from the joystick
+     *
+     * \param   command         Thrust command (output)
+     */
+    void get_thrust_command_wing(thrust_command_t* command) const;
+
 
 
     /**
@@ -252,7 +261,7 @@ public:
      *
      * \return  command
      */
-    Attitude_controller_I::att_command_t get_attitude_command(quat_t current_attitude) const;
+    attitude_command_t get_attitude_command(quat_t current_attitude) const;
 
 
     /**

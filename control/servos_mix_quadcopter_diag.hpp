@@ -75,7 +75,7 @@ public:
         Servo& motor_front_left;
         Servo& motor_front_right;
         Servo& motor_rear_right;
-    };   
+    };
 
     /**
      * \brief                   Constructor (calls only super class constructor)
@@ -88,11 +88,11 @@ public:
      */
     Servos_mix_quadcopter_diag(args_t args, const conf_t& config = default_config());
 
-    
+
     /*
      * \brief   Write motor commands to servo structure based on torque command
      */
-    virtual void update();
+    virtual bool update();
 
     /*
      * \brief   Default configuration
@@ -102,6 +102,9 @@ public:
     static inline conf_t default_config();
 
 private:
+    torque_command_t torque_command_;
+    thrust_command_t thrust_command_;
+    
     rot_dir_t   motor_rear_left_dir_;            ///< Rear  motor turning direction
     rot_dir_t   motor_front_left_dir_;           ///< Left  motor turning direction
     rot_dir_t   motor_front_right_dir_;          ///< Front motor turning direction

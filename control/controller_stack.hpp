@@ -30,27 +30,62 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file base_cascade_controller.hpp
+ * \file controller_stack.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
+ * \author Julien Lecoeur
  *
- * \brief Abstract Base class for cascade style controller hierarchy. Only the lowest level should inherit from this class!
+ * \brief  Base class for cascade style controller hierarchy
  *
  ******************************************************************************/
 
 
-#ifndef BASE_CASC_CONTROLLER_HPP_
-#define BASE_CASC_CONTROLLER_HPP_
+#ifndef CONTROLLER_STACK_HPP_
+#define CONTROLLER_STACK_HPP_
 
-#include "control/control_command.h"
+#include "control/control_command.hpp"
+#include "control/controller.hpp"
 
-class Base_cascade_controller
+template<typename VEL_CTRL, typename ATT_CTRL, typename RATE_CTRL, typename SERVO_MIX>
+class Controller_stack: public Controller<velocity_command_t>,
+                        public Controller<attitude_command_t>,
+                        public Controller<rate_command_t>
 {
-protected:
-    Base_cascade_controller() : cascade_command_(NULL){};
+public:
+    enum control_mode_t
+    {
+        VELOCITY_,
+    };
 
-    base_command_t const*  cascade_command_;
+    struct conf_t
+    {
+
+    };
+
+    static conf_t default_config(void)
+    {
+        conf_t config;
+        return config;
+    };
+
+    bool update(void){return true;};
+
+    bool set_command(const velocity_command_t& velocity) {return true;};
+    bool set_command(const attitude_command_t& attitude) {return true;};
+    bool set_command(const rate_command_t& rate) {return true;};
+
+    bool get_command(velocity_command_t& velocity) const {return true;};
+    bool get_command(attitude_command_t& attitude) const {return true;};
+    bool get_command(rate_command_t& rate) const {return true;};
+
+    bool get_output(empty_command_t& command) const
+    {
+        return true;
+    };
+
+protected:
+
 };
 
-#endif /* BASE_CASC_CONTROLLER_HPP_ */
+#endif /* CONTROLLER_STACK_HPP_ */

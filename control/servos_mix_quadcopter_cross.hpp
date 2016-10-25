@@ -75,7 +75,7 @@ public:
         Servo& motor_left;
         Servo& motor_right;
         Servo& motor_rear;
-    };   
+    };
 
     /**
      * \brief                   Constructor
@@ -89,9 +89,12 @@ public:
     /*
      * \brief   Write motor commands to servo structure based on torque command
      */
-    virtual void update();
+    virtual bool update();
 
 private:
+    torque_command_t torque_command_;
+    thrust_command_t thrust_command_;
+    
     rot_dir_t   motor_front_dir_;              ///< Front  motor turning direction
     rot_dir_t   motor_left_dir_;               ///< Left  motor turning direction
     rot_dir_t   motor_right_dir_;              ///< Right motor turning direction
