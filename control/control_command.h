@@ -43,11 +43,10 @@
 #ifndef CONTROL_COMMAND_H_
 #define CONTROL_COMMAND_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+extern "C"
+{
 #include "util/quaternions.h"
+}
 
 /**
  * \brief   Control command mode enum
@@ -63,35 +62,13 @@ typedef enum
 
 
 /**
- * \brief   Velocity command mode: either in local or global frame
- */
-typedef enum
-{
-    VELOCITY_COMMAND_MODE_BODY          = 0,    ///< Body frame
-    VELOCITY_COMMAND_MODE_SEMI_LOCAL    = 1,    ///< Lobal frame rotated around vertical axis to match the X axis with the current heading of the UAV
-    VELOCITY_COMMAND_MODE_LOCAL         = 2,    ///< Local NED frame
-} velocity_command_mode_t;
-
-
-/**
  * \brief   Velocity command structure
  */
 typedef struct
 {
-    float xyz[3];                   ///<    Velocity on X, Y and Z axis
-    velocity_command_mode_t mode;   ///<    Command mode, defines whether the velocity is given in local or global frame
+    local_velocity_t vel;           ///<    Velocity on X, Y and Z axis (NED frame)
+    float heading;                  ///<    Heading (can be ignored for fixed wing)
 } velocity_command_t;
-
-
-
-/**
- * \brief   Position command mode: either in local or global frame
- */
-typedef enum
-{
-    POSITION_COMMAND_MODE_LOCAL  = 0,
-    POSITION_COMMAND_MODE_GLOBAL = 1
-} position_command_mode_t;
 
 
 /**
@@ -99,55 +76,33 @@ typedef enum
  */
 typedef struct
 {
-    float xyz[3];                   ///<    Velocity on X, Y and Z axis
-    position_command_mode_t mode;   ///<    Command mode, defines whether the position is given in local or global frame
+    local_position_t pos;       ///<    Position in NED frame
+    float heading;              ///<    Heading (can be ignored for fixed wing)
 } position_command_t;
 
 
 /**
  * \brief   Attitude command structure
  */
-typedef struct
-{
-    quat_t quat;                    ///<    Attitude quaternion
-    float rpy[3];                   ///<    Roll, pitch and yaw angles (just for information, should not be used for control)
-} attitude_command_t;
+typedef quat_t attitude_command_t;
 
 
 /**
- * \brief   Rate command structure
+ * \brief   Rate command structure (expressed in body frame)
  */
-typedef struct
-{
-    float xyz[3];                   ///<    Rate on X, Y and Z axis (in rad/s)
-} rate_command_t;
+typedef std::array<float,3> rate_command_t;
 
 
 /**
- * \brief   Torque command structure
+ * \brief   Torque command structure (expressed in body frame)
  */
-typedef struct
-{
-    float xyz[3];                   ///<    Torque on X, Y and Z axis
-} torque_command_t;
-
-
-/**
- * \brief   Thrust command type
- */
-typedef struct
-{
-    float thrust;                   ///< Thrust command
-} thrust_command_t;
+typedef typedef std::array<float,3> torque_command_t;
 
 
 /**
  * \brief   Thrust command type for vehicles with multi-lifting devices
  */
-typedef struct
-{
-    float xyz[3];
-} thrust3D_command_t;
+typedef typedef std::array<float,3> thrust_command_t;
 
 
 /**
@@ -156,20 +111,12 @@ typedef struct
 typedef struct
 {
     control_command_mode_t  mode;       ///< Control command mode
-    thrust_command_t        thrust;     ///< Thrust command
-    thrust3D_command_t      thrust3D;   ///< 3D Thrust command
-    torque_command_t        torque;     ///< Torque command
-    rate_command_t          rate;       ///< Rate command
-    attitude_command_t      attitude;   ///< Attitude command
     position_command_t      position;   ///< Position command
     velocity_command_t      velocity;   ///< Velocity command
+    attitude_command_t      attitude;   ///< Attitude command
+    rate_command_t          rate;       ///< Rate command
+    torque_command_t        torque;     ///< Torque command
+    thrust_command_t        thrust3D;   ///< Thrust command
 } command_t;
-
-
-struct base_command_t {};
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
