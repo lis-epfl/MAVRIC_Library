@@ -137,7 +137,7 @@ private:
     float                       last_update_s_;         ///< The time of the last update in s
 };
 
-typename Rate_controller::conf_t Rate_controller::default_config()
+Rate_controller::conf_t Rate_controller::default_config()
 {
     conf_t conf = {};
 

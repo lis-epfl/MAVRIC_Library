@@ -62,6 +62,22 @@ typedef struct
 
 
 /**
+ * \brief       Get quaternion
+ *
+ * \details     The quaternions are in the form q = [s, v_1, v_2, v_3]
+ */
+static inline quat_t quaternions_create(float s, float vx, float vy, float vz)
+{
+    quat_t quat;
+    quat.s    = s;
+    quat.v[0] = vx;
+    quat.v[1] = vy;
+    quat.v[2] = vz;
+
+    return quat;
+}
+
+/**
  * \brief       Quaternion inverse
  *
  * \param   q   Input quaternion

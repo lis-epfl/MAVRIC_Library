@@ -57,8 +57,8 @@
 
 Rate_controller::Rate_controller(const ahrs_t& ahrs, const conf_t& config) :
     ahrs_(ahrs),
-    rate_command_({0.0f, 0.0f, 0.0f}),
-    torque_command_({0.0f, 0.0f, 0.0f}),
+    rate_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
+    torque_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
     dt_s_(0.0f),
     last_update_s_(0.0f)
 {

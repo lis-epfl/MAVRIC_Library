@@ -108,7 +108,7 @@ protected:
 };
 
 
-typename Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(void)
+Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(void)
 {
     conf_t conf = {};
 

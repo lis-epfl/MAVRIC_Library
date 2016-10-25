@@ -107,7 +107,8 @@ private:
     float kp_yaw_;
 };
 
-typename Position_controller::conf_t Position_controller::default_config()
+
+Position_controller::conf_t Position_controller::default_config()
 {
     conf_t conf;
     conf.max_climb_rate     = 1.0f;

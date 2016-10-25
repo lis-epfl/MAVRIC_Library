@@ -58,9 +58,9 @@ extern "C"
 Velocity_controller::Velocity_controller(const ahrs_t& ahrs, const INS& ins, const conf_t& config):
     ahrs_(ahrs),
     ins_(ins),
-    velocity_command_({{0.0f, 0.0f, 0.0f}, 0.0f}),
-    attitude_command_({1.0f, 0.0f, 0.0f, 0.0f}),
-    thrust_command_({0.0f, 0.0f, 0.0f})
+    velocity_command_({std::array<float,3>{{0.0f, 0.0f, 0.0f}}, 0.0f}),
+    attitude_command_(quaternions_create(1.0f, 0.0f, 0.0f, 0.0f)),
+    thrust_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}}
 {
     // Init PID gains
     pid_controller_init(&pid_[X], &config.pid_config[X]);
