@@ -46,18 +46,15 @@
 //------------------------------------------------------------------------------
 
 Position_controller::Position_controller(args_t args, const conf_t& config) :
-    TVelocity_controller(args.velocity_controller_args, config.velocity_controller_config),
     ins_(args.ins),
     ahrs_(args.ahrs),
+    position_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}, 0.0f},
+    velocity_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}, 0.0f},
     ctrl_mode_(ctrl_mode_t::POS_XYZ),
     max_climb_rate_(config.max_climb_rate),
     kp_yaw_(config.kp_yaw)
 {
     pid_controller_init(&pid_controller_, &config.pid_config);
-
-    pos_command_t pos_command;
-    pos_command.pos = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
-    set_position_command(pos_command);
 }
 
 bool Position_controller::update()
@@ -67,15 +64,15 @@ bool Position_controller::update()
 
     // get position relative to the target position (0 in z dir if z is controlled in velocity)
     float rel_goal_pos[3];
-    rel_goal_pos[X] = pos_command.pos[X] - local_pos[X];
-    rel_goal_pos[Y] = pos_command.pos[Y] - local_pos[Y];
+    rel_goal_pos[X] = position_command_.xyz[X] - local_pos[X];
+    rel_goal_pos[Y] = position_command_.xyz[Y] - local_pos[Y];
     if (ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z)
     {
         rel_goal_pos[Z] = 0.0f;
     }
     else
     {
-        rel_goal_pos[Z] = pos_command.pos[Z] - local_pos[Z];
+        rel_goal_pos[Z] = position_command_.xyz[Z] - local_pos[Z];
     }
 
     // Normalize relative goal position to get desired direction (unit vector)
@@ -96,10 +93,9 @@ bool Position_controller::update()
     }
 
     // Compute desired velocity command
-	typename TVelocity_controller::vel_command_t velocity_command;
-    velocity_command.vel[X] = goal_dir[X] * v_desired;
-    velocity_command.vel[Y] = goal_dir[Y] * v_desired;
-    velocity_command.vel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
+    velocity_command_.xyz[X] = goal_dir[X] * v_desired;
+    velocity_command_.xyz[Y] = goal_dir[Y] * v_desired;
+    velocity_command_.xyz[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
 
 
     // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
@@ -107,13 +103,13 @@ bool Position_controller::update()
     if (goal_distance > 5.0f)
     {
         float rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y], goal_dir[X]) - yaw_current);
-        velocity_command.yaw = yaw_current + kp_yaw_ * rel_heading;
+        velocity_command_.heading = yaw_current + kp_yaw_ * rel_heading;
     }
 
     // Reduce XY velocity according to yaw error: this gives time to align to next waypoint before accelerating
-    float yaw_error_factor = 1.0f - maths_f_abs(maths_clip(maths_calc_smaller_angle(velocity_command.yaw - yaw_current), 1.0f));
-    velocity_command.vel[X] *= yaw_error_factor;
-    velocity_command.vel[Y] *= yaw_error_factor;
+    float yaw_error_factor = 1.0f - maths_f_abs(maths_clip(maths_calc_smaller_angle(velocity_command_.heading - yaw_current), 1.0f));
+    velocity_command_.xyz[X] *= yaw_error_factor;
+    velocity_command_.xyz[Y] *= yaw_error_factor;
 
 
 	return true;

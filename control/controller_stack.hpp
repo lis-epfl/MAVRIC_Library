@@ -47,16 +47,14 @@
 #include "control/control_command.hpp"
 #include "control/controller.hpp"
 
-template<typename VEL_CTRL, typename ATT_CTRL, typename RATE_CTRL, typename SERVO_MIX>
-class Controller_stack: public Controller<velocity_command_t>,
+template<typename POS_CTRL, typename VEL_CTRL, typename ATT_CTRL, typename RATE_CTRL, typename SERVO_MIX>
+class Controller_stack: public Controller<position_command_t>,
+                        public Controller<velocity_command_t>,
                         public Controller<attitude_command_t>,
-                        public Controller<rate_command_t>
+                        public Controller<rate_command_t>,
+                        public Controller<thrust_command_t>
 {
 public:
-    enum control_mode_t
-    {
-        VELOCITY_,
-    };
 
     struct conf_t
     {
@@ -71,13 +69,50 @@ public:
 
     bool update(void){return true;};
 
+    // bool set_command(const command_t& command)
+    // {
+    //     mode_ = command.mode;
+    //
+    //     switch (command.mode)
+    //     {
+    //         case COMMAND_MODE_THRUST_AND_TORQUE:
+    //             set_command(command.thrust);
+    //             set_command(command.torque);
+    //         break;
+    //
+    //         case COMMAND_MODE_THRUST_AND_RATE:
+    //             set_command(command.thrust);
+    //             set_command(command.rate);
+    //         break;
+    //
+    //         case COMMAND_MODE_THRUST_AND_ATTITUDE:
+    //             set_command(command.thrust);
+    //             set_command(command.attitude);
+    //         break;
+    //
+    //         case COMMAND_MODE_VELOCITY:
+    //             set_command(command.velocity);
+    //         break;
+    //
+    //         case COMMAND_MODE_POSITION:
+    //             set_command(command.position);
+    //         break;
+    //     }
+    //
+    //     return true;
+    // };
+
+    bool set_command(const position_command_t& velocity) {return true;};
     bool set_command(const velocity_command_t& velocity) {return true;};
     bool set_command(const attitude_command_t& attitude) {return true;};
     bool set_command(const rate_command_t& rate) {return true;};
+    bool set_command(const thrust_command_t& rate) {return true;};
 
+    bool get_command(position_command_t& velocity) const {return true;};
     bool get_command(velocity_command_t& velocity) const {return true;};
     bool get_command(attitude_command_t& attitude) const {return true;};
     bool get_command(rate_command_t& rate) const {return true;};
+    bool get_command(thrust_command_t& rate) const {return true;};
 
     bool get_output(empty_command_t& command) const
     {
@@ -85,7 +120,7 @@ public:
     };
 
 protected:
-
+    control_command_mode_t mode_;
 };
 
 #endif /* CONTROLLER_STACK_HPP_ */

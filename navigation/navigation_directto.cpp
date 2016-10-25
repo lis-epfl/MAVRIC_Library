@@ -30,34 +30,81 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_navigating.cpp
+ * \file navigation_directto.cpp
  *
  * \author MAV'RIC Team
- * \author Matthew Douglas
+ * \author Basil Huber
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the navigating state
+ * \brief   Navigation module allowing to navigated to goal position on direct trajectory
+ * \details Inherits from Position_controller, which inherits from a Velocity_controller_I
+ *          i.e. can take navigation, position and velocity commands
  *
  ******************************************************************************/
 
-
-#include "mission/mission_handler_navigating.hpp"
-#include "navigation/navigation.hpp"
-//------------------------------------------------------------------------------
-// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-template <>
-bool Mission_handler_navigating<Navigation>::set_control_command()
-{
-    Navigation::nav_command_t cmd;
-    float heading = 0.0f;
-    waypoint_.heading(heading);
-
-	cmd.xyz        = waypoint_.local_pos();
-    cmd.heading    = heading;
-	return controller_.set_goal(cmd);
-}
+#include "navigation/navigation_directto.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+
+Navigation_directto::Navigation_directto(args_t args, const conf_t& config) :
+    ins_(args.ins),
+    cruise_pid_config_(config.cruise_pid_config),
+    hover_pid_config_(config.hover_pid_config),
+    // std_pid_config_(config.position_controller_config.pid_config),
+    min_cruise_dist_sqr_(config.min_cruise_dist_sqr)
+{
+    // nav_command_t nav_command;
+    // nav_command.pos = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
+    // set_navigation_command(pos_command);
+}
+
+
+bool Navigation_directto::update()
+{
+    position_command_t pos_command;
+    pos_command.xyz = navigation_command_.xyz;
+
+    // calculate distance to goal squared
+    const local_position_t& pos = ins_.position_lf();
+    const local_position_t& goal_pos = navigation_command_.xyz;
+    float dist[3] = {pos[X] - goal_pos[X], pos[Y] - goal_pos[Y], pos[Z] - goal_pos[Z]};
+    distance_to_goal_sqr_ = vectors_norm_sqr(dist);
+
+    // adjust PID parameters of position controller depending on distance to goal
+    //pid_controller_conf_t pid_config = distance_to_goal_sqr_ > min_cruise_dist_sqr_ ? cruise_pid_config_ : hover_pid_config_;
+    //pid_controller_apply_config(&(TPosition_controller::pid_controller_), &pid_config);
+
+    return true;
+}
+
+
+bool Navigation_directto::set_navigation_command(const nav_command_t& command)
+{
+    navigation_command_ = command;
+    return true;
+}
+
+bool Navigation_directto::set_goal(const nav_command_t& command)
+{
+    navigation_command_ = command;
+    return true;
+}
+
+//------------------------------------------------------------------------------
+// PROTECTED FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+pid_controller_conf_t& Navigation_directto::cruise_pid_config()
+{
+    return cruise_pid_config_;
+}
+
+
+
+pid_controller_conf_t& Navigation_directto::hover_pid_config()
+{
+    return hover_pid_config_;
+}

@@ -47,10 +47,13 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_on_ground::Mission_handler_on_ground(Controller<rate_command_t>& rate_controller):
+Mission_handler_on_ground::Mission_handler_on_ground(Controller<rate_command_t>& rate_controller,
+                                                     Controller<thrust_command_t>& thrust_controller):
     Mission_handler(),
-    rate_controller_(rate_controller)
+    rate_controller_(rate_controller),
+    thrust_controller_(thrust_controller)
 {}
+
 
 bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
 {
@@ -58,18 +61,24 @@ bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
     return wpt.command() == MAV_CMD_NAV_ON_GROUND;
 }
 
+
 bool Mission_handler_on_ground::setup(const Waypoint& wpt)
 {
     return true;
 }
 
+
 Mission_handler::update_status_t Mission_handler_on_ground::update()
 {
 	// Set prop speeds to lowest setting
-	rate_command_t cmd;
-	cmd.xyz = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
-    // cmd.thrust = -1.0f;
-	rate_controller_.set_command(cmd);
+	rate_command_t rate_cmd;
+	rate_cmd.xyz = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
+
+    thrust_command_t thrust_cmd;
+    rate_cmd.xyz = std::array<float,3>{{0.0f, 0.0f, -1.0f}};
+
+    rate_controller_.set_command(rate_cmd);
+    thrust_controller_.set_command(thrust_cmd);
 
     return MISSION_IN_PROGRESS;
 }

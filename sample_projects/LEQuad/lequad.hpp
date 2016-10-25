@@ -114,8 +114,11 @@ extern "C"
 #include "sensing/altitude.h"
 }
 
-// typedef Navigation_directto<Position_controller<Velocity_controller_copter<Attitude_controller<Rate_controller<Servos_mix_quadcopter_diag> > > > > Cascade_controller;
-typedef Controller_stack<Velocity_controller_copter, Attitude_controller, Rate_controller, Servos_mix_quadcopter_diag> Cascade_controller;
+typedef Controller_stack<Position_controller,
+                         Velocity_controller_copter,
+                         Attitude_controller,
+                         Rate_controller,
+                         Servos_mix_quadcopter_diag> Controller_stack_copter;
 
 /**
  * \brief MAV class
@@ -148,7 +151,7 @@ public:
         INS_complementary::conf_t ins_complementary_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        Cascade_controller::conf_t cascade_controller_config;
+        Controller_stack_copter::conf_t controller_stack_config;
         Geofence_cylinder::conf_t safety_geofence_config;
         Geofence_cylinder::conf_t emergency_geofence_config;
     };
@@ -291,15 +294,15 @@ protected:
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
 
-    Cascade_controller cascade_controller_;
+    Controller_stack_copter controller_stack_;
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
-    // Mission_handler_hold_position<Navigation_controller_I> hold_position_handler;
+    // Mission_handler_hold_position hold_position_handler;
     // Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I> landing_handler;
     // Mission_handler_navigating<Navigation_controller_I> navigating_handler;
-    // Mission_handler_on_ground on_ground_handler;
-    // Mission_handler_manual manual_ctrl_handler;
+    Mission_handler_on_ground on_ground_handler;
+    Mission_handler_manual manual_ctrl_handler;
     // Mission_handler_takeoff<Navigation_controller_I> takeoff_handler;
     // Mission_handler_critical_landing<Navigation_controller_I, XYposition_Zvel_controller_I> critical_landing_handler;
     // Mission_handler_critical_navigating<Navigation_controller_I> critical_navigating_handler;
@@ -317,9 +320,6 @@ protected:
     Data_logging_T<10>    data_logging_stat;
 
     command_t                       command;
-    // attitude_controller_t           attitude_controller;
-    // velocity_controller_copter_t    velocity_controller;
-    // vector_field_waypoint_t         vector_field_waypoint;
 
     uint8_t sysid_;    ///< System ID
     conf_t config_;    ///< Configuration
@@ -357,7 +357,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.remote_config = remote_default_config();
 
-    conf.cascade_controller_config = Cascade_controller::default_config();
+    conf.controller_stack_config = Controller_stack_copter::default_config();
 
     conf.safety_geofence_config     = Geofence_cylinder::default_config();
     conf.emergency_geofence_config  = Geofence_cylinder::default_config();

@@ -96,7 +96,9 @@ public:
 private:
     const INS&          ins_;                       /// inertial navigation unit ti use for position estimation
     const ahrs_t&       ahrs_;                      ///< Attitude estimation
+
     position_command_t  position_command_;          ///< Position command in local frame; Z coord ONLY VALID if in POS_XYZ
+    velocity_command_t  velocity_command_;          ///< Velocity command in local frame;
 
     pid_controller_t    pid_controller_;            //< position pid controller
     float               zvel_command_;              ///< Velocity command in z direction (local frame); ONLY VALID if in POS_XY_VELZ mode

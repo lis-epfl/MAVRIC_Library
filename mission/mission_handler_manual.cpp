@@ -48,9 +48,9 @@
 //------------------------------------------------------------------------------
 
 Mission_handler_manual::Mission_handler_manual():
-            Mission_handler()
-{
-}
+    Mission_handler()
+{}
+
 
 bool Mission_handler_manual::can_handle(const Waypoint& wpt) const
 {
@@ -58,15 +58,18 @@ bool Mission_handler_manual::can_handle(const Waypoint& wpt) const
     return wpt.command() == MAV_CMD_NAV_MANUAL_CTRL;
 }
 
+
 bool Mission_handler_manual::setup(const Waypoint& wpt)
 {
     return true;
 }
 
+
 Mission_handler::update_status_t Mission_handler_manual::update()
 {
 	return MISSION_FINISHED;
 }
+
 
 Mission_planner::internal_state_t Mission_handler_manual::handler_mission_state() const
 {

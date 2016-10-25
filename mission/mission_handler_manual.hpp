@@ -85,7 +85,7 @@ public:
 
     /**
      * \brief   Handles the mission every iteration
-     *  
+     *
      * \details     Does nothing and returns MISSION_FINISHED for the status code.
      *
      * \return  Status code
@@ -100,7 +100,7 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    
+
 };
 
 

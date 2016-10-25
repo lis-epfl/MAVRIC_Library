@@ -46,21 +46,20 @@
 #include "control/controller.hpp"
 #include "mission/mission_handler.hpp"
 
-/*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
- */
+
 
 class Mission_handler_on_ground : public Mission_handler
 {
 public:
 
-
     /**
      * \brief   Initialize the on ground mission planner handler
      *
-     * \param   rate_controller     The reference to the attitude controls
+     * \param   rate_controller     The reference to the rate controls
+     * \param   thrust_controller   The reference to the thrust controls
      */
-     Mission_handler_on_ground(Controller<rate_command_t>& rate_controller);
+     Mission_handler_on_ground(Controller<rate_command_t>& rate_controller,
+                               Controller<thrust_command_t>& thrust_controller);
 
 
     /**
@@ -102,7 +101,8 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    Controller<rate_command_t>& rate_controller_;                    ///< The reference to the rate controller
+    Controller<rate_command_t>&   rate_controller_;                  ///< The reference to the rate controller
+    Controller<thrust_command_t>& thrust_controller_;                ///< The reference to the rate controller
 };
 
 

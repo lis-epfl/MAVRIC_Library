@@ -56,11 +56,11 @@ extern "C"
  */
 typedef enum
 {
-    TORQUE_COMMAND   = 0,
-    RATE_COMMAND     = 1,
-    ATTITUDE_COMMAND = 2,
-    POSITION_COMMAND = 3,
-    VELOCITY_COMMAND = 4
+    COMMAND_MODE_THRUST_AND_TORQUE   = 0,
+    COMMAND_MODE_THRUST_AND_RATE     = 1,
+    COMMAND_MODE_THRUST_AND_ATTITUDE = 2,
+    COMMAND_MODE_VELOCITY            = 3,
+    COMMAND_MODE_POSITION            = 4
 } control_command_mode_t;
 
 
@@ -125,6 +125,7 @@ typedef struct
  */
 typedef struct {} empty_command_t;
 
+
 /**
  * \brief   Global command structure
  */
@@ -136,7 +137,7 @@ typedef struct
     attitude_command_t      attitude;   ///< Attitude command
     rate_command_t          rate;       ///< Rate command
     torque_command_t        torque;     ///< Torque command
-    thrust_command_t        thrust3D;   ///< Thrust command
+    thrust_command_t        thrust;     ///< Thrust command
 } command_t;
 
 #endif // CONTROL_COMMAND_HPP_

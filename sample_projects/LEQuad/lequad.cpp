@@ -114,18 +114,18 @@ LEQuad::LEQuad(Imu& imu,
     ins_(&ins_complementary),
     ins_complementary(state, barometer, sonar, gps, flow, ahrs, config.ins_complementary_config),
     ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs),
-    // cascade_controller_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.cascade_controller_config),
-    cascade_controller_(),
+    // controller_stack_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.controller_stack_config),
+    controller_stack_(),
     mission_handler_registry(),
     waypoint_handler(*ins_, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
-    // hold_position_handler(cascade_controller_, *ins_),
-    // landing_handler(cascade_controller_, cascade_controller_, *ins_, state),
-    // navigating_handler(cascade_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
-    // on_ground_handler(cascade_controller_),
-    // manual_ctrl_handler(),
-    // takeoff_handler(cascade_controller_, *ins_, state),
-    // critical_landing_handler(cascade_controller_, cascade_controller_, *ins_, state),
-    // critical_navigating_handler(cascade_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
+    // hold_position_handler(controller_stack_, *ins_),
+    // landing_handler(controller_stack_, controller_stack_, *ins_, state),
+    // navigating_handler(controller_stack_, *ins_, communication.mavlink_stream(), waypoint_handler),
+    on_ground_handler(controller_stack_, controller_stack_),
+    manual_ctrl_handler(),
+    // takeoff_handler(controller_stack_, *ins_, state),
+    // critical_landing_handler(controller_stack_, controller_stack_, *ins_, state),
+    // critical_navigating_handler(controller_stack_, *ins_, communication.mavlink_stream(), waypoint_handler),
     // mission_planner(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     safety_geofence_(config.safety_geofence_config),
     emergency_geofence_(config.emergency_geofence_config),
@@ -639,6 +639,11 @@ bool LEQuad::main_task(void)
     ahrs_ekf.update();
     ins_->update();
 
+
+    Navigation_directto nav({*ins_});
+
+    controller_stack_.set_command(nav.get_control_command(true));
+
     bool failsafe = false;
 
     // Do control
@@ -654,14 +659,14 @@ bool LEQuad::main_task(void)
             {
                 velocity_command_t vel_command;
                 manual_control.get_velocity_command(&vel_command, 1.0f);
-                cascade_controller_.set_command(vel_command);
+                controller_stack_.set_command(vel_command);
             }
                 break;
 
             case Mav_mode::ATTITUDE:
             {
                 attitude_command_t command = manual_control.get_attitude_command(ahrs.qe);
-                cascade_controller_.set_command(command);
+                controller_stack_.set_command(command);
             }
                 break;
 
@@ -673,7 +678,7 @@ bool LEQuad::main_task(void)
             //     rate_command.rates = {rate_command_legacy.xyz[0], rate_command_legacy.xyz[1], rate_command_legacy.xyz[2]};
             //     rate_command.thrust = manual_control.get_thrust();
             //     /* set attitude command */
-            //     cascade_controller_.set_rate_command(rate_command);
+            //     controller_stack_.set_rate_command(rate_command);
             //     break;
 
             default:
@@ -689,7 +694,7 @@ bool LEQuad::main_task(void)
     if(!failsafe)
     {
         /* update controller cascade down to the motors */
-        cascade_controller_.update();
+        controller_stack_.update();
     }
     else
     {

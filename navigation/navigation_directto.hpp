@@ -45,13 +45,13 @@
 #ifndef NAVIGATION_DIRECTTO_HPP_
 #define NAVIGATION_DIRECTTO_HPP_
 
-#include "navigation/navigation_controller_i.hpp"
+#include "navigation/navigation.hpp"
 #include "control/position_controller.hpp"
 
-template<class TPosition_controller>
-class Navigation_directto : public Navigation_controller_I, public TPosition_controller
+
+class Navigation_directto : public Navigation
 {
-    typedef typename TPosition_controller::pos_command_t pos_command_t;
+    typedef position_command_t nav_command_t;
 public:
 
     /**
@@ -62,7 +62,6 @@ public:
         float min_cruise_dist_sqr;
         pid_controller_conf_t cruise_pid_config;
         pid_controller_conf_t hover_pid_config;
-        typename TPosition_controller::conf_t position_controller_config;
     };
 
     enum class ctrl_mode_t
@@ -75,7 +74,6 @@ public:
     struct args_t
     {
         INS& ins;
-        typename TPosition_controller::args_t position_controller_args;
     };
 
     Navigation_directto(args_t args, const conf_t& config = default_config());
@@ -84,7 +82,7 @@ public:
 	/**
      * \brief Main update function
      */
-    virtual void update();
+    virtual bool update();
 
     /**
      * \brief           sets the navigation command (desired position)
@@ -93,7 +91,8 @@ public:
      *
      * \return success  whether command was accepted
      */
-    bool set_navigation_command(const nav_command_t& command);
+     bool set_navigation_command(const nav_command_t& command);
+    bool set_goal(const nav_command_t& command);
 
     /**
      * \brief           Sets the 3D position command
@@ -103,7 +102,7 @@ public:
      *
      * \return success  whether command was accepted
      */
-    virtual bool set_position_command(const pos_command_t& pos_command);
+    // virtual bool set_position_command(const pos_command_t& pos_command);
 
     /**
      * \brief           sets the horizontal position & vertical velocity command
@@ -114,7 +113,7 @@ public:
      *
      * \return success  whether command was accepted
      */
-    virtual bool set_xyposition_zvel_command(const typename TPosition_controller::xypos_zvel_command_t& command);
+    // virtual bool set_xyposition_zvel_command(const typename TPosition_controller::xypos_zvel_command_t& command);
 
 
     /**
@@ -133,24 +132,6 @@ public:
     static inline conf_t default_config();
 
 protected:
-
-    /*
-     * \brief   calc velocity command based on given position command and update underlaying cascade level (TVelocity_controller)
-     * \details Sets the internal position_command_ to the provided one, without modifiying cascade_command_
-     *          Calls calc_velocity_command followed by TVelocity_controller::update_cascade
-     *          This function should be called from higher level controllers if they provide a command
-     * \param   position_command  position command to be set
-     */
-    void update_cascade(const nav_command_t& nav_command);
-
-    /*
-     * \brief   calc velocity command based on given position command
-     * \details Sets the internal position_command_ to the provided one, without modifiying cascade_command_
-     *          This function should be called from higher level controllers if they provide a command
-     * \param position_command  position command
-     */
-     pos_command_t calc_position_command(const nav_command_t& nav_command);
-
 
     pid_controller_conf_t& cruise_pid_config(); // TODO: set return to const when onboard parameter use get/set
     pid_controller_conf_t& hover_pid_config(); // TODO: set return to const when onboard parameter use get/set
@@ -179,8 +160,8 @@ private:
     float distance_to_goal_sqr_;                     ///< Distance to goal squared(updated in calc_position_command)
 };
 
-template<class TPosition_controller>
-typename Navigation_directto<TPosition_controller>::conf_t Navigation_directto<TPosition_controller>::default_config()
+
+Navigation_directto::conf_t Navigation_directto::default_config()
 {
     conf_t conf;
     conf.min_cruise_dist_sqr                        = 4.0f;
@@ -207,12 +188,8 @@ typename Navigation_directto<TPosition_controller>::conf_t Navigation_directto<T
     conf.hover_pid_config.differentiator.clip     = 0.46f;
     conf.hover_pid_config.soft_zone_width         = 0.0f;
 
-    conf.position_controller_config = TPosition_controller::default_config();
-
     return conf;
 };
 
-
-#include "navigation/navigation_directto.hxx"
 
 #endif /* NAVIGATION_DIRECTTO_HPP_ */

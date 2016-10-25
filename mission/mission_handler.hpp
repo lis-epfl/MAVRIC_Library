@@ -66,9 +66,10 @@ public:
         MISSION_FINISHED=1
     };
 
+
     /**
      * \brief   Checks if the handler is able to handle the request
-     *  
+     *
      * \details     This must be defined in the subclasses. It should perform
      *              a check on the inputted waypoint and return true or false
      *              if this is the appropriate handler for the waypoint.
@@ -79,9 +80,10 @@ public:
      */
     virtual bool can_handle(const Waypoint& wpt) const = 0;
 
+
     /**
      * \brief   Sets up this handler class for a first time initialization
-     *  
+     *
      * \details     This must be defined in the subclasses. It should perform
      *              initial setup. For example, setting the hold position to
      *              the current position of the drone, that way it is not done
@@ -93,9 +95,10 @@ public:
      */
     virtual bool setup(const Waypoint& wpt) = 0;
 
+
     /**
      * \brief   Handles the mission every iteration
-     *  
+     *
      * \details     This must be defined in the subclasses. It should perform
      *              routine checks and code that needs to be done every iteration
      *              The effective goal of the handle function is to set some
@@ -104,6 +107,7 @@ public:
      * \return  Update status code
      */
     virtual update_status_t update() = 0;
+
 
     /**
      * \brief   Gets the mission state of this handler

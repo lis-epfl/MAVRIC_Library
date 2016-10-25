@@ -30,41 +30,61 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file navigation_controller_i.hpp
+ * \file navigation.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
+ * \author Julien Lecoeur
  *
- * \brief Interface for navigation controller
+ * \brief Interface for navigation
  *
  ******************************************************************************/
 
 
-#ifndef NAVIGATION_CONTROLLER_I_HPP_
-#define NAVIGATION_CONTROLLER_I_HPP_
+#ifndef NAVIGATION_HPP_
+#define NAVIGATION_HPP_
 
 #include "util/coord_conventions.hpp"
 #include "control/control_command.hpp"
 
-class Navigation_controller_I
+class Navigation
 {
 public:
 
     typedef position_command_t nav_command_t;
 
     /**
-     * \brief   Update controller;
+     * \brief   Main update method
+     *
+     * \return  Success
      */
-    virtual void update() = 0;
+    virtual bool update() = 0;
+
 
     /**
-     * \brief           sets the navigation command (desired position)
+     * \brief           Sets the navigation goal (desired position)
      *
-     * \param command   navigation command indicating navigation target location in local frame
+     * \param   goal    Navigation goal waypoint
      *
      * \return success  whether command was accepted
      */
-    virtual bool set_navigation_command(const nav_command_t& command) = 0;
+    //  virtual bool set_goal(const Waypoint& goal) = 0;
+    virtual bool set_goal(const nav_command_t& goal) = 0;
+
+    
+    command_t get_control_command(bool flag)
+    {
+        if (flag)
+        {
+            attitude_command_t att;
+            return att;
+        }
+        else
+        {
+            rate_command_t rate;
+            return rate;
+        }
+    }
 };
 
-#endif /* NAVIGATION_CONTROLLER_I_HPP_ */
+#endif /* NAVIGATION_HPP_ */

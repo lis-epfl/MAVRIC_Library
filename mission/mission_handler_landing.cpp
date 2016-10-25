@@ -41,7 +41,7 @@
 
 
 #include "mission/mission_handler_landing.hpp"
-#include "navigation/navigation_controller_i.hpp"
+#include "navigation/navigation.hpp"
 
 
 //------------------------------------------------------------------------------

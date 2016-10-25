@@ -44,11 +44,11 @@
 #define MISSION_HANDLER_HOLD_POSITION__
 
 #include "mission/mission_handler.hpp"
+#include "navigation/navigation.hpp"
 
 /*
  * The handler class takes in a template parameter that allows control inputs.
  */
-template <class T>
 class Mission_handler_hold_position : public Mission_handler
 {
 public:
@@ -60,12 +60,12 @@ public:
      * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
      */
-     Mission_handler_hold_position( T& controller,
+     Mission_handler_hold_position( Navigation& controller,
                                     const INS& ins);
 
     /**
      * \brief   Checks if the waypoint is a hold position waypoint
-     *  
+     *
      * \details     Checks if this is a:
                         MAV_CMD_NAV_LOITER_UNLIM
                         MAV_CMD_NAV_LOITER_TIME
@@ -80,7 +80,7 @@ public:
 
     /**
      * \brief   Sets up this handler class for a first time initialization
-     *  
+     *
      * \details     Stores the waypoint reference and records the starting
                     time
      *
@@ -92,7 +92,7 @@ public:
 
     /**
      * \brief   Handles the mission every iteration
-     *  
+     *
      * \details     Sets the waypoint goal to the setup waypoint. Returns MISSION_IN_PROGRESS
      *              if the drone is still holding position, MISSION_FINISHED if it should move
      *              to the next waypoint, and MISSION_FAILED if the drone cannot hold position
@@ -113,7 +113,7 @@ protected:
     uint64_t start_time_;               ///< The start time of the waypoint hold
     bool within_radius_;                ///< Flag stating if we are within the radius
 
-    T& controller_;                     ///< The reference to the controller
+    Navigation& controller_;                     ///< The reference to the controller
     const INS& ins_;                    ///< The reference to the ins structure
 
     /**
@@ -123,7 +123,5 @@ protected:
      */
     virtual bool set_control_command();
 };
-
-#include "mission/mission_handler_hold_position.hxx"
 
 #endif // MISSION_HANDLER_HOLD_POSITION__
