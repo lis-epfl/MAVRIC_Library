@@ -43,15 +43,10 @@
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
 
-// #include "hal/dummy/file_dummy.hpp"
-#include "hal/avr32/file_flash_avr32.hpp"
+#include "hal/dummy/file_dummy.hpp"
 #include "hal/avr32/serial_usb_avr32.hpp"
 
-// //uncomment to go in simulation
-// #include "simulation/dynamic_model_quad_diag.hpp"
-// #include "simulation/simulation.hpp"
-// #include "hal/dummy/adc_dummy.hpp"
-// #include "hal/dummy/pwm_dummy.hpp"
+//uncomment to go in simulation
 #include "hal/common/time_keeper.hpp"
 
 extern "C"
@@ -61,6 +56,8 @@ extern "C"
 #include "libs/asf/avr32/services/delay/delay.h"
 
 #include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
+
+#include "hal/common/mavric_endian.h"
 }
 
 // #include "hal/common/dbg.hpp"
@@ -107,12 +104,8 @@ int main(void)
     // Board initialisation
     init_success &= board.init();
 
-    fat_fs_mounting_t fat_fs_mounting;
-
-    fat_fs_mounting_init(&fat_fs_mounting);
-
-    File_fat_fs file_log(true, &fat_fs_mounting); // boolean value = debug mode
-    File_fat_fs file_stat(true, &fat_fs_mounting); // boolean value = debug mode
+    File_dummy file1;
+    File_dummy file2;
 
     // -------------------------------------------------------------------------
     // Create MAV
@@ -138,53 +131,10 @@ int main(void)
                         board.servo_5,
                         board.servo_6,
                         board.servo_7,
-                        file_log,
-                        file_stat,
+                        file1,
+                        file2,
                         board.i2c1,
                         mav_config );
-
-    // -------------------------------------------------------------------------
-    // Create simulation
-    // -------------------------------------------------------------------------
-    // // Simulated servos
-    // Pwm_dummy pwm[4];
-    // Servo sim_servo_0(pwm[0], servo_default_config_esc());
-    // Servo sim_servo_1(pwm[1], servo_default_config_esc());
-    // Servo sim_servo_2(pwm[2], servo_default_config_esc());
-    // Servo sim_servo_3(pwm[3], servo_default_config_esc());
-
-    // // Simulated dynamic model
-    // Dynamic_model_quad_diag sim_model    = Dynamic_model_quad_diag(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
-    // Simulation sim                       = Simulation(sim_model);
-
-    // // Simulated battery
-    // Adc_dummy    sim_adc_battery = Adc_dummy(11.1f);
-    // Battery  sim_battery     = Battery(sim_adc_battery);
-
-    // // Simulated IMU
-    // Imu      sim_imu         = Imu(  sim.accelerometer(),
-    //                                  sim.gyroscope(),
-    //                                  sim.magnetometer() );
-
-    // // set the flag to simulation
-    // mav_config.state_config.simulation_mode = HIL_ON;
-    // LEQuad mav = LEQuad( MAVLINK_SYS_ID,
-    //                              sim_imu,
-    //                              sim.barometer(),
-    //                              sim.gps(),
-    //                              sim.sonar(),
-    //                              board.uart0,                // mavlink serial
-    //                              board.spektrum_satellite,
-    //                              board.green_led,
-    //                              board.file_flash,
-    //                              sim_battery,
-    //                              sim_servo_0,
-    //                              sim_servo_1,
-    //                              sim_servo_2,
-    //                              sim_servo_3 ,
-    //                              file_log,
-    //                              file_stat,
-    //                              mav_config );
 
     if (init_success)
     {
@@ -199,7 +149,7 @@ int main(void)
     }
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");
-mav.get_scheduler().add_task(1000000, (Scheduler_task::task_function_t)&px4_update, (Scheduler_task::task_argument_t)&board.i2c1);
+mav.get_scheduler().add_task(500000, (Scheduler_task::task_function_t)&px4_update, (Scheduler_task::task_argument_t)&board.i2c1);
 
     // -------------------------------------------------------------------------
     // Main loop
@@ -210,80 +160,145 @@ mav.get_scheduler().add_task(1000000, (Scheduler_task::task_function_t)&px4_upda
 }
 
 
-#define FLOW_STAT_COMMAND 50
-#define PX4_ADDRESS 0x42+3
-#define SECTOR_COUNT 6
-
-
-// struct flow_stat_frame{
-//     int16_t maxima[SECTOR_COUNT];
-//     uint8_t max_pos[SECTOR_COUNT];
-//     int16_t minima[SECTOR_COUNT];
-//     uint8_t min_pos[SECTOR_COUNT];
-//     int16_t stddev[SECTOR_COUNT];
-//     int16_t avg[SECTOR_COUNT];
-// };
-
-struct flow_stat_frame_t{
+typedef struct
+{
     int16_t maxima[SECTOR_COUNT];
-    uint8_t max_pos[SECTOR_COUNT];
+    int16_t max_pos[SECTOR_COUNT];
     int16_t minima[SECTOR_COUNT];
-    uint8_t min_pos[SECTOR_COUNT];
+    int16_t min_pos[SECTOR_COUNT];
     int16_t stddev[SECTOR_COUNT];
     int16_t avg[SECTOR_COUNT];
-};
+} __attribute__((packed)) flow_stat_frame_t;
 
-static inline void swap_bytes(uint16_t* buffer, uint8_t size)
-{
-    uint16_t* end = buffer + size;
-    uint8_t* b1 = reinterpret_cast<uint8_t*>(buffer);
-    uint8_t* b2 = b1+1;
-    for(; buffer < end; buffer++, b1+=2, b2+=2){
-        *buffer = ((int16_t)(*b2 << 8 | *b1));
-    }
-}
-
+// #define FLOW_STAT_FRAME_SIZE 18
+// #define FLOW_STAT_COMMAND 47 + sizeof(flow_stat_frame_t) - FLOW_STAT_FRAME_SIZE
 
 #define FLOW_STAT_FRAME_SIZE sizeof(flow_stat_frame_t)
+#define FLOW_STAT_COMMAND 47
+#define PX4_ADDRESS 0x42
+#define SECTOR_COUNT 6
 
 void print_frame(flow_stat_frame_t& f)
 {
-    print_util_dbg_print("Maxima:  ");
+    print_util_dbg_print("Maxima:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.maxima[i],10);
-    print_util_dbg_print("\r\nMax Pos:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nMaxPos:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.max_pos[i],10);
-    print_util_dbg_print("\r\nMinima:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nMinima:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.minima[i],10);
-    print_util_dbg_print("\r\nMin Pos:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nMinPos:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.min_pos[i],10);
-    print_util_dbg_print("\r\nSTDDEV:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nSTDDEV:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.stddev[i],10);
-    print_util_dbg_print("\r\nAvg:  ");
+        print_util_dbg_print("\t");
+    }
+
+    print_util_dbg_print("\r\nAvg:\t");
     for(uint8_t i = 0; i < SECTOR_COUNT; i++)
+    {
         print_util_dbg_print_num(f.avg[i],10);
+        print_util_dbg_print("\t");
+    }
+
     print_util_dbg_print("\r\n");
+    print_util_dbg_print("\r\n");
+
+    print_util_get_debug_stream()->flush(print_util_get_debug_stream());
+}
+
+void print_buffer(uint8_t* buffer, uint8_t size)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        print_util_dbg_print_num(buffer[i], 10);
+        print_util_dbg_print(" ");
+    }
+    print_util_dbg_print("\r\n");
+    print_util_dbg_print("\r\n");
+
+    print_util_get_debug_stream()->flush(print_util_get_debug_stream());
 }
 
 void px4_update(I2c& i2c)
 {
     uint8_t flow_stat_command = FLOW_STAT_COMMAND;
-    i2c.write(&flow_stat_command, 1, PX4_ADDRESS);
-
     flow_stat_frame_t frame;
-    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS))
+
+    uint64_t t = time_keeper_get_us();
+
+    i2c.write(&flow_stat_command, 1, PX4_ADDRESS + 1);
+    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS + 1))
     {
-        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.maxima)), SECTOR_COUNT);
-        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.minima)), SECTOR_COUNT);
-        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.stddev)), SECTOR_COUNT);
-        swap_bytes(reinterpret_cast<uint16_t*>(&(frame.avg)), SECTOR_COUNT);
-        
-        //swap_bytes(reinterpret_cast<uint16_t*>(&(frame.minima)), SECTOR_COUNT);
-        print_util_dbg_print("PX4 read\r\n");
+        for (size_t i = 0; i < SECTOR_COUNT; i++)
+        {
+            frame.maxima[i]     = endian_from_little16(frame.maxima[i]);
+            frame.max_pos[i]    = endian_from_little16(frame.max_pos[i]);
+            frame.minima[i]     = endian_from_little16(frame.minima[i]);
+            frame.min_pos[i]    = endian_from_little16(frame.min_pos[i]);
+            frame.avg[i]        = endian_from_little16(frame.avg[i]);
+            frame.stddev[i]     = endian_from_little16(frame.stddev[i]);
+        }
+
+        print_util_dbg_print("PX4 1 read\r\n");
         print_frame(frame);
     }
+
+    i2c.write(&flow_stat_command, 1, PX4_ADDRESS + 2);
+    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS + 2))
+    {
+        for (size_t i = 0; i < SECTOR_COUNT; i++)
+        {
+            frame.maxima[i]     = endian_from_little16(frame.maxima[i]);
+            frame.max_pos[i]    = endian_from_little16(frame.max_pos[i]);
+            frame.minima[i]     = endian_from_little16(frame.minima[i]);
+            frame.min_pos[i]    = endian_from_little16(frame.min_pos[i]);
+            frame.avg[i]        = endian_from_little16(frame.avg[i]);
+            frame.stddev[i]     = endian_from_little16(frame.stddev[i]);
+        }
+
+        print_util_dbg_print("PX4 2 read\r\n");
+        print_frame(frame);
+    }
+
+    i2c.write(&flow_stat_command, 1, PX4_ADDRESS + 3);
+    if(i2c.read(reinterpret_cast<uint8_t*>(&frame), FLOW_STAT_FRAME_SIZE, PX4_ADDRESS + 3))
+    {
+        for (size_t i = 0; i < SECTOR_COUNT; i++)
+        {
+            frame.maxima[i]     = endian_from_little16(frame.maxima[i]);
+            frame.max_pos[i]    = endian_from_little16(frame.max_pos[i]);
+            frame.minima[i]     = endian_from_little16(frame.minima[i]);
+            frame.min_pos[i]    = endian_from_little16(frame.min_pos[i]);
+            frame.avg[i]        = endian_from_little16(frame.avg[i]);
+            frame.stddev[i]     = endian_from_little16(frame.stddev[i]);
+        }
+
+        print_util_dbg_print("PX4 3 read\r\n");
+        print_frame(frame);
+    }
+
+    print_util_dbg_print_num(time_keeper_get_us() - t, 10);
+    print_util_dbg_print("\r\n\r\n");
 }

@@ -65,6 +65,12 @@ uint8_t serial2stream(stream_data_t data, uint8_t byte)
     return 0;
 }
 
+void serial2streamflush(stream_data_t data)
+{
+    p_uart_usb->flush();
+}
+
+
 Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
     dsm_receiver_pin(config.dsm_receiver_pin_config),
     dsm_power_pin(config.dsm_power_pin_config),
@@ -135,7 +141,7 @@ bool Megafly_rev4::init(void)
     p_uart_usb = &uart_usb;
     dbg_stream_.get = NULL;
     dbg_stream_.put = &serial2stream;
-    dbg_stream_.flush = NULL;
+    dbg_stream_.flush = &serial2streamflush;
     dbg_stream_.buffer_empty = NULL;
     dbg_stream_.data = NULL;
     print_util_dbg_print_init(&dbg_stream_);

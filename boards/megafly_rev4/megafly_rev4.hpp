@@ -44,7 +44,6 @@
 
 #include "hal/avr32/adc_avr32.hpp"
 #include "hal/avr32/file_flash_avr32.hpp"
-#include "hal/avr32/file_fat_fs.hpp"
 #include "hal/avr32/gpio_avr32.hpp"
 #include "hal/avr32/i2c_avr32.hpp"
 #include "hal/avr32/led_avr32.hpp"
