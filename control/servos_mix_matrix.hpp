@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_6dof.hpp
+ * \file servos_mix_matrix.hpp
  *
  * \author MAV'RIC Team
  *
@@ -45,9 +45,9 @@
  *     thrust3D_command_t thrust3d_command;
  *
  *     // Configuration structure
- *     Servos_mix_6dof<6>::conf_t mix6dof_config = Servos_mix_6dof<6>::default_config();
+ *     Servos_mix_matrix<6>::conf_t servosmix_config = Servos_mix_matrix<6>::default_config();
  *     float s60 = 0.866025f;
- *     mix6dof_config.mix = Mat<6, 6>({  0.0f,  1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
+ *     servosmix_config.mix = Mat<6, 6>({  0.0f,  1.0f,  1.0f,  1.0f, 0.0f, 1.0f,
  *                                         s60,  0.5f, -1.0f, -0.5f,  s60, 1.0f,
  *                                         s60, -0.5f,  1.0f, -0.5f, -s60, 1.0f,
  *                                        0.0f, -1.0f, -1.0f,  1.0f, 0.0f, 1.0f,
@@ -55,23 +55,20 @@
  *                                        -s60, 0.5f, -1.0f, -0.5f, -s60, 1.0f});
  *
  *      # Create object
- *      Servos_mix_6dof<6> mix6dof( torque_command,
+ *      Servos_mix_matrix<6> servosmix( torque_command,
  *                                  thrust3d_command,
  *                                  std::array<Servo*, 6>{&board.servo_0, &board.servo_1,
  *                                                        &board.servo_4, &board.servo_5},
- *                                  mix6dof_config);
+ *                                  servosmix_config);
  * ```
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_6DOF_HPP_
-#define SERVOS_MIX_6DOF_HPP_
+#ifndef SERVOS_MIX_MATRIX_HPP_
+#define SERVOS_MIX_MATRIX_HPP_
 
-#include <stdbool.h>
-#include <stdint.h>
-
+#include "control/servos_mix.hpp"
 #include "drivers/servo.hpp"
-#include "control/control_command.hpp"
 #include "util/matrix.hpp"
 
 /**
@@ -80,7 +77,7 @@
  * \tparam  N   Number of servos
  */
 template<uint32_t N>
-class Servos_mix_6dof
+class Servos_mix_matrix: Servos_mix
 {
 public:
     /**
@@ -88,24 +85,24 @@ public:
      */
     struct conf_t
     {
-        float     min_thrust;   ///< Minimum command to apply to the motors
-        float     max_thrust;   ///< Maximum command to apply to the motors
-        Mat<N,6>  mix;          ///< Mix matrix
+        Mat<N, 6> mix;          ///< Mix matrix
+        Mat<N, 1> trim;         ///< Trim values added to output
+        Mat<N, 1> min;          ///< Minimum commands to apply to servo
+        Mat<N, 1> max;          ///< Maximum commands to apply to servo
     };
 
     /**
      * \brief   Default configuration
-     *
-     * \param   sysid       System id (default value = 1)
      *
      * \return  Config structure
      */
     static inline conf_t default_config(void)
     {
         conf_t conf = {};
-        conf.min_thrust = -0.95f;
-        conf.max_thrust =  1.0f;
         conf.mix        = Mat<N,6>(0.0f);
+        conf.trim       = Mat<N,1>(-1.0f);  // -1.0f in case some servos are motors
+        conf.min        = Mat<N,1>(-0.9f);
+        conf.max        = Mat<N,1>(1.0f);
         return conf;
     };
 
@@ -113,24 +110,24 @@ public:
     /**
      * \brief   Constructor
      */
-    Servos_mix_6dof( const torque_command_t& torque_command,
-            const thrust3D_command_t& thrust_command,
-            std::array<Servo*, N> servos,
-            const conf_t& config = default_config()):
-        torque_command_(torque_command),
-        thrust_command_(thrust_command),
+    Servos_mix_matrix( std::array<Servo*, N> servos,
+                       const conf_t& config = default_config()):
         servos_(servos),
+        torque_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
+        thrust_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
         mix_(config.mix),
-        min_thrust_(config.min_thrust),
-        max_thrust_(config.max_thrust)
+        trim_(config.trim),
+        min_(config.min),
+        max_(config.max)
     {};
 
 
     /**
      * \brief  Perform conversion from torque/thrust command to servo command
      */
-    bool update(void)
+    virtual bool update(void)
     {
+        // Mix commands into servo values
         Mat<N,1> servos_cmd = mix_ % Mat<6,1>({torque_command_.xyz[X],
                                                torque_command_.xyz[Y],
                                                torque_command_.xyz[Z],
@@ -138,33 +135,89 @@ public:
                                                thrust_command_.xyz[Y],
                                                thrust_command_.xyz[Z]});
 
+        // Add trim
+        servos_cmd += trim_;
+
+        // Clip between min and max actuator values
+        servos_cmd.clip(min_, max_);
+
+        // Write to hardware
         for (uint32_t i=0; i<N; ++i)
         {
-            // Clip servo command
-            if (servos_cmd[i] > max_thrust_)
-            {
-               servos_cmd[i] = max_thrust_;
-            }
-            else if (servos_cmd[i] < min_thrust_)
-            {
-                servos_cmd[i] = min_thrust_;
-            }
-
-            // Write to hardware
             servos_[i]->write(servos_cmd[i]);
         }
 
         return true;
     };
 
+
+    /**
+     * \brief           sets the torque command
+     *
+     * \param command   torque command in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool set_command(const torque_command_t& torque)
+    {
+        torque_command_ = torque;
+        return true;
+    };
+
+
+    /**
+     * \brief           sets the thrust command
+     *
+     * \param command   thrust command in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool set_command(const thrust_command_t& thrust)
+    {
+        thrust_command_ = thrust;
+        return true;
+    };
+
+
+    /**
+     * \brief           sets the torque command
+     *
+     * \param command   torque command in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool get_command(torque_command_t& torque) const
+    {
+        torque = torque_command_;
+        return true;
+    }
+
+
+    /**
+     * \brief           sets the thrust command
+     *
+     * \param command   thrust command in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool get_command(thrust_command_t& thrust) const
+    {
+        thrust = thrust_command_;
+        return true;
+    };
+
+
 protected:
-    const torque_command_t& torque_command_;
-    const thrust3D_command_t& thrust_command_;
     std::array<Servo*, N> servos_;
+
+    torque_command_t torque_command_;
+    thrust_command_t thrust_command_;
+
     Mat<N, 6> mix_;
-    float min_thrust_;
-    float max_thrust_;
+    Mat<N, 1> trim_;
+    Mat<N, 1> min_;
+    Mat<N, 1> max_;
 };
 
 
-#endif /* SERVOS_MIX_6DOF_HPP_ */
+#endif /* SERVOS_MIX_MATRIX_HPP_ */

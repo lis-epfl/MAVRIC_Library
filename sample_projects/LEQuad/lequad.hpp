@@ -48,25 +48,19 @@
 
 #include "communication/data_logging.hpp"
 #include "communication/hud_telemetry.hpp"
-
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/onboard_parameters.hpp"
-#include "manual_control/remote_default_config.hpp"
 
 #include "control/controller_stack.hpp"
 #include "control/position_controller.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
-#include "manual_control/manual_control.hpp"
-#include "navigation/navigation_directto.hpp"
 #include "control/rate_controller.hpp"
-#include "control/servos_mix_quadcopter_diag.hpp"
-#include "manual_control/manual_control.hpp"
 #include "control/stabilisation.hpp"
-
-#include "navigation/vector_field_waypoint.hpp"
+#include "control/servos_mix_quadcopter_diag.hpp"
+#include "control/servos_mix_matrix.hpp"
 
 #include "drivers/battery.hpp"
 #include "drivers/gps.hpp"
@@ -79,6 +73,9 @@
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"
 
+#include "manual_control/manual_control.hpp"
+#include "manual_control/remote_default_config.hpp"
+
 #include "mission/mission_planner.hpp"
 #include "mission/mission_handler_critical_landing.hpp"
 #include "mission/mission_handler_critical_navigating.hpp"
@@ -89,7 +86,8 @@
 #include "mission/mission_handler_on_ground.hpp"
 #include "mission/mission_handler_takeoff.hpp"
 
-#include "simulation/simulation.hpp"
+#include "navigation/navigation_directto.hpp"
+#include "navigation/vector_field_waypoint.hpp"
 
 #include "sensing/ahrs.hpp"
 #include "sensing/ahrs_ekf.hpp"
@@ -100,6 +98,8 @@
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
 #include "sensing/ahrs_ekf_mocap.hpp"
+
+#include "simulation/simulation.hpp"
 
 #include "status/geofence.hpp"
 #include "status/geofence_cylinder.hpp"

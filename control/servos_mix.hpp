@@ -90,7 +90,7 @@ public:
      *
      * \return success  whether command was accepted
      */
-    virtual bool get_command(const torque_command_t& torque) const = 0;
+    virtual bool get_command(torque_command_t& torque) const = 0;
 
 
     /**
@@ -100,7 +100,7 @@ public:
      *
      * \return success  whether command was accepted
      */
-    virtual bool get_command(const thrust_command_t& thrust) const = 0;
+    virtual bool get_command(thrust_command_t& thrust) const = 0;
 
 
     /**
