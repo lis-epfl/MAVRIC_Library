@@ -642,7 +642,7 @@ bool LEQuad::main_task(void)
 
     Navigation_directto nav({*ins_});
 
-    controller_stack_.set_command(nav.get_control_command(true));
+    // controller_stack_.set_command(nav.get_control_command(true));
 
     bool failsafe = false;
 
@@ -658,14 +658,15 @@ bool LEQuad::main_task(void)
             case Mav_mode::VELOCITY:
             {
                 velocity_command_t vel_command;
-                manual_control.get_velocity_command(&vel_command, 1.0f);
+                manual_control.get_velocity_command(&vel_command);
                 controller_stack_.set_command(vel_command);
             }
                 break;
 
             case Mav_mode::ATTITUDE:
             {
-                attitude_command_t command = manual_control.get_attitude_command(ahrs.qe);
+                attitude_command_t command;
+                manual_control.get_attitude_command(&command, ahrs.qe);
                 controller_stack_.set_command(command);
             }
                 break;

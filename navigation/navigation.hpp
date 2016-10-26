@@ -71,19 +71,9 @@ public:
     //  virtual bool set_goal(const Waypoint& goal) = 0;
     virtual bool set_goal(const nav_command_t& goal) = 0;
 
-    
+
     command_t get_control_command(bool flag)
     {
-        if (flag)
-        {
-            attitude_command_t att;
-            return att;
-        }
-        else
-        {
-            rate_command_t rate;
-            return rate;
-        }
     }
 };
 

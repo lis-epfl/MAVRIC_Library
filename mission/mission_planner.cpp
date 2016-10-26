@@ -532,7 +532,7 @@ void Mission_planner::state_machine()
         // Require takeoff if we have switched out of auto, dont take off if on ground
         if (require_takeoff_ &&
            (internal_state_ != STANDBY ||
-                (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)))
+                (internal_state_ == STANDBY && manual_control_.throttle() > -0.7f)))
         {
             inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_TAKEOFF,
@@ -645,7 +645,7 @@ void Mission_planner::state_machine()
     else if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
     {
         // Set hold position waypoint
-        if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f  && !hold_position_set_) // On ground and desired to take off
+        if (internal_state_ == STANDBY && manual_control_.throttle() > -0.7f  && !hold_position_set_) // On ground and desired to take off
         {
             inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_TAKEOFF,
@@ -689,7 +689,7 @@ void Mission_planner::state_machine()
         require_takeoff_ = true;
 
         // Change only if thrust value is great enough
-        if (manual_control_.get_thrust() > -0.7f && current_mission_handler_->handler_mission_state() != MANUAL_CTRL)
+        if (manual_control_.throttle() > -0.7f && current_mission_handler_->handler_mission_state() != MANUAL_CTRL)
         {
             inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_MANUAL_CTRL,

@@ -100,85 +100,146 @@ public:
 
 
     /**
-     * \brief   Selects the source input and returns the thrust
+     * \brief   Selects the source input and returns the throttle
      *
      * \return  The value of the thrust depending on the source input
      */
-    float get_thrust() const;
+    float throttle() const;
+
+
+    /**
+     * \brief   Selects the source input and returns the roll
+     *
+     * \return  The value of the thrust depending on the source input
+     */
+    float roll() const;
+
+
+    /**
+     * \brief   Selects the source input and returns the pitch
+     *
+     * \return  The value of the thrust depending on the source input
+     */
+    float pitch() const;
+
+
+    /**
+     * \brief   Selects the source input and returns the yaw
+     *
+     * \return  The value of the thrust depending on the source input
+     */
+    float yaw() const;
 
 
     /**
      * \brief   Compute torque command from the manual input
      *
      * \param   command         Torque command (output)
-     * \param   scale           Scale (maximum output / max remote input)
+     * \param   scale_roll      Scale (maximum output / max remote input)
+     * \param   scale_pitch     Scale (maximum output / max remote input)
+     * \param   scale_yaw       Scale (maximum output / max remote input)
      */
-    void get_torque_command(torque_command_t* command, float scale) const;
+    void get_torque_command(torque_command_t* command,
+                            float scale_roll = 1.0f,
+                            float scale_pitch = 1.0f,
+                            float scale_yaw = 1.0f) const;
 
 
     /**
      * \brief   Compute rate command from the manual input
      *
      * \param   command         Rate command (output)
-     * \param   scale           Scale (maximum output / max remote input)
+     * \param   scale_roll      Scale (maximum output / max remote input)
+     * \param   scale_pitch     Scale (maximum output / max remote input)
+     * \param   scale_yaw       Scale (maximum output / max remote input)
      */
-    void get_rate_command(rate_command_t* command, float scale) const;
+    void get_rate_command(rate_command_t* command,
+                          float scale_roll = 1.0f,
+                          float scale_pitch = 1.0f,
+                          float scale_yaw = 1.0f) const;
 
 
     /**
      * \brief   Compute thrust command from the manual input
      *
      * \param   command         Thrust command (output)
+     * \param   scale           Scale
      */
-    void get_thrust_command_copter(thrust_command_t* command) const;
+    void get_thrust_command_copter(thrust_command_t* command, float scale = 1.0f) const;
 
 
     /**
      * \brief   Compute thrust command from the manual input
      *
      * \param   command         Thrust command (output)
+     * \param   scale           Scale
      */
-    void get_thrust_command_wing(thrust_command_t* command) const;
+    void get_thrust_command_wing(thrust_command_t* command, float scale = 1.0f) const;
 
 
     /**
      * \brief   Compute attitude command from the manual input (absolute angles)
      *
      * \param   command         Attitude command (output)
-     * \param   scale           Scale (maximum output / max remote input)
+     * \param   scale_roll      Scale (maximum output / max remote input)
+     * \param   scale_pitch     Scale (maximum output / max remote input)
+     * \param   scale_yaw       Scale (maximum output / max remote input)
      */
-    void get_attitude_command_absolute_yaw(attitude_command_t* command, float scale) const;
+    void get_attitude_command_absolute_yaw( attitude_command_t* command,
+                                            float scale_roll = 1.0f,
+                                            float scale_pitch = 1.0f,
+                                            float scale_yaw = 1.0f) const;
 
 
     /**
      * \brief   Compute attitude command from manual control source (absolute roll and pitch, relative yaw)
      * \details Yaw is relative to current yaw (command.yaw = current.yaw + 0.5 * input.yaw)
      *
+     * \param   command             Attitude command (output)
      * \param   current_attitude    Current attitude of the vehicle
+     * \param   scale_roll          Scale (maximum output / max remote input)
+     * \param   scale_pitch         Scale (maximum output / max remote input)
+     * \param   scale_yaw           Scale (maximum output / max remote input)
      *
      * \return  command
      */
-    attitude_command_t get_attitude_command(quat_t current_attitude) const;
+    void get_attitude_command(  attitude_command_t* command,
+                                quat_t current_attitude,
+                                float scale_roll = 1.0f,
+                                float scale_pitch = 1.0f,
+                                float scale_yaw = 0.5f) const;
 
 
     /**
      * \brief   Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)
      *
-     * \param   ki_yaw          Integration factor for yaw (0.02 is ok) (input)
-     * \param   command         Attitude command (output)
-     * \param   scale           Scale (maximum output / max remote input)
-     * \param   reference_pitch Transition factor (0: forward flight, PI/2:hover)
+     * \param   command             Attitude command (output)
+     * \param   current_attitude    Current attitude of the vehicle
+     * \param   reference_pitch     Transition factor (0: forward flight, PI/2:hover)
+     * \param   scale_roll          Scale (maximum output / max remote input)
+     * \param   scale_pitch         Scale (maximum output / max remote input)
+     * \param   scale_yaw           Scale (maximum output / max remote input)
      */
-    void get_attitude_command_vtol(const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch) const;
+    void get_attitude_command_vtol( attitude_command_t* command,
+                                    quat_t current_attitude,
+                                    float reference_pitch,
+                                    float scale_roll = 1.0f,
+                                    float scale_pitch = 1.0f,
+                                    float scale_yaw = 0.5f) const;
 
 
     /**
      * \brief   Compute velocity command from the manual input
      *
      * \param   command         Velocity command (output)
-     * \param   scale           Scale (maximum output / max remote input)
+     * \param   scale_x         Scale (maximum output / max remote input)
+     * \param   scale_y         Scale (maximum output / max remote input)
+     * \param   scale_z         Scale (maximum output / max remote input)
      */
-    void get_velocity_command(velocity_command_t* command, float scale) const;
+    void get_velocity_command(  velocity_command_t* command,
+                                float scale_x = 10.0f,
+                                float scale_y = 10.0f,
+                                float scale_z = 1.5f) const;
 
 
     /**

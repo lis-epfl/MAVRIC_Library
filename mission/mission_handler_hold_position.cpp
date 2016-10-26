@@ -141,6 +141,7 @@ Mission_handler::update_status_t Mission_handler_hold_position::update()
                 return MISSION_FINISHED;
             }
             break;
+            
         case MAV_CMD_OVERRIDE_GOTO:
             return MISSION_FINISHED;
         }
