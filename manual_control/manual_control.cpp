@@ -170,7 +170,7 @@ void Manual_control::get_thrust_command_copter(thrust_command_t* command, float 
     {
         command->xyz[X] = 0.0f;
         command->xyz[Y] = 0.0f;
-        command->xyz[Z] = - scale * throttle();
+        command->xyz[Z] = - scale * (0.5f + 0.5f * throttle());  // negative Z thrust between 0 and - scale
     }
 }
 
@@ -179,7 +179,7 @@ void Manual_control::get_thrust_command_wing(thrust_command_t* command, float sc
 {
     if (control_source_ != CONTROL_SOURCE_NONE)
     {
-        command->xyz[X] = scale * throttle();
+        command->xyz[X] = scale * (0.5f + 0.5f * throttle()); // positive X thrust between 0 and scale
         command->xyz[Y] = 0.0f;
         command->xyz[Z] = 0.0f;
     }
