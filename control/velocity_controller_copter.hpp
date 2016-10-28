@@ -80,13 +80,19 @@ public:
 
 
     /**
+     * \brief   Required arguments
+     */
+    struct args_t: public Velocity_controller::args_t
+    {};
+
+    /**
      * \brief                       Constructor
      *
      * \param   ahrs                Reference to estimated attitude
      * \param   ins                 Reference to estimated speed and position
      * \param   config              Configuration
      */
-    Velocity_controller_copter(const ahrs_t& ahrs, const INS& ins, const conf_t& config = default_config());
+    Velocity_controller_copter(const args_t& args, const conf_t& config = default_config());
 
 
 protected:

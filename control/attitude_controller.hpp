@@ -82,12 +82,23 @@ public:
 
 
     /**
+     * \brief   Required arguments
+     */
+    struct args_t
+    {
+        const ahrs_t&               ahrs;                        ///< Reference to estimated attitude
+        const attitude_command_t&   attitude_command;            ///< Reference to attitude command (input)
+        rate_command_t&             rate_command;                ///< Reference to rate command (output)
+    };
+
+
+    /**
      * \brief                       Constructor
      *
-     * \param   ahrs                Reference to estimated attitude
+     * \param   args                Required arguments
      * \param   config              Configuration
      */
-    Attitude_controller(const ahrs_t& ahrs, const conf_t& config = default_config());
+    Attitude_controller(const args_t& args, const conf_t& config = default_config());
 
 
     /**
@@ -130,9 +141,8 @@ public:
 
 protected:
     const ahrs_t&               ahrs_;                       ///< Ref to attitude estimation (input)
-
-    attitude_command_t          attitude_command_;           ///< Attitude command
-    rate_command_t              rate_command_;               ///< Attitude command
+    const attitude_command_t&   attitude_command_;           ///< Reference to attitude command (input)
+    rate_command_t&             rate_command_;               ///< Reference to rate command (output)
 
     attitude_error_estimator_t  attitude_error_estimator_;   ///< Attitude error estimator
     pid_controller_t            pid_[3];                     ///< Attitude PID controller for roll, pitch and yaw

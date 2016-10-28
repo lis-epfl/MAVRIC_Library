@@ -64,12 +64,13 @@ class Rate_controller : public Controller<rate_command_t, torque_command_t>
 public:
 
     /**
-     * \brief Rate controller configuration
+     * \brief   Rate controller configuration
      */
     struct conf_t
     {
         pid_controller_conf_t pid_config[3];   ///< Angular rate PID controller for roll, pitch and yaw
     };
+
 
     /**
      * \brief   Default Configuration
@@ -80,12 +81,23 @@ public:
 
 
     /**
+     * \brief   Required arguments
+     */
+    struct args_t
+    {
+        const ahrs_t&               ahrs;                  ///< Ref to attitude estimation (input)
+        const rate_command_t&       rate_command;          ///< Reference to rate command (input)
+        torque_command_t&           torque_command;        ///< Reference to torque command (output)
+    };
+
+
+    /**
      * \brief                 Constructor
      *
-     * \param   ahrs          Reference to estimated attitude
+     * \param   args          Required arguments
      * \param   config        Configuration
      */
-    Rate_controller(const ahrs_t& ahrs, const conf_t& config = default_config());
+    Rate_controller(const args_t& args, const conf_t& config = default_config());
 
 
     /**
@@ -128,9 +140,8 @@ public:
 
 private:
     const ahrs_t&               ahrs_;                  ///< Ref to attitude estimation (input)
-
-    rate_command_t              rate_command_;          ///< Rate command (input)
-    torque_command_t            torque_command_;        ///< Torque command (output)
+    const rate_command_t&       rate_command_;          ///< Reference to rate command (input)
+    torque_command_t&           torque_command_;        ///< Reference to torque command (output)
 
     pid_controller_t            pid_[3];                ///< Angular rate PID controller for roll, pitch and yaw
     float                       dt_s_;                  ///< The time interval between two updates

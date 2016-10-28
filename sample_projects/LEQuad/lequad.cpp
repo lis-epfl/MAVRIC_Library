@@ -642,7 +642,7 @@ bool LEQuad::main_task(void)
 
     Navigation_directto nav({*ins_});
 
-    Servos_mix_matrix<4> mix(std::array<Servo*,4>{{&servo_0, &servo_0, &servo_0, &servo_0}});
+    // Servos_mix_matrix<4> mix(std::array<Servo*,4>{{&servo_0, &servo_0, &servo_0, &servo_0}});
 
     // controller_stack_.set_command(nav.get_control_command(true));
 

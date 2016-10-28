@@ -114,11 +114,22 @@ extern "C"
 #include "sensing/altitude.h"
 }
 
-typedef Controller_stack<Position_controller,
-                         Velocity_controller_copter,
-                         Attitude_controller,
-                         Rate_controller,
-                         Servos_mix_quadcopter_diag> Controller_stack_copter;
+
+class Controller_stack_copter: public Controller_stack<Position_controller,
+                                                       Velocity_controller_copter,
+                                                       Attitude_controller,
+                                                       Rate_controller,
+                                                       Servos_mix_matrix<4>>
+{
+    Controller_stack_copter(const INS& ins, const ahrs_t& ahrs, Servo& servo_rl, Servo& servo_fl, Servo& servo_fr, Servo& servo_rr):
+        Controller_stack<Position_controller, Velocity_controller_copter, Attitude_controller, Rate_controller,
+                         Servos_mix_matrix<4>>( Position_controller::args_t{ahrs, ins},
+                                                Velocity_controller::args_t{ahrs, ins, command_.velocity, command_.attitude, command_.thrust},
+                                                Attitude_controller::args_t{ahrs, command_.attitude, command_.rate},
+                                                Rate_controller::args_t{ahrs, command_.rate, command_.torque},
+                                                Servos_mix_matrix<4>::args_t{std::array<Servo*,4>{{&servo_rl, &servo_fl, &servo_fr, &servo_rr}}})
+        {};
+};
 
 /**
  * \brief MAV class

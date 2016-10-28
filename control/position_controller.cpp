@@ -114,3 +114,24 @@ bool Position_controller::update()
 
 	return true;
 }
+
+
+bool Position_controller::set_command(const position_command_t& pos)
+{
+    position_command_ = pos;
+    return true;
+}
+
+
+bool Position_controller::get_command(position_command_t& pos) const
+{
+    pos = position_command_;
+    return true;
+}
+
+
+bool Position_controller::get_output(velocity_command_t& vel) const
+{
+    vel = velocity_command_;
+    return true;
+}

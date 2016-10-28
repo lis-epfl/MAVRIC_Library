@@ -66,13 +66,25 @@ public:
 
 
     /**
-     * \brief                       Constructor
-     *
-     * \param   ahrs                Reference to estimated attitude
-     * \param   ins                 Reference to estimated speed and position
-     * \param   config              Configuration
+     * \brief   Required arguments
      */
-    Velocity_controller(const ahrs_t& ahrs, const INS& ins, const conf_t& config);
+    struct args_t
+    {
+        const ahrs_t&                ahrs;                      ///< Pointer to attitude estimation (input)
+        const INS&                   ins;                       ///< Speed and position estimation (input)
+        const velocity_command_t&    velocity_command;          ///< Velocity command (input)
+        attitude_command_t&          attitude_command;          ///< Attitude command (output)
+        thrust_command_t&            thrust_command;            ///< Thrust command (output)
+    };
+
+
+    /**
+     * \brief                 Constructor
+     *
+     * \param   args          Required arguments
+     * \param   config        Configuration
+     */
+    Velocity_controller(const args_t& args, const conf_t& config);
 
 
     /**
@@ -140,9 +152,9 @@ protected:
 
     const ahrs_t&                ahrs_;                      ///< Pointer to attitude estimation (input)
     const INS&                   ins_;                       ///< Speed and position estimation (input)
-    velocity_command_t           velocity_command_;          ///< Velocity command (input)
-    attitude_command_t           attitude_command_;          ///< Attitude command (output)
-    thrust_command_t             thrust_command_;            ///< Thrust command (output)
+    const velocity_command_t&    velocity_command_;          ///< Velocity command (input)
+    attitude_command_t&          attitude_command_;          ///< Attitude command (output)
+    thrust_command_t&            thrust_command_;            ///< Thrust command (output)
 
     pid_controller_t             pid_[3];                    ///< PID controller for velocity along X, Y and Z in global frame
 };

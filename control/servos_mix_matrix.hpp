@@ -108,11 +108,19 @@ public:
 
 
     /**
+     * \brief   Required arguments
+     */
+    struct args_t
+    {
+        std::array<Servo*, N> servos;   ///< List of servos
+    };
+
+    /**
      * \brief   Constructor
      */
-    Servos_mix_matrix( std::array<Servo*, N> servos,
+    Servos_mix_matrix( const args_t& args,
                        const conf_t& config = default_config()):
-        servos_(servos),
+        servos_(args.servos),
         torque_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
         thrust_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
         mix_(config.mix),

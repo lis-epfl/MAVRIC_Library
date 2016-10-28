@@ -64,6 +64,15 @@ public:
         pid_controller_conf_t pid_config;
     };
 
+
+    /**
+     * \brief   Default configuration
+     *
+     * \return  config
+     */
+    static inline conf_t default_config();
+
+
     enum class ctrl_mode_t
     {
         POS_XYZ,        ///< 3D position control
@@ -71,12 +80,22 @@ public:
     };
 
 
+    /**
+     * \brief   Required arguments
+     */
     struct args_t
     {
-        const INS& ins;
-        const ahrs_t& ahrs;
+        const ahrs_t& ahrs;     ///< Reference to estimated attitude
+        const INS& ins;         ///< Reference to estimated speed and position
     };
 
+
+    /**
+     * \brief                 Constructor
+     *
+     * \param   args          Required arguments
+     * \param   config        Configuration
+     */
     Position_controller(args_t args, const conf_t& config = default_config());
 
 
@@ -87,11 +106,34 @@ public:
 
 
     /**
-     * \brief   Default configuration
+     * \brief   Sets the input command
      *
-     * \return  config
+     * \param   command   Input command
+     *
+     * \return  success
      */
-    static inline conf_t default_config();
+    bool set_command(const position_command_t& pos);
+
+
+    /**
+     * \brief   Returns the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    bool get_command(position_command_t& pos) const;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    bool get_output(velocity_command_t& vel) const;
+
 
 private:
     const INS&          ins_;                       /// inertial navigation unit ti use for position estimation

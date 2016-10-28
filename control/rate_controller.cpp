@@ -55,10 +55,10 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Rate_controller::Rate_controller(const ahrs_t& ahrs, const conf_t& config) :
-    ahrs_(ahrs),
-    rate_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
-    torque_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
+Rate_controller::Rate_controller(const args_t& args, const conf_t& config) :
+    ahrs_(args.ahrs),
+    rate_command_(args.rate_command)),
+    torque_command_(args.torque_command),
     dt_s_(0.0f),
     last_update_s_(0.0f)
 {
