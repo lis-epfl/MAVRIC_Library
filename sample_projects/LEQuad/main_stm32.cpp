@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 #include "boards/mavrimini.hpp"
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drones/lequad.hpp"
 #include "util/print_util.hpp"
 
 extern "C"

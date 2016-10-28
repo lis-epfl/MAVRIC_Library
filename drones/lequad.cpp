@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drones/lequad.hpp"
 
 #include "communication/data_logging_telemetry.hpp"
 #include "status/state_telemetry.hpp"

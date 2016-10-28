@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drones/lequad.hpp"
 #include "sample_projects/LEQuad/proj_avr32/config/conf_imu.hpp"
 
 #include "boards/megafly_rev4/megafly_rev4.hpp"
