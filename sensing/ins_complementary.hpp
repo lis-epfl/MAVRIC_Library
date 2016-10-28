@@ -288,16 +288,16 @@ INS_complementary::conf_t INS_complementary::default_config()
     conf.use_gps        = 1;
 
     // GPS with DGPS fix
-    conf.kp_gps_XY_pos  = 20.0f;
-    conf.kp_gps_Z_pos   = 10.0f;
-    conf.kp_gps_XY_vel  = 20.0f;
-    conf.kp_gps_Z_vel   = 10.0f;
+    conf.kp_gps_XY_pos_dgps  = 20.0f;
+    conf.kp_gps_Z_pos_dgps   = 10.0f;
+    conf.kp_gps_XY_vel_dgps  = 20.0f;
+    conf.kp_gps_Z_vel_dgps   = 10.0f;
 
     // GPS with RTK fix
-    conf.kp_gps_XY_pos  = 200.0f;
-    conf.kp_gps_Z_pos   = 100.0f;
-    conf.kp_gps_XY_vel  = 200.0f;
-    conf.kp_gps_Z_vel   = 100.0f;
+    conf.kp_gps_XY_pos_rtk  = 200.0f;
+    conf.kp_gps_Z_pos_rtk   = 100.0f;
+    conf.kp_gps_XY_vel_rtk  = 200.0f;
+    conf.kp_gps_Z_vel_rtk   = 100.0f;
 
 
     // Barometer

@@ -21,6 +21,7 @@ $(info Project name     = $(PROJ_NAME))
 PROJECT_GIT_HASH := $(shell git describe --abbrev=7 --always)
 # Find git hash for library
 MAVRIC_GIT_HASH  := $(shell cd $(MAVRIC_LIB) && git describe --abbrev=7 --always)
+MAVRIC_GIT_TAG   := $(shell cd $(MAVRIC_LIB) && git describe --tags)
 
 # Add to compile flags
 CFLAGS   += -DMAVRIC_GIT_HASH=\"$(MAVRIC_GIT_HASH)\"
@@ -31,7 +32,7 @@ CXXFLAGS += -DPROJECT_GIT_HASH=\"$(PROJECT_GIT_HASH)\"
 # Report
 $(info Project git hash = $(PROJECT_GIT_HASH))
 $(info Mavric git hash  = $(MAVRIC_GIT_HASH))
-$(info Mavric version   = $(shell git describe --tags))
+$(info Mavric version   = $(MAVRIC_GIT_TAG))
 
 
 ####################################################################################################

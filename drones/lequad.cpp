@@ -112,7 +112,7 @@ LEQuad::LEQuad(Imu& imu,
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
     // ins_(&ins_kf),
     ins_(&ins_complementary),
-    ins_complementary(state, barometer, sonar, gps, flow, ahrs, config.ins_complementary_config),
+    ins_complementary(state, barometer, sonar, gps_hub, flow, ahrs, config.ins_complementary_config),
     ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs),
     cascade_controller_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.cascade_controller_config),
     mission_handler_registry(),
@@ -200,8 +200,8 @@ bool LEQuad::init_main_task(void)
     ret &= scheduler.add_task(4000, &LEQuad::main_task_func, this, Scheduler_task::PRIORITY_HIGHEST);
 
     // DOWN link
-    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, &scheduler_telemetry_send_rt_stats, &scheduler);
-    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, &scheduler_telemetry_send_rt_stats_all, &scheduler);
+    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  5000000, &scheduler_telemetry_send_rt_stats, &scheduler);
+    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  5000000, &scheduler_telemetry_send_rt_stats_all, &scheduler);
 
     return ret;
 }
@@ -325,7 +325,7 @@ bool LEQuad::init_barometer(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_PRESSURE, 100000, &barometer_telemetry_send, &barometer);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_PRESSURE, 250000, &barometer_telemetry_send, &barometer);
 
     // Task
     ret &= scheduler.add_task(15000, &task_barometer_update, &barometer, Scheduler_task::PRIORITY_HIGH, Scheduler_task::PERIODIC_RELATIVE);
@@ -342,7 +342,7 @@ bool LEQuad::init_sonar(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_DISTANCE_SENSOR, 200000, &sonar_telemetry_send, &sonar);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_DISTANCE_SENSOR, 250000, &sonar_telemetry_send, &sonar);
 
 
     // Task
@@ -360,7 +360,7 @@ bool LEQuad::init_ahrs(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            200000, &ahrs_telemetry_send_attitude,            &ahrs);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            500000, &ahrs_telemetry_send_attitude,            &ahrs);
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, &ahrs_telemetry_send_attitude_quaternion, &ahrs);
 
     return ret;
@@ -378,8 +378,8 @@ bool LEQuad::init_ins(void)
     // Via ins_ alias
     // -------------------------------------------------------------------------
     // DOWN telemetry
-    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  10000, &ins_telemetry_send_local_position_ned,  ins_);
-    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 100000, &ins_telemetry_send_global_position_int, ins_);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  250000, &ins_telemetry_send_local_position_ned,  ins_);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, &ins_telemetry_send_global_position_int, ins_);
 
     // -------------------------------------------------------------------------
     // Position estimation specfic
@@ -655,6 +655,7 @@ bool LEQuad::main_task(void)
                 }
                 Cascade_controller::vel_command_t vel_command;
                 vel_command.vel = std::array<float,3>{{controls.tvel[0], controls.tvel[1], controls.tvel[2]}};
+                vel_command.yaw = 0.0f;
                 cascade_controller_.set_velocity_command(vel_command);
             }
                 break;
