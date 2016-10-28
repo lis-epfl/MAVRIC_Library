@@ -10,7 +10,7 @@ var searchData=
   ['card_5ftype',['card_type',['../structsd__spi__t.html#a1e3ff5e74b98887358082c91c331e512',1,'sd_spi_t']]],
   ['center',['center',['../structGeofence__cylinder_1_1conf__t.html#a9a6cabb660bc3848ee4b0087b175d5fe',1,'Geofence_cylinder::conf_t']]],
   ['chan_5fdata',['chan_data',['../structubx__nav__dgps__t.html#a434efe452079116e088b323b65e6d099',1,'ubx_nav_dgps_t']]],
-  ['channel',['channel',['../structPwm__chibios_1_1conf__t.html#ac644325adc7aa9fec688689c437bb8c6',1,'Pwm_chibios::conf_t::channel()'],['../structPwm__stm32_1_1config__t.html#abe1785d8bf3424cca8899d2667b83ca8',1,'Pwm_stm32::config_t::channel()'],['../structtLED__DESCRIPTOR.html#a87c42b45cbaa8d445bfde93f3656730b',1,'tLED_DESCRIPTOR::CHANNEL()']]],
+  ['channel',['CHANNEL',['../structtLED__DESCRIPTOR.html#a87c42b45cbaa8d445bfde93f3656730b',1,'tLED_DESCRIPTOR::CHANNEL()'],['../structPwm__chibios_1_1conf__t.html#ac644325adc7aa9fec688689c437bb8c6',1,'Pwm_chibios::conf_t::channel()'],['../structPwm__stm32_1_1config__t.html#abe1785d8bf3424cca8899d2667b83ca8',1,'Pwm_stm32::config_t::channel()']]],
   ['channel_5fdata',['channel_data',['../structubx__nav__sv__info__t.html#a58d9f29ba851b527eca58f0463816758',1,'ubx_nav_sv_info_t']]],
   ['channel_5finv',['channel_inv',['../structremote__t.html#a90644a21324c37f5709041e7ca7b0af5',1,'remote_t']]],
   ['channels',['channels',['../structremote__t.html#a3f5bd50dfe990673411526a023602776',1,'remote_t']]],
