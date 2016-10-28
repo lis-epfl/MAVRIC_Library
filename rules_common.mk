@@ -153,3 +153,9 @@ LIB_SRCS += util/print_util.cpp
 LIB_SRCS += util/quick_trig.cpp
 LIB_SRCS += util/raytracing.cpp
 LIB_SRCS += util/string_util.cpp
+
+
+####################################################################################################
+# SAMPLE PROJECT SOURCE FILES
+####################################################################################################
+LIB_SRCS += sample_projects/LEQuad/lequad.cpp
