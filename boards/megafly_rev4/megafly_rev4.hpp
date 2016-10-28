@@ -132,7 +132,7 @@ public:
 
      * \return  Success
      */
-    bool init(void);
+    virtual bool init(void);
 
     /**
      * Public Members

@@ -15,7 +15,7 @@
 */
 
 #include "boards/sparky_chibi/sparky_chibi.hpp"
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drones/lequad.hpp"
 
 #include "hal/common/time_keeper.hpp"
 

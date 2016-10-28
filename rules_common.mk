@@ -87,6 +87,8 @@ LIB_SRCS += drivers/state_display.cpp
 LIB_SRCS += drivers/state_display_megafly_rev4.cpp
 LIB_SRCS += drivers/state_display_sparky_v2.cpp
 
+LIB_SRCS += drones/lequad.cpp
+
 LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp

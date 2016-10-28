@@ -40,7 +40,7 @@
 
 #include "boards/mavrinux.hpp"
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drones/lequad.hpp"
 
 #include "hal/dummy/i2c_dummy.hpp"
 
