@@ -10,6 +10,7 @@ var searchData=
   ['battery_5fconf_5ft',['battery_conf_t',['../structbattery__conf__t.html',1,'']]],
   ['buffer_5ft',['Buffer_T',['../classBuffer__T.html',1,'']]],
   ['buffer_5ft_3c_201024_20_3e',['Buffer_T< 1024 >',['../classBuffer__T.html',1,'']]],
+  ['buffer_5ft_3c_202048_20_3e',['Buffer_T< 2048 >',['../classBuffer__T.html',1,'']]],
   ['buffer_5ft_3c_20256_2c_20uint8_5ft_20_3e',['Buffer_T< 256, uint8_t >',['../classBuffer__T.html',1,'']]],
   ['buffer_5ft_3c_203_2c_20float_20_3e',['Buffer_T< 3, float >',['../classBuffer__T.html',1,'']]],
   ['button_5ft',['button_t',['../unionJoystick_1_1button__t.html',1,'Joystick']]],

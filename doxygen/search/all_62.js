@@ -22,6 +22,7 @@ var searchData=
   ['buffer_5fempty',['buffer_empty',['../structbyte__stream__t.html#a562e6ae27ebe8ec887eb002291095cb7',1,'byte_stream_t']]],
   ['buffer_5ft',['Buffer_T',['../classBuffer__T.html',1,'Buffer_T&lt; S, T &gt;'],['../classBuffer__T.html#a54234fbcf8708651efeb0b5103f884ba',1,'Buffer_T::Buffer_T()']]],
   ['buffer_5ft_3c_201024_20_3e',['Buffer_T< 1024 >',['../classBuffer__T.html',1,'']]],
+  ['buffer_5ft_3c_202048_20_3e',['Buffer_T< 2048 >',['../classBuffer__T.html',1,'']]],
   ['buffer_5ft_3c_20256_2c_20uint8_5ft_20_3e',['Buffer_T< 256, uint8_t >',['../classBuffer__T.html',1,'']]],
   ['buffer_5ft_3c_203_2c_20float_20_3e',['Buffer_T< 3, float >',['../classBuffer__T.html',1,'']]],
   ['button_5fpressed_5ft',['button_pressed_t',['../classJoystick.html#a76a226fa88ae09d0d4b675b99900631f',1,'Joystick']]],
