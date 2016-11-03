@@ -55,6 +55,7 @@ public:
     struct pos_command_t : base_command_t
     {
         local_position_t    pos;        ///< desired position in local frame
+        float               heading;    ///< desired heading
     };
 
     /**

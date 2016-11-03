@@ -57,7 +57,8 @@ Position_controller<TVelocity_controller>::Position_controller(args_t args, cons
     pid_controller_init(&pid_controller_, &config.pid_config);
 
     pos_command_t pos_command;
-    pos_command.pos = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
+    pos_command.pos     = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
+    pos_command.heading = 0.0f;
     set_position_command(pos_command);
 }
 
@@ -160,12 +161,17 @@ typename TVelocity_controller::vel_command_t Position_controller<TVelocity_contr
     velocity_command.vel[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
 
     // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
-    if (goal_distance > 5.0f)
+    if (goal_distance > 1.0f)
     {
         float yaw_current = coord_conventions_get_yaw(ahrs_.qe);
         float rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y],goal_dir[X]) - yaw_current);
         velocity_command.yaw = yaw_current + kp_yaw_ * rel_heading;
     }
+    else
+    {
+        velocity_command.yaw = 0.0f; //pos_command.heading;
+    }
+    velocity_command.yaw = 0.0f; //pos_command.heading;
 
 	return velocity_command;
 }
