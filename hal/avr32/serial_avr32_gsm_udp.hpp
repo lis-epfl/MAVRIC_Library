@@ -49,7 +49,7 @@ private:
 	bool charToIPAddress(char * ipChar, union IPAddress* ipRet);
 
 	bool initcheck;
-	int temp;
+	int count;
 
 public:
 	Serial_avr32_gsm_udp(serial_avr32_conf_t config);
@@ -87,7 +87,7 @@ public:
 	/// e.g.: hostByName("sparkfun.com", returnIPhere);
 	///
 	/// Returns: >0 on success, <0 on fail
-	int hostByName(const char * domain, IPAddress ipRet);
+	int hostByName(const char * domain, IPAddress* ipRet);
 
 
 	///////////////////////

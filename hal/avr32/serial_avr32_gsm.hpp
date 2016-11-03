@@ -59,7 +59,7 @@ typedef unsigned int size_t;
 ////////////////////////
 // Memory Allocations //
 ////////////////////////
-#define RX_BUFFER_LENGTH 64 // Number of bytes in the SS receive buffer
+#define RX_BUFFER_LENGTH 500 // Number of bytes in the SS receive buffer
 
 ////////////////////////////
 // Timing Characteristics //

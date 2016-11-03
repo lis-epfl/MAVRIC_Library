@@ -165,13 +165,13 @@ bool Serial_avr32::write(const uint8_t* bytes, const uint32_t size)
     // // Queue byte
     if (writeable() >= size)
     {
-    	print_util_dbg_print("Writing: ");
-    	print_util_dbg_print((char *) bytes);
+    	//print_util_dbg_print("Writing: ");
+    	//print_util_dbg_print((char *) bytes);
         for (uint32_t i = 0; i < size; ++i)
         {
             tx_buffer_.put(bytes[i]);
         }
-        print_util_dbg_print("\n");
+       // print_util_dbg_print("\n");
         ret = true;
     }
 
@@ -192,13 +192,18 @@ bool Serial_avr32::read(uint8_t* bytes, const uint32_t size)
     if (readable() >= size)
     {
         ret = true;
-        print_util_dbg_print("Reading: ");
+       //print_util_dbg_print("Reading: ");
         for (uint32_t i = 0; i < size; ++i)
         {
             ret &= rx_buffer_.get(bytes[i]);
-            print_util_dbg_print((char *) bytes+i);
+            char test[2];
+            test[0] = *(bytes+i);
+            test[1] = '\0';
+           //print_util_dbg_print((char *) test);
         }
-        print_util_dbg_print("\n");
+       //print_util_dbg_print("\n");
+    }else{
+    	//print_util_dbg_print("Nothing\n");
     }
 
     return ret;

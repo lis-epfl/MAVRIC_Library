@@ -97,6 +97,7 @@ bool Serial_avr32_gsm::begin()
 {
 	int echoResponse;
 
+
 	//printChar('\r'); // Print a '\r' to send any possible garbage command
 	time_keeper_delay_ms(10); // Wait for a possible "ERROR" response
 
@@ -115,9 +116,9 @@ bool Serial_avr32_gsm::checkSIM()
 	//char cmd[3]= "AT";
 	//Serial_avr32_gsm::write((uint8_t*) cmd,3);
 	//int8_t iRetVal;
-	print_util_dbg_print("in func\n");
+	//print_util_dbg_print("in func\n");
 	sendATCommand(CHECK_SIM); // Send "AT*TSIMINS"
-	print_util_dbg_print("Command sent\n");
+	//print_util_dbg_print("Command sent\n");
 //	iRetVal = readWaitForResponse(RESPONSE_OK, COMMAND_RESPONSE_TIME);
 //	print_util_dbg_print("Success");
 //	// Example response: *TSIMINS:0, 1/r/n/r/nOK/r/n
@@ -313,7 +314,7 @@ int Serial_avr32_gsm::readWaitForResponse(const char *goodRsp, unsigned int time
 	{
 		if (dataAvailable()) // If data is available on UART RX
 		{
-			print_util_dbg_print("Something Available: I am readWaitForResponse \n ");
+			//print_util_dbg_print("Something Available: I am readWaitForResponse \n ");
 			received += readByteToBuffer();
 
 			if (searchBuffer(goodRsp))	// Search the buffer for goodRsp
@@ -321,7 +322,7 @@ int Serial_avr32_gsm::readWaitForResponse(const char *goodRsp, unsigned int time
 		}
 	}
 
-	print_util_dbg_print("No data received \n ");
+	//print_util_dbg_print("No data received \n ");
 	if (received > 0) // If we received any characters
 		return ERROR_UNKNOWN_RESPONSE; // Return unkown response error code
 	else // If we haven't received any characters
@@ -335,11 +336,14 @@ int Serial_avr32_gsm::readWaitForResponses(const char * goodRsp,
 	unsigned int received = 0; // received keeps track of number of chars read
 
 	clearBuffer(); // Clear the class receive buffer (rxBuffer)
+	//print_util_dbg_print("Reading: ");
 	while (timeIn + timeout > time_keeper_get_ms()) // While we haven't timed out
 	{
+
 		if (dataAvailable()) // If data is available on UART RX
 		{
 			// Increment received count & read byte to buffer
+			//print_util_dbg_print("Something Available: I am readWaitForResponse2 \n ");
 			received += readByteToBuffer();
 			if (searchBuffer(goodRsp))
 				return received; // If we've received [goodRsp], return received
@@ -347,6 +351,7 @@ int Serial_avr32_gsm::readWaitForResponses(const char * goodRsp,
 				return ERROR_FAIL_RESPONSE; // return FAIL response error code
 		}
 	}
+	//print_util_dbg_print("\n ");
 
 	if (received > 0) // If we received any characters
 		return ERROR_UNKNOWN_RESPONSE;	// Return unkown response error code
@@ -397,6 +402,7 @@ void Serial_avr32_gsm::printString(const char * str)
 	for(size=0; str[size]!='\0'; ++size);
 
 	//TODO: Check sizeof(str) returns the proper size
+
 	printString(str,size);
 	//uart0.print(str); // Abstracting a UART print char array
 }
@@ -429,9 +435,9 @@ unsigned int Serial_avr32_gsm::readByteToBuffer()
 {
 	// Read the data in
 	char c = uartRead();	// uart0.read();
-	print_util_dbg_print("Reading:");
-	print_util_dbg_print(&c);
-	print_util_dbg_print("\n");
+	//print_util_dbg_print("ReadingToBuffer:");
+
+	//print_util_dbg_print("\n");
 	// Store the data in the buffer
 	rxBuffer[bufferHead] = c;
 	//! TODO: Don't care if we overflow. Should we? Set a flag or something?

@@ -48,7 +48,8 @@
 
 
 #include "hal/avr32/serial_usb_avr32.hpp"
-
+//Remove this
+#include "util/print_util.h"
 extern "C"
 {
 #include <cstdint>
@@ -167,6 +168,7 @@ bool Serial_usb_avr32::read(uint8_t* bytes, const uint32_t size)
 {
     bool ret = false;
 
+    print_util_dbg_print("Reading from SerialUsbAvr32");
     // Check if there is enough data to be read
     if (rx_buffer_.readable() >= size)
     {
