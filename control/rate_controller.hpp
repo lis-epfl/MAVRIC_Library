@@ -81,29 +81,34 @@ public:
     {
         const ahrs_t& ahrs;
         typename TServos_mix::args_t servos_mix_args;
-    };    
+    };
 
     /**
      * \brief                       Constructor
      *
      * \param   args                containing constructor arguments for rate controller and TServos_mix
-     * \param   config              Configuration     
+     * \param   config              Configuration
      */
     Rate_controller(args_t args, const conf_t& config = default_config());
 
     virtual void update();
 
     /*
-     * \brief   Set rate command and set controller cascade to "rate mode" 
+     * \brief   Set rate command and set controller cascade to "rate mode"
      * \details Sets the rate_command_ and sets cascade_command_ to point to rate_command, signaling that this is the command mode
      *          This function should NOT be called from higher level controllers if they provide a command, use update_cascade instead
      * \param rate_command  rate command to be set and used to calculate the torque command
-     * 
+     *
      * \return  success     indicates whether the command was accepted
      */
     bool set_rate_command(const rate_command_t& rate_command);
 
     static conf_t default_config();
+
+    pid_controller_t* get_pid(void)
+    {
+        return pid_;
+    }
 
 protected:
     /*

@@ -113,6 +113,12 @@ public:
      */
     static inline conf_t default_config();
 
+    pid_controller_t* get_pid(void)
+    {
+        return &pid_controller_;
+    }
+
+
 protected:
 
     /*

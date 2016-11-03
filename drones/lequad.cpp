@@ -479,7 +479,7 @@ bool LEQuad::init_stabilisers(void)
     ret &= stabilisation_init(&controls);
 
     // Parameters
-    // Onboard_parameters& op            = communication.parameters();
+    Onboard_parameters& op            = communication.parameters();
     // stabiliser_t* rate_stabiliser     = &stabilisation_copter.stabiliser_stack.rate_stabiliser;
     // stabiliser_t* attitude_stabiliser = &stabilisation_copter.stabiliser_stack.attitude_stabiliser;
     // stabiliser_t* velocity_stabiliser = &stabilisation_copter.stabiliser_stack.velocity_stabiliser;
@@ -517,16 +517,56 @@ bool LEQuad::init_stabilisers(void)
     // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAW_A_KI");
     // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAW_A_D_CLIP");
     // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAW_A_KD");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_V_KP");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip_pre,   "ROLL_V_I_CLPRE");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_V_KI");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_V_I_CLIP");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_V_KD");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_V_KP");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip_pre,  "PITCH_V_I_CLPRE");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_V_KI");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_V_I_CLIP");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_V_KD");
+
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[X].p_gain,               "C_RAT_X_KP");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[X].integrator.clip_pre,  "C_RAT_X_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[X].integrator.gain,      "C_RAT_X_KI");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[X].integrator.clip,      "C_RAT_X_I_CLIP");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[X].differentiator.gain,  "C_RAT_X_KD");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Y].p_gain,               "C_RAT_Y_KP");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Y].integrator.clip_pre,  "C_RAT_Y_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Y].integrator.gain,      "C_RAT_Y_KI");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Y].integrator.clip,      "C_RAT_Y_I_CLIP");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Y].differentiator.gain,  "C_RAT_Y_KD");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Z].p_gain,               "C_RAT_Z_KP");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Z].integrator.clip_pre,  "C_RAT_Z_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Z].integrator.gain,      "C_RAT_Z_KI");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Z].integrator.clip,      "C_RAT_Z_I_CLIP");
+    ret &= op.add(&cascade_controller_.Rate_controller::get_pid()[Z].differentiator.gain,  "C_RAT_Z_KD");
+
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[X].p_gain,               "C_ATT_X_KP");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[X].integrator.clip_pre,  "C_ATT_X_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[X].integrator.gain,      "C_ATT_X_KI");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[X].integrator.clip,      "C_ATT_X_I_CLIP");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[X].differentiator.gain,  "C_ATT_X_KD");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Y].p_gain,               "C_ATT_Y_KP");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Y].integrator.clip_pre,  "C_ATT_Y_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Y].integrator.gain,      "C_ATT_Y_KI");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Y].integrator.clip,      "C_ATT_Y_I_CLIP");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Y].differentiator.gain,  "C_ATT_Y_KD");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Z].p_gain,               "C_ATT_Z_KP");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Z].integrator.clip_pre,  "C_ATT_Z_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Z].integrator.gain,      "C_ATT_Z_KI");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Z].integrator.clip,      "C_ATT_Z_I_CLIP");
+    ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Z].differentiator.gain,  "C_ATT_Z_KD");
+
+
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[X].p_gain,               "C_VEL_X_KP");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[X].integrator.clip_pre,  "C_VEL_X_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[X].integrator.gain,      "C_VEL_X_KI");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[X].integrator.clip,      "C_VEL_X_I_CLIP");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[X].differentiator.gain,  "C_VEL_X_KD");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Y].p_gain,               "C_VEL_Y_KP");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Y].integrator.clip_pre,  "C_VEL_Y_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Y].integrator.gain,      "C_VEL_Y_KI");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Y].integrator.clip,      "C_VEL_Y_I_CLIP");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Y].differentiator.gain,  "C_VEL_Y_KD");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Z].p_gain,               "C_VEL_Z_KP");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Z].integrator.clip_pre,  "C_VEL_Z_I_CLPRE");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Z].integrator.gain,      "C_VEL_Z_KI");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Z].integrator.clip,      "C_VEL_Z_I_CLIP");
+    ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[Z].differentiator.gain,  "C_VEL_Z_KD");
+
     // ret &= op.add(&velocity_stabiliser->thrust_controller.p_gain,                   "THRV_KP");
     // ret &= op.add(&velocity_stabiliser->thrust_controller.integrator.clip_pre,      "THRV_I_PREG");
     // ret &= op.add(&velocity_stabiliser->thrust_controller.differentiator.gain,      "THRV_KD");

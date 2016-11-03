@@ -108,6 +108,11 @@ public:
      */
     static inline conf_t default_config(void);
 
+    pid_controller_t* get_pid(void)
+    {
+        return pid_;
+    }
+
 protected:
     /*
      * \brief   calc attitude command based on given velocity command and update underlaying cascade level (TAttitude_controller)
@@ -144,7 +149,7 @@ typename Velocity_controller_copter<TAttitude_controller>::conf_t Velocity_contr
     conf_t conf = {};
 
     conf.thrust_hover_point                    = -0.26f;
-    
+
     // -----------------------------------------------------------------
     // ------ X PID ----------------------------------------------------
     // -----------------------------------------------------------------

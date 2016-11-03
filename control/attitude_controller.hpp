@@ -81,13 +81,13 @@ public:
     {
         const ahrs_t&                     ahrs;
         typename TRate_controller::args_t rate_controller_args;
-    };    
+    };
 
     /**
      * \brief                       Constructor
      *
      * \param   args                Constructor arguments
-     * \param   config              Configuration     
+     * \param   config              Configuration
      */
     Attitude_controller(args_t args, const conf_t& config = default_config());
 
@@ -98,6 +98,12 @@ public:
     inline att_command_t attitude_command(){return att_command_;};
 
     static inline conf_t default_config();
+
+    pid_controller_t* get_pid(void)
+    {
+        return pid_;
+    }
+
 
 protected:
     /*
