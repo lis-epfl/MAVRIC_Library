@@ -76,6 +76,9 @@ public:
 
         float R_acc;                                  ///< The variance of the accelerometer
         float R_mag;                                  ///< The variance of the magnetometer
+
+        uint32_t use_accelerometer;                   ///< Boolean indicating if accelerometer is used for correction
+        uint32_t use_magnetometer;                    ///< Boolean indicating if magnetometer is used for correction
     };
 
     /**
@@ -104,6 +107,9 @@ public:
      */
     static inline Ahrs_ekf::conf_t default_config();
 
+
+    conf_t config_;                                     ///< The config structure for the EKF module
+
 protected:
 
     /**
@@ -126,17 +132,14 @@ protected:
      */
     void update_step_mag(void);
 
+    const Imu& imu_;                                    ///< The Reference to the IMU structure
+    ahrs_t& ahrs_;                                      ///< The pointer to the ahrs structure
 
     Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
 
     float dt_s_;                                        ///< Time interval since last update in seconds
     float last_update_s_;                               ///< Last update time in seconds
-
-    conf_t config_;                                     ///< The config structure for the EKF module
-
-    const Imu& imu_;                                    ///< The Reference to the IMU structure
-    ahrs_t& ahrs_;                                      ///< The pointer to the ahrs structure
 };
 
 Ahrs_ekf::conf_t Ahrs_ekf::default_config()
@@ -149,6 +152,9 @@ Ahrs_ekf::conf_t Ahrs_ekf::default_config()
     conf.R_mag = 0.040f;
     conf.acc_norm_noise = 0.05f;
     conf.acc_multi_noise = 4.0f;
+
+    conf.use_accelerometer = 1;
+    conf.use_magnetometer  = 1;
 
     return conf;
 };

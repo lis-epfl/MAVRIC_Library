@@ -208,6 +208,7 @@ int main(int argc, char** argv)
                         file_dummy,
                         file_dummy,
                         mav_config );
+    mav.init();
 
     // -------------------------------------------------------------------------
     // Main loop

@@ -363,6 +363,10 @@ bool LEQuad::init_ahrs(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            500000, &ahrs_telemetry_send_attitude,            &ahrs);
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, &ahrs_telemetry_send_attitude_quaternion, &ahrs);
 
+    // Parameters
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_accelerometer,     "AHRSEKF_USE_ACC"    );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_magnetometer,      "AHRSEKF_USE_MAG"    );
+
     return ret;
 }
 
