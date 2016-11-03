@@ -23,7 +23,7 @@
 <area shape="rect" id="node39" href="$structManual__control_1_1conf__t.html" title="Configuration for manual control." alt="" coords="2844,1320,2999,1440"/>
 <area shape="rect" id="node41" href="$structJoystick_1_1conf__t.html" title="Configuration for joystick." alt="" coords="2947,572,3064,692"/>
 <area shape="rect" id="node43" href="$structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="2935,66,3076,203"/>
-<area shape="rect" id="node48" href="$structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure." alt="" coords="3023,1294,3151,1466"/>
+<area shape="rect" id="node48" href="$structAhrs__ekf_1_1conf__t.html" title="The AHRS EKF config structure." alt="" coords="3023,1277,3167,1483"/>
 <area shape="rect" id="node50" href="$classMission__handler__landing.html" title="{Mission_handler_landing\&lt; Navigation_controller_I, XYposition_Zvel_controller_I \&gt;\n|# waypoint_\l# is_landed_\l# auto_landing_behavior_\l# alt_lpf_\l# LPF_gain_\l# desc_to_ground_altitude_\l# desc_to_ground_range_\l# desc_to_small_alt_controller_\l# desc_to_ground_controller_\l# ins_\l# state_\l|+ Mission_handler_landing()\l+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l+ default_config()\l# set_desc_to_small_alt_control_command()\l# set_desc_to_ground_control_command()\l}" alt="" coords="1865,1190,2359,1570"/>
 <area shape="rect" id="node52" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="2040,563,2211,701"/>
 <area shape="rect" id="node54" href="$classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="2235,425,2349,839"/>
@@ -31,5 +31,5 @@
 <area shape="rect" id="node58" href="$classXYposition__Zvel__controller__I.html" title="{XYposition_Zvel_controller_I\n||+ update()\l+ set_xyposition_zvel_command()\l}" alt="" coords="2536,581,2757,683"/>
 <area shape="rect" id="node60" href="$classNavigation__controller__I.html" title="{Navigation_controller_I\n||+ update()\l+ set_navigation_command()\l}" alt="" coords="1603,581,1792,683"/>
 <area shape="rect" id="node64" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1875,57,1957,212"/>
-<area shape="rect" id="node67" href="$structMission__planner_1_1conf__t.html" title="{Mission_planner::conf_t\n|+ safe_altitude\l+ critical_landing_altitude\l+ takeoff_altitude\l|}" alt="" coords="3175,1320,3343,1440"/>
+<area shape="rect" id="node67" href="$structMission__planner_1_1conf__t.html" title="{Mission_planner::conf_t\n|+ safe_altitude\l+ critical_landing_altitude\l+ takeoff_altitude\l|}" alt="" coords="3191,1320,3359,1440"/>
 </map>
