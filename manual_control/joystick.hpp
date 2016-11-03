@@ -56,7 +56,7 @@
 class Joystick
 {
 public:
-    
+
     /**
      * \brief button enumeration
      */
@@ -322,8 +322,8 @@ Joystick::conf_t Joystick::default_config()
     conf_t conf;
     conf.throttle_mode = throttle_mode_t::ZERO_DOWN;
     /* attitude scales */
-    conf.scale_attitude.x = -0.8f;  // pitch (negativ scale to invert for QGC >= 2.9)
-    conf.scale_attitude.y = 0.8f;   // roll
+    conf.scale_attitude.x = 0.8f;  // pitch (negativ scale to invert for QGC >= 2.9)
+    conf.scale_attitude.y = -0.8f;   // roll
     conf.scale_attitude.z = 1;      // thrust
     conf.scale_attitude.r = 0.8f;   // yaw
     /* velocity scales */
