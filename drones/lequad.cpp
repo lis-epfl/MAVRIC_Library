@@ -201,7 +201,7 @@ bool LEQuad::init_main_task(void)
 
     // DOWN link
     ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  5000000, &scheduler_telemetry_send_rt_stats, &scheduler);
-    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  5000000, &scheduler_telemetry_send_rt_stats_all, &scheduler);
+    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  500000, &scheduler_telemetry_send_rt_stats_all, &scheduler);
 
     return ret;
 }
@@ -259,8 +259,8 @@ bool LEQuad::init_data_logging(void)
     ret &= data_logging_telemetry_init(&data_logging_stat, &communication.handler());
 
     // Task
-    ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_continuous);
-    ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_stat);
+    // ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_continuous);
+    // ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_stat);
 
     return ret;
 }
@@ -549,7 +549,6 @@ bool LEQuad::init_stabilisers(void)
     ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Z].integrator.gain,      "C_ATT_Z_KI");
     ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Z].integrator.clip,      "C_ATT_Z_I_CLIP");
     ret &= op.add(&cascade_controller_.Attitude_controller::get_pid()[Z].differentiator.gain,  "C_ATT_Z_KD");
-
 
     ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[X].p_gain,               "C_VEL_X_KP");
     ret &= op.add(&cascade_controller_.Velocity_controller_copter::get_pid()[X].integrator.clip_pre,  "C_VEL_X_I_CLPRE");
