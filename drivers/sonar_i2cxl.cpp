@@ -160,7 +160,7 @@ bool Sonar_i2cxl::get_last_measure(void)
     distance_m = median_filter_n(last_distances_, 5);
 
 
-    if (distance_m > config_.min_distance && distance_m < config_.max_distance)
+    if (distance_m < config_.max_distance)
     {
         dt_s = (time_us - last_update_us_) / 1000000.0f;
 
