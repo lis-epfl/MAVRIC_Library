@@ -383,11 +383,11 @@ void Ahrs_ekf::update_step_mag(void)
 
 Ahrs_ekf::Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config):
     Kalman<7, 0, 3>(),
-    dt_s_(0.0f),
-    last_update_s_(0.0f),
     config_(config),
     imu_(imu),
-    ahrs_(ahrs)
+    ahrs_(ahrs),
+    dt_s_(0.0f),
+    last_update_s_(0.0f)
 {
     init_kalman();
 
@@ -420,9 +420,15 @@ bool Ahrs_ekf::update(void)
 
         predict_step();
 
-        update_step_acc();
+        if (config_.use_accelerometer)
+        {
+            update_step_acc();
+        }
 
-        update_step_mag();
+        if (config_.use_magnetometer)
+        {
+            update_step_mag();
+        }
     }
     else
     {
@@ -432,8 +438,17 @@ bool Ahrs_ekf::update(void)
         R_acc_ = Mat<3,3>(0.1f,true);
         R_mag_ = Mat<3,3>(10.0f,true);
         P_ = Mat<7,7>(1.0f,true);
-        update_step_acc();
-        update_step_mag();
+
+        if (config_.use_accelerometer)
+        {
+            update_step_acc();
+        }
+
+        if (config_.use_magnetometer)
+        {
+            update_step_mag();
+        }
+
         Mat<7,1> state_previous = x_;
 
         // Re-init kalman to keep covariance high: ie we follow the raw accelero and magneto without

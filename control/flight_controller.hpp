@@ -30,96 +30,32 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix.hpp
+ * \file flight_controller.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
- * \author Nicolas Dousse
- * \author Basil Huber
  *
- * \brief Abstract class that links between torque commands and servos PWM command for quadcopters
+ * \brief   Interface for full flight controllers
  *
  ******************************************************************************/
 
-
-#ifndef SERVOS_MIX_HPP_
-#define SERVOS_MIX_HPP_
+#ifndef FLIGHT_CONTROLLER_HPP_
+#define FLIGHT_CONTROLLER_HPP_
 
 #include "control/controller.hpp"
-#include "control/control_command.hpp"
-#include "util/coord_conventions.hpp"
-#include "drivers/servo.hpp"
-#include "util/constants.hpp"
+#include "manual_control/manual_control.hpp"
 
-
-class Servos_mix : public Controller<torque_command_t>,
-                   public Controller<thrust_command_t>
+class Flight_controller: public Controller<position_command_t>,
+                         public Controller<velocity_command_t>,
+                         public Controller<attitude_command_t>,
+                         public Controller<rate_command_t>,
+                         public Controller<torque_command_t>,
+                         public Controller<thrust_command_t>
 {
-public:
-
-    /*
-     * \brief   Write motor commands to servos based on torque command
-     */
-    virtual bool update()=0;
-
-
-    /*
-     * \brief   Write failsafe motor commands to servos
-     */
-    virtual bool failsafe()=0;
-
-
-    /**
-     * \brief           sets the torque command
-     *
-     * \param command   torque command in body frame
-     *
-     * \return success  whether command was accepted
-     */
-    virtual bool set_command(const torque_command_t& torque) = 0;
-
-
-    /**
-     * \brief           sets the thrust command
-     *
-     * \param command   thrust command in body frame
-     *
-     * \return success  whether command was accepted
-     */
-    virtual bool set_command(const thrust_command_t& thrust) = 0;
-
-
-    /**
-     * \brief           sets the torque command
-     *
-     * \param command   torque command in body frame
-     *
-     * \return success  whether command was accepted
-     */
-    virtual bool get_command(torque_command_t& torque) const = 0;
-
-
-    /**
-     * \brief           sets the thrust command
-     *
-     * \param command   thrust command in body frame
-     *
-     * \return success  whether command was accepted
-     */
-    virtual bool get_command(thrust_command_t& thrust) const = 0;
-
-
-    /**
-     * \brief   Returns the output command
-     *
-     * \param   command   output command
-     *
-     * \return  success
-     */
-    virtual bool get_output(empty_command_t& command) const
-    {
-        return true;
-    };
+    virtual bool failsafe(void) = 0;
+    virtual bool set_manual_rate_command(const Manual_control& manual_control) = 0;
+    virtual bool set_manual_attitude_command(const Manual_control& manual_control) = 0;
+    virtual bool set_manual_velocity_command(const Manual_control& manual_control) = 0;
 };
 
-#endif
+#endif  // FLIGHT_CONTROLLER_HPP_

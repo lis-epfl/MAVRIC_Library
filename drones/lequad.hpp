@@ -53,7 +53,7 @@
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/onboard_parameters.hpp"
 
-#include "control/controller_stack.hpp"
+#include "control/flight_controller_copter.hpp"
 #include "control/position_controller.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
@@ -115,22 +115,6 @@ extern "C"
 }
 
 
-class Controller_stack_copter: public Controller_stack<Position_controller,
-                                                       Velocity_controller_copter,
-                                                       Attitude_controller,
-                                                       Rate_controller,
-                                                       Servos_mix_matrix<4>>
-{
-    Controller_stack_copter(const INS& ins, const ahrs_t& ahrs, Servo& servo_rl, Servo& servo_fl, Servo& servo_fr, Servo& servo_rr):
-        Controller_stack<Position_controller, Velocity_controller_copter, Attitude_controller, Rate_controller,
-                         Servos_mix_matrix<4>>( Position_controller::args_t{ahrs, ins},
-                                                Velocity_controller::args_t{ahrs, ins, command_.velocity, command_.attitude, command_.thrust},
-                                                Attitude_controller::args_t{ahrs, command_.attitude, command_.rate},
-                                                Rate_controller::args_t{ahrs, command_.rate, command_.torque},
-                                                Servos_mix_matrix<4>::args_t{std::array<Servo*,4>{{&servo_rl, &servo_fl, &servo_fr, &servo_rr}}})
-        {};
-};
-
 /**
  * \brief MAV class
  */
@@ -162,7 +146,7 @@ public:
         INS_complementary::conf_t ins_complementary_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        Controller_stack_copter::conf_t controller_stack_config;
+        Flight_controller_copter::conf_t flight_controller_config;
         Geofence_cylinder::conf_t safety_geofence_config;
         Geofence_cylinder::conf_t emergency_geofence_config;
     };
@@ -233,7 +217,16 @@ public:
      *
      * \return  MAVLINK Communication module
      */
-     inline Mavlink_communication& mavlink_communication(){return communication;};
+    inline Mavlink_communication& get_communication(){return communication;};
+
+
+     /**
+      * \brief   Returns non-const reference to scheduler
+      * \details This is used to add sleep task from the main function
+      *
+      * \return  Scheduler module
+      */
+    inline Scheduler& get_scheduler(){return scheduler;};
 
 
 protected:
@@ -305,7 +298,7 @@ protected:
 
     control_command_t controls;                                 ///< The control structure used for rate and attitude modes
 
-    Controller_stack_copter controller_stack_;
+    Flight_controller_copter flight_controller_;
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
@@ -368,7 +361,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.remote_config = remote_default_config();
 
-    conf.controller_stack_config = Controller_stack_copter::default_config();
+    conf.flight_controller_config = Flight_controller_copter::default_config();
 
     conf.safety_geofence_config     = Geofence_cylinder::default_config();
     conf.emergency_geofence_config  = Geofence_cylinder::default_config();

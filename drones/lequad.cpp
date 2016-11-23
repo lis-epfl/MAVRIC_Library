@@ -39,7 +39,7 @@
  ******************************************************************************/
 
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drones/lequad.hpp"
 
 #include "communication/data_logging_telemetry.hpp"
 #include "status/state_telemetry.hpp"
@@ -110,22 +110,20 @@ LEQuad::LEQuad(Imu& imu,
     communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
     ahrs(ahrs_initialized()),
     ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
-    // ins_(&ins_kf),
     ins_(&ins_complementary),
-    ins_complementary(state, barometer, sonar, gps, flow, ahrs, config.ins_complementary_config),
+    ins_complementary(state, barometer, sonar, gps_hub, flow, ahrs, config.ins_complementary_config),
     ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs),
-    // controller_stack_({*ins_, {*ins_, ahrs, {ahrs, *ins_, {ahrs, {ahrs,{servo_0, servo_1, servo_2, servo_3}}}}}}, config.controller_stack_config),
-    controller_stack_(),
+    flight_controller_(*ins_, ahrs, servo_0, servo_1, servo_2, servo_3, config.flight_controller_config),
     mission_handler_registry(),
     waypoint_handler(*ins_, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
-    // hold_position_handler(controller_stack_, *ins_),
-    // landing_handler(controller_stack_, controller_stack_, *ins_, state),
-    // navigating_handler(controller_stack_, *ins_, communication.mavlink_stream(), waypoint_handler),
-    on_ground_handler(controller_stack_, controller_stack_),
+    // hold_position_handler(flight_controller_, *ins_),
+    // landing_handler(flight_controller_, flight_controller_, *ins_, state),
+    // navigating_handler(flight_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
+    on_ground_handler(flight_controller_, flight_controller_),
     manual_ctrl_handler(),
-    // takeoff_handler(controller_stack_, *ins_, state),
-    // critical_landing_handler(controller_stack_, controller_stack_, *ins_, state),
-    // critical_navigating_handler(controller_stack_, *ins_, communication.mavlink_stream(), waypoint_handler),
+    // takeoff_handler(flight_controller_, *ins_, state),
+    // critical_landing_handler(flight_controller_, flight_controller_, *ins_, state),
+    // critical_navigating_handler(flight_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
     // mission_planner(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     safety_geofence_(config.safety_geofence_config),
     emergency_geofence_(config.emergency_geofence_config),
@@ -201,8 +199,8 @@ bool LEQuad::init_main_task(void)
     ret &= scheduler.add_task(4000, &LEQuad::main_task_func, this, Scheduler_task::PRIORITY_HIGHEST);
 
     // DOWN link
-    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  1000000, &scheduler_telemetry_send_rt_stats, &scheduler);
-    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  1000000, &scheduler_telemetry_send_rt_stats_all, &scheduler);
+    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_NAMED_VALUE_FLOAT,  5000000, &scheduler_telemetry_send_rt_stats, &scheduler);
+    ret &= communication.telemetry().add<Scheduler>(MAVLINK_MSG_ID_BIG_DEBUG_VECT,  5000000, &scheduler_telemetry_send_rt_stats_all, &scheduler);
 
     return ret;
 }
@@ -326,7 +324,7 @@ bool LEQuad::init_barometer(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_PRESSURE, 100000, &barometer_telemetry_send, &barometer);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_SCALED_PRESSURE, 250000, &barometer_telemetry_send, &barometer);
 
     // Task
     ret &= scheduler.add_task(15000, &task_barometer_update, &barometer, Scheduler_task::PRIORITY_HIGH, Scheduler_task::PERIODIC_RELATIVE);
@@ -343,7 +341,7 @@ bool LEQuad::init_sonar(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_DISTANCE_SENSOR, 200000, &sonar_telemetry_send, &sonar);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_DISTANCE_SENSOR, 250000, &sonar_telemetry_send, &sonar);
 
 
     // Task
@@ -361,8 +359,12 @@ bool LEQuad::init_ahrs(void)
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            200000, &ahrs_telemetry_send_attitude,            &ahrs);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            500000, &ahrs_telemetry_send_attitude,            &ahrs);
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, &ahrs_telemetry_send_attitude_quaternion, &ahrs);
+
+    // Parameters
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_accelerometer,     "AHRSEKF_USE_ACC"    );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_magnetometer,      "AHRSEKF_USE_MAG"    );
 
     return ret;
 }
@@ -379,8 +381,8 @@ bool LEQuad::init_ins(void)
     // Via ins_ alias
     // -------------------------------------------------------------------------
     // DOWN telemetry
-    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  10000, &ins_telemetry_send_local_position_ned,  ins_);
-    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 100000, &ins_telemetry_send_global_position_int, ins_);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED,  250000, &ins_telemetry_send_local_position_ned,  ins_);
+    ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, 250000, &ins_telemetry_send_global_position_int, ins_);
 
     // -------------------------------------------------------------------------
     // Position estimation specfic
@@ -639,81 +641,53 @@ bool LEQuad::main_task(void)
     ahrs_ekf.update();
     ins_->update();
 
-
-    Navigation_directto nav({*ins_});
-
-    // Servos_mix_matrix<4> mix(std::array<Servo*,4>{{&servo_0, &servo_0, &servo_0, &servo_0}});
-
-    // controller_stack_.set_command(nav.get_control_command(true));
-
     bool failsafe = false;
 
-    // Do control
+    // Get control command
     if (state.is_armed())
     {
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
+            break;
 
             case Mav_mode::POSITION_HOLD:
-                break;
+            break;
+
             case Mav_mode::VELOCITY:
-            {
-                velocity_command_t vel_command;
-                manual_control.get_velocity_command(&vel_command);
-                controller_stack_.set_command(vel_command);
-            }
-                break;
+                flight_controller_.set_manual_velocity_command(manual_control);
+            break;
 
             case Mav_mode::ATTITUDE:
-            {
-                attitude_command_t command;
-                manual_control.get_attitude_command(&command, ahrs.qe);
-                controller_stack_.set_command(command);
-            }
-                break;
+                flight_controller_.set_manual_attitude_command(manual_control);
+            break;
 
-            // case Mav_mode::RATE:
-            //     rate_command_t rate_command_legacy;
-            //     manual_control.get_rate_command(&rate_command_legacy,1.0f);
-            //     /* convert controls from control_command_t (legacy) to att_command_t */
-            //     Cascade_controller::rate_command_t rate_command;
-            //     rate_command.rates = {rate_command_legacy.xyz[0], rate_command_legacy.xyz[1], rate_command_legacy.xyz[2]};
-            //     rate_command.thrust = manual_control.get_thrust();
-            //     /* set attitude command */
-            //     controller_stack_.set_rate_command(rate_command);
-            //     break;
+            case Mav_mode::RATE:
+                flight_controller_.set_manual_attitude_command(manual_control);
+            break;
 
             default:
-                failsafe = true;    // undefined behaviour -> failsafe
+                // undefined behaviour -> failsafe
+                failsafe = true;
+            break;
         }
     }
-    else    // !state.is_armed()
+    else
     {
-        failsafe = true;    // undefined behaviour -> failsafe
+        // not armed -> failsafe
+        failsafe = true;
     }
 
     // if behaviour defined, execute controller and mix; otherwise: set servos to failsafe
     if(!failsafe)
     {
-        /* update controller cascade down to the motors */
-        controller_stack_.update();
+        // update controller cascade down to the motors
+        flight_controller_.update();
     }
     else
     {
-        servo_0.failsafe();
-        servo_1.failsafe();
-        servo_2.failsafe();
-        servo_3.failsafe();
+        flight_controller_.failsafe();
     }
 
     return true;
 }
-
-
-  // // Vector field
-  // ret &= vector_field_waypoint_init(&vector_field_waypoint,
-  //                                   {},
-  //                                   &waypoint_handler,
-  //                                   &ins_complementary,
-  //                                   &command.velocity);

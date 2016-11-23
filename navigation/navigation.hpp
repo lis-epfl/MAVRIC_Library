@@ -74,6 +74,8 @@ public:
 
     command_t get_control_command(bool flag)
     {
+        command_t command;
+        return command;
     }
 };
 

@@ -72,7 +72,7 @@ public:
     {
         const ahrs_t&                ahrs;                      ///< Pointer to attitude estimation (input)
         const INS&                   ins;                       ///< Speed and position estimation (input)
-        const velocity_command_t&    velocity_command;          ///< Velocity command (input)
+        velocity_command_t&          velocity_command;          ///< Velocity command (input)
         attitude_command_t&          attitude_command;          ///< Attitude command (output)
         thrust_command_t&            thrust_command;            ///< Thrust command (output)
     };
@@ -152,7 +152,7 @@ protected:
 
     const ahrs_t&                ahrs_;                      ///< Pointer to attitude estimation (input)
     const INS&                   ins_;                       ///< Speed and position estimation (input)
-    const velocity_command_t&    velocity_command_;          ///< Velocity command (input)
+    velocity_command_t&          velocity_command_;          ///< Velocity command (input)
     attitude_command_t&          attitude_command_;          ///< Attitude command (output)
     thrust_command_t&            thrust_command_;            ///< Thrust command (output)
 

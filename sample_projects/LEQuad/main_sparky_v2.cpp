@@ -57,7 +57,7 @@
 #include "hal/dummy/pwm_dummy.hpp"
 #include "hal/stm32/spi_stm32.hpp"
 
-#include "sample_projects/LEQuad/lequad.hpp"
+#include "drones/lequad.hpp"
 
 #include "simulation/dynamic_model_quad_diag.hpp"
 #include "simulation/simulation.hpp"
@@ -208,6 +208,7 @@ int main(int argc, char** argv)
                         file_dummy,
                         file_dummy,
                         mav_config );
+    mav.init();
 
     // -------------------------------------------------------------------------
     // Main loop

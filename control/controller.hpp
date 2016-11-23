@@ -48,7 +48,6 @@ template<typename in_command_T, typename out_command_T = empty_command_t>
 class Controller
 {
 public:
-    // typedef Controller<in_command_T, out_command_T> Ctlr_t;
     typedef in_command_T in_command_t;
     typedef out_command_T out_command_t;
 
@@ -58,13 +57,6 @@ public:
      * \return  success
      */
     virtual bool update(void) = 0;
-
-
-    // template<typename T>
-    // bool set_command(T command)
-    // {
-    //     return false;
-    // };
 
 
     /**

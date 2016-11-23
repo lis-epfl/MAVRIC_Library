@@ -46,193 +46,16 @@
 
 #include "control/control_command.hpp"
 #include "control/controller.hpp"
-//
-// template<typename POS_CTRL, typename VEL_CTRL, typename ATT_CTRL, typename RATE_CTRL, typename MIX>
-// class Controller_stack: public Controller<position_command_t>,
-//                         public Controller<velocity_command_t>,
-//                         public Controller<attitude_command_t>,
-//                         public Controller<rate_command_t>,
-//                         public Controller<thrust_command_t>
-// {
-// public:
-//
-//     struct conf_t
-//     {
-//         typename POS_CTRL::conf_t   pos_config;
-//         typename VEL_CTRL::conf_t   vel_config;
-//         typename ATT_CTRL::conf_t   att_config;
-//         typename RATE_CTRL::conf_t  rate_config;
-//         typename MIX::conf_t        mix_config;
-//     };
-//
-//
-//     static conf_t default_config(void)
-//     {
-//         conf_t conf;
-//
-//         conf.pos_config  = POS_CTRL::default_config();
-//         conf.vel_config  = VEL_CTRL::default_config();
-//         conf.att_config  = ATT_CTRL::default_config();
-//         conf.rate_config = RATE_CTRL::default_config();
-//         conf.mix_config  = MIX::default_config();
-//
-//         return conf;
-//     };
-//
-//
-//     Controller_stack(typename POS_CTRL::args_t pos_args,
-//                      typename VEL_CTRL::args_t vel_args,
-//                      typename ATT_CTRL::args_t att_args,
-//                      typename RATE_CTRL::args_t rate_args,
-//                      typename MIX::args_t mix_args,
-//                      conf_t config = default_config()):
-//         pos_ctrl_(pos_args, config.pos_config),
-//         vel_ctrl_(vel_args, config.vel_config),
-//         att_ctrl_(att_args, config.att_config),
-//         rate_ctrl_(rate_args, config.rate_config),
-//         mix_(mix_args, config.mix_config)
-//     {
-//         command_.mode   = COMMAND_MODE_THRUST_AND_TORQUE;
-//         command_.thrust = {0.0f, 0.0f, 0.0f};
-//         // mode_(COMMAND_MODE_THRUST_AND_TORQUE)
-//     };
-//     //
-//     // virtual bool update_rate(void)
-//     // {
-//     //     torque_command_t torque;
-//     //     bool ret = true;
-//     //
-//     //     ret &= rate_ctrl_.update();
-//     //     ret &= rate_ctrl_.get_output(torque);
-//     //     ret &= mix_.set_command(torque);
-//     //
-//     //     return ret;
-//     // }
-//     //
-//     //
-//     // virtual bool update_attitude(void)
-//     // {
-//     //     rate_command_t command;
-//     //     bool ret = true;
-//     //
-//     //     ret &= att_ctrl_.update();
-//     //     ret &= att_ctrl_.get_output(command);
-//     //     ret &= rate_ctrl_.set_command(command);
-//     //
-//     //     return ret;
-//     // }
-//
-//     // template<typename CTRL1, typename CTRL2>
-//     // bool update_cascade_level(CTRL1& ctrl1, CTRL2& ctrl2)
-//     // {
-//     //     bool ret = true;
-//     //
-//     //     typename CTRL2::in_command_t command;
-//     //     ret &= ctrl1.update();
-//     //     ret &= ctrl1.get_output(command);
-//     //     ret &= ctrl2.set_command(command);
-//     //
-//     //     return ret;
-//     // }
-//
-//
-//     virtual bool update(void)
-//     {
-//         switch (command_.mode)
-//         {
-//             case COMMAND_MODE_THRUST_AND_TORQUE:
-//                 // Servo mix
-//                 mix_.update();
-//             break;
-//
-//             case COMMAND_MODE_THRUST_AND_RATE:
-//                 // Rate control
-//                 // update_cascade_level(rate_ctrl_, mix_);
-//                 mix_.update();
-//             break;
-//
-//             case COMMAND_MODE_THRUST_AND_ATTITUDE:
-//                 // Attitude control
-//                 // update_cascade_level(att_ctrl_,  rate_ctrl_);
-//                 // update_cascade_level(rate_ctrl_, mix_);
-//                 mix_.update();
-//             break;
-//
-//             case COMMAND_MODE_VELOCITY:
-//                 // Velocity control
-//                 // update_cascade_level(vel_ctrl_,  att_ctrl_);
-//
-//                 // thrust_command_t thrust_command;
-//                 // vel_ctrl_.get_output(thrust_command);
-//                 // mix_.set_command(thrust_command);
-//
-//                 // update_cascade_level(att_ctrl_,  rate_ctrl_);
-//                 // update_cascade_level(rate_ctrl_, mix_);
-//                 mix_.update();
-//             break;
-//
-//             case COMMAND_MODE_POSITION:
-//                 // Position control
-//                 // update_cascade_level(pos_ctrl_,  vel_ctrl_);
-//                 // update_cascade_level(vel_ctrl_,  att_ctrl_);
-//
-//                 // thrust_command_t thrust_command;
-//                 // vel_ctrl_.get_output(thrust_command);
-//                 // mix_.set_command(thrust_command);
-//
-//                 // update_cascade_level(att_ctrl_,  rate_ctrl_);
-//                 // update_cascade_level(rate_ctrl_, mix_);
-//                 mix_.update();
-//             break;
-//         }
-//     };
-//
-//     bool set_command(const position_command_t& velocity) {return true;};
-//     bool set_command(const velocity_command_t& velocity) {return true;};
-//     bool set_command(const attitude_command_t& attitude) {return true;};
-//     bool set_command(const rate_command_t& rate) {return true;};
-//     bool set_command(const thrust_command_t& rate) {return true;};
-//
-//     bool get_command(position_command_t& velocity) const {return true;};
-//     bool get_command(velocity_command_t& velocity) const {return true;};
-//     bool get_command(attitude_command_t& attitude) const {return true;};
-//     bool get_command(rate_command_t& rate) const {return true;};
-//     bool get_command(thrust_command_t& rate) const {return true;};
-//
-//     bool get_output(empty_command_t& command) const
-//     {
-//         return true;
-//     };
-//
-// protected:
-//     POS_CTRL  pos_ctrl_;
-//     VEL_CTRL  vel_ctrl_;
-//     ATT_CTRL  att_ctrl_;
-//     RATE_CTRL rate_ctrl_;
-//     MIX       mix_;
-//     // control_command_mode_t mode_;
-//     command_t command_;
-// };
+#include "control/flight_controller.hpp"
 
-
-template<typename POS_CTRL, typename VEL_CTRL, typename ATT_CTRL, typename RATE_CTRL, typename MIX>
-class Controller_stack: public Controller<position_command_t>,
-                        public Controller<velocity_command_t>,
-                        public Controller<attitude_command_t>,
-                        public Controller<rate_command_t>,
-                        public Controller<thrust_command_t>
+template<typename POS_CTRL,
+         typename VEL_CTRL,
+         typename ATT_CTRL,
+         typename RATE_CTRL,
+         typename MIX_CTRL>
+class Controller_stack: public Flight_controller
 {
 public:
-
-    struct conf_t
-    {
-        typename POS_CTRL::conf_t   pos_config;
-        typename VEL_CTRL::conf_t   vel_config;
-        typename ATT_CTRL::conf_t   att_config;
-        typename RATE_CTRL::conf_t  rate_config;
-        typename MIX::conf_t        mix_config;
-    };
-
 
     struct args_t
     {
@@ -240,7 +63,16 @@ public:
         typename VEL_CTRL::args_t vel_args;
         typename ATT_CTRL::args_t att_args;
         typename RATE_CTRL::args_t rate_args;
-        typename MIX::args_t mix_args;
+        typename MIX_CTRL::args_t mix_args;
+    };
+
+    struct conf_t
+    {
+        typename POS_CTRL::conf_t   pos_config;
+        typename VEL_CTRL::conf_t   vel_config;
+        typename ATT_CTRL::conf_t   att_config;
+        typename RATE_CTRL::conf_t  rate_config;
+        typename MIX_CTRL::conf_t        mix_config;
     };
 
     static conf_t default_config(void)
@@ -251,67 +83,30 @@ public:
         conf.vel_config  = VEL_CTRL::default_config();
         conf.att_config  = ATT_CTRL::default_config();
         conf.rate_config = RATE_CTRL::default_config();
-        conf.mix_config  = MIX::default_config();
+        conf.mix_config  = MIX_CTRL::default_config();
 
         return conf;
     };
 
-
-    // Controller_stack(const args_t& args,
-    //                  const conf_t& config = default_config()):
-    //     pos_ctrl_(args.pos_args, config.pos_config),
-    //     vel_ctrl_(args.vel_args, config.vel_config),
-    //     att_ctrl_(args.att_args, config.att_config),
-    //     rate_ctrl_(args.rate_args, config.rate_config),
-    //     mix_(args.mix_args, config.mix_config)
-    Controller_stack(typename POS_CTRL::args_t pos_args,
-                     typename VEL_CTRL::args_t vel_args,
-                     typename ATT_CTRL::args_t att_args,
-                     typename RATE_CTRL::args_t rate_args,
-                     typename MIX::args_t mix_args,
+    Controller_stack(const args_t& args,
                      const conf_t& config = default_config()):
-        pos_ctrl_(pos_args, config.pos_config),
-        vel_ctrl_(vel_args, config.vel_config),
-        att_ctrl_(att_args, config.att_config),
-        rate_ctrl_(rate_args, config.rate_config),
-        mix_(mix_args, config.mix_config)
+        pos_ctrl_(args.pos_args, config.pos_config),
+        vel_ctrl_(args.vel_args, config.vel_config),
+        att_ctrl_(args.att_args, config.att_config),
+        rate_ctrl_(args.rate_args, config.rate_config),
+        mix_ctrl_(args.mix_args, config.mix_config)
     {
         command_.mode   = COMMAND_MODE_THRUST_AND_TORQUE;
-        command_.thrust = {0.0f, 0.0f, 0.0f};
-        // mode_(COMMAND_MODE_THRUST_AND_TORQUE)
+        command_.thrust = thrust_command_t{{{0.0f, 0.0f, 0.0f}}};
+        command_.torque = torque_command_t{{{0.0f, 0.0f, 0.0f}}};
     };
-    //
-    // virtual bool update_rate(void)
-    // {
-    //     torque_command_t torque;
-    //     bool ret = true;
-    //
-    //     ret &= rate_ctrl_.update();
-    //     ret &= rate_ctrl_.get_output(torque);
-    //     ret &= mix_.set_command(torque);
-    //
-    //     return ret;
-    // }
-    //
-    //
-    // virtual bool update_attitude(void)
-    // {
-    //     rate_command_t command;
-    //     bool ret = true;
-    //
-    //     ret &= att_ctrl_.update();
-    //     ret &= att_ctrl_.get_output(command);
-    //     ret &= rate_ctrl_.set_command(command);
-    //
-    //     return ret;
-    // }
 
-    template<typename CTRL1, typename CTRL2>
+    template<typename CTRL1, typename CTRL2, typename MID_COMMAND_T = typename CTRL1::out_command_t>
     bool update_cascade_level(CTRL1& ctrl1, CTRL2& ctrl2)
     {
         bool ret = true;
 
-        typename CTRL1::out_command_t command;
+        MID_COMMAND_T command;
         ret &= ctrl1.update();
         ret &= ctrl1.get_output(command);
         ret &= ctrl2.set_command(command);
@@ -319,69 +114,174 @@ public:
         return ret;
     }
 
+    template<typename CTRL1,
+             typename CTRL2_A, typename CTRL2_B,
+             typename MID_COMMAND_A_T = typename CTRL2_A::in_command_t,
+             typename MID_COMMAND_B_T = typename CTRL2_B::in_command_t>
+    bool update_cascade_level(CTRL1& ctrl1, CTRL2_A& ctrl2_a, CTRL2_B& ctrl2_b)
+    {
+        bool ret = true;
+
+        // common part
+        ret &= ctrl1.update();
+
+        // A branch
+        MID_COMMAND_A_T  a_command;
+        ret &= ctrl1.get_output(a_command);
+        ret &= ctrl2_a.set_command(a_command);
+
+        // B branch
+        MID_COMMAND_B_T  b_command;
+        ret &= ctrl1.get_output(b_command);
+        ret &= ctrl2_b.set_command(b_command);
+
+        return ret;
+    }
 
     virtual bool update(void)
     {
+        bool ret = true;
         switch (command_.mode)
         {
             case COMMAND_MODE_THRUST_AND_TORQUE:
-                // Servo mix
-                mix_.update();
+                ret &= update_in_thrust_and_torque_mode();
             break;
 
             case COMMAND_MODE_THRUST_AND_RATE:
-                // Rate control
-                // update_cascade_level(rate_ctrl_, mix_);
-                mix_.update();
+                ret &= update_in_thrust_and_rate_mode();
             break;
 
             case COMMAND_MODE_THRUST_AND_ATTITUDE:
-                // Attitude control
-                // update_cascade_level(att_ctrl_,  rate_ctrl_);
-                // update_cascade_level(rate_ctrl_, mix_);
-                mix_.update();
+                ret &= update_in_thrust_and_attitude_mode();
             break;
 
             case COMMAND_MODE_VELOCITY:
-                // Velocity control
-                // update_cascade_level(vel_ctrl_,  att_ctrl_);
-
-                // thrust_command_t thrust_command;
-                // vel_ctrl_.get_output(thrust_command);
-                // mix_.set_command(thrust_command);
-
-                // update_cascade_level(att_ctrl_,  rate_ctrl_);
-                // update_cascade_level(rate_ctrl_, mix_);
-                mix_.update();
+                ret &= update_in_velocity_mode();
             break;
 
             case COMMAND_MODE_POSITION:
-                // Position control
-                // update_cascade_level(pos_ctrl_,  vel_ctrl_);
-                // update_cascade_level(vel_ctrl_,  att_ctrl_);
-
-                // thrust_command_t thrust_command;
-                // vel_ctrl_.get_output(thrust_command);
-                // mix_.set_command(thrust_command);
-
-                // update_cascade_level(att_ctrl_,  rate_ctrl_);
-                // update_cascade_level(rate_ctrl_, mix_);
-                mix_.update();
+                ret &= update_in_position_mode();
             break;
         }
+
+        return true;
     };
 
-    bool set_command(const position_command_t& velocity) {return true;};
-    bool set_command(const velocity_command_t& velocity) {return true;};
-    bool set_command(const attitude_command_t& attitude) {return true;};
-    bool set_command(const rate_command_t& rate) {return true;};
-    bool set_command(const thrust_command_t& rate) {return true;};
 
-    bool get_command(position_command_t& velocity) const {return true;};
-    bool get_command(velocity_command_t& velocity) const {return true;};
-    bool get_command(attitude_command_t& attitude) const {return true;};
-    bool get_command(rate_command_t& rate) const {return true;};
-    bool get_command(thrust_command_t& rate) const {return true;};
+    bool update_in_thrust_and_torque_mode(void)
+    {
+        // Servo mix
+        return mix_ctrl_.update();
+    }
+
+    bool update_in_thrust_and_rate_mode(void)
+    {
+        // Rate control
+        bool ret = true;
+        ret &= update_cascade_level(rate_ctrl_, mix_ctrl_);
+        ret &= mix_ctrl_.update();
+        return ret;
+    }
+
+    bool update_in_thrust_and_attitude_mode(void)
+    {
+        // Attitude control
+        bool ret = true;
+        update_cascade_level(att_ctrl_, rate_ctrl_);
+        update_cascade_level(rate_ctrl_, mix_ctrl_);
+        ret &= mix_ctrl_.update();
+        return ret;
+    }
+
+    bool update_in_velocity_mode(void)
+    {
+        // Velocity control
+        bool ret = true;
+        ret &= update_cascade_level<VEL_CTRL, ATT_CTRL, MIX_CTRL,
+                                    attitude_command_t, thrust_command_t>(vel_ctrl_, att_ctrl_, mix_ctrl_);
+        ret &= update_cascade_level(att_ctrl_,  rate_ctrl_);
+        ret &= update_cascade_level(rate_ctrl_, mix_ctrl_);
+        ret &= mix_ctrl_.update();
+        return ret;
+    }
+
+    bool update_in_position_mode(void)
+    {
+        // Position control
+        bool ret = true;
+        ret &= update_cascade_level(pos_ctrl_,  vel_ctrl_);
+        ret &= update_cascade_level<VEL_CTRL, ATT_CTRL, MIX_CTRL,
+                                    attitude_command_t, thrust_command_t>(vel_ctrl_, att_ctrl_, mix_ctrl_);
+        ret &= update_cascade_level(att_ctrl_,  rate_ctrl_);
+        ret &= update_cascade_level(rate_ctrl_, mix_ctrl_);
+        ret &= mix_ctrl_.update();
+        return ret;
+    }
+
+    bool set_command(const position_command_t& position)
+    {
+        command_.mode = COMMAND_MODE_POSITION;
+        return pos_ctrl_.set_command(position);
+    };
+
+    bool set_command(const velocity_command_t& velocity)
+    {
+        command_.mode = COMMAND_MODE_VELOCITY;
+        return vel_ctrl_.set_command(velocity);
+    };
+
+    bool set_command(const attitude_command_t& attitude)
+    {
+        command_.mode = COMMAND_MODE_THRUST_AND_ATTITUDE;
+        return att_ctrl_.set_command(attitude);
+    };
+
+    bool set_command(const rate_command_t& rate)
+    {
+        command_.mode = COMMAND_MODE_THRUST_AND_RATE;
+        return rate_ctrl_.set_command(rate);
+    };
+
+    bool set_command(const torque_command_t& torque)
+    {
+        command_.mode = COMMAND_MODE_THRUST_AND_TORQUE;
+        return mix_ctrl_.set_command(torque);
+    };
+
+    bool set_command(const thrust_command_t& thrust)
+    {
+        return mix_ctrl_.set_command(thrust);
+    };
+
+    bool get_command(position_command_t& position) const
+    {
+        return pos_ctrl_.get_command(position);
+    };
+
+    bool get_command(velocity_command_t& velocity) const
+    {
+        return vel_ctrl_.get_command(velocity);
+    };
+
+    bool get_command(attitude_command_t& attitude) const
+    {
+        return att_ctrl_.get_command(attitude);
+    };
+
+    bool get_command(rate_command_t& rate) const
+    {
+        return rate_ctrl_.get_command(rate);
+    };
+
+    bool get_command(torque_command_t& torque) const
+    {
+        return mix_ctrl_.get_command(torque);
+    };
+
+    bool get_command(thrust_command_t& thrust) const
+    {
+        return mix_ctrl_.get_command(thrust);
+    };
 
     bool get_output(empty_command_t& command) const
     {
@@ -393,31 +293,10 @@ protected:
     VEL_CTRL  vel_ctrl_;
     ATT_CTRL  att_ctrl_;
     RATE_CTRL rate_ctrl_;
-    MIX       mix_;
-    // control_command_mode_t mode_;
+    MIX_CTRL  mix_ctrl_;
+
     command_t command_;
 };
-
-
-
-// template<typename T_CTRL, typename T_CTRL_NEXT>
-// class Cascade_level: public T_CTRL, public T_CTRL_NEXT
-// {
-// public:
-//
-// protected:
-//     bool update_cascade()
-//     {
-//
-//     };
-//
-// };
-
-
-
-
-
-
 
 
 #endif /* CONTROLLER_STACK_HPP_ */

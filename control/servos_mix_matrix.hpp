@@ -159,6 +159,17 @@ public:
     };
 
 
+    virtual bool failsafe(void)
+    {
+        for (uint32_t i = 0; i < N; i++)
+        {
+            servos_[i]->failsafe();
+        }
+
+        return true;
+    }
+
+
     /**
      * \brief           sets the torque command
      *

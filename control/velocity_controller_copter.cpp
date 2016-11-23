@@ -56,7 +56,7 @@ extern "C"
 
 
 Velocity_controller_copter::Velocity_controller_copter(const args_t& args, const conf_t& config) :
-    Velocity_controller(args, config),
+    Velocity_controller(args.vel_args, config),
     thrust_hover_point_(config.thrust_hover_point)
 {}
 

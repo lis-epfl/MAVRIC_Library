@@ -139,7 +139,7 @@ public:
      * \param   scale_pitch     Scale (maximum output / max remote input)
      * \param   scale_yaw       Scale (maximum output / max remote input)
      */
-    void get_torque_command(torque_command_t* command,
+    void get_torque_command(torque_command_t& command,
                             float scale_roll = 1.0f,
                             float scale_pitch = 1.0f,
                             float scale_yaw = 1.0f) const;
@@ -153,7 +153,7 @@ public:
      * \param   scale_pitch     Scale (maximum output / max remote input)
      * \param   scale_yaw       Scale (maximum output / max remote input)
      */
-    void get_rate_command(rate_command_t* command,
+    void get_rate_command(rate_command_t& command,
                           float scale_roll = 1.0f,
                           float scale_pitch = 1.0f,
                           float scale_yaw = 1.0f) const;
@@ -165,7 +165,7 @@ public:
      * \param   command         Thrust command (output)
      * \param   scale           Scale
      */
-    void get_thrust_command_copter(thrust_command_t* command, float scale = 1.0f) const;
+    void get_thrust_command_copter(thrust_command_t& command, float scale = 1.0f) const;
 
 
     /**
@@ -174,7 +174,7 @@ public:
      * \param   command         Thrust command (output)
      * \param   scale           Scale
      */
-    void get_thrust_command_wing(thrust_command_t* command, float scale = 1.0f) const;
+    void get_thrust_command_wing(thrust_command_t& command, float scale = 1.0f) const;
 
 
     /**
@@ -185,7 +185,7 @@ public:
      * \param   scale_pitch     Scale (maximum output / max remote input)
      * \param   scale_yaw       Scale (maximum output / max remote input)
      */
-    void get_attitude_command_absolute_yaw( attitude_command_t* command,
+    void get_attitude_command_absolute_yaw( attitude_command_t& command,
                                             float scale_roll = 1.0f,
                                             float scale_pitch = 1.0f,
                                             float scale_yaw = 1.0f) const;
@@ -203,8 +203,8 @@ public:
      *
      * \return  command
      */
-    void get_attitude_command(  attitude_command_t* command,
-                                quat_t current_attitude,
+    void get_attitude_command(  attitude_command_t& command,
+                                const quat_t& current_attitude,
                                 float scale_roll = 1.0f,
                                 float scale_pitch = 1.0f,
                                 float scale_yaw = 0.5f) const;
@@ -220,26 +220,31 @@ public:
      * \param   scale_pitch         Scale (maximum output / max remote input)
      * \param   scale_yaw           Scale (maximum output / max remote input)
      */
-    void get_attitude_command_vtol( attitude_command_t* command,
-                                    quat_t current_attitude,
+    void get_attitude_command_vtol( attitude_command_t& command,
+                                    const quat_t& current_attitude,
                                     float reference_pitch,
                                     float scale_roll = 1.0f,
                                     float scale_pitch = 1.0f,
-                                    float scale_yaw = 0.5f) const;
+                                    float scale_yaw = 0.25f) const;
 
 
     /**
      * \brief   Compute velocity command from the manual input
      *
-     * \param   command         Velocity command (output)
+     * \param   command                     Velocity command (output)
+     * \param   current_attitude            Current attitude of the vehicle
+     * \param   current_velocity_command    Current velocity command
      * \param   scale_x         Scale (maximum output / max remote input)
      * \param   scale_y         Scale (maximum output / max remote input)
      * \param   scale_z         Scale (maximum output / max remote input)
      */
-    void get_velocity_command(  velocity_command_t* command,
-                                float scale_x = 10.0f,
-                                float scale_y = 10.0f,
-                                float scale_z = 1.5f) const;
+    void get_velocity_command_copter(velocity_command_t& command,
+                                    const quat_t& current_attitude,
+                                    const velocity_command_t& current_velocity_command,
+                                    float scale_x = 10.0f,
+                                    float scale_y = 10.0f,
+                                    float scale_z = 1.5f,
+                                    float scale_heading = 0.25f) const;
 
 
     /**

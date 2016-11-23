@@ -85,9 +85,9 @@ public:
      */
     struct args_t
     {
-        const ahrs_t&               ahrs;                  ///< Ref to attitude estimation (input)
-        const rate_command_t&       rate_command;          ///< Reference to rate command (input)
-        torque_command_t&           torque_command;        ///< Reference to torque command (output)
+        const ahrs_t&         ahrs;                  ///< Ref to attitude estimation (input)
+        rate_command_t&       rate_command;          ///< Reference to rate command (input)
+        torque_command_t&     torque_command;        ///< Reference to torque command (output)
     };
 
 
@@ -139,13 +139,13 @@ public:
 
 
 private:
-    const ahrs_t&               ahrs_;                  ///< Ref to attitude estimation (input)
-    const rate_command_t&       rate_command_;          ///< Reference to rate command (input)
-    torque_command_t&           torque_command_;        ///< Reference to torque command (output)
+    const ahrs_t&         ahrs_;                  ///< Ref to attitude estimation (input)
+    rate_command_t&       rate_command_;          ///< Reference to rate command (input)
+    torque_command_t&     torque_command_;        ///< Reference to torque command (output)
 
-    pid_controller_t            pid_[3];                ///< Angular rate PID controller for roll, pitch and yaw
-    float                       dt_s_;                  ///< The time interval between two updates
-    float                       last_update_s_;         ///< The time of the last update in s
+    pid_controller_t      pid_[3];                ///< Angular rate PID controller for roll, pitch and yaw
+    float                 dt_s_;                  ///< The time interval between two updates
+    float                 last_update_s_;         ///< The time of the last update in s
 };
 
 Rate_controller::conf_t Rate_controller::default_config()

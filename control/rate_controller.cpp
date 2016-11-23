@@ -57,11 +57,21 @@
 
 Rate_controller::Rate_controller(const args_t& args, const conf_t& config) :
     ahrs_(args.ahrs),
-    rate_command_(args.rate_command)),
+    rate_command_(args.rate_command),
     torque_command_(args.torque_command),
     dt_s_(0.0f),
     last_update_s_(0.0f)
 {
+    // set initial rate command
+    rate_command_.xyz[X]  = 0.0f;
+    rate_command_.xyz[Y]  = 0.0f;
+    rate_command_.xyz[Z]  = 0.0f;
+
+    // set initial torque command
+    torque_command_.xyz[X]  = 0.0f;
+    torque_command_.xyz[Y]  = 0.0f;
+    torque_command_.xyz[Z]  = 0.0f;
+
     // Init rate gains
     pid_controller_init(&pid_[ROLL],  &config.pid_config[ROLL]);
     pid_controller_init(&pid_[PITCH], &config.pid_config[PITCH]);

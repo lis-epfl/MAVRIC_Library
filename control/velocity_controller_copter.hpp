@@ -82,8 +82,10 @@ public:
     /**
      * \brief   Required arguments
      */
-    struct args_t: public Velocity_controller::args_t
-    {};
+    struct args_t
+    {
+        Velocity_controller::args_t vel_args;
+    };
 
     /**
      * \brief                       Constructor
@@ -118,7 +120,9 @@ Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(vo
 {
     conf_t conf = {};
 
-    conf.thrust_hover_point                    = -0.26f;
+    // conf.thrust_hover_point                    = -0.26f;
+    // conf.thrust_hover_point                    = -0.13f;
+    conf.thrust_hover_point                    = -0.52f;
 
     // -----------------------------------------------------------------
     // ------ X PID ----------------------------------------------------
@@ -133,10 +137,10 @@ Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(vo
     conf.pid_config[X].integrator.accumulator  = 0.0f;
     conf.pid_config[X].integrator.clip         = 0.5f;
     conf.pid_config[X].differentiator          = {};
-    conf.pid_config[X].differentiator.gain     = 0.0f;
+    conf.pid_config[X].differentiator.gain     = 0.001f;
     conf.pid_config[X].differentiator.previous = 0.0f;
     conf.pid_config[X].differentiator.clip     = 1.0f;
-    conf.pid_config[X].soft_zone_width         = 0.0f;
+    conf.pid_config[X].soft_zone_width         = 0.2f;
 
     // -----------------------------------------------------------------
     // ------ Y PID ----------------------------------------------------
@@ -151,10 +155,10 @@ Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(vo
     conf.pid_config[Y].integrator.accumulator  = 0.0f;
     conf.pid_config[Y].integrator.clip         = 0.5f;
     conf.pid_config[Y].differentiator          = {};
-    conf.pid_config[Y].differentiator.gain     = 0.0f;
+    conf.pid_config[Y].differentiator.gain     = 0.001f;
     conf.pid_config[Y].differentiator.previous = 0.0f;
     conf.pid_config[Y].differentiator.clip     = 1.0f;
-    conf.pid_config[Y].soft_zone_width         = 0.0f;
+    conf.pid_config[Y].soft_zone_width         = 0.2f;
 
     // ---------------------------------------------------------------------
     // ------ Z PID --------------------------------------------------------

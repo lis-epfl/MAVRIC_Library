@@ -44,7 +44,7 @@
 #include "manual_control/manual_control.hpp"
 #include "util/constants.hpp"
 #include "util/print_util.hpp"
-
+#include "util/quick_trig.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -108,7 +108,7 @@ float Manual_control::pitch() const
             pitch = remote_get_pitch(&remote);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            pitch = joystick.pitch();
+            pitch = - joystick.pitch();
             break;
         case CONTROL_SOURCE_NONE:
             pitch = 0.0f;
@@ -136,72 +136,72 @@ float Manual_control::yaw() const
     return yaw;
 }
 
-void Manual_control::get_torque_command(torque_command_t* command,
+void Manual_control::get_torque_command(torque_command_t& command,
                                         float scale_roll,
                                         float scale_pitch,
                                         float scale_yaw) const
 {
     if (control_source_ != CONTROL_SOURCE_NONE)
     {
-        command->xyz[ROLL]  = scale_roll  * roll();
-        command->xyz[PITCH] = scale_pitch * pitch();
-        command->xyz[YAW]   = scale_yaw   * yaw();
+        command.xyz[ROLL]  = scale_roll  * roll();
+        command.xyz[PITCH] = scale_pitch * pitch();
+        command.xyz[YAW]   = scale_yaw   * yaw();
     }
 }
 
 
-void Manual_control::get_rate_command(rate_command_t* command,
+void Manual_control::get_rate_command(rate_command_t& command,
                                       float scale_roll,
                                       float scale_pitch,
                                       float scale_yaw) const
 {
     if (control_source_ != CONTROL_SOURCE_NONE)
     {
-        command->xyz[ROLL]  = scale_roll  * roll();
-        command->xyz[PITCH] = scale_pitch * pitch();
-        command->xyz[YAW]   = scale_yaw   * yaw();
+        command.xyz[ROLL]  = scale_roll  * roll();
+        command.xyz[PITCH] = scale_pitch * pitch();
+        command.xyz[YAW]   = scale_yaw   * yaw();
     }
 }
 
 
-void Manual_control::get_thrust_command_copter(thrust_command_t* command, float scale) const
+void Manual_control::get_thrust_command_copter(thrust_command_t& command, float scale) const
 {
     if (control_source_ != CONTROL_SOURCE_NONE)
     {
-        command->xyz[X] = 0.0f;
-        command->xyz[Y] = 0.0f;
-        command->xyz[Z] = - scale * (0.5f + 0.5f * throttle());  // negative Z thrust between 0 and - scale
+        command.xyz[X] = 0.0f;
+        command.xyz[Y] = 0.0f;
+        command.xyz[Z] = - scale * (0.5f + 0.5f * throttle());  // negative Z thrust between 0 and - scale
     }
 }
 
 
-void Manual_control::get_thrust_command_wing(thrust_command_t* command, float scale) const
+void Manual_control::get_thrust_command_wing(thrust_command_t& command, float scale) const
 {
     if (control_source_ != CONTROL_SOURCE_NONE)
     {
-        command->xyz[X] = scale * (0.5f + 0.5f * throttle()); // positive X thrust between 0 and scale
-        command->xyz[Y] = 0.0f;
-        command->xyz[Z] = 0.0f;
+        command.xyz[X] = scale * (0.5f + 0.5f * throttle()); // positive X thrust between 0 and scale
+        command.xyz[Y] = 0.0f;
+        command.xyz[Z] = 0.0f;
     }
 }
 
 
-void Manual_control::get_attitude_command_absolute_yaw( attitude_command_t* command,
+void Manual_control::get_attitude_command_absolute_yaw( attitude_command_t& command,
                                                         float scale_roll,
                                                         float scale_pitch,
                                                         float scale_yaw) const
 {
     if (control_source_ != CONTROL_SOURCE_NONE)
     {
-        *command = coord_conventions_quaternion_from_rpy(scale_roll  * roll(),
-                                                         scale_pitch * pitch(),
-                                                         scale_yaw   * yaw());
+        command = coord_conventions_quaternion_from_rpy(scale_roll  * roll(),
+                                                        scale_pitch * pitch(),
+                                                        scale_yaw   * yaw());
     }
 }
 
 
-void Manual_control::get_attitude_command(  attitude_command_t* command,
-                                            quat_t current_attitude,
+void Manual_control::get_attitude_command(  attitude_command_t& command,
+                                            const quat_t& current_attitude,
                                             float scale_roll,
                                             float scale_pitch,
                                             float scale_yaw) const
@@ -213,13 +213,13 @@ void Manual_control::get_attitude_command(  attitude_command_t* command,
         rpy[PITCH] = scale_pitch * pitch();
         rpy[YAW]   = scale_yaw * yaw() + coord_conventions_get_yaw(current_attitude);
 
-        *command = coord_conventions_quaternion_from_rpy(rpy);
+        command = coord_conventions_quaternion_from_rpy(rpy);
     }
 }
 
 
-void Manual_control::get_attitude_command_vtol( attitude_command_t* command,
-                                                quat_t current_attitude,
+void Manual_control::get_attitude_command_vtol( attitude_command_t& command,
+                                                const quat_t& current_attitude,
                                                 float reference_pitch,
                                                 float scale_roll,
                                                 float scale_pitch,
@@ -238,21 +238,41 @@ void Manual_control::get_attitude_command_vtol( attitude_command_t* command,
                                                               0.0f);
 
         // q := q . q_rh . q_rf
-        *command = quaternions_multiply(q_yawpitch, q_roll);
+        command = quaternions_multiply(q_yawpitch, q_roll);
     }
 }
 
 
-void Manual_control::get_velocity_command(  velocity_command_t* command,
-                                            float scale_x,
-                                            float scale_y,
-                                            float scale_z) const
+void Manual_control::get_velocity_command_copter(velocity_command_t& command,
+                                                const quat_t& current_attitude,
+                                                const velocity_command_t& current_velocity_command,
+                                                float scale_x,
+                                                float scale_y,
+                                                float scale_z,
+                                                float scale_heading) const
 {
     if (control_source_ != CONTROL_SOURCE_NONE)
     {
-        command->xyz[X] = scale_x * pitch();
-        command->xyz[Y] = scale_y * roll();
-        command->xyz[Z] = scale_z * throttle();
+        // Velocity vector command
+        float vel_semiloc[3] = {- scale_x * pitch(),
+                                  scale_y * roll(),
+                                - scale_z * throttle()};
+        float heading   = coord_conventions_get_yaw(current_attitude);
+        quat_t qheading = coord_conventions_quaternion_from_rpy(  0.0f, 0.0f, heading);
+        quaternions_rotate_vector(qheading, vel_semiloc, command.xyz.data());
+
+        // Heading command
+        float heading_increment = scale_heading * yaw();
+        float new_heading_command = maths_calc_smaller_angle(current_velocity_command.heading + heading_increment);
+        float heading_error = maths_calc_smaller_angle(new_heading_command - heading);
+        if (maths_f_abs(heading_error) > PI/8.0f)
+        {
+            command.heading = heading;
+        }
+        else
+        {
+            command.heading = maths_calc_smaller_angle(heading + maths_clip(heading_error, PI/8.0f));
+        }
     }
 }
 
