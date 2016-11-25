@@ -324,6 +324,28 @@ public:
      */
     template<uint32_t N, uint32_t P, uint32_t I, uint32_t J, uint32_t Q, uint32_t R, typename T>
     static bool insert_inplace(Mat<N,P,T>& m1, const Mat<Q,R,T>& m2);
+
+
+    /**
+     * \brief   Clips matrix values between that of two matrices (element-wise)
+     *
+     * \param   m         Matrix to clip
+     * \param   min       Matrix with minimum values
+     * \param   max       Matrix with maximum values
+     */
+    template<uint32_t N, uint32_t P, typename T>
+    static void clip(Mat<N,P,T>& m, const Mat<N,P,T>& min, const Mat<N,P,T>& max);
+
+
+    /**
+     * \brief   Clips matrix values
+     *
+     * \param   m         Matrix to clip
+     * \param   min       Minimum value
+     * \param   max       Maximum value
+     */
+    template<uint32_t N, uint32_t P, typename T>
+    static void clip(Mat<N,P,T>& m, float min, float max);
 };
 
 }
@@ -806,6 +828,23 @@ public:
     template<uint32_t I, uint32_t J, uint32_t Q, uint32_t R>
     bool insert_inplace(const Mat<Q,R,T>& m);
 
+
+    /**
+     * \brief   Clips matrix values between that of two matrices (element-wise)
+     *
+     * \param   min       Matrix with minimum values
+     * \param   max       Matrix with maximum values
+     */
+    void clip(const Mat& min, const Mat& max);
+
+
+    /**
+     * \brief   Clips matrix values
+     *
+     * \param   min       Minimum value
+     * \param   max       Maximum value
+     */
+    void clip(float min, float max);
 
 private:
     std::array<T,N*P> d;   ///< Data

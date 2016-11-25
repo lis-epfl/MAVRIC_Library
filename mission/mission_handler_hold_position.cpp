@@ -34,28 +34,133 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the hold position state
+ * \brief The mission handler functions for the hold position state
  *
  ******************************************************************************/
 
-
 #include "mission/mission_handler_hold_position.hpp"
-#include "navigation/navigation_controller_i.hpp"
 
 
-//------------------------------------------------------------------------------
-// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-template <>
-bool Mission_handler_hold_position<Navigation_controller_I>::set_control_command()
+Mission_handler_hold_position::Mission_handler_hold_position(const INS& ins):
+    Mission_handler(),
+    ins_(ins)
 {
-	Navigation_controller_I::nav_command_t cmd;
-	cmd.pos = waypoint_.local_pos();
-	return controller_.set_navigation_command(cmd);
+    waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
+                            MAV_CMD_NAV_LOITER_UNLIM,
+                            0,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f);
 }
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+
+bool Mission_handler_hold_position::can_handle(const Waypoint& wpt) const
+{
+    bool handleable = false;
+
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_LOITER_UNLIM ||
+        cmd == MAV_CMD_NAV_LOITER_TIME  ||
+        cmd == MAV_CMD_NAV_LOITER_TO_ALT ||
+        (cmd == MAV_CMD_OVERRIDE_GOTO && wpt.param1() == MAV_GOTO_DO_HOLD))
+    {
+        handleable = true;
+    }
+
+    return handleable;
+}
+
+
+bool Mission_handler_hold_position::setup(const Waypoint& wpt)
+{
+    bool success = true;
+    waypoint_ = wpt;
+    start_time_ = time_keeper_get_ms();
+    within_radius_ = false;
+
+    return success;
+}
+
+
+Mission_handler::update_status_t Mission_handler_hold_position::update()
+{
+    /*******************
+    Determine status code
+    ********************/
+    // Determine if we have entered the hold position volume
+    local_position_t wpt_pos = waypoint_.local_pos();
+
+    float radius;
+    if (!waypoint_.radius(radius))
+    {
+        radius = 0.0f;
+    }
+
+    // Check that we are at the waypoint
+    else if (((wpt_pos[X]-ins_.position_lf()[X])*(wpt_pos[X]-ins_.position_lf()[X]) + (wpt_pos[Y]-ins_.position_lf()[Y])*(wpt_pos[Y]-ins_.position_lf()[Y])) < radius*radius)
+    {
+        within_radius_ = true;
+    }
+    else
+    {
+        within_radius_ = false;
+
+        // Reset start time
+        start_time_ = time_keeper_get_ms();
+    }
+
+    // Determine if we should advance to the next waypoint
+    if (waypoint_.autocontinue() == 1)
+    {
+        switch (waypoint_.command())
+        {
+        case MAV_CMD_NAV_LOITER_UNLIM:
+            break;
+
+        case MAV_CMD_NAV_LOITER_TIME:
+            if (within_radius_ && ((time_keeper_get_ms() - start_time_) > waypoint_.param1() * 1000))
+            {
+                return MISSION_FINISHED;
+            }
+            break;
+
+        case MAV_CMD_NAV_LOITER_TO_ALT:
+            if (maths_f_abs(ins_.position_lf()[Z] - waypoint_.local_pos()[Z]) < waypoint_.param2()) // TODO: Add check for heading
+            {
+                return MISSION_FINISHED;
+            }
+            break;
+
+        case MAV_CMD_OVERRIDE_GOTO:
+            return MISSION_FINISHED;
+        }
+    }
+
+    return MISSION_IN_PROGRESS;
+}
+
+
+Mission_planner::internal_state_t Mission_handler_hold_position::handler_mission_state() const
+{
+    return Mission_planner::MISSION;
+}
+
+
+bool Mission_handler_hold_position::write_flight_command(Flight_controller& flight_controller) const
+{
+	position_command_t cmd;
+
+    // Set heading and position fram waypoint
+    float heading = 0.0f;
+    waypoint_.heading(heading);
+    cmd.xyz     = waypoint_.local_pos();
+	cmd.heading = heading;
+
+    return flight_controller.set_command(cmd);
+}

@@ -30,63 +30,81 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller.cpp
+ * \file navigation_directto.cpp
  *
  * \author MAV'RIC Team
+ * \author Basil Huber
  * \author Julien Lecoeur
  *
- * \brief   A simple altitude controller for copter
+ * \brief   Navigation module allowing to navigated to goal position on direct trajectory
+ * \details Inherits from Position_controller, which inherits from a Velocity_controller_I
+ *          i.e. can take navigation, position and velocity commands
  *
  ******************************************************************************/
 
-
-#include "control/altitude_controller.hpp"
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
+#include "navigation/navigation_directto.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Altitude_controller::Altitude_controller(const position_command_t& position_command, 
-                                         const altitude_t& altitude, 
-                                         thrust_command_t& thrust_command,
-                                         altitude_controller_conf_t config):
-    position_command_(position_command),
-    altitude_(altitude),
-    thrust_command_(thrust_command)
+
+Navigation_directto::Navigation_directto(args_t args, const conf_t& config) :
+    ins_(args.ins),
+    cruise_pid_config_(config.cruise_pid_config),
+    hover_pid_config_(config.hover_pid_config),
+    // std_pid_config_(config.position_controller_config.pid_config),
+    min_cruise_dist_sqr_(config.min_cruise_dist_sqr)
 {
-    hover_point_ = config.hover_point;
-    pid_controller_init(&pid_, &config.pid_config);
+    // nav_command_t nav_command;
+    // nav_command.pos = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
+    // set_navigation_command(pos_command);
 }
 
 
-bool Altitude_controller::init(void)
-{   
+bool Navigation_directto::update()
+{
+    position_command_t pos_command;
+    pos_command.xyz = navigation_command_.xyz;
+
+    // calculate distance to goal squared
+    const local_position_t& pos = ins_.position_lf();
+    const local_position_t& goal_pos = navigation_command_.xyz;
+    float dist[3] = {pos[X] - goal_pos[X], pos[Y] - goal_pos[Y], pos[Z] - goal_pos[Z]};
+    distance_to_goal_sqr_ = vectors_norm_sqr(dist);
+
+    // adjust PID parameters of position controller depending on distance to goal
+    //pid_controller_conf_t pid_config = distance_to_goal_sqr_ > min_cruise_dist_sqr_ ? cruise_pid_config_ : hover_pid_config_;
+    //pid_controller_apply_config(&(TPosition_controller::pid_controller_), &pid_config);
+
     return true;
 }
 
 
-bool Altitude_controller::update(void)
+bool Navigation_directto::set_navigation_command(const nav_command_t& command)
 {
-    float error = 0.0f;
-
-    switch (position_command_.mode)
-    {
-        case POSITION_COMMAND_MODE_LOCAL:
-            error = position_command_.xyz[2] - (-altitude_.above_ground);
-            break;
-
-        case POSITION_COMMAND_MODE_GLOBAL:
-            error = position_command_.xyz[2] - (-altitude_.above_sea);
-            break;
-    }
-
-    thrust_command_.thrust = hover_point_ - pid_controller_update(&pid_, error);
-
+    navigation_command_ = command;
     return true;
+}
+
+bool Navigation_directto::set_goal(const nav_command_t& command)
+{
+    navigation_command_ = command;
+    return true;
+}
+
+//------------------------------------------------------------------------------
+// PROTECTED FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+pid_controller_conf_t& Navigation_directto::cruise_pid_config()
+{
+    return cruise_pid_config_;
+}
+
+
+
+pid_controller_conf_t& Navigation_directto::hover_pid_config()
+{
+    return hover_pid_config_;
 }

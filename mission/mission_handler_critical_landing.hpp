@@ -34,42 +34,36 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
  * \brief The MAVLink mission planner handler for the critical landing state
  *
  ******************************************************************************/
 
-
-#ifndef MISSION_HANDLER_CRITICAL_LANDING__
-#define MISSION_HANDLER_CRITICAL_LANDING__
+#ifndef MISSION_HANDLER_CRITICAL_LANDING_HPP__
+#define MISSION_HANDLER_CRITICAL_LANDING_HPP__
 
 #include "mission/mission_handler_landing.hpp"
 
 /*
  * The handler class takes in a template parameter that allows control inputs.
  */
-template <class T1, class T2>
-class Mission_handler_critical_landing : public Mission_handler_landing<T1, T2>
-{
+class Mission_handler_critical_landing : public Mission_handler_landing
+{  
 public:
 
 
     /**
      * \brief   Initialize the landing mission planner handler
      *
-     * \param   desc_to_small_alt_controller    The reference to the controller used during the descent to small altitudes phase
-     * \param   desc_to_ground_controller       The reference to the controller used during the descent to ground phase
      * \param   ins                             The reference to the ins
      * \param   state                           The reference to the state structure
      */
-     Mission_handler_critical_landing(  T1& desc_to_small_alt_controller,
-                                        T2& desc_to_ground_controller,
-                                        const INS& ins,
-                                        State& state);
+     Mission_handler_critical_landing(const INS& ins, State& state);
 
     /**
      * \brief   Checks if the waypoint is a landing waypoint
-     *  
+     *
      * \details     Checks if the inputted waypoint is a:
      *                  MAV_CMD_NAV_CRITICAL_LAND
      *
@@ -79,13 +73,6 @@ public:
      */
     virtual bool can_handle(const Waypoint& wpt) const;
 };
-
-
-#include "mission/mission_handler_critical_landing.hxx"
-
-
-
-
 
 
 #endif // MISSION_HANDLER_CRITICAL_LANDING__

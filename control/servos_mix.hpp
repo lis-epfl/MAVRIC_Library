@@ -45,34 +45,81 @@
 #ifndef SERVOS_MIX_HPP_
 #define SERVOS_MIX_HPP_
 
+#include "control/controller.hpp"
+#include "control/control_command.hpp"
+#include "util/coord_conventions.hpp"
 #include "drivers/servo.hpp"
 #include "util/constants.hpp"
 
-#include "control/servos_mix_i.hpp"
 
-
-class Servos_mix : public Servos_mix_I
+class Servos_mix : public Controller<torque_command_t>,
+                   public Controller<thrust_command_t>
 {
 public:
 
-    Servos_mix();
+    /*
+     * \brief   Write motor commands to servos based on torque command
+     */
+    virtual bool update()=0;
+
 
     /*
-     * \brief   Write motor commands to servo structure based on torque command
+     * \brief   Write failsafe motor commands to servos
      */
-    virtual void update()=0;
+    virtual bool failsafe()=0;
 
-    /*
-     * \brief   Set torque command and set controller cascade to "torque mode" 
-     * \details Sets the torq_command_ and sets cascade_command_ to point to torq_command, signaling that this is the command mode
-     *          This function should NOT be called from higher level controllers if they provide a command, use update_cascade instead
-     * \param torq_command  torque command to be set and used for motor commands
+
+    /**
+     * \brief           sets the torque command
+     *
+     * \param command   torque command in body frame
+     *
+     * \return success  whether command was accepted
      */
-    inline bool set_torque_command(const torq_command_t& torq_command){torq_command_ = torq_command; return true;};
+    virtual bool set_command(const torque_command_t& torque) = 0;
 
-protected:
 
-    torq_command_t torq_command_;               ///< torque command (desired torque and thrust)
+    /**
+     * \brief           sets the thrust command
+     *
+     * \param command   thrust command in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool set_command(const thrust_command_t& thrust) = 0;
+
+
+    /**
+     * \brief           sets the torque command
+     *
+     * \param command   torque command in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool get_command(torque_command_t& torque) const = 0;
+
+
+    /**
+     * \brief           sets the thrust command
+     *
+     * \param command   thrust command in body frame
+     *
+     * \return success  whether command was accepted
+     */
+    virtual bool get_command(thrust_command_t& thrust) const = 0;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    virtual bool get_output(empty_command_t& command) const
+    {
+        return true;
+    };
 };
 
 #endif

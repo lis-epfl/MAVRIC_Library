@@ -34,26 +34,25 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the manual control state
+ * \brief The mission handler for the manual control state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_MANUAL__
-#define MISSION_HANDLER_MANUAL__
+#ifndef MISSION_HANDLER_MANUAL_HPP_
+#define MISSION_HANDLER_MANUAL_HPP_
 
 #include "mission/mission_handler.hpp"
 
-/*
- * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
- */
 
+/**
+ * \brief The mission handler for the manual control state
+ */
 class Mission_handler_manual : public Mission_handler
 {
 public:
-
-
     /**
      * \brief   Initialize the manual mission planner handler
      */
@@ -72,6 +71,7 @@ public:
      */
     virtual bool can_handle(const Waypoint& wpt) const;
 
+
     /**
      * \brief   Does nothing
      *
@@ -83,14 +83,24 @@ public:
      */
     virtual bool setup(const Waypoint& wpt);
 
+
     /**
      * \brief   Handles the mission every iteration
-     *  
+     *
      * \details     Does nothing and returns MISSION_FINISHED for the status code.
      *
      * \return  Status code
      */
     virtual Mission_handler::update_status_t update();
+
+
+    /**
+     * \brief   Provides control commands to the flight controller
+     *
+     * \return  success
+     */
+    virtual bool write_flight_command(Flight_controller& flight_controller) const;
+
 
     /**
      * \brief   Returns that the mission state is in MANUAL_CTRL
@@ -100,13 +110,7 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    
+
 };
 
-
-
-
-
-
-
-#endif // MISSION_HANDLER_MANUAL__
+#endif // MISSION_HANDLER_MANUAL_HPP_

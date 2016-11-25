@@ -30,47 +30,34 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ivelocity_yaw_controller.hpp
+ * \file mission_handler_critical_landing.cpp
  *
  * \author MAV'RIC Team
- * \author Basil Huber
+ * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief Interface for velocity controller taking also a yaw command
+ * \brief   The MAVLink mission planner handler functions for the critical
+ *          landing state
  *
  ******************************************************************************/
 
+#include "mission/mission_handler_critical_landing.hpp"
 
-#ifndef IVELOCITY_CONTROLLER_YAW_HPP_
-#define IVELOCITY_CONTROLLER_YAW_HPP_
 
-#include "util/coord_conventions.hpp"
-#include "control/control_command.h"
+Mission_handler_critical_landing::Mission_handler_critical_landing(const INS& ins, State& state):
+            Mission_handler_landing(ins, state)
+{}
 
-class IVelocity_yaw_controller
+
+bool Mission_handler_critical_landing::can_handle(const Waypoint& wpt) const
 {
-public:
-    /*
-     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
-     */
-    struct vel_yaw_command_t : base_command_t
+    bool handleable = false;
+
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_CRITICAL_LAND)
     {
-        local_velocity_t    vel;        ///< desired velocity in local frame
-        float               yaw;        ///< desired absolute yaw in local frame
-    };
+        handleable = true;
+    }
 
-    /**
-     * \brief   Update controller;
-     */
-    virtual void update() = 0;
-
-    /**
-     * \brief           sets the velocity yaw command (desired velocity and desired yaw)
-     *
-     * \param command   velocity command indicating desired velocity and yaw in local frame
-     *
-     * \return success  whether command was accepted
-     */
-    inline virtual bool set_velocity_yaw_command(const vel_yaw_command_t& command) = 0;
-};
-
-#endif /* IVELOCITY_CONTROLLER_YAW_HPP_ */
+    return handleable;
+}

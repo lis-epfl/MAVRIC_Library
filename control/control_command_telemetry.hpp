@@ -43,11 +43,8 @@
 #define CONTROL_COMMAND_TELEMETRY_HPP_
 
 #include "communication/mavlink_stream.hpp"
+#include "control/control_command.hpp"
 
-extern "C"
-{
-#include "control/control_command.h"
-}
 
 /**
  * \brief   Function to send current control command

@@ -48,6 +48,11 @@
 
 #include "util/print_util.hpp"
 
+bool sleep_task(uint32_t* us)
+{
+    time_keeper_sleep_us(*us);
+    return true;
+}
 
 int main(int argc, char** argv)
 {
@@ -120,7 +125,13 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Add simulation telemetry
     // -------------------------------------------------------------------------
-    mav.mavlink_communication().telemetry().add<Dynamic_model>(MAVLINK_MSG_ID_HIL_STATE_QUATERNION,  50000, &dynamic_model_telemetry_send_state_quaternion, &board.dynamic_model);
+    mav.get_communication().telemetry().add<Dynamic_model>(MAVLINK_MSG_ID_HIL_STATE_QUATERNION,  50000, &dynamic_model_telemetry_send_state_quaternion, &board.dynamic_model);
+
+    // -------------------------------------------------------------------------
+    // Add sleep task to use less CPU on host computer
+    // -------------------------------------------------------------------------
+    uint32_t sleep_duration_us = 3000;
+    mav.get_scheduler().add_task(4000, &sleep_task, &sleep_duration_us, Scheduler_task::PRIORITY_LOWEST);
 
 
     print_util_dbg_print("[MAIN] OK. Starting up.\r\n");

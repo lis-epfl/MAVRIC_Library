@@ -30,43 +30,63 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_critical_landing.hxx
+ * \file controller.hpp
  *
  * \author MAV'RIC Team
- * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief   The MAVLink mission planner handler functions for the critical 
- *          landing state
+ * \brief   Interface for controllers
  *
  ******************************************************************************/
 
+#ifndef CONTROLLER_HPP_
+#define CONTROLLER_HPP_
 
-#ifndef MISSION_HANDLER_CRITICAL_LANDING_HXX__
-#define MISSION_HANDLER_CRITICAL_LANDING_HXX__
+#include "control/control_command.hpp"
 
-#include "mission/mission_handler_landing.hpp"
-
-template <class T1, class T2>
-Mission_handler_critical_landing<T1, T2>::Mission_handler_critical_landing( T1& desc_to_small_alt_controller,
-                                                                            T2& desc_to_ground_controller,
-                                                                            const INS& ins,
-                                                                            State& state):
-            Mission_handler_landing<T1, T2>(desc_to_small_alt_controller, desc_to_ground_controller, ins, state)
+template<typename in_command_T, typename out_command_T = empty_command_t>
+class Controller
 {
-}
+public:
+    typedef in_command_T in_command_t;
+    typedef out_command_T out_command_t;
 
-template <class T1, class T2>
-bool Mission_handler_critical_landing<T1, T2>::can_handle(const Waypoint& wpt) const
-{
-    bool handleable = false;
+    /**
+     * \brief   Main update function
+     *
+     * \return  success
+     */
+    virtual bool update(void) = 0;
 
-    uint16_t cmd = wpt.command();
-    if (cmd == MAV_CMD_NAV_CRITICAL_LAND)
-    {
-        handleable = true;
-    }
 
-    return handleable;
-}
+    /**
+     * \brief   Sets the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool set_command(const in_command_t& command) = 0;
 
-#endif // MISSION_HANDLER_CRITICAL_LANDING_HXX__
+
+    /**
+     * \brief   Returns the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool get_command(in_command_t& command) const = 0;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    virtual bool get_output(out_command_t& command) const = 0;
+};
+
+#endif  // CONTROLLER_HPP_

@@ -49,19 +49,18 @@ LIB_SRCS += communication/onboard_parameters.cpp
 LIB_SRCS += communication/periodic_telemetry.cpp
 
 
-LIB_SRCS += control/altitude_controller.cpp
 LIB_SRCS += control/attitude_controller_p2.cpp
 LIB_SRCS += control/attitude_error_estimator.cpp
+LIB_SRCS += control/rate_controller.cpp
+LIB_SRCS += control/attitude_controller.cpp
+LIB_SRCS += control/velocity_controller.cpp
+LIB_SRCS += control/velocity_controller_copter.cpp
+LIB_SRCS += control/position_controller.cpp
 LIB_SRCS += control/pid_controller.cpp
-LIB_SRCS += control/stabilisation.cpp
-# LIB_SRCS += control/stabilisation_wing.cpp
-LIB_SRCS += control/servos_mix.cpp
 LIB_SRCS += control/servos_mix_quadcopter_diag.cpp
 LIB_SRCS += control/servos_mix_quadcopter_cross.cpp
 LIB_SRCS += control/servos_mix_wing.cpp
 LIB_SRCS += control/servos_mix_ywing.cpp
-LIB_SRCS += control/gimbal_controller.cpp
-LIB_SRCS += control/gimbal_controller_telemetry.cpp
 
 LIB_SRCS += drivers/airspeed_analog.cpp
 LIB_SRCS += drivers/battery.cpp
@@ -105,8 +104,10 @@ LIB_SRCS += manual_control/remote_telemetry.cpp
 LIB_SRCS += mission/mission_planner.cpp
 LIB_SRCS += mission/mission_handler_hold_position.cpp
 LIB_SRCS += mission/mission_handler_landing.cpp
+LIB_SRCS += mission/mission_handler_critical_landing.cpp
 LIB_SRCS += mission/mission_handler_manual.cpp
 LIB_SRCS += mission/mission_handler_navigating.cpp
+LIB_SRCS += mission/mission_handler_critical_navigating.cpp
 LIB_SRCS += mission/mission_handler_on_ground.cpp
 LIB_SRCS += mission/mission_handler_registry.cpp
 LIB_SRCS += mission/mission_handler_takeoff.cpp
@@ -114,6 +115,7 @@ LIB_SRCS += mission/waypoint.cpp
 
 LIB_SRCS += navigation/dubin.cpp
 LIB_SRCS += navigation/vector_field_waypoint.cpp
+LIB_SRCS += navigation/navigation_directto.cpp
 
 LIB_SRCS += runtime/scheduler.cpp
 LIB_SRCS += runtime/scheduler_task.cpp

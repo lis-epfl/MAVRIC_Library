@@ -34,14 +34,15 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
  * \brief The mission planner
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_PLANNER__
-#define MISSION_PLANNER__
+#ifndef MISSION_PLANNER_HPP_
+#define MISSION_PLANNER_HPP_
 
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
@@ -54,6 +55,7 @@
 #include "status/geofence.hpp"
 #include "mission/mission_handler_registry.hpp"
 #include "navigation/dubin.hpp"
+#include "control/flight_controller.hpp"
 
 class Mission_handler;
 
@@ -61,7 +63,7 @@ class Mission_handler;
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
  */
 
-class Mission_planner
+class Mission_planner: public Flight_command_source
 {
 public:
     enum internal_state_t
@@ -119,7 +121,9 @@ public:
                         Mission_handler_registry& mission_handler_registry,
                         conf_t config = default_config());
 
+
     bool init();
+
 
     /**
      * \brief   The mission planner tasks, gives a goal for the navigation module
@@ -128,6 +132,15 @@ public:
      */
     static bool update(Mission_planner* mission_planner);
 
+
+    /**
+     * \brief   Provides control commands to the flight controller
+     *
+     * \return  success
+     */
+    bool write_flight_command(Flight_controller& flight_controller) const;
+
+
     /**
      * \brief   Default configuration
      *
@@ -135,7 +148,9 @@ public:
      */
     static inline conf_t default_config();
 
+
     void set_critical_next_state(bool critical_next_state);
+
 
     /**
      * \brief   Gets the internal state
@@ -332,4 +347,4 @@ Mission_planner::conf_t Mission_planner::default_config()
 
 
 
-#endif // MISSION_PLANNER__
+#endif // MISSION_PLANNER_HPP_

@@ -34,22 +34,22 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the landing state
+ * \brief The mission handler for the landing state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_LANDING__
-#define MISSION_HANDLER_LANDING__
+#ifndef MISSION_HANDLER_LANDING_HPP_
+#define MISSION_HANDLER_LANDING_HPP_
 
 #include "status/state.hpp"
 #include "mission/mission_handler.hpp"
 
 /*
- * The handler class takes in a template parameter that allows control inputs.
+ * \brief The mission handler for the landing state
  */
-template <class T1, class T2>
 class Mission_handler_landing : public Mission_handler
 {
 public:
@@ -72,24 +72,22 @@ public:
         float desc_to_ground_range;                         ///< The range in meters that allows switching from the descent to ground
     };
 
+
     /**
      * \brief   Initialize the landing mission planner handler
      *
-     * \param   desc_to_small_alt_controller    The reference to the controller used during the descent to small altitudes phase
-     * \param   desc_to_ground_controller       The reference to the controller used during the descent to ground phase
      * \param   ins                             The reference to the ins
      * \param   state                           The reference to the state structure
      * \param   config                          The landing mission handler config structure
      */
-     Mission_handler_landing(   T1& desc_to_small_alt_controller,
-                                T2& desc_to_ground_controller,
-                                const INS& ins,
+     Mission_handler_landing(   const INS& ins,
                                 State& state,
                                 conf_t config = default_config());
 
+
     /**
      * \brief   Checks if the waypoint is a landing waypoint
-     *  
+     *
      * \details     Checks if the inputted waypoint is a:
      *                  MAV_CMD_NAV_LAND
      *
@@ -99,9 +97,10 @@ public:
      */
     virtual bool can_handle(const Waypoint& wpt) const;
 
+
     /**
      * \brief   Sets up this handler class for a first time initialization
-     *  
+     *
      * \details     Records the waypoint reference and sets the mav mode
      *
      * \param   wpt                 The waypoint class
@@ -110,9 +109,10 @@ public:
      */
     virtual bool setup(const Waypoint& wpt);
 
+
     /**
      * \brief   Handles the mission every iteration
-     *  
+     *
      * \details     Sets the goal location and determines the status code. The
      *              code is MISSION_IN_PROGRESS for landing in progress, MISSION_FINISHED for landing finished
      *              and autocontinue on, MISSION_FAILED for control command rejected.
@@ -121,12 +121,22 @@ public:
      */
     virtual Mission_handler::update_status_t update();
 
+
+    /**
+     * \brief   Provides control commands to the flight controller
+     *
+     * \return  success
+     */
+    virtual bool write_flight_command(Flight_controller& flight_controller) const;
+
+
     /**
      * \brief   Returns that the mission state is in POSTMISSION
      *
      * \return  Mission handler's mission state
      */
     virtual Mission_planner::internal_state_t handler_mission_state() const;
+
 
     /**
      * \brief   default configuration for the landing handler
@@ -143,9 +153,7 @@ protected:
     float LPF_gain_;                                            ///< The low-pass filter gain
     float desc_to_ground_altitude_;                             ///< The altitude to switch to the descent to ground state
     float desc_to_ground_range_;                                ///< The range in meters that allows switching from the descent to ground
-    
-    T1& desc_to_small_alt_controller_;                          ///< The reference to the controller used during the descent to small altitudes phase
-    T2& desc_to_ground_controller_;                             ///< The reference to the controller used during the descent to ground phase
+
     const INS& ins_;                                            ///< The reference to the ins interface
     State& state_;                                              ///< The reference to the state structure
 
@@ -155,7 +163,7 @@ protected:
      *
      * \return  Controller accepted input
      */
-    virtual bool set_desc_to_small_alt_control_command();
+    virtual bool write_desc_to_small_alt_flight_command(Flight_controller& flight_controller) const;
 
     /**
      * \brief   Function to set the controller specific command for the descent to
@@ -163,11 +171,11 @@ protected:
      *
      * \return  Controller accepted input
      */
-    virtual bool set_desc_to_ground_control_command();
+    virtual bool write_desc_to_ground_flight_command(Flight_controller& flight_controller) const;
 };
 
-template <class T1, class T2>
-typename Mission_handler_landing<T1, T2>::conf_t Mission_handler_landing<T1, T2>::default_config()
+
+Mission_handler_landing::conf_t Mission_handler_landing::default_config()
 {
     conf_t conf                                      = {};
 
@@ -178,6 +186,4 @@ typename Mission_handler_landing<T1, T2>::conf_t Mission_handler_landing<T1, T2>
     return conf;
 };
 
-#include "mission/mission_handler_landing.hxx"
-
-#endif // MISSION_HANDLER_LANDING__
+#endif // MISSION_HANDLER_LANDING_HPP_

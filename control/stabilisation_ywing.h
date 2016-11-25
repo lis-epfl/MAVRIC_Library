@@ -48,6 +48,8 @@
 #ifndef STABILISATION_YWING_H_
 #define STABILISATION_YWING_H_
 
+#include "control/control_command.hpp"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -56,7 +58,6 @@ extern "C" {
 #include <stdbool.h>
 #include "util/quaternions.h"
 
-#include "control/control_command.h"
 #include "control/attitude_controller.h"
 #include "servos_mix_ywing.h"
 #include "remote.h"

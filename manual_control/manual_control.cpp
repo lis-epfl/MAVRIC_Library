@@ -44,7 +44,7 @@
 #include "manual_control/manual_control.hpp"
 #include "util/constants.hpp"
 #include "util/print_util.hpp"
-
+#include "util/quick_trig.hpp"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -58,235 +58,197 @@ Manual_control::Manual_control(Satellite* sat, conf_t config, remote_conf_t remo
     remote_init(&remote, sat, remote_config);
 }
 
-
-void Manual_control::get_control_command(control_command_t* controls)
+float Manual_control::throttle() const
 {
-    switch (control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_control_command(&remote, controls);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_control_command(controls);
-            break;
-        case CONTROL_SOURCE_NONE:
-            controls->rpy[ROLL] = 0.0f;
-            controls->rpy[PITCH] = 0.0f;
-            controls->rpy[YAW] = 0.0f;
-            controls->thrust = -1.0f;
-            break;
-    }
-}
-
-
-void Manual_control::get_velocity_vector(control_command_t* controls)
-{
-    switch (control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_velocity_vector(&remote, controls);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_velocity_vector(controls);
-            break;
-        case CONTROL_SOURCE_NONE:
-            controls->tvel[X] = 0.0f;
-            controls->tvel[Y] = 0.0f;
-            controls->tvel[Z] = 0.0f;
-            controls->rpy[YAW] = 0.0f;
-            break;
-    }
-}
-
-void Manual_control::get_rate_command_wing(control_command_t* controls)
-{
-    switch(control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_rate_command_wing(&remote, controls);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_rate_command_wing(controls);
-        case CONTROL_SOURCE_NONE:
-            controls->rpy[ROLL] = 0.0f;
-            controls->rpy[PITCH] = 0.0f;
-            controls->rpy[YAW] = 0.0f;
-            controls->thrust = -1.0f;
-            break;
-    }
-}
-
-void Manual_control::get_angle_command_wing(control_command_t* controls)
-{
-    switch(control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_angle_command_wing(&remote, controls);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_angle_command_wing(controls);
-        case CONTROL_SOURCE_NONE:
-            controls->rpy[ROLL] = 0.0f;
-            controls->rpy[PITCH] = 0.0f;
-            controls->rpy[YAW] = 0.0f;
-            controls->thrust = -1.0f;
-            break;
-    }
-}
-
-void Manual_control::get_velocity_vector_wing(const float ki_yaw, control_command_t* controls)
-{
-    switch(control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_velocity_wing(&remote, ki_yaw, controls);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_velocity_wing(ki_yaw, controls);
-        case CONTROL_SOURCE_NONE:
-            controls->tvel[X] = 0.0f;
-            controls->tvel[Y] = 0.0f;
-            controls->tvel[Z] = 0.0f;
-            controls->rpy[YAW] = 0.0f;
-            break;
-    }
-}
-
-float Manual_control::get_thrust() const
-{
-    float thrust = 0.0f;
+    float throttle = 0.0f;
 
     switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            thrust = remote_get_throttle(&remote);
+            throttle = remote_get_throttle(&remote);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            thrust = joystick.throttle();
+            throttle = joystick.throttle();
             break;
         case CONTROL_SOURCE_NONE:
-            thrust = -1.0f;
+            throttle = -1.0f;
             break;
     }
-    return thrust;
+    return throttle;
 }
 
 
-void Manual_control::get_torque_command(torque_command_t* command, float scale) const
+float Manual_control::roll() const
 {
+    float roll = 0.0f;
+
     switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_torque_command(&remote, command, scale);
+            roll = remote_get_roll(&remote);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_torque_command(command, scale);
+            roll = joystick.roll();
             break;
         case CONTROL_SOURCE_NONE:
+            roll = 0.0f;
             break;
     }
+    return roll;
 }
 
 
-void Manual_control::get_rate_command(rate_command_t* command, float scale) const
+float Manual_control::pitch() const
 {
+    float pitch = 0.0f;
+
     switch (control_source_)
     {
         case CONTROL_SOURCE_REMOTE:
-            remote_get_rate_command(&remote, command, scale);
+            pitch = remote_get_pitch(&remote);
             break;
         case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_rate_command(command, scale);
+            pitch = - joystick.pitch();
             break;
         case CONTROL_SOURCE_NONE:
+            pitch = 0.0f;
             break;
     }
+    return pitch;
+}
+
+float Manual_control::yaw() const
+{
+    float yaw = 0.0f;
+
+    switch (control_source_)
+    {
+        case CONTROL_SOURCE_REMOTE:
+            yaw = remote_get_yaw(&remote);
+            break;
+        case CONTROL_SOURCE_JOYSTICK:
+            yaw = joystick.yaw();
+            break;
+        case CONTROL_SOURCE_NONE:
+            yaw = 0.0f;
+            break;
+    }
+    return yaw;
+}
+
+void Manual_control::get_torque_command(torque_command_t& command,
+                                        float scale_roll,
+                                        float scale_pitch,
+                                        float scale_yaw) const
+{
+    command.xyz[ROLL]  = scale_roll  * roll();
+    command.xyz[PITCH] = scale_pitch * pitch();
+    command.xyz[YAW]   = scale_yaw   * yaw();
 }
 
 
-void Manual_control::get_thrust_command(thrust_command_t* command) const
+void Manual_control::get_rate_command(rate_command_t& command,
+                                      float scale_roll,
+                                      float scale_pitch,
+                                      float scale_yaw) const
 {
-    switch (control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_thrust_command(&remote, command);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_thrust_command(command);
-            break;
-        case CONTROL_SOURCE_NONE:
-            break;
-    }
+    command.xyz[ROLL]  = scale_roll  * roll();
+    command.xyz[PITCH] = scale_pitch * pitch();
+    command.xyz[YAW]   = scale_yaw   * yaw();
 }
 
 
-void Manual_control::get_attitude_command_absolute_yaw(attitude_command_t* command, float scale) const
+void Manual_control::get_thrust_command_copter(thrust_command_t& command, float scale) const
 {
-    switch (control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_attitude_command_absolute_yaw(&remote, command, scale);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_attitude_command_absolute_yaw(command, scale);
-            break;
-        case CONTROL_SOURCE_NONE:
-            break;
-    }
+    command.xyz[X] = 0.0f;
+    command.xyz[Y] = 0.0f;
+    command.xyz[Z] = - scale * (0.5f + 0.5f * throttle());  // negative Z thrust between 0 and - scale
 }
 
 
-Attitude_controller_I::att_command_t Manual_control::get_attitude_command(quat_t current_attitude) const
+void Manual_control::get_thrust_command_wing(thrust_command_t& command, float scale) const
 {
-    Attitude_controller_I::att_command_t command;
-    switch (control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            command = remote_get_attitude_command(&remote, current_attitude);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            command = joystick.get_attitude_command(current_attitude);
-            break;
-        case CONTROL_SOURCE_NONE:
-            command.att.s = 0.0f;
-            command.att.v[0] = 0.0f;
-            command.att.v[1] = 0.0f;
-            command.att.v[2] = 0.0f;
-            command.thrust = 0;
-            break;
-    }
-    return command;
+    command.xyz[X] = scale * (0.5f + 0.5f * throttle()); // positive X thrust between 0 and scale
+    command.xyz[Y] = 0.0f;
+    command.xyz[Z] = 0.0f;
 }
 
 
-void Manual_control::get_attitude_command_vtol(const float k_yaw, attitude_command_t* command, float scale, float reference_pitch) const
+void Manual_control::get_attitude_command_absolute_yaw( attitude_command_t& command,
+                                                        float scale_roll,
+                                                        float scale_pitch,
+                                                        float scale_yaw) const
 {
-    switch (control_source_)
-    {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_attitude_command_vtol(&remote, k_yaw, command, scale, reference_pitch);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_attitude_command_vtol(k_yaw, command, scale, reference_pitch);
-            break;
-        case CONTROL_SOURCE_NONE:
-            break;
-    }
+    command = coord_conventions_quaternion_from_rpy(scale_roll  * roll(),
+                                                    scale_pitch * pitch(),
+                                                    scale_yaw   * yaw());
 }
 
 
-void Manual_control::get_velocity_command(velocity_command_t* command, float scale) const
+void Manual_control::get_attitude_command(  attitude_command_t& command,
+                                            const quat_t& current_attitude,
+                                            float scale_roll,
+                                            float scale_pitch,
+                                            float scale_yaw) const
 {
-    switch (control_source_)
+    float rpy[3];
+    rpy[ROLL]  = scale_roll * roll();
+    rpy[PITCH] = scale_pitch * pitch();
+    rpy[YAW]   = scale_yaw * yaw() + coord_conventions_get_yaw(current_attitude);
+
+    command = coord_conventions_quaternion_from_rpy(rpy);
+}
+
+
+void Manual_control::get_attitude_command_vtol( attitude_command_t& command,
+                                                const quat_t& current_attitude,
+                                                float reference_pitch,
+                                                float scale_roll,
+                                                float scale_pitch,
+                                                float scale_yaw) const
+{
+    // Apply yaw and pitch first
+    quat_t q_yawpitch = coord_conventions_quaternion_from_rpy(0.0f,
+                                                              scale_pitch * pitch() + reference_pitch,
+                                                              scale_yaw * yaw() + coord_conventions_get_yaw(current_attitude));
+
+    // Apply roll according to transition factor
+    quat_t q_roll = coord_conventions_quaternion_from_rpy(scale_roll * roll(),
+                                                          0.0f,
+                                                          0.0f);
+
+    // q := q . q_rh . q_rf
+    command = quaternions_multiply(q_yawpitch, q_roll);
+}
+
+
+void Manual_control::get_velocity_command_copter(velocity_command_t& command,
+                                                const quat_t& current_attitude,
+                                                const velocity_command_t& current_velocity_command,
+                                                float scale_x,
+                                                float scale_y,
+                                                float scale_z,
+                                                float scale_heading) const
+{
+    // Velocity vector command
+    float vel_semiloc[3] = {- scale_x * pitch(),
+                              scale_y * roll(),
+                            - scale_z * throttle()};
+    float heading   = coord_conventions_get_yaw(current_attitude);
+    quat_t qheading = coord_conventions_quaternion_from_rpy(  0.0f, 0.0f, heading);
+    quaternions_rotate_vector(qheading, vel_semiloc, command.xyz.data());
+
+    // Heading command
+    float heading_increment = scale_heading * yaw();
+    float new_heading_command = maths_calc_smaller_angle(current_velocity_command.heading + heading_increment);
+    float heading_error = maths_calc_smaller_angle(new_heading_command - heading);
+    if (maths_f_abs(heading_error) > PI/8.0f)
     {
-        case CONTROL_SOURCE_REMOTE:
-            remote_get_velocity_command(&remote, command, scale);
-            break;
-        case CONTROL_SOURCE_JOYSTICK:
-            joystick.get_velocity_command(command, scale);
-            break;
-        case CONTROL_SOURCE_NONE:
-            break;
+        command.heading = heading;
+    }
+    else
+    {
+        command.heading = maths_calc_smaller_angle(heading + maths_clip(heading_error, PI/8.0f));
     }
 }
 
@@ -305,7 +267,7 @@ Mav_mode Manual_control::get_mode_from_source(Mav_mode mode_current)
                 // Update mode from remote
                 remote_mode_update(&remote);
                 new_mode = remote_mode_get(&remote, mode_current);
-                //joystick.mav_mode_desired = mode_current;
+                // joystick.mav_mode_desired = mode_current;
             }
             break;
         case MODE_SOURCE_JOYSTICK:
@@ -322,6 +284,7 @@ void Manual_control::set_mode_of_source(Mav_mode mode)
     // override internal mav_mode of joystick
     joystick.mav_mode_desired_ = mode;
 }
+
 
 signal_quality_t Manual_control::get_signal_strength()
 {

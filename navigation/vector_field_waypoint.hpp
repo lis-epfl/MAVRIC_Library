@@ -46,11 +46,7 @@
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "mission/waypoint.hpp"
 #include "sensing/ins.hpp"
-
-extern "C"
-{
-#include "control/control_command.h"
-}
+#include "control/control_command.hpp"
 
 /**
  * \brief Vector field navigation

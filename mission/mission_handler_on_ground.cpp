@@ -34,8 +34,9 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the on ground state
+ * \brief The mission handler for the on ground state
  *
  ******************************************************************************/
 
@@ -47,12 +48,10 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Mission_handler_on_ground::Mission_handler_on_ground(Rate_controller_I& rate_controller):
-            Mission_handler(),
-            rate_controller_(rate_controller)
-{
+Mission_handler_on_ground::Mission_handler_on_ground():
+    Mission_handler()
+{}
 
-}
 
 bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
 {
@@ -60,21 +59,28 @@ bool Mission_handler_on_ground::can_handle(const Waypoint& wpt) const
     return wpt.command() == MAV_CMD_NAV_ON_GROUND;
 }
 
+
 bool Mission_handler_on_ground::setup(const Waypoint& wpt)
 {
     return true;
 }
 
+
 Mission_handler::update_status_t Mission_handler_on_ground::update()
 {
-	// Set prop speeds to lowest setting
-	Rate_controller_I::rate_command_t cmd;
-	cmd.rates = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
-    cmd.thrust = -1.0f;
-	rate_controller_.set_rate_command(cmd);
-	
     return MISSION_IN_PROGRESS;
 }
+
+
+bool Mission_handler_on_ground::write_flight_command(Flight_controller& flight_controller) const
+{
+    // Set prop speeds to lowest setting
+    flight_controller.set_command(torque_command_t{{{0.0f, 0.0f, 0.0f}}});
+    flight_controller.set_command(thrust_command_t{{{0.0f, 0.0f, 0.0f}}});
+
+    return true;
+}
+
 
 Mission_planner::internal_state_t Mission_handler_on_ground::handler_mission_state() const
 {

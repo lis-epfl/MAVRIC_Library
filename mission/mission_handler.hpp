@@ -35,28 +35,25 @@
  * \author MAV'RIC Team
  * \author Matthew Douglas
  *
- * \brief The MAVLink mission planner handler
+ * \brief Interface for mission planner handler
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER__
-#define MISSION_HANDLER__
+#ifndef MISSION_HANDLER_HPP_
+#define MISSION_HANDLER_HPP_
 
 #include "mission/mission_planner.hpp"
 #include "mission/waypoint.hpp"
+#include "control/flight_controller.hpp"
 
 /*
- * This mission handler interface. Outine functions that child classes must
- * implement in order to have the drone achieve the desired mission command.
- * Child classes will probably pass in a reference to some controller and
- * pass the desired control commands. If a specific handler should have more
- * than one possible method of controlling it (e.g. position control, velocity
- * control), then the mission handler child class can be a template that allows
- * a template to be inputted instead of a specific control type.
+ * \brief   Interface for mission planner handler
+ *
+ * \detail  This mission handler interface. Outine functions that child classes must
+ *          implement in order to have the drone achieve the desired mission command.
  */
-
-class Mission_handler
+class Mission_handler: public Flight_command_source
 {
 public:
     enum update_status_t
@@ -66,9 +63,10 @@ public:
         MISSION_FINISHED=1
     };
 
+
     /**
      * \brief   Checks if the handler is able to handle the request
-     *  
+     *
      * \details     This must be defined in the subclasses. It should perform
      *              a check on the inputted waypoint and return true or false
      *              if this is the appropriate handler for the waypoint.
@@ -79,9 +77,10 @@ public:
      */
     virtual bool can_handle(const Waypoint& wpt) const = 0;
 
+
     /**
      * \brief   Sets up this handler class for a first time initialization
-     *  
+     *
      * \details     This must be defined in the subclasses. It should perform
      *              initial setup. For example, setting the hold position to
      *              the current position of the drone, that way it is not done
@@ -93,9 +92,10 @@ public:
      */
     virtual bool setup(const Waypoint& wpt) = 0;
 
+
     /**
      * \brief   Handles the mission every iteration
-     *  
+     *
      * \details     This must be defined in the subclasses. It should perform
      *              routine checks and code that needs to be done every iteration
      *              The effective goal of the handle function is to set some
@@ -104,6 +104,7 @@ public:
      * \return  Update status code
      */
     virtual update_status_t update() = 0;
+
 
     /**
      * \brief   Gets the mission state of this handler
@@ -123,9 +124,4 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const = 0;
 };
 
-
-
-
-
-
-#endif // MISSION_HANDLER__
+#endif // MISSION_HANDLER_HPP_

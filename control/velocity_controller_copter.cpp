@@ -30,25 +30,56 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix.cpp
+ * \file velocity_controller_copter.cpp
  *
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Felix Schill
  * \author Nicolas Dousse
- * \author Basil Huber
+ * \author Julien Lecoeur
  *
- * \brief Links between torque commands and servos PWM command for quadcopters
- * in diagonal configuration
+ * \brief A velocity controller for copters.
  *
  ******************************************************************************/
 
-#include "control/servos_mix.hpp"
+#include <array>
 
-Servos_mix::Servos_mix()
+#include "control/velocity_controller_copter.hpp"
+#include "util/coord_conventions.hpp"
+#include "util/constants.hpp"
+
+extern "C"
 {
-    /* set initial torque command */
-    torq_command_t initial_torque_command;
-    initial_torque_command.torq = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
-    initial_torque_command.thrust = {-1.0f};
-    set_torque_command(initial_torque_command);
+#include "util/quaternions.h"
+#include "util/maths.h"
+#include "util/vectors.h"
+}
+
+
+Velocity_controller_copter::Velocity_controller_copter(const args_t& args, const conf_t& config) :
+    Velocity_controller(args.vel_args, config),
+    thrust_hover_point_(config.thrust_hover_point)
+{}
+
+
+bool Velocity_controller_copter::compute_attitude_and_thrust_from_desired_accel(const std::array<float,3>& accel_vector,
+                                                                                attitude_command_t& attitude_command,
+                                                                                thrust_command_t& thrust_command)
+{
+    // Desired attitude with yaw facing north
+    quat_t qrollpitch = coord_conventions_quaternion_from_rpy(    maths_clip(accel_vector[Y], 1),
+                                                                - maths_clip(accel_vector[X], 1),
+                                                                  0.0f                             );
+
+    // Rotation to face the goal
+    quat_t qyaw = coord_conventions_quaternion_from_rpy(  0.0f,
+                                                          0.0f,
+                                                          velocity_command_.heading );
+
+    // Output
+    attitude_command      = quaternions_multiply(qrollpitch, qyaw);
+    thrust_command.xyz[X] = 0.0f;
+    thrust_command.xyz[Y] = 0.0f;
+    thrust_command.xyz[Z] = thrust_hover_point_ + accel_vector[Z];
+
+    return true;
 }

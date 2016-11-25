@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_REGISTRY__
-#define MISSION_HANDLER_REGISTRY__
+#ifndef MISSION_HANDLER_REGISTRY_HPP_
+#define MISSION_HANDLER_REGISTRY_HPP_
 
 class Mission_handler;
 
@@ -94,9 +94,4 @@ private:
     uint8_t registered_mission_handler_count_;                  ///< The number of mission handler in the array
 };
 
-
-
-
-
-
-#endif // MISSION_HANDLER_REGISTRY__
+#endif // MISSION_HANDLER_REGISTRY_HPP_

@@ -30,47 +30,34 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file rate_controller_i.hpp
+ * \file flight_command_source.hpp
  *
  * \author MAV'RIC Team
- * \author Basil Huber
+ * \author Julien Lecoeur
  *
- * \brief Interface for rate controller
+ * \brief   Interface for things that can provide flight control commands autonomously
  *
  ******************************************************************************/
 
+#ifndef FLIGHT_COMMAND_SOURCE_HPP_
+#define FLIGHT_COMMAND_SOURCE_HPP_
 
-#ifndef RATE_CONTROLLER_I_HPP_
-#define RATE_CONTROLLER_I_HPP_
+// Forward declaration
+class Flight_controller;
 
-#include "util/coord_conventions.hpp"
-#include "control/control_command.h"
 
-class Rate_controller_I
+/**
+ * \brief   Interface for things that can provide flight control commands autonomously
+ */
+class Flight_command_source
 {
 public:
-    /*
-     * \brief   structure representing a rate command; contains desired angular velocity and thrust in body frame
-     */
-    struct rate_command_t : base_command_t
-    {
-        std::array<float,3>  rates;       ///< desired rates (angular velocity) in body frame
-        float                thrust;     ///< desired thrust
-    };
-
     /**
-     * \brief   Update controller;
-     */
-    virtual void update() = 0;
-
-    /**
-     * \brief           sets the rate command (desired angular velocity and thrust)
+     * \brief   Provides control commands to the flight controller
      *
-     * \param command   rate command indicating desired angular velocity and thrust in body frame
-     *
-     * \return success  whether command was accepted
+     * \return  success
      */
-    virtual bool set_rate_command(const rate_command_t& command) = 0;
+    virtual bool write_flight_command(Flight_controller& flight_controller) const = 0;
 };
 
-#endif /* RATE_CONTROLLER_I_HPP_ */
+#endif  // FLIGHT_COMMAND_SOURCE_HPP_

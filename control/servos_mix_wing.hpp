@@ -85,11 +85,14 @@ public:
 
     Servos_mix_wing(args_t& args, const conf_t& config = default_config());
 
-    virtual void update();
+    virtual bool update();
 
     static inline conf_t default_config();
 
 private:
+    torque_command_t torque_command_;
+    thrust_command_t thrust_command_;
+
     conf_t   config_;                        ///< Configuration of the mix
     Servo& servo_left_;                      ///< Left servo
     Servo& servo_right_;                     ///< Right servo

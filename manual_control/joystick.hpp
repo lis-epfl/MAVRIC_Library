@@ -44,9 +44,8 @@
 #define JOYSTICK_HPP_
 
 #include "status/state.hpp"
-#include "control/stabilisation.hpp"
-#include "control/control_command.h"
-#include "control/attitude_controller_i.hpp"
+#include "control/control_command.hpp"
+#include "control/controller.hpp"
 
 
 
@@ -56,7 +55,7 @@
 class Joystick
 {
 public:
-    
+
     /**
      * \brief button enumeration
      */
@@ -190,113 +189,11 @@ public:
     Mav_mode get_mode(const Mav_mode current_mode) ;
 
     /**
-     * \brief   Parse joystick to velocity vector command
-     *
-     * \param   controls        The pointer to the control structure
-     */
-    void get_velocity_vector(control_command_t* controls) const;
-
-
-    /**
-     * \brief   Parse joystick to rate command for the wing
-     *
-     * \param   controls        The pointer to the control structure
-     */
-    void get_rate_command_wing(control_command_t* controls) const;
-
-
-    /**
-     * \brief   Parse joystick to attitude command
-     *
-     * \param   controls        The pointer to the control structure
-     */
-    void get_control_command(control_command_t* controls) const;
-
-
-    /**
      * \brief               Do operations when buttons are pressed
      *
      * \param   buttons     The bit mask of the buttons
      */
     void button_update(uint16_t buttons);
-
-
-    /**
-     * \brief   Compute torque command from the joystick
-     *
-     * \param   command         Torque command (output)
-     */
-    void get_torque_command(torque_command_t* command, float scale) const;
-
-
-    /**
-     * \brief   Compute rate command from the joystick
-     *
-     * \param   command         Rate command (output)
-     */
-    void get_rate_command(rate_command_t* command, float scale) const;
-
-    /**
-     * \brief   Compute thrust command from the joystick
-     *
-     * \param   command         Thrust command (output)
-     */
-    void get_thrust_command(thrust_command_t* command) const;
-
-
-    /**
-     * \brief   Compute attitude command from joystick input (absolute roll and pitch, relative yaw)
-     * \details Yaw is relative to current yaw (command.yaw = current.yaw + 0.5 * input.yaw)
-     *
-     * \param   current_attitude    Current attitude of the vehicle
-     *
-     * \return  command
-     */
-    Attitude_controller_I::att_command_t get_attitude_command(quat_t current_attitude) const;
-
-
-    /**
-     * \brief   Compute velocity command from the joystick
-     *
-     * \param   command         Velocity command (output)
-     */
-    void get_velocity_command(velocity_command_t* command, float scale) const;
-
-
-    /**
-     * \brief   Compute attitude (angle) command from the joystick for the wing
-     *
-     * \param   command         Velocity command (output)
-     */
-    void get_angle_command_wing(control_command_t* controls) const;
-
-
-    /**
-     * \brief   Compute velocity command from the joystick for the wing
-     *
-     * \param   ki_yaw          The yaw integrator gain
-     * \param   command         Velocity command (output)
-     */
-    void get_velocity_wing(const float ki_yaw, control_command_t* controls) const;
-
-
-    /**
-     * \brief   Compute attitude command from the joystick (absolute angles)
-     *
-     * \param   command         Attitude command (output)
-     */
-    void get_attitude_command_absolute_yaw(attitude_command_t* command, float scale) const;
-
-
-    /**
-     * \brief   Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)
-     *
-     * \param   ki_yaw          Integration factor for yaw (0.02 is ok) (input)
-     * \param   command         Attitude command (output)
-     * \param   scale           Scale (maximum output / max remote input)
-     * \param   reference_pitch Transition factor (0: forward flight, PI/2:hover)
-     */
-    void get_attitude_command_vtol(const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch) const;
 
 
     /**
@@ -312,8 +209,6 @@ public:
 private:
     arm_action_t                arm_action_;
     throttle_mode_t             throttle_mode_;      ///< indicates whether zero throttle is stick in center or stick down
-    channels_t                  scale_attitude_;     ///< scales applied to channels in attitude mode
-    channels_t                  scale_velocity_;     ///< scales applied to channels in velocity mode
 };
 
 
@@ -321,16 +216,6 @@ Joystick::conf_t Joystick::default_config()
 {
     conf_t conf;
     conf.throttle_mode = throttle_mode_t::ZERO_DOWN;
-    /* attitude scales */
-    conf.scale_attitude.x = -0.8f;  // pitch (negativ scale to invert for QGC >= 2.9)
-    conf.scale_attitude.y = 0.8f;   // roll
-    conf.scale_attitude.z = 1;      // thrust
-    conf.scale_attitude.r = 0.8f;   // yaw
-    /* velocity scales */
-    conf.scale_velocity.x = 8.0f;   // x
-    conf.scale_velocity.y = 8.0f;   // y
-    conf.scale_velocity.z = -1.5f;   // z  (negativ since z is pointing down)
-    conf.scale_velocity.r = 0.8f;   // yaw
     return conf;
 }
 

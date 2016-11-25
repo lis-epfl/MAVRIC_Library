@@ -48,25 +48,18 @@
 
 #include "communication/data_logging.hpp"
 #include "communication/hud_telemetry.hpp"
-
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/onboard_parameters.hpp"
-#include "manual_control/remote_default_config.hpp"
 
-#include "control/altitude_controller.hpp"
+#include "control/flight_controller_copter.hpp"
 #include "control/position_controller.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
-#include "manual_control/manual_control.hpp"
-#include "navigation/navigation_directto.hpp"
 #include "control/rate_controller.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
-#include "manual_control/manual_control.hpp"
-#include "control/stabilisation.hpp"
-
-#include "navigation/vector_field_waypoint.hpp"
+#include "control/servos_mix_matrix.hpp"
 
 #include "drivers/battery.hpp"
 #include "drivers/gps.hpp"
@@ -79,6 +72,9 @@
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"
 
+#include "manual_control/manual_control.hpp"
+#include "manual_control/remote_default_config.hpp"
+
 #include "mission/mission_planner.hpp"
 #include "mission/mission_handler_critical_landing.hpp"
 #include "mission/mission_handler_critical_navigating.hpp"
@@ -89,7 +85,8 @@
 #include "mission/mission_handler_on_ground.hpp"
 #include "mission/mission_handler_takeoff.hpp"
 
-#include "simulation/simulation.hpp"
+#include "navigation/navigation_directto.hpp"
+#include "navigation/vector_field_waypoint.hpp"
 
 #include "sensing/ahrs.hpp"
 #include "sensing/ahrs_ekf.hpp"
@@ -100,6 +97,8 @@
 #include "sensing/qfilter.hpp"
 #include "sensing/qfilter_default_config.hpp"
 #include "sensing/ahrs_ekf_mocap.hpp"
+
+#include "simulation/simulation.hpp"
 
 #include "status/geofence.hpp"
 #include "status/geofence_cylinder.hpp"
@@ -114,7 +113,6 @@ extern "C"
 #include "sensing/altitude.h"
 }
 
-typedef Navigation_directto<Position_controller<Velocity_controller_copter<Attitude_controller<Rate_controller<Servos_mix_quadcopter_diag> > > > > Cascade_controller;
 
 /**
  * \brief MAV class
@@ -141,13 +139,13 @@ public:
         Mavlink_communication::conf_t mavlink_communication_config;
         Mavlink_waypoint_handler::conf_t waypoint_handler_config;
         Mission_planner::conf_t mission_planner_config;
-        Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::conf_t mission_handler_landing_config;
+        Mission_handler_landing::conf_t mission_handler_landing_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         INS_complementary::conf_t ins_complementary_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        Cascade_controller::conf_t cascade_controller_config;
+        Flight_controller_copter::conf_t flight_controller_config;
         Geofence_cylinder::conf_t safety_geofence_config;
         Geofence_cylinder::conf_t emergency_geofence_config;
     };
@@ -218,7 +216,16 @@ public:
      *
      * \return  MAVLINK Communication module
      */
-     inline Mavlink_communication& mavlink_communication(){return communication;};
+    inline Mavlink_communication& get_communication(){return communication;};
+
+
+     /**
+      * \brief   Returns non-const reference to scheduler
+      * \details This is used to add sleep task from the main function
+      *
+      * \return  Scheduler module
+      */
+    inline Scheduler& get_scheduler(){return scheduler;};
 
 
 protected:
@@ -288,21 +295,21 @@ protected:
     INS_complementary   ins_complementary;                      ///< The position estimaton structure
     INS_kf              ins_kf;                                 ///< The Kalman INS structure, used for position estimation
 
-    control_command_t controls;                                 ///< The control structure used for rate and attitude modes
-
-    Cascade_controller cascade_controller_;
+    Flight_controller_copter flight_controller_;
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
-    Mission_handler_hold_position<Navigation_controller_I> hold_position_handler;
-    Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I> landing_handler;
-    Mission_handler_navigating<Navigation_controller_I> navigating_handler;
-    Mission_handler_on_ground on_ground_handler;
-    Mission_handler_manual manual_ctrl_handler;
-    Mission_handler_takeoff<Navigation_controller_I> takeoff_handler;
-    Mission_handler_critical_landing<Navigation_controller_I, XYposition_Zvel_controller_I> critical_landing_handler;
-    Mission_handler_critical_navigating<Navigation_controller_I> critical_navigating_handler;
-    Mission_planner mission_planner;                            ///< Controls the mission plan
+
+    Mission_handler_hold_position       hold_position_handler;
+    Mission_handler_landing             landing_handler;
+    Mission_handler_navigating          navigating_handler;
+    Mission_handler_on_ground           on_ground_handler;
+    Mission_handler_manual              manual_ctrl_handler;
+    Mission_handler_takeoff             takeoff_handler;
+    Mission_handler_critical_landing    critical_landing_handler;
+    Mission_handler_critical_navigating critical_navigating_handler;
+
+    Mission_planner mission_planner_;                            ///< Controls the mission plan
 
     Geofence_cylinder safety_geofence_;                         ///< Geofence
     Geofence_cylinder emergency_geofence_;                      ///< Geofence
@@ -316,9 +323,6 @@ protected:
     Data_logging_T<10>    data_logging_stat;
 
     command_t                       command;
-    // attitude_controller_t           attitude_controller;
-    // velocity_controller_copter_t    velocity_controller;
-    // vector_field_waypoint_t         vector_field_waypoint;
 
     uint8_t sysid_;    ///< System ID
     conf_t config_;    ///< Configuration
@@ -344,7 +348,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
 
     conf.mission_planner_config = Mission_planner::default_config();
-    conf.mission_handler_landing_config = Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::default_config();
+    conf.mission_handler_landing_config = Mission_handler_landing::default_config();
 
     conf.qfilter_config = qfilter_default_config();
 
@@ -356,7 +360,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.remote_config = remote_default_config();
 
-    conf.cascade_controller_config = Cascade_controller::default_config();
+    conf.flight_controller_config = Flight_controller_copter::default_config();
 
     conf.safety_geofence_config     = Geofence_cylinder::default_config();
     conf.emergency_geofence_config  = Geofence_cylinder::default_config();
@@ -386,7 +390,6 @@ LEQuad::conf_t LEQuad::dronedome_config(uint8_t sysid)
     conf.ins_complementary_config.kp_sonar_vel = 0.0f;
 
     conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
-
     conf.mission_planner_config.safe_altitude                   =  -3.0f;
     conf.mission_planner_config.critical_landing_altitude       =  -2.0f;
     conf.mission_planner_config.takeoff_altitude                =  -2.0f;

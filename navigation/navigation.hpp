@@ -30,27 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file base_cascade_controller.hpp
+ * \file navigation.hpp
  *
  * \author MAV'RIC Team
  * \author Basil Huber
+ * \author Julien Lecoeur
  *
- * \brief Abstract Base class for cascade style controller hierarchy. Only the lowest level should inherit from this class!
+ * \brief Interface for navigation
  *
  ******************************************************************************/
 
 
-#ifndef BASE_CASC_CONTROLLER_HPP_
-#define BASE_CASC_CONTROLLER_HPP_
+#ifndef NAVIGATION_HPP_
+#define NAVIGATION_HPP_
 
-#include "control/control_command.h"
+#include "util/coord_conventions.hpp"
+#include "control/control_command.hpp"
 
-class Base_cascade_controller
+class Navigation
 {
-protected:
-    Base_cascade_controller() : cascade_command_(NULL){};
+public:
 
-    base_command_t const*  cascade_command_;
+    typedef position_command_t nav_command_t;
+
+    /**
+     * \brief   Main update method
+     *
+     * \return  Success
+     */
+    virtual bool update() = 0;
+
+
+    /**
+     * \brief           Sets the navigation goal (desired position)
+     *
+     * \param   goal    Navigation goal waypoint
+     *
+     * \return success  whether command was accepted
+     */
+    //  virtual bool set_goal(const Waypoint& goal) = 0;
+    virtual bool set_goal(const nav_command_t& goal) = 0;
+
+
+    command_t get_control_command(bool flag)
+    {
+        command_t command;
+        return command;
+    }
 };
 
-#endif /* BASE_CASC_CONTROLLER_HPP_ */
+#endif /* NAVIGATION_HPP_ */

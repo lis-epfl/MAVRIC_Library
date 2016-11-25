@@ -34,8 +34,9 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The mission planner
+ * \brief Interface for mission planner handler
  *
  ******************************************************************************/
 
@@ -213,6 +214,20 @@ bool Mission_planner::update(Mission_planner* mission_planner)
 
     return true;
 }
+
+
+bool Mission_planner::write_flight_command(Flight_controller& flight_controller) const
+{
+    if (current_mission_handler_)
+    {
+        return current_mission_handler_->write_flight_command(flight_controller);
+    }
+    else
+    {
+        return false;
+    }
+}
+
 
 void Mission_planner::set_critical_next_state(bool critical_next_state)
 {
@@ -408,11 +423,15 @@ mav_result_t Mission_planner::override_goto_callback(Mission_planner* mission_pl
     else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
     {
         uint16_t new_wp_index = mission_planner->waypoint_handler_.current_waypoint_index();
-        if(mission_planner->internal_state_ != PAUSED)
+        if (mission_planner->internal_state_ != PAUSED)
         {
-            new_wp_index++;
+            uint16_t wp_count     = mission_planner->waypoint_handler_.waypoint_count();
+            if (wp_count != 0)
+            {
+                new_wp_index = (new_wp_index + 1) % wp_count;
+            }
         }
-        mission_planner->set_current_waypoint(new_wp_index % mission_planner->waypoint_handler_.waypoint_count());
+        mission_planner->set_current_waypoint(new_wp_index);
         result = MAV_RESULT_ACCEPTED;
     }
     else
@@ -532,7 +551,7 @@ void Mission_planner::state_machine()
         // Require takeoff if we have switched out of auto, dont take off if on ground
         if (require_takeoff_ &&
            (internal_state_ != STANDBY ||
-                (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f)))
+                (internal_state_ == STANDBY && manual_control_.throttle() > -0.7f)))
         {
             inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_TAKEOFF,
@@ -645,7 +664,7 @@ void Mission_planner::state_machine()
     else if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
     {
         // Set hold position waypoint
-        if (internal_state_ == STANDBY && manual_control_.get_thrust() > -0.7f  && !hold_position_set_) // On ground and desired to take off
+        if (internal_state_ == STANDBY && manual_control_.throttle() > -0.7f  && !hold_position_set_) // On ground and desired to take off
         {
             inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_TAKEOFF,
@@ -689,7 +708,7 @@ void Mission_planner::state_machine()
         require_takeoff_ = true;
 
         // Change only if thrust value is great enough
-        if (manual_control_.get_thrust() > -0.7f && current_mission_handler_->handler_mission_state() != MANUAL_CTRL)
+        if (manual_control_.throttle() > -0.7f && current_mission_handler_->handler_mission_state() != MANUAL_CTRL)
         {
             inserted_waypoint_ = Waypoint(  MAV_FRAME_LOCAL_NED,
                                             MAV_CMD_NAV_MANUAL_CTRL,

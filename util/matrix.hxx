@@ -450,6 +450,20 @@ bool Mat<N,P,T>::insert_inplace(const Mat<Q,R,T>& m)
 }
 
 
+template<uint32_t N, uint32_t P, typename T>
+void Mat<N,P,T>::clip(const Mat& min, const Mat& max)
+{
+    mat::op::clip<N, P, T>(*this, min, max);
+}
+
+
+template<uint32_t N, uint32_t P, typename T>
+void Mat<N,P,T>::clip(float min, float max)
+{
+    mat::op::clip<N, P, T>(*this, min, max);
+}
+
+
 namespace mat
 {
 
@@ -650,6 +664,47 @@ bool op::insert(const Mat<N,P,T>& m1, const Mat<Q,R,T>& m2, Mat<N,P,T>& res)
 
     return true;
 }
+
+
+template<uint32_t N, uint32_t P, typename T>
+void op::clip(Mat<N,P,T>& m, const Mat<N,P,T>& min, const Mat<N,P,T>& max)
+{
+    for (size_t i = 0; i < N; i++)
+    {
+        for (size_t j = 0; j < P; j++)
+        {
+            if (m(i,j) < min(i,j))
+            {
+                m(i,j) = min(i,j);
+            }
+            else if (m(i,j) > max(i,j))
+            {
+                m(i,j) = max(i,j);
+            }
+        }
+    }
+}
+
+
+template<uint32_t N, uint32_t P, typename T>
+void op::clip(Mat<N,P,T>& m, float min, float max)
+{
+    for (size_t i = 0; i < N; i++)
+    {
+        for (size_t j = 0; j < P; j++)
+        {
+            if (m(i,j) < min)
+            {
+                m(i,j) = min;
+            }
+            else if (m(i,j) > max)
+            {
+                m(i,j) = max;
+            }
+        }
+    }
+}
+
 
 }
 

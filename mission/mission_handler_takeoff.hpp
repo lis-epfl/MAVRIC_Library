@@ -34,22 +34,22 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the takeoff state
+ * \brief The mission handler for the takeoff
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_TAKEOFF__
-#define MISSION_HANDLER_TAKEOFF__
+#ifndef MISSION_HANDLER_TAKEOFF_HPP_
+#define MISSION_HANDLER_TAKEOFF_HPP_
 
 #include "status/state.hpp"
 #include "mission/mission_handler.hpp"
 
 /*
- * The handler class takes in a template parameter that allows control inputs.
+ * \brief The mission handler for the takeoff
  */
-template <class T>
 class Mission_handler_takeoff : public Mission_handler
 {
 public:
@@ -58,17 +58,14 @@ public:
     /**
      * \brief   Initialize the takeoff mission planner handler
      *
-     * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
      * \param   state                   The reference to the state class
      */
-     Mission_handler_takeoff(   T& controller,
-                                const INS& ins,
-                                State& state);
+     Mission_handler_takeoff(const INS& ins, State& state);
 
     /**
      * \brief   Checks if the waypoint is a takeoff waypoint
-     *  
+     *
      * \details     Checks if the inputted waypoint is a:
      *                  MAV_CMD_NAV_TAKEOFF
      *
@@ -80,7 +77,7 @@ public:
 
     /**
      * \brief   Sets up this handler class for a first time initialization
-     *  
+     *
      * \details     Records the waypoint reference and sets the mav mode
      *
      * \param   wpt                 The waypoint class
@@ -91,7 +88,7 @@ public:
 
     /**
      * \brief   Handles the mission every iteration
-     *  
+     *
      * \details     Sets the goal and determines the handler status. The status
      *              is: MISSION_IN_PROGRESS for takeoff in process, MISSION_FINISHED for takeoff complete, and
      *              MISSION_FAILED for control impossible
@@ -99,6 +96,15 @@ public:
      * \return  Status code
      */
     virtual Mission_handler::update_status_t update();
+
+
+    /**
+     * \brief   Provides control commands to the flight controller
+     *
+     * \return  success
+     */
+    virtual bool write_flight_command(Flight_controller& flight_controller) const;
+
 
     /**
      * \brief   Returns that the mission state is in PREMISSION
@@ -108,20 +114,9 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    T& controller_;                                             ///< The reference to the controller
-    const INS& ins_;                                            ///< The reference to the ins interface
-    State& state_;                                              ///< The reference to the state structure
-
-    Waypoint waypoint_;
-
-    /**
-     * \brief   Function to set the controller specific command
-     *
-     * \return  Controller accepted input
-     */
-    virtual bool set_control_command();
+    const INS& ins_;                ///< The reference to the ins interface
+    State& state_;                  ///< The reference to the state structure
+    Waypoint waypoint_;             ///< The take off waypoint
 };
 
-#include "mission/mission_handler_takeoff.hxx"
-
-#endif // MISSION_HANDLER_TAKEOFF__
+#endif // MISSION_HANDLER_TAKEOFF_HPP_

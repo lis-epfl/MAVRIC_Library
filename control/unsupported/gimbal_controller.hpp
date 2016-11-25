@@ -45,11 +45,8 @@
 
 #include "control/pid_controller.hpp"
 #include "drivers/servo.hpp"
+#include "control/control_command.hpp"
 
-extern "C"
-{
-#include "control/control_command.h"
-}
 
 /**
  * \brief Gimbal controller configuration

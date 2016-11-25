@@ -40,7 +40,6 @@
  *
  * \brief A velocity controller for copters.
  *
- * TODO: adjust this text
  * \details It takes a velocity command as input and computes an attitude
  * command as output. It is best suited for a hovering UAV with the thrust along
  * its local -Z axis (like multicopters).
@@ -51,7 +50,7 @@
 #ifndef VELOCITY_CONTROLLER_COPTER_HPP_
 #define VELOCITY_CONTROLLER_COPTER_HPP_
 
-#include "control/velocity_controller_i.hpp"
+#include "control/velocity_controller.hpp"
 #include "control/pid_controller.hpp"
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
@@ -59,92 +58,72 @@
 /**
  * \brief Velocity controller for hovering platforms
  */
-template<class TAttitude_controller>
-class Velocity_controller_copter : public Velocity_controller_I, public TAttitude_controller
+class Velocity_controller_copter : public Velocity_controller
 {
 public:
 
     /**
      * \brief Velocity controller configuration
      */
-    struct conf_t
+    struct conf_t: public Velocity_controller::conf_t
     {
-        pid_controller_conf_t   pid_config[3];          ///< Config for PID controller on velocity along X, Y and Z in global frame
-        float                   thrust_hover_point;     ///< Amount of thrust required to hover (between -1 and 1)
-        typename TAttitude_controller::conf_t attitude_controller_config; ///< Config of the attitude controller
+        float thrust_hover_point;
     };
 
+
     /**
-     * \brief Velocity controller constructor arguments
+    * \brief   Default Configuration
+    *
+    * /return  config
+    */
+    static inline conf_t default_config(void);
+
+
+    /**
+     * \brief   Required arguments
      */
     struct args_t
     {
-        const ahrs_t&   ahrs;                           ///< Estimated attitude
-        const INS&      ins;                            ///< Estimated speed and position
-        typename TAttitude_controller::args_t attitude_controller_args; ///< Constructor arguments for attitude controller
+        Velocity_controller::args_t vel_args;
     };
 
     /**
      * \brief                       Constructor
      *
-     * \param   args                Constructor arguments
+     * \param   ahrs                Reference to estimated attitude
+     * \param   ins                 Reference to estimated speed and position
      * \param   config              Configuration
      */
-    Velocity_controller_copter( args_t args, const conf_t& config = default_config());
+    Velocity_controller_copter(const args_t& args, const conf_t& config = default_config());
+
+
+protected:
 
     /**
-     * \brief   Main update function
+     * \brief   Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics
+     *
+     * \param   accel_vector        Desired acceleration vectors (input)
+     * \param   attitude_command    Attitude command (output)
+     * \param   thrust_command      Thrust command (output)
      *
      * \return  success
      */
-    virtual void update(void);
+    virtual bool compute_attitude_and_thrust_from_desired_accel(const std::array<float,3>& accel_command,
+                                                                attitude_command_t& attitude_command,
+                                                                thrust_command_t& thrust_command);
 
-    bool set_velocity_command(const vel_command_t& vel_command);
-
-    /**
-     * \brief   Default Configuration
-     *
-     * /return  config
-     */
-    static inline conf_t default_config(void);
-
-protected:
-    /*
-     * \brief   calc attitude command based on given velocity command and update underlaying cascade level (TAttitude_controller)
-     * \details Sets the internal velocity_command_ to the provided one, without modifiying cascade_command_
-     *          Calls calc_attitude_command followed by TAttitude_controller::update_cascade
-     *          This function should be called from higher level controllers if they provide a command
-     * \param   velocity_command  velocity command to be set
-     */
-    void update_cascade(const vel_command_t& vel_command);
-
-    /*
-     * \brief   calc attitude command based on given velocity command
-     * \details Sets the internal velocity_command_ to the provided one, without modifiying cascade_command_
-     *          This function should be called from higher level controllers if they provide a command
-     * \param velocity_command  velocity command
-     */
-    typename TAttitude_controller::att_command_t calc_attitude_command(const vel_command_t& vel_command);
-
-
-
-private:
-    const ahrs_t&                ahrs_;                      ///< Pointer to attitude estimation (input)
-    const INS&                   ins_;                       ///< Speed and position estimation (input)
-    vel_command_t                velocity_command_;          ///< Velocity command (input)
-
-    pid_controller_t             pid_[3];                    ///< PID controller for velocity along X, Y and Z in global frame
-    float                        thrust_hover_point_;        ///< Amount of thrust required to hover (between -1 and 1)
+    float thrust_hover_point_;        ///< Amount of thrust required to hover (between -1 and 1)
 };
 
 
-template<class TAttitude_controller>
-typename Velocity_controller_copter<TAttitude_controller>::conf_t Velocity_controller_copter<TAttitude_controller>::default_config(void)
+Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(void)
 {
     conf_t conf = {};
 
-    conf.thrust_hover_point                    = -0.26f;
-    
+    // conf.thrust_hover_point                    = -0.26f;
+    // conf.thrust_hover_point                    = -0.13f;
+    conf.thrust_hover_point                    = -0.52f;
+
     // -----------------------------------------------------------------
     // ------ X PID ----------------------------------------------------
     // -----------------------------------------------------------------
@@ -199,11 +178,7 @@ typename Velocity_controller_copter<TAttitude_controller>::conf_t Velocity_contr
     conf.pid_config[Z].differentiator.clip     = 0.04f;
     conf.pid_config[Z].soft_zone_width         = 0.2f;
 
-    conf.attitude_controller_config = TAttitude_controller::default_config();
-
     return conf;
 }
-
-#include "control/velocity_controller_copter.hxx"
 
 #endif /* VELOCITY_CONTROLLER_COPTER_HPP_ */

@@ -58,7 +58,7 @@
 #define ATTITUDE_CONTROLLER_P2_HPP_
 
 #include "control/attitude_error_estimator.hpp"
-#include "control/control_command.h"
+#include "control/control_command.hpp"
 #include "sensing/ahrs.hpp"
 
 

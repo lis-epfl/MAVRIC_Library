@@ -30,47 +30,37 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file velocity_controller_i.hpp
+ * \file mission_handler_critical_navigating.cpp
  *
  * \author MAV'RIC Team
- * \author Basil Huber
+ * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief Interface for velocity controller with yaw aligned with velocity vector
+ * \brief   The MAVLink mission planner handler functions for the critical
+ *          navigating state
  *
  ******************************************************************************/
 
+#include "mission/mission_handler_critical_navigating.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 
-#ifndef VELOCITY_CONTROLLER_I_HPP_
-#define VELOCITY_CONTROLLER_I_HPP_
 
-#include "util/coord_conventions.hpp"
-#include "control/control_command.h"
+Mission_handler_critical_navigating::Mission_handler_critical_navigating(const INS& ins,
+                                                                         const Mavlink_stream& mavlink_stream,
+                                                                         Mavlink_waypoint_handler& waypoint_handler):
+    Mission_handler_navigating(ins, mavlink_stream, waypoint_handler)
+{}
 
-class Velocity_controller_I
+
+bool Mission_handler_critical_navigating::can_handle(const Waypoint& wpt) const
 {
-public:
-    /*
-     * \brief   structure representing containing a velocity command; contains desired velocity in local frame
-     */
-    struct vel_command_t : base_command_t
+    bool handleable = false;
+
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_CRITICAL_WAYPOINT)
     {
-        local_velocity_t    vel;        ///< desired velocity in local frame (NED)
-        float               yaw;        ///< desired float in local frame (NED)
-    };
+        handleable = true;
+    }
 
-    /**
-     * \brief   Update controller;
-     */
-    virtual void update() = 0;
-
-    /**
-     * \brief           sets the velocity command (desired velocity)
-     *
-     * \param command   velocity command indicating desired velocity in local frame
-     *
-     * \return success  whether command was accepted
-     */
-    inline virtual bool set_velocity_command(const vel_command_t& command) = 0;
-};
-
-#endif /* VELOCITY_CONTROLLER_I_HPP_ */
+    return handleable;
+}

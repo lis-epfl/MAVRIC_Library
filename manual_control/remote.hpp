@@ -45,13 +45,9 @@
 
 #include "status/mav_modes.hpp"
 #include "drivers/satellite.hpp"
-#include "control/stabilisation.hpp"
-#include "control/attitude_controller_i.hpp"
+#include "control/controller.hpp"
+#include "control/control_command.hpp"
 
-extern "C"
-{
-#include "control/control_command.h"
-}
 
 #define REMOTE_CHANNEL_COUNT 14
 
@@ -297,121 +293,5 @@ void remote_mode_update(remote_t* remote);
  * \return  The value of the mode
  */
 Mav_mode remote_mode_get(remote_t* remote, Mav_mode mode_current);
-
-
-/**
- * \brief   Sets the attitude command from the remote (rpy and thrust values)
- *
- * \param   remote              The pointer to the remote structure
- * \param   controls            The pointer to the controls structure
- */
-void remote_get_control_command(remote_t* remote, control_command_t* controls);
-
-
-/**
- * \brief   Sets the velocity command vector from the remote
- *
- * \param   remote              The pointer to the remote structure
- * \param   controls            The pointer to the controls structure
- */
-void remote_get_velocity_vector(remote_t* remote, control_command_t* controls);
-
-/**
- * \brief   Sets the rate command from the remote (rpy and thrust values)
- *
- * \param   remote              The pointer to the remote structure
- * \param   controls            The pointer to the controls structure
- */
- void remote_get_rate_command_wing(remote_t* remote, control_command_t* controls);
-
-/**
- * \brief   Sets the attitude (angles) command from the remote for the wing
- *
- * \param   remote              The pointer to the remote structure
- * \param   controls            The pointer to the controls structure
- */
-void remote_get_angle_command_wing(remote_t* remote, control_command_t* controls);
-
-/**
- * \brief   Sets the velocity command vector from the remote for the wing
- *
- * \param   remote              The pointer to the remote structure
- * \param   ki_yaw              The yaw integrator gain
- * \param   controls            The pointer to the controls structure
- */
-void remote_get_velocity_wing(remote_t* remote, const float ki_yaw, control_command_t* controls);
-
-/**
- * \brief   Compute torque command from the remote
- *
- * \param   remote          Remote structure (input)
- * \param   command         Torque command (output)
- * \param   scale           Scale (maximum output / max remote input)
- */
-void remote_get_torque_command(const remote_t* remote, torque_command_t* command, float scale);
-
-
-/**
- * \brief   Compute rate command from the remote
- *
- * \param   remote          Remote structure (input)
- * \param   command         Rate command (output)
- * \param   scale           Scale (maximum output / max remote input)
- */
-void remote_get_rate_command(const remote_t* remote, rate_command_t* command, float scale);
-
-
-/**
- * \brief   Compute thrust command from the remote
- *
- * \param   remote          Remote structure (input)
- * \param   command         Thrust command (output)
- */
-void remote_get_thrust_command(const remote_t* remote, thrust_command_t* command);
-
-
-/**
- * \brief   Compute attitude command from the remote (absolute angles)
- *
- * \param   remote          Remote structure (input)
- * \param   command         Attitude command (output)
- * \param   scale           Scale (maximum output / max remote input)
- */
-void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_command_t* command, float scale);
-
-
-/**
- * \brief   Compute attitude command from the remote (absolute roll and pitch, relative yaw)
- * \details Yaw is relative to current yaw (command.yaw = current.yaw + 0.5 * input.yaw)
- *
- * \param   remote              Remote structure
- * \param   current_attitude    Current attitude of the vehicle
- *
- * \return  command
- */
-Attitude_controller_I::att_command_t remote_get_attitude_command(const remote_t* remote, quat_t current_attitude);
-
-
-/**
- * \brief   Compute attitude command from the remote (absolute roll and pitch, integrated yaw)
- *
- * \param   remote          Remote structure (input)
- * \param   ki_yaw          Integration factor for yaw (0.02 is ok) (input)
- * \param   command         Attitude command (output)
- * \param   scale           Scale (maximum output / max remote input)
- * \param   reference_pitch Transition factor (0: forward flight, PI/2:hover)
- */
-void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t* command, float scale, float reference_pitch);
-
-
-/**
- * \brief   Compute velocity command from the remote
- *
- * \param   remote          Remote structure (input)
- * \param   command         Velocity command (output)
- * \param   scale           Scale (maximum output / max remote input)
- */
-void remote_get_velocity_command(const remote_t* remote, velocity_command_t* command, float scale);
-
 
 #endif

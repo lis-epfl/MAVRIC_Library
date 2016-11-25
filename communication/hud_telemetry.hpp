@@ -45,8 +45,7 @@
 
 #include "sensing/ins.hpp"
 #include "sensing/ahrs.hpp"
-#include "control/stabilisation.hpp"
-
+#include "control/control_command.hpp"
 
 /**
  * \brief   The HUD structure to send the MAVLink HUD message
@@ -54,7 +53,7 @@
 typedef struct
 {
     const INS* ins;                         ///< The pointer to the Inertial Navigation System
-    const control_command_t* controls;      ///< The pointer to the control structure
+    const command_t* controls;              ///< The pointer to the control structure
     const ahrs_t* ahrs;                     ///< The pointer to the attitude estimation structure
     const Mavlink_stream* mavlink_stream;   ///< The pointer to the MAVLink stream structure
 } hud_telemetry_t;
@@ -69,7 +68,7 @@ typedef struct
  *
  * \return  True if the init succeed, false otherwise
  */
-bool hud_telemetry_init(hud_telemetry_t* hud_telemetry_structure, const INS* ins, const control_command_t* controls, const ahrs_t* ahrs);
+bool hud_telemetry_init(hud_telemetry_t* hud_telemetry_structure, const INS* ins, const command_t* controls, const ahrs_t* ahrs);
 
 /**
  * \brief   Function to send the MAVLink HUD message

@@ -51,12 +51,12 @@ Servos_mix_wing::Servos_mix_wing(args_t& args, const conf_t& config) :
     {}
 
 
-void Servos_mix_wing::update()
+bool Servos_mix_wing::update()
 {
     // Calculate value to be sent to the motors
-    float tmp_right_servo   = config_.servo_right_dir * ( (torq_command_.torq[1] + config_.trim_pitch) + (torq_command_.torq[0] + config_.trim_roll) );
-    float tmp_left_servo    = config_.servo_left_dir  * ( (torq_command_.torq[1] + config_.trim_pitch) - (torq_command_.torq[0] + config_.trim_roll) );
-    float tmp_motor         = torq_command_.thrust;
+    float tmp_right_servo   = config_.servo_right_dir * ( (torque_command_.xyz[Y] + config_.trim_pitch) + (torque_command_.xyz[X] + config_.trim_roll) );
+    float tmp_left_servo    = config_.servo_left_dir  * ( (torque_command_.xyz[Y] + config_.trim_pitch) - (torque_command_.xyz[X] + config_.trim_roll) );
+    float tmp_motor         = thrust_command_.xyz[X];
 
     // Clip values
     if (tmp_right_servo < config_.min_amplitude)
@@ -90,4 +90,6 @@ void Servos_mix_wing::update()
     servo_left_.write(tmp_left_servo);
     servo_right_.write(tmp_right_servo);
     motor_.write(tmp_motor);
+
+    return true;
 }

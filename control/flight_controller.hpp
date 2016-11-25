@@ -30,53 +30,50 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.cpp
+ * \file flight_controller.hpp
  *
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Julien Lecoeur
  *
- * \brief Executing the PID controllers for stabilization
+ * \brief   Interface for flight controllers
  *
  ******************************************************************************/
 
+#ifndef FLIGHT_CONTROLLER_HPP_
+#define FLIGHT_CONTROLLER_HPP_
 
-#include "control/stabilisation.hpp"
-#include "util/print_util.hpp"
-#include "util/constants.hpp"
+#include "control/controller.hpp"
+#include "manual_control/manual_control.hpp"
+#include "control/flight_command_source.hpp"
 
-bool stabilisation_init(control_command_t* controls)
+
+class Flight_controller: public Controller<position_command_t>,
+                         public Controller<velocity_command_t>,
+                         public Controller<attitude_command_t>,
+                         public Controller<rate_command_t>,
+                         public Controller<torque_command_t>,
+                         public Controller<thrust_command_t>
 {
-    bool init_success = true;
+public:
+    virtual bool failsafe(void) = 0;
 
-    controls->control_mode = ATTITUDE_COMMAND_MODE;
-    controls->yaw_mode = YAW_RELATIVE;
+    virtual bool set_command(const position_command_t& command) = 0;
+    virtual bool set_command(const velocity_command_t& command) = 0;
+    virtual bool set_command(const attitude_command_t& command) = 0;
+    virtual bool set_command(const rate_command_t& command) = 0;
+    virtual bool set_command(const torque_command_t& command) = 0;
+    virtual bool set_command(const thrust_command_t& command) = 0;
 
-    controls->rpy[ROLL] = 0.0f;
-    controls->rpy[PITCH] = 0.0f;
-    controls->rpy[YAW] = 0.0f;
-    controls->tvel[X] = 0.0f;
-    controls->tvel[Y] = 0.0f;
-    controls->tvel[Z] = 0.0f;
-    controls->theading = 0.0f;
-    controls->thrust = -1.0f;
+    virtual bool set_manual_rate_command(const Manual_control& manual_control) = 0;
+    virtual bool set_manual_attitude_command(const Manual_control& manual_control) = 0;
+    virtual bool set_manual_velocity_command(const Manual_control& manual_control) = 0;
 
-    return init_success;
-}
-
-void stabilisation_run(stabiliser_t* stabiliser, float dt, float errors[])
-{
-    for (int32_t i = 0; i < 3; i++)
+    virtual bool set_flight_command(const Flight_command_source& command_source)
     {
-        stabiliser->output.rpy[i] = pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-    }
-    stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
-}
+        return command_source.write_flight_command(*this);
+    };
+};
 
-void stabilisation_run_feedforward(stabiliser_t *stabiliser, float dt, float errors[], float feedforward[])
-{
-    for (int32_t i = 0; i < 3; i++)
-    {
-        stabiliser->output.rpy[i] = pid_controller_update_feedforward_dt(&(stabiliser->rpy_controller[i]),  errors[i], feedforward[i], dt);
-    }
-    stabiliser->output.thrust = pid_controller_update_feedforward_dt(&(stabiliser->thrust_controller),  errors[3], feedforward[3], dt);
-}
+
+
+#endif  // FLIGHT_CONTROLLER_HPP_

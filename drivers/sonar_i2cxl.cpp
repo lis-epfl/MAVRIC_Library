@@ -148,59 +148,62 @@ bool Sonar_i2cxl::get_last_measure(void)
 
     res = i2c_.read(buf, 2, config_.i2c_address);
 
-    distance_cm = (buf[0] << 8) + buf[1];
-    distance_m  = ((float)distance_cm) / 100.0f;
-
-    // Store last measurements and compute median filter
-    for (int32_t i = 0; i < 4; i++)
+    if (res)
     {
-        last_distances_[i] = last_distances_[i + 1];
-    }
-    last_distances_[4] = distance_m;
-    distance_m = median_filter_n(last_distances_, 5);
+        distance_cm = (buf[0] << 8) + buf[1];
+        distance_m  = ((float)distance_cm) / 100.0f;
 
-
-    if (distance_m > config_.min_distance && distance_m < config_.max_distance)
-    {
-        dt_s = (time_us - last_update_us_) / 1000000.0f;
-
-        // Update velocity
-        if (healthy_ && dt_s != 0.0f)
+        // Store last measurements and compute median filter
+        for (int32_t i = 0; i < 4; i++)
         {
-            new_velocity = (distance_m - distance_) / dt_s;
+            last_distances_[i] = last_distances_[i + 1];
+        }
+        last_distances_[4] = distance_m;
+        distance_m = median_filter_n(last_distances_, 5);
 
-            //discard sonar new_velocity estimation if it seems too big
-            if (maths_f_abs(new_velocity) > 20.0f)
+
+        if (distance_m < config_.max_distance)
+        {
+            dt_s = (time_us - last_update_us_) / 1000000.0f;
+
+            // Update velocity
+            if (healthy_ && dt_s != 0.0f)
             {
-                new_velocity = 0.0f;
+                new_velocity = (distance_m - distance_) / dt_s;
+
+                //discard sonar new_velocity estimation if it seems too big
+                if (maths_f_abs(new_velocity) > 20.0f)
+                {
+                    new_velocity = 0.0f;
+                }
+
+                velocity_ = (1.0f - SONAR_I2CXL_LPF_VARIO) * velocity_
+                            + SONAR_I2CXL_LPF_VARIO      * new_velocity;
+            }
+            else
+            {
+                velocity_ = 0.0f;
             }
 
-            velocity_ = (1.0f - SONAR_I2CXL_LPF_VARIO) * velocity_
-                        + SONAR_I2CXL_LPF_VARIO      * new_velocity;
+            distance_       = distance_m;
+            last_update_us_ = time_us;
+            healthy_        = true;
         }
         else
         {
-            velocity_ = 0.0f;
-        }
+            // Update current distance even if not healthy
+            if (distance_m < config_.min_distance)
+            {
+                distance_ = config_.min_distance;
+            }
+            else if(distance_m > config_.max_distance)
+            {
+                distance_ = config_.max_distance;
+            }
 
-        distance_       = distance_m;
-        last_update_us_ = time_us;
-        healthy_        = true;
-    }
-    else
-    {
-        // Update current distance even if not healthy
-        if (distance_m < config_.min_distance)
-        {
-            distance_ = config_.min_distance;
+            velocity_   = 0.0f;
+            healthy_    = false;
         }
-        else if(distance_m > config_.max_distance)
-        {
-            distance_ = config_.max_distance;
-        }
-
-        velocity_   = 0.0f;
-        healthy_    = false;
     }
 
 

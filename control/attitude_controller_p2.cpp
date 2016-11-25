@@ -87,8 +87,7 @@ bool attitude_controller_p2_update(attitude_controller_p2_t* controller)
 
     // Get attitude command
     attitude_error_estimator_set_quat_ref(&controller->attitude_error_estimator,
-                                          controller->attitude_command->quat);
-
+                                          *controller->attitude_command);
 
     // Get local angular errors
     attitude_error_estimator_update(&controller->attitude_error_estimator);
@@ -102,9 +101,10 @@ bool attitude_controller_p2_update(attitude_controller_p2_t* controller)
     rates[2] = controller->ahrs->angular_speed[2];
 
     // Compute outputs
-    controller->torque_command->xyz[0] = controller->p_gain_angle[0] * errors[0] - controller->p_gain_rate[0] * rates[0];
-    controller->torque_command->xyz[1] = controller->p_gain_angle[1] * errors[1] - controller->p_gain_rate[1] * rates[1];
-    controller->torque_command->xyz[2] = controller->p_gain_angle[2] * errors[2] - controller->p_gain_rate[2] * rates[2];
+    torque_command_t& torque_command = *controller->torque_command;
+    torque_command.xyz[0] = controller->p_gain_angle[0] * errors[0] - controller->p_gain_rate[0] * rates[0];
+    torque_command.xyz[1] = controller->p_gain_angle[1] * errors[1] - controller->p_gain_rate[1] * rates[1];
+    torque_command.xyz[2] = controller->p_gain_angle[2] * errors[2] - controller->p_gain_rate[2] * rates[2];
 
     return true;
 }
