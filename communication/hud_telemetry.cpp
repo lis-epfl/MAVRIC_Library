@@ -46,7 +46,7 @@
 #include "util/print_util.hpp"
 
 
-bool hud_telemetry_init(hud_telemetry_t* hud, const INS* ins, const control_command_t* controls, const ahrs_t* ahrs)
+bool hud_telemetry_init(hud_telemetry_t* hud, const INS* ins, const command_t* controls, const ahrs_t* ahrs)
 {
     bool init_success = true;
 
@@ -76,13 +76,15 @@ void hud_telemetry_send_message(const hud_telemetry_t* hud, const Mavlink_stream
         heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
     }
 
+    float thrust = vectors_norm(hud->controls->thrust.xyz.data());
+
     mavlink_msg_vfr_hud_pack(mavlink_stream->sysid(),
                              mavlink_stream->sysid(),
                              msg,
                              airspeed,
                              groundspeed,
                              heading,
-                             (int32_t)((hud->controls->thrust + 1.0f) * 50),
+                             (int32_t)(thrust * 50),
                              hud->ins->absolute_altitude(),
                              -vel[2]);
 }

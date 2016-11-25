@@ -475,8 +475,6 @@ bool LEQuad::init_stabilisers(void)
     // -------------------------------------------------------------------------
     // Module
 
-    ret &= stabilisation_init(&controls);
-
     // Parameters
     // Onboard_parameters& op            = communication.parameters();
     // stabiliser_t* rate_stabiliser     = &stabilisation_copter.stabiliser_stack.rate_stabiliser;
@@ -581,7 +579,7 @@ bool LEQuad::init_hud(void)
     bool ret = true;
 
     // Module
-    ret &= hud_telemetry_init(&hud, ins_, &controls, &ahrs);
+    ret &= hud_telemetry_init(&hud, ins_, &flight_controller_.command(), &ahrs);
 
     // DOWN telemetry
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_VFR_HUD, 500000, &hud_telemetry_send_message, &hud);

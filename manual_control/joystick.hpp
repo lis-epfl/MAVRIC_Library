@@ -44,7 +44,6 @@
 #define JOYSTICK_HPP_
 
 #include "status/state.hpp"
-#include "control/stabilisation.hpp"
 #include "control/control_command.hpp"
 #include "control/controller.hpp"
 

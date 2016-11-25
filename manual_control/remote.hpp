@@ -45,7 +45,6 @@
 
 #include "status/mav_modes.hpp"
 #include "drivers/satellite.hpp"
-#include "control/stabilisation.hpp"
 #include "control/controller.hpp"
 #include "control/control_command.hpp"
 

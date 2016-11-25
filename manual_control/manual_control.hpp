@@ -46,7 +46,6 @@
 #include "manual_control/remote.hpp"
 #include "manual_control/joystick.hpp"
 #include "status/state.hpp"
-#include "control/stabilisation.hpp"
 
 
 /* forward declaration for friend function */

@@ -288,6 +288,11 @@ public:
         return true;
     };
 
+    const command_t& command(void) const
+    {
+        return command_;
+    }
+
 protected:
     POS_CTRL  pos_ctrl_;
     VEL_CTRL  vel_ctrl_;

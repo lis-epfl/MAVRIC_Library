@@ -58,7 +58,6 @@
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/rate_controller.hpp"
-#include "control/stabilisation.hpp"
 #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_matrix.hpp"
 
@@ -295,8 +294,6 @@ protected:
     INS*                ins_;                                   ///< Alias for the position filter in use
     INS_complementary   ins_complementary;                      ///< The position estimaton structure
     INS_kf              ins_kf;                                 ///< The Kalman INS structure, used for position estimation
-
-    control_command_t controls;                                 ///< The control structure used for rate and attitude modes
 
     Flight_controller_copter flight_controller_;
 
