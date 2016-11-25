@@ -139,8 +139,8 @@ public:
         Scheduler::conf_t scheduler_config;
         Mavlink_communication::conf_t mavlink_communication_config;
         Mavlink_waypoint_handler::conf_t waypoint_handler_config;
-        // Mission_planner::conf_t mission_planner_config;
-        // Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::conf_t mission_handler_landing_config;
+        Mission_planner::conf_t mission_planner_config;
+        Mission_handler_landing::conf_t mission_handler_landing_config;
         qfilter_conf_t qfilter_config;
         Ahrs_ekf::conf_t ahrs_ekf_config;
         INS_complementary::conf_t ins_complementary_config;
@@ -302,15 +302,17 @@ protected:
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
-    // Mission_handler_hold_position hold_position_handler;
-    // Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I> landing_handler;
-    // Mission_handler_navigating<Navigation_controller_I> navigating_handler;
-    Mission_handler_on_ground on_ground_handler;
-    Mission_handler_manual manual_ctrl_handler;
-    // Mission_handler_takeoff<Navigation_controller_I> takeoff_handler;
-    // Mission_handler_critical_landing<Navigation_controller_I, XYposition_Zvel_controller_I> critical_landing_handler;
-    // Mission_handler_critical_navigating<Navigation_controller_I> critical_navigating_handler;
-    // Mission_planner mission_planner;                            ///< Controls the mission plan
+
+    Mission_handler_hold_position       hold_position_handler;
+    Mission_handler_landing             landing_handler;
+    Mission_handler_navigating          navigating_handler;
+    Mission_handler_on_ground           on_ground_handler;
+    Mission_handler_manual              manual_ctrl_handler;
+    Mission_handler_takeoff             takeoff_handler;
+    Mission_handler_critical_landing    critical_landing_handler;
+    Mission_handler_critical_navigating critical_navigating_handler;
+
+    Mission_planner mission_planner_;                            ///< Controls the mission plan
 
     Geofence_cylinder safety_geofence_;                         ///< Geofence
     Geofence_cylinder emergency_geofence_;                      ///< Geofence
@@ -348,8 +350,8 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.waypoint_handler_config = Mavlink_waypoint_handler::default_config();
 
-    // conf.mission_planner_config = Mission_planner::default_config();
-    // conf.mission_handler_landing_config = Mission_handler_landing<Navigation_controller_I, XYposition_Zvel_controller_I>::default_config();
+    conf.mission_planner_config = Mission_planner::default_config();
+    conf.mission_handler_landing_config = Mission_handler_landing::default_config();
 
     conf.qfilter_config = qfilter_default_config();
 
@@ -390,11 +392,10 @@ LEQuad::conf_t LEQuad::dronedome_config(uint8_t sysid)
     conf.ins_complementary_config.kp_sonar_alt = 0.0f;
     conf.ins_complementary_config.kp_sonar_vel = 0.0f;
 
-    // conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
-
-    // conf.mission_planner_config.safe_altitude                   =  -3.0f;
-    // conf.mission_planner_config.critical_landing_altitude       =  -2.0f;
-    // conf.mission_planner_config.takeoff_altitude                =  -2.0f;
+    conf.mission_handler_landing_config.desc_to_ground_altitude = -1.0f;
+    conf.mission_planner_config.safe_altitude                   =  -3.0f;
+    conf.mission_planner_config.critical_landing_altitude       =  -2.0f;
+    conf.mission_planner_config.takeoff_altitude                =  -2.0f;
 
     return conf;
 }

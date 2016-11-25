@@ -34,8 +34,9 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the takeoff state
+ * \brief The mission handler for the takeoff
  *
  ******************************************************************************/
 
@@ -44,23 +45,106 @@
 #include "navigation/navigation.hpp"
 
 
-//------------------------------------------------------------------------------
-// PROTECTED/PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-template <>
-bool Mission_handler_takeoff<Navigation>::set_control_command()
+Mission_handler_takeoff::Mission_handler_takeoff(const INS& ins, State& state):
+    Mission_handler(),
+    ins_(ins),
+    state_(state)
 {
-    Navigation::nav_command_t cmd;
+    waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
+                            MAV_CMD_NAV_TAKEOFF,
+                            0,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f,
+                            0.0f);
+}
+
+
+bool Mission_handler_takeoff::can_handle(const Waypoint& wpt) const
+{
+    bool handleable = false;
+
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_TAKEOFF)
+    {
+        handleable = true;
+    }
+
+    return handleable;
+}
+
+
+bool Mission_handler_takeoff::setup(const Waypoint& wpt)
+{
+    bool success = true;
+
+    waypoint_ = wpt;
+
+    print_util_dbg_print("Automatic take-off, will hold position at: (");
+    print_util_dbg_print_num(wpt.local_pos()[X], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(wpt.local_pos()[Y], 10);
+    print_util_dbg_print(", ");
+    print_util_dbg_print_num(wpt.local_pos()[Z], 10);
+    print_util_dbg_print(")\r\n");
+
+    return success;
+}
+
+
+Mission_handler::update_status_t Mission_handler_takeoff::update()
+{
+    /*******************
+    Determine status code
+    ********************/
+    bool finished = false;
+
+    // Determine distance to the waypoint
+    local_position_t wpt_pos = waypoint_.local_pos();
+    float xy_radius_sqr = wpt_pos[Z]*wpt_pos[Z]*0.16f;
+
+    float xy_dist2wp_sqr;
+    float rel_pos[3];
+    for (int i = 0; i < 2; i++)
+    {
+        rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
+    }
+    rel_pos[2] = 0.0f;
+    xy_dist2wp_sqr = vectors_norm_sqr(rel_pos);
+
+    // Determine if finished
+    if (xy_dist2wp_sqr <= xy_radius_sqr && ins_.position_lf()[Z] <= 0.9f * wpt_pos[Z])
+    {
+        finished = true;
+    }
+
+    // Return true if waiting at waypoint and autocontinue
+    if (finished && waypoint_.autocontinue() == 1)
+    {
+        return MISSION_FINISHED;
+    }
+
+    return MISSION_IN_PROGRESS;
+}
+
+
+bool Mission_handler_takeoff::write_flight_command(Flight_controller& flight_controller) const
+{
+    position_command_t cmd;
     float heading = 0.0f;
     waypoint_.heading(heading);
 
 	cmd.xyz     = waypoint_.local_pos();
     cmd.heading = heading;
 
-    return controller_.set_goal(cmd);
+    return flight_controller.set_command(cmd);
 }
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+
+Mission_planner::internal_state_t Mission_handler_takeoff::handler_mission_state() const
+{
+    return Mission_planner::PREMISSION;
+}

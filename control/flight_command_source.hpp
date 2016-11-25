@@ -30,44 +30,34 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_critical_navigating.hxx
+ * \file flight_command_source.hpp
  *
  * \author MAV'RIC Team
- * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief   The MAVLink mission planner handler functions for the critical 
- *          navigating state
+ * \brief   Interface for things that can provide flight control commands autonomously
  *
  ******************************************************************************/
 
- 
-#ifndef MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
-#define MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
+#ifndef FLIGHT_COMMAND_SOURCE_HPP_
+#define FLIGHT_COMMAND_SOURCE_HPP_
 
-#include "communication/mavlink_waypoint_handler.hpp"
-#include "mission/mission_handler_navigating.hpp"
+// Forward declaration
+class Flight_controller;
 
-template <class T>
-Mission_handler_critical_navigating<T>::Mission_handler_critical_navigating(T& controller,
-                                                                            const INS& ins,
-                                                                            const Mavlink_stream& mavlink_stream,
-                                                                            Mavlink_waypoint_handler& waypoint_handler):
-            Mission_handler_navigating<T>(controller, ins, mavlink_stream, waypoint_handler)
+
+/**
+ * \brief   Interface for things that can provide flight control commands autonomously
+ */
+class Flight_command_source
 {
-}
+public:
+    /**
+     * \brief   Provides control commands to the flight controller
+     *
+     * \return  success
+     */
+    virtual bool write_flight_command(Flight_controller& flight_controller) const = 0;
+};
 
-template <class T>
-bool Mission_handler_critical_navigating<T>::can_handle(const Waypoint& wpt) const
-{
-    bool handleable = false;
-
-    uint16_t cmd = wpt.command();
-    if (cmd == MAV_CMD_NAV_CRITICAL_WAYPOINT)
-    {
-        handleable = true;
-    }
-
-    return handleable;
-}
-
-#endif // MISSION_HANDLER_CRITICAL_NAVIGATING_HXX__
+#endif  // FLIGHT_COMMAND_SOURCE_HPP_

@@ -34,32 +34,31 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the on ground state
+ * \brief The mission handler for the on ground state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_ON_GROUND__
-#define MISSION_HANDLER_ON_GROUND__
+#ifndef MISSION_HANDLER_ON_GROUND_HPP_
+#define MISSION_HANDLER_ON_GROUND_HPP_
 
 #include "control/controller.hpp"
 #include "mission/mission_handler.hpp"
 
 
-
+/**
+ * \brief The mission handler for the on ground state
+ */
 class Mission_handler_on_ground : public Mission_handler
 {
 public:
 
     /**
      * \brief   Initialize the on ground mission planner handler
-     *
-     * \param   rate_controller     The reference to the rate controls
-     * \param   thrust_controller   The reference to the thrust controls
      */
-     Mission_handler_on_ground(Controller<rate_command_t>& rate_controller,
-                               Controller<thrust_command_t>& thrust_controller);
+     Mission_handler_on_ground();
 
 
     /**
@@ -73,6 +72,7 @@ public:
      */
     virtual bool can_handle(const Waypoint& wpt) const;
 
+
     /**
      * \brief   Does nothing
      *
@@ -84,6 +84,7 @@ public:
      */
     virtual bool setup(const Waypoint& wpt);
 
+
     /**
      * \brief   Returns MISSION_IN_PROGRESS
      *
@@ -93,6 +94,15 @@ public:
      */
     virtual Mission_handler::update_status_t update();
 
+
+    /**
+     * \brief   Provides control commands to the flight controller
+     *
+     * \return  success
+     */
+    virtual bool write_flight_command(Flight_controller& flight_controller) const;
+
+
     /**
      * \brief   Returns that the mission state is in STANDBY
      *
@@ -100,15 +110,6 @@ public:
      */
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
-protected:
-    Controller<rate_command_t>&   rate_controller_;                  ///< The reference to the rate controller
-    Controller<thrust_command_t>& thrust_controller_;                ///< The reference to the rate controller
 };
 
-
-
-
-
-
-
-#endif // MISSION_HANDLER_ON_GROUND__
+#endif // MISSION_HANDLER_ON_GROUND_HPP_

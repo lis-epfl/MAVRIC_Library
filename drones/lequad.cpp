@@ -116,15 +116,15 @@ LEQuad::LEQuad(Imu& imu,
     flight_controller_(*ins_, ahrs, servo_0, servo_1, servo_2, servo_3, config.flight_controller_config),
     mission_handler_registry(),
     waypoint_handler(*ins_, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
-    // hold_position_handler(flight_controller_, *ins_),
-    // landing_handler(flight_controller_, flight_controller_, *ins_, state),
-    // navigating_handler(flight_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
-    on_ground_handler(flight_controller_, flight_controller_),
+    hold_position_handler(*ins_),
+    landing_handler(*ins_, state),
+    navigating_handler(*ins_, communication.mavlink_stream(), waypoint_handler),
+    on_ground_handler(),
     manual_ctrl_handler(),
-    // takeoff_handler(flight_controller_, *ins_, state),
-    // critical_landing_handler(flight_controller_, flight_controller_, *ins_, state),
-    // critical_navigating_handler(flight_controller_, *ins_, communication.mavlink_stream(), waypoint_handler),
-    // mission_planner(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
+    takeoff_handler(*ins_, state),
+    critical_landing_handler(*ins_, state),
+    critical_navigating_handler(*ins_, communication.mavlink_stream(), waypoint_handler),
+    mission_planner_(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     safety_geofence_(config.safety_geofence_config),
     emergency_geofence_(config.emergency_geofence_config),
     state_machine(state, *ins_, imu, ahrs, manual_control, safety_geofence_, emergency_geofence_, state_display_),
@@ -544,31 +544,30 @@ bool LEQuad::init_mission_planning(void)
 
     // Initialize
     // ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
-    // ret &= mission_handler_registry.register_mission_handler(landing_handler);
-    // ret &= mission_handler_registry.register_mission_handler(manual_ctrl_handler);
-    // ret &= mission_handler_registry.register_mission_handler(navigating_handler);
-    // ret &= mission_handler_registry.register_mission_handler(on_ground_handler);
-    // ret &= mission_handler_registry.register_mission_handler(takeoff_handler);
-    // ret &= mission_handler_registry.register_mission_handler(critical_landing_handler);
-    // ret &= mission_handler_registry.register_mission_handler(critical_navigating_handler);
+    ret &= mission_handler_registry.register_mission_handler(landing_handler);
+    ret &= mission_handler_registry.register_mission_handler(manual_ctrl_handler);
+    ret &= mission_handler_registry.register_mission_handler(navigating_handler);
+    ret &= mission_handler_registry.register_mission_handler(on_ground_handler);
+    ret &= mission_handler_registry.register_mission_handler(takeoff_handler);
+    ret &= mission_handler_registry.register_mission_handler(critical_landing_handler);
+    ret &= mission_handler_registry.register_mission_handler(critical_navigating_handler);
     ret &= waypoint_handler.init();
-    // ret &= mission_planner.init();
+    ret &= mission_planner_.init();
 
     // Parameters
-    //ret &= communication.parameters().add(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
-    //ret &= communication.parameters().add(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
+    ret &= communication.parameters().add(&mission_planner_.takeoff_altitude(),                 "NAV_TAKEOFF_ALT" );
 
-    // ret &= communication.parameters().add(&mission_planner.takeoff_altitude(),                 "NAV_TAKEOFF_ALT" );
-
-    //ret &= communication.parameters().add(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
-    //ret &= communication.parameters().add(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
-    //ret &= communication.parameters().add(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
-    //ret &= communication.parameters().add(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
-    //ret &= communication.parameters().add(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
-    //ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
+    // ret &= communication.parameters().add(&navigation.cruise_speed,                            "NAV_CRUISESPEED" );
+    // ret &= communication.parameters().add(&navigation.max_climb_rate,                          "NAV_CLIMBRATE"   );
+    // ret &= communication.parameters().add(&navigation.minimal_radius,                          "NAV_MINI_RADIUS" );
+    // ret &= communication.parameters().add(&navigation.hovering_controller.p_gain,              "NAV_HOVER_PGAIN" );
+    // ret &= communication.parameters().add(&navigation.hovering_controller.differentiator.gain, "NAV_HOVER_DGAIN" );
+    // ret &= communication.parameters().add(&navigation.wpt_nav_controller.p_gain,               "NAV_WPT_PGAIN"   );
+    // ret &= communication.parameters().add(&navigation.wpt_nav_controller.differentiator.gain,  "NAV_WPT_DGAIN"   );
+    // ret &= communication.parameters().add(&navigation.kp_yaw,                                  "NAV_YAW_KPGAIN"  );
 
     // Task
-    // ret &= scheduler.add_task(10000, &Mission_planner::update, &mission_planner, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, &Mission_planner::update, &mission_planner_, Scheduler_task::PRIORITY_HIGH);
 
     return ret;
 }
@@ -649,9 +648,9 @@ bool LEQuad::main_task(void)
         switch (state.mav_mode().ctrl_mode())
         {
             case Mav_mode::GPS_NAV:
-            break;
-
             case Mav_mode::POSITION_HOLD:
+                // mission_planner_.write_autonomous_flight_command(flight_controller_);
+                flight_controller_.set_flight_command(mission_planner_);
             break;
 
             case Mav_mode::VELOCITY:

@@ -30,49 +30,37 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_critical_landing.hpp
+ * \file mission_handler_critical_navigating.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
  * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the critical landing state
+ * \brief   The MAVLink mission planner handler functions for the critical
+ *          navigating state
  *
  ******************************************************************************/
 
-#ifndef MISSION_HANDLER_CRITICAL_LANDING_HPP__
-#define MISSION_HANDLER_CRITICAL_LANDING_HPP__
-
-#include "mission/mission_handler_landing.hpp"
-
-/*
- * The handler class takes in a template parameter that allows control inputs.
- */
-class Mission_handler_critical_landing : public Mission_handler_landing
-{  
-public:
+#include "mission/mission_handler_critical_navigating.hpp"
+#include "communication/mavlink_waypoint_handler.hpp"
 
 
-    /**
-     * \brief   Initialize the landing mission planner handler
-     *
-     * \param   ins                             The reference to the ins
-     * \param   state                           The reference to the state structure
-     */
-     Mission_handler_critical_landing(const INS& ins, State& state);
-
-    /**
-     * \brief   Checks if the waypoint is a landing waypoint
-     *
-     * \details     Checks if the inputted waypoint is a:
-     *                  MAV_CMD_NAV_CRITICAL_LAND
-     *
-     * \param   wpt                 The waypoint class
-     *
-     * \return  Can handle
-     */
-    virtual bool can_handle(const Waypoint& wpt) const;
-};
+Mission_handler_critical_navigating::Mission_handler_critical_navigating(const INS& ins,
+                                                                         const Mavlink_stream& mavlink_stream,
+                                                                         Mavlink_waypoint_handler& waypoint_handler):
+    Mission_handler_navigating(ins, mavlink_stream, waypoint_handler)
+{}
 
 
-#endif // MISSION_HANDLER_CRITICAL_LANDING__
+bool Mission_handler_critical_navigating::can_handle(const Waypoint& wpt) const
+{
+    bool handleable = false;
+
+    uint16_t cmd = wpt.command();
+    if (cmd == MAV_CMD_NAV_CRITICAL_WAYPOINT)
+    {
+        handleable = true;
+    }
+
+    return handleable;
+}

@@ -30,33 +30,26 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file mission_handler_critical_landing.hxx
+ * \file mission_handler_critical_landing.cpp
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief   The MAVLink mission planner handler functions for the critical 
+ * \brief   The MAVLink mission planner handler functions for the critical
  *          landing state
  *
  ******************************************************************************/
 
+#include "mission/mission_handler_critical_landing.hpp"
 
-#ifndef MISSION_HANDLER_CRITICAL_LANDING_HXX__
-#define MISSION_HANDLER_CRITICAL_LANDING_HXX__
 
-#include "mission/mission_handler_landing.hpp"
+Mission_handler_critical_landing::Mission_handler_critical_landing(const INS& ins, State& state):
+            Mission_handler_landing(ins, state)
+{}
 
-template <class T1, class T2>
-Mission_handler_critical_landing<T1, T2>::Mission_handler_critical_landing( T1& desc_to_small_alt_controller,
-                                                                            T2& desc_to_ground_controller,
-                                                                            const INS& ins,
-                                                                            State& state):
-            Mission_handler_landing<T1, T2>(desc_to_small_alt_controller, desc_to_ground_controller, ins, state)
-{
-}
 
-template <class T1, class T2>
-bool Mission_handler_critical_landing<T1, T2>::can_handle(const Waypoint& wpt) const
+bool Mission_handler_critical_landing::can_handle(const Waypoint& wpt) const
 {
     bool handleable = false;
 
@@ -68,5 +61,3 @@ bool Mission_handler_critical_landing<T1, T2>::can_handle(const Waypoint& wpt) c
 
     return handleable;
 }
-
-#endif // MISSION_HANDLER_CRITICAL_LANDING_HXX__

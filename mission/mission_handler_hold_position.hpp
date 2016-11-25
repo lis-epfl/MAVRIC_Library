@@ -34,34 +34,32 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the hold position state
+ * \brief The mission handler for the hold position state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_HOLD_POSITION__
-#define MISSION_HANDLER_HOLD_POSITION__
+#ifndef MISSION_HANDLER_HOLD_POSITION_HPP_
+#define MISSION_HANDLER_HOLD_POSITION_HPP_
 
 #include "mission/mission_handler.hpp"
 #include "navigation/navigation.hpp"
 
 /*
- * The handler class takes in a template parameter that allows control inputs.
+ * \brief   The mission handler for the hold position state
  */
 class Mission_handler_hold_position : public Mission_handler
 {
 public:
-
-
     /**
      * \brief   Initialize the hold position mission planner handler
      *
-     * \param   controller              The reference to the controller
      * \param   ins                     The reference to the ins
      */
-     Mission_handler_hold_position( Navigation& controller,
-                                    const INS& ins);
+     Mission_handler_hold_position(const INS& ins);
+
 
     /**
      * \brief   Checks if the waypoint is a hold position waypoint
@@ -78,6 +76,7 @@ public:
      */
     virtual bool can_handle(const Waypoint& wpt) const;
 
+
     /**
      * \brief   Sets up this handler class for a first time initialization
      *
@@ -90,6 +89,7 @@ public:
      */
     virtual bool setup(const Waypoint& wpt);
 
+
     /**
      * \brief   Handles the mission every iteration
      *
@@ -100,6 +100,15 @@ public:
      * \return  Status code
      */
     virtual Mission_handler::update_status_t update();
+
+
+    /**
+     * \brief   Provides control commands to the flight controller
+     *
+     * \return  success
+     */
+    virtual bool write_flight_command(Flight_controller& flight_controller) const;
+
 
     /**
      * \brief   Returns that the mission state is in MISSION
@@ -113,15 +122,7 @@ protected:
     uint64_t start_time_;               ///< The start time of the waypoint hold
     bool within_radius_;                ///< Flag stating if we are within the radius
 
-    Navigation& controller_;                     ///< The reference to the controller
     const INS& ins_;                    ///< The reference to the ins structure
-
-    /**
-     * \brief   Function to set the controller specific command
-     *
-     * \return  Controller accepted input
-     */
-    virtual bool set_control_command();
 };
 
-#endif // MISSION_HANDLER_HOLD_POSITION__
+#endif // MISSION_HANDLER_HOLD_POSITION_HPP_

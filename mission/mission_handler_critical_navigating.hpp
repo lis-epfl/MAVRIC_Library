@@ -34,22 +34,22 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the critical navigating state
+ * \brief The mission handler for the critical navigating state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_CRITICAL_NAVIGATING__
-#define MISSION_HANDLER_CRITICAL_NAVIGATING__
+#ifndef MISSION_HANDLER_CRITICAL_NAVIGATING_HPP_
+#define MISSION_HANDLER_CRITICAL_NAVIGATING_HPP_
 
 #include "mission/mission_handler_navigating.hpp"
 
 /*
- * The handler class takes in a template parameter that allows control inputs.
+ * \brief The mission handler for the critical navigating state
  */
-template <class T>
-class Mission_handler_critical_navigating : public Mission_handler_navigating<T>
+class Mission_handler_critical_navigating : public Mission_handler_navigating
 {
 public:
 
@@ -57,20 +57,18 @@ public:
     /**
      * \brief   Initialize the navigating mission planner handler
      *
-     * \param   controller                          The reference to the controller
      * \param   ins                                 The reference to the ins
      * \param   mission_planner                     The reference to the mission planner
      * \param   mavlink_stream                      The reference to the MAVLink stream structure
      * \param   waypoint_handler                    The handler for the manual control state
      */
-     Mission_handler_critical_navigating(   T& controller,
-                                            const INS& ins,
-                                            const Mavlink_stream& mavlink_stream,
-                                            Mavlink_waypoint_handler& waypoint_handler);
+     Mission_handler_critical_navigating(const INS& ins,
+                                         const Mavlink_stream& mavlink_stream,
+                                         Mavlink_waypoint_handler& waypoint_handler);
 
     /**
      * \brief   Checks if the waypoint is a navigating waypoint
-     *  
+     *
      * \details     Checks if the inputted waypoint is a:
      *                  MAV_CMD_NAV_CRITICAL_WAYPOINT
      *
@@ -81,6 +79,4 @@ public:
     virtual bool can_handle(const Waypoint& wpt) const;
 };
 
-#include "mission/mission_handler_critical_navigating.hxx"
-
-#endif // MISSION_HANDLER_CRITICAL_NAVIGATING__
+#endif // MISSION_HANDLER_CRITICAL_NAVIGATING_HPP_

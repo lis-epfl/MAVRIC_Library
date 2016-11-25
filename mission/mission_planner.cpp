@@ -34,8 +34,9 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The mission planner
+ * \brief Interface for mission planner handler
  *
  ******************************************************************************/
 
@@ -213,6 +214,20 @@ bool Mission_planner::update(Mission_planner* mission_planner)
 
     return true;
 }
+
+
+bool Mission_planner::write_flight_command(Flight_controller& flight_controller) const
+{
+    if (current_mission_handler_)
+    {
+        return current_mission_handler_->write_flight_command(flight_controller);
+    }
+    else
+    {
+        return false;
+    }
+}
+
 
 void Mission_planner::set_critical_next_state(bool critical_next_state)
 {

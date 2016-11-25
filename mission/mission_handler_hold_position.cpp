@@ -36,17 +36,15 @@
  * \author Matthew Douglas
  * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler functions for the hold position state
+ * \brief The mission handler functions for the hold position state
  *
  ******************************************************************************/
 
 #include "mission/mission_handler_hold_position.hpp"
 
 
-Mission_handler_hold_position::Mission_handler_hold_position(Navigation& controller,
-                                                             const INS& ins):
+Mission_handler_hold_position::Mission_handler_hold_position(const INS& ins):
     Mission_handler(),
-    controller_(controller),
     ins_(ins)
 {
     waypoint_ = Waypoint(   MAV_FRAME_LOCAL_NED,
@@ -92,9 +90,6 @@ bool Mission_handler_hold_position::setup(const Waypoint& wpt)
 
 Mission_handler::update_status_t Mission_handler_hold_position::update()
 {
-    // Set goal
-    bool ret = set_control_command();
-
     /*******************
     Determine status code
     ********************/
@@ -141,16 +136,10 @@ Mission_handler::update_status_t Mission_handler_hold_position::update()
                 return MISSION_FINISHED;
             }
             break;
-            
+
         case MAV_CMD_OVERRIDE_GOTO:
             return MISSION_FINISHED;
         }
-    }
-
-    // Handle control command failed status
-    if (!ret)
-    {
-        return MISSION_FAILED;
     }
 
     return MISSION_IN_PROGRESS;
@@ -163,14 +152,15 @@ Mission_planner::internal_state_t Mission_handler_hold_position::handler_mission
 }
 
 
-bool Mission_handler_hold_position::set_control_command()
+bool Mission_handler_hold_position::write_flight_command(Flight_controller& flight_controller) const
 {
-	Navigation::nav_command_t cmd;
+	position_command_t cmd;
+
+    // Set heading and position fram waypoint
     float heading = 0.0f;
     waypoint_.heading(heading);
-
     cmd.xyz     = waypoint_.local_pos();
 	cmd.heading = heading;
 
-    return controller_.set_goal(cmd);
+    return flight_controller.set_command(cmd);
 }

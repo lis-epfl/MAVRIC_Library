@@ -34,14 +34,15 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the navigating state
+ * \brief The mission handler for the navigating state
  *
  ******************************************************************************/
 
 
-#ifndef MISSION_HANDLER_NAVIGATING__
-#define MISSION_HANDLER_NAVIGATING__
+#ifndef MISSION_HANDLER_NAVIGATING_HPP_
+#define MISSION_HANDLER_NAVIGATING_HPP_
 
 #include "communication/mavlink_message_handler.hpp"
 #include "mission/mission_handler.hpp"
@@ -49,30 +50,26 @@
 class Mavlink_waypoint_handler;
 
 /*
- * The handler class takes in a template parameter that allows control inputs.
+* \brief The mission handler for the navigating state
  */
-template <class T>
 class Mission_handler_navigating : public Mission_handler
 {
 public:
-
-
     /**
      * \brief   Initialize the navigating mission planner handler
      *
-     * \param   controller                          The reference to the controller
      * \param   ins                                 The reference to the ins
      * \param   mavlink_stream                      The reference to the MAVLink stream structure
      * \param   waypoint_handler                    The handler for the manual control state
      */
-     Mission_handler_navigating(    T& controller,
-                                    const INS& ins,
-                                    const Mavlink_stream& mavlink_stream,
-                                    Mavlink_waypoint_handler& waypoint_handler);
+     Mission_handler_navigating(const INS& ins,
+                                const Mavlink_stream& mavlink_stream,
+                                Mavlink_waypoint_handler& waypoint_handler);
+
 
     /**
      * \brief   Checks if the waypoint is a navigating waypoint
-     *  
+     *
      * \details     Checks if the inputted waypoint is a:
      *                  MAV_CMD_NAV_WAYPOINT
      *
@@ -82,9 +79,10 @@ public:
      */
     virtual bool can_handle(const Waypoint& wpt) const;
 
+
     /**
      * \brief   Sets up this handler class for a first time initialization
-     *  
+     *
      * \details     Records the waypoint reference
      *
      * \param   wpt                 The waypoint class
@@ -93,9 +91,10 @@ public:
      */
     virtual bool setup(const Waypoint& wpt);
 
+
     /**
      * \brief   Handles the mission every iteration
-     *  
+     *
      * \details     Handles the navigation to the waypoint and determines the
      *              status code. The status code is MISSION_IN_PROGRESS for currently navigating
      *              to the waypoint, MISSION_FINISHED for waypoint reached and autocontinue,
@@ -105,6 +104,15 @@ public:
      */
     virtual Mission_handler::update_status_t update();
 
+
+    /**
+     * \brief   Provides control commands to the flight controller
+     *
+     * \return  success
+     */
+    virtual bool write_flight_command(Flight_controller& flight_controller) const;
+
+
     /**
      * \brief   Returns that the mission state is in MISSION
      *
@@ -113,7 +121,6 @@ public:
     virtual Mission_planner::internal_state_t handler_mission_state() const;
 
 protected:
-    T& controller_;                                                     ///< The reference to the controller
     const INS& ins_;                                                    ///< The reference to the ins interface
     const Mavlink_stream& mavlink_stream_;                              ///< The reference to the mavlink object
     Mavlink_waypoint_handler& waypoint_handler_;                        ///< The reference to the mavlink waypoint handler
@@ -123,13 +130,7 @@ protected:
     uint64_t start_time_;                                               ///< The start time for travelling to this waypoint
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
-    /**
-     * \brief   Function to set the controller specific command
-     *
-     * \return  Controller accepted input
-     */
-    virtual bool set_control_command();
-    
+
     /**
      * \brief   Sends the travel time between the last two waypoints
      *
@@ -140,6 +141,4 @@ protected:
     void send_nav_time(const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 };
 
-#include "mission/mission_handler_navigating.hxx"
-
-#endif // MISSION_HANDLER_NAVIGATING__
+#endif // MISSION_HANDLER_NAVIGATING_HPP_

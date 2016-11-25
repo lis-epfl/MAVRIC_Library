@@ -34,8 +34,9 @@
  *
  * \author MAV'RIC Team
  * \author Matthew Douglas
+ * \author Julien Lecoeur
  *
- * \brief The MAVLink mission planner handler for the manual control state
+ * \brief The mission handler for the manual control state
  *
  ******************************************************************************/
 
@@ -68,6 +69,12 @@ bool Mission_handler_manual::setup(const Waypoint& wpt)
 Mission_handler::update_status_t Mission_handler_manual::update()
 {
 	return MISSION_FINISHED;
+}
+
+
+bool Mission_handler_manual::write_flight_command(Flight_controller& flight_controller) const
+{
+    return false;
 }
 
 

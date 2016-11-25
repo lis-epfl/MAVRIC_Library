@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Interface for full flight controllers
+ * \brief   Interface for flight controllers
  *
  ******************************************************************************/
 
@@ -44,6 +44,8 @@
 
 #include "control/controller.hpp"
 #include "manual_control/manual_control.hpp"
+#include "control/flight_command_source.hpp"
+
 
 class Flight_controller: public Controller<position_command_t>,
                          public Controller<velocity_command_t>,
@@ -52,10 +54,26 @@ class Flight_controller: public Controller<position_command_t>,
                          public Controller<torque_command_t>,
                          public Controller<thrust_command_t>
 {
+public:
     virtual bool failsafe(void) = 0;
+
+    virtual bool set_command(const position_command_t& command) = 0;
+    virtual bool set_command(const velocity_command_t& command) = 0;
+    virtual bool set_command(const attitude_command_t& command) = 0;
+    virtual bool set_command(const rate_command_t& command) = 0;
+    virtual bool set_command(const torque_command_t& command) = 0;
+    virtual bool set_command(const thrust_command_t& command) = 0;
+
     virtual bool set_manual_rate_command(const Manual_control& manual_control) = 0;
     virtual bool set_manual_attitude_command(const Manual_control& manual_control) = 0;
     virtual bool set_manual_velocity_command(const Manual_control& manual_control) = 0;
+
+    virtual bool set_flight_command(const Flight_command_source& command_source)
+    {
+        return command_source.write_flight_command(*this);
+    };
 };
+
+
 
 #endif  // FLIGHT_CONTROLLER_HPP_
