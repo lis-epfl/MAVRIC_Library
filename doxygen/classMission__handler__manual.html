@@ -85,19 +85,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Mission_handler_manual Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Mission_handler_manual" --><!-- doxytag: inherits="Mission_handler" --><div class="dynheader">
+<!-- doxytag: class="Mission_handler_manual" --><!-- doxytag: inherits="Mission_handler" -->
+<p>The mission handler for the manual control state.  
+ <a href="classMission__handler__manual.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="mission__handler__manual_8hpp_source.html">mission_handler_manual.hpp</a>&gt;</code></p>
+<div class="dynheader">
 Inheritance diagram for Mission_handler_manual:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMission__handler__manual__inherit__graph.png" border="0" usemap="#Mission__handler__manual_inherit__map" alt="Inheritance graph"/></div>
 <map name="Mission__handler__manual_inherit__map" id="Mission__handler__manual_inherit__map">
-<area shape="rect" id="node2" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="12,6,183,143"/></map>
+<area shape="rect" id="node2" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="12,139,183,277"/><area shape="rect" id="node4" href="classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="13,5,181,91"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Mission_handler_manual:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMission__handler__manual__coll__graph.png" border="0" usemap="#Mission__handler__manual_coll__map" alt="Collaboration graph"/></div>
 <map name="Mission__handler__manual_coll__map" id="Mission__handler__manual_coll__map">
-<area shape="rect" id="node2" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="12,6,183,143"/></map>
+<area shape="rect" id="node2" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="12,139,183,277"/><area shape="rect" id="node4" href="classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="13,5,181,91"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classMission__handler__manual-members.html">List of all members.</a></p>
@@ -114,11 +119,15 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual <br class="typebreak"/>
 Mission_handler::update_status_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__manual.html#a0f94b021948a82954698ae1168abe54f">update</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the mission every iteration.  <a href="#a0f94b021948a82954698ae1168abe54f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__manual.html#a6844711ac26b9e63e5d21e84b027cf85">write_flight_command</a> (<a class="el" href="classFlight__controller.html">Flight_controller</a> &amp;flight_controller) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides control commands to the flight controller.  <a href="#a6844711ac26b9e63e5d21e84b027cf85"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual <br class="typebreak"/>
 Mission_planner::internal_state_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__manual.html#a1ea391c7f5d804de0f247a48ba637973">handler_mission_state</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns that the mission state is in MANUAL_CTRL.  <a href="#a1ea391c7f5d804de0f247a48ba637973"></a><br/></td></tr>
 </table>
-<hr/><h2>Member Function Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>The mission handler for the manual control state. </p>
+</div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="aa644fc1d73e7a56835a49df70efdb4c5"></a><!-- doxytag: member="Mission_handler_manual::can_handle" ref="aa644fc1d73e7a56835a49df70efdb4c5" args="(const Waypoint &amp;wpt) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -230,6 +239,28 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="a6844711ac26b9e63e5d21e84b027cf85"></a><!-- doxytag: member="Mission_handler_manual::write_flight_command" ref="a6844711ac26b9e63e5d21e84b027cf85" args="(Flight_controller &amp;flight_controller) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classMission__handler__manual.html#a6844711ac26b9e63e5d21e84b027cf85">Mission_handler_manual::write_flight_command</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classFlight__controller.html">Flight_controller</a> &amp;&#160;</td>
+          <td class="paramname"><em>flight_controller</em></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Provides control commands to the flight controller. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
+
+<p>Implements <a class="el" href="classFlight__command__source.html#a1ea29d57bc9f57a569119256a2dd723c">Flight_command_source</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/mission/<a class="el" href="mission__handler__manual_8hpp_source.html">mission_handler_manual.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/mission/mission_handler_manual.cpp</li>
@@ -252,7 +283,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

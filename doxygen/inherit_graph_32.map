@@ -1,11 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structbase__command__t.html" title="base_command_t" alt="" coords="5,192,131,221"/>
-<area shape="rect" id="node3" href="$structAttitude__controller__I_1_1att__command__t.html" title="Attitude_controller_I::att_command_t" alt="" coords="231,5,465,35"/>
-<area shape="rect" id="node5" href="$structIVelocity__yaw__controller_1_1vel__yaw__command__t.html" title="IVelocity_yaw_controller::vel_yaw_command_t" alt="" coords="201,59,495,88"/>
-<area shape="rect" id="node7" href="$structNavigation__controller__I_1_1nav__command__t.html" title="Navigation_controller_I::nav_command_t" alt="" coords="219,112,477,141"/>
-<area shape="rect" id="node9" href="$structPosition__controller__I_1_1pos__command__t.html" title="Position_controller_I::pos_command_t" alt="" coords="227,165,469,195"/>
-<area shape="rect" id="node11" href="$structRate__controller__I_1_1rate__command__t.html" title="Rate_controller_I::rate_command_t" alt="" coords="235,219,461,248"/>
-<area shape="rect" id="node13" href="$structServos__mix__I_1_1torq__command__t.html" title="Servos_mix_I::torq_command_t" alt="" coords="245,272,451,301"/>
-<area shape="rect" id="node15" href="$structVelocity__controller__I_1_1vel__command__t.html" title="Velocity_controller_I::vel_command_t" alt="" coords="228,325,468,355"/>
-<area shape="rect" id="node17" href="$structXYposition__Zvel__controller__I_1_1xypos__zvel__command__t.html" title="XYposition_Zvel_controller_I::xypos_zvel_command_t" alt="" coords="180,379,516,408"/>
+<area shape="rect" id="node1" href="$structcommand__t.html" title="Global command structure." alt="" coords="5,5,96,35"/>
 </map>

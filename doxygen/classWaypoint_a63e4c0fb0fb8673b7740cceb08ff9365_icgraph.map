@@ -1,22 +1,23 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMission__handler__critical__landing.html#a377b6f352203fcdc88611a39373ab9a9" title="Checks if the waypoint is a landing waypoint." alt="" coords="207,5,489,35"/>
-<area shape="rect" id="node5" href="$classMission__handler__critical__navigating.html#aa9b1340302ebc4dbc2a09ebf039cbe56" title="Checks if the waypoint is a navigating waypoint." alt="" coords="197,59,499,88"/>
-<area shape="rect" id="node7" href="$classMission__handler__hold__position.html#ac7c7d5be558fed573be3478dc9173fca" title="Checks if the waypoint is a hold position waypoint." alt="" coords="212,112,484,141"/>
-<area shape="rect" id="node9" href="$classMission__handler__landing.html#a8f548b5ae8105f6021932cf4622e7305" title="Checks if the waypoint is a landing waypoint." alt="" coords="229,165,467,195"/>
-<area shape="rect" id="node11" href="$classMission__handler__manual.html#aa644fc1d73e7a56835a49df70efdb4c5" title="Checks if the waypoint is on the ground." alt="" coords="229,219,467,248"/>
-<area shape="rect" id="node13" href="$classMission__handler__navigating.html#ab7e644547b58bee1b986bf8f55e1381c" title="Checks if the waypoint is a navigating waypoint." alt="" coords="220,272,476,301"/>
-<area shape="rect" id="node15" href="$classMission__handler__on__ground.html#ac17c38f64a6b20546a6bf97bc1e29f44" title="Checks if the waypoint is on the ground." alt="" coords="220,325,476,355"/>
-<area shape="rect" id="node17" href="$classMission__handler__takeoff.html#ae67db1a43b81ab42caaa962ad1d570d1" title="Checks if the waypoint is a takeoff waypoint." alt="" coords="229,379,467,408"/>
-<area shape="rect" id="node19" href="$classMission__planner.html#adb37dab461884be985fa9dce1f759e3a" title="Switches the mission handler to the inputted waypoint." alt="" coords="217,432,479,461"/>
-<area shape="rect" id="node21" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="1203,379,1365,408"/>
-<area shape="rect" id="node23" href="$classMission__planner.html#a52445702cb5a8611abb1e4272a6b15be" title="Inserts the inputted waypoint into the mission." alt="" coords="547,511,811,540"/>
-<area shape="rect" id="node33" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="903,431,1111,460"/>
-<area shape="rect" id="node36" href="$classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="555,671,803,700"/>
-<area shape="rect" id="node44" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="573,380,784,409"/>
-<area shape="rect" id="node25" href="$classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold." alt="" coords="904,484,1109,513"/>
-<area shape="rect" id="node27" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="879,644,1135,673"/>
-<area shape="rect" id="node29" href="$classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto&#45;takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF." alt="" coords="884,537,1129,567"/>
-<area shape="rect" id="node31" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="892,591,1121,620"/>
-<area shape="rect" id="node38" href="$classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="879,751,1135,780"/>
-<area shape="rect" id="node40" href="$classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="859,697,1155,727"/>
+<area shape="rect" id="node3" href="$classMission__handler__critical__landing.html#a06e538b089b4fae101c3c228a15623ae" title="Checks if the waypoint is a landing waypoint." alt="" coords="207,5,489,35"/>
+<area shape="rect" id="node5" href="$classMission__handler__critical__navigating.html#abe33592e37a69eaed14c95bcbc704e5f" title="Checks if the waypoint is a navigating waypoint." alt="" coords="197,59,499,88"/>
+<area shape="rect" id="node7" href="$classMission__handler__hold__position.html#ab7ffd26f91f52d91e3b2a571d093cd49" title="Checks if the waypoint is a hold position waypoint." alt="" coords="212,112,484,141"/>
+<area shape="rect" id="node9" href="$classMission__handler__hold__position.html#a97a8871a6f05793ec1d5a07c8825de8c" title="Handles the mission every iteration." alt="" coords="225,165,471,195"/>
+<area shape="rect" id="node11" href="$classMission__handler__landing.html#a758d1ad8d34b556804cacca6319016be" title="Checks if the waypoint is a landing waypoint." alt="" coords="229,219,467,248"/>
+<area shape="rect" id="node13" href="$classMission__handler__manual.html#aa644fc1d73e7a56835a49df70efdb4c5" title="Checks if the waypoint is on the ground." alt="" coords="229,272,467,301"/>
+<area shape="rect" id="node15" href="$classMission__handler__navigating.html#a9916956ff218f15aabeaa95f0c01eacd" title="Checks if the waypoint is a navigating waypoint." alt="" coords="220,325,476,355"/>
+<area shape="rect" id="node17" href="$classMission__handler__on__ground.html#ac17c38f64a6b20546a6bf97bc1e29f44" title="Checks if the waypoint is on the ground." alt="" coords="220,379,476,408"/>
+<area shape="rect" id="node19" href="$classMission__handler__takeoff.html#adf2b112703bc3a24a94434417c084fcc" title="Checks if the waypoint is a takeoff waypoint." alt="" coords="229,432,467,461"/>
+<area shape="rect" id="node21" href="$classMission__planner.html#adb37dab461884be985fa9dce1f759e3a" title="Switches the mission handler to the inputted waypoint." alt="" coords="217,485,479,515"/>
+<area shape="rect" id="node23" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="1203,432,1365,461"/>
+<area shape="rect" id="node25" href="$classMission__planner.html#a52445702cb5a8611abb1e4272a6b15be" title="Inserts the inputted waypoint into the mission." alt="" coords="547,564,811,593"/>
+<area shape="rect" id="node35" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="903,484,1111,513"/>
+<area shape="rect" id="node38" href="$classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="555,724,803,753"/>
+<area shape="rect" id="node46" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="573,433,784,463"/>
+<area shape="rect" id="node27" href="$classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3" title="Navigate to the home position and hold." alt="" coords="904,537,1109,567"/>
+<area shape="rect" id="node29" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="879,697,1135,727"/>
+<area shape="rect" id="node31" href="$classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto&#45;takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF." alt="" coords="884,591,1129,620"/>
+<area shape="rect" id="node33" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="892,644,1121,673"/>
+<area shape="rect" id="node40" href="$classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="879,804,1135,833"/>
+<area shape="rect" id="node42" href="$classMission__planner.html#a5ba51e14690861f52854852b6a9e0716" title="Set the current waypoint to new_current." alt="" coords="859,751,1155,780"/>
 </map>

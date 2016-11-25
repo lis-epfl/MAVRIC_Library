@@ -1,0 +1,16 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="373,5,512,35"/>
+<area shape="rect" id="node7" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="387,59,499,88"/>
+<area shape="rect" id="node9" href="$classINS.html#a6be12f73aed4742471ff86bd045f3630" title="Velocity in meters/seconds in NED frame." alt="" coords="387,112,499,141"/>
+<area shape="rect" id="node11" href="$classWaypoint.html#a70275d81e841101deb34b6d1077e25c1" title="Gets the radius of the waypoint." alt="" coords="383,165,503,195"/>
+<area shape="rect" id="node13" href="$classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87" title="Return sysid of this stream." alt="" coords="367,219,519,248"/>
+<area shape="rect" id="node15" href="$classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441" title="Return sysid of this stream." alt="" coords="361,272,524,301"/>
+<area shape="rect" id="node17" href="$classMavlink__waypoint__handler.html#ab728a8c4758a7afcbe08a28e8c06a2c8" title="Gets the current waypoint index." alt="" coords="283,325,603,355"/>
+<area shape="rect" id="node19" href="$classMavlink__stream.html#a00524b173f3d900665e1f512cbce083f" title="Send Mavlink stream." alt="" coords="368,379,517,408"/>
+<area shape="rect" id="node25" href="$classWaypoint.html#a7bc118bf70a2f2017d2ae4ca8e0916b7" title="Gets the autocontinue state of the waypoint." alt="" coords="364,432,521,461"/>
+<area shape="rect" id="node27" href="$classWaypoint.html#a0aa7594662a253a289cb2f9da0b3b1f9" title="Gets the heading of the waypoint." alt="" coords="377,485,508,515"/>
+<area shape="rect" id="node29" href="$classMavlink__waypoint__handler.html#aefe41b70a4df4ac22a038a4537e84bbc" title="Returns the number of waypoints." alt="" coords="305,539,580,568"/>
+<area shape="rect" id="node5" href="$classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="667,5,749,35"/>
+<area shape="rect" id="node21" href="$classSerial.html#afd01f2d7dc0fb63d859599fb03003689" title="Test if there is space available to write bytes." alt="" coords="651,352,765,381"/>
+<area shape="rect" id="node23" href="$classSerial.html#a59b7d353bc9b33b4cd5735ae475c0044" title="Write bytes on the serial line." alt="" coords="663,405,753,435"/>
+</map>

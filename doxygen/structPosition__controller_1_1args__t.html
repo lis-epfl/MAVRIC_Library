@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: Position_controller&lt; TVelocity_controller &gt;::args_t Struct Reference</title>
+<title>MAV&#39;RIC: Position_controller::args_t Struct Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -102,32 +102,36 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">Position_controller&lt; TVelocity_controller &gt;::args_t Struct Reference</div>  </div>
+<div class="title">Position_controller::args_t Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Position_controller::args_t" --><div class="dynheader">
-Collaboration diagram for Position_controller&lt; TVelocity_controller &gt;::args_t:</div>
+<!-- doxytag: class="Position_controller::args_t" -->
+<p>Required arguments.  
+ <a href="structPosition__controller_1_1args__t.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="position__controller_8hpp_source.html">position_controller.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for Position_controller::args_t:</div>
 <div class="dyncontent">
-<div class="center"><img src="structPosition__controller_1_1args__t__coll__graph.png" border="0" usemap="#Position__controller_3_01TVelocity__controller_01_4_1_1args__t_coll__map" alt="Collaboration graph"/></div>
-<map name="Position__controller_3_01TVelocity__controller_01_4_1_1args__t_coll__map" id="Position__controller_3_01TVelocity__controller_01_4_1_1args__t_coll__map">
-<area shape="rect" id="node2" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="41,177,180,418"/><area shape="rect" id="node4" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="204,220,321,375"/><area shape="rect" id="node6" href="structquat__t.html" title="Unit quaternion." alt="" coords="233,6,292,109"/></map>
+<div class="center"><img src="structPosition__controller_1_1args__t__coll__graph.png" border="0" usemap="#Position__controller_1_1args__t_coll__map" alt="Collaboration graph"/></div>
+<map name="Position__controller_1_1args__t_coll__map" id="Position__controller_1_1args__t_coll__map">
+<area shape="rect" id="node2" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="5,177,144,418"/><area shape="rect" id="node4" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="168,220,285,375"/><area shape="rect" id="node6" href="structquat__t.html" title="Unit quaternion." alt="" coords="197,6,256,109"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="structPosition__controller_1_1args__t-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab8f89af5ea6c9c4c01cd78e2eb753f14"></a><!-- doxytag: member="Position_controller::args_t::ins" ref="ab8f89af5ea6c9c4c01cd78e2eb753f14" args="" -->
-<a class="el" href="classINS.html">INS</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ins</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abec2f16c128a5a2e046bd9a2480755c7"></a><!-- doxytag: member="Position_controller::args_t::ahrs" ref="abec2f16c128a5a2e046bd9a2480755c7" args="" -->
-<a class="el" href="structahrs__t.html">ahrs_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ahrs</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ddcd6c575593b90a5303a6d366d78c2"></a><!-- doxytag: member="Position_controller::args_t::velocity_controller_args" ref="a5ddcd6c575593b90a5303a6d366d78c2" args="" -->
-TVelocity_controller::args_t&#160;</td><td class="memItemRight" valign="bottom"><b>velocity_controller_args</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9c5df9eef330e20a4df7e04d65f2fab1"></a><!-- doxytag: member="Position_controller::args_t::ahrs" ref="a9c5df9eef330e20a4df7e04d65f2fab1" args="" -->
+const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPosition__controller_1_1args__t.html#a9c5df9eef330e20a4df7e04d65f2fab1">ahrs</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to estimated attitude. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4689bdd23718073ff338b09a0a11cc3c"></a><!-- doxytag: member="Position_controller::args_t::ins" ref="a4689bdd23718073ff338b09a0a11cc3c" args="" -->
+const <a class="el" href="classINS.html">INS</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPosition__controller_1_1args__t.html#a4689bdd23718073ff338b09a0a11cc3c">ins</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to estimated speed and position. <br/></td></tr>
 </table>
-<h3>template&lt;class TVelocity_controller&gt;<br/>
- struct Position_controller&lt; TVelocity_controller &gt;::args_t</h3>
-
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>Required arguments. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="position__controller_8hpp_source.html">position_controller.hpp</a></li>
 </ul>
 </div><!-- contents -->
@@ -148,7 +152,7 @@ TVelocity_controller::args_t&#160;</td><td class="memItemRight" valign="bottom">
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

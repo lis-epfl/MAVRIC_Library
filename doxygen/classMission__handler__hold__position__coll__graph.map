@@ -1,5 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="5,145,176,282"/>
-<area shape="rect" id="node4" href="$classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="200,6,315,421"/>
-<area shape="rect" id="node6" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="339,93,477,334"/>
+<area shape="rect" id="node2" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="5,281,176,418"/>
+<area shape="rect" id="node4" href="$classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="7,5,175,91"/>
+<area shape="rect" id="node6" href="$classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="200,142,315,557"/>
+<area shape="rect" id="node8" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="339,229,477,470"/>
 </map>

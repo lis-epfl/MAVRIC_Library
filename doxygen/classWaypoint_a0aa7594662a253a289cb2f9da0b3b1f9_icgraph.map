@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMission__handler__hold__position.html#afa566f50820dab8816bf6b6d7d2ca314" title="Provides control commands to the flight controller." alt="" coords="223,5,556,35"/>
+<area shape="rect" id="node5" href="$classMission__handler__landing.html#a4f725cce92bb52f5e3d76c64337e7830" title="Function to set the controller specific command for the descent to small altitude state..." alt="" coords="184,59,595,88"/>
+<area shape="rect" id="node9" href="$classMission__handler__landing.html#a13fd46bd48de1d9a99eea8e8b11af0b3" title="Function to set the controller specific command for the descent to ground state." alt="" coords="191,112,588,141"/>
+<area shape="rect" id="node12" href="$classMission__handler__navigating.html#afde956e68864854438ae5727ddbd5b27" title="Handles the mission every iteration." alt="" coords="275,165,504,195"/>
+<area shape="rect" id="node14" href="$classMission__handler__takeoff.html#a28119f2fc4be460e72941a0c0244fdef" title="Provides control commands to the flight controller." alt="" coords="240,219,539,248"/>
+<area shape="rect" id="node7" href="$classMission__handler__landing.html#af1e37fd52608635b638c3b2130d50db4" title="Provides control commands to the flight controller." alt="" coords="643,85,941,115"/>
+</map>

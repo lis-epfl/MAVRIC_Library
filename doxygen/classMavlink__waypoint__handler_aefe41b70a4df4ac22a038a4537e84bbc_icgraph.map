@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="329,5,585,35"/>
+<area shape="rect" id="node3" href="$classMission__handler__navigating.html#afde956e68864854438ae5727ddbd5b27" title="Handles the mission every iteration." alt="" coords="343,5,572,35"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="329,59,585,88"/>
 </map>

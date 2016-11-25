@@ -1,3 +1,10 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classAttitude__controller__I.html" title="{Attitude_controller_I\n||+ update()\l+ set_attitude_command()\l}" alt="" coords="41,6,215,109"/>
+<area shape="rect" id="node2" href="$classController.html" title="{Controller\&lt; attitude_command_t, rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,450,331,587"/>
+<area shape="rect" id="node4" href="$structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="355,476,472,561"/>
+<area shape="rect" id="node6" href="$structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="584,459,755,579"/>
+<area shape="rect" id="node8" href="$structquat__t.html" title="Unit quaternion." alt="" coords="639,6,697,109"/>
+<area shape="rect" id="node10" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="744,176,861,331"/>
+<area shape="rect" id="node15" href="$structpid__controller__t.html" title="PID controller." alt="" coords="873,398,1001,639"/>
+<area shape="rect" id="node17" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="885,193,989,313"/>
+<area shape="rect" id="node19" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="1013,185,1117,322"/>
 </map>

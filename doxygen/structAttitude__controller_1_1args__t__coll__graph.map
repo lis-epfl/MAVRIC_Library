@@ -1,4 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="92,176,209,331"/>
-<area shape="rect" id="node4" href="$structquat__t.html" title="Unit quaternion." alt="" coords="121,6,180,109"/>
+<area shape="rect" id="node2" href="$structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="5,211,123,296"/>
+<area shape="rect" id="node4" href="$structquat__t.html" title="Unit quaternion." alt="" coords="204,6,263,109"/>
+<area shape="rect" id="node6" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="311,176,428,331"/>
 </map>

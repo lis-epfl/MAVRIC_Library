@@ -186,6 +186,10 @@ T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (co
 <tr><td class="memTemplParams" colspan="2">template&lt;uint32_t I, uint32_t J, uint32_t Q, uint32_t R&gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classMat.html#ac715327d75ee8129295e0c5f814a56a2">insert_inplace</a> (const <a class="el" href="classMat.html">Mat</a>&lt; Q, R, T &gt; &amp;m)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Insert a matrix into this one.  <a href="#ac715327d75ee8129295e0c5f814a56a2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMat.html#a73cf6014cd534dcf9f2a56a0cf9cb323">clip</a> (const <a class="el" href="classMat.html">Mat</a> &amp;min, const <a class="el" href="classMat.html">Mat</a> &amp;max)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clips matrix values between that of two matrices (element-wise)  <a href="#a73cf6014cd534dcf9f2a56a0cf9cb323"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMat.html#aa924befc1d33c133b3b4e4ec3c7c504d">clip</a> (float min, float max)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Clips matrix values.  <a href="#aa924befc1d33c133b3b4e4ec3c7c504d"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMat.html#a587cc7480e4fe018f43e60b8bc20265e">mat::op</a></td></tr>
@@ -480,6 +484,91 @@ Here is the call graph for this function:</div>
 <area shape="rect" id="node3" href="classmat_1_1op.html#adde1334fecffd8e70be5a5d31f43d62c" title="Add two matrices." alt="" coords="177,5,271,35"/></map>
 </div>
 </p>
+
+</div>
+</div>
+<a class="anchor" id="a73cf6014cd534dcf9f2a56a0cf9cb323"></a><!-- doxytag: member="Mat::clip" ref="a73cf6014cd534dcf9f2a56a0cf9cb323" args="(const Mat &amp;min, const Mat &amp;max)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N, uint32_t P, typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt;::<a class="el" href="classMat.html#a73cf6014cd534dcf9f2a56a0cf9cb323">clip</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt; &amp;&#160;</td>
+          <td class="paramname"><em>max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Clips matrix values between that of two matrices (element-wise) </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">min</td><td>Matrix with minimum values </td></tr>
+    <tr><td class="paramname">max</td><td>Matrix with maximum values </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMat_a73cf6014cd534dcf9f2a56a0cf9cb323_icgraph.png" border="0" usemap="#classMat_a73cf6014cd534dcf9f2a56a0cf9cb323_icgraph" alt=""/></div>
+<map name="classMat_a73cf6014cd534dcf9f2a56a0cf9cb323_icgraph" id="classMat_a73cf6014cd534dcf9f2a56a0cf9cb323_icgraph">
+<area shape="rect" id="node3" href="classServos__mix__matrix.html#ae6f8e5006a8b5759aedf5c1a29b042bb" title="Perform conversion from torque/thrust command to servo command." alt="" coords="127,5,337,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="aa924befc1d33c133b3b4e4ec3c7c504d"></a><!-- doxytag: member="Mat::clip" ref="aa924befc1d33c133b3b4e4ec3c7c504d" args="(float min, float max)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N, uint32_t P, typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classMat.html">Mat</a>&lt; N, P, T &gt;::<a class="el" href="classMat.html#a73cf6014cd534dcf9f2a56a0cf9cb323">clip</a> </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>max</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Clips matrix values. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">min</td><td>Minimum value </td></tr>
+    <tr><td class="paramname">max</td><td>Maximum value </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1773,7 +1862,7 @@ template&lt;typename TT &gt; </div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

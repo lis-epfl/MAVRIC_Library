@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: Attitude_controller&lt; TRate_controller &gt;::args_t Struct Reference</title>
+<title>MAV&#39;RIC: Attitude_controller::args_t Struct Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -102,36 +102,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">Attitude_controller&lt; TRate_controller &gt;::args_t Struct Reference</div>  </div>
+<div class="title">Attitude_controller::args_t Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="Attitude_controller::args_t" -->
-<p>Attitude controller constructor arguments.  
+<p>Required arguments.  
  <a href="structAttitude__controller_1_1args__t.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="attitude__controller_8hpp_source.html">attitude_controller.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Collaboration diagram for Attitude_controller&lt; TRate_controller &gt;::args_t:</div>
+Collaboration diagram for Attitude_controller::args_t:</div>
 <div class="dyncontent">
-<div class="center"><img src="structAttitude__controller_1_1args__t__coll__graph.png" border="0" usemap="#Attitude__controller_3_01TRate__controller_01_4_1_1args__t_coll__map" alt="Collaboration graph"/></div>
-<map name="Attitude__controller_3_01TRate__controller_01_4_1_1args__t_coll__map" id="Attitude__controller_3_01TRate__controller_01_4_1_1args__t_coll__map">
-<area shape="rect" id="node2" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="92,176,209,331"/><area shape="rect" id="node4" href="structquat__t.html" title="Unit quaternion." alt="" coords="121,6,180,109"/></map>
+<div class="center"><img src="structAttitude__controller_1_1args__t__coll__graph.png" border="0" usemap="#Attitude__controller_1_1args__t_coll__map" alt="Collaboration graph"/></div>
+<map name="Attitude__controller_1_1args__t_coll__map" id="Attitude__controller_1_1args__t_coll__map">
+<area shape="rect" id="node2" href="structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="5,211,123,296"/><area shape="rect" id="node4" href="structquat__t.html" title="Unit quaternion." alt="" coords="204,6,263,109"/><area shape="rect" id="node6" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="311,176,428,331"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="structAttitude__controller_1_1args__t-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a991bf44c03de4b42463080dc854e0db5"></a><!-- doxytag: member="Attitude_controller::args_t::ahrs" ref="a991bf44c03de4b42463080dc854e0db5" args="" -->
-const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ahrs</b></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8aee36f2fa5d4e5ef9d3d587cc2f86d7"></a><!-- doxytag: member="Attitude_controller::args_t::rate_controller_args" ref="a8aee36f2fa5d4e5ef9d3d587cc2f86d7" args="" -->
-TRate_controller::args_t&#160;</td><td class="memItemRight" valign="bottom"><b>rate_controller_args</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7a8f0e58a47487aec561ce994984fc70"></a><!-- doxytag: member="Attitude_controller::args_t::ahrs" ref="a7a8f0e58a47487aec561ce994984fc70" args="" -->
+const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAttitude__controller_1_1args__t.html#a7a8f0e58a47487aec561ce994984fc70">ahrs</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to estimated attitude. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6255edbfea70901c52f0c0e2bb7d3bd8"></a><!-- doxytag: member="Attitude_controller::args_t::attitude_command" ref="a6255edbfea70901c52f0c0e2bb7d3bd8" args="" -->
+<a class="el" href="structquat__t.html">attitude_command_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAttitude__controller_1_1args__t.html#a6255edbfea70901c52f0c0e2bb7d3bd8">attitude_command</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to attitude command (input) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a050e1da7ef16e247bf76bad5b5b2e1db"></a><!-- doxytag: member="Attitude_controller::args_t::rate_command" ref="a050e1da7ef16e247bf76bad5b5b2e1db" args="" -->
+<a class="el" href="structrate__command__t.html">rate_command_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structAttitude__controller_1_1args__t.html#a050e1da7ef16e247bf76bad5b5b2e1db">rate_command</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to rate command (output) <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class TRate_controller&gt;<br/>
-struct Attitude_controller&lt; TRate_controller &gt;::args_t</h3>
-
-<p>Attitude controller constructor arguments. </p>
+<div class="textblock"><p>Required arguments. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="attitude__controller_8hpp_source.html">attitude_controller.hpp</a></li>
 </ul>
@@ -153,7 +155,7 @@ struct Attitude_controller&lt; TRate_controller &gt;::args_t</h3>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:30 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

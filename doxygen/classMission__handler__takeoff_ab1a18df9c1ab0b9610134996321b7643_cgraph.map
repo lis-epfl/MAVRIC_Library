@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="275,5,413,35"/>
+<area shape="rect" id="node7" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="288,59,400,88"/>
+<area shape="rect" id="node9" href="$classWaypoint.html#a7bc118bf70a2f2017d2ae4ca8e0916b7" title="Gets the autocontinue state of the waypoint." alt="" coords="265,112,423,141"/>
+<area shape="rect" id="node5" href="$classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="473,5,556,35"/>
+</map>

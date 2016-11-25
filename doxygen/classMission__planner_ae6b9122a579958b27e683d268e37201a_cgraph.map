@@ -14,7 +14,7 @@
 <area shape="rect" id="node21" href="$classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365" title="Gets the command of the waypoint." alt="" coords="1335,592,1476,622"/>
 <area shape="rect" id="node26" href="$classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a" title="returns the ctrl_mode (defined by manual, stabilize, guided and auto flag)" alt="" coords="571,330,720,359"/>
 <area shape="rect" id="node28" href="$classMav__mode.html#a4cfa294420a4f7c293ff1675dea8eb00" title="returns whether in auto mode (MAV_MODE_FLAG_AUTO_ENABLED set)" alt="" coords="577,540,713,570"/>
-<area shape="rect" id="node30" href="$classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357" title="Selects the source input and returns the thrust." alt="" coords="557,804,733,834"/>
+<area shape="rect" id="node30" href="$classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="567,804,724,834"/>
 <area shape="rect" id="node34" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="589,383,701,412"/>
 <area shape="rect" id="node36" href="$classMission__planner.html#a52445702cb5a8611abb1e4272a6b15be" title="Inserts the inputted waypoint into the mission." alt="" coords="513,751,777,780"/>
 <area shape="rect" id="node40" href="$classMission__handler.html#a053d8e3cfd4e2bc720c437629400d589" title="Handles the mission every iteration." alt="" coords="564,276,727,306"/>

@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classManual__control.html#a224f579fb29807afdae8a04627602210" title="Compute torque command from the manual input." alt="" coords="237,5,480,35"/>
+<area shape="rect" id="node5" href="$classManual__control.html#a20503e7bc964e689a5e32b9b90852246" title="Compute rate command from the manual input." alt="" coords="244,59,473,88"/>
+<area shape="rect" id="node7" href="$classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="191,112,527,141"/>
+<area shape="rect" id="node9" href="$classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="233,165,484,195"/>
+<area shape="rect" id="node11" href="$classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="220,219,497,248"/>
+<area shape="rect" id="node13" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="212,272,505,301"/>
+</map>

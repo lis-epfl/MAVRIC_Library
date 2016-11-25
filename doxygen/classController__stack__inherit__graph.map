@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classFlight__controller.html" title="{Flight_controller\n||+ failsafe()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ set_flight_command()\l}" alt="" coords="609,192,833,451"/>
+<area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,227,143"/>
+<area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="251,6,472,143"/>
+<area shape="rect" id="node8" href="$classController.html" title="{Controller\&lt; attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="496,6,715,143"/>
+<area shape="rect" id="node10" href="$classController.html" title="{Controller\&lt; rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="739,6,936,143"/>
+<area shape="rect" id="node12" href="$classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="960,6,1173,143"/>
+<area shape="rect" id="node14" href="$classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1197,6,1408,143"/>
+</map>

@@ -1,9 +1,9 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classServo.html#afc97bfc58e00c9c586d67f53ef4764ad" title="Sets the servos to a given value." alt="" coords="225,219,316,248"/>
 <area shape="rect" id="node23" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="436,112,543,141"/>
-<area shape="rect" id="node5" href="$classServos__mix__quadcopter__cross.html#a9ded93cf1f243401d3358911685ce945" title="Update controller;." alt="" coords="365,272,613,301"/>
-<area shape="rect" id="node7" href="$classServos__mix__quadcopter__diag.html#aa7257c65bc78b1c1e5de4b0095c46644" title="Update controller;." alt="" coords="369,325,609,355"/>
-<area shape="rect" id="node9" href="$classServos__mix__ywing.html#a2e4a4f403461a7e6da8e7838cbc1cec6" title="Update controller;." alt="" coords="400,379,579,408"/>
+<area shape="rect" id="node5" href="$classServos__mix__quadcopter__cross.html#a1086c09ac38a3bcca0188f661610c279" title="Main update function." alt="" coords="365,272,613,301"/>
+<area shape="rect" id="node7" href="$classServos__mix__quadcopter__diag.html#adaf68b4c9aa29a817585905f8a7cddd0" title="Main update function." alt="" coords="369,325,609,355"/>
+<area shape="rect" id="node9" href="$classServos__mix__ywing.html#a6d420617398234a52e18f701d625bd90" title="Main update function." alt="" coords="400,379,579,408"/>
 <area shape="rect" id="node11" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="661,5,803,35"/>
 <area shape="rect" id="node13" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="413,165,565,195"/>
 <area shape="rect" id="node21" href="$classServo.html#a91d7c835b5b0e44a9c57f34ea24affe5" title="Sets the minimum value to the servo." alt="" coords="415,219,564,248"/>

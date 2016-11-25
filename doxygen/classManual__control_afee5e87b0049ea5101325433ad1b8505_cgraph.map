@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="329,5,487,35"/>
+<area shape="rect" id="node5" href="$classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="537,5,655,35"/>
+</map>

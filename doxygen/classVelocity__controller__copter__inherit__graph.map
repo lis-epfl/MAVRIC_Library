@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classVelocity__controller__I.html" title="{Velocity_controller_I\n||+ update()\l+ set_velocity_command()\l}" alt="" coords="72,6,248,109"/>
+<area shape="rect" id="node2" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="197,193,525,469"/>
+<area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/>
+<area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/>
 </map>

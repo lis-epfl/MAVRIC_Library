@@ -1,10 +1,19 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="167,5,423,35"/>
-<area shape="rect" id="node5" href="$classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto&#45;takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF." alt="" coords="172,59,417,88"/>
-<area shape="rect" id="node7" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="180,112,409,141"/>
-<area shape="rect" id="node9" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="191,165,399,195"/>
-<area shape="rect" id="node13" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="189,219,400,248"/>
-<area shape="rect" id="node16" href="$classINS.html#ae3635c2574df207f492208b14c7d1cbb" title="3D Position in global frame" alt="" coords="237,272,352,301"/>
-<area shape="rect" id="node11" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="472,192,635,221"/>
-<area shape="rect" id="node18" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="476,272,631,301"/>
+<area shape="rect" id="node3" href="$classPosition__controller.html#a0053e27a76331e0dadac9ce640f715b2" title="Main update function." alt="" coords="277,5,453,35"/>
+<area shape="rect" id="node5" href="$classMission__handler__hold__position.html#a97a8871a6f05793ec1d5a07c8825de8c" title="Handles the mission every iteration." alt="" coords="243,59,488,88"/>
+<area shape="rect" id="node7" href="$classMission__handler__landing.html#abf91f35cc2c43a5cf3864553292b4dfb" title="Handles the mission every iteration." alt="" coords="260,112,471,141"/>
+<area shape="rect" id="node9" href="$classMission__handler__landing.html#a13fd46bd48de1d9a99eea8e8b11af0b3" title="Function to set the controller specific command for the descent to ground state." alt="" coords="167,165,564,195"/>
+<area shape="rect" id="node13" href="$classMission__handler__navigating.html#a0c39589ed570325c90820442d398eca6" title="Sets up this handler class for a first time initialization." alt="" coords="255,219,476,248"/>
+<area shape="rect" id="node15" href="$classMission__handler__navigating.html#afde956e68864854438ae5727ddbd5b27" title="Handles the mission every iteration." alt="" coords="251,272,480,301"/>
+<area shape="rect" id="node17" href="$classMission__handler__takeoff.html#ab1a18df9c1ab0b9610134996321b7643" title="Handles the mission every iteration." alt="" coords="260,325,471,355"/>
+<area shape="rect" id="node19" href="$classMission__planner.html#a8f7cbff50fd6e373c892fc3c6ec8ad44" title="Pauses the navigation or resumes/advances the navigation waypoint." alt="" coords="237,379,493,408"/>
+<area shape="rect" id="node21" href="$classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc" title="Sets auto&#45;takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF." alt="" coords="243,432,488,461"/>
+<area shape="rect" id="node23" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="251,485,480,515"/>
+<area shape="rect" id="node25" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="261,539,469,568"/>
+<area shape="rect" id="node29" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="260,592,471,621"/>
+<area shape="rect" id="node32" href="$classNavigation__directto.html#a8b3a8f96a3ba89b9facca93cc7a96839" title="Main update function." alt="" coords="275,645,456,675"/>
+<area shape="rect" id="node34" href="$classINS.html#ae3635c2574df207f492208b14c7d1cbb" title="3D Position in global frame" alt="" coords="308,699,423,728"/>
+<area shape="rect" id="node11" href="$classMission__handler__landing.html#af1e37fd52608635b638c3b2130d50db4" title="Provides control commands to the flight controller." alt="" coords="613,165,912,195"/>
+<area shape="rect" id="node27" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="681,565,844,595"/>
+<area shape="rect" id="node36" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="685,699,840,728"/>
 </map>

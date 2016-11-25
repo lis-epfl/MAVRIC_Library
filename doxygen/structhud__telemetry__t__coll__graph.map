@@ -1,7 +1,12 @@
 <map id="G" name="G">
 <area shape="rect" id="node2" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="5,203,139,392"/>
-<area shape="rect" id="node4" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="163,211,299,383"/>
-<area shape="rect" id="node6" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="323,177,461,418"/>
-<area shape="rect" id="node8" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="485,220,603,375"/>
-<area shape="rect" id="node10" href="$structquat__t.html" title="Unit quaternion." alt="" coords="515,6,573,109"/>
+<area shape="rect" id="node4" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="163,177,301,418"/>
+<area shape="rect" id="node6" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="325,220,443,375"/>
+<area shape="rect" id="node8" href="$structquat__t.html" title="Unit quaternion." alt="" coords="285,6,344,109"/>
+<area shape="rect" id="node10" href="$structcommand__t.html" title="Global command structure." alt="" coords="536,203,627,392"/>
+<area shape="rect" id="node12" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="368,15,499,100"/>
+<area shape="rect" id="node14" href="$structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="523,15,640,100"/>
+<area shape="rect" id="node16" href="$structposition__command__t.html" title="Position command structure." alt="" coords="664,6,805,109"/>
+<area shape="rect" id="node18" href="$structtorque__command__t.html" title="Torque command structure (expressed in body frame)" alt="" coords="829,15,963,100"/>
+<area shape="rect" id="node21" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="987,6,1128,109"/>
 </map>

@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="35,6,205,143"/>
+<area shape="rect" id="node2" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="29,139,200,277"/>
+<area shape="rect" id="node4" href="$classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="31,5,199,91"/>
 </map>

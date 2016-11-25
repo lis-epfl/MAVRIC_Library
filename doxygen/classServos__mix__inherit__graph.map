@@ -1,8 +1,11 @@
 <map id="G" name="G">
-<area shape="rect" id="node5" href="$classServos__mix__birotor.html" title="{Servos_mix_birotor\n||}" alt="" coords="5,343,139,428"/>
-<area shape="rect" id="node7" href="$classServos__mix__quadcopter__cross.html" title="{Servos_mix_quadcopter_cross\n||+ Servos_mix_quadcopter_cross()\l+ update()\l}" alt="" coords="163,334,384,437"/>
-<area shape="rect" id="node9" href="$classServos__mix__quadcopter__diag.html" title="{Servos_mix_quadcopter_diag\n||+ Servos_mix_quadcopter_diag()\l+ update()\l+ default_config()\l}" alt="" coords="408,325,621,445"/>
-<area shape="rect" id="node11" href="$classServos__mix__wing.html" title="{Servos_mix_wing\n||+ Servos_mix_wing()\l+ update()\l+ default_config()\l}" alt="" coords="645,325,789,445"/>
-<area shape="rect" id="node13" href="$classServos__mix__ywing.html" title="{Servos_mix_ywing\n||+ Servos_mix_ywing()\l+ update()\l+ default_config()\l}" alt="" coords="813,325,965,445"/>
-<area shape="rect" id="node2" href="$classServos__mix__I.html" title="{Servos_mix_I\n||+ update()\l+ set_torque_command()\l}" alt="" coords="432,6,597,109"/>
+<area shape="rect" id="node7" href="$classServos__mix__birotor.html" title="{Servos_mix_birotor\n||}" alt="" coords="5,577,139,663"/>
+<area shape="rect" id="node9" href="$classServos__mix__matrix.html" title="Servos mix." alt="" coords="163,430,331,810"/>
+<area shape="rect" id="node11" href="$classServos__mix__matrix.html" title="{Servos_mix_matrix\&lt; 4 \&gt;\n|# servos_\l# torque_command_\l# thrust_command_\l# mix_\l# trim_\l# min_\l# max_\l|+ mix_()\l+ trim_()\l+ min_()\l+ max_()\l+ Servos_mix_matrix()\l+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ default_config()\l}" alt="" coords="355,430,520,810"/>
+<area shape="rect" id="node13" href="$classServos__mix__quadcopter__cross.html" title="{Servos_mix_quadcopter_cross\n||+ Servos_mix_quadcopter_cross()\l+ update()\l}" alt="" coords="544,569,765,671"/>
+<area shape="rect" id="node15" href="$classServos__mix__quadcopter__diag.html" title="{Servos_mix_quadcopter_diag\n||+ Servos_mix_quadcopter_diag()\l+ update()\l+ default_config()\l}" alt="" coords="789,560,1003,680"/>
+<area shape="rect" id="node17" href="$classServos__mix__wing.html" title="{Servos_mix_wing\n||+ Servos_mix_wing()\l+ update()\l+ default_config()\l}" alt="" coords="1027,560,1171,680"/>
+<area shape="rect" id="node19" href="$classServos__mix__ywing.html" title="{Servos_mix_ywing\n||+ Servos_mix_ywing()\l+ update()\l+ default_config()\l}" alt="" coords="1195,560,1347,680"/>
+<area shape="rect" id="node2" href="$classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="431,6,644,143"/>
+<area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="668,6,879,143"/>
 </map>

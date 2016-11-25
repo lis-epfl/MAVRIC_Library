@@ -99,7 +99,7 @@ Collaboration diagram for Manual_control:</div>
 <div class="dyncontent">
 <div class="center"><img src="classManual__control__coll__graph.png" border="0" usemap="#Manual__control_coll__map" alt="Collaboration graph"/></div>
 <map name="Manual__control_coll__map" id="Manual__control_coll__map">
-<area shape="rect" id="node2" href="classJoystick.html" title="{Joystick\n|+ buttons_\l+ channels_\l+ mav_mode_desired_\l|+ Joystick()\l+ throttle()\l+ roll()\l+ pitch()\l+ yaw()\l+ get_mode()\l+ get_velocity_vector()\l+ get_rate_command_wing()\l+ get_control_command()\l+ button_update()\land 8 more...+ default_config()\l}" alt="" coords="133,409,333,703"/><area shape="rect" id="node4" href="structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="5,66,147,203"/><area shape="rect" id="node6" href="unionJoystick_1_1button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="171,5,296,264"/><area shape="rect" id="node8" href="classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="352,5,533,264"/><area shape="rect" id="node12" href="structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="357,401,592,711"/><area shape="rect" id="node10" href="structremote__t.html" title="The configuration structure of the remote." alt="" coords="399,779,551,1021"/><area shape="rect" id="node15" href="classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="616,479,725,633"/></map>
+<area shape="rect" id="node2" href="classJoystick.html" title="{Joystick\n|+ buttons_\l+ channels_\l+ mav_mode_desired_\l|+ Joystick()\l+ throttle()\l+ roll()\l+ pitch()\l+ yaw()\l+ get_mode()\l+ button_update()\l+ default_config()\l}" alt="" coords="161,435,316,677"/><area shape="rect" id="node4" href="structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="5,66,147,203"/><area shape="rect" id="node6" href="unionJoystick_1_1button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="171,5,296,264"/><area shape="rect" id="node8" href="classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="352,5,533,264"/><area shape="rect" id="node12" href="structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="351,401,585,711"/><area shape="rect" id="node10" href="structremote__t.html" title="The configuration structure of the remote." alt="" coords="392,779,544,1021"/><area shape="rect" id="node15" href="classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="609,479,719,633"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classManual__control-members.html">List of all members.</a></p>
@@ -124,32 +124,30 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b">Manual_control</a> (<a class="el" href="classSatellite.html">Satellite</a> *sat, <a class="el" href="structManual__control_1_1conf__t.html">conf_t</a> config, <a class="el" href="structremote__conf__t.html">remote_conf_t</a> remote_config)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#abdd8dda0390014247e8c3c4e489ef17b"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#aecfe45d5c88670a64d775c9345db42b4">get_control_command</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the attitude command.  <a href="#aecfe45d5c88670a64d775c9345db42b4"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a000d94be2eae9353d1ede1a21bf476f8">get_velocity_vector</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the velocity command.  <a href="#a000d94be2eae9353d1ede1a21bf476f8"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea">get_rate_command_wing</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the rate command for the wing.  <a href="#a4d7a55608a3acd4d6448ae080b11e6ea"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7">get_angle_command_wing</a> (<a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the attitude command for the wing.  <a href="#a43b15d110f14516ef5b5b4dc9d568fa7"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a181fd7347d5f4e9219ac8bbeb2025b23">get_velocity_vector_wing</a> (const float ki_yaw, <a class="el" href="structcontrol__command__t.html">control_command_t</a> *controls)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input for the velocity command for the wing.  <a href="#a181fd7347d5f4e9219ac8bbeb2025b23"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357">get_thrust</a> () const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input and returns the thrust.  <a href="#a57fbbf9cfad5c405ad822c9b83633357"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a28d928918d8883341b5d3647b52aa9ca">get_torque_command</a> (<a class="el" href="structtorque__command__t.html">torque_command_t</a> *command, float scale) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute torque command from the manual input.  <a href="#a28d928918d8883341b5d3647b52aa9ca"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a1b85adad9375f7eea177f226d7c50a26">get_rate_command</a> (<a class="el" href="structrate__command__t.html">rate_command_t</a> *command, float scale) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute rate command from the manual input.  <a href="#a1b85adad9375f7eea177f226d7c50a26"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a7ee7cc0ffb6874db132d0829154553e0">get_thrust_command</a> (<a class="el" href="structthrust__command__t.html">thrust_command_t</a> *command) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute thrust command from the manual input.  <a href="#a7ee7cc0ffb6874db132d0829154553e0"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a0bd378d186d7b2bfe1a09af34eda439f">get_attitude_command_absolute_yaw</a> (<a class="el" href="structattitude__command__t.html">attitude_command_t</a> *command, float scale) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute attitude command from the manual input (absolute angles)  <a href="#a0bd378d186d7b2bfe1a09af34eda439f"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structAttitude__controller__I_1_1att__command__t.html">Attitude_controller_I::att_command_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a43b50b743427e67d6ab5acc480373129">get_attitude_command</a> (<a class="el" href="structquat__t.html">quat_t</a> current_attitude) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute attitude command from manual control source (absolute roll and pitch, relative yaw)  <a href="#a43b50b743427e67d6ab5acc480373129"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#ad7b10226f0a5847a2265b422e1a9d12d">get_attitude_command_vtol</a> (const float ki_yaw, <a class="el" href="structattitude__command__t.html">attitude_command_t</a> *command, float scale, float reference_pitch) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)  <a href="#ad7b10226f0a5847a2265b422e1a9d12d"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#abe507693f441a6738193a18604591f1a">get_velocity_command</a> (<a class="el" href="structvelocity__command__t.html">velocity_command_t</a> *command, float scale) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute velocity command from the manual input.  <a href="#abe507693f441a6738193a18604591f1a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a021f6b93df57e980d80a4339ed950cc3">throttle</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input and returns the throttle.  <a href="#a021f6b93df57e980d80a4339ed950cc3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269">roll</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input and returns the roll.  <a href="#a8baecbca2bc17799bf59d70a5fc7d269"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b">pitch</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input and returns the pitch.  <a href="#af46ed3f6af5e52d9764a958aba46d09b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971">yaw</a> () const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the source input and returns the yaw.  <a href="#a7ba9eae74ab3a7d5af8c2461903ea971"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a224f579fb29807afdae8a04627602210">get_torque_command</a> (<a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;command, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=1.0f) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute torque command from the manual input.  <a href="#a224f579fb29807afdae8a04627602210"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a20503e7bc964e689a5e32b9b90852246">get_rate_command</a> (<a class="el" href="structrate__command__t.html">rate_command_t</a> &amp;command, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=1.0f) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute rate command from the manual input.  <a href="#a20503e7bc964e689a5e32b9b90852246"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a96ba44d8d90624864782cfb53fee0e99">get_thrust_command_copter</a> (<a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;command, float scale=1.0f) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute thrust command from the manual input.  <a href="#a96ba44d8d90624864782cfb53fee0e99"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#afee5e87b0049ea5101325433ad1b8505">get_thrust_command_wing</a> (<a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;command, float scale=1.0f) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute thrust command from the manual input.  <a href="#afee5e87b0049ea5101325433ad1b8505"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0">get_attitude_command_absolute_yaw</a> (<a class="el" href="structquat__t.html">attitude_command_t</a> &amp;command, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=1.0f) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute attitude command from the manual input (absolute angles)  <a href="#a4c242a6332968b98e9d7eb36d40ccca0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#afba8c5de46eec802a9487b53185f2ca9">get_attitude_command</a> (<a class="el" href="structquat__t.html">attitude_command_t</a> &amp;command, const <a class="el" href="structquat__t.html">quat_t</a> &amp;current_attitude, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=0.5f) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute attitude command from manual control source (absolute roll and pitch, relative yaw)  <a href="#afba8c5de46eec802a9487b53185f2ca9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb">get_attitude_command_vtol</a> (<a class="el" href="structquat__t.html">attitude_command_t</a> &amp;command, const <a class="el" href="structquat__t.html">quat_t</a> &amp;current_attitude, float reference_pitch, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=0.25f) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)  <a href="#a09757cbbfd086292519e5ae1d2512fdb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8">get_velocity_command_copter</a> (<a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;command, const <a class="el" href="structquat__t.html">quat_t</a> &amp;current_attitude, const <a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;current_velocity_command, float scale_x=10.0f, float scale_y=10.0f, float scale_z=1.5f, float scale_heading=0.25f) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute velocity command from the manual input.  <a href="#ad6f5811301b7b80b9f308e4fd6d315d8"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMav__mode.html">Mav_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#ab5e3264560be63f99dd0c4d2828f34c7">get_mode_from_source</a> (<a class="el" href="classMav__mode.html">Mav_mode</a> mode_current)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of the mode from the desired source input.  <a href="#ab5e3264560be63f99dd0c4d2828f34c7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManual__control.html#a74ff138d9eefaef201e42ca4e9130747">set_mode_of_source</a> (<a class="el" href="classMav__mode.html">Mav_mode</a> mode_current)</td></tr>
@@ -257,50 +255,44 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a43b15d110f14516ef5b5b4dc9d568fa7"></a><!-- doxytag: member="Manual_control::get_angle_command_wing" ref="a43b15d110f14516ef5b5b4dc9d568fa7" args="(control_command_t *controls)" -->
+<a class="anchor" id="afba8c5de46eec802a9487b53185f2ca9"></a><!-- doxytag: member="Manual_control::get_attitude_command" ref="afba8c5de46eec802a9487b53185f2ca9" args="(attitude_command_t &amp;command, const quat_t &amp;current_attitude, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=0.5f) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7">Manual_control::get_angle_command_wing</a> </td>
+          <td class="memname">void <a class="el" href="classManual__control.html#afba8c5de46eec802a9487b53185f2ca9">Manual_control::get_attitude_command</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> *&#160;</td>
-          <td class="paramname"><em>controls</em></td><td>)</td>
-          <td></td>
+          <td class="paramtype"><a class="el" href="structquat__t.html">attitude_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>command</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Selects the source input for the attitude command for the wing. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classManual__control_a43b15d110f14516ef5b5b4dc9d568fa7_cgraph.png" border="0" usemap="#classManual__control_a43b15d110f14516ef5b5b4dc9d568fa7_cgraph" alt=""/></div>
-<map name="classManual__control_a43b15d110f14516ef5b5b4dc9d568fa7_cgraph" id="classManual__control_a43b15d110f14516ef5b5b4dc9d568fa7_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#a00fba7082240c85900d7eb035eb2a337" title="Compute attitude (angle) command from the joystick for the wing." alt="" coords="327,85,559,115"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="620,5,716,35"/><area shape="rect" id="node7" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="615,59,721,88"/><area shape="rect" id="node9" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="617,112,719,141"/><area shape="rect" id="node11" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="609,165,727,195"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a43b50b743427e67d6ab5acc480373129"></a><!-- doxytag: member="Manual_control::get_attitude_command" ref="a43b50b743427e67d6ab5acc480373129" args="(quat_t current_attitude) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structAttitude__controller__I_1_1att__command__t.html">Attitude_controller_I::att_command_t</a> <a class="el" href="classManual__control.html#a43b50b743427e67d6ab5acc480373129">Manual_control::get_attitude_command</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structquat__t.html">quat_t</a>&#160;</td>
-          <td class="paramname"><em>current_attitude</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>current_attitude</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_roll</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_pitch</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_yaw</em> = <code>0.5f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div>
@@ -310,7 +302,11 @@ Here is the call graph for this function:</div>
 <p>Yaw is relative to current yaw (command.yaw = current.yaw + 0.5 * input.yaw)</p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">current_attitude</td><td>Current attitude of the vehicle</td></tr>
+    <tr><td class="paramname">command</td><td>Attitude command (output) </td></tr>
+    <tr><td class="paramname">current_attitude</td><td>Current attitude of the vehicle </td></tr>
+    <tr><td class="paramname">scale_roll</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_pitch</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_yaw</td><td>Scale (maximum output / max remote input)</td></tr>
   </table>
   </dd>
 </dl>
@@ -319,29 +315,41 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_a43b50b743427e67d6ab5acc480373129_cgraph.png" border="0" usemap="#classManual__control_a43b50b743427e67d6ab5acc480373129_cgraph" alt=""/></div>
-<map name="classManual__control_a43b50b743427e67d6ab5acc480373129_cgraph" id="classManual__control_a43b50b743427e67d6ab5acc480373129_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#a220b38dc722abe126bc9877f7cd17f0b" title="Compute attitude command from joystick input (absolute roll and pitch, relative yaw)" alt="" coords="304,85,515,115"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="575,5,671,35"/><area shape="rect" id="node7" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="569,59,676,88"/><area shape="rect" id="node9" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="572,112,673,141"/><area shape="rect" id="node11" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="564,165,681,195"/></map>
+<div class="center"><img src="classManual__control_afba8c5de46eec802a9487b53185f2ca9_cgraph.png" border="0" usemap="#classManual__control_afba8c5de46eec802a9487b53185f2ca9_cgraph" alt=""/></div>
+<map name="classManual__control_afba8c5de46eec802a9487b53185f2ca9_cgraph" id="classManual__control_afba8c5de46eec802a9487b53185f2ca9_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="311,5,444,35"/><area shape="rect" id="node7" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="304,59,451,88"/><area shape="rect" id="node11" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="307,112,448,141"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="504,5,600,35"/><area shape="rect" id="node9" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="499,59,605,88"/><area shape="rect" id="node13" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="501,112,603,141"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a0bd378d186d7b2bfe1a09af34eda439f"></a><!-- doxytag: member="Manual_control::get_attitude_command_absolute_yaw" ref="a0bd378d186d7b2bfe1a09af34eda439f" args="(attitude_command_t *command, float scale) const " -->
+<a class="anchor" id="a4c242a6332968b98e9d7eb36d40ccca0"></a><!-- doxytag: member="Manual_control::get_attitude_command_absolute_yaw" ref="a4c242a6332968b98e9d7eb36d40ccca0" args="(attitude_command_t &amp;command, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=1.0f) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a0bd378d186d7b2bfe1a09af34eda439f">Manual_control::get_attitude_command_absolute_yaw</a> </td>
+          <td class="memname">void <a class="el" href="classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0">Manual_control::get_attitude_command_absolute_yaw</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structattitude__command__t.html">attitude_command_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structquat__t.html">attitude_command_t</a> &amp;&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>scale</em>&#160;</td>
+          <td class="paramname"><em>scale_roll</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_pitch</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_yaw</em> = <code>1.0f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -356,7 +364,9 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">command</td><td>Attitude command (output) </td></tr>
-    <tr><td class="paramname">scale</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_roll</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_pitch</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_yaw</td><td>Scale (maximum output / max remote input) </td></tr>
   </table>
   </dd>
 </dl>
@@ -364,41 +374,53 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_a0bd378d186d7b2bfe1a09af34eda439f_cgraph.png" border="0" usemap="#classManual__control_a0bd378d186d7b2bfe1a09af34eda439f_cgraph" alt=""/></div>
-<map name="classManual__control_a0bd378d186d7b2bfe1a09af34eda439f_cgraph" id="classManual__control_a0bd378d186d7b2bfe1a09af34eda439f_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#afc9977f82ba8cc8a603a1ed308521254" title="Compute attitude command from the joystick (absolute angles)" alt="" coords="392,59,691,88"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="744,5,840,35"/><area shape="rect" id="node7" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="739,59,845,88"/><area shape="rect" id="node9" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="741,112,843,141"/></map>
+<div class="center"><img src="classManual__control_a4c242a6332968b98e9d7eb36d40ccca0_cgraph.png" border="0" usemap="#classManual__control_a4c242a6332968b98e9d7eb36d40ccca0_cgraph" alt=""/></div>
+<map name="classManual__control_a4c242a6332968b98e9d7eb36d40ccca0_cgraph" id="classManual__control_a4c242a6332968b98e9d7eb36d40ccca0_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="399,5,532,35"/><area shape="rect" id="node7" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="392,59,539,88"/><area shape="rect" id="node11" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="395,112,536,141"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="592,5,688,35"/><area shape="rect" id="node9" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="587,59,693,88"/><area shape="rect" id="node13" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="589,112,691,141"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="ad7b10226f0a5847a2265b422e1a9d12d"></a><!-- doxytag: member="Manual_control::get_attitude_command_vtol" ref="ad7b10226f0a5847a2265b422e1a9d12d" args="(const float ki_yaw, attitude_command_t *command, float scale, float reference_pitch) const " -->
+<a class="anchor" id="a09757cbbfd086292519e5ae1d2512fdb"></a><!-- doxytag: member="Manual_control::get_attitude_command_vtol" ref="a09757cbbfd086292519e5ae1d2512fdb" args="(attitude_command_t &amp;command, const quat_t &amp;current_attitude, float reference_pitch, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=0.25f) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#ad7b10226f0a5847a2265b422e1a9d12d">Manual_control::get_attitude_command_vtol</a> </td>
+          <td class="memname">void <a class="el" href="classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb">Manual_control::get_attitude_command_vtol</a> </td>
           <td>(</td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ki_yaw</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structattitude__command__t.html">attitude_command_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structquat__t.html">attitude_command_t</a> &amp;&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>scale</em>, </td>
+          <td class="paramtype">const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>current_attitude</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>reference_pitch</em>&#160;</td>
+          <td class="paramname"><em>reference_pitch</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_roll</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_pitch</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_yaw</em> = <code>0.25f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -412,10 +434,12 @@ Here is the call graph for this function:</div>
 <p>Compute attitude command from the manual input (absolute roll and pitch, integrated yaw) </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">ki_yaw</td><td>Integration factor for yaw (0.02 is ok) (input) </td></tr>
     <tr><td class="paramname">command</td><td>Attitude command (output) </td></tr>
-    <tr><td class="paramname">scale</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">current_attitude</td><td>Current attitude of the vehicle </td></tr>
     <tr><td class="paramname">reference_pitch</td><td>Transition factor (0: forward flight, PI/2:hover) </td></tr>
+    <tr><td class="paramname">scale_roll</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_pitch</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_yaw</td><td>Scale (maximum output / max remote input) </td></tr>
   </table>
   </dd>
 </dl>
@@ -423,43 +447,9 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_ad7b10226f0a5847a2265b422e1a9d12d_cgraph.png" border="0" usemap="#classManual__control_ad7b10226f0a5847a2265b422e1a9d12d_cgraph" alt=""/></div>
-<map name="classManual__control_ad7b10226f0a5847a2265b422e1a9d12d_cgraph" id="classManual__control_ad7b10226f0a5847a2265b422e1a9d12d_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#a3c75109de94037f519786db2859641c2" title="Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)" alt="" coords="335,59,572,88"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="627,5,723,35"/><area shape="rect" id="node7" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="621,59,728,88"/><area shape="rect" id="node9" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="624,112,725,141"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="aecfe45d5c88670a64d775c9345db42b4"></a><!-- doxytag: member="Manual_control::get_control_command" ref="aecfe45d5c88670a64d775c9345db42b4" args="(control_command_t *controls)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#aecfe45d5c88670a64d775c9345db42b4">Manual_control::get_control_command</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> *&#160;</td>
-          <td class="paramname"><em>controls</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Selects the source input for the attitude command. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classManual__control_aecfe45d5c88670a64d775c9345db42b4_cgraph.png" border="0" usemap="#classManual__control_aecfe45d5c88670a64d775c9345db42b4_cgraph" alt=""/></div>
-<map name="classManual__control_aecfe45d5c88670a64d775c9345db42b4_cgraph" id="classManual__control_aecfe45d5c88670a64d775c9345db42b4_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#ab9c9dd860b3b1556b1ffc99493b64e44" title="Parse joystick to attitude command." alt="" coords="303,5,508,35"/></map>
+<div class="center"><img src="classManual__control_a09757cbbfd086292519e5ae1d2512fdb_cgraph.png" border="0" usemap="#classManual__control_a09757cbbfd086292519e5ae1d2512fdb_cgraph" alt=""/></div>
+<map name="classManual__control_a09757cbbfd086292519e5ae1d2512fdb_cgraph" id="classManual__control_a09757cbbfd086292519e5ae1d2512fdb_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="333,5,480,35"/><area shape="rect" id="node7" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="336,59,477,88"/><area shape="rect" id="node11" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="340,112,473,141"/><area shape="rect" id="node5" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="528,5,635,35"/><area shape="rect" id="node9" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="531,59,632,88"/><area shape="rect" id="node13" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="533,112,629,141"/></map>
 </div>
 </p>
 
@@ -509,21 +499,33 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a1b85adad9375f7eea177f226d7c50a26"></a><!-- doxytag: member="Manual_control::get_rate_command" ref="a1b85adad9375f7eea177f226d7c50a26" args="(rate_command_t *command, float scale) const " -->
+<a class="anchor" id="a20503e7bc964e689a5e32b9b90852246"></a><!-- doxytag: member="Manual_control::get_rate_command" ref="a20503e7bc964e689a5e32b9b90852246" args="(rate_command_t &amp;command, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=1.0f) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a1b85adad9375f7eea177f226d7c50a26">Manual_control::get_rate_command</a> </td>
+          <td class="memname">void <a class="el" href="classManual__control.html#a20503e7bc964e689a5e32b9b90852246">Manual_control::get_rate_command</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structrate__command__t.html">rate_command_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structrate__command__t.html">rate_command_t</a> &amp;&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>scale</em>&#160;</td>
+          <td class="paramname"><em>scale_roll</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_pitch</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_yaw</em> = <code>1.0f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -538,7 +540,9 @@ Here is the caller graph for this function:</div>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">command</td><td>Rate command (output) </td></tr>
-    <tr><td class="paramname">scale</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_roll</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_pitch</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_yaw</td><td>Scale (maximum output / max remote input) </td></tr>
   </table>
   </dd>
 </dl>
@@ -546,43 +550,9 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_a1b85adad9375f7eea177f226d7c50a26_cgraph.png" border="0" usemap="#classManual__control_a1b85adad9375f7eea177f226d7c50a26_cgraph" alt=""/></div>
-<map name="classManual__control_a1b85adad9375f7eea177f226d7c50a26_cgraph" id="classManual__control_a1b85adad9375f7eea177f226d7c50a26_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#aa0221d2544fbcf53efa67b575a2a1f8b" title="Compute rate command from the joystick." alt="" coords="284,59,473,88"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="528,5,624,35"/><area shape="rect" id="node7" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="523,59,629,88"/><area shape="rect" id="node9" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="525,112,627,141"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a4d7a55608a3acd4d6448ae080b11e6ea"></a><!-- doxytag: member="Manual_control::get_rate_command_wing" ref="a4d7a55608a3acd4d6448ae080b11e6ea" args="(control_command_t *controls)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea">Manual_control::get_rate_command_wing</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> *&#160;</td>
-          <td class="paramname"><em>controls</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Selects the source input for the rate command for the wing. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classManual__control_a4d7a55608a3acd4d6448ae080b11e6ea_cgraph.png" border="0" usemap="#classManual__control_a4d7a55608a3acd4d6448ae080b11e6ea_cgraph" alt=""/></div>
-<map name="classManual__control_a4d7a55608a3acd4d6448ae080b11e6ea_cgraph" id="classManual__control_a4d7a55608a3acd4d6448ae080b11e6ea_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#a48da533fcde8d71fa1d766a9653302e9" title="Parse joystick to rate command for the wing." alt="" coords="317,85,541,115"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="601,5,697,35"/><area shape="rect" id="node7" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="596,59,703,88"/><area shape="rect" id="node9" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="599,112,700,141"/><area shape="rect" id="node11" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="591,165,708,195"/></map>
+<div class="center"><img src="classManual__control_a20503e7bc964e689a5e32b9b90852246_cgraph.png" border="0" usemap="#classManual__control_a20503e7bc964e689a5e32b9b90852246_cgraph" alt=""/></div>
+<map name="classManual__control_a20503e7bc964e689a5e32b9b90852246_cgraph" id="classManual__control_a20503e7bc964e689a5e32b9b90852246_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="289,5,423,35"/><area shape="rect" id="node7" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="283,59,429,88"/><area shape="rect" id="node11" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="285,112,427,141"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="483,5,579,35"/><area shape="rect" id="node9" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="477,59,584,88"/><area shape="rect" id="node13" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="480,112,581,141"/></map>
 </div>
 </p>
 
@@ -616,53 +586,26 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a class="anchor" id="a57fbbf9cfad5c405ad822c9b83633357"></a><!-- doxytag: member="Manual_control::get_thrust" ref="a57fbbf9cfad5c405ad822c9b83633357" args="() const " -->
+<a class="anchor" id="a96ba44d8d90624864782cfb53fee0e99"></a><!-- doxytag: member="Manual_control::get_thrust_command_copter" ref="a96ba44d8d90624864782cfb53fee0e99" args="(thrust_command_t &amp;command, float scale=1.0f) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float <a class="el" href="classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357">Manual_control::get_thrust</a> </td>
+          <td class="memname">void <a class="el" href="classManual__control.html#a96ba44d8d90624864782cfb53fee0e99">Manual_control::get_thrust_command_copter</a> </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype"><a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>command</em>, </td>
         </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Selects the source input and returns the thrust. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The value of the thrust depending on the source input </dd></dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classManual__control_a57fbbf9cfad5c405ad822c9b83633357_cgraph.png" border="0" usemap="#classManual__control_a57fbbf9cfad5c405ad822c9b83633357_cgraph" alt=""/></div>
-<map name="classManual__control_a57fbbf9cfad5c405ad822c9b83633357_cgraph" id="classManual__control_a57fbbf9cfad5c405ad822c9b83633357_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="231,5,348,35"/></map>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classManual__control_a57fbbf9cfad5c405ad822c9b83633357_icgraph.png" border="0" usemap="#classManual__control_a57fbbf9cfad5c405ad822c9b83633357_icgraph" alt=""/></div>
-<map name="classManual__control_a57fbbf9cfad5c405ad822c9b83633357_icgraph" id="classManual__control_a57fbbf9cfad5c405ad822c9b83633357_icgraph">
-<area shape="rect" id="node3" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="231,5,439,35"/><area shape="rect" id="node5" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="488,5,651,35"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a7ee7cc0ffb6874db132d0829154553e0"></a><!-- doxytag: member="Manual_control::get_thrust_command" ref="a7ee7cc0ffb6874db132d0829154553e0" args="(thrust_command_t *command) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a7ee7cc0ffb6874db132d0829154553e0">Manual_control::get_thrust_command</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structthrust__command__t.html">thrust_command_t</a> *&#160;</td>
-          <td class="paramname"><em>command</em></td><td>)</td>
-          <td> const</td>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>1.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
         </tr>
       </table>
 </div>
@@ -672,6 +615,7 @@ Here is the caller graph for this function:</div>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">command</td><td>Thrust command (output) </td></tr>
+    <tr><td class="paramname">scale</td><td>Scale </td></tr>
   </table>
   </dd>
 </dl>
@@ -679,29 +623,86 @@ Here is the caller graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_a7ee7cc0ffb6874db132d0829154553e0_cgraph.png" border="0" usemap="#classManual__control_a7ee7cc0ffb6874db132d0829154553e0_cgraph" alt=""/></div>
-<map name="classManual__control_a7ee7cc0ffb6874db132d0829154553e0_cgraph" id="classManual__control_a7ee7cc0ffb6874db132d0829154553e0_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#afde54c50e4a19d4a168157d6a36cda5f" title="Compute thrust command from the joystick." alt="" coords="295,5,495,35"/><area shape="rect" id="node5" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="545,5,663,35"/></map>
+<div class="center"><img src="classManual__control_a96ba44d8d90624864782cfb53fee0e99_cgraph.png" border="0" usemap="#classManual__control_a96ba44d8d90624864782cfb53fee0e99_cgraph" alt=""/></div>
+<map name="classManual__control_a96ba44d8d90624864782cfb53fee0e99_cgraph" id="classManual__control_a96ba44d8d90624864782cfb53fee0e99_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="337,5,495,35"/><area shape="rect" id="node5" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="545,5,663,35"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a28d928918d8883341b5d3647b52aa9ca"></a><!-- doxytag: member="Manual_control::get_torque_command" ref="a28d928918d8883341b5d3647b52aa9ca" args="(torque_command_t *command, float scale) const " -->
+<a class="anchor" id="afee5e87b0049ea5101325433ad1b8505"></a><!-- doxytag: member="Manual_control::get_thrust_command_wing" ref="afee5e87b0049ea5101325433ad1b8505" args="(thrust_command_t &amp;command, float scale=1.0f) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a28d928918d8883341b5d3647b52aa9ca">Manual_control::get_torque_command</a> </td>
+          <td class="memname">void <a class="el" href="classManual__control.html#afee5e87b0049ea5101325433ad1b8505">Manual_control::get_thrust_command_wing</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structtorque__command__t.html">torque_command_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>scale</em>&#160;</td>
+          <td class="paramname"><em>scale</em> = <code>1.0f</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Compute thrust command from the manual input. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>Thrust command (output) </td></tr>
+    <tr><td class="paramname">scale</td><td>Scale </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_afee5e87b0049ea5101325433ad1b8505_cgraph.png" border="0" usemap="#classManual__control_afee5e87b0049ea5101325433ad1b8505_cgraph" alt=""/></div>
+<map name="classManual__control_afee5e87b0049ea5101325433ad1b8505_cgraph" id="classManual__control_afee5e87b0049ea5101325433ad1b8505_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="329,5,487,35"/><area shape="rect" id="node5" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="537,5,655,35"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a224f579fb29807afdae8a04627602210"></a><!-- doxytag: member="Manual_control::get_torque_command" ref="a224f579fb29807afdae8a04627602210" args="(torque_command_t &amp;command, float scale_roll=1.0f, float scale_pitch=1.0f, float scale_yaw=1.0f) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classManual__control.html#a224f579fb29807afdae8a04627602210">Manual_control::get_torque_command</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>command</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_roll</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_pitch</em> = <code>1.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_yaw</em> = <code>1.0f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -716,7 +717,9 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">command</td><td>Torque command (output) </td></tr>
-    <tr><td class="paramname">scale</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_roll</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_pitch</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_yaw</td><td>Scale (maximum output / max remote input) </td></tr>
   </table>
   </dd>
 </dl>
@@ -724,29 +727,59 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_a28d928918d8883341b5d3647b52aa9ca_cgraph.png" border="0" usemap="#classManual__control_a28d928918d8883341b5d3647b52aa9ca_cgraph" alt=""/></div>
-<map name="classManual__control_a28d928918d8883341b5d3647b52aa9ca_cgraph" id="classManual__control_a28d928918d8883341b5d3647b52aa9ca_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#a2664e8d6e9610f934cb65f29e12032d4" title="Compute torque command from the joystick." alt="" coords="297,59,500,88"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="555,5,651,35"/><area shape="rect" id="node7" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="549,59,656,88"/><area shape="rect" id="node9" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="552,112,653,141"/></map>
+<div class="center"><img src="classManual__control_a224f579fb29807afdae8a04627602210_cgraph.png" border="0" usemap="#classManual__control_a224f579fb29807afdae8a04627602210_cgraph" alt=""/></div>
+<map name="classManual__control_a224f579fb29807afdae8a04627602210_cgraph" id="classManual__control_a224f579fb29807afdae8a04627602210_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="303,5,436,35"/><area shape="rect" id="node7" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="296,59,443,88"/><area shape="rect" id="node11" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="299,112,440,141"/><area shape="rect" id="node5" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="496,5,592,35"/><area shape="rect" id="node9" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="491,59,597,88"/><area shape="rect" id="node13" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="493,112,595,141"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="abe507693f441a6738193a18604591f1a"></a><!-- doxytag: member="Manual_control::get_velocity_command" ref="abe507693f441a6738193a18604591f1a" args="(velocity_command_t *command, float scale) const " -->
+<a class="anchor" id="ad6f5811301b7b80b9f308e4fd6d315d8"></a><!-- doxytag: member="Manual_control::get_velocity_command_copter" ref="ad6f5811301b7b80b9f308e4fd6d315d8" args="(velocity_command_t &amp;command, const quat_t &amp;current_attitude, const velocity_command_t &amp;current_velocity_command, float scale_x=10.0f, float scale_y=10.0f, float scale_z=1.5f, float scale_heading=0.25f) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#abe507693f441a6738193a18604591f1a">Manual_control::get_velocity_command</a> </td>
+          <td class="memname">void <a class="el" href="classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8">Manual_control::get_velocity_command_copter</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structvelocity__command__t.html">velocity_command_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;&#160;</td>
           <td class="paramname"><em>command</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const <a class="el" href="structquat__t.html">quat_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>current_attitude</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>current_velocity_command</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">float&#160;</td>
-          <td class="paramname"><em>scale</em>&#160;</td>
+          <td class="paramname"><em>scale_x</em> = <code>10.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_y</em> = <code>10.0f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_z</em> = <code>1.5f</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>scale_heading</em> = <code>0.25f</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -761,7 +794,11 @@ Here is the call graph for this function:</div>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">command</td><td>Velocity command (output) </td></tr>
-    <tr><td class="paramname">scale</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">current_attitude</td><td>Current attitude of the vehicle </td></tr>
+    <tr><td class="paramname">current_velocity_command</td><td>Current velocity command </td></tr>
+    <tr><td class="paramname">scale_x</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_y</td><td>Scale (maximum output / max remote input) </td></tr>
+    <tr><td class="paramname">scale_z</td><td>Scale (maximum output / max remote input) </td></tr>
   </table>
   </dd>
 </dl>
@@ -769,88 +806,9 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classManual__control_abe507693f441a6738193a18604591f1a_cgraph.png" border="0" usemap="#classManual__control_abe507693f441a6738193a18604591f1a_cgraph" alt=""/></div>
-<map name="classManual__control_abe507693f441a6738193a18604591f1a_cgraph" id="classManual__control_abe507693f441a6738193a18604591f1a_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#a90bd1aa9caaf5b3315ed25efa6e939fe" title="Compute velocity command from the joystick." alt="" coords="307,59,520,88"/><area shape="rect" id="node5" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="575,5,681,35"/><area shape="rect" id="node7" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="580,59,676,88"/><area shape="rect" id="node9" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="569,112,687,141"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a000d94be2eae9353d1ede1a21bf476f8"></a><!-- doxytag: member="Manual_control::get_velocity_vector" ref="a000d94be2eae9353d1ede1a21bf476f8" args="(control_command_t *controls)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a000d94be2eae9353d1ede1a21bf476f8">Manual_control::get_velocity_vector</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> *&#160;</td>
-          <td class="paramname"><em>controls</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Selects the source input for the velocity command. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classManual__control_a000d94be2eae9353d1ede1a21bf476f8_cgraph.png" border="0" usemap="#classManual__control_a000d94be2eae9353d1ede1a21bf476f8_cgraph" alt=""/></div>
-<map name="classManual__control_a000d94be2eae9353d1ede1a21bf476f8_cgraph" id="classManual__control_a000d94be2eae9353d1ede1a21bf476f8_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#a2adf68c3cacab482fd90c5425542b39e" title="Parse joystick to velocity vector command." alt="" coords="285,5,477,35"/></map>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a181fd7347d5f4e9219ac8bbeb2025b23"></a><!-- doxytag: member="Manual_control::get_velocity_vector_wing" ref="a181fd7347d5f4e9219ac8bbeb2025b23" args="(const float ki_yaw, control_command_t *controls)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="classManual__control.html#a181fd7347d5f4e9219ac8bbeb2025b23">Manual_control::get_velocity_vector_wing</a> </td>
-          <td>(</td>
-          <td class="paramtype">const float&#160;</td>
-          <td class="paramname"><em>ki_yaw</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structcontrol__command__t.html">control_command_t</a> *&#160;</td>
-          <td class="paramname"><em>controls</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Selects the source input for the velocity command for the wing. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ki_yaw</td><td>The yaw integrator gain </td></tr>
-    <tr><td class="paramname">controls</td><td>The pointer to the command structure that will be executed </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classManual__control_a181fd7347d5f4e9219ac8bbeb2025b23_cgraph.png" border="0" usemap="#classManual__control_a181fd7347d5f4e9219ac8bbeb2025b23_cgraph" alt=""/></div>
-<map name="classManual__control_a181fd7347d5f4e9219ac8bbeb2025b23_cgraph" id="classManual__control_a181fd7347d5f4e9219ac8bbeb2025b23_cgraph">
-<area shape="rect" id="node3" href="classJoystick.html#ab5b32d780899af8f6a4bf48a825122a7" title="Compute velocity command from the joystick for the wing." alt="" coords="321,5,503,35"/></map>
+<div class="center"><img src="classManual__control_ad6f5811301b7b80b9f308e4fd6d315d8_cgraph.png" border="0" usemap="#classManual__control_ad6f5811301b7b80b9f308e4fd6d315d8_cgraph" alt=""/></div>
+<map name="classManual__control_ad6f5811301b7b80b9f308e4fd6d315d8_cgraph" id="classManual__control_ad6f5811301b7b80b9f308e4fd6d315d8_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="356,5,503,35"/><area shape="rect" id="node7" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="363,59,496,88"/><area shape="rect" id="node11" href="classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="351,112,508,141"/><area shape="rect" id="node15" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="359,165,500,195"/><area shape="rect" id="node5" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="564,5,671,35"/><area shape="rect" id="node9" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="569,59,665,88"/><area shape="rect" id="node13" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="559,112,676,141"/><area shape="rect" id="node17" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="567,165,668,195"/></map>
 </div>
 </p>
 
@@ -879,6 +837,80 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classManual__control_af0ed9529564e5aa165fa5e77df3fe091_icgraph.png" border="0" usemap="#classManual__control_af0ed9529564e5aa165fa5e77df3fe091_icgraph" alt=""/></div>
 <map name="classManual__control_af0ed9529564e5aa165fa5e77df3fe091_icgraph" id="classManual__control_af0ed9529564e5aa165fa5e77df3fe091_icgraph">
 <area shape="rect" id="node3" href="classManual__control.html#a62a53dd52299a4fc43389a9ab0a1ddfa" title="Set the mode source (which control source can change the mode (remote, joystick, groundstation))" alt="" coords="251,5,472,35"/><area shape="rect" id="node5" href="classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="284,59,439,88"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="af46ed3f6af5e52d9764a958aba46d09b"></a><!-- doxytag: member="Manual_control::pitch" ref="af46ed3f6af5e52d9764a958aba46d09b" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b">Manual_control::pitch</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Selects the source input and returns the pitch. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The value of the thrust depending on the source input </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_af46ed3f6af5e52d9764a958aba46d09b_cgraph.png" border="0" usemap="#classManual__control_af46ed3f6af5e52d9764a958aba46d09b_cgraph" alt=""/></div>
+<map name="classManual__control_af46ed3f6af5e52d9764a958aba46d09b_cgraph" id="classManual__control_af46ed3f6af5e52d9764a958aba46d09b_cgraph">
+<area shape="rect" id="node3" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="200,5,307,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_af46ed3f6af5e52d9764a958aba46d09b_icgraph.png" border="0" usemap="#classManual__control_af46ed3f6af5e52d9764a958aba46d09b_icgraph" alt=""/></div>
+<map name="classManual__control_af46ed3f6af5e52d9764a958aba46d09b_icgraph" id="classManual__control_af46ed3f6af5e52d9764a958aba46d09b_icgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a224f579fb29807afdae8a04627602210" title="Compute torque command from the manual input." alt="" coords="248,5,491,35"/><area shape="rect" id="node5" href="classManual__control.html#a20503e7bc964e689a5e32b9b90852246" title="Compute rate command from the manual input." alt="" coords="255,59,484,88"/><area shape="rect" id="node7" href="classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="201,112,537,141"/><area shape="rect" id="node9" href="classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="244,165,495,195"/><area shape="rect" id="node11" href="classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="231,219,508,248"/><area shape="rect" id="node13" href="classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="223,272,516,301"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a8baecbca2bc17799bf59d70a5fc7d269"></a><!-- doxytag: member="Manual_control::roll" ref="a8baecbca2bc17799bf59d70a5fc7d269" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269">Manual_control::roll</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Selects the source input and returns the roll. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The value of the thrust depending on the source input </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_a8baecbca2bc17799bf59d70a5fc7d269_cgraph.png" border="0" usemap="#classManual__control_a8baecbca2bc17799bf59d70a5fc7d269_cgraph" alt=""/></div>
+<map name="classManual__control_a8baecbca2bc17799bf59d70a5fc7d269_cgraph" id="classManual__control_a8baecbca2bc17799bf59d70a5fc7d269_cgraph">
+<area shape="rect" id="node3" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="189,5,285,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_a8baecbca2bc17799bf59d70a5fc7d269_icgraph.png" border="0" usemap="#classManual__control_a8baecbca2bc17799bf59d70a5fc7d269_icgraph" alt=""/></div>
+<map name="classManual__control_a8baecbca2bc17799bf59d70a5fc7d269_icgraph" id="classManual__control_a8baecbca2bc17799bf59d70a5fc7d269_icgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a224f579fb29807afdae8a04627602210" title="Compute torque command from the manual input." alt="" coords="237,5,480,35"/><area shape="rect" id="node5" href="classManual__control.html#a20503e7bc964e689a5e32b9b90852246" title="Compute rate command from the manual input." alt="" coords="244,59,473,88"/><area shape="rect" id="node7" href="classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="191,112,527,141"/><area shape="rect" id="node9" href="classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="233,165,484,195"/><area shape="rect" id="node11" href="classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="220,219,497,248"/><area shape="rect" id="node13" href="classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="212,272,505,301"/></map>
 </div>
 </p>
 
@@ -987,6 +1019,80 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="a021f6b93df57e980d80a4339ed950cc3"></a><!-- doxytag: member="Manual_control::throttle" ref="a021f6b93df57e980d80a4339ed950cc3" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classManual__control.html#a021f6b93df57e980d80a4339ed950cc3">Manual_control::throttle</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Selects the source input and returns the throttle. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The value of the thrust depending on the source input </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_a021f6b93df57e980d80a4339ed950cc3_cgraph.png" border="0" usemap="#classManual__control_a021f6b93df57e980d80a4339ed950cc3_cgraph" alt=""/></div>
+<map name="classManual__control_a021f6b93df57e980d80a4339ed950cc3_cgraph" id="classManual__control_a021f6b93df57e980d80a4339ed950cc3_cgraph">
+<area shape="rect" id="node3" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="215,5,332,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_a021f6b93df57e980d80a4339ed950cc3_icgraph.png" border="0" usemap="#classManual__control_a021f6b93df57e980d80a4339ed950cc3_icgraph" alt=""/></div>
+<map name="classManual__control_a021f6b93df57e980d80a4339ed950cc3_icgraph" id="classManual__control_a021f6b93df57e980d80a4339ed950cc3_icgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a96ba44d8d90624864782cfb53fee0e99" title="Compute thrust command from the manual input." alt="" coords="220,5,503,35"/><area shape="rect" id="node5" href="classManual__control.html#afee5e87b0049ea5101325433ad1b8505" title="Compute thrust command from the manual input." alt="" coords="224,59,499,88"/><area shape="rect" id="node7" href="classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="215,112,508,141"/><area shape="rect" id="node9" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="257,165,465,195"/><area shape="rect" id="node11" href="classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="557,165,720,195"/></map>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a7ba9eae74ab3a7d5af8c2461903ea971"></a><!-- doxytag: member="Manual_control::yaw" ref="a7ba9eae74ab3a7d5af8c2461903ea971" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float <a class="el" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971">Manual_control::yaw</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Selects the source input and returns the yaw. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The value of the thrust depending on the source input </dd></dl>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_a7ba9eae74ab3a7d5af8c2461903ea971_cgraph.png" border="0" usemap="#classManual__control_a7ba9eae74ab3a7d5af8c2461903ea971_cgraph" alt=""/></div>
+<map name="classManual__control_a7ba9eae74ab3a7d5af8c2461903ea971_cgraph" id="classManual__control_a7ba9eae74ab3a7d5af8c2461903ea971_cgraph">
+<area shape="rect" id="node3" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="199,5,300,35"/></map>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classManual__control_a7ba9eae74ab3a7d5af8c2461903ea971_icgraph.png" border="0" usemap="#classManual__control_a7ba9eae74ab3a7d5af8c2461903ea971_icgraph" alt=""/></div>
+<map name="classManual__control_a7ba9eae74ab3a7d5af8c2461903ea971_icgraph" id="classManual__control_a7ba9eae74ab3a7d5af8c2461903ea971_icgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a224f579fb29807afdae8a04627602210" title="Compute torque command from the manual input." alt="" coords="245,5,488,35"/><area shape="rect" id="node5" href="classManual__control.html#a20503e7bc964e689a5e32b9b90852246" title="Compute rate command from the manual input." alt="" coords="252,59,481,88"/><area shape="rect" id="node7" href="classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="199,112,535,141"/><area shape="rect" id="node9" href="classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="241,165,492,195"/><area shape="rect" id="node11" href="classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="228,219,505,248"/><area shape="rect" id="node13" href="classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="220,272,513,301"/></map>
+</div>
+</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/manual_control/<a class="el" href="manual__control_8hpp_source.html">manual_control.hpp</a></li>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/manual_control/manual_control.cpp</li>
@@ -1009,7 +1115,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

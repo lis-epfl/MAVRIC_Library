@@ -16,6 +16,5 @@ var searchData=
   ['ins_5fcomplementary',['INS_complementary',['../classINS__complementary.html',1,'']]],
   ['ins_5fkf',['INS_kf',['../classINS__kf.html',1,'']]],
   ['integrator_5ft',['integrator_t',['../structintegrator__t.html',1,'']]],
-  ['intersection',['Intersection',['../classraytracing_1_1Intersection.html',1,'raytracing']]],
-  ['ivelocity_5fyaw_5fcontroller',['IVelocity_yaw_controller',['../classIVelocity__yaw__controller.html',1,'']]]
+  ['intersection',['Intersection',['../classraytracing_1_1Intersection.html',1,'raytracing']]]
 ];

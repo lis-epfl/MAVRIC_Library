@@ -155,42 +155,45 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00078"></a>00078 
 <a name="l00079"></a>00079     <a class="code" href="classServos__mix__ywing.html">Servos_mix_ywing</a>(<a class="code" href="structServos__mix__ywing_1_1args__t.html" title="Constructor arguments.">args_t</a>&amp; args, <span class="keyword">const</span> <a class="code" href="structServos__mix__ywing_1_1conf__t.html" title="The servo mix structure for a Ywing.">conf_t</a>&amp; config = default_config());
 <a name="l00080"></a>00080 
-<a name="l00081"></a>00081     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classServos__mix__ywing.html#a2e4a4f403461a7e6da8e7838cbc1cec6" title="Update controller;.">update</a>();
+<a name="l00081"></a>00081     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classServos__mix__ywing.html#a6d420617398234a52e18f701d625bd90" title="Main update function.">update</a>();
 <a name="l00082"></a>00082 
 <a name="l00083"></a>00083 
 <a name="l00084"></a>00084     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structServos__mix__ywing_1_1conf__t.html" title="The servo mix structure for a Ywing.">conf_t</a> default_config();
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086 <span class="keyword">private</span>:
-<a name="l00087"></a>00087     flap_dir_t  flap_top_dir_;       
-<a name="l00088"></a>00088     flap_dir_t  flap_right_dir_;     
-<a name="l00089"></a>00089     flap_dir_t  flap_left_dir_;      
-<a name="l00090"></a>00090     <span class="keywordtype">float</span>       min_thrust_;         
-<a name="l00091"></a>00091     <span class="keywordtype">float</span>       max_thrust_;         
-<a name="l00092"></a>00092     <span class="keywordtype">float</span>       min_deflection_;     
-<a name="l00093"></a>00093     <span class="keywordtype">float</span>       max_deflection_;     
-<a name="l00094"></a>00094     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;      motor_;               
-<a name="l00095"></a>00095     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;      flap_top_;            
-<a name="l00096"></a>00096     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;      flap_right_;          
-<a name="l00097"></a>00097     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;      flap_left_;           
-<a name="l00098"></a>00098 };
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102 <a class="code" href="structServos__mix__ywing_1_1conf__t.html" title="The servo mix structure for a Ywing.">Servos_mix_ywing::conf_t</a> Servos_mix_ywing::default_config()
-<a name="l00103"></a>00103 {
-<a name="l00104"></a>00104     conf_t conf;
-<a name="l00105"></a>00105     conf.<a class="code" href="structServos__mix__ywing_1_1conf__t.html#a607ff5469b85bf2d1d0ce745b7bc3fad" title="Left flap turning direction.">flap_top_dir</a>   = FLAP_INVERTED;
-<a name="l00106"></a>00106     conf.flap_right_dir = FLAP_INVERTED;
-<a name="l00107"></a>00107     conf.flap_left_dir  = FLAP_INVERTED;
-<a name="l00108"></a>00108     conf.min_thrust     = -0.9f;
-<a name="l00109"></a>00109     conf.max_thrust     = 1.0f;
-<a name="l00110"></a>00110     conf.min_deflection = -1.0f;
-<a name="l00111"></a>00111     conf.max_deflection = 1.0f;
-<a name="l00112"></a>00112 
-<a name="l00113"></a>00113     <span class="keywordflow">return</span> conf;
-<a name="l00114"></a>00114 };
+<a name="l00087"></a>00087     <a class="code" href="structtorque__command__t.html" title="Torque command structure (expressed in body frame)">torque_command_t</a> torque_command_;
+<a name="l00088"></a>00088     <a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a> thrust_command_;
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090     flap_dir_t  flap_top_dir_;       
+<a name="l00091"></a>00091     flap_dir_t  flap_right_dir_;     
+<a name="l00092"></a>00092     flap_dir_t  flap_left_dir_;      
+<a name="l00093"></a>00093     <span class="keywordtype">float</span>       min_thrust_;         
+<a name="l00094"></a>00094     <span class="keywordtype">float</span>       max_thrust_;         
+<a name="l00095"></a>00095     <span class="keywordtype">float</span>       min_deflection_;     
+<a name="l00096"></a>00096     <span class="keywordtype">float</span>       max_deflection_;     
+<a name="l00097"></a>00097     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;      motor_;               
+<a name="l00098"></a>00098     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;      flap_top_;            
+<a name="l00099"></a>00099     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;      flap_right_;          
+<a name="l00100"></a>00100     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp;      flap_left_;           
+<a name="l00101"></a>00101 };
+<a name="l00102"></a>00102 
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105 <a class="code" href="structServos__mix__ywing_1_1conf__t.html" title="The servo mix structure for a Ywing.">Servos_mix_ywing::conf_t</a> Servos_mix_ywing::default_config()
+<a name="l00106"></a>00106 {
+<a name="l00107"></a>00107     conf_t conf;
+<a name="l00108"></a>00108     conf.<a class="code" href="structServos__mix__ywing_1_1conf__t.html#a607ff5469b85bf2d1d0ce745b7bc3fad" title="Left flap turning direction.">flap_top_dir</a>   = FLAP_INVERTED;
+<a name="l00109"></a>00109     conf.flap_right_dir = FLAP_INVERTED;
+<a name="l00110"></a>00110     conf.flap_left_dir  = FLAP_INVERTED;
+<a name="l00111"></a>00111     conf.min_thrust     = -0.9f;
+<a name="l00112"></a>00112     conf.max_thrust     = 1.0f;
+<a name="l00113"></a>00113     conf.min_deflection = -1.0f;
+<a name="l00114"></a>00114     conf.max_deflection = 1.0f;
 <a name="l00115"></a>00115 
-<a name="l00116"></a>00116 <span class="preprocessor">#endif</span>
+<a name="l00116"></a>00116     <span class="keywordflow">return</span> conf;
+<a name="l00117"></a>00117 };
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119 <span class="preprocessor">#endif</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -209,7 +212,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

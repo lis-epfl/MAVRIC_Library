@@ -1,15 +1,8 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classJoystick.html#a48da533fcde8d71fa1d766a9653302e9" title="Parse joystick to rate command for the wing." alt="" coords="179,5,403,35"/>
-<area shape="rect" id="node7" href="$classJoystick.html#afde54c50e4a19d4a168157d6a36cda5f" title="Compute thrust command from the joystick." alt="" coords="191,59,391,88"/>
-<area shape="rect" id="node11" href="$classJoystick.html#a220b38dc722abe126bc9877f7cd17f0b" title="Compute attitude command from joystick input (absolute roll and pitch, relative yaw)" alt="" coords="185,112,396,141"/>
-<area shape="rect" id="node15" href="$classJoystick.html#a90bd1aa9caaf5b3315ed25efa6e939fe" title="Compute velocity command from the joystick." alt="" coords="184,165,397,195"/>
-<area shape="rect" id="node19" href="$classJoystick.html#a00fba7082240c85900d7eb035eb2a337" title="Compute attitude (angle) command from the joystick for the wing." alt="" coords="175,219,407,248"/>
-<area shape="rect" id="node23" href="$classManual__control.html#a57fbbf9cfad5c405ad822c9b83633357" title="Selects the source input and returns the thrust." alt="" coords="203,272,379,301"/>
-<area shape="rect" id="node5" href="$classManual__control.html#a4d7a55608a3acd4d6448ae080b11e6ea" title="Selects the source input for the rate command for the wing." alt="" coords="461,5,723,35"/>
-<area shape="rect" id="node9" href="$classManual__control.html#a7ee7cc0ffb6874db132d0829154553e0" title="Compute thrust command from the manual input." alt="" coords="472,59,712,88"/>
-<area shape="rect" id="node13" href="$classManual__control.html#a43b50b743427e67d6ab5acc480373129" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="467,112,717,141"/>
-<area shape="rect" id="node17" href="$classManual__control.html#abe507693f441a6738193a18604591f1a" title="Compute velocity command from the manual input." alt="" coords="467,165,717,195"/>
-<area shape="rect" id="node21" href="$classManual__control.html#a43b15d110f14516ef5b5b4dc9d568fa7" title="Selects the source input for the attitude command for the wing." alt="" coords="456,219,728,248"/>
-<area shape="rect" id="node25" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="488,272,696,301"/>
-<area shape="rect" id="node27" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="776,272,939,301"/>
+<area shape="rect" id="node3" href="$classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="175,85,332,115"/>
+<area shape="rect" id="node5" href="$classManual__control.html#a96ba44d8d90624864782cfb53fee0e99" title="Compute thrust command from the manual input." alt="" coords="388,5,671,35"/>
+<area shape="rect" id="node7" href="$classManual__control.html#afee5e87b0049ea5101325433ad1b8505" title="Compute thrust command from the manual input." alt="" coords="392,59,667,88"/>
+<area shape="rect" id="node9" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="383,112,676,141"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="425,165,633,195"/>
+<area shape="rect" id="node13" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="725,165,888,195"/>
 </map>

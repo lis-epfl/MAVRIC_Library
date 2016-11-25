@@ -80,45 +80,220 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Servos_mix Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Servos_mix" --><!-- doxytag: inherits="Servos_mix_I" --><div class="dynheader">
+<!-- doxytag: class="Servos_mix" --><!-- doxytag: inherits="Controller&lt; torque_command_t &gt;,Controller&lt; thrust_command_t &gt;" --><div class="dynheader">
 Inheritance diagram for Servos_mix:</div>
 <div class="dyncontent">
 <div class="center"><img src="classServos__mix__inherit__graph.png" border="0" usemap="#Servos__mix_inherit__map" alt="Inheritance graph"/></div>
 <map name="Servos__mix_inherit__map" id="Servos__mix_inherit__map">
-<area shape="rect" id="node5" href="classServos__mix__birotor.html" title="{Servos_mix_birotor\n||}" alt="" coords="5,343,139,428"/><area shape="rect" id="node7" href="classServos__mix__quadcopter__cross.html" title="{Servos_mix_quadcopter_cross\n||+ Servos_mix_quadcopter_cross()\l+ update()\l}" alt="" coords="163,334,384,437"/><area shape="rect" id="node9" href="classServos__mix__quadcopter__diag.html" title="{Servos_mix_quadcopter_diag\n||+ Servos_mix_quadcopter_diag()\l+ update()\l+ default_config()\l}" alt="" coords="408,325,621,445"/><area shape="rect" id="node11" href="classServos__mix__wing.html" title="{Servos_mix_wing\n||+ Servos_mix_wing()\l+ update()\l+ default_config()\l}" alt="" coords="645,325,789,445"/><area shape="rect" id="node13" href="classServos__mix__ywing.html" title="{Servos_mix_ywing\n||+ Servos_mix_ywing()\l+ update()\l+ default_config()\l}" alt="" coords="813,325,965,445"/><area shape="rect" id="node2" href="classServos__mix__I.html" title="{Servos_mix_I\n||+ update()\l+ set_torque_command()\l}" alt="" coords="432,6,597,109"/></map>
+<area shape="rect" id="node7" href="classServos__mix__birotor.html" title="{Servos_mix_birotor\n||}" alt="" coords="5,577,139,663"/><area shape="rect" id="node9" href="classServos__mix__matrix.html" title="Servos mix." alt="" coords="163,430,331,810"/><area shape="rect" id="node11" href="classServos__mix__matrix.html" title="{Servos_mix_matrix\&lt; 4 \&gt;\n|# servos_\l# torque_command_\l# thrust_command_\l# mix_\l# trim_\l# min_\l# max_\l|+ mix_()\l+ trim_()\l+ min_()\l+ max_()\l+ Servos_mix_matrix()\l+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ default_config()\l}" alt="" coords="355,430,520,810"/><area shape="rect" id="node13" href="classServos__mix__quadcopter__cross.html" title="{Servos_mix_quadcopter_cross\n||+ Servos_mix_quadcopter_cross()\l+ update()\l}" alt="" coords="544,569,765,671"/><area shape="rect" id="node15" href="classServos__mix__quadcopter__diag.html" title="{Servos_mix_quadcopter_diag\n||+ Servos_mix_quadcopter_diag()\l+ update()\l+ default_config()\l}" alt="" coords="789,560,1003,680"/><area shape="rect" id="node17" href="classServos__mix__wing.html" title="{Servos_mix_wing\n||+ Servos_mix_wing()\l+ update()\l+ default_config()\l}" alt="" coords="1027,560,1171,680"/><area shape="rect" id="node19" href="classServos__mix__ywing.html" title="{Servos_mix_ywing\n||+ Servos_mix_ywing()\l+ update()\l+ default_config()\l}" alt="" coords="1195,560,1347,680"/><area shape="rect" id="node2" href="classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="431,6,644,143"/><area shape="rect" id="node4" href="classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="668,6,879,143"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Servos_mix:</div>
 <div class="dyncontent">
 <div class="center"><img src="classServos__mix__coll__graph.png" border="0" usemap="#Servos__mix_coll__map" alt="Collaboration graph"/></div>
 <map name="Servos__mix_coll__map" id="Servos__mix_coll__map">
-<area shape="rect" id="node2" href="classServos__mix__I.html" title="{Servos_mix_I\n||+ update()\l+ set_torque_command()\l}" alt="" coords="5,6,171,109"/></map>
+<area shape="rect" id="node2" href="classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,219,143"/><area shape="rect" id="node4" href="classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="243,6,453,143"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classServos__mix-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9a6141dd98169e65354e3f733da7c8b6"></a><!-- doxytag: member="Servos_mix::update" ref="a9a6141dd98169e65354e3f733da7c8b6" args="()=0" -->
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServos__mix.html#a9a6141dd98169e65354e3f733da7c8b6">update</a> ()=0</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Update controller;. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9fd5b484de522b5dd70662ab7c893856"></a><!-- doxytag: member="Servos_mix::set_torque_command" ref="a9fd5b484de522b5dd70662ab7c893856" args="(const torq_command_t &amp;torq_command)" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>set_torque_command</b> (const torq_command_t &amp;torq_command)</td></tr>
-<tr><td colspan="2"><h2><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a433df531fae80afe61cc708b4a60c564"></a><!-- doxytag: member="Servos_mix::torq_command_" ref="a433df531fae80afe61cc708b4a60c564" args="" -->
-torq_command_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServos__mix.html#a433df531fae80afe61cc708b4a60c564">torq_command_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">torque command (desired torque and thrust) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServos__mix.html#a0f4ae2e5686a56370300276f591f560e">update</a> ()=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function.  <a href="#a0f4ae2e5686a56370300276f591f560e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6fd2053d437a107753e1e65e768f6bcf"></a><!-- doxytag: member="Servos_mix::failsafe" ref="a6fd2053d437a107753e1e65e768f6bcf" args="()=0" -->
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><b>failsafe</b> ()=0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServos__mix.html#afd31ff5f561fe5e87cb63a4f3e032955">set_command</a> (const <a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;torque)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the torque command  <a href="#afd31ff5f561fe5e87cb63a4f3e032955"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServos__mix.html#a4d0fc00b4585ed06ec54f7e5f3e673b9">set_command</a> (const <a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;thrust)=0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the thrust command  <a href="#a4d0fc00b4585ed06ec54f7e5f3e673b9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServos__mix.html#a276bf0407436aa5885451dace5ad5ecc">get_command</a> (<a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;torque) const =0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the torque command  <a href="#a276bf0407436aa5885451dace5ad5ecc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServos__mix.html#a928032545ed0e7273c3f7b4c56178093">get_command</a> (<a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;thrust) const =0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the thrust command  <a href="#a928032545ed0e7273c3f7b4c56178093"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classServos__mix.html#a7d6c0da401146e2ce2e8d8105f13c41b">get_output</a> (<a class="el" href="structempty__command__t.html">empty_command_t</a> &amp;command) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the output command.  <a href="#a7d6c0da401146e2ce2e8d8105f13c41b"></a><br/></td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a276bf0407436aa5885451dace5ad5ecc"></a><!-- doxytag: member="Servos_mix::get_command" ref="a276bf0407436aa5885451dace5ad5ecc" args="(torque_command_t &amp;torque) const =0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool <a class="el" href="classServos__mix.html#a276bf0407436aa5885451dace5ad5ecc">Servos_mix::get_command</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>torque</em></td><td>)</td>
+          <td> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sets the torque command </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>torque command in body frame</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success whether command was accepted </dd></dl>
+
+<p>Implements <a class="el" href="classController.html#a9adabf87cf02bda367db9be841e88b41">Controller&lt; torque_command_t &gt;</a>.</p>
+
+<p>Implemented in <a class="el" href="classServos__mix__matrix.html#a18d099b30ef27a857ff3c55faee02ad7">Servos_mix_matrix&lt; N &gt;</a>, and <a class="el" href="classServos__mix__matrix.html#a18d099b30ef27a857ff3c55faee02ad7">Servos_mix_matrix&lt; 4 &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a928032545ed0e7273c3f7b4c56178093"></a><!-- doxytag: member="Servos_mix::get_command" ref="a928032545ed0e7273c3f7b4c56178093" args="(thrust_command_t &amp;thrust) const =0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool <a class="el" href="classServos__mix.html#a276bf0407436aa5885451dace5ad5ecc">Servos_mix::get_command</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>thrust</em></td><td>)</td>
+          <td> const<code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sets the thrust command </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>thrust command in body frame</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success whether command was accepted </dd></dl>
+
+<p>Implements <a class="el" href="classController.html#a9adabf87cf02bda367db9be841e88b41">Controller&lt; thrust_command_t &gt;</a>.</p>
+
+<p>Implemented in <a class="el" href="classServos__mix__matrix.html#a9e22590deb18cca7165a6176885283f1">Servos_mix_matrix&lt; N &gt;</a>, and <a class="el" href="classServos__mix__matrix.html#a9e22590deb18cca7165a6176885283f1">Servos_mix_matrix&lt; 4 &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7d6c0da401146e2ce2e8d8105f13c41b"></a><!-- doxytag: member="Servos_mix::get_output" ref="a7d6c0da401146e2ce2e8d8105f13c41b" args="(empty_command_t &amp;command) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool <a class="el" href="classServos__mix.html#a7d6c0da401146e2ce2e8d8105f13c41b">Servos_mix::get_output</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structempty__command__t.html">empty_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>command</em></td><td>)</td>
+          <td> const<code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns the output command. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>output command</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
+
+<p>Implements <a class="el" href="classController.html#a1182d2261ae62e0fba6f6405aac39064">Controller&lt; torque_command_t &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afd31ff5f561fe5e87cb63a4f3e032955"></a><!-- doxytag: member="Servos_mix::set_command" ref="afd31ff5f561fe5e87cb63a4f3e032955" args="(const torque_command_t &amp;torque)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool <a class="el" href="classServos__mix.html#afd31ff5f561fe5e87cb63a4f3e032955">Servos_mix::set_command</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>torque</em></td><td>)</td>
+          <td><code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sets the torque command </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>torque command in body frame</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success whether command was accepted </dd></dl>
+
+<p>Implements <a class="el" href="classController.html#a12d397078af966cba69733d1bbcbd012">Controller&lt; torque_command_t &gt;</a>.</p>
+
+<p>Implemented in <a class="el" href="classServos__mix__matrix.html#ad1038847da00f740de5a128d94544ef8">Servos_mix_matrix&lt; N &gt;</a>, and <a class="el" href="classServos__mix__matrix.html#ad1038847da00f740de5a128d94544ef8">Servos_mix_matrix&lt; 4 &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4d0fc00b4585ed06ec54f7e5f3e673b9"></a><!-- doxytag: member="Servos_mix::set_command" ref="a4d0fc00b4585ed06ec54f7e5f3e673b9" args="(const thrust_command_t &amp;thrust)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool <a class="el" href="classServos__mix.html#afd31ff5f561fe5e87cb63a4f3e032955">Servos_mix::set_command</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>thrust</em></td><td>)</td>
+          <td><code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>sets the thrust command </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>thrust command in body frame</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success whether command was accepted </dd></dl>
+
+<p>Implements <a class="el" href="classController.html#a12d397078af966cba69733d1bbcbd012">Controller&lt; thrust_command_t &gt;</a>.</p>
+
+<p>Implemented in <a class="el" href="classServos__mix__matrix.html#abef395be50ffcc448c46a94610019234">Servos_mix_matrix&lt; N &gt;</a>, and <a class="el" href="classServos__mix__matrix.html#abef395be50ffcc448c46a94610019234">Servos_mix_matrix&lt; 4 &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0f4ae2e5686a56370300276f591f560e"></a><!-- doxytag: member="Servos_mix::update" ref="a0f4ae2e5686a56370300276f591f560e" args="()=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool <a class="el" href="classServos__mix.html#a0f4ae2e5686a56370300276f591f560e">Servos_mix::update</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Main update function. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
+
+<p>Implements <a class="el" href="classController.html#aa9c92bc7999828a025feda54ce30e874">Controller&lt; torque_command_t &gt;</a>.</p>
+
+<p>Implemented in <a class="el" href="classServos__mix__matrix.html#ae6f8e5006a8b5759aedf5c1a29b042bb">Servos_mix_matrix&lt; N &gt;</a>, <a class="el" href="classServos__mix__matrix.html#ae6f8e5006a8b5759aedf5c1a29b042bb">Servos_mix_matrix&lt; 4 &gt;</a>, <a class="el" href="classServos__mix__quadcopter__diag.html#adaf68b4c9aa29a817585905f8a7cddd0">Servos_mix_quadcopter_diag</a>, <a class="el" href="classServos__mix__quadcopter__cross.html#a1086c09ac38a3bcca0188f661610c279">Servos_mix_quadcopter_cross</a>, <a class="el" href="classServos__mix__wing.html#acdd8aced365e4fb3d03643b7043bac75">Servos_mix_wing</a>, and <a class="el" href="classServos__mix__ywing.html#a6d420617398234a52e18f701d625bd90">Servos_mix_ywing</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="servos__mix_8hpp_source.html">servos_mix.hpp</a></li>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/servos_mix.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -138,7 +313,7 @@ torq_command_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

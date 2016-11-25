@@ -126,62 +126,63 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00048"></a>00048 <span class="preprocessor">#ifndef STABILISATION_YWING_H_</span>
 <a name="l00049"></a>00049 <span class="preprocessor"></span><span class="preprocessor">#define STABILISATION_YWING_H_</span>
 <a name="l00050"></a>00050 <span class="preprocessor"></span>
-<a name="l00051"></a>00051 <span class="preprocessor">#ifdef __cplusplus</span>
-<a name="l00052"></a>00052 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {
-<a name="l00053"></a>00053 <span class="preprocessor">#endif</span>
-<a name="l00054"></a>00054 <span class="preprocessor"></span>
-<a name="l00055"></a>00055 <span class="preprocessor">#include &lt;stdint.h&gt;</span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &lt;stdbool.h&gt;</span>
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;util/quaternions.h&quot;</span>
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059 <span class="preprocessor">#include &quot;control/control_command.h&quot;</span>
-<a name="l00060"></a>00060 <span class="preprocessor">#include &quot;control/attitude_controller.h&quot;</span>
-<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;servos_mix_ywing.h&quot;</span>
-<a name="l00062"></a>00062 <span class="preprocessor">#include &quot;remote.h&quot;</span>
-<a name="l00063"></a>00063 
+<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;control/control_command.hpp&quot;</span>
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053 <span class="preprocessor">#ifdef __cplusplus</span>
+<a name="l00054"></a>00054 <span class="preprocessor"></span><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {
+<a name="l00055"></a>00055 <span class="preprocessor">#endif</span>
+<a name="l00056"></a>00056 <span class="preprocessor"></span>
+<a name="l00057"></a>00057 <span class="preprocessor">#include &lt;stdint.h&gt;</span>
+<a name="l00058"></a>00058 <span class="preprocessor">#include &lt;stdbool.h&gt;</span>
+<a name="l00059"></a>00059 <span class="preprocessor">#include &quot;util/quaternions.h&quot;</span>
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="preprocessor">#include &quot;control/attitude_controller.h&quot;</span>
+<a name="l00062"></a>00062 <span class="preprocessor">#include &quot;servos_mix_ywing.h&quot;</span>
+<a name="l00063"></a>00063 <span class="preprocessor">#include &quot;remote.h&quot;</span>
 <a name="l00064"></a>00064 
-<a name="l00068"></a>00068 <span class="keyword">typedef</span> <span class="keyword">enum</span>
-<a name="l00069"></a>00069 {
-<a name="l00070"></a>00070     YWING_DISARMED      = 0,        
-<a name="l00071"></a>00071     YWING_MANUAL        = 1,        
-<a name="l00072"></a>00072     YWING_RATE          = 2,        
-<a name="l00073"></a>00073     YWING_HOVER         = 3,        
-<a name="l00074"></a>00074     YWING_TRANSITION    = 4,        
-<a name="l00075"></a>00075     YWING_45            = 5,        
-<a name="l00076"></a>00076 } ywing_mode_t;
-<a name="l00077"></a>00077 
+<a name="l00065"></a>00065 
+<a name="l00069"></a>00069 <span class="keyword">typedef</span> <span class="keyword">enum</span>
+<a name="l00070"></a>00070 {
+<a name="l00071"></a>00071     YWING_DISARMED      = 0,        
+<a name="l00072"></a>00072     YWING_MANUAL        = 1,        
+<a name="l00073"></a>00073     YWING_RATE          = 2,        
+<a name="l00074"></a>00074     YWING_HOVER         = 3,        
+<a name="l00075"></a>00075     YWING_TRANSITION    = 4,        
+<a name="l00076"></a>00076     YWING_45            = 5,        
+<a name="l00077"></a>00077 } ywing_mode_t;
 <a name="l00078"></a>00078 
-<a name="l00082"></a><a class="code" href="structstabilisation__ywing__t.html">00082</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00083"></a>00083 {
-<a name="l00084"></a><a class="code" href="structstabilisation__ywing__t.html#a5c0c3c5a46eecb0b13b1285a50c4a288">00084</a>     ywing_mode_t            <a class="code" href="structstabilisation__ywing__t.html#a5c0c3c5a46eecb0b13b1285a50c4a288" title="Current flight mode.">mode</a>;                   
-<a name="l00085"></a><a class="code" href="structstabilisation__ywing__t.html#a1ae2af0b159efced318bb25c542fe050">00085</a>     <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>               <a class="code" href="structstabilisation__ywing__t.html#a1ae2af0b159efced318bb25c542fe050" title="Input command.">command</a>;                
-<a name="l00086"></a><a class="code" href="structstabilisation__ywing__t.html#a58bccce578f2c460d05e0f9b77354b23">00086</a>     attitude_controller_t   <a class="code" href="structstabilisation__ywing__t.html#a58bccce578f2c460d05e0f9b77354b23" title="Attitude controler.">attitude_controller</a>;    
-<a name="l00087"></a><a class="code" href="structstabilisation__ywing__t.html#ab79e7bfd6e238b53d2cc228830153b95">00087</a>     <span class="keywordtype">float</span>                   <a class="code" href="structstabilisation__ywing__t.html#ab79e7bfd6e238b53d2cc228830153b95" title="Current pitch reference.">reference_pitch</a>;        
-<a name="l00088"></a><a class="code" href="structstabilisation__ywing__t.html#a2f3f403498634917f01144641a04b4a4">00088</a>     <span class="keywordtype">float</span>                   <a class="code" href="structstabilisation__ywing__t.html#a2f3f403498634917f01144641a04b4a4" title="Current heading reference.">reference_heading</a>;      
-<a name="l00089"></a><a class="code" href="structstabilisation__ywing__t.html#a13bae8f72079ee7e98a49e67f73d608e">00089</a>     <span class="keywordtype">float</span>                   <a class="code" href="structstabilisation__ywing__t.html#a13bae8f72079ee7e98a49e67f73d608e" title="Current roll reference.">reference_roll</a>;         
-<a name="l00090"></a><a class="code" href="structstabilisation__ywing__t.html#a84c6221d8d45b4a04ca0f467e211951a">00090</a>     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>*           <a class="code" href="structstabilisation__ywing__t.html#a84c6221d8d45b4a04ca0f467e211951a" title="Pointer to attitude estimation (input)">ahrs</a>;                   
-<a name="l00091"></a><a class="code" href="structstabilisation__ywing__t.html#a621f36c226787bdffc4f82d322cc55d9">00091</a>     <span class="keyword">const</span> <a class="code" href="structremote__t.html" title="The configuration structure of the remote.">remote_t</a>*         <a class="code" href="structstabilisation__ywing__t.html#a621f36c226787bdffc4f82d322cc55d9" title="Pointer to remote (input)">remote</a>;                 
-<a name="l00092"></a>00092 } <a class="code" href="structstabilisation__ywing__t.html" title="Ywing.">stabilisation_ywing_t</a>;
-<a name="l00093"></a>00093 
+<a name="l00079"></a>00079 
+<a name="l00083"></a><a class="code" href="structstabilisation__ywing__t.html">00083</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00084"></a>00084 {
+<a name="l00085"></a><a class="code" href="structstabilisation__ywing__t.html#a5c0c3c5a46eecb0b13b1285a50c4a288">00085</a>     ywing_mode_t            <a class="code" href="structstabilisation__ywing__t.html#a5c0c3c5a46eecb0b13b1285a50c4a288" title="Current flight mode.">mode</a>;                   
+<a name="l00086"></a><a class="code" href="structstabilisation__ywing__t.html#a1ae2af0b159efced318bb25c542fe050">00086</a>     <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>               <a class="code" href="structstabilisation__ywing__t.html#a1ae2af0b159efced318bb25c542fe050" title="Input command.">command</a>;                
+<a name="l00087"></a><a class="code" href="structstabilisation__ywing__t.html#a58bccce578f2c460d05e0f9b77354b23">00087</a>     attitude_controller_t   <a class="code" href="structstabilisation__ywing__t.html#a58bccce578f2c460d05e0f9b77354b23" title="Attitude controler.">attitude_controller</a>;    
+<a name="l00088"></a><a class="code" href="structstabilisation__ywing__t.html#ab79e7bfd6e238b53d2cc228830153b95">00088</a>     <span class="keywordtype">float</span>                   <a class="code" href="structstabilisation__ywing__t.html#ab79e7bfd6e238b53d2cc228830153b95" title="Current pitch reference.">reference_pitch</a>;        
+<a name="l00089"></a><a class="code" href="structstabilisation__ywing__t.html#a2f3f403498634917f01144641a04b4a4">00089</a>     <span class="keywordtype">float</span>                   <a class="code" href="structstabilisation__ywing__t.html#a2f3f403498634917f01144641a04b4a4" title="Current heading reference.">reference_heading</a>;      
+<a name="l00090"></a><a class="code" href="structstabilisation__ywing__t.html#a13bae8f72079ee7e98a49e67f73d608e">00090</a>     <span class="keywordtype">float</span>                   <a class="code" href="structstabilisation__ywing__t.html#a13bae8f72079ee7e98a49e67f73d608e" title="Current roll reference.">reference_roll</a>;         
+<a name="l00091"></a><a class="code" href="structstabilisation__ywing__t.html#a84c6221d8d45b4a04ca0f467e211951a">00091</a>     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>*           <a class="code" href="structstabilisation__ywing__t.html#a84c6221d8d45b4a04ca0f467e211951a" title="Pointer to attitude estimation (input)">ahrs</a>;                   
+<a name="l00092"></a><a class="code" href="structstabilisation__ywing__t.html#a621f36c226787bdffc4f82d322cc55d9">00092</a>     <span class="keyword">const</span> <a class="code" href="structremote__t.html" title="The configuration structure of the remote.">remote_t</a>*         <a class="code" href="structstabilisation__ywing__t.html#a621f36c226787bdffc4f82d322cc55d9" title="Pointer to remote (input)">remote</a>;                 
+<a name="l00093"></a>00093 } <a class="code" href="structstabilisation__ywing__t.html" title="Ywing.">stabilisation_ywing_t</a>;
 <a name="l00094"></a>00094 
-<a name="l00098"></a><a class="code" href="structstabilisation__ywing__conf__t.html">00098</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00099"></a>00099 {
-<a name="l00100"></a>00100 } <a class="code" href="structstabilisation__ywing__conf__t.html" title="Configuration for the ywing structure.">stabilisation_ywing_conf_t</a>;
-<a name="l00101"></a>00101 
+<a name="l00095"></a>00095 
+<a name="l00099"></a><a class="code" href="structstabilisation__ywing__conf__t.html">00099</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00100"></a>00100 {
+<a name="l00101"></a>00101 } <a class="code" href="structstabilisation__ywing__conf__t.html" title="Configuration for the ywing structure.">stabilisation_ywing_conf_t</a>;
 <a name="l00102"></a>00102 
 <a name="l00103"></a>00103 
 <a name="l00104"></a>00104 
-<a name="l00113"></a>00113 <span class="keywordtype">bool</span> stabilisation_ywing_init(<a class="code" href="structstabilisation__ywing__t.html" title="Ywing.">stabilisation_ywing_t</a>* stabilisation_ywing, <a class="code" href="structstabilisation__ywing__conf__t.html" title="Configuration for the ywing structure.">stabilisation_ywing_conf_t</a>* config);
-<a name="l00114"></a>00114 
+<a name="l00105"></a>00105 
+<a name="l00114"></a>00114 <span class="keywordtype">bool</span> stabilisation_ywing_init(<a class="code" href="structstabilisation__ywing__t.html" title="Ywing.">stabilisation_ywing_t</a>* stabilisation_ywing, <a class="code" href="structstabilisation__ywing__conf__t.html" title="Configuration for the ywing structure.">stabilisation_ywing_conf_t</a>* config);
 <a name="l00115"></a>00115 
-<a name="l00121"></a>00121 <span class="keywordtype">void</span> stabilisation_ywing_update(<a class="code" href="structstabilisation__ywing__t.html" title="Ywing.">stabilisation_ywing_t</a>* stabilisation_ywing);
-<a name="l00122"></a>00122 
+<a name="l00116"></a>00116 
+<a name="l00122"></a>00122 <span class="keywordtype">void</span> stabilisation_ywing_update(<a class="code" href="structstabilisation__ywing__t.html" title="Ywing.">stabilisation_ywing_t</a>* stabilisation_ywing);
 <a name="l00123"></a>00123 
-<a name="l00124"></a>00124 <span class="preprocessor">#ifdef __cplusplus</span>
-<a name="l00125"></a>00125 <span class="preprocessor"></span>}
-<a name="l00126"></a>00126 <span class="preprocessor">#endif</span>
-<a name="l00127"></a>00127 <span class="preprocessor"></span>
-<a name="l00128"></a>00128 <span class="preprocessor">#endif </span><span class="comment">/* STABILISATION_YWING_H_ */</span>
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125 <span class="preprocessor">#ifdef __cplusplus</span>
+<a name="l00126"></a>00126 <span class="preprocessor"></span>}
+<a name="l00127"></a>00127 <span class="preprocessor">#endif</span>
+<a name="l00128"></a>00128 <span class="preprocessor"></span>
+<a name="l00129"></a>00129 <span class="preprocessor">#endif </span><span class="comment">/* STABILISATION_YWING_H_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -200,7 +201,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

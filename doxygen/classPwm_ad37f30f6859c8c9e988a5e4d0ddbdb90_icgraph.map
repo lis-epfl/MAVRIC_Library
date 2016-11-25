@@ -4,9 +4,9 @@
 <area shape="rect" id="node5" href="$classSparky__chibi.html#a11ac79dbd29abeed3bcb800a726ee56f" title="Hardware initialisation." alt="" coords="900,5,1023,35"/>
 <area shape="rect" id="node9" href="$classServo.html#afc97bfc58e00c9c586d67f53ef4764ad" title="Sets the servos to a given value." alt="" coords="456,317,547,347"/>
 <area shape="rect" id="node29" href="$classServo.html#a2b5d2ce904f65a74afad4e62c49938bf" title="Sets the servos to failsafe value." alt="" coords="448,108,555,137"/>
-<area shape="rect" id="node11" href="$classServos__mix__quadcopter__cross.html#a9ded93cf1f243401d3358911685ce945" title="Update controller;." alt="" coords="603,371,851,400"/>
-<area shape="rect" id="node13" href="$classServos__mix__quadcopter__diag.html#aa7257c65bc78b1c1e5de4b0095c46644" title="Update controller;." alt="" coords="607,424,847,453"/>
-<area shape="rect" id="node15" href="$classServos__mix__ywing.html#a2e4a4f403461a7e6da8e7838cbc1cec6" title="Update controller;." alt="" coords="637,477,816,507"/>
+<area shape="rect" id="node11" href="$classServos__mix__quadcopter__cross.html#a1086c09ac38a3bcca0188f661610c279" title="Main update function." alt="" coords="603,371,851,400"/>
+<area shape="rect" id="node13" href="$classServos__mix__quadcopter__diag.html#adaf68b4c9aa29a817585905f8a7cddd0" title="Main update function." alt="" coords="607,424,847,453"/>
+<area shape="rect" id="node15" href="$classServos__mix__ywing.html#a6d420617398234a52e18f701d625bd90" title="Main update function." alt="" coords="637,477,816,507"/>
 <area shape="rect" id="node17" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="656,264,797,293"/>
 <area shape="rect" id="node19" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="651,160,803,189"/>
 <area shape="rect" id="node27" href="$classServo.html#a91d7c835b5b0e44a9c57f34ea24affe5" title="Sets the minimum value to the servo." alt="" coords="652,317,801,347"/>

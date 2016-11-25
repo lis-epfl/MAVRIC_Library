@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classServos__mix__I.html" title="{Servos_mix_I\n||+ update()\l+ set_torque_command()\l}" alt="" coords="5,6,171,109"/>
+<area shape="rect" id="node2" href="$classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,219,143"/>
+<area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="243,6,453,143"/>
 </map>

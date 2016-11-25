@@ -1,21 +1,25 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="193,179,332,208"/>
-<area shape="rect" id="node19" href="$classINS.html#a72b551f6ce6cf46b33d1699618b44937" title="Constructor." alt="" coords="225,259,300,288"/>
-<area shape="rect" id="node21" href="$classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9" title="set the origin of the local (NED) coordinate system" alt="" coords="208,312,317,341"/>
-<area shape="rect" id="node23" href="$classINS.html#ae3635c2574df207f492208b14c7d1cbb" title="3D Position in global frame" alt="" coords="205,365,320,395"/>
-<area shape="rect" id="node27" href="$classINS__complementary.html#ab647bbb3968c81393f7f143e2e9aaaa9" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="140,419,385,448"/>
-<area shape="rect" id="node29" href="$classINS__kf.html#ab8eaaae0714f6ce078495a2b3c8cabee" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="179,472,347,501"/>
-<area shape="rect" id="node31" href="$classDynamic__model__quad__diag.html#ac4fe34730b0cf423f9f478a3749374bd" title="Main update function &#160;Reads new values from sensor." alt="" coords="148,525,377,555"/>
-<area shape="rect" id="node33" href="$classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="159,579,367,608"/>
-<area shape="rect" id="node37" href="$classGeofence__cylinder.html#a3d24674fc2daacddeb0d65157227dbe2" title="Indicates if the position is allowed by the geofence." alt="" coords="164,632,361,661"/>
-<area shape="rect" id="node39" href="$classGeofence__cylinder.html#ad63086f08942388a644c7099ee527685" title="Computes the closest border between allowed and disallowed space." alt="" coords="152,685,373,715"/>
-<area shape="rect" id="node5" href="$classMission__handler__hold__position.html#afffb500321fe25a141ac222c62cc5371" title="Function to set the controller specific command." alt="" coords="561,5,1052,35"/>
-<area shape="rect" id="node7" href="$classMission__handler__landing.html#ac869d2bd10336643b38d1c9c7b7777ec" title="Function to set the controller specific command for the descent to small altitude state..." alt="" coords="436,59,1177,88"/>
-<area shape="rect" id="node9" href="$classMission__handler__landing.html#a20eec885dad664b9a532c5486c6abae7" title="Function to set the controller specific command for the descent to ground state." alt="" coords="441,112,1172,141"/>
-<area shape="rect" id="node11" href="$classMission__handler__navigating.html#aec16a6a8a763d6459786f900d2ce4efd" title="Function to set the controller specific command." alt="" coords="569,165,1044,195"/>
-<area shape="rect" id="node13" href="$classMission__handler__takeoff.html#ab570f242f871dd9df40b9a6583facbfd" title="Function to set the controller specific command." alt="" coords="579,219,1035,248"/>
-<area shape="rect" id="node15" href="$classMission__handler__takeoff.html#acfe121fe25652d7d0cb2351a9996a8ac" title="Sets up this handler class for a first time initialization." alt="" coords="705,272,908,301"/>
-<area shape="rect" id="node17" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="692,325,921,355"/>
-<area shape="rect" id="node25" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="729,379,884,408"/>
-<area shape="rect" id="node35" href="$classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="652,579,961,608"/>
+<area shape="rect" id="node3" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="193,272,332,301"/>
+<area shape="rect" id="node28" href="$classINS.html#a72b551f6ce6cf46b33d1699618b44937" title="Constructor." alt="" coords="225,379,300,408"/>
+<area shape="rect" id="node30" href="$classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9" title="set the origin of the local (NED) coordinate system" alt="" coords="208,432,317,461"/>
+<area shape="rect" id="node32" href="$classINS.html#ae3635c2574df207f492208b14c7d1cbb" title="3D Position in global frame" alt="" coords="205,485,320,515"/>
+<area shape="rect" id="node36" href="$classINS__complementary.html#ab647bbb3968c81393f7f143e2e9aaaa9" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="140,539,385,568"/>
+<area shape="rect" id="node38" href="$classINS__kf.html#ab8eaaae0714f6ce078495a2b3c8cabee" title="Absolute altitude above sea level in meters (&gt;=0)" alt="" coords="179,592,347,621"/>
+<area shape="rect" id="node40" href="$classDynamic__model__quad__diag.html#ac4fe34730b0cf423f9f478a3749374bd" title="Main update function &#160;Reads new values from sensor." alt="" coords="148,645,377,675"/>
+<area shape="rect" id="node42" href="$classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="159,699,367,728"/>
+<area shape="rect" id="node46" href="$classGeofence__cylinder.html#a3d24674fc2daacddeb0d65157227dbe2" title="Indicates if the position is allowed by the geofence." alt="" coords="164,752,361,781"/>
+<area shape="rect" id="node48" href="$classGeofence__cylinder.html#ad63086f08942388a644c7099ee527685" title="Computes the closest border between allowed and disallowed space." alt="" coords="152,805,373,835"/>
+<area shape="rect" id="node5" href="$classMission__handler__hold__position.html#a97a8871a6f05793ec1d5a07c8825de8c" title="Handles the mission every iteration." alt="" coords="517,5,763,35"/>
+<area shape="rect" id="node7" href="$classMission__handler__hold__position.html#afa566f50820dab8816bf6b6d7d2ca314" title="Provides control commands to the flight controller." alt="" coords="473,59,807,88"/>
+<area shape="rect" id="node9" href="$classMission__handler__landing.html#a4f725cce92bb52f5e3d76c64337e7830" title="Function to set the controller specific command for the descent to small altitude state..." alt="" coords="435,112,845,141"/>
+<area shape="rect" id="node13" href="$classMission__handler__landing.html#a13fd46bd48de1d9a99eea8e8b11af0b3" title="Function to set the controller specific command for the descent to ground state." alt="" coords="441,165,839,195"/>
+<area shape="rect" id="node16" href="$classMission__handler__navigating.html#a0c39589ed570325c90820442d398eca6" title="Sets up this handler class for a first time initialization." alt="" coords="529,219,751,248"/>
+<area shape="rect" id="node18" href="$classMission__handler__navigating.html#afde956e68864854438ae5727ddbd5b27" title="Handles the mission every iteration." alt="" coords="525,272,755,301"/>
+<area shape="rect" id="node20" href="$classMission__handler__takeoff.html#a00239402258059b6cc2dbe742768a198" title="Sets up this handler class for a first time initialization." alt="" coords="539,325,741,355"/>
+<area shape="rect" id="node22" href="$classMission__handler__takeoff.html#ab1a18df9c1ab0b9610134996321b7643" title="Handles the mission every iteration." alt="" coords="535,379,745,408"/>
+<area shape="rect" id="node24" href="$classMission__handler__takeoff.html#a28119f2fc4be460e72941a0c0244fdef" title="Provides control commands to the flight controller." alt="" coords="491,432,789,461"/>
+<area shape="rect" id="node26" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="525,485,755,515"/>
+<area shape="rect" id="node11" href="$classMission__handler__landing.html#af1e37fd52608635b638c3b2130d50db4" title="Provides control commands to the flight controller." alt="" coords="893,139,1192,168"/>
+<area shape="rect" id="node34" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="563,539,717,568"/>
+<area shape="rect" id="node44" href="$classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="485,699,795,728"/>
 </map>

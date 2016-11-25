@@ -1,9 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classServos__mix__I.html" title="Servos_mix_I" alt="" coords="7,112,108,141"/>
-<area shape="rect" id="node3" href="$classServos__mix.html" title="Servos_mix" alt="" coords="157,112,248,141"/>
-<area shape="rect" id="node5" href="$classServos__mix__birotor.html" title="Servos_mix_birotor" alt="" coords="331,5,464,35"/>
-<area shape="rect" id="node7" href="$classServos__mix__quadcopter__cross.html" title="Servos_mix_quadcopter_cross" alt="" coords="297,59,497,88"/>
-<area shape="rect" id="node9" href="$classServos__mix__quadcopter__diag.html" title="Servos_mix_quadcopter_diag" alt="" coords="301,112,493,141"/>
-<area shape="rect" id="node11" href="$classServos__mix__wing.html" title="Servos_mix_wing" alt="" coords="335,165,460,195"/>
-<area shape="rect" id="node13" href="$classServos__mix__ywing.html" title="Servos_mix_ywing" alt="" coords="332,219,463,248"/>
+<area shape="rect" id="node1" href="$structServos__mix__4dof_1_1conf__t.html" title="Configuration structure." alt="" coords="7,5,207,35"/>
 </map>

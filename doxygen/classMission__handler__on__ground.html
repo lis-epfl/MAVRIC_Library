@@ -80,33 +80,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a>  </div>
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Mission_handler_on_ground Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Mission_handler_on_ground" --><!-- doxytag: inherits="Mission_handler" --><div class="dynheader">
+<!-- doxytag: class="Mission_handler_on_ground" --><!-- doxytag: inherits="Mission_handler" -->
+<p>The mission handler for the on ground state.  
+ <a href="classMission__handler__on__ground.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="mission__handler__on__ground_8hpp_source.html">mission_handler_on_ground.hpp</a>&gt;</code></p>
+<div class="dynheader">
 Inheritance diagram for Mission_handler_on_ground:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMission__handler__on__ground__inherit__graph.png" border="0" usemap="#Mission__handler__on__ground_inherit__map" alt="Inheritance graph"/></div>
 <map name="Mission__handler__on__ground_inherit__map" id="Mission__handler__on__ground_inherit__map">
-<area shape="rect" id="node2" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="21,6,192,143"/></map>
+<area shape="rect" id="node2" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="21,139,192,277"/><area shape="rect" id="node4" href="classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="23,5,191,91"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Mission_handler_on_ground:</div>
 <div class="dyncontent">
 <div class="center"><img src="classMission__handler__on__ground__coll__graph.png" border="0" usemap="#Mission__handler__on__ground_coll__map" alt="Collaboration graph"/></div>
 <map name="Mission__handler__on__ground_coll__map" id="Mission__handler__on__ground_coll__map">
-<area shape="rect" id="node2" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="5,6,176,143"/><area shape="rect" id="node4" href="classRate__controller__I.html" title="{Rate_controller_I\n||+ update()\l+ set_rate_command()\l}" alt="" coords="200,23,352,126"/></map>
+<area shape="rect" id="node2" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="21,139,192,277"/><area shape="rect" id="node4" href="classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="23,5,191,91"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classMission__handler__on__ground-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__on__ground.html#a065c07a8522168b3b2807103723e7bf3">Mission_handler_on_ground</a> (<a class="el" href="classRate__controller__I.html">Rate_controller_I</a> &amp;rate_controller)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the on ground mission planner handler.  <a href="#a065c07a8522168b3b2807103723e7bf3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a04977b7d260015ee5af542c741df175c"></a><!-- doxytag: member="Mission_handler_on_ground::Mission_handler_on_ground" ref="a04977b7d260015ee5af542c741df175c" args="()" -->
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__on__ground.html#a04977b7d260015ee5af542c741df175c">Mission_handler_on_ground</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the on ground mission planner handler. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__on__ground.html#ac17c38f64a6b20546a6bf97bc1e29f44">can_handle</a> (const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;wpt) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the waypoint is on the ground.  <a href="#ac17c38f64a6b20546a6bf97bc1e29f44"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__on__ground.html#a371e2b7f4d2576af4f590ddd9932b5c8">setup</a> (const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;wpt)</td></tr>
@@ -114,42 +119,15 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual <br class="typebreak"/>
 Mission_handler::update_status_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__on__ground.html#ac5b1f5fe018046b248e4e460819f1b0a">update</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns MISSION_IN_PROGRESS.  <a href="#ac5b1f5fe018046b248e4e460819f1b0a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__on__ground.html#ad5070f918a94688da7625c4c057b03b0">write_flight_command</a> (<a class="el" href="classFlight__controller.html">Flight_controller</a> &amp;flight_controller) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides control commands to the flight controller.  <a href="#ad5070f918a94688da7625c4c057b03b0"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual <br class="typebreak"/>
 Mission_planner::internal_state_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__on__ground.html#aea7b094a1df13793207ddf0dbf69cf41">handler_mission_state</a> () const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns that the mission state is in STANDBY.  <a href="#aea7b094a1df13793207ddf0dbf69cf41"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a39f7bfcc6f1dab1de4d231b34a89f8c1"></a><!-- doxytag: member="Mission_handler_on_ground::rate_controller_" ref="a39f7bfcc6f1dab1de4d231b34a89f8c1" args="" -->
-<a class="el" href="classRate__controller__I.html">Rate_controller_I</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__on__ground.html#a39f7bfcc6f1dab1de4d231b34a89f8c1">rate_controller_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The reference to the rate controller. <br/></td></tr>
 </table>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a065c07a8522168b3b2807103723e7bf3"></a><!-- doxytag: member="Mission_handler_on_ground::Mission_handler_on_ground" ref="a065c07a8522168b3b2807103723e7bf3" args="(Rate_controller_I &amp;rate_controller)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classMission__handler__on__ground.html#a065c07a8522168b3b2807103723e7bf3">Mission_handler_on_ground::Mission_handler_on_ground</a> </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classRate__controller__I.html">Rate_controller_I</a> &amp;&#160;</td>
-          <td class="paramname"><em>rate_controller</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Initialize the on ground mission planner handler. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">rate_controller</td><td>The reference to the attitude controls </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<hr/><h2>Member Function Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>The mission handler for the on ground state. </p>
+</div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="ac17c38f64a6b20546a6bf97bc1e29f44"></a><!-- doxytag: member="Mission_handler_on_ground::can_handle" ref="ac17c38f64a6b20546a6bf97bc1e29f44" args="(const Waypoint &amp;wpt) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -259,12 +237,34 @@ Here is the call graph for this function:</div>
 
 <p>Implements <a class="el" href="classMission__handler.html#a053d8e3cfd4e2bc720c437629400d589">Mission_handler</a>.</p>
 
+</div>
+</div>
+<a class="anchor" id="ad5070f918a94688da7625c4c057b03b0"></a><!-- doxytag: member="Mission_handler_on_ground::write_flight_command" ref="ad5070f918a94688da7625c4c057b03b0" args="(Flight_controller &amp;flight_controller) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classMission__handler__on__ground.html#ad5070f918a94688da7625c4c057b03b0">Mission_handler_on_ground::write_flight_command</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classFlight__controller.html">Flight_controller</a> &amp;&#160;</td>
+          <td class="paramname"><em>flight_controller</em></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Provides control commands to the flight controller. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
+
+<p>Implements <a class="el" href="classFlight__command__source.html#a1ea29d57bc9f57a569119256a2dd723c">Flight_command_source</a>.</p>
+
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMission__handler__on__ground_ac5b1f5fe018046b248e4e460819f1b0a_cgraph.png" border="0" usemap="#classMission__handler__on__ground_ac5b1f5fe018046b248e4e460819f1b0a_cgraph" alt=""/></div>
-<map name="classMission__handler__on__ground_ac5b1f5fe018046b248e4e460819f1b0a_cgraph" id="classMission__handler__on__ground_ac5b1f5fe018046b248e4e460819f1b0a_cgraph">
-<area shape="rect" id="node3" href="classRate__controller__I.html#a96b6bca469929028ced5cbdacb277a60" title="sets the rate command (desired angular velocity and thrust)" alt="" coords="285,5,525,35"/></map>
+<div class="center"><img src="classMission__handler__on__ground_ad5070f918a94688da7625c4c057b03b0_cgraph.png" border="0" usemap="#classMission__handler__on__ground_ad5070f918a94688da7625c4c057b03b0_cgraph" alt=""/></div>
+<map name="classMission__handler__on__ground_ad5070f918a94688da7625c4c057b03b0_cgraph" id="classMission__handler__on__ground_ad5070f918a94688da7625c4c057b03b0_cgraph">
+<area shape="rect" id="node3" href="classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5" title="Sets the input command." alt="" coords="375,5,577,35"/></map>
 </div>
 </p>
 
@@ -292,7 +292,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

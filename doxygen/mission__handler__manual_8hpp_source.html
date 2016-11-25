@@ -117,48 +117,44 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00034"></a>00034 <span class="comment"> *</span>
 <a name="l00035"></a>00035 <span class="comment"> * \author MAV&#39;RIC Team</span>
 <a name="l00036"></a>00036 <span class="comment"> * \author Matthew Douglas</span>
-<a name="l00037"></a>00037 <span class="comment"> *</span>
-<a name="l00038"></a>00038 <span class="comment"> * \brief The MAVLink mission planner handler for the manual control state</span>
-<a name="l00039"></a>00039 <span class="comment"> *</span>
-<a name="l00040"></a>00040 <span class="comment"> ******************************************************************************/</span>
-<a name="l00041"></a>00041 
+<a name="l00037"></a>00037 <span class="comment"> * \author Julien Lecoeur</span>
+<a name="l00038"></a>00038 <span class="comment"> *</span>
+<a name="l00039"></a>00039 <span class="comment"> * \brief The mission handler for the manual control state</span>
+<a name="l00040"></a>00040 <span class="comment"> *</span>
+<a name="l00041"></a>00041 <span class="comment"> ******************************************************************************/</span>
 <a name="l00042"></a>00042 
-<a name="l00043"></a>00043 <span class="preprocessor">#ifndef MISSION_HANDLER_MANUAL__</span>
-<a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define MISSION_HANDLER_MANUAL__</span>
-<a name="l00045"></a>00045 <span class="preprocessor"></span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;mission/mission_handler.hpp&quot;</span>
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048 <span class="comment">/*</span>
-<a name="l00049"></a>00049 <span class="comment"> * N.B.: Reference Frames and MAV_CMD_NAV are defined in &quot;maveric.h&quot;</span>
-<a name="l00050"></a>00050 <span class="comment"> */</span>
-<a name="l00051"></a>00051 
-<a name="l00052"></a><a class="code" href="classMission__handler__manual.html">00052</a> <span class="keyword">class </span><a class="code" href="classMission__handler__manual.html">Mission_handler_manual</a> : <span class="keyword">public</span> <a class="code" href="classMission__handler.html">Mission_handler</a>
-<a name="l00053"></a>00053 {
-<a name="l00054"></a>00054 <span class="keyword">public</span>:
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056 
-<a name="l00060"></a>00060      <a class="code" href="classMission__handler__manual.html#a8728cbea6b79a8a9ae1aadb6d07c3a7c" title="Initialize the manual mission planner handler.">Mission_handler_manual</a>();
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044 <span class="preprocessor">#ifndef MISSION_HANDLER_MANUAL_HPP_</span>
+<a name="l00045"></a>00045 <span class="preprocessor"></span><span class="preprocessor">#define MISSION_HANDLER_MANUAL_HPP_</span>
+<a name="l00046"></a>00046 <span class="preprocessor"></span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;mission/mission_handler.hpp&quot;</span>
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049 
+<a name="l00053"></a><a class="code" href="classMission__handler__manual.html">00053</a> <span class="keyword">class </span><a class="code" href="classMission__handler__manual.html" title="The mission handler for the manual control state.">Mission_handler_manual</a> : <span class="keyword">public</span> <a class="code" href="classMission__handler.html">Mission_handler</a>
+<a name="l00054"></a>00054 {
+<a name="l00055"></a>00055 <span class="keyword">public</span>:
+<a name="l00059"></a>00059      <a class="code" href="classMission__handler__manual.html#a8728cbea6b79a8a9ae1aadb6d07c3a7c" title="Initialize the manual mission planner handler.">Mission_handler_manual</a>();
+<a name="l00060"></a>00060 
 <a name="l00061"></a>00061 
-<a name="l00062"></a>00062 
-<a name="l00073"></a>00073     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__manual.html#aa644fc1d73e7a56835a49df70efdb4c5" title="Checks if the waypoint is on the ground.">can_handle</a>(<span class="keyword">const</span> <a class="code" href="classWaypoint.html">Waypoint</a>&amp; wpt) <span class="keyword">const</span>;
+<a name="l00072"></a>00072     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__manual.html#aa644fc1d73e7a56835a49df70efdb4c5" title="Checks if the waypoint is on the ground.">can_handle</a>(<span class="keyword">const</span> <a class="code" href="classWaypoint.html">Waypoint</a>&amp; wpt) <span class="keyword">const</span>;
+<a name="l00073"></a>00073 
 <a name="l00074"></a>00074 
 <a name="l00084"></a>00084     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__manual.html#aead4bb715d1e0cc57b97b007a1b2ff41" title="Does nothing.">setup</a>(<span class="keyword">const</span> <a class="code" href="classWaypoint.html">Waypoint</a>&amp; wpt);
 <a name="l00085"></a>00085 
-<a name="l00093"></a>00093     <span class="keyword">virtual</span> Mission_handler::update_status_t <a class="code" href="classMission__handler__manual.html#a0f94b021948a82954698ae1168abe54f" title="Handles the mission every iteration.">update</a>();
-<a name="l00094"></a>00094 
-<a name="l00100"></a>00100     <span class="keyword">virtual</span> Mission_planner::internal_state_t <a class="code" href="classMission__handler__manual.html#a1ea391c7f5d804de0f247a48ba637973" title="Returns that the mission state is in MANUAL_CTRL.">handler_mission_state</a>() <span class="keyword">const</span>;
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102 <span class="keyword">protected</span>:
-<a name="l00103"></a>00103     
-<a name="l00104"></a>00104 };
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108 
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110 
+<a name="l00086"></a>00086 
+<a name="l00094"></a>00094     <span class="keyword">virtual</span> Mission_handler::update_status_t <a class="code" href="classMission__handler__manual.html#a0f94b021948a82954698ae1168abe54f" title="Handles the mission every iteration.">update</a>();
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096 
+<a name="l00102"></a>00102     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__manual.html#a6844711ac26b9e63e5d21e84b027cf85" title="Provides control commands to the flight controller.">write_flight_command</a>(<a class="code" href="classFlight__controller.html">Flight_controller</a>&amp; flight_controller) <span class="keyword">const</span>;
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104 
+<a name="l00110"></a>00110     <span class="keyword">virtual</span> Mission_planner::internal_state_t <a class="code" href="classMission__handler__manual.html#a1ea391c7f5d804de0f247a48ba637973" title="Returns that the mission state is in MANUAL_CTRL.">handler_mission_state</a>() <span class="keyword">const</span>;
 <a name="l00111"></a>00111 
-<a name="l00112"></a>00112 <span class="preprocessor">#endif // MISSION_HANDLER_MANUAL__</span>
+<a name="l00112"></a>00112 <span class="keyword">protected</span>:
+<a name="l00113"></a>00113 
+<a name="l00114"></a>00114 };
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116 <span class="preprocessor">#endif // MISSION_HANDLER_MANUAL_HPP_</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -177,7 +173,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:30 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

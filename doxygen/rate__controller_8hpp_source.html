@@ -119,7 +119,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00036"></a>00036 <span class="comment"> * \author Julien Lecoeur</span>
 <a name="l00037"></a>00037 <span class="comment"> * \author Basil Huber</span>
 <a name="l00038"></a>00038 <span class="comment"> *</span>
-<a name="l00039"></a>00039 <span class="comment"> * \brief A controller for rate control, to be use within a cascade controller structure</span>
+<a name="l00039"></a>00039 <span class="comment"> * \brief A controller for rate control</span>
 <a name="l00040"></a>00040 <span class="comment"> *</span>
 <a name="l00041"></a>00041 <span class="comment"> * TODO: update this text</span>
 <a name="l00042"></a>00042 <span class="comment"> * \details It takes a command in attitude (roll/pitch/yaw or quaternion) as</span>
@@ -136,133 +136,112 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00053"></a>00053 <span class="preprocessor">#ifndef RATE_CONTROLLER_HPP_</span>
 <a name="l00054"></a>00054 <span class="preprocessor"></span><span class="preprocessor">#define RATE_CONTROLLER_HPP_</span>
 <a name="l00055"></a>00055 <span class="preprocessor"></span>
-<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;control/base_cascade_controller.hpp&quot;</span>
-<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;control/rate_controller_i.hpp&quot;</span>
-<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;control/pid_controller.hpp&quot;</span>
-<a name="l00059"></a>00059 <span class="preprocessor">#include &quot;util/constants.hpp&quot;</span>
-<a name="l00060"></a>00060 <span class="preprocessor">#include &quot;sensing/ahrs.hpp&quot;</span>
+<a name="l00056"></a>00056 <span class="preprocessor">#include &quot;control/controller.hpp&quot;</span>
+<a name="l00057"></a>00057 <span class="preprocessor">#include &quot;control/pid_controller.hpp&quot;</span>
+<a name="l00058"></a>00058 <span class="preprocessor">#include &quot;util/constants.hpp&quot;</span>
+<a name="l00059"></a>00059 <span class="preprocessor">#include &quot;sensing/ahrs.hpp&quot;</span>
+<a name="l00060"></a>00060 
 <a name="l00061"></a>00061 
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063 <span class="keyword">template</span>&lt;<span class="keyword">class</span> TServos_mix&gt;
-<a name="l00064"></a><a class="code" href="classRate__controller.html">00064</a> <span class="keyword">class </span><a class="code" href="classRate__controller.html">Rate_controller</a> : <span class="keyword">public</span> <a class="code" href="classRate__controller__I.html">Rate_controller_I</a>, <span class="keyword">public</span> <a class="code" href="classBase__cascade__controller.html">Base_cascade_controller</a>
-<a name="l00065"></a>00065 {
-<a name="l00066"></a>00066 <span class="keyword">public</span>:
-<a name="l00067"></a>00067 
-<a name="l00071"></a><a class="code" href="structRate__controller_1_1conf__t.html">00071</a>     <span class="keyword">struct </span><a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">conf_t</a>
-<a name="l00072"></a>00072     {
-<a name="l00073"></a><a class="code" href="structRate__controller_1_1conf__t.html#a2f3c172e0f642029d2ef02392450d567">00073</a>         <a class="code" href="structpid__controller__conf__t.html" title="Configuration for PID controller.">pid_controller_conf_t</a> <a class="code" href="structRate__controller_1_1conf__t.html#a2f3c172e0f642029d2ef02392450d567" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[3];   
-<a name="l00074"></a>00074         <span class="keyword">typename</span> TServos_mix::conf_t servos_mix_config;
-<a name="l00075"></a>00075     };
-<a name="l00076"></a>00076 
-<a name="l00080"></a><a class="code" href="structRate__controller_1_1args__t.html">00080</a>     <span class="keyword">struct </span><a class="code" href="structRate__controller_1_1args__t.html" title="Rate controller constructor arguments.">args_t</a>
-<a name="l00081"></a>00081     {
-<a name="l00082"></a>00082         <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; ahrs;
-<a name="l00083"></a>00083         <span class="keyword">typename</span> TServos_mix::args_t servos_mix_args;
-<a name="l00084"></a>00084     };    
-<a name="l00085"></a>00085 
-<a name="l00092"></a>00092     <a class="code" href="classRate__controller.html#aed850b36aeb67dd8f67e31895b7b5ca2" title="Constructor.">Rate_controller</a>(<a class="code" href="structRate__controller_1_1args__t.html" title="Rate controller constructor arguments.">args_t</a> args, <span class="keyword">const</span> <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">conf_t</a>&amp; config = default_config());
+<a name="l00062"></a><a class="code" href="classRate__controller.html">00062</a> <span class="keyword">class </span><a class="code" href="classRate__controller.html">Rate_controller</a> : <span class="keyword">public</span> <a class="code" href="classController.html">Controller</a>&lt;rate_command_t, torque_command_t&gt;
+<a name="l00063"></a>00063 {
+<a name="l00064"></a>00064 <span class="keyword">public</span>:
+<a name="l00065"></a>00065 
+<a name="l00069"></a><a class="code" href="structRate__controller_1_1conf__t.html">00069</a>     <span class="keyword">struct </span><a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">conf_t</a>
+<a name="l00070"></a>00070     {
+<a name="l00071"></a><a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05">00071</a>         <a class="code" href="structpid__controller__conf__t.html" title="Configuration for PID controller.">pid_controller_conf_t</a> <a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[3];   
+<a name="l00072"></a>00072     };
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074 
+<a name="l00080"></a>00080     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">conf_t</a> <a class="code" href="classRate__controller.html#a4574b703f8da6e771582f33b0c6156a1" title="Default Configuration.">default_config</a>();
+<a name="l00081"></a>00081 
+<a name="l00082"></a>00082 
+<a name="l00086"></a><a class="code" href="structRate__controller_1_1args__t.html">00086</a>     <span class="keyword">struct </span><a class="code" href="structRate__controller_1_1args__t.html" title="Required arguments.">args_t</a>
+<a name="l00087"></a>00087     {
+<a name="l00088"></a><a class="code" href="structRate__controller_1_1args__t.html#a30daf21a5b97d860c98db05cc0442f4b">00088</a>         <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp;         <a class="code" href="structRate__controller_1_1args__t.html#a30daf21a5b97d860c98db05cc0442f4b" title="Ref to attitude estimation (input)">ahrs</a>;                  
+<a name="l00089"></a><a class="code" href="structRate__controller_1_1args__t.html#aeee6f35a8a80d3806948f0c4adc24077">00089</a>         <a class="code" href="structrate__command__t.html" title="Rate command structure (expressed in body frame)">rate_command_t</a>&amp;       <a class="code" href="structRate__controller_1_1args__t.html#aeee6f35a8a80d3806948f0c4adc24077" title="Reference to rate command (input)">rate_command</a>;          
+<a name="l00090"></a><a class="code" href="structRate__controller_1_1args__t.html#aeb4efd381b6f1fcdf5d1ddd474da1845">00090</a>         <a class="code" href="structtorque__command__t.html" title="Torque command structure (expressed in body frame)">torque_command_t</a>&amp;     <a class="code" href="structRate__controller_1_1args__t.html#aeb4efd381b6f1fcdf5d1ddd474da1845" title="Reference to torque command (output)">torque_command</a>;        
+<a name="l00091"></a>00091     };
+<a name="l00092"></a>00092 
 <a name="l00093"></a>00093 
-<a name="l00094"></a>00094     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classRate__controller.html#a19eafa16a70ef08bd04d3403fb8d0dd9" title="Update controller;.">update</a>();
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096     <span class="comment">/*</span>
-<a name="l00097"></a>00097 <span class="comment">     * \brief   Set rate command and set controller cascade to &quot;rate mode&quot; </span>
-<a name="l00098"></a>00098 <span class="comment">     * \details Sets the rate_command_ and sets cascade_command_ to point to rate_command, signaling that this is the command mode</span>
-<a name="l00099"></a>00099 <span class="comment">     *          This function should NOT be called from higher level controllers if they provide a command, use update_cascade instead</span>
-<a name="l00100"></a>00100 <span class="comment">     * \param rate_command  rate command to be set and used to calculate the torque command</span>
-<a name="l00101"></a>00101 <span class="comment">     * </span>
-<a name="l00102"></a>00102 <span class="comment">     * \return  success     indicates whether the command was accepted</span>
-<a name="l00103"></a>00103 <span class="comment">     */</span>
-<a name="l00104"></a>00104     <span class="keywordtype">bool</span> <a class="code" href="classRate__controller.html#a9d04a70592c8581240ab6761d759c002" title="sets the rate command (desired angular velocity and thrust)">set_rate_command</a>(<span class="keyword">const</span> <a class="code" href="structRate__controller__I_1_1rate__command__t.html">rate_command_t</a>&amp; rate_command);
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106     <span class="keyword">static</span> <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">conf_t</a> default_config();
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108 <span class="keyword">protected</span>:
-<a name="l00109"></a>00109     <span class="comment">/*</span>
-<a name="l00110"></a>00110 <span class="comment">     * \brief   calc torque commands based on given rate command and update underlaying cascade level (TTorque)</span>
-<a name="l00111"></a>00111 <span class="comment">     * \details Sets the internal rate_command_ to the provided one, without modifiying cascade_command_</span>
-<a name="l00112"></a>00112 <span class="comment">     *          Calls calc_torque_command followed by TTorque::update_cascade</span>
-<a name="l00113"></a>00113 <span class="comment">     *          This function should be called from higher level controllers if they provide a command</span>
-<a name="l00114"></a>00114 <span class="comment">     * \param rate_command  rate command to be set</span>
-<a name="l00115"></a>00115 <span class="comment">     */</span>
-<a name="l00116"></a>00116     <span class="keywordtype">void</span> update_cascade(<span class="keyword">const</span> <a class="code" href="structRate__controller__I_1_1rate__command__t.html">rate_command_t</a>&amp; rate_command);
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118     <span class="comment">/*</span>
-<a name="l00119"></a>00119 <span class="comment">     * \brief   calc torque commands based on given rate command</span>
-<a name="l00120"></a>00120 <span class="comment">     * \details Sets the internal rate_command_ to the provided one, without modifiying cascade_command_</span>
-<a name="l00121"></a>00121 <span class="comment">     *          This function should be called from higher level controllers if they provide a command</span>
-<a name="l00122"></a>00122 <span class="comment">     * \param rate_command  rate_command</span>
-<a name="l00123"></a>00123 <span class="comment">     */</span>
-<a name="l00124"></a>00124     <span class="keyword">typename</span> TServos_mix::torq_command_t calc_torque_command(<span class="keyword">const</span> <a class="code" href="structRate__controller__I_1_1rate__command__t.html">rate_command_t</a>&amp; rate_command);
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126 
-<a name="l00127"></a>00127 <span class="keyword">private</span>:
-<a name="l00128"></a>00128     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>            pid_[3];                
-<a name="l00129"></a>00129     <span class="keywordtype">float</span>                       dt_s_;                  
-<a name="l00130"></a>00130     <span class="keywordtype">float</span>                       last_update_s_;         
-<a name="l00131"></a>00131     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp;               ahrs_;                  
-<a name="l00132"></a>00132     <a class="code" href="structRate__controller__I_1_1rate__command__t.html">rate_command_t</a>              rate_command_;          
-<a name="l00133"></a>00133     TServos_mix                 servos_mix_;            
-<a name="l00134"></a>00134 };
-<a name="l00135"></a>00135 
-<a name="l00136"></a>00136 <span class="keyword">template</span>&lt;<span class="keyword">class</span> TServos_mix&gt;
-<a name="l00137"></a>00137 <span class="keyword">typename</span> <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">Rate_controller&lt;TServos_mix&gt;::conf_t</a> <a class="code" href="classRate__controller.html">Rate_controller&lt;TServos_mix&gt;::default_config</a>()
-<a name="l00138"></a>00138 {
-<a name="l00139"></a>00139     conf_t conf = {};
+<a name="l00100"></a>00100     <a class="code" href="classRate__controller.html#a0ef7e889369b6d38aef627fca8a1e214" title="Constructor.">Rate_controller</a>(<span class="keyword">const</span> <a class="code" href="structRate__controller_1_1args__t.html" title="Required arguments.">args_t</a>&amp; args, <span class="keyword">const</span> <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">conf_t</a>&amp; config = <a class="code" href="classRate__controller.html#a4574b703f8da6e771582f33b0c6156a1" title="Default Configuration.">default_config</a>());
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102 
+<a name="l00108"></a>00108     <span class="keywordtype">bool</span> <a class="code" href="classRate__controller.html#a942092114ef854ff543f70bd4ebcf40e" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110 
+<a name="l00118"></a>00118     <span class="keywordtype">bool</span> <a class="code" href="classRate__controller.html#a939ef3f98eebb065d0f95e440908adc5" title="Sets the input command.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structrate__command__t.html" title="Rate command structure (expressed in body frame)">rate_command_t</a>&amp; command);
+<a name="l00119"></a>00119 
+<a name="l00120"></a>00120 
+<a name="l00128"></a>00128     <span class="keywordtype">bool</span> <a class="code" href="classRate__controller.html#a1736d30b2e44791ccfec8ae52359aed2" title="Returns the input command.">get_command</a>(<a class="code" href="structrate__command__t.html" title="Rate command structure (expressed in body frame)">rate_command_t</a>&amp; command) <span class="keyword">const</span>;
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130 
+<a name="l00138"></a>00138     <span class="keywordtype">bool</span> <a class="code" href="classRate__controller.html#a6650b59fc856bfbb648bfdf8e7833ebf" title="Returns the output command.">get_output</a>(<a class="code" href="structtorque__command__t.html" title="Torque command structure (expressed in body frame)">torque_command_t</a>&amp; command) <span class="keyword">const</span>;
+<a name="l00139"></a>00139 
 <a name="l00140"></a>00140 
-<a name="l00141"></a>00141     <span class="comment">// -----------------------------------------------------------------</span>
-<a name="l00142"></a>00142     <span class="comment">// ------ ROLL RATE PID --------------------------------------------</span>
-<a name="l00143"></a>00143     <span class="comment">// -----------------------------------------------------------------</span>
-<a name="l00144"></a>00144     conf.pid_config[ROLL]                           = {};
-<a name="l00145"></a>00145     conf.pid_config[ROLL].p_gain                    = 0.07f;
-<a name="l00146"></a>00146     conf.pid_config[ROLL].clip_min                  = -0.9f;
-<a name="l00147"></a>00147     conf.pid_config[ROLL].clip_max                  = 0.9f;
-<a name="l00148"></a>00148     conf.pid_config[ROLL].integrator                = {};
-<a name="l00149"></a>00149     conf.pid_config[ROLL].integrator.gain           = 0.125f;
-<a name="l00150"></a>00150     conf.pid_config[ROLL].integrator.clip_pre       = 6.0f;
-<a name="l00151"></a>00151     conf.pid_config[ROLL].integrator.clip           = 0.3f;
-<a name="l00152"></a>00152     conf.pid_config[ROLL].differentiator            = {};
-<a name="l00153"></a>00153     conf.pid_config[ROLL].differentiator.gain       = 0.008f;
-<a name="l00154"></a>00154     conf.pid_config[ROLL].differentiator.clip       = 0.14f;
-<a name="l00155"></a>00155     conf.pid_config[ROLL].soft_zone_width           = 0.0f;
-<a name="l00156"></a>00156     <span class="comment">// -----------------------------------------------------------------</span>
-<a name="l00157"></a>00157     <span class="comment">// ------ PITCH RATE PID -------------------------------------------</span>
-<a name="l00158"></a>00158     <span class="comment">// -----------------------------------------------------------------</span>
-<a name="l00159"></a>00159     conf.pid_config[PITCH]                          = {};
-<a name="l00160"></a>00160     conf.pid_config[PITCH].p_gain                   = 0.07f;
-<a name="l00161"></a>00161     conf.pid_config[PITCH].clip_min                 = -0.9f;
-<a name="l00162"></a>00162     conf.pid_config[PITCH].clip_max                 = 0.9f;
-<a name="l00163"></a>00163     conf.pid_config[PITCH].integrator               = {};
-<a name="l00164"></a>00164     conf.pid_config[PITCH].integrator.gain          = 0.125f,
-<a name="l00165"></a>00165     conf.pid_config[PITCH].integrator.clip_pre      = 6.0f;
-<a name="l00166"></a>00166     conf.pid_config[PITCH].integrator.clip          = 0.3f;
-<a name="l00167"></a>00167     conf.pid_config[PITCH].differentiator           = {};
-<a name="l00168"></a>00168     conf.pid_config[PITCH].differentiator.gain      = 0.008f;
-<a name="l00169"></a>00169     conf.pid_config[PITCH].differentiator.clip      = 0.14f;
-<a name="l00170"></a>00170     conf.pid_config[PITCH].soft_zone_width          = 0.0f;
-<a name="l00171"></a>00171     <span class="comment">// -----------------------------------------------------------------</span>
-<a name="l00172"></a>00172     <span class="comment">// ------ YAW RATE PID ---------------------------------------------</span>
-<a name="l00173"></a>00173     <span class="comment">// -----------------------------------------------------------------</span>
-<a name="l00174"></a>00174     conf.pid_config[YAW]                            = {};
-<a name="l00175"></a>00175     conf.pid_config[YAW].p_gain                     = 0.3f;
-<a name="l00176"></a>00176     conf.pid_config[YAW].clip_min                   = -0.3f;
-<a name="l00177"></a>00177     conf.pid_config[YAW].clip_max                   = 0.3f;
-<a name="l00178"></a>00178     conf.pid_config[YAW].integrator                 = {};
-<a name="l00179"></a>00179     conf.pid_config[YAW].integrator.gain            = 0.075f;
-<a name="l00180"></a>00180     conf.pid_config[YAW].integrator.clip_pre        = 1.0f;
-<a name="l00181"></a>00181     conf.pid_config[YAW].integrator.clip            = 0.045f;
-<a name="l00182"></a>00182     conf.pid_config[YAW].differentiator             = {};
-<a name="l00183"></a>00183     conf.pid_config[YAW].differentiator.gain        = 0.0f;
-<a name="l00184"></a>00184     conf.pid_config[YAW].differentiator.clip        = 0.0f;
-<a name="l00185"></a>00185     conf.pid_config[YAW].soft_zone_width            = 0.0;
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187     conf.servos_mix_config = TServos_mix::default_config();
-<a name="l00188"></a>00188 
-<a name="l00189"></a>00189     <span class="keywordflow">return</span> conf;
-<a name="l00190"></a>00190 };
-<a name="l00191"></a>00191 
-<a name="l00192"></a>00192 <span class="preprocessor">#include &quot;control/rate_controller.hxx&quot;</span>
-<a name="l00193"></a>00193 
-<a name="l00194"></a>00194 <span class="preprocessor">#endif </span><span class="comment">/* RATE_CONTROLLER_HPP_ */</span>
+<a name="l00141"></a>00141 <span class="keyword">private</span>:
+<a name="l00142"></a>00142     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp;         ahrs_;                  
+<a name="l00143"></a>00143     <a class="code" href="structrate__command__t.html" title="Rate command structure (expressed in body frame)">rate_command_t</a>&amp;       rate_command_;          
+<a name="l00144"></a>00144     <a class="code" href="structtorque__command__t.html" title="Torque command structure (expressed in body frame)">torque_command_t</a>&amp;     torque_command_;        
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>      pid_[3];                
+<a name="l00147"></a>00147     <span class="keywordtype">float</span>                 dt_s_;                  
+<a name="l00148"></a>00148     <span class="keywordtype">float</span>                 last_update_s_;         
+<a name="l00149"></a>00149 };
+<a name="l00150"></a>00150 
+<a name="l00151"></a><a class="code" href="classRate__controller.html#a4574b703f8da6e771582f33b0c6156a1">00151</a> <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">Rate_controller::conf_t</a> <a class="code" href="classRate__controller.html#a4574b703f8da6e771582f33b0c6156a1" title="Default Configuration.">Rate_controller::default_config</a>()
+<a name="l00152"></a>00152 {
+<a name="l00153"></a>00153     <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">conf_t</a> conf = {};
+<a name="l00154"></a>00154 
+<a name="l00155"></a>00155     <span class="comment">// -----------------------------------------------------------------</span>
+<a name="l00156"></a>00156     <span class="comment">// ------ ROLL RATE PID --------------------------------------------</span>
+<a name="l00157"></a>00157     <span class="comment">// -----------------------------------------------------------------</span>
+<a name="l00158"></a>00158     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL]                           = {};
+<a name="l00159"></a>00159     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].p_gain                    = 0.07f;
+<a name="l00160"></a>00160     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d" title="Min clipping values.">clip_min</a>                  = -0.9f;
+<a name="l00161"></a>00161     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#af0f1c1a65e4560eabbec2997dc925bcf" title="Max clipping values.">clip_max</a>                  = 0.9f;
+<a name="l00162"></a>00162     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>                = {};
+<a name="l00163"></a>00163     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f" title="Pregain.">gain</a>           = 0.125f;
+<a name="l00164"></a>00164     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7" title="Clipping value for the charging rate.">clip_pre</a>       = 6.0f;
+<a name="l00165"></a>00165     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac7235199ce88a94e9509286ccc6cfd6b" title="Clipping value for the accumulator.">clip</a>           = 0.3f;
+<a name="l00166"></a>00166     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>            = {};
+<a name="l00167"></a>00167     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5" title="Gain.">gain</a>       = 0.008f;
+<a name="l00168"></a>00168     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a2c30df7a7674d3b06c8695512710ec8a" title="Clipping value.">clip</a>       = 0.14f;
+<a name="l00169"></a>00169     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[ROLL].<a class="code" href="structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489" title="Approximate width of a &quot;soft zone&quot; on the error input, i.e. a region of low gain around the target po...">soft_zone_width</a>           = 0.0f;
+<a name="l00170"></a>00170     <span class="comment">// -----------------------------------------------------------------</span>
+<a name="l00171"></a>00171     <span class="comment">// ------ PITCH RATE PID -------------------------------------------</span>
+<a name="l00172"></a>00172     <span class="comment">// -----------------------------------------------------------------</span>
+<a name="l00173"></a>00173     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH]                          = {};
+<a name="l00174"></a>00174     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].p_gain                   = 0.07f;
+<a name="l00175"></a>00175     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d" title="Min clipping values.">clip_min</a>                 = -0.9f;
+<a name="l00176"></a>00176     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#af0f1c1a65e4560eabbec2997dc925bcf" title="Max clipping values.">clip_max</a>                 = 0.9f;
+<a name="l00177"></a>00177     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>               = {};
+<a name="l00178"></a>00178     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f" title="Pregain.">gain</a>          = 0.125f,
+<a name="l00179"></a>00179     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7" title="Clipping value for the charging rate.">clip_pre</a>      = 6.0f;
+<a name="l00180"></a>00180     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac7235199ce88a94e9509286ccc6cfd6b" title="Clipping value for the accumulator.">clip</a>          = 0.3f;
+<a name="l00181"></a>00181     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>           = {};
+<a name="l00182"></a>00182     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5" title="Gain.">gain</a>      = 0.008f;
+<a name="l00183"></a>00183     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a2c30df7a7674d3b06c8695512710ec8a" title="Clipping value.">clip</a>      = 0.14f;
+<a name="l00184"></a>00184     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[PITCH].<a class="code" href="structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489" title="Approximate width of a &quot;soft zone&quot; on the error input, i.e. a region of low gain around the target po...">soft_zone_width</a>          = 0.0f;
+<a name="l00185"></a>00185     <span class="comment">// -----------------------------------------------------------------</span>
+<a name="l00186"></a>00186     <span class="comment">// ------ YAW RATE PID ---------------------------------------------</span>
+<a name="l00187"></a>00187     <span class="comment">// -----------------------------------------------------------------</span>
+<a name="l00188"></a>00188     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW]                            = {};
+<a name="l00189"></a>00189     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].p_gain                     = 0.3f;
+<a name="l00190"></a>00190     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d" title="Min clipping values.">clip_min</a>                   = -0.3f;
+<a name="l00191"></a>00191     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#af0f1c1a65e4560eabbec2997dc925bcf" title="Max clipping values.">clip_max</a>                   = 0.3f;
+<a name="l00192"></a>00192     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>                 = {};
+<a name="l00193"></a>00193     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f" title="Pregain.">gain</a>            = 0.075f;
+<a name="l00194"></a>00194     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7" title="Clipping value for the charging rate.">clip_pre</a>        = 1.0f;
+<a name="l00195"></a>00195     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac7235199ce88a94e9509286ccc6cfd6b" title="Clipping value for the accumulator.">clip</a>            = 0.045f;
+<a name="l00196"></a>00196     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>             = {};
+<a name="l00197"></a>00197     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5" title="Gain.">gain</a>        = 0.0f;
+<a name="l00198"></a>00198     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a2c30df7a7674d3b06c8695512710ec8a" title="Clipping value.">clip</a>        = 0.0f;
+<a name="l00199"></a>00199     conf.<a class="code" href="structRate__controller_1_1conf__t.html#add3e124f8f2007f53e100f06787cef05" title="Angular rate PID controller for roll, pitch and yaw.">pid_config</a>[YAW].<a class="code" href="structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489" title="Approximate width of a &quot;soft zone&quot; on the error input, i.e. a region of low gain around the target po...">soft_zone_width</a>            = 0.0;
+<a name="l00200"></a>00200 
+<a name="l00201"></a>00201     <span class="keywordflow">return</span> conf;
+<a name="l00202"></a>00202 };
+<a name="l00203"></a>00203 
+<a name="l00204"></a>00204 <span class="preprocessor">#endif </span><span class="comment">/* RATE_CONTROLLER_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -281,7 +260,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,16 +1,15 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|# waypoint_list_\l# waypoint_count_\l# current_waypoint_index_\l# home_waypoint_\l# mavlink_stream_\l# ins_\l# message_handler_\l# mission_handler_registry_\l|+ Mavlink_waypoint_handler()\l+ init()\l+ waypoint_count()\l+ waypoint_received_time_ms()\l+ current_waypoint()\l+ next_waypoint()\l+ waypoint_from_index()\l+ home_waypoint()\l+ advance_to_next_waypoint()\l+ current_waypoint_index()\l+ set_current_waypoint_index()\l+ default_config()\l}" alt="" coords="411,899,616,1296"/>
+<area shape="rect" id="node2" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|# waypoint_list_\l# waypoint_count_\l# current_waypoint_index_\l# home_waypoint_\l# mavlink_stream_\l# ins_\l# message_handler_\l# mission_handler_registry_\l|+ Mavlink_waypoint_handler()\l+ init()\l+ waypoint_count()\l+ waypoint_received_time_ms()\l+ current_waypoint()\l+ next_waypoint()\l+ waypoint_from_index()\l+ home_waypoint()\l+ advance_to_next_waypoint()\l+ current_waypoint_index()\l+ set_current_waypoint_index()\l+ default_config()\l}" alt="" coords="445,899,651,1296"/>
 <area shape="rect" id="node4" href="$classMission__handler__registry.html" title="{Mission_handler_registry\n||+ Mission_handler_registry()\l+ register_mission_handler()\l+ get_mission_handler()\l}" alt="" coords="5,548,192,668"/>
 <area shape="rect" id="node6" href="$classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="221,401,336,815"/>
 <area shape="rect" id="node8" href="$classMavlink__message__handler.html" title="Message handler base class." alt="" coords="360,479,555,737"/>
 <area shape="rect" id="node10" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="579,513,712,703"/>
 <area shape="rect" id="node12" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="736,487,875,729"/>
-<area shape="rect" id="node14" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="947,977,1099,1218"/>
-<area shape="rect" id="node16" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="900,453,1135,763"/>
-<area shape="rect" id="node18" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="927,5,1108,264"/>
-<area shape="rect" id="node20" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="1159,531,1268,685"/>
-<area shape="rect" id="node22" href="$structcontrol__command__t.html" title="The control command typedef." alt="" coords="1123,1011,1259,1183"/>
-<area shape="rect" id="node25" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1283,1020,1400,1175"/>
-<area shape="rect" id="node27" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1312,557,1371,659"/>
-<area shape="rect" id="node29" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="1424,1011,1547,1183"/>
+<area shape="rect" id="node14" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="963,977,1115,1218"/>
+<area shape="rect" id="node16" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="899,453,1133,763"/>
+<area shape="rect" id="node18" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="925,5,1107,264"/>
+<area shape="rect" id="node20" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="1157,531,1267,685"/>
+<area shape="rect" id="node23" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1139,1020,1256,1175"/>
+<area shape="rect" id="node25" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1291,557,1349,659"/>
+<area shape="rect" id="node27" href="$structbyte__stream__t.html" title="Byte stream." alt="" coords="1280,1011,1403,1183"/>
 </map>

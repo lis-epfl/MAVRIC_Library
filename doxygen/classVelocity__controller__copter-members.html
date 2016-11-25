@@ -80,16 +80,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">Velocity_controller_copter&lt; TAttitude_controller &gt; Member List</div>  </div>
+<div class="title">Velocity_controller_copter Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-This is the complete list of members for <a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a>, including all inherited members.<table>
-  <tr bgcolor="#f0f0f0"><td><b>calc_attitude_command</b>(const vel_command_t &amp;vel_command) (defined in <a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a>)</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classVelocity__controller__copter.html#ad1a5b4cde5a7afd5436d1b8dd7bc9b7c">default_config</a>(void)</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a></td><td><code> [inline, static]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classVelocity__controller__copter.html#a989eba73d8a33a767b44faf219e5d166">set_velocity_command</a>(const vel_command_t &amp;vel_command)</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a></td><td><code> [virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classVelocity__controller__copter.html#a530968c7374c8c7f13c5683ef9fe6f2f">update</a>(void)</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a></td><td><code> [virtual]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>update_cascade</b>(const vel_command_t &amp;vel_command) (defined in <a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a>)</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classVelocity__controller__copter.html#a8cec52143eac76ddab8946674d1ce583">Velocity_controller_copter</a>(args_t args, const conf_t &amp;config=default_config())</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter&lt; TAttitude_controller &gt;</a></td><td></td></tr>
+This is the complete list of members for <a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>, including all inherited members.<table>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#afb84aafd60b50b454fbec2b1a3acaa90">ahrs_</a></td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#a5bd58bd5c52f338351e872257b78e80a">attitude_command_</a></td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller__copter.html#ac38916b698325bd2742e8791061b6c26">compute_attitude_and_thrust_from_desired_accel</a>(const std::array&lt; float, 3 &gt; &amp;accel_command, attitude_command_t &amp;attitude_command, thrust_command_t &amp;thrust_command)</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a></td><td><code> [protected, virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller__copter.html#ad224948baf1ad774fb4518acce93a90f">default_config</a>(void)</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a></td><td><code> [inline, static]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#a6ac5f4d6b36430119df30b3e8e45e775">get_command</a>(velocity_command_t &amp;vel) const </td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#a9a65103e887e25ae58d4bbf1f1ff070b">get_output</a>(attitude_command_t &amp;att) const </td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#a620b628a566ac568b8eac04008fc6b7f">get_output</a>(thrust_command_t &amp;thrust) const </td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [virtual]</code></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>in_command_t</b> typedef (defined in <a class="el" href="classController.html">Controller&lt; velocity_command_t, attitude_command_t &gt;</a>)</td><td><a class="el" href="classController.html">Controller&lt; velocity_command_t, attitude_command_t &gt;</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>in_command_t</b> typedef (defined in <a class="el" href="classController.html">Controller&lt; velocity_command_t, thrust_command_t &gt;</a>)</td><td><a class="el" href="classController.html">Controller&lt; velocity_command_t, thrust_command_t &gt;</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#a8eafd84581e9f70a3d5792fba3daa6cf">ins_</a></td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [protected]</code></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>out_command_t</b> typedef (defined in <a class="el" href="classController.html">Controller&lt; velocity_command_t, attitude_command_t &gt;</a>)</td><td><a class="el" href="classController.html">Controller&lt; velocity_command_t, attitude_command_t &gt;</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>out_command_t</b> typedef (defined in <a class="el" href="classController.html">Controller&lt; velocity_command_t, thrust_command_t &gt;</a>)</td><td><a class="el" href="classController.html">Controller&lt; velocity_command_t, thrust_command_t &gt;</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#ac95045e0231e38d2a2a0f8f92b6f15db">pid_</a></td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#a1f496ec712f6fc6fe3c4fb639f3711db">set_command</a>(const velocity_command_t &amp;vel)</td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#ac4a8f9326a20b04f866b235f4115710f">thrust_command_</a></td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller__copter.html#a071583bc4caaa83d1fe85161d8abd960">thrust_hover_point_</a></td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#abfb5d1693fb09235f4d5654af3bd34b4">update</a>(void)</td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#a25a0d5fff77eeacab6f9dad7103f8bbe">velocity_command_</a></td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td><code> [protected]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller.html#a1720c6ec911466e9632d220a4fd0ee58">Velocity_controller</a>(const args_t &amp;args, const conf_t &amp;config)</td><td><a class="el" href="classVelocity__controller.html">Velocity_controller</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classVelocity__controller__copter.html#af9a918b27ab8e3c7955ed42d3698f849">Velocity_controller_copter</a>(const args_t &amp;args, const conf_t &amp;config=default_config())</td><td><a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a></td><td></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -108,7 +122,7 @@ This is the complete list of members for <a class="el" href="classVelocity__cont
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

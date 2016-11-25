@@ -1,23 +1,24 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classManual__control.html" title="The manual control structure." alt="" coords="149,1510,355,1821"/>
-<area shape="rect" id="node4" href="$classJoystick.html" title="{Joystick\n|+ buttons_\l+ channels_\l+ mav_mode_desired_\l|+ Joystick()\l+ throttle()\l+ roll()\l+ pitch()\l+ yaw()\l+ get_mode()\l+ get_velocity_vector()\l+ get_rate_command_wing()\l+ get_control_command()\l+ button_update()\land 8 more...+ default_config()\l}" alt="" coords="133,504,333,797"/>
-<area shape="rect" id="node6" href="$structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="5,66,147,203"/>
-<area shape="rect" id="node8" href="$unionJoystick_1_1button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="171,5,296,264"/>
-<area shape="rect" id="node10" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="384,5,565,264"/>
-<area shape="rect" id="node14" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="357,495,592,806"/>
-<area shape="rect" id="node46" href="$classState.html" title="The MAV state." alt="" coords="1352,400,1552,901"/>
-<area shape="rect" id="node12" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="388,1055,540,1297"/>
-<area shape="rect" id="node17" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="616,573,725,728"/>
-<area shape="rect" id="node19" href="$classMission__handler__registry.html" title="{Mission_handler_registry\n||+ Mission_handler_registry()\l+ register_mission_handler()\l+ get_mission_handler()\l}" alt="" coords="564,1116,751,1236"/>
-<area shape="rect" id="node29" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|# waypoint_list_\l# waypoint_count_\l# current_waypoint_index_\l# home_waypoint_\l# mavlink_stream_\l# ins_\l# message_handler_\l# mission_handler_registry_\l|+ Mavlink_waypoint_handler()\l+ init()\l+ waypoint_count()\l+ waypoint_received_time_ms()\l+ current_waypoint()\l+ next_waypoint()\l+ waypoint_from_index()\l+ home_waypoint()\l+ advance_to_next_waypoint()\l+ current_waypoint_index()\l+ set_current_waypoint_index()\l+ default_config()\l}" alt="" coords="1249,1467,1455,1864"/>
-<area shape="rect" id="node21" href="$classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="781,969,896,1383"/>
-<area shape="rect" id="node23" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="744,1597,915,1734"/>
-<area shape="rect" id="node25" href="$classMavlink__message__handler.html" title="Message handler base class." alt="" coords="972,1047,1167,1305"/>
-<area shape="rect" id="node27" href="$classGeofence.html" title="Interface for Geofence." alt="" coords="1100,1614,1225,1717"/>
-<area shape="rect" id="node34" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="1496,1081,1629,1271"/>
-<area shape="rect" id="node36" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="1316,1055,1455,1297"/>
-<area shape="rect" id="node40" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1708,1588,1825,1743"/>
-<area shape="rect" id="node42" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1737,1125,1796,1227"/>
-<area shape="rect" id="node44" href="$structMission__planner_1_1conf__t.html" title="{Mission_planner::conf_t\n|+ safe_altitude\l+ critical_landing_altitude\l+ takeoff_altitude\l|}" alt="" coords="1849,1605,2017,1725"/>
-<area shape="rect" id="node48" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1411,57,1493,212"/>
+<area shape="rect" id="node2" href="$classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="28,1133,196,1219"/>
+<area shape="rect" id="node25" href="$classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="88,1597,259,1734"/>
+<area shape="rect" id="node4" href="$classManual__control.html" title="The manual control structure." alt="" coords="283,1510,544,1821"/>
+<area shape="rect" id="node6" href="$classJoystick.html" title="{Joystick\n|+ buttons_\l+ channels_\l+ mav_mode_desired_\l|+ Joystick()\l+ throttle()\l+ roll()\l+ pitch()\l+ yaw()\l+ get_mode()\l+ button_update()\l+ default_config()\l}" alt="" coords="313,530,468,771"/>
+<area shape="rect" id="node8" href="$structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="163,66,304,203"/>
+<area shape="rect" id="node10" href="$unionJoystick_1_1button__t.html" title="The union structure for the bit mask of the joystick buttons." alt="" coords="328,5,453,264"/>
+<area shape="rect" id="node12" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="541,5,723,264"/>
+<area shape="rect" id="node16" href="$structremote__mode__t.html" title="The structure of the remote mode." alt="" coords="492,495,727,806"/>
+<area shape="rect" id="node49" href="$classState.html" title="The MAV state." alt="" coords="1416,400,1616,901"/>
+<area shape="rect" id="node14" href="$structremote__t.html" title="The configuration structure of the remote." alt="" coords="519,1055,671,1297"/>
+<area shape="rect" id="node19" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="751,573,860,728"/>
+<area shape="rect" id="node21" href="$classMission__handler__registry.html" title="{Mission_handler_registry\n||+ Mission_handler_registry()\l+ register_mission_handler()\l+ get_mission_handler()\l}" alt="" coords="833,1116,1020,1236"/>
+<area shape="rect" id="node32" href="$classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|# waypoint_list_\l# waypoint_count_\l# current_waypoint_index_\l# home_waypoint_\l# mavlink_stream_\l# ins_\l# message_handler_\l# mission_handler_registry_\l|+ Mavlink_waypoint_handler()\l+ init()\l+ waypoint_count()\l+ waypoint_received_time_ms()\l+ current_waypoint()\l+ next_waypoint()\l+ waypoint_from_index()\l+ home_waypoint()\l+ advance_to_next_waypoint()\l+ current_waypoint_index()\l+ set_current_waypoint_index()\l+ default_config()\l}" alt="" coords="1244,1467,1449,1864"/>
+<area shape="rect" id="node23" href="$classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="695,969,809,1383"/>
+<area shape="rect" id="node28" href="$classMavlink__message__handler.html" title="Message handler base class." alt="" coords="1056,1047,1251,1305"/>
+<area shape="rect" id="node30" href="$classGeofence.html" title="Interface for Geofence." alt="" coords="1095,1614,1220,1717"/>
+<area shape="rect" id="node37" href="$classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="1324,1081,1457,1271"/>
+<area shape="rect" id="node39" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="1540,1055,1679,1297"/>
+<area shape="rect" id="node43" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="1703,1588,1820,1743"/>
+<area shape="rect" id="node45" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1732,1125,1791,1227"/>
+<area shape="rect" id="node47" href="$structMission__planner_1_1conf__t.html" title="{Mission_planner::conf_t\n|+ safe_altitude\l+ critical_landing_altitude\l+ takeoff_altitude\l|}" alt="" coords="1844,1605,2012,1725"/>
+<area shape="rect" id="node51" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="1475,57,1557,212"/>
 </map>

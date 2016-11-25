@@ -1,16 +1,13 @@
 var searchData=
 [
   ['nano',['nano',['../structubx__nav__timeutc__t.html#a6f0751fa5a7e3e94a791988fe7e63e12',1,'ubx_nav_timeutc_t']]],
-  ['nav_5fcommand_5ft',['nav_command_t',['../structNavigation__controller__I_1_1nav__command__t.html',1,'Navigation_controller_I']]],
   ['nav_5fgo_5fhome',['nav_go_home',['../classMission__planner.html#aee0ba642e6d0961992cc6a3626651cf3',1,'Mission_planner']]],
   ['nav_5fland_5fcallback',['nav_land_callback',['../classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514',1,'Mission_planner']]],
   ['nav_5frate',['nav_rate',['../structubx__cfg__nav__rate__t.html#a26a4f63336ab89b1f29b3f3d4803a219',1,'ubx_cfg_nav_rate_t::nav_rate()'],['../structubx__cfg__nav__rate__send__t.html#acc213a0e07ce19d929005c9a7ca0a6a2',1,'ubx_cfg_nav_rate_send_t::nav_rate()'],['../structubx__cfg__rate__t.html#a884abd9fa8dbac9a7405d8892c18182f',1,'ubx_cfg_rate_t::nav_rate()']]],
   ['nav_5fsettings',['nav_settings',['../structgps__t.html#a6709cde6bb4ed3a5915d4b7fff9e4b5b',1,'gps_t']]],
   ['nav_5ftakeoff_5fcallback',['nav_takeoff_callback',['../classMission__planner.html#a5482bfd16a74070ca9ce378cb6a452fc',1,'Mission_planner']]],
-  ['navigation',['navigation',['../structstabilisation__wing__t.html#abd512b6e07b4eb72114b1877950dc19e',1,'stabilisation_wing_t::navigation()'],['../structaudio__t.html#a447eb7c039465b9ea4cf36599b17406f',1,'audio_t::navigation()']]],
-  ['navigation_5fcontroller_5fi',['Navigation_controller_I',['../classNavigation__controller__I.html',1,'']]],
+  ['navigation',['Navigation',['../classNavigation.html',1,'Navigation'],['../structstabilisation__wing__t.html#abd512b6e07b4eb72114b1877950dc19e',1,'stabilisation_wing_t::navigation()'],['../structaudio__t.html#a447eb7c039465b9ea4cf36599b17406f',1,'audio_t::navigation()']]],
   ['navigation_5fdirectto',['Navigation_directto',['../classNavigation__directto.html',1,'']]],
-  ['navigation_5fdirectto_3c_20position_5fcontroller_3c_20velocity_5fcontroller_5fcopter_3c_20attitude_5fcontroller_3c_20rate_5fcontroller_3c_20servos_5fmix_5fquadcopter_5fdiag_20_3e_20_3e_20_3e_20_3e_20_3e',['Navigation_directto< Position_controller< Velocity_controller_copter< Attitude_controller< Rate_controller< Servos_mix_quadcopter_diag > > > > >',['../classNavigation__directto.html',1,'']]],
   ['nb_5fsetpoints',['nb_setpoints',['../structadaptive__parameter__t.html#a210c6c63169d594762b9a87329bab5b0',1,'adaptive_parameter_t']]],
   ['ned_5fdown',['ned_down',['../structubx__nav__vel__ned__t.html#a27ce6c6619f52481c6c077f8ce867a54',1,'ubx_nav_vel_ned_t']]],
   ['ned_5feast',['ned_east',['../structubx__nav__vel__ned__t.html#a6c54c1e5225d01271a3ab70904c88bd2',1,'ubx_nav_vel_ned_t']]],

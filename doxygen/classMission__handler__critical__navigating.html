@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: Mission_handler_critical_navigating&lt; T &gt; Class Template Reference</title>
+<title>MAV&#39;RIC: Mission_handler_critical_navigating Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -82,52 +82,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Mission_handler_critical_navigating&lt; T &gt; Class Template Reference</div>  </div>
+<div class="title">Mission_handler_critical_navigating Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <!-- doxytag: class="Mission_handler_critical_navigating" --><!-- doxytag: inherits="Mission_handler_navigating" --><div class="dynheader">
-Inheritance diagram for Mission_handler_critical_navigating&lt; T &gt;:</div>
+Inheritance diagram for Mission_handler_critical_navigating:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMission__handler__critical__navigating__inherit__graph.png" border="0" usemap="#Mission__handler__critical__navigating_3_01T_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="Mission__handler__critical__navigating_3_01T_01_4_inherit__map" id="Mission__handler__critical__navigating_3_01T_01_4_inherit__map">
-<area shape="rect" id="node2" href="classMission__handler__navigating.html" title="{Mission_handler_navigating\&lt; T \&gt;\n|# controller_\l# ins_\l# mavlink_stream_\l# waypoint_handler_\l# waypoint_\l# waypoint_reached_\l# start_time_\l# travel_time_\l|+ Mission_handler_navigating()\l+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l# set_control_command()\l# send_nav_time()\l}" alt="" coords="28,193,241,503"/><area shape="rect" id="node4" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="49,6,220,143"/></map>
+<div class="center"><img src="classMission__handler__critical__navigating__inherit__graph.png" border="0" usemap="#Mission__handler__critical__navigating_inherit__map" alt="Inheritance graph"/></div>
+<map name="Mission__handler__critical__navigating_inherit__map" id="Mission__handler__critical__navigating_inherit__map">
+<area shape="rect" id="node2" href="classMission__handler__navigating.html" title="{Mission_handler_navigating\n|# ins_\l# mavlink_stream_\l# waypoint_handler_\l# waypoint_\l# waypoint_reached_\l# start_time_\l# travel_time_\l# position_command_\l|+ Mission_handler_navigating()\l+ can_handle()\l+ setup()\l+ update()\l+ write_flight_command()\l+ handler_mission_state()\l# send_nav_time()\l}" alt="" coords="27,326,229,637"/><area shape="rect" id="node4" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="43,139,213,277"/><area shape="rect" id="node6" href="classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="44,5,212,91"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for Mission_handler_critical_navigating&lt; T &gt;:</div>
+Collaboration diagram for Mission_handler_critical_navigating:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMission__handler__critical__navigating__coll__graph.png" border="0" usemap="#Mission__handler__critical__navigating_3_01T_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="Mission__handler__critical__navigating_3_01T_01_4_coll__map" id="Mission__handler__critical__navigating_3_01T_01_4_coll__map">
-<area shape="rect" id="node2" href="classMission__handler__navigating.html" title="{Mission_handler_navigating\&lt; T \&gt;\n|# controller_\l# ins_\l# mavlink_stream_\l# waypoint_handler_\l# waypoint_\l# waypoint_reached_\l# start_time_\l# travel_time_\l|+ Mission_handler_navigating()\l+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l# set_control_command()\l# send_nav_time()\l}" alt="" coords="348,969,561,1279"/><area shape="rect" id="node4" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="5,634,176,771"/><area shape="rect" id="node6" href="classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="171,6,285,421"/><area shape="rect" id="node8" href="classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|# waypoint_list_\l# waypoint_count_\l# current_waypoint_index_\l# home_waypoint_\l# mavlink_stream_\l# ins_\l# message_handler_\l# mission_handler_registry_\l|+ Mavlink_waypoint_handler()\l+ init()\l+ waypoint_count()\l+ waypoint_received_time_ms()\l+ current_waypoint()\l+ next_waypoint()\l+ waypoint_from_index()\l+ home_waypoint()\l+ advance_to_next_waypoint()\l+ current_waypoint_index()\l+ set_current_waypoint_index()\l+ default_config()\l}" alt="" coords="515,504,720,901"/><area shape="rect" id="node10" href="classMission__handler__registry.html" title="{Mission_handler_registry\n||+ Mission_handler_registry()\l+ register_mission_handler()\l+ get_mission_handler()\l}" alt="" coords="469,153,656,273"/><area shape="rect" id="node13" href="classMavlink__message__handler.html" title="Message handler base class." alt="" coords="680,84,875,343"/><area shape="rect" id="node15" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="312,119,445,308"/><area shape="rect" id="node17" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="899,93,1037,334"/></map>
+<div class="center"><img src="classMission__handler__critical__navigating__coll__graph.png" border="0" usemap="#Mission__handler__critical__navigating_coll__map" alt="Collaboration graph"/></div>
+<map name="Mission__handler__critical__navigating_coll__map" id="Mission__handler__critical__navigating_coll__map">
+<area shape="rect" id="node2" href="classMission__handler__navigating.html" title="{Mission_handler_navigating\n|# ins_\l# mavlink_stream_\l# waypoint_handler_\l# waypoint_\l# waypoint_reached_\l# start_time_\l# travel_time_\l# position_command_\l|+ Mission_handler_navigating()\l+ can_handle()\l+ setup()\l+ update()\l+ write_flight_command()\l+ handler_mission_state()\l# send_nav_time()\l}" alt="" coords="427,969,629,1279"/><area shape="rect" id="node4" href="classMission__handler.html" title="{Mission_handler\n||+ can_handle()\l+ setup()\l+ update()\l+ handler_mission_state()\l}" alt="" coords="20,634,191,771"/><area shape="rect" id="node6" href="classFlight__command__source.html" title="Interface for things that can provide flight control commands autonomously." alt="" coords="5,171,173,256"/><area shape="rect" id="node8" href="classWaypoint.html" title="{Waypoint\n|# frame_\l# command_\l# autocontinue_\l# param1_\l# param2_\l# param3_\l# param4_\l# param5_\l# param6_\l# param7_\l|+ Waypoint()\l+ Waypoint()\l+ Waypoint()\l+ send()\l+ frame()\l+ command()\l+ autocontinue()\l+ param1()\l+ param2()\l+ param3()\land 6 more...}" alt="" coords="197,6,312,421"/><area shape="rect" id="node12" href="classMavlink__waypoint__handler.html" title="{Mavlink_waypoint_handler\n|# waypoint_list_\l# waypoint_count_\l# current_waypoint_index_\l# home_waypoint_\l# mavlink_stream_\l# ins_\l# message_handler_\l# mission_handler_registry_\l|+ Mavlink_waypoint_handler()\l+ init()\l+ waypoint_count()\l+ waypoint_received_time_ms()\l+ current_waypoint()\l+ next_waypoint()\l+ waypoint_from_index()\l+ home_waypoint()\l+ advance_to_next_waypoint()\l+ current_waypoint_index()\l+ set_current_waypoint_index()\l+ default_config()\l}" alt="" coords="536,504,741,901"/><area shape="rect" id="node10" href="structposition__command__t.html" title="Position command structure." alt="" coords="371,651,512,754"/><area shape="rect" id="node14" href="classMission__handler__registry.html" title="{Mission_handler_registry\n||+ Mission_handler_registry()\l+ register_mission_handler()\l+ get_mission_handler()\l}" alt="" coords="336,153,523,273"/><area shape="rect" id="node17" href="classMavlink__message__handler.html" title="Message handler base class." alt="" coords="547,84,741,343"/><area shape="rect" id="node19" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module." alt="" coords="929,119,1063,308"/><area shape="rect" id="node21" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="765,93,904,334"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classMission__handler__critical__navigating-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__critical__navigating.html#ad875cf7029918a3e0d1fd2027bf93098">Mission_handler_critical_navigating</a> (T &amp;controller, const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a> &amp;waypoint_handler)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the navigating mission planner handler.  <a href="#ad875cf7029918a3e0d1fd2027bf93098"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__critical__navigating.html#aa9b1340302ebc4dbc2a09ebf039cbe56">can_handle</a> (const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;wpt) const </td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the waypoint is a navigating waypoint.  <a href="#aa9b1340302ebc4dbc2a09ebf039cbe56"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__critical__navigating.html#a6c5455a00fc38483aff705d3a49e3db2">Mission_handler_critical_navigating</a> (const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="classMavlink__stream.html">Mavlink_stream</a> &amp;mavlink_stream, <a class="el" href="classMavlink__waypoint__handler.html">Mavlink_waypoint_handler</a> &amp;waypoint_handler)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the navigating mission planner handler.  <a href="#a6c5455a00fc38483aff705d3a49e3db2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMission__handler__critical__navigating.html#abe33592e37a69eaed14c95bcbc704e5f">can_handle</a> (const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;wpt) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the waypoint is a navigating waypoint.  <a href="#abe33592e37a69eaed14c95bcbc704e5f"></a><br/></td></tr>
 </table>
-<h3>template&lt;class T&gt;<br/>
- class Mission_handler_critical_navigating&lt; T &gt;</h3>
-
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ad875cf7029918a3e0d1fd2027bf93098"></a><!-- doxytag: member="Mission_handler_critical_navigating::Mission_handler_critical_navigating" ref="ad875cf7029918a3e0d1fd2027bf93098" args="(T &amp;controller, const INS &amp;ins, const Mavlink_stream &amp;mavlink_stream, Mavlink_waypoint_handler &amp;waypoint_handler)" -->
+<a class="anchor" id="a6c5455a00fc38483aff705d3a49e3db2"></a><!-- doxytag: member="Mission_handler_critical_navigating::Mission_handler_critical_navigating" ref="a6c5455a00fc38483aff705d3a49e3db2" args="(const INS &amp;ins, const Mavlink_stream &amp;mavlink_stream, Mavlink_waypoint_handler &amp;waypoint_handler)" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class T&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classMission__handler__critical__navigating.html">Mission_handler_critical_navigating</a>&lt; T &gt;::<a class="el" href="classMission__handler__critical__navigating.html">Mission_handler_critical_navigating</a> </td>
+          <td class="memname"><a class="el" href="classMission__handler__critical__navigating.html#a6c5455a00fc38483aff705d3a49e3db2">Mission_handler_critical_navigating::Mission_handler_critical_navigating</a> </td>
           <td>(</td>
-          <td class="paramtype">T &amp;&#160;</td>
-          <td class="paramname"><em>controller</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const <a class="el" href="classINS.html">INS</a> &amp;&#160;</td>
           <td class="paramname"><em>ins</em>, </td>
         </tr>
@@ -155,7 +144,6 @@ template&lt;class T&gt; </div>
 <p>Initialize the navigating mission planner handler. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">controller</td><td>The reference to the controller </td></tr>
     <tr><td class="paramname">ins</td><td>The reference to the ins </td></tr>
     <tr><td class="paramname">mission_planner</td><td>The reference to the mission planner </td></tr>
     <tr><td class="paramname">mavlink_stream</td><td>The reference to the MAVLink stream structure </td></tr>
@@ -167,14 +155,12 @@ template&lt;class T&gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="aa9b1340302ebc4dbc2a09ebf039cbe56"></a><!-- doxytag: member="Mission_handler_critical_navigating::can_handle" ref="aa9b1340302ebc4dbc2a09ebf039cbe56" args="(const Waypoint &amp;wpt) const " -->
+<a class="anchor" id="abe33592e37a69eaed14c95bcbc704e5f"></a><!-- doxytag: member="Mission_handler_critical_navigating::can_handle" ref="abe33592e37a69eaed14c95bcbc704e5f" args="(const Waypoint &amp;wpt) const " -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classMission__handler__critical__navigating.html">Mission_handler_critical_navigating</a>&lt; T &gt;::<a class="el" href="classMission__handler__critical__navigating.html#aa9b1340302ebc4dbc2a09ebf039cbe56">can_handle</a> </td>
+          <td class="memname">bool <a class="el" href="classMission__handler__critical__navigating.html#abe33592e37a69eaed14c95bcbc704e5f">Mission_handler_critical_navigating::can_handle</a> </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classWaypoint.html">Waypoint</a> &amp;&#160;</td>
           <td class="paramname"><em>wpt</em></td><td>)</td>
@@ -194,13 +180,13 @@ template&lt;class T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Can handle </dd></dl>
 
-<p>Reimplemented from <a class="el" href="classMission__handler__navigating.html#ab7e644547b58bee1b986bf8f55e1381c">Mission_handler_navigating&lt; T &gt;</a>.</p>
+<p>Reimplemented from <a class="el" href="classMission__handler__navigating.html#a9916956ff218f15aabeaa95f0c01eacd">Mission_handler_navigating</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMission__handler__critical__navigating_aa9b1340302ebc4dbc2a09ebf039cbe56_cgraph.png" border="0" usemap="#classMission__handler__critical__navigating_aa9b1340302ebc4dbc2a09ebf039cbe56_cgraph" alt=""/></div>
-<map name="classMission__handler__critical__navigating_aa9b1340302ebc4dbc2a09ebf039cbe56_cgraph" id="classMission__handler__critical__navigating_aa9b1340302ebc4dbc2a09ebf039cbe56_cgraph">
+<div class="center"><img src="classMission__handler__critical__navigating_abe33592e37a69eaed14c95bcbc704e5f_cgraph.png" border="0" usemap="#classMission__handler__critical__navigating_abe33592e37a69eaed14c95bcbc704e5f_cgraph" alt=""/></div>
+<map name="classMission__handler__critical__navigating_abe33592e37a69eaed14c95bcbc704e5f_cgraph" id="classMission__handler__critical__navigating_abe33592e37a69eaed14c95bcbc704e5f_cgraph">
 <area shape="rect" id="node3" href="classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365" title="Gets the command of the waypoint." alt="" coords="356,5,497,35"/></map>
 </div>
 </p>
@@ -209,7 +195,7 @@ Here is the call graph for this function:</div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/mission/<a class="el" href="mission__handler__critical__navigating_8hpp_source.html">mission_handler_critical_navigating.hpp</a></li>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/mission/<a class="el" href="mission__handler__critical__navigating_8hxx_source.html">mission_handler_critical_navigating.hxx</a></li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/mission/mission_handler_critical_navigating.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -229,7 +215,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

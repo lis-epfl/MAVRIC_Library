@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMission__handler__hold__position.html#a97a8871a6f05793ec1d5a07c8825de8c" title="Handles the mission every iteration." alt="" coords="215,5,460,35"/>
+<area shape="rect" id="node5" href="$classMission__handler__landing.html#abf91f35cc2c43a5cf3864553292b4dfb" title="Handles the mission every iteration." alt="" coords="232,59,443,88"/>
+<area shape="rect" id="node7" href="$classMission__handler__navigating.html#afde956e68864854438ae5727ddbd5b27" title="Handles the mission every iteration." alt="" coords="223,112,452,141"/>
+<area shape="rect" id="node9" href="$classMission__handler__takeoff.html#ab1a18df9c1ab0b9610134996321b7643" title="Handles the mission every iteration." alt="" coords="232,165,443,195"/>
+</map>

@@ -126,110 +126,96 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor">#ifndef POSITION_CONTROLLER_HPP_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span><span class="preprocessor">#define POSITION_CONTROLLER_HPP_</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;control/position_controller_i.hpp&quot;</span>
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;control/xyposition_zvel_controller_i.hpp&quot;</span>
-<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;navigation/navigation_controller_i.hpp&quot;</span>
-<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;control/pid_controller.hpp&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;sensing/ahrs.hpp&quot;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;sensing/ins.hpp&quot;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;control/controller.hpp&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;control/control_command.hpp&quot;</span>
+<a name="l00048"></a>00048 <span class="preprocessor">#include &quot;control/pid_controller.hpp&quot;</span>
+<a name="l00049"></a>00049 <span class="preprocessor">#include &quot;sensing/ahrs.hpp&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;sensing/ins.hpp&quot;</span>
+<a name="l00051"></a>00051 
 <a name="l00052"></a>00052 
-<a name="l00053"></a>00053 <span class="keyword">template</span>&lt;<span class="keyword">class</span> TVelocity_controller&gt;
-<a name="l00054"></a><a class="code" href="classPosition__controller.html">00054</a> <span class="keyword">class </span><a class="code" href="classPosition__controller.html">Position_controller</a> : <span class="keyword">public</span> <a class="code" href="classPosition__controller__I.html">Position_controller_I</a>, <span class="keyword">public</span> <a class="code" href="classXYposition__Zvel__controller__I.html">XYposition_Zvel_controller_I</a>, <span class="keyword">public</span> TVelocity_controller
-<a name="l00055"></a>00055 {
-<a name="l00056"></a>00056 <span class="keyword">public</span>:
-<a name="l00057"></a>00057 
-<a name="l00061"></a><a class="code" href="structPosition__controller_1_1conf__t.html">00061</a>     <span class="keyword">struct </span><a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">conf_t</a>
-<a name="l00062"></a>00062     {
-<a name="l00063"></a>00063         <span class="keywordtype">float</span> max_climb_rate;
-<a name="l00064"></a>00064         <span class="keywordtype">float</span> kp_yaw;
-<a name="l00065"></a>00065         <a class="code" href="structpid__controller__conf__t.html" title="Configuration for PID controller.">pid_controller_conf_t</a> pid_config;
-<a name="l00066"></a>00066         <span class="keyword">typename</span> TVelocity_controller::conf_t velocity_controller_config;
-<a name="l00067"></a>00067     };
-<a name="l00068"></a>00068 
-<a name="l00069"></a><a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">00069</a>     <span class="keyword">enum class</span> <a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">ctrl_mode_t</a>
-<a name="l00070"></a>00070     {
-<a name="l00071"></a><a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9a1f60d47768f8127451ec58837dc0a3dc">00071</a>         <a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9a1f60d47768f8127451ec58837dc0a3dc" title="3D position control">POS_XYZ</a>,        
-<a name="l00072"></a><a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9acf1b9e5bd3bf10656dc491f6f38704b9">00072</a>         <a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9acf1b9e5bd3bf10656dc491f6f38704b9" title="Horizontal position control + vertical velocity control.">POS_XY_VEL_Z</a>    
-<a name="l00073"></a>00073     };
+<a name="l00053"></a><a class="code" href="classPosition__controller.html">00053</a> <span class="keyword">class </span><a class="code" href="classPosition__controller.html">Position_controller</a> : <span class="keyword">public</span> <a class="code" href="classController.html">Controller</a>&lt;position_command_t, velocity_command_t&gt;
+<a name="l00054"></a>00054 {
+<a name="l00055"></a>00055 <span class="keyword">public</span>:
+<a name="l00056"></a>00056 
+<a name="l00060"></a><a class="code" href="structPosition__controller_1_1conf__t.html">00060</a>     <span class="keyword">struct </span><a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">conf_t</a>
+<a name="l00061"></a>00061     {
+<a name="l00062"></a>00062         <span class="keywordtype">float</span> max_climb_rate;
+<a name="l00063"></a>00063         <span class="keywordtype">float</span> kp_yaw;
+<a name="l00064"></a>00064         <a class="code" href="structpid__controller__conf__t.html" title="Configuration for PID controller.">pid_controller_conf_t</a> pid_config;
+<a name="l00065"></a>00065     };
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067 
+<a name="l00073"></a>00073     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">conf_t</a> <a class="code" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297" title="Default configuration.">default_config</a>();
 <a name="l00074"></a>00074 
 <a name="l00075"></a>00075 
-<a name="l00076"></a><a class="code" href="structPosition__controller_1_1args__t.html">00076</a>     <span class="keyword">struct </span><a class="code" href="structPosition__controller_1_1args__t.html">args_t</a>
+<a name="l00076"></a><a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">00076</a>     <span class="keyword">enum class</span> <a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">ctrl_mode_t</a>
 <a name="l00077"></a>00077     {
-<a name="l00078"></a>00078         <a class="code" href="classINS.html">INS</a>&amp; ins;
-<a name="l00079"></a>00079         <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; ahrs;
-<a name="l00080"></a>00080         <span class="keyword">typename</span> TVelocity_controller::args_t velocity_controller_args;
-<a name="l00081"></a>00081     };
+<a name="l00078"></a><a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9aa3ab142aaee1d117773949f0b8dced2a">00078</a>         <a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9aa3ab142aaee1d117773949f0b8dced2a" title="3D position control">POS_XYZ</a>,        
+<a name="l00079"></a><a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9a98bd3010597c09f5d813871c6dec37e8">00079</a>         <a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9a98bd3010597c09f5d813871c6dec37e8" title="Horizontal position control + vertical velocity control.">POS_XY_VEL_Z</a>    
+<a name="l00080"></a>00080     };
+<a name="l00081"></a>00081 
 <a name="l00082"></a>00082 
-<a name="l00083"></a>00083     <a class="code" href="classPosition__controller.html">Position_controller</a>(<a class="code" href="structPosition__controller_1_1args__t.html">args_t</a> args, <span class="keyword">const</span> <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">conf_t</a>&amp; config = <a class="code" href="classPosition__controller.html#a67383438ca115539dbdb3cbd9d4ae784" title="Default configuration.">default_config</a>());
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085 
-<a name="l00089"></a>00089     <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="classPosition__controller.html#a82f9eebcbd1fa20d7fb1cb740b68c3bb" title="Main update function.">update</a>();
-<a name="l00090"></a>00090 
-<a name="l00098"></a>00098     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classPosition__controller.html#ab66d7047541e7d9b884c2c7a62ecd9cf" title="Sets the 3D position command.">set_position_command</a>(<span class="keyword">const</span> <a class="code" href="structPosition__controller__I_1_1pos__command__t.html">pos_command_t</a>&amp; pos_command);
-<a name="l00099"></a>00099 
-<a name="l00107"></a>00107     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classPosition__controller.html#a38f993253b3caf300e1a95a6ed4c9a59" title="sets the horizontal position &amp; vertical velocity command">set_xyposition_zvel_command</a>(<span class="keyword">const</span> <a class="code" href="structXYposition__Zvel__controller__I_1_1xypos__zvel__command__t.html">xypos_zvel_command_t</a>&amp; command);
-<a name="l00108"></a>00108 
-<a name="l00114"></a>00114     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">conf_t</a> <a class="code" href="classPosition__controller.html#a67383438ca115539dbdb3cbd9d4ae784" title="Default configuration.">default_config</a>();
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116 <span class="keyword">protected</span>:
+<a name="l00086"></a><a class="code" href="structPosition__controller_1_1args__t.html">00086</a>     <span class="keyword">struct </span><a class="code" href="structPosition__controller_1_1args__t.html" title="Required arguments.">args_t</a>
+<a name="l00087"></a>00087     {
+<a name="l00088"></a><a class="code" href="structPosition__controller_1_1args__t.html#a9c5df9eef330e20a4df7e04d65f2fab1">00088</a>         <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; <a class="code" href="structPosition__controller_1_1args__t.html#a9c5df9eef330e20a4df7e04d65f2fab1" title="Reference to estimated attitude.">ahrs</a>;     
+<a name="l00089"></a><a class="code" href="structPosition__controller_1_1args__t.html#a4689bdd23718073ff338b09a0a11cc3c">00089</a>         <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; <a class="code" href="structPosition__controller_1_1args__t.html#a4689bdd23718073ff338b09a0a11cc3c" title="Reference to estimated speed and position.">ins</a>;         
+<a name="l00090"></a>00090     };
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092 
+<a name="l00099"></a>00099     <a class="code" href="classPosition__controller.html#a39b82d2f93c921ee841886c583e9787a" title="Constructor.">Position_controller</a>(<a class="code" href="structPosition__controller_1_1args__t.html" title="Required arguments.">args_t</a> args, <span class="keyword">const</span> <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">conf_t</a>&amp; config = <a class="code" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297" title="Default configuration.">default_config</a>());
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101 
+<a name="l00105"></a>00105     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classPosition__controller.html#a0053e27a76331e0dadac9ce640f715b2" title="Main update function.">update</a>();
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 
+<a name="l00115"></a>00115     <span class="keywordtype">bool</span> <a class="code" href="classPosition__controller.html#aa9ee79998f9be6cb8354a35c4386b6ac" title="Sets the input command.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>&amp; pos);
+<a name="l00116"></a>00116 
 <a name="l00117"></a>00117 
-<a name="l00118"></a>00118     <span class="comment">/*</span>
-<a name="l00119"></a>00119 <span class="comment">     * \brief   calc velocity command based on given position command and update underlaying cascade level (TVelocity_controller)</span>
-<a name="l00120"></a>00120 <span class="comment">     * \details Sets the internal position_command_ to the provided one, without modifiying cascade_command_</span>
-<a name="l00121"></a>00121 <span class="comment">     *          Calls calc_velocity_command followed by TVelocity_controller::update_cascade</span>
-<a name="l00122"></a>00122 <span class="comment">     *          This function should be called from higher level controllers if they provide a command</span>
-<a name="l00123"></a>00123 <span class="comment">     * \param   position_command  position command to be set</span>
-<a name="l00124"></a>00124 <span class="comment">     */</span>
-<a name="l00125"></a>00125     <span class="keywordtype">void</span> update_cascade(<span class="keyword">const</span> <a class="code" href="structPosition__controller__I_1_1pos__command__t.html">pos_command_t</a>&amp; pos_command);
+<a name="l00125"></a>00125     <span class="keywordtype">bool</span> <a class="code" href="classPosition__controller.html#a6b65f720d40df1f64a8ae758ccf1c402" title="Returns the input command.">get_command</a>(<a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>&amp; pos) <span class="keyword">const</span>;
 <a name="l00126"></a>00126 
-<a name="l00127"></a>00127     <span class="comment">/*</span>
-<a name="l00128"></a>00128 <span class="comment">     * \brief   calc velocity command based on given position command</span>
-<a name="l00129"></a>00129 <span class="comment">     * \details Sets the internal position_command_ to the provided one, without modifiying cascade_command_</span>
-<a name="l00130"></a>00130 <span class="comment">     *          This function should be called from higher level controllers if they provide a command</span>
-<a name="l00131"></a>00131 <span class="comment">     * \param position_command  position command</span>
-<a name="l00132"></a>00132 <span class="comment">     */</span>
-<a name="l00133"></a>00133     <span class="keyword">typename</span> TVelocity_controller::vel_command_t calc_velocity_command(<span class="keyword">const</span> <a class="code" href="structPosition__controller__I_1_1pos__command__t.html">pos_command_t</a>&amp; pos_command);
-<a name="l00134"></a>00134 
-<a name="l00135"></a>00135     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>    pid_controller_;            <span class="comment">//&lt; position pid controller</span>
+<a name="l00127"></a>00127 
+<a name="l00135"></a>00135     <span class="keywordtype">bool</span> <a class="code" href="classPosition__controller.html#a6d75d33d5bfb0898635f4464ff090a18" title="Returns the output command.">get_output</a>(<a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp; vel) <span class="keyword">const</span>;
 <a name="l00136"></a>00136 
-<a name="l00137"></a>00137 <span class="keyword">private</span>:
-<a name="l00138"></a>00138     <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp;          ins_;                       
-<a name="l00139"></a>00139     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp;       ahrs_;                      
-<a name="l00140"></a>00140     <a class="code" href="structPosition__controller__I_1_1pos__command__t.html">pos_command_t</a>       position_command_;          
-<a name="l00141"></a>00141     <span class="keywordtype">float</span>               zvel_command_;              
-<a name="l00142"></a>00142     <a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">ctrl_mode_t</a>         ctrl_mode_;
-<a name="l00143"></a>00143 
-<a name="l00144"></a>00144     <span class="comment">/* parameters */</span>
-<a name="l00145"></a>00145     <span class="keywordtype">float</span> max_climb_rate_;                           <span class="comment">//&lt; maximal climb rate (velocity is scaled so that output velocity in Z &lt;= max_climb_rate)</span>
-<a name="l00146"></a>00146     <span class="keywordtype">float</span> kp_yaw_;
-<a name="l00147"></a>00147 };
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138 <span class="keyword">private</span>:
+<a name="l00139"></a>00139     <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp;          ins_;                       
+<a name="l00140"></a>00140     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp;       ahrs_;                      
+<a name="l00141"></a>00141 
+<a name="l00142"></a>00142     <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>  position_command_;          
+<a name="l00143"></a>00143     <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>  velocity_command_;          
+<a name="l00144"></a>00144 
+<a name="l00145"></a>00145     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>    pid_controller_;            <span class="comment">//&lt; position pid controller</span>
+<a name="l00146"></a>00146     <span class="keywordtype">float</span>               zvel_command_;              
+<a name="l00147"></a>00147     <a class="code" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">ctrl_mode_t</a>         ctrl_mode_;
 <a name="l00148"></a>00148 
-<a name="l00149"></a>00149 <span class="keyword">template</span>&lt;<span class="keyword">class</span> TVelocity_controller&gt;
-<a name="l00150"></a><a class="code" href="classPosition__controller.html#a67383438ca115539dbdb3cbd9d4ae784">00150</a> <span class="keyword">typename</span> <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">Position_controller&lt;TVelocity_controller&gt;::conf_t</a> <a class="code" href="classPosition__controller.html#a67383438ca115539dbdb3cbd9d4ae784" title="Default configuration.">Position_controller&lt;TVelocity_controller&gt;::default_config</a>()
-<a name="l00151"></a>00151 {
-<a name="l00152"></a>00152     <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">conf_t</a> conf;
-<a name="l00153"></a>00153     conf.max_climb_rate     = 1.0f;
-<a name="l00154"></a>00154     conf.kp_yaw             = 0.5f;
-<a name="l00155"></a>00155 
-<a name="l00156"></a>00156     conf.pid_config.p_gain                  = 0.4f;
-<a name="l00157"></a>00157     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d" title="Min clipping values.">clip_min</a>                = 0.0f;
-<a name="l00158"></a>00158     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#af0f1c1a65e4560eabbec2997dc925bcf" title="Max clipping values.">clip_max</a>                = 3.0f;
-<a name="l00159"></a>00159     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f" title="Pregain.">gain</a>         = 0.0f;
-<a name="l00160"></a>00160     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7" title="Clipping value for the charging rate.">clip_pre</a>     = 0.0f;
-<a name="l00161"></a>00161     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac7235199ce88a94e9509286ccc6cfd6b" title="Clipping value for the accumulator.">clip</a>         = 0.0f;
-<a name="l00162"></a>00162     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5" title="Gain.">gain</a>     = 0.28f;
-<a name="l00163"></a>00163     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a2c30df7a7674d3b06c8695512710ec8a" title="Clipping value.">clip</a>     = 0.46f;
-<a name="l00164"></a>00164     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489" title="Approximate width of a &quot;soft zone&quot; on the error input, i.e. a region of low gain around the target po...">soft_zone_width</a>         = 0.0f;
-<a name="l00165"></a>00165 
-<a name="l00166"></a>00166     conf.velocity_controller_config = TVelocity_controller::default_config();
-<a name="l00167"></a>00167 
-<a name="l00168"></a>00168     <span class="keywordflow">return</span> conf;
-<a name="l00169"></a>00169 };
-<a name="l00170"></a>00170 
+<a name="l00149"></a>00149     <span class="comment">/* parameters */</span>
+<a name="l00150"></a>00150     <span class="keywordtype">float</span> max_climb_rate_;                           <span class="comment">//&lt; maximal climb rate (velocity is scaled so that output velocity in Z &lt;= max_climb_rate)</span>
+<a name="l00151"></a>00151     <span class="keywordtype">float</span> kp_yaw_;
+<a name="l00152"></a>00152 };
+<a name="l00153"></a>00153 
+<a name="l00154"></a>00154 
+<a name="l00155"></a><a class="code" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297">00155</a> <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">Position_controller::conf_t</a> <a class="code" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297" title="Default configuration.">Position_controller::default_config</a>()
+<a name="l00156"></a>00156 {
+<a name="l00157"></a>00157     <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">conf_t</a> conf;
+<a name="l00158"></a>00158     conf.max_climb_rate     = 1.0f;
+<a name="l00159"></a>00159     conf.kp_yaw             = 0.5f;
+<a name="l00160"></a>00160 
+<a name="l00161"></a>00161     conf.pid_config.p_gain                  = 0.4f;
+<a name="l00162"></a>00162     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#a1161e6ecb1b8eb4beef490c9ab74461d" title="Min clipping values.">clip_min</a>                = 0.0f;
+<a name="l00163"></a>00163     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#af0f1c1a65e4560eabbec2997dc925bcf" title="Max clipping values.">clip_max</a>                = 3.0f;
+<a name="l00164"></a>00164     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#a56b8cfbb20b72511c329412ef464422f" title="Pregain.">gain</a>         = 0.0f;
+<a name="l00165"></a>00165     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#aa9a4c5f83a1f79f9d0fb65830f4709a7" title="Clipping value for the charging rate.">clip_pre</a>     = 0.0f;
+<a name="l00166"></a>00166     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#aaed712fccf70b795135229fdac0ede83" title="Integrator parameters.">integrator</a>.<a class="code" href="structintegrator__t.html#ac7235199ce88a94e9509286ccc6cfd6b" title="Clipping value for the accumulator.">clip</a>         = 0.0f;
+<a name="l00167"></a>00167     <span class="comment">//conf.pid_config.differentiator.gain     = 0.28f;</span>
+<a name="l00168"></a>00168     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a9422aa77a4f9e672b66f6ce5a2083cf5" title="Gain.">gain</a>     = 0.0f;
+<a name="l00169"></a>00169     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#a62f2e7500bb39b3adb6526cdccac9d21" title="Differentiator parameters.">differentiator</a>.<a class="code" href="structdifferentiator__t.html#a2c30df7a7674d3b06c8695512710ec8a" title="Clipping value.">clip</a>     = 0.46f;
+<a name="l00170"></a>00170     conf.pid_config.<a class="code" href="structpid__controller__conf__t.html#a8b1a7572ca677ee7bc047d72d5fbb489" title="Approximate width of a &quot;soft zone&quot; on the error input, i.e. a region of low gain around the target po...">soft_zone_width</a>         = 0.0f;
 <a name="l00171"></a>00171 
-<a name="l00172"></a>00172 <span class="preprocessor">#include &quot;control/position_controller.hxx&quot;</span>
-<a name="l00173"></a>00173 
-<a name="l00174"></a>00174 <span class="preprocessor">#endif </span><span class="comment">/* POSITION_CONTROLLER_HPP_ */</span>
+<a name="l00172"></a>00172     <span class="keywordflow">return</span> conf;
+<a name="l00173"></a>00173 };
+<a name="l00174"></a>00174 
+<a name="l00175"></a>00175 
+<a name="l00176"></a>00176 <span class="preprocessor">#endif </span><span class="comment">/* POSITION_CONTROLLER_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -248,7 +234,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:29 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

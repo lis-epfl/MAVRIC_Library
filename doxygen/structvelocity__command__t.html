@@ -89,23 +89,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Velocity command structure.  
  <a href="structvelocity__command__t.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="control__command_8h_source.html">control_command.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="control__command_8hpp_source.html">control_command.hpp</a>&gt;</code></p>
 
 <p><a href="structvelocity__command__t-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae410881f95516d811869501d19bc484d"></a><!-- doxytag: member="velocity_command_t::xyz" ref="ae410881f95516d811869501d19bc484d" args="[3]" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvelocity__command__t.html#ae410881f95516d811869501d19bc484d">xyz</a> [3]</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity on X, Y and Z axis. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5074b53f2715628e6cd2b88dfb3b1c11"></a><!-- doxytag: member="velocity_command_t::mode" ref="a5074b53f2715628e6cd2b88dfb3b1c11" args="" -->
-velocity_command_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvelocity__command__t.html#a5074b53f2715628e6cd2b88dfb3b1c11">mode</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Command mode, defines whether the velocity is given in local or global frame. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a17d536fc3c08ed3f4a4827fc7bf3f11c"></a><!-- doxytag: member="velocity_command_t::xyz" ref="a17d536fc3c08ed3f4a4827fc7bf3f11c" args="" -->
+local_velocity_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvelocity__command__t.html#a17d536fc3c08ed3f4a4827fc7bf3f11c">xyz</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity on X, Y and Z axis (NED frame) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3a103829414ab8600208d6164b66ce47"></a><!-- doxytag: member="velocity_command_t::heading" ref="a3a103829414ab8600208d6164b66ce47" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structvelocity__command__t.html#a3a103829414ab8600208d6164b66ce47">heading</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Heading (can be ignored for fixed wing) <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Velocity command structure. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="control__command_8h_source.html">control_command.h</a></li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="control__command_8hpp_source.html">control_command.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -125,7 +125,7 @@ velocity_command_mode_t&#160;</td><td class="memItemRight" valign="bottom"><a cl
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

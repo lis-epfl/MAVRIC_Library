@@ -85,12 +85,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 This is the complete list of members for <a class="el" href="classServos__mix__ywing.html">Servos_mix_ywing</a>, including all inherited members.<table>
   <tr bgcolor="#f0f0f0"><td><b>default_config</b>() (defined in <a class="el" href="classServos__mix__ywing.html">Servos_mix_ywing</a>)</td><td><a class="el" href="classServos__mix__ywing.html">Servos_mix_ywing</a></td><td><code> [inline, static]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>Servos_mix</b>() (defined in <a class="el" href="classServos__mix.html">Servos_mix</a>)</td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>failsafe</b>()=0 (defined in <a class="el" href="classServos__mix.html">Servos_mix</a>)</td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classServos__mix.html#a276bf0407436aa5885451dace5ad5ecc">get_command</a>(torque_command_t &amp;torque) const =0</td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classServos__mix.html#a928032545ed0e7273c3f7b4c56178093">get_command</a>(thrust_command_t &amp;thrust) const =0</td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classServos__mix.html#a7d6c0da401146e2ce2e8d8105f13c41b">get_output</a>(empty_command_t &amp;command) const </td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td><code> [inline, virtual]</code></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>in_command_t</b> typedef (defined in <a class="el" href="classController.html">Controller&lt; torque_command_t &gt;</a>)</td><td><a class="el" href="classController.html">Controller&lt; torque_command_t &gt;</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>in_command_t</b> typedef (defined in <a class="el" href="classController.html">Controller&lt; thrust_command_t &gt;</a>)</td><td><a class="el" href="classController.html">Controller&lt; thrust_command_t &gt;</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>out_command_t</b> typedef (defined in <a class="el" href="classController.html">Controller&lt; torque_command_t &gt;</a>)</td><td><a class="el" href="classController.html">Controller&lt; torque_command_t &gt;</a></td><td></td></tr>
+  <tr bgcolor="#f0f0f0"><td><b>out_command_t</b> typedef (defined in <a class="el" href="classController.html">Controller&lt; thrust_command_t &gt;</a>)</td><td><a class="el" href="classController.html">Controller&lt; thrust_command_t &gt;</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>Servos_mix_ywing</b>(args_t &amp;args, const conf_t &amp;config=default_config()) (defined in <a class="el" href="classServos__mix__ywing.html">Servos_mix_ywing</a>)</td><td><a class="el" href="classServos__mix__ywing.html">Servos_mix_ywing</a></td><td></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>set_torque_command</b>(const torq_command_t &amp;torq_command) (defined in <a class="el" href="classServos__mix.html">Servos_mix</a>)</td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td><code> [inline]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classServos__mix__I.html#ac9dc782db66796a2609528df3fb9c71d">Servos_mix_I::set_torque_command</a>(const torq_command_t &amp;command)=0</td><td><a class="el" href="classServos__mix__I.html">Servos_mix_I</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classServos__mix.html#a433df531fae80afe61cc708b4a60c564">torq_command_</a></td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td><code> [protected]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classServos__mix__ywing.html#a2e4a4f403461a7e6da8e7838cbc1cec6">update</a>()</td><td><a class="el" href="classServos__mix__ywing.html">Servos_mix_ywing</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classServos__mix.html#afd31ff5f561fe5e87cb63a4f3e032955">set_command</a>(const torque_command_t &amp;torque)=0</td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classServos__mix.html#a4d0fc00b4585ed06ec54f7e5f3e673b9">set_command</a>(const thrust_command_t &amp;thrust)=0</td><td><a class="el" href="classServos__mix.html">Servos_mix</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classServos__mix__ywing.html#a6d420617398234a52e18f701d625bd90">update</a>()</td><td><a class="el" href="classServos__mix__ywing.html">Servos_mix_ywing</a></td><td><code> [virtual]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -109,7 +115,7 @@ This is the complete list of members for <a class="el" href="classServos__mix__y
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

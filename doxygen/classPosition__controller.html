@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: Position_controller&lt; TVelocity_controller &gt; Class Template Reference</title>
+<title>MAV&#39;RIC: Position_controller Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -83,26 +83,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">Position_controller&lt; TVelocity_controller &gt; Class Template Reference</div>  </div>
+<div class="title">Position_controller Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Position_controller" --><!-- doxytag: inherits="Position_controller_I,XYposition_Zvel_controller_I" --><div class="dynheader">
-Inheritance diagram for Position_controller&lt; TVelocity_controller &gt;:</div>
+<!-- doxytag: class="Position_controller" --><!-- doxytag: inherits="Controller&lt; position_command_t, velocity_command_t &gt;" --><div class="dynheader">
+Inheritance diagram for Position_controller:</div>
 <div class="dyncontent">
-<div class="center"><img src="classPosition__controller__inherit__graph.png" border="0" usemap="#Position__controller_3_01TVelocity__controller_01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="Position__controller_3_01TVelocity__controller_01_4_inherit__map" id="Position__controller_3_01TVelocity__controller_01_4_inherit__map">
-<area shape="rect" id="node2" href="classPosition__controller__I.html" title="{Position_controller_I\n||+ update()\l+ set_position_command()\l}" alt="" coords="5,6,181,109"/><area shape="rect" id="node4" href="classXYposition__Zvel__controller__I.html" title="{XYposition_Zvel_controller_I\n||+ update()\l+ set_xyposition_zvel_command()\l}" alt="" coords="205,6,427,109"/></map>
+<div class="center"><img src="classPosition__controller__inherit__graph.png" border="0" usemap="#Position__controller_inherit__map" alt="Inheritance graph"/></div>
+<map name="Position__controller_inherit__map" id="Position__controller_inherit__map">
+<area shape="rect" id="node2" href="classController.html" title="{Controller\&lt; position_command_t, velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,355,143"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for Position_controller&lt; TVelocity_controller &gt;:</div>
+Collaboration diagram for Position_controller:</div>
 <div class="dyncontent">
-<div class="center"><img src="classPosition__controller__coll__graph.png" border="0" usemap="#Position__controller_3_01TVelocity__controller_01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="Position__controller_3_01TVelocity__controller_01_4_coll__map" id="Position__controller_3_01TVelocity__controller_01_4_coll__map">
-<area shape="rect" id="node2" href="classPosition__controller__I.html" title="{Position_controller_I\n||+ update()\l+ set_position_command()\l}" alt="" coords="5,281,181,383"/><area shape="rect" id="node4" href="classXYposition__Zvel__controller__I.html" title="{XYposition_Zvel_controller_I\n||+ update()\l+ set_xyposition_zvel_command()\l}" alt="" coords="205,281,427,383"/><area shape="rect" id="node6" href="structpid__controller__t.html" title="PID controller." alt="" coords="451,211,579,453"/><area shape="rect" id="node8" href="structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="399,15,503,135"/><area shape="rect" id="node10" href="structintegrator__t.html" title="Integrator part of PID." alt="" coords="527,6,631,143"/></map>
+<div class="center"><img src="classPosition__controller__coll__graph.png" border="0" usemap="#Position__controller_coll__map" alt="Collaboration graph"/></div>
+<map name="Position__controller_coll__map" id="Position__controller_coll__map">
+<area shape="rect" id="node2" href="classController.html" title="{Controller\&lt; position_command_t, velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,355,143"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classPosition__controller-members.html">List of all members.</a></p>
@@ -110,48 +108,36 @@ Collaboration diagram for Position_controller&lt; TVelocity_controller &gt;:</di
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPosition__controller_1_1args__t.html">args_t</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Required arguments.  <a href="structPosition__controller_1_1args__t.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPosition__controller_1_1conf__t.html">conf_t</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration.  <a href="structPosition__controller_1_1conf__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">ctrl_mode_t</a> { <a class="el" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9a1f60d47768f8127451ec58837dc0a3dc">POS_XYZ</a>, 
-<a class="el" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9acf1b9e5bd3bf10656dc491f6f38704b9">POS_XY_VEL_Z</a>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">ctrl_mode_t</a> { <a class="el" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9aa3ab142aaee1d117773949f0b8dced2a">POS_XYZ</a>, 
+<a class="el" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9a98bd3010597c09f5d813871c6dec37e8">POS_XY_VEL_Z</a>
  }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab77c628cb33f2fbd29548f49866c22ad"></a><!-- doxytag: member="Position_controller::Position_controller" ref="ab77c628cb33f2fbd29548f49866c22ad" args="(args_t args, const conf_t &amp;config=default_config())" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Position_controller</b> (<a class="el" href="structPosition__controller_1_1args__t.html">args_t</a> args, const <a class="el" href="structPosition__controller_1_1conf__t.html">conf_t</a> &amp;config=<a class="el" href="classPosition__controller.html#a67383438ca115539dbdb3cbd9d4ae784">default_config</a>())</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a82f9eebcbd1fa20d7fb1cb740b68c3bb"></a><!-- doxytag: member="Position_controller::update" ref="a82f9eebcbd1fa20d7fb1cb740b68c3bb" args="()" -->
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#a82f9eebcbd1fa20d7fb1cb740b68c3bb">update</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#a39b82d2f93c921ee841886c583e9787a">Position_controller</a> (<a class="el" href="structPosition__controller_1_1args__t.html">args_t</a> args, const <a class="el" href="structPosition__controller_1_1conf__t.html">conf_t</a> &amp;config=<a class="el" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297">default_config</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a39b82d2f93c921ee841886c583e9787a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0053e27a76331e0dadac9ce640f715b2"></a><!-- doxytag: member="Position_controller::update" ref="a0053e27a76331e0dadac9ce640f715b2" args="()" -->
+virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#a0053e27a76331e0dadac9ce640f715b2">update</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Main update function. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#ab66d7047541e7d9b884c2c7a62ecd9cf">set_position_command</a> (const <a class="el" href="structPosition__controller__I_1_1pos__command__t.html">pos_command_t</a> &amp;pos_command)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the 3D position command.  <a href="#ab66d7047541e7d9b884c2c7a62ecd9cf"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#a38f993253b3caf300e1a95a6ed4c9a59">set_xyposition_zvel_command</a> (const <a class="el" href="structXYposition__Zvel__controller__I_1_1xypos__zvel__command__t.html">xypos_zvel_command_t</a> &amp;command)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">sets the horizontal position &amp; vertical velocity command  <a href="#a38f993253b3caf300e1a95a6ed4c9a59"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#aa9ee79998f9be6cb8354a35c4386b6ac">set_command</a> (const <a class="el" href="structposition__command__t.html">position_command_t</a> &amp;pos)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the input command.  <a href="#aa9ee79998f9be6cb8354a35c4386b6ac"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#a6b65f720d40df1f64a8ae758ccf1c402">get_command</a> (<a class="el" href="structposition__command__t.html">position_command_t</a> &amp;pos) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the input command.  <a href="#a6b65f720d40df1f64a8ae758ccf1c402"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#a6d75d33d5bfb0898635f4464ff090a18">get_output</a> (<a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;vel) const </td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the output command.  <a href="#a6d75d33d5bfb0898635f4464ff090a18"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structPosition__controller_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#a67383438ca115539dbdb3cbd9d4ae784">default_config</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration.  <a href="#a67383438ca115539dbdb3cbd9d4ae784"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af636210b86e888c5605e3d2c3713b732"></a><!-- doxytag: member="Position_controller::update_cascade" ref="af636210b86e888c5605e3d2c3713b732" args="(const pos_command_t &amp;pos_command)" -->
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update_cascade</b> (const <a class="el" href="structPosition__controller__I_1_1pos__command__t.html">pos_command_t</a> &amp;pos_command)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae6955d078e78c7209a3b2c976ee8f429"></a><!-- doxytag: member="Position_controller::calc_velocity_command" ref="ae6955d078e78c7209a3b2c976ee8f429" args="(const pos_command_t &amp;pos_command)" -->
-TVelocity_controller::vel_command_t&#160;</td><td class="memItemRight" valign="bottom"><b>calc_velocity_command</b> (const <a class="el" href="structPosition__controller__I_1_1pos__command__t.html">pos_command_t</a> &amp;pos_command)</td></tr>
-<tr><td colspan="2"><h2><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9c8213593e2cc5d0ed7979f85af6228"></a><!-- doxytag: member="Position_controller::pid_controller_" ref="af9c8213593e2cc5d0ed7979f85af6228" args="" -->
-<a class="el" href="structpid__controller__t.html">pid_controller_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>pid_controller_</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structPosition__controller_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297">default_config</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration.  <a href="#af3b56bc035c2629202df6f68b467a297"></a><br/></td></tr>
 </table>
-<h3>template&lt;class TVelocity_controller&gt;<br/>
- class Position_controller&lt; TVelocity_controller &gt;</h3>
-
 <hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="ac2aa95f4ac2e6efc5c99d33242c080a9"></a><!-- doxytag: member="Position_controller::ctrl_mode_t" ref="ac2aa95f4ac2e6efc5c99d33242c080a9" args="" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class TVelocity_controller&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">enum <a class="el" href="classPosition__controller.html#ac2aa95f4ac2e6efc5c99d33242c080a9">Position_controller::ctrl_mode_t</a></td>
@@ -160,29 +146,62 @@ template&lt;class TVelocity_controller&gt; </div>
 </div>
 <div class="memdoc">
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="ac2aa95f4ac2e6efc5c99d33242c080a9a1f60d47768f8127451ec58837dc0a3dc"></a><!-- doxytag: member="POS_XYZ" ref="ac2aa95f4ac2e6efc5c99d33242c080a9a1f60d47768f8127451ec58837dc0a3dc" args="" -->POS_XYZ</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" id="ac2aa95f4ac2e6efc5c99d33242c080a9aa3ab142aaee1d117773949f0b8dced2a"></a><!-- doxytag: member="POS_XYZ" ref="ac2aa95f4ac2e6efc5c99d33242c080a9aa3ab142aaee1d117773949f0b8dced2a" args="" -->POS_XYZ</em>&nbsp;</td><td>
 <p>3D position control </p>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" id="ac2aa95f4ac2e6efc5c99d33242c080a9acf1b9e5bd3bf10656dc491f6f38704b9"></a><!-- doxytag: member="POS_XY_VEL_Z" ref="ac2aa95f4ac2e6efc5c99d33242c080a9acf1b9e5bd3bf10656dc491f6f38704b9" args="" -->POS_XY_VEL_Z</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" id="ac2aa95f4ac2e6efc5c99d33242c080a9a98bd3010597c09f5d813871c6dec37e8"></a><!-- doxytag: member="POS_XY_VEL_Z" ref="ac2aa95f4ac2e6efc5c99d33242c080a9a98bd3010597c09f5d813871c6dec37e8" args="" -->POS_XY_VEL_Z</em>&nbsp;</td><td>
 <p>Horizontal position control + vertical velocity control. </p>
 </td></tr>
 </table>
 </dd>
 </dl>
 
-<p>Reimplemented in <a class="el" href="classNavigation__directto.html#a6d7bc5259c53a5ab47bae232c442a1ea">Navigation_directto&lt; Position_controller&lt; Velocity_controller_copter&lt; Attitude_controller&lt; Rate_controller&lt; Servos_mix_quadcopter_diag &gt; &gt; &gt; &gt; &gt;</a>.</p>
+</div>
+</div>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a39b82d2f93c921ee841886c583e9787a"></a><!-- doxytag: member="Position_controller::Position_controller" ref="a39b82d2f93c921ee841886c583e9787a" args="(args_t args, const conf_t &amp;config=default_config())" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classPosition__controller.html#a39b82d2f93c921ee841886c583e9787a">Position_controller::Position_controller</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structPosition__controller_1_1args__t.html">args_t</a>&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structPosition__controller_1_1conf__t.html">conf_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>config</em> = <code><a class="el" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297">default_config</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Constructor. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>Required arguments </td></tr>
+    <tr><td class="paramname">config</td><td>Configuration </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a67383438ca115539dbdb3cbd9d4ae784"></a><!-- doxytag: member="Position_controller::default_config" ref="a67383438ca115539dbdb3cbd9d4ae784" args="()" -->
+<a class="anchor" id="af3b56bc035c2629202df6f68b467a297"></a><!-- doxytag: member="Position_controller::default_config" ref="af3b56bc035c2629202df6f68b467a297" args="()" -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class TVelocity_controller &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classPosition__controller.html">Position_controller</a>&lt; TVelocity_controller &gt;::<a class="el" href="structPosition__controller_1_1conf__t.html">conf_t</a> <a class="el" href="classPosition__controller.html">Position_controller</a>&lt; TVelocity_controller &gt;::<a class="el" href="classPosition__controller.html#a67383438ca115539dbdb3cbd9d4ae784">default_config</a> </td>
+          <td class="memname"><a class="el" href="structPosition__controller_1_1conf__t.html">Position_controller::conf_t</a> <a class="el" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297">Position_controller::default_config</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -195,75 +214,95 @@ template&lt;class TVelocity_controller &gt; </div>
 <p>Default configuration. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>config </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classNavigation__directto.html#a5a2bc2f4d6371803566a2ee75eb604ac">Navigation_directto&lt; Position_controller&lt; Velocity_controller_copter&lt; Attitude_controller&lt; Rate_controller&lt; Servos_mix_quadcopter_diag &gt; &gt; &gt; &gt; &gt;</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a6b65f720d40df1f64a8ae758ccf1c402"></a><!-- doxytag: member="Position_controller::get_command" ref="a6b65f720d40df1f64a8ae758ccf1c402" args="(position_command_t &amp;pos) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classPosition__controller.html#a6b65f720d40df1f64a8ae758ccf1c402">Position_controller::get_command</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structposition__command__t.html">position_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns the input command. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>Input command</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
+
+<p>Implements <a class="el" href="classController.html#a9adabf87cf02bda367db9be841e88b41">Controller&lt; position_command_t, velocity_command_t &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab66d7047541e7d9b884c2c7a62ecd9cf"></a><!-- doxytag: member="Position_controller::set_position_command" ref="ab66d7047541e7d9b884c2c7a62ecd9cf" args="(const pos_command_t &amp;pos_command)" -->
+<a class="anchor" id="a6d75d33d5bfb0898635f4464ff090a18"></a><!-- doxytag: member="Position_controller::get_output" ref="a6d75d33d5bfb0898635f4464ff090a18" args="(velocity_command_t &amp;vel) const " -->
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class TVelocity_controller &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">bool <a class="el" href="classPosition__controller.html">Position_controller</a>&lt; TVelocity_controller &gt;::<a class="el" href="classPosition__controller.html#ab66d7047541e7d9b884c2c7a62ecd9cf">set_position_command</a> </td>
+          <td class="memname">bool <a class="el" href="classPosition__controller.html#a6d75d33d5bfb0898635f4464ff090a18">Position_controller::get_output</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structPosition__controller__I_1_1pos__command__t.html">pos_command_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>pos_command</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>vel</em></td><td>)</td>
+          <td> const<code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Returns the output command. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>output command</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
+
+<p>Implements <a class="el" href="classController.html#a1182d2261ae62e0fba6f6405aac39064">Controller&lt; position_command_t, velocity_command_t &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa9ee79998f9be6cb8354a35c4386b6ac"></a><!-- doxytag: member="Position_controller::set_command" ref="aa9ee79998f9be6cb8354a35c4386b6ac" args="(const position_command_t &amp;pos)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classPosition__controller.html#aa9ee79998f9be6cb8354a35c4386b6ac">Position_controller::set_command</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structposition__command__t.html">position_command_t</a> &amp;&#160;</td>
+          <td class="paramname"><em>pos</em></td><td>)</td>
           <td><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Sets the 3D position command. </p>
+<p>Sets the input command. </p>
 <dl class="params"><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">command</td><td>xyz position command indicating target location in local frame</td></tr>
+    <tr><td class="paramname">command</td><td>Input command</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>success whether command was accepted </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>success </dd></dl>
 
-<p>Implements <a class="el" href="classPosition__controller__I.html#a6730f17374c7911b5463c84a29b3d391">Position_controller_I</a>.</p>
-
-<p>Reimplemented in <a class="el" href="classNavigation__directto.html#a556f353fe1f01284eca097448bdf2c6a">Navigation_directto&lt; Position_controller&lt; Velocity_controller_copter&lt; Attitude_controller&lt; Rate_controller&lt; Servos_mix_quadcopter_diag &gt; &gt; &gt; &gt; &gt;</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a38f993253b3caf300e1a95a6ed4c9a59"></a><!-- doxytag: member="Position_controller::set_xyposition_zvel_command" ref="a38f993253b3caf300e1a95a6ed4c9a59" args="(const xypos_zvel_command_t &amp;command)" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TVelocity_controller &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="classPosition__controller.html">Position_controller</a>&lt; TVelocity_controller &gt;::<a class="el" href="classPosition__controller.html#a38f993253b3caf300e1a95a6ed4c9a59">set_xyposition_zvel_command</a> </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structXYposition__Zvel__controller__I_1_1xypos__zvel__command__t.html">xypos_zvel_command_t</a> &amp;&#160;</td>
-          <td class="paramname"><em>command</em></td><td>)</td>
-          <td><code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>sets the horizontal position &amp; vertical velocity command </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">command</td><td>xy position z velocity command indicating target location &amp; velocity in local frame</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>success whether command was accepted </dd></dl>
-
-<p>Implements <a class="el" href="classXYposition__Zvel__controller__I.html#a6aa9c47567583a82e32fdc050c57c0d9">XYposition_Zvel_controller_I</a>.</p>
+<p>Implements <a class="el" href="classController.html#a12d397078af966cba69733d1bbcbd012">Controller&lt; position_command_t, velocity_command_t &gt;</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="position__controller_8hpp_source.html">position_controller.hpp</a></li>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="position__controller_8hxx_source.html">position_controller.hxx</a></li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/position_controller.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -283,7 +322,7 @@ template&lt;class TVelocity_controller &gt; </div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Nov 3 2016 10:29:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,7 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classGpio.html" title="Gpio" alt="" coords="7,85,55,115"/>
-<area shape="rect" id="node3" href="$classGpio__avr32.html" title="Gpio_avr32" alt="" coords="109,5,197,35"/>
-<area shape="rect" id="node5" href="$classGpio__chibios.html" title="Gpio_chibios" alt="" coords="105,59,201,88"/>
-<area shape="rect" id="node7" href="$classGpio__dummy.html" title="Gpio_dummy" alt="" coords="104,112,203,141"/>
-<area shape="rect" id="node9" href="$classGpio__stm32.html" title="Gpio_stm32" alt="" coords="108,165,199,195"/>
+<area shape="rect" id="node1" href="$classGeofence.html" title="Interface for Geofence." alt="" coords="7,5,84,35"/>
+<area shape="rect" id="node3" href="$classGeofence__cylinder.html" title="Geofence with cylindrical shape." alt="" coords="133,5,264,35"/>
 </map>

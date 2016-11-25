@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="312,5,451,35"/>
+<area shape="rect" id="node7" href="$classWaypoint.html#a70275d81e841101deb34b6d1077e25c1" title="Gets the radius of the waypoint." alt="" coords="321,59,441,88"/>
+<area shape="rect" id="node9" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="325,112,437,141"/>
+<area shape="rect" id="node11" href="$classWaypoint.html#a7bc118bf70a2f2017d2ae4ca8e0916b7" title="Gets the autocontinue state of the waypoint." alt="" coords="303,165,460,195"/>
+<area shape="rect" id="node13" href="$classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365" title="Gets the command of the waypoint." alt="" coords="311,219,452,248"/>
+<area shape="rect" id="node15" href="$classWaypoint.html#a74c9883e0ed0902f56ad7210babd02b1" title="Gets param1 of the waypoint." alt="" coords="317,272,445,301"/>
+<area shape="rect" id="node17" href="$classWaypoint.html#a0b59e68c17f62101f2857e8d7e1c66a6" title="Gets param2 of the waypoint." alt="" coords="317,325,445,355"/>
+<area shape="rect" id="node5" href="$classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="511,5,593,35"/>
+</map>

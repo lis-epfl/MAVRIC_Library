@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structpid__controller__conf__t.html" title="Configuration for PID controller." alt="" coords="7,5,148,35"/>
+<area shape="rect" id="node1" href="$classPeriodic__telemetry.html" title="Periodic_telemetry" alt="" coords="5,5,136,35"/>
+<area shape="rect" id="node3" href="$classPeriodic__telemetry__T.html" title="Periodic_telemetry_T\&lt; N \&gt;" alt="" coords="184,5,363,35"/>
 </map>

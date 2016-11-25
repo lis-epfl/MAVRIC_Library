@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="288,32,400,61"/>
+<area shape="rect" id="node5" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="283,85,405,115"/>
+<area shape="rect" id="node17" href="$classWaypoint.html#a7bc118bf70a2f2017d2ae4ca8e0916b7" title="Gets the autocontinue state of the waypoint." alt="" coords="265,139,423,168"/>
+<area shape="rect" id="node7" href="$classState.html#aed82df84db5ad27e500e51d212ba051d" title="returns whether armed" alt="" coords="515,5,629,35"/>
+<area shape="rect" id="node11" href="$classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="517,59,627,88"/>
+<area shape="rect" id="node13" href="$classMav__mode.html#a4b5399cd7da6c1decbc0c1ee2501aa2d" title="set armed flag" alt="" coords="481,112,663,141"/>
+<area shape="rect" id="node15" href="$classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="473,165,671,195"/>
+<area shape="rect" id="node9" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="720,5,867,35"/>
+</map>

@@ -1,6 +1,7 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classMission__planner.html#a161071abd5d807890c20f14386472303" title="Drives the critical navigation behavior." alt="" coords="333,5,544,35"/>
-<area shape="rect" id="node7" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="163,44,285,73"/>
-<area shape="rect" id="node10" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="361,71,516,100"/>
+<area shape="rect" id="node7" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="163,59,285,88"/>
+<area shape="rect" id="node12" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="361,112,516,141"/>
 <area shape="rect" id="node5" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="592,5,755,35"/>
+<area shape="rect" id="node9" href="$classMission__handler__landing.html#abf91f35cc2c43a5cf3864553292b4dfb" title="Handles the mission every iteration." alt="" coords="333,59,544,88"/>
 </map>
