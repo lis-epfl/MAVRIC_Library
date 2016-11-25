@@ -130,6 +130,7 @@ protected:
     uint64_t start_time_;                                               ///< The start time for travelling to this waypoint
     uint32_t travel_time_;                                              ///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
+    position_command_t position_command_;                               ///< Desired position command
 
     /**
      * \brief   Sends the travel time between the last two waypoints

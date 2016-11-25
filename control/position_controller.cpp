@@ -93,20 +93,13 @@ bool Position_controller::update()
     }
 
     // Compute desired velocity command
-    velocity_command_.xyz[X] = goal_dir[X] * v_desired;
-    velocity_command_.xyz[Y] = goal_dir[Y] * v_desired;
-    velocity_command_.xyz[Z] = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
-
-
-    // if in cruise_mode: calculate heading towards goal; else leave yaw command as is
-    float yaw_current = coord_conventions_get_yaw(ahrs_.qe);
-    if (goal_distance > 5.0f)
-    {
-        float rel_heading = maths_calc_smaller_angle(atan2(goal_dir[Y], goal_dir[X]) - yaw_current);
-        velocity_command_.heading = yaw_current + kp_yaw_ * rel_heading;
-    }
+    velocity_command_.xyz[X]  = goal_dir[X] * v_desired;
+    velocity_command_.xyz[Y]  = goal_dir[Y] * v_desired;
+    velocity_command_.xyz[Z]  = ctrl_mode_ == ctrl_mode_t::POS_XY_VEL_Z ? zvel_command_ : goal_dir[Z] * v_desired;
+    velocity_command_.heading = position_command_.heading;
 
     // Reduce XY velocity according to yaw error: this gives time to align to next waypoint before accelerating
+    float yaw_current = coord_conventions_get_yaw(ahrs_.qe);
     float yaw_error_factor = 1.0f - maths_f_abs(maths_clip(maths_calc_smaller_angle(velocity_command_.heading - yaw_current), 1.0f));
     velocity_command_.xyz[X] *= yaw_error_factor;
     velocity_command_.xyz[Y] *= yaw_error_factor;

@@ -82,6 +82,9 @@ Mission_handler_navigating::Mission_handler_navigating( const INS& ins,
                             0.0f,
                             0.0f,
                             0.0f);
+
+    position_command_ = position_command_t{{{0.0f, 0.0f, 0.0f}},
+                                            0.0f};
 }
 
 
@@ -103,9 +106,15 @@ bool Mission_handler_navigating::setup(const Waypoint& wpt)
 {
     bool success = true;
 
-    start_time_ = time_keeper_get_ms();
+    start_time_       = time_keeper_get_ms();
     waypoint_reached_ = false;
-    waypoint_ = wpt;
+    waypoint_         = wpt;
+
+    // Compute desired command
+    local_position_t local_pos = ins_.position_lf();
+    position_command_.xyz     = waypoint_.local_pos();
+    position_command_.heading = atan2(position_command_.xyz[Y] - local_pos[Y],
+                                      position_command_.xyz[X] - local_pos[X]);
 
     return success;
 }
@@ -124,16 +133,20 @@ Mission_handler::update_status_t Mission_handler_navigating::update()
         rel_pos[i] = wpt_pos[i] - ins_.position_lf()[i];
     }
     float dist2wp_sqr = vectors_norm_sqr(rel_pos);
+    float vel_sqr     = vectors_norm_sqr(ins_.velocity_lf().data());
 
     // Check if radius is available
-    float radius;
-    if (!waypoint_.radius(radius))
+    float radius = 0.0f;
+    waypoint_.radius(radius);
+    if (radius == 0.0f)
     {
-        radius = 4.0f;
+        // TODO use a configuration for this default radius
+        radius = 2.0f;
     }
 
-    // If we are near the waypoint or are doing dubin circles
-    if (dist2wp_sqr < (radius * radius))
+    // Check if we reached the waypoint
+    bool is_arrived = (dist2wp_sqr < (radius * radius)) && (vel_sqr < 0.5f); // TODO use a config for this speed threshold
+    if (is_arrived)
     {
         // If we are near the waypoint but the flag has not been set, do this once ...
         if (!waypoint_reached_)
@@ -158,6 +171,13 @@ Mission_handler::update_status_t Mission_handler_navigating::update()
 
             // ... and set to waiting at waypoint ...
             waypoint_reached_ = true;
+
+            // If the waypoint is not autocontinue, use its heading
+            if (waypoint_.autocontinue() == false)
+            {
+                // Use waypoint's heading
+                waypoint_.heading(position_command_.heading);
+            }
         }
     }
 
@@ -181,15 +201,7 @@ Mission_handler::update_status_t Mission_handler_navigating::update()
 
 bool Mission_handler_navigating::write_flight_command(Flight_controller& flight_controller) const
 {
-    position_command_t cmd;
-
-    // Position and heading from waypoint
-    float heading = 0.0f;
-    waypoint_.heading(heading);
-	cmd.xyz        = waypoint_.local_pos();
-    cmd.heading    = heading;
-
-	return flight_controller.set_command(cmd);
+	return flight_controller.set_command(position_command_);
 }
 
 
