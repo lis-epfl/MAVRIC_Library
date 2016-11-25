@@ -423,11 +423,15 @@ mav_result_t Mission_planner::override_goto_callback(Mission_planner* mission_pl
     else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
     {
         uint16_t new_wp_index = mission_planner->waypoint_handler_.current_waypoint_index();
-        if(mission_planner->internal_state_ != PAUSED)
+        if (mission_planner->internal_state_ != PAUSED)
         {
-            new_wp_index++;
+            uint16_t wp_count     = mission_planner->waypoint_handler_.waypoint_count();
+            if (wp_count != 0)
+            {
+                new_wp_index = (new_wp_index + 1) % wp_count;
+            }
         }
-        mission_planner->set_current_waypoint(new_wp_index % mission_planner->waypoint_handler_.waypoint_count());
+        mission_planner->set_current_waypoint(new_wp_index);
         result = MAV_RESULT_ACCEPTED;
     }
     else
