@@ -75,8 +75,8 @@ Mission_handler::update_status_t Mission_handler_on_ground::update()
 bool Mission_handler_on_ground::write_flight_command(Flight_controller& flight_controller) const
 {
     // Set prop speeds to lowest setting
-    flight_controller.set_command(torque_command_t{{0.0f, 0.0f, 0.0f}});
-    flight_controller.set_command(thrust_command_t{{0.0f, 0.0f, 0.0f}});
+    flight_controller.set_command(torque_command_t{{{0.0f, 0.0f, 0.0f}}});
+    flight_controller.set_command(thrust_command_t{{{0.0f, 0.0f, 0.0f}}});
 
     return true;
 }
