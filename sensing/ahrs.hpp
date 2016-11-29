@@ -73,7 +73,14 @@ public:
         AHRS_READY          = 3,    ///< Calibration level: leveled
     };
 
+    /**
+     * \brief   Main update function
+     *
+     * \return  Success
+     */
+    virtual bool update(void) = 0;
 
+    
     /**
      * \brief     Last update in seconds
      *

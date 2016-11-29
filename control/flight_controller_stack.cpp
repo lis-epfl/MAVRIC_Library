@@ -256,8 +256,3 @@ bool Flight_controller_stack::get_output(empty_command_t& command) const
 {
     return true;
 };
-
-const command_t& Flight_controller_stack::command(void) const
-{
-    return command_;
-};

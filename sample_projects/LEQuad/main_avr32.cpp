@@ -99,16 +99,12 @@ int main(void)
                         board.state_display_megafly_rev4_,
                         board.file_flash,
                         board.battery,
+                        file_log,
+                        file_stat,
                         board.servo_0,
                         board.servo_1,
                         board.servo_2,
                         board.servo_3,
-                        board.servo_4,
-                        board.servo_5,
-                        board.servo_6,
-                        board.servo_7,
-                        file_log,
-                        file_stat,
                         mav_config );
     // initialize MAV
     init_success &= mav.init();

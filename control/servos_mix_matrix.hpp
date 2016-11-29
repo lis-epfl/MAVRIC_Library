@@ -121,8 +121,8 @@ public:
     Servos_mix_matrix( const args_t& args,
                        const conf_t& config = default_config()):
         servos_(args.servos),
-        torque_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
-        thrust_command_{std::array<float,3>{{0.0f, 0.0f, 0.0f}}},
+        torque_command_(torque_command_t{{{0.0f, 0.0f, 0.0f}}}),
+        thrust_command_(thrust_command_t{{{0.0f, 0.0f, 0.0f}}}),
         mix_(config.mix),
         trim_(config.trim),
         min_(config.min),

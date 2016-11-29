@@ -116,12 +116,6 @@ public:
     bool get_command(thrust_command_t& thrust) const;
     bool get_output(empty_command_t& command) const;
 
-    /**
-     * \brief  Get non-const reference to command structure
-     */
-    const command_t& command(void) const;
-
-
 protected:
     /**
      * \brief   Main update function when in thrust + torque mode

@@ -85,16 +85,12 @@ int main(int argc, char** argv)
                         board.state_display_mavrimini_,
                         board.file_flash,
                         board.battery,
+                        dummy_file_log,
+                        dummy_file_stat,
                         board.servo_0,
                         board.servo_1,
                         board.servo_2,
                         board.servo_3,
-                        board.servo_4,
-                        board.servo_5,
-                        board.servo_6,
-                        board.servo_7,
-                        dummy_file_log,
-                        dummy_file_stat,
                         mav_config );
 
     // initialize MAV
