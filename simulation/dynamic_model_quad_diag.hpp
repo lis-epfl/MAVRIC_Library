@@ -242,7 +242,7 @@ static inline dynamic_model_quad_diag_conf_t dynamic_model_quad_diag_default_con
     conf.wind_y                 = 0.0f;                 ///< Wind in y axis, global frame
     conf.gravity                = 9.8f;                 ///< Simulation gravity
     conf.air_density            = 1.2f;                 ///< Air density
-    conf.motor_dir              = {-1.0f, 1.0f , -1.0f, 1.0f};
+    conf.motor_dir              = std::array<float,4>{{-1.0f, 1.0f , -1.0f, 1.0f}};
 
     return conf;
 }
