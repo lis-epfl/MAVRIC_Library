@@ -93,9 +93,9 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     // Create MAV using simulated sensors
     LEQuad::conf_t mav_config = LEQuad::default_config(sysid);
-    mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
-    mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
-    mav_config.state_config.simulation_mode = true;
+    mav_config.mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_GND_STATION;
+    mav_config.mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_NONE;
+    mav_config.mav_config.state_config.simulation_mode = true;
 
     LEQuad mav = LEQuad(board.imu,
                         board.sim.barometer(),
@@ -107,16 +107,12 @@ int main(int argc, char** argv)
                         board.state_display_mavrinux_,
                         board.file_flash,
                         board.battery,
+                        file_log,
+                        file_stat,
                         board.servo_0,
                         board.servo_1,
                         board.servo_2,
                         board.servo_3,
-                        board.servo_4,
-                        board.servo_5,
-                        board.servo_6,
-                        board.servo_7,
-                        file_log,
-                        file_stat,
                         mav_config);
 
     // initialize MAV

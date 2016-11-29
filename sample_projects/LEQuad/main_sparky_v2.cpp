@@ -170,8 +170,8 @@ int main(int argc, char** argv)
     LEQuad::conf_t mav_config = LEQuad::dronedome_config(MAVLINK_SYS_ID);
 
     //use joystick by default
-    mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_JOYSTICK;
-    mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_JOYSTICK;
+    mav_config.mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_JOYSTICK;
+    mav_config.mav_config.manual_control_config.control_source = Manual_control::CONTROL_SOURCE_JOYSTICK;
 
     //adapt servo mix gains
     // mav_config.stabilisation_copter_config.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].p_gain      = 0.035f;
@@ -197,16 +197,12 @@ int main(int argc, char** argv)
                         // board.file_flash,
                         sim_battery,
     //                  board.battery,
+                        file_dummy,
+                        file_dummy,
                         board.servo_[0],
                         board.servo_[1],
                         board.servo_[2],
                         board.servo_[3],
-                        board.servo_[4],
-                        board.servo_[5],
-                        board.servo_[6],
-                        board.servo_[7],
-                        file_dummy,
-                        file_dummy,
                         mav_config );
     mav.init();
 

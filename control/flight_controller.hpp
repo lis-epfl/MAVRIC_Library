@@ -110,6 +110,18 @@ public:
     {
         return command_source.write_flight_command(*this);
     };
+
+
+    /**
+     * \brief  Get const reference to command structure
+     */
+    const command_t& command(void) const
+    {
+        return command_;
+    }
+
+protected:
+    command_t command_;
 };
 
 
