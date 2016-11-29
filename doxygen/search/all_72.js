@@ -71,6 +71,7 @@ var searchData=
   ['roll',['roll',['../classJoystick.html#a9914a442bcc376a452fcf01c0007e738',1,'Joystick::roll()'],['../classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269',1,'Manual_control::roll()']]],
   ['roll_5fpitch_5fmomentum',['roll_pitch_momentum',['../structdynamic__model__quad__diag__conf__t.html#a72e161d3e33e5256ea656899af13d8d4',1,'dynamic_model_quad_diag_conf_t']]],
   ['rom_5fversion',['rom_version',['../structubx__mon__ver__t.html#a78f472bb866228472334c6ef760433ae',1,'ubx_mon_ver_t']]],
+  ['rotate_5fraw_5fvalues',['rotate_raw_values',['../classPx4flow__i2c.html#a9ccac19d2f118a8269eef500b1932ebf',1,'Px4flow_i2c']]],
   ['rotor_5farm_5flength',['rotor_arm_length',['../structdynamic__model__quad__diag__conf__t.html#a11a87292d4f721f263e8017032db25d4',1,'dynamic_model_quad_diag_conf_t']]],
   ['rotor_5fcd',['rotor_cd',['../structdynamic__model__quad__diag__conf__t.html#af5dd62e6481faef70243b37b6e8c452a',1,'dynamic_model_quad_diag_conf_t']]],
   ['rotor_5fcl',['rotor_cl',['../structdynamic__model__quad__diag__conf__t.html#ae29cc30caf6fd9db77851f0b4e807c76',1,'dynamic_model_quad_diag_conf_t']]],

@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$structPx4flow__i2c_1_1conf__t.html" title="{Px4flow_i2c::conf_t\n|+ i2c_address\l+ orientation\l|}" alt="" coords="5,75,141,178"/>
+<area shape="rect" id="node4" href="$classI2c.html" title="{I2c\n||+ init()\l+ probe()\l+ write()\l+ read()\l+ transfer()\l}" alt="" coords="165,49,251,204"/>
+<area shape="rect" id="node6" href="$classBuffer__T.html" title="{Buffer_T\&lt; 3, float \&gt;\n||+ Buffer_T()\l+ put_lossy()\l+ put()\l+ get()\l+ clear()\l+ readable()\l+ writeable()\l+ full()\l+ empty()\l+ get_element()\l}" alt="" coords="275,6,411,247"/>
+</map>

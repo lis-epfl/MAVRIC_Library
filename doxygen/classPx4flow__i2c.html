@@ -81,22 +81,40 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">Px4flow_i2c Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Px4flow_i2c" -->
+<!-- doxytag: class="Px4flow_i2c" --><div class="dynheader">
+Collaboration diagram for Px4flow_i2c:</div>
+<div class="dyncontent">
+<div class="center"><img src="classPx4flow__i2c__coll__graph.png" border="0" usemap="#Px4flow__i2c_coll__map" alt="Collaboration graph"/></div>
+<map name="Px4flow__i2c_coll__map" id="Px4flow__i2c_coll__map">
+<area shape="rect" id="node2" href="structPx4flow__i2c_1_1conf__t.html" title="{Px4flow_i2c::conf_t\n|+ i2c_address\l+ orientation\l|}" alt="" coords="5,75,141,178"/><area shape="rect" id="node4" href="classI2c.html" title="{I2c\n||+ init()\l+ probe()\l+ write()\l+ read()\l+ transfer()\l}" alt="" coords="165,49,251,204"/><area shape="rect" id="node6" href="classBuffer__T.html" title="{Buffer_T\&lt; 3, float \&gt;\n||+ Buffer_T()\l+ put_lossy()\l+ put()\l+ get()\l+ clear()\l+ readable()\l+ writeable()\l+ full()\l+ empty()\l+ get_element()\l}" alt="" coords="275,6,411,247"/></map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+
 <p><a href="classPx4flow__i2c-members.html">List of all members.</a></p>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><b>conf_t</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPx4flow__i2c_1_1conf__t.html">conf_t</a></td></tr>
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><b>orientation_t</b> { <b>ORIENT_0_DEG</b> =  0, 
+<b>ORIENT_90_DEG</b> =  1, 
+<b>ORIENT_180_DEG</b> =  2, 
+<b>ORIENT_270_DEG</b> =  3
+ }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a28d76790e8b76a8f5dfdf1b3986c941c"></a><!-- doxytag: member="Px4flow_i2c::Px4flow_i2c" ref="a28d76790e8b76a8f5dfdf1b3986c941c" args="(I2c &amp;i2c, conf_t config=default_config())" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Px4flow_i2c</b> (<a class="el" href="classI2c.html">I2c</a> &amp;i2c, conf_t config=<a class="el" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56">default_config</a>())</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Px4flow_i2c</b> (<a class="el" href="classI2c.html">I2c</a> &amp;i2c, <a class="el" href="structPx4flow__i2c_1_1conf__t.html">conf_t</a> config=<a class="el" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56">default_config</a>())</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a08460836c10b0f71090686429a2531ba">healthy</a> (void) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates whether the measurements can be trusted.  <a href="#a08460836c10b0f71090686429a2531ba"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8">update</a> (void)</td></tr>
@@ -121,8 +139,59 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885">update_task</a> (<a class="el" href="classPx4flow__i2c.html">Px4flow_i2c</a> *flow)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Glue function used for scheduler.  <a href="#a028c6c1db84e829be94b67cc12c10885"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static conf_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56">default_config</a> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structPx4flow__i2c_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56">default_config</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default configuration.  <a href="#a913b653a9ea43c11df2bc03f94d2bd56"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab4396136b8e994fe2f2def1c25744071"></a><!-- doxytag: member="Px4flow_i2c::GET_FRAME_COMMAND" ref="ab4396136b8e994fe2f2def1c25744071" args="" -->
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#ab4396136b8e994fe2f2def1c25744071">GET_FRAME_COMMAND</a> = 0x0</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Command to receive 22 bytes i2c frame. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a195bd3faa44767d0b7258bbccf55c464"></a><!-- doxytag: member="Px4flow_i2c::GET_INTEGRAL_FRAME_COMMAND" ref="a195bd3faa44767d0b7258bbccf55c464" args="" -->
+static const uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a195bd3faa44767d0b7258bbccf55c464">GET_INTEGRAL_FRAME_COMMAND</a> = 0x16</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Command to receive 25 bytes i2c integral frame. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9ccac19d2f118a8269eef500b1932ebf"></a><!-- doxytag: member="Px4flow_i2c::rotate_raw_values" ref="a9ccac19d2f118a8269eef500b1932ebf" args="(float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw)" -->
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a9ccac19d2f118a8269eef500b1932ebf">rotate_raw_values</a> (float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies rotation to raw readings based on how the camera is mounted on drone. <br/></td></tr>
+<tr><td colspan="2"><h2><a name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b87ead488d94e903a988565309e8cad"></a><!-- doxytag: member="Px4flow_i2c::flow_x_" ref="a0b87ead488d94e903a988565309e8cad" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a0b87ead488d94e903a988565309e8cad">flow_x_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Optic flow in x direction (rad/s) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a281ec6622ae8d5b1ad1f6536ae4f2616"></a><!-- doxytag: member="Px4flow_i2c::flow_y_" ref="a281ec6622ae8d5b1ad1f6536ae4f2616" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a281ec6622ae8d5b1ad1f6536ae4f2616">flow_y_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Optic flow in y direction (rad/s) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adf80e76c8a66deaaf3552c2d5be44a1a"></a><!-- doxytag: member="Px4flow_i2c::flow_quality_" ref="adf80e76c8a66deaaf3552c2d5be44a1a" args="" -->
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#adf80e76c8a66deaaf3552c2d5be44a1a">flow_quality_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Quality of optic flow measurement (between 0 and 255) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a659c939473a22c3c4f1e59833490249e"></a><!-- doxytag: member="Px4flow_i2c::velocity_x_" ref="a659c939473a22c3c4f1e59833490249e" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a659c939473a22c3c4f1e59833490249e">velocity_x_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity in x direction (m/s) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac22fd84343895792f5612ce6ce3e996d"></a><!-- doxytag: member="Px4flow_i2c::velocity_y_" ref="ac22fd84343895792f5612ce6ce3e996d" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#ac22fd84343895792f5612ce6ce3e996d">velocity_y_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity in y direction (m/s) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ecbb624e8100fc0059d0e4c73c6e68d"></a><!-- doxytag: member="Px4flow_i2c::velocity_z_" ref="a5ecbb624e8100fc0059d0e4c73c6e68d" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a5ecbb624e8100fc0059d0e4c73c6e68d">velocity_z_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity in z direction (m/s) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8f8217cf98bbd516b66e3e3a791e2f77"></a><!-- doxytag: member="Px4flow_i2c::ground_distance_" ref="a8f8217cf98bbd516b66e3e3a791e2f77" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a8f8217cf98bbd516b66e3e3a791e2f77">ground_distance_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Ground distance (m) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a351d7126047026d28c8e54f7439e1b39"></a><!-- doxytag: member="Px4flow_i2c::ground_distance_buffer_" ref="a351d7126047026d28c8e54f7439e1b39" args="" -->
+<a class="el" href="classBuffer__T.html">Buffer_T</a>&lt; 3, float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a351d7126047026d28c8e54f7439e1b39">ground_distance_buffer_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Buffer used to filter sonar measurement. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa819439b507f3219d9d82ad1a50eed1a"></a><!-- doxytag: member="Px4flow_i2c::last_update_s_" ref="aa819439b507f3219d9d82ad1a50eed1a" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#aa819439b507f3219d9d82ad1a50eed1a">last_update_s_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Last update time in seconds. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a210ba438d856c6eaf229c4883dcbb54e"></a><!-- doxytag: member="Px4flow_i2c::is_healthy_" ref="a210ba438d856c6eaf229c4883dcbb54e" args="" -->
+bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a210ba438d856c6eaf229c4883dcbb54e">is_healthy_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates if sensor data can be trusted. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4e720676ecbc4f5bc49dd10dedcb82d7"></a><!-- doxytag: member="Px4flow_i2c::i2c_" ref="a4e720676ecbc4f5bc49dd10dedcb82d7" args="" -->
+<a class="el" href="classI2c.html">I2c</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a4e720676ecbc4f5bc49dd10dedcb82d7">i2c_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">reference to I2C <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a97b9085e3313c9ef933c6f4dce5a2b70"></a><!-- doxytag: member="Px4flow_i2c::config_" ref="a97b9085e3313c9ef933c6f4dce5a2b70" args="" -->
+<a class="el" href="structPx4flow__i2c_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPx4flow__i2c.html#a97b9085e3313c9ef933c6f4dce5a2b70">config_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration. <br/></td></tr>
 </table>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a913b653a9ea43c11df2bc03f94d2bd56"></a><!-- doxytag: member="Px4flow_i2c::default_config" ref="a913b653a9ea43c11df2bc03f94d2bd56" args="(void)" -->
@@ -130,7 +199,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Px4flow_i2c::conf_t <a class="el" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56">Px4flow_i2c::default_config</a> </td>
+          <td class="memname"><a class="el" href="structPx4flow__i2c_1_1conf__t.html">Px4flow_i2c::conf_t</a> <a class="el" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56">Px4flow_i2c::default_config</a> </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -306,7 +375,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPx4flow__i2c_a2c83263486535f4becc95f71201f9ca8_cgraph.png" border="0" usemap="#classPx4flow__i2c_a2c83263486535f4becc95f71201f9ca8_cgraph" alt=""/></div>
 <map name="classPx4flow__i2c_a2c83263486535f4becc95f71201f9ca8_cgraph" id="classPx4flow__i2c_a2c83263486535f4becc95f71201f9ca8_cgraph">
-<area shape="rect" id="node3" href="classI2c.html#a6df122b68bbb83bdfbd85399761cf6b6" title="Write multiple bytes to a I2C slave device." alt="" coords="233,5,308,35"/><area shape="rect" id="node5" href="classI2c.html#aae83ee6e5df1bc8b39832fc63a448bdb" title="Read multiple bytes to a I2C slave device." alt="" coords="235,59,307,88"/><area shape="rect" id="node7" href="classBuffer__T.html#a88378087609442dc301bcdfef4bb8f34" title="Stores data in the buffer even of it overwrites existing data." alt="" coords="203,112,339,141"/><area shape="rect" id="node9" href="classBuffer__T.html#ab02b06e057265507e5e5d9e5d8e87d1e" title="Get value of i&#45;th element in buffer, but does not modify anything." alt="" coords="196,165,345,195"/></map>
+<area shape="rect" id="node3" href="classI2c.html#a6df122b68bbb83bdfbd85399761cf6b6" title="Write multiple bytes to a I2C slave device." alt="" coords="261,5,336,35"/><area shape="rect" id="node5" href="classI2c.html#aae83ee6e5df1bc8b39832fc63a448bdb" title="Read multiple bytes to a I2C slave device." alt="" coords="263,59,335,88"/><area shape="rect" id="node7" href="classPx4flow__i2c.html#a9ccac19d2f118a8269eef500b1932ebf" title="Applies rotation to raw readings based on how the camera is mounted on drone." alt="" coords="196,112,401,141"/><area shape="rect" id="node9" href="classBuffer__T.html#a88378087609442dc301bcdfef4bb8f34" title="Stores data in the buffer even of it overwrites existing data." alt="" coords="231,165,367,195"/><area shape="rect" id="node11" href="classBuffer__T.html#ab02b06e057265507e5e5d9e5d8e87d1e" title="Get value of i&#45;th element in buffer, but does not modify anything." alt="" coords="224,219,373,248"/></map>
 </div>
 </p>
 
@@ -350,7 +419,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classPx4flow__i2c_a028c6c1db84e829be94b67cc12c10885_cgraph.png" border="0" usemap="#classPx4flow__i2c_a028c6c1db84e829be94b67cc12c10885_cgraph" alt=""/></div>
 <map name="classPx4flow__i2c_a028c6c1db84e829be94b67cc12c10885_cgraph" id="classPx4flow__i2c_a028c6c1db84e829be94b67cc12c10885_cgraph">
-<area shape="rect" id="node3" href="classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="228,85,367,115"/><area shape="rect" id="node5" href="classI2c.html#a6df122b68bbb83bdfbd85399761cf6b6" title="Write multiple bytes to a I2C slave device." alt="" coords="455,5,529,35"/><area shape="rect" id="node7" href="classI2c.html#aae83ee6e5df1bc8b39832fc63a448bdb" title="Read multiple bytes to a I2C slave device." alt="" coords="456,59,528,88"/><area shape="rect" id="node9" href="classBuffer__T.html#a88378087609442dc301bcdfef4bb8f34" title="Stores data in the buffer even of it overwrites existing data." alt="" coords="424,112,560,141"/><area shape="rect" id="node11" href="classBuffer__T.html#ab02b06e057265507e5e5d9e5d8e87d1e" title="Get value of i&#45;th element in buffer, but does not modify anything." alt="" coords="417,165,567,195"/></map>
+<area shape="rect" id="node3" href="classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="228,112,367,141"/><area shape="rect" id="node5" href="classI2c.html#a6df122b68bbb83bdfbd85399761cf6b6" title="Write multiple bytes to a I2C slave device." alt="" coords="483,5,557,35"/><area shape="rect" id="node7" href="classI2c.html#aae83ee6e5df1bc8b39832fc63a448bdb" title="Read multiple bytes to a I2C slave device." alt="" coords="484,59,556,88"/><area shape="rect" id="node9" href="classPx4flow__i2c.html#a9ccac19d2f118a8269eef500b1932ebf" title="Applies rotation to raw readings based on how the camera is mounted on drone." alt="" coords="417,112,623,141"/><area shape="rect" id="node11" href="classBuffer__T.html#a88378087609442dc301bcdfef4bb8f34" title="Stores data in the buffer even of it overwrites existing data." alt="" coords="452,165,588,195"/><area shape="rect" id="node13" href="classBuffer__T.html#ab02b06e057265507e5e5d9e5d8e87d1e" title="Get value of i&#45;th element in buffer, but does not modify anything." alt="" coords="445,219,595,248"/></map>
 </div>
 </p>
 
@@ -438,7 +507,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 17:32:07 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 19:21:08 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
