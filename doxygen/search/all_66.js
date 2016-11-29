@@ -7,7 +7,7 @@ var searchData=
   ['file',['File',['../classFile.html',1,'']]],
   ['file_5fdummy',['File_dummy',['../classFile__dummy.html',1,'File_dummy'],['../classFile__dummy.html#a276ebac56da140011a18239514e8e9e0',1,'File_dummy::File_dummy()']]],
   ['file_5ffat_5ffs',['File_fat_fs',['../classFile__fat__fs.html',1,'File_fat_fs'],['../classFile__fat__fs.html#a03f91469470859c0088754d6310f7bba',1,'File_fat_fs::File_fat_fs()']]],
-  ['file_5fflash',['file_flash',['../classLEQuad.html#a2eea47ba1e67ff1d749be2269c05ecb5',1,'LEQuad']]],
+  ['file_5fflash',['file_flash',['../classMAV.html#ab12450f1f901c9f38afd7360d57081f5',1,'MAV']]],
   ['file_5fflash_5favr32',['File_flash_avr32',['../classFile__flash__avr32.html',1,'File_flash_avr32'],['../classFile__flash__avr32.html#a52e841a8840f50385751a4cf0a191789',1,'File_flash_avr32::File_flash_avr32()']]],
   ['file_5flinux',['File_linux',['../classFile__linux.html',1,'File_linux'],['../classFile__linux.html#a806a28b5f94d2a5f69c3e0a966cafb81',1,'File_linux::File_linux()']]],
   ['filter_5fgain',['filter_gain',['../structairspeed__analog__conf__t.html#a306b4fb409d629ef51f60b7e0e841608',1,'airspeed_analog_conf_t']]],
@@ -34,7 +34,7 @@ var searchData=
   ['flight_5fcontroller_5fquadcopter_5fcross',['Flight_controller_quadcopter_cross',['../classFlight__controller__quadcopter__cross.html',1,'']]],
   ['flight_5fcontroller_5fquadcopter_5fdiag',['Flight_controller_quadcopter_diag',['../classFlight__controller__quadcopter__diag.html',1,'']]],
   ['flight_5fcontroller_5fstack',['Flight_controller_stack',['../classFlight__controller__stack.html',1,'Flight_controller_stack'],['../classFlight__controller__stack.html#ac2d0be74af67c53942029171f3c30fa0',1,'Flight_controller_stack::Flight_controller_stack()']]],
-  ['flow',['Flow',['../classFlow.html',1,'Flow'],['../classLEQuad.html#a4a822a6d8b96974d73ca192b8fb1a9e2',1,'LEQuad::flow()']]],
+  ['flow',['Flow',['../classFlow.html',1,'Flow'],['../classMAV.html#af16623ddc8b5071158dc6bd9a0cee337',1,'MAV::flow()']]],
   ['flow_5fdata_5ft',['flow_data_t',['../structflow__data__t.html',1,'']]],
   ['flow_5fpx4',['Flow_px4',['../classFlow__px4.html',1,'Flow_px4'],['../classFlow__px4.html#a369ea53b6998e90aa12581995f1793c6',1,'Flow_px4::Flow_px4()']]],
   ['flow_5fpx4_5fdata_5ft',['flow_px4_data_t',['../unionflow__px4__data__t.html',1,'']]],
@@ -52,7 +52,7 @@ var searchData=
   ['fs',['fs',['../structfat__fs__mounting__t.html#a6559a26f8510813780bb53fad8260d02',1,'fat_fs_mounting_t']]],
   ['full',['full',['../classBuffer__T.html#a015a62a50cd6931d44e4d6b3176fcc94',1,'Buffer_T']]],
   ['function',['function',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry']]],
-  ['function',['FUNCTION',['../structtLED__DESCRIPTOR.html#aa887761788f738fa9e3962ff3d550d68',1,'tLED_DESCRIPTOR::FUNCTION()'],['../structMavlink__message__handler_1_1msg__callback__t.html#a15b1ca8eacaa9fba1eb12d53b160059f',1,'Mavlink_message_handler::msg_callback_t::function()'],['../structMavlink__message__handler_1_1cmd__callback__t.html#af0714c3bc1479f7e97a8a12f00a4751e',1,'Mavlink_message_handler::cmd_callback_t::function()'],['../structPeriodic__telemetry_1_1telemetry__entry__t.html#ac251a3ef6f3cc6e1888840a7e6d1b878',1,'Periodic_telemetry::telemetry_entry_t::function()'],['../structserial__avr32__gpio__map__t.html#afea7a90cb66b46621468f5b52d477b13',1,'serial_avr32_gpio_map_t::function()'],['../structspi__avr32__gpio__map__t.html#a045cd6b7ffd9b71b75fa4aaa42fb0b3d',1,'spi_avr32_gpio_map_t::function()']]],
+  ['function',['function',['../structMavlink__message__handler_1_1msg__callback__t.html#a15b1ca8eacaa9fba1eb12d53b160059f',1,'Mavlink_message_handler::msg_callback_t::function()'],['../structMavlink__message__handler_1_1cmd__callback__t.html#af0714c3bc1479f7e97a8a12f00a4751e',1,'Mavlink_message_handler::cmd_callback_t::function()'],['../structPeriodic__telemetry_1_1telemetry__entry__t.html#ac251a3ef6f3cc6e1888840a7e6d1b878',1,'Periodic_telemetry::telemetry_entry_t::function()'],['../structserial__avr32__gpio__map__t.html#afea7a90cb66b46621468f5b52d477b13',1,'serial_avr32_gpio_map_t::function()'],['../structspi__avr32__gpio__map__t.html#a045cd6b7ffd9b71b75fa4aaa42fb0b3d',1,'spi_avr32_gpio_map_t::function()'],['../structtLED__DESCRIPTOR.html#aa887761788f738fa9e3962ff3d550d68',1,'tLED_DESCRIPTOR::FUNCTION()']]],
   ['function',['function',['../structScheduler__task_1_1function.html',1,'Scheduler_task']]],
   ['function_3c_20void_20_3e',['function< void >',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;'],['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;']]]
 ];

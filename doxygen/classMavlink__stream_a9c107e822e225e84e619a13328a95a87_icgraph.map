@@ -7,9 +7,9 @@
 <area shape="rect" id="node25" href="$classMission__planner.html#a5faa7dffb887c958f3ae6b163216b48f" title="Sets the current waypoint to num_of_waypoint." alt="" coords="224,325,472,355"/>
 <area shape="rect" id="node33" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="244,392,452,421"/>
 <area shape="rect" id="node5" href="$classMavlink__communication__T.html#a3a226bf9d3316a83a1e5e4aa39fd0a23" title="Default configuration." alt="" coords="551,5,817,35"/>
-<area shape="rect" id="node11" href="$classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="633,59,735,88"/>
-<area shape="rect" id="node7" href="$classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration." alt="" coords="929,5,1087,35"/>
-<area shape="rect" id="node9" href="$classLEQuad.html#a68c1925ad3474528ed8ece3657dad7f4" title="Configuration for use in drone dome." alt="" coords="1185,5,1367,35"/>
+<area shape="rect" id="node11" href="$classMAV.html#a2414b0960a7f0d99fabcfc9e8bc9ab4d" title="Main update function (infinite loop)" alt="" coords="643,59,725,88"/>
+<area shape="rect" id="node7" href="$classMAV.html#a3b7298085647d11c34666102156037dc" title="Default configuration." alt="" coords="939,5,1077,35"/>
+<area shape="rect" id="node9" href="$classMAV.html#a76416869992b290d430dcf24f961c50d" title="Configuration for use in drone dome." alt="" coords="1184,5,1349,35"/>
 <area shape="rect" id="node15" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="572,112,796,141"/>
 <area shape="rect" id="node17" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="880,112,1136,141"/>
 <area shape="rect" id="node27" href="$classMission__planner.html#ab2c46dcf79d58702a0c74e7ec7737a41" title="Starts the mission." alt="" coords="556,259,812,288"/>

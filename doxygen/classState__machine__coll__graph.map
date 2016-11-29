@@ -10,7 +10,7 @@
 <area shape="rect" id="node17" href="$classSatellite.html" title="{Satellite\n||+ init()\l+ bind()\l+ channel()\l+ last_update()\l+ dt()\l}" alt="" coords="229,573,339,728"/>
 <area shape="rect" id="node19" href="$classState__display.html" title="Interface class for state display." alt="" coords="491,1365,592,1502"/>
 <area shape="rect" id="node21" href="$classGeofence.html" title="Interface for Geofence." alt="" coords="616,1382,741,1485"/>
-<area shape="rect" id="node23" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="765,1347,915,1519"/>
+<area shape="rect" id="node23" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="765,1339,915,1528"/>
 <area shape="rect" id="node25" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="939,1313,1077,1554"/>
 <area shape="rect" id="node27" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1101,1304,1232,1563"/>
 <area shape="rect" id="node31" href="$classBattery.html" title="Battery voltage monitor." alt="" coords="64,57,147,212"/>

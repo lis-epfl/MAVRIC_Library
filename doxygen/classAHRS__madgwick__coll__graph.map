@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="5,49,155,221"/>
+<area shape="rect" id="node2" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="5,40,155,229"/>
 <area shape="rect" id="node4" href="$classAirspeed__analog.html" title="{Airspeed_analog\n||+ Airspeed_analog()\l+ start_calibration()\l+ stop_calibration()\l+ update()\l+ get_airspeed()\l+ get_last_airspeed()\l}" alt="" coords="179,49,323,221"/>
 <area shape="rect" id="node6" href="$structquat__t.html" title="Unit quaternion." alt="" coords="347,83,405,186"/>
 <area shape="rect" id="node8" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="429,5,560,264"/>

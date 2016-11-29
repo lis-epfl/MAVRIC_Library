@@ -1,11 +1,11 @@
 var searchData=
 [
   ['b_5f',['B_',['../classKalman.html#acf8e90cf222702a93cc079769813c7c0',1,'Kalman']]],
-  ['barometer',['barometer',['../classLEQuad.html#abd0a931d4efb860cf55498856440ca1a',1,'LEQuad']]],
+  ['barometer',['barometer',['../classMAV.html#adb7d75b8ad55eb7b3a61722b7e962893',1,'MAV']]],
   ['base_5fhealth',['base_health',['../structubx__nav__dgps__t.html#ae32b24ce493c04451063f95f7c8e5c0d',1,'ubx_nav_dgps_t']]],
   ['base_5fid',['base_id',['../structubx__nav__dgps__t.html#a943b371eb1753d81aeaf082310b2a407',1,'ubx_nav_dgps_t']]],
   ['base_5ftow',['base_tow',['../structubx__cfg__fxn__t.html#ad67f012b730f61443ffba40bda2c5755',1,'ubx_cfg_fxn_t']]],
-  ['battery',['battery',['../classLEQuad.html#a599ef32e6e9f1f3f6e4024a2af65f885',1,'LEQuad']]],
+  ['battery',['battery',['../classMAV.html#ace8fe6c173e46083998e76c29d014023',1,'MAV']]],
   ['battery_5f',['battery_',['../classState.html#aa8af6eff2f240cae87d455db9023e079',1,'State']]],
   ['baud_5frate',['baud_rate',['../structubx__cfg__prt__t.html#a0403d8ad0dae4dcf8e693c98f159c196',1,'ubx_cfg_prt_t']]],
   ['beta_5f',['beta_',['../classAHRS__madgwick.html#ae71669a77ab7e3ca2ed9a71cac28e0b1',1,'AHRS_madgwick']]],

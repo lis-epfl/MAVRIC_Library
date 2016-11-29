@@ -1,8 +1,15 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,227,143"/>
-<area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="251,6,472,143"/>
-<area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="496,6,715,143"/>
-<area shape="rect" id="node8" href="$classController.html" title="{Controller\&lt; rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="739,6,936,143"/>
-<area shape="rect" id="node10" href="$classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="960,6,1173,143"/>
-<area shape="rect" id="node12" href="$classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1197,6,1408,143"/>
+<area shape="rect" id="node2" href="$classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,202,227,339"/>
+<area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="251,202,472,339"/>
+<area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="496,202,715,339"/>
+<area shape="rect" id="node8" href="$classController.html" title="{Controller\&lt; rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="739,202,936,339"/>
+<area shape="rect" id="node10" href="$classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="960,202,1173,339"/>
+<area shape="rect" id="node12" href="$classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1197,202,1408,339"/>
+<area shape="rect" id="node14" href="$structcommand__t.html" title="Global command structure." alt="" coords="1432,176,1523,365"/>
+<area shape="rect" id="node16" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="1029,15,1160,100"/>
+<area shape="rect" id="node18" href="$structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="1184,15,1301,100"/>
+<area shape="rect" id="node20" href="$structposition__command__t.html" title="Position command structure." alt="" coords="1325,6,1467,109"/>
+<area shape="rect" id="node22" href="$structtorque__command__t.html" title="Torque command structure (expressed in body frame)" alt="" coords="1491,15,1624,100"/>
+<area shape="rect" id="node24" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1648,6,1707,109"/>
+<area shape="rect" id="node26" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="1731,6,1872,109"/>
 </map>

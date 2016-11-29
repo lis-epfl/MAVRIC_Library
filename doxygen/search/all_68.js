@@ -21,7 +21,7 @@ var searchData=
   ['horizontal_5fposition_5faccuracy',['horizontal_position_accuracy',['../classGps.html#af565be90e7e55181001a39682054b324',1,'Gps::horizontal_position_accuracy()'],['../classGps__hub.html#a8c13b31988c5af7a5f39f13c6e2fcc6b',1,'Gps_hub::horizontal_position_accuracy()'],['../classGps__mocap.html#a29c373fb7dd755bf02e5a970cad36ce6',1,'Gps_mocap::horizontal_position_accuracy()'],['../classGps__ublox.html#a06c0d58120d27a7d07d5340df84889e0',1,'Gps_ublox::horizontal_position_accuracy()'],['../classGps__sim.html#aab941a901c24b96070bc990450921d88',1,'Gps_sim::horizontal_position_accuracy()']]],
   ['horizontal_5fstatus',['horizontal_status',['../structgps__t.html#ac11a2c4b6291bc7e0db1510f514683ae',1,'gps_t']]],
   ['hour',['hour',['../structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893',1,'ubx_nav_timeutc_t::hour()'],['../structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120',1,'date_time_t::hour()']]],
-  ['hud',['hud',['../classLEQuad.html#acdc4072d2bc5f84b926e017f95dfde28',1,'LEQuad']]],
+  ['hud',['hud',['../classMAV.html#abc372f907c015cbe220b1bed0190d6bc',1,'MAV']]],
   ['hud_5ftelemetry_5ft',['hud_telemetry_t',['../structhud__telemetry__t.html',1,'']]],
   ['hw_5fversion',['hw_version',['../structubx__mon__ver__t.html#ab88ba534ab797ea8978d1575f82adb13',1,'ubx_mon_ver_t']]]
 ];

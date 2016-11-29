@@ -1,5 +1,5 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classOnboard__parameters.html#a7f269933f48766f3d6ba32343a2eaf5f" title="Read onboard parameters from the file storage." alt="" coords="133,5,392,35"/>
 <area shape="rect" id="node7" href="$classOnboard__parameters.html#a67802790b17200b7eaf376641251666f" title="Write onboard parameters to the file storage." alt="" coords="140,59,385,88"/>
-<area shape="rect" id="node5" href="$classLEQuad.html#acc67075f90c55b09726bef35c0313cdf" title="Main update function (infinite loop)" alt="" coords="440,32,541,61"/>
+<area shape="rect" id="node5" href="$classMAV.html#a2414b0960a7f0d99fabcfc9e8bc9ab4d" title="Main update function (infinite loop)" alt="" coords="440,32,523,61"/>
 </map>

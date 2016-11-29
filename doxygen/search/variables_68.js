@@ -14,6 +14,6 @@ var searchData=
   ['horizontal_5faccuracy',['horizontal_accuracy',['../structubx__nav__pos__llh__t.html#a37574e9885d3fa1268c2010184d48c48',1,'ubx_nav_pos_llh_t::horizontal_accuracy()'],['../structgps__t.html#ae7f7b21657d1adb7038bd3933d4a81c3',1,'gps_t::horizontal_accuracy()']]],
   ['horizontal_5fstatus',['horizontal_status',['../structgps__t.html#ac11a2c4b6291bc7e0db1510f514683ae',1,'gps_t']]],
   ['hour',['hour',['../structubx__nav__timeutc__t.html#a2c68e9306f2e066a5982aa0f3eb63893',1,'ubx_nav_timeutc_t::hour()'],['../structdate__time__t.html#ab9ee4c9f9a31aac8fea020d567697120',1,'date_time_t::hour()']]],
-  ['hud',['hud',['../classLEQuad.html#acdc4072d2bc5f84b926e017f95dfde28',1,'LEQuad']]],
+  ['hud',['hud',['../classMAV.html#abc372f907c015cbe220b1bed0190d6bc',1,'MAV']]],
   ['hw_5fversion',['hw_version',['../structubx__mon__ver__t.html#ab88ba534ab797ea8978d1575f82adb13',1,'ubx_mon_ver_t']]]
 ];

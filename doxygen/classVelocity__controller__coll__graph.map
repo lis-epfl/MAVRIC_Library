@@ -3,7 +3,7 @@
 <area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/>
 <area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/>
 <area shape="rect" id="node8" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="640,289,771,375"/>
-<area shape="rect" id="node10" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="795,246,944,418"/>
+<area shape="rect" id="node10" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="795,237,944,427"/>
 <area shape="rect" id="node12" href="$structquat__t.html" title="Unit quaternion." alt="" coords="968,281,1027,383"/>
 <area shape="rect" id="node14" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="1051,281,1192,383"/>
 <area shape="rect" id="node16" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="1216,211,1355,453"/>

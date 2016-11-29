@@ -1,7 +1,7 @@
 <map id="G" name="G">
 <area shape="rect" id="node2" href="$structVelocity__controller_1_1args__t.html" title="Required arguments." alt="" coords="267,315,440,469"/>
 <area shape="rect" id="node4" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="5,84,136,169"/>
-<area shape="rect" id="node6" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="160,41,309,213"/>
+<area shape="rect" id="node6" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="160,32,309,221"/>
 <area shape="rect" id="node8" href="$structquat__t.html" title="Unit quaternion." alt="" coords="333,75,392,178"/>
 <area shape="rect" id="node10" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="425,75,567,178"/>
 <area shape="rect" id="node12" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="591,6,729,247"/>

@@ -12,6 +12,7 @@ var searchData=
   ['magnetometer_5fsim',['Magnetometer_sim',['../classMagnetometer__sim.html#a6c85e1deb5c9b68cf8e595ae276056af',1,'Magnetometer_sim']]],
   ['manual_5fcontrol',['Manual_control',['../classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b',1,'Manual_control']]],
   ['mat',['Mat',['../classMat.html#ab29b9cf111199df7fe2dfd645d563b59',1,'Mat::Mat(T value=0.0f, bool diag=false)'],['../classMat.html#a2c9400f204ae3187d183879c4799db79',1,'Mat::Mat(const Mat&lt; N, P &gt; &amp;mat)'],['../classMat.html#add81daa1c3f09622ecd4924c2ce297ba',1,'Mat::Mat(const std::array&lt; T, N *P &gt; arr)'],['../classMat.html#ae70a42918a9b6732017746ccf84aae5e',1,'Mat::Mat(const std::initializer_list&lt; T &gt; list)']]],
+  ['mav',['MAV',['../classMAV.html#ae79768f96b8671f471521f80aaa27c43',1,'MAV']]],
   ['mav_5fmode',['mav_mode',['../classState.html#a9bf37e3784367761637c2c5a7c2b1b16',1,'State']]],
   ['mavlink_5fcommunication_5ft',['Mavlink_communication_T',['../classMavlink__communication__T.html#ad52ad2b01f090ee623917e195b9e03d2',1,'Mavlink_communication_T']]],
   ['mavlink_5fmessage_5fhandler',['Mavlink_message_handler',['../classMavlink__message__handler.html#a60ee5337c71f77a361cc7bf9d1819fd4',1,'Mavlink_message_handler']]],

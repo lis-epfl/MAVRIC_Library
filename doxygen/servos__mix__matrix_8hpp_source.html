@@ -185,8 +185,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00121"></a><a class="code" href="classServos__mix__matrix.html#ad3909b2071b77d94a4350b036ca9e3b0">00121</a>     <a class="code" href="classServos__mix__matrix.html#ad3909b2071b77d94a4350b036ca9e3b0" title="Constructor.">Servos_mix_matrix</a>( <span class="keyword">const</span> args_t&amp; args,
 <a name="l00122"></a>00122                        <span class="keyword">const</span> conf_t&amp; config = <a class="code" href="classServos__mix__matrix.html#a60f3f7d30ce6853f55dddbf17ad775ff" title="Default configuration.">default_config</a>()):
 <a name="l00123"></a>00123         servos_(args.servos),
-<a name="l00124"></a>00124         torque_command_{std::array&lt;float,3&gt;{{0.0f, 0.0f, 0.0f}}},
-<a name="l00125"></a>00125         thrust_command_{std::array&lt;float,3&gt;{{0.0f, 0.0f, 0.0f}}},
+<a name="l00124"></a>00124         torque_command_(<a class="code" href="structtorque__command__t.html" title="Torque command structure (expressed in body frame)">torque_command_t</a>{{{0.0f, 0.0f, 0.0f}}}),
+<a name="l00125"></a>00125         thrust_command_(<a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>{{{0.0f, 0.0f, 0.0f}}}),
 <a name="l00126"></a>00126         mix_(config.mix),
 <a name="l00127"></a>00127         trim_(config.trim),
 <a name="l00128"></a>00128         min_(config.min),
@@ -291,7 +291,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 15:52:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 17:32:06 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

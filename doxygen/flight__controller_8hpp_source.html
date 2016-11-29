@@ -141,7 +141,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00064"></a>00064 
 <a name="l00068"></a>00068     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller.html#a296ba53f78c43a7406e55105ccfa682b" title="Sets actuators in safety mode.">failsafe</a>(<span class="keywordtype">void</span>) = 0;
 <a name="l00069"></a>00069 
-<a name="l00073"></a>00073     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5" title="Set of command setters.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>&amp; command) = 0;
+<a name="l00073"></a>00073     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5" title="Set of command setters.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structposition__command__t.html" title="Position command structure.">position_command_t</a>&amp; <a class="code" href="classFlight__controller.html#a8c22c895f79b4597065e121b81eabb59" title="Get const reference to command structure.">command</a>) = 0;
 <a name="l00074"></a>00074     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5" title="Set of command setters.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp; command) = 0;
 <a name="l00075"></a>00075     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5" title="Set of command setters.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp; command) = 0;
 <a name="l00076"></a>00076     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5" title="Set of command setters.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structrate__command__t.html" title="Rate command structure (expressed in body frame)">rate_command_t</a>&amp; command) = 0;
@@ -161,11 +161,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00110"></a>00110     {
 <a name="l00111"></a>00111         <span class="keywordflow">return</span> command_source.<a class="code" href="classFlight__command__source.html#a1ea29d57bc9f57a569119256a2dd723c" title="Provides control commands to the flight controller.">write_flight_command</a>(*<span class="keyword">this</span>);
 <a name="l00112"></a>00112     };
-<a name="l00113"></a>00113 };
+<a name="l00113"></a>00113 
 <a name="l00114"></a>00114 
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117 <span class="preprocessor">#endif  // FLIGHT_CONTROLLER_HPP_</span>
+<a name="l00118"></a><a class="code" href="classFlight__controller.html#a8c22c895f79b4597065e121b81eabb59">00118</a>     <span class="keyword">const</span> <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a>&amp; <a class="code" href="classFlight__controller.html#a8c22c895f79b4597065e121b81eabb59" title="Get const reference to command structure.">command</a>(<span class="keywordtype">void</span>)<span class="keyword"> const</span>
+<a name="l00119"></a>00119 <span class="keyword">    </span>{
+<a name="l00120"></a>00120         <span class="keywordflow">return</span> command_;
+<a name="l00121"></a>00121     }
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123 <span class="keyword">protected</span>:
+<a name="l00124"></a>00124     <a class="code" href="structcommand__t.html" title="Global command structure.">command_t</a> command_;
+<a name="l00125"></a>00125 };
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 
+<a name="l00129"></a>00129 <span class="preprocessor">#endif  // FLIGHT_CONTROLLER_HPP_</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -184,7 +193,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 15:52:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 17:32:05 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

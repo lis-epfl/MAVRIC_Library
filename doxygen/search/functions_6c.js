@@ -20,11 +20,11 @@ var searchData=
   ['led_5ftest',['LED_Test',['../led_8c.html#a359e6f6bc7043c16a0094145c4fba370',1,'LED_Test(uint32_t leds):&#160;led.c'],['../led_8h.html#a359e6f6bc7043c16a0094145c4fba370',1,'LED_Test(uint32_t leds):&#160;led.c']]],
   ['led_5ftoggle',['LED_Toggle',['../led_8c.html#a27336aae34072b90559f0a59147302d0',1,'LED_Toggle(uint32_t leds):&#160;led.c'],['../led_8h.html#a27336aae34072b90559f0a59147302d0',1,'LED_Toggle(uint32_t leds):&#160;led.c']]],
   ['length',['length',['../classFile__fat__fs.html#afe7149ff00eda8e1b5c6ecc9a44fded0',1,'File_fat_fs::length()'],['../classFile__flash__avr32.html#a0fe29627a2ba7af9d600189d3f699b5c',1,'File_flash_avr32::length()'],['../classFile.html#a230c72c26d75daa2da7e1876b3cf2888',1,'File::length()'],['../classFile__dummy.html#ad71b3725485a2aefdaacb68aed6eebbc',1,'File_dummy::length()'],['../classFile__linux.html#a9c352b48d85565a3abc82286d30f9c71',1,'File_linux::length()']]],
-  ['lequad',['LEQuad',['../classLEQuad.html#ad33d7eca1635eb0176826d066e8788db',1,'LEQuad']]],
+  ['lequad',['LEQuad',['../classLEQuad.html#a57cc7eb328ba2f81edd772a0e2ebaea0',1,'LEQuad']]],
   ['level',['level',['../classBattery.html#a13fa2e56c1eb27945cfd604e8a03dc5b',1,'Battery']]],
   ['linear_5facceleration',['linear_acceleration',['../classAHRS.html#a01b55f6181231cc2309a6563caf503c4',1,'AHRS::linear_acceleration()'],['../classAHRS__ekf.html#a9c15238ce331d036b28c8e3cdd7db870',1,'AHRS_ekf::linear_acceleration()'],['../classAHRS__madgwick.html#a72643c8fefe1ed8590217ae67d844214',1,'AHRS_madgwick::linear_acceleration()'],['../classAHRS__qfilter.html#a6a819bedc7dbab60937e60229ec6add2',1,'AHRS_qfilter::linear_acceleration()'],['../classINS__AHRS__groundtruth.html#af86917ab199f18aeaf53d85a3407f3f2',1,'INS_AHRS_groundtruth::linear_acceleration()']]],
   ['list',['list',['../classData__logging.html#ad09987371f50a7d0c8df8b2325ec313c',1,'Data_logging::list()'],['../classData__logging__T.html#a17d4ced71918c8a9fb62b0c10bd1fc37',1,'Data_logging_T::list()'],['../classPeriodic__telemetry.html#a7b04804a2df353a39d21f31d7992560e',1,'Periodic_telemetry::list()'],['../classPeriodic__telemetry__T.html#a9166ab0121e615e649e47ab8270a3b30',1,'Periodic_telemetry_T::list()']]],
   ['local_5fpos',['local_pos',['../classWaypoint.html#a6c500cee0255693487b8cc97371b9c64',1,'Waypoint']]],
-  ['loop',['loop',['../classLEQuad.html#acc67075f90c55b09726bef35c0313cdf',1,'LEQuad']]],
+  ['loop',['loop',['../classMAV.html#a2414b0960a7f0d99fabcfc9e8bc9ab4d',1,'MAV']]],
   ['lsm330dlc',['Lsm330dlc',['../classLsm330dlc.html#a060e3760ea5392904a28e604b3ba78aa',1,'Lsm330dlc']]]
 ];
