@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
- #include "hal/common/time_keeper.hpp"
-#include "sensing/qfilter.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "sensing/ahrs_qfilter.hpp"
 #include "util/coord_conventions.hpp"
 #include "util/constants.hpp"
 #include "util/print_util.hpp"
@@ -52,39 +52,25 @@ extern "C"
 #include "util/maths.h"
 }
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, const Imu* imu, ahrs_t* ahrs)
+AHRS_qfilter::AHRS_qfilter(const Imu& imu, const conf_t& config):
+    imu_(imu),
+    attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
+    angular_speed_{{0.0f, 0.0f, 0.0f}},
+    linear_acc_{{0.0f, 0.0f, 0.0f}},
+    last_update_s_(0.0f)
 {
-    bool init_success = true;
-
-    //Init dependencies
-    qf->imu = imu;
-    qf->ahrs = ahrs;
-
     //init qfilter gains according to provided configuration
-    qf->kp = config.kp;
-    qf->ki = config.ki;
-    qf->kp_mag = config.kp_mag;
-    qf->ki_mag = config.ki_mag;
+    kp_ = config.kp;
+    ki_ = config.ki;
+    kp_mag_ = config.kp_mag;
+    ki_mag_ = config.ki_mag;
 
-    qf->gyro_bias = std::array<float, 3> {{0.0f, 0.0f, 0.0f}};
-
-    return init_success;
+    gyro_bias_ = std::array<float, 3> {{0.0f, 0.0f, 0.0f}};
 }
 
 
-void qfilter_update(qfilter_t* qf)
+bool AHRS_qfilter::update(void)
 {
     float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
     quat_t qed, qtmp1, up, up_bf;
@@ -96,33 +82,33 @@ void qfilter_update(qfilter_t* qf)
     front_vec_global.v[1] = 0.0f;
     front_vec_global.v[2] = 0.0f;
 
-    float kp     = qf->kp;
-    float kp_mag = qf->kp_mag;
-    float ki     = qf->ki;
-    float ki_mag = qf->ki_mag;
+    float kp     = kp_;
+    float kp_mag = kp_mag_;
+    float ki     = ki_;
+    float ki_mag = ki_mag_;
 
     // Update time in us
     float now_s    = time_keeper_get_s();
 
     // Delta t in seconds
-    float dt_s     = (float)(now_s - qf->ahrs->last_update_s);
+    float dt_s     = (float)(now_s - last_update_s_);
 
     // Write to ahrs structure
-    qf->ahrs->last_update_s = now_s;
+    last_update_s_ = now_s;
 
     // up_bf = qe^-1 *(0,0,0,-1) * qe
     up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;
-    up_bf = quaternions_global_to_local(qf->ahrs->qe, up);
+    up_bf = quaternions_global_to_local(attitude_, up);
 
     // Get data from IMU
-    std::array<float, 3> acc  = qf->imu->acc();
-    std::array<float, 3> gyro = qf->imu->gyro();
-    std::array<float, 3> mag  = qf->imu->mag();
+    std::array<float, 3> acc  = imu_.acc();
+    std::array<float, 3> gyro = imu_.gyro();
+    std::array<float, 3> mag  = imu_.mag();
 
     // Remove estimated bias from gyros
-    gyro[X] -= qf->gyro_bias[X];
-    gyro[Y] -= qf->gyro_bias[Y];
-    gyro[Z] -= qf->gyro_bias[Z];
+    gyro[X] -= gyro_bias_[X];
+    gyro[Y] -= gyro_bias_[Y];
+    gyro[Z] -= gyro_bias_[Z];
 
     // calculate norm of acceleration vector
     s_acc_norm =  acc[X] * acc[X] + acc[Y] * acc[Y] + acc[Z] * acc[Z];
@@ -148,7 +134,7 @@ void qfilter_update(qfilter_t* qf)
     // Heading computation
     // transfer
     qtmp1 = quat_t{0.0f, {mag[X], mag[Y], mag[Z]}};
-    mag_global = quaternions_local_to_global(qf->ahrs->qe, qtmp1);
+    mag_global = quaternions_local_to_global(attitude_, qtmp1);
 
     // calculate norm of compass vector
     //s_mag_norm = SQR(mag_global.v[X]) + SQR(mag_global.v[Y]) + SQR(mag_global.v[Z]);
@@ -163,9 +149,9 @@ void qfilter_update(qfilter_t* qf)
         mag_global.v[Z] = 0.0f;   // set z component in global frame to 0
 
         // transfer magneto vector back to body frame
-        quat_t north_vec = quaternions_global_to_local(qf->ahrs->qe, front_vec_global);
+        quat_t north_vec = quaternions_global_to_local(attitude_, front_vec_global);
 
-        mag_corrected_local = quaternions_global_to_local(qf->ahrs->qe, mag_global);
+        mag_corrected_local = quaternions_global_to_local(attitude_, mag_global);
 
         // omc = a x up_bf.v
         CROSS(mag_corrected_local.v, north_vec.v,  omc_mag);
@@ -180,45 +166,45 @@ void qfilter_update(qfilter_t* qf)
 
 
     // get error correction gains depending on mode
-    switch (qf->ahrs->internal_state)
+    switch (internal_state_)
     {
         case AHRS_INITIALISING:
-            qf->time_s = time_keeper_get_s();
-            qf->ahrs->internal_state = AHRS_LEVELING;
+            time_s_ = time_keeper_get_s();
+            internal_state_ = AHRS_LEVELING;
         case AHRS_LEVELING:
-            kp = qf->kp * 10.0f;
-            kp_mag = qf->kp_mag * 10.0f;
+            kp = kp_ * 10.0f;
+            kp_mag = kp_mag_ * 10.0f;
 
-            ki = 0.0f * qf->ki;
-            ki_mag = 0.0f * qf->ki_mag;
+            ki = 0.0f * ki_;
+            ki_mag = 0.0f * ki_mag_;
 
-            if ((time_keeper_get_s() - qf->time_s) > 8.0f)
+            if ((time_keeper_get_s() - time_s_) > 8.0f)
             {
-                qf->time_s = time_keeper_get_s();
-                qf->ahrs->internal_state = AHRS_CONVERGING;
+                time_s_ = time_keeper_get_s();
+                internal_state_ = AHRS_CONVERGING;
                 print_util_dbg_print("End of AHRS attitude initialization.\r\n");
             }
             break;
 
         case AHRS_CONVERGING:
-            kp = qf->kp;
-            kp_mag = qf->kp_mag;
+            kp = kp_;
+            kp_mag = kp_mag_;
 
-            //ki = qf->ki * 1.5f;
-            //ki_mag = qf->ki_mag * 1.5f;
+            //ki = ki_ * 1.5f;
+            //ki_mag = ki_mag_ * 1.5f;
 
-            if (qf->imu->is_ready())
+            if (imu_.is_ready())
             {
-                qf->ahrs->internal_state = AHRS_READY;
+                internal_state_ = AHRS_READY;
                 print_util_dbg_print("End of AHRS leveling.\r\n");
             }
             break;
 
         case AHRS_READY:
-            kp = qf->kp;
-            kp_mag = qf->kp_mag;
-            ki = qf->ki;
-            ki_mag = qf->ki_mag;
+            kp = kp_;
+            kp_mag = kp_mag_;
+            ki = ki_;
+            ki_mag = ki_mag_;
             break;
     }
 
@@ -231,15 +217,15 @@ void qfilter_update(qfilter_t* qf)
     qtmp1.s = 0;
 
     // apply step rotation with corrections
-    qed = quaternions_multiply(qf->ahrs->qe, qtmp1);
+    qed = quaternions_multiply(attitude_, qtmp1);
 
     // TODO: correct this formulas!
-    qf->ahrs->qe.s = qf->ahrs->qe.s + qed.s * dt_s;
-    qf->ahrs->qe.v[X] += qed.v[X] * dt_s;
-    qf->ahrs->qe.v[Y] += qed.v[Y] * dt_s;
-    qf->ahrs->qe.v[Z] += qed.v[Z] * dt_s;
+    attitude_.s = attitude_.s + qed.s * dt_s;
+    attitude_.v[X] += qed.v[X] * dt_s;
+    attitude_.v[Y] += qed.v[Y] * dt_s;
+    attitude_.v[Z] += qed.v[Z] * dt_s;
 
-    snorm = qf->ahrs->qe.s * qf->ahrs->qe.s + qf->ahrs->qe.v[X] * qf->ahrs->qe.v[X] + qf->ahrs->qe.v[Y] * qf->ahrs->qe.v[Y] + qf->ahrs->qe.v[Z] * qf->ahrs->qe.v[Z];
+    snorm = attitude_.s * attitude_.s + attitude_.v[X] * attitude_.v[X] + attitude_.v[Y] * attitude_.v[Y] + attitude_.v[Z] * attitude_.v[Z];
     if (snorm < 0.0001f)
     {
         norm = 0.01f;
@@ -249,27 +235,59 @@ void qfilter_update(qfilter_t* qf)
         // approximate square root by running 2 iterations of newton method
         norm = maths_fast_sqrt(snorm);
     }
-    qf->ahrs->qe.s /= norm;
-    qf->ahrs->qe.v[X] /= norm;
-    qf->ahrs->qe.v[Y] /= norm;
-    qf->ahrs->qe.v[Z] /= norm;
+    attitude_.s /= norm;
+    attitude_.v[X] /= norm;
+    attitude_.v[Y] /= norm;
+    attitude_.v[Z] /= norm;
 
     // bias estimate update
-    qf->gyro_bias[X] += - dt_s * ki * omc[X];
-    qf->gyro_bias[Y] += - dt_s * ki * omc[Y];
-    qf->gyro_bias[Z] += - dt_s * ki * omc[Z];
+    gyro_bias_[X] += - dt_s * ki * omc[X];
+    gyro_bias_[Y] += - dt_s * ki * omc[Y];
+    gyro_bias_[Z] += - dt_s * ki * omc[Z];
 
-    qf->gyro_bias[X] += - dt_s * ki_mag * omc_mag[X];
-    qf->gyro_bias[Y] += - dt_s * ki_mag * omc_mag[Y];
-    qf->gyro_bias[Z] += - dt_s * ki_mag * omc_mag[Z];
+    gyro_bias_[X] += - dt_s * ki_mag * omc_mag[X];
+    gyro_bias_[Y] += - dt_s * ki_mag * omc_mag[Y];
+    gyro_bias_[Z] += - dt_s * ki_mag * omc_mag[Z];
 
     // Update linear acceleration
-    qf->ahrs->linear_acc[X] = 9.81f * (acc[X] - up_bf.v[X]) ;
-    qf->ahrs->linear_acc[Y] = 9.81f * (acc[Y] - up_bf.v[Y]) ;
-    qf->ahrs->linear_acc[Z] = 9.81f * (acc[Z] - up_bf.v[Z]) ;
+    linear_acc_[X] = 9.81f * (acc[X] - up_bf.v[X]) ;
+    linear_acc_[Y] = 9.81f * (acc[Y] - up_bf.v[Y]) ;
+    linear_acc_[Z] = 9.81f * (acc[Z] - up_bf.v[Z]) ;
 
     // Update angular_speed.
-    qf->ahrs->angular_speed[X] = gyro[X];
-    qf->ahrs->angular_speed[Y] = gyro[Y];
-    qf->ahrs->angular_speed[Z] = gyro[Z];
+    angular_speed_[X] = gyro[X];
+    angular_speed_[Y] = gyro[Y];
+    angular_speed_[Z] = gyro[Z];
+
+    return true;
+}
+
+
+float AHRS_qfilter::last_update_s(void) const
+{
+    return last_update_s_;
+}
+
+
+bool AHRS_qfilter::is_healthy(void) const
+{
+    return (internal_state_ == AHRS_READY);
+}
+
+
+quat_t AHRS_qfilter::attitude(void) const
+{
+    return attitude_;
+}
+
+
+std::array<float,3> AHRS_qfilter::angular_speed(void) const
+{
+    return angular_speed_;
+}
+
+
+std::array<float,3> AHRS_qfilter::linear_acceleration(void) const
+{
+    return linear_acc_;
 }

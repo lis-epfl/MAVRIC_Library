@@ -63,9 +63,144 @@ extern "C"
 
 using namespace mat;
 
+
 //------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
+// PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+AHRS_ekf::AHRS_ekf(const Imu& imu, const AHRS_ekf::conf_t config):
+    Kalman<7, 0, 3>(),
+    config_(config),
+    imu_(imu),
+    attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
+    angular_speed_{{0.0f, 0.0f, 0.0f}},
+    linear_acc_{{0.0f, 0.0f, 0.0f}},
+    dt_s_(0.0f),
+    last_update_s_(0.0f)
+{
+    init_kalman();
+
+    internal_state_ = AHRS_INITIALISING;
+}
+
+
+bool AHRS_ekf::update(void)
+{
+    bool task_return = true;
+
+    // Update time in us
+    float now_s    = time_keeper_get_s();
+
+    // Delta t in seconds
+    dt_s_          = now_s - last_update_s_;
+    last_update_s_ = now_s;
+
+    // To enable changing of R with onboard parameters.
+    R_acc_(0,0) = config_.R_acc;
+    R_acc_(1,1) = config_.R_acc;
+    R_acc_(2,2) = config_.R_acc;
+
+    R_mag_(0,0) = config_.R_mag;
+    R_mag_(1,1) = config_.R_mag;
+    R_mag_(2,2) = config_.R_mag;
+
+    if (imu_.is_ready())
+    {
+        internal_state_ = AHRS_READY;
+
+        predict_step();
+
+        if (config_.use_accelerometer)
+        {
+            update_step_acc();
+        }
+
+        if (config_.use_magnetometer)
+        {
+            update_step_mag();
+        }
+    }
+    else
+    {
+        internal_state_ = AHRS_LEVELING;
+
+        // Follow accelerometer and magnetometer blindly during IMU calibration
+        R_acc_ = Mat<3,3>(0.1f,true);
+        R_mag_ = Mat<3,3>(10.0f,true);
+        P_ = Mat<7,7>(1.0f,true);
+
+        if (config_.use_accelerometer)
+        {
+            update_step_acc();
+        }
+
+        if (config_.use_magnetometer)
+        {
+            update_step_mag();
+        }
+
+        Mat<7,1> state_previous = x_;
+
+        // Re-init kalman to keep covariance high: ie we follow the raw accelero and magneto without
+        // believing them.
+        // This allows the filter to re-converge quickly after an imu calibration
+        init_kalman();
+        for (int i = 3; i < 7; ++i)
+        {
+            x_(i,0) = state_previous(i,0);
+        }
+    }
+
+    // Attitude
+    attitude_.s = x_(3,0);
+    attitude_.v[0] = x_(4,0);
+    attitude_.v[1] = x_(5,0);
+    attitude_.v[2] = x_(6,0);
+
+    // Angular speed
+    angular_speed_[X] = imu_.gyro()[X] - x_(0,0);
+    angular_speed_[Y] = imu_.gyro()[Y] - x_(1,0);
+    angular_speed_[Z] = imu_.gyro()[Z] - x_(2,0);
+
+    // Linear acceleration
+    float up[3] = {0.0f, 0.0f, -1.0f};
+    float up_bf[3];
+    quaternions_rotate_vector(quaternions_inverse(attitude_), up, up_bf);
+    linear_acc_[X] = 9.81f * (imu_.acc()[X] - up_bf[X]);
+    linear_acc_[Y] = 9.81f * (imu_.acc()[Y] - up_bf[Y]);
+    linear_acc_[Z] = 9.81f * (imu_.acc()[Z] - up_bf[Z]);
+
+    return task_return;
+}
+
+float AHRS_ekf::last_update_s(void) const
+{
+    return last_update_s_;
+}
+
+
+bool AHRS_ekf::is_healthy(void) const
+{
+    return (internal_state_ == AHRS_READY);
+}
+
+
+quat_t AHRS_ekf::attitude(void) const
+{
+    return attitude_;
+}
+
+
+std::array<float,3> AHRS_ekf::angular_speed(void) const
+{
+    return angular_speed_;
+}
+
+
+std::array<float,3> AHRS_ekf::linear_acceleration(void) const
+{
+    return linear_acc_;
+}
 
 
 
@@ -73,7 +208,7 @@ using namespace mat;
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void Ahrs_ekf::init_kalman(void)
+void AHRS_ekf::init_kalman(void)
 {
     P_ = Mat<7,7>(1.0f,true);
 
@@ -92,7 +227,7 @@ void Ahrs_ekf::init_kalman(void)
     R_mag_ = Mat<3,3>(config_.R_mag,true);
 }
 
-void Ahrs_ekf::predict_step(void)
+void AHRS_ekf::predict_step(void)
 {
     float dt    = dt_s_;
     float dt2_2 = dt * dt * 0.5f;
@@ -229,7 +364,7 @@ void Ahrs_ekf::predict_step(void)
     x_(6,0) = quat.v[2];
 }
 
-void Ahrs_ekf::update_step_acc(void)
+void AHRS_ekf::update_step_acc(void)
 {
     uint16_t i;
 
@@ -307,7 +442,7 @@ void Ahrs_ekf::update_step_acc(void)
     P_ = (I_ - (K_acc % H_acc_k)) % P_;
 }
 
-void Ahrs_ekf::update_step_mag(void)
+void AHRS_ekf::update_step_mag(void)
 {
     uint16_t i;
 
@@ -374,114 +509,4 @@ void Ahrs_ekf::update_step_mag(void)
 
     // Update covariance estimate
     P_ = (I_ - (K_mag % H_mag_k)) % P_;
-}
-
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-Ahrs_ekf::Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config):
-    Kalman<7, 0, 3>(),
-    config_(config),
-    imu_(imu),
-    ahrs_(ahrs),
-    dt_s_(0.0f),
-    last_update_s_(0.0f)
-{
-    init_kalman();
-
-    ahrs_.internal_state = AHRS_INITIALISING;
-}
-
-bool Ahrs_ekf::update(void)
-{
-    bool task_return = true;
-
-    // Update time in us
-    float now_s    = time_keeper_get_s();
-
-    // Delta t in seconds
-    dt_s_          = now_s - last_update_s_;
-    last_update_s_ = now_s;
-
-    // To enable changing of R with onboard parameters.
-    R_acc_(0,0) = config_.R_acc;
-    R_acc_(1,1) = config_.R_acc;
-    R_acc_(2,2) = config_.R_acc;
-
-    R_mag_(0,0) = config_.R_mag;
-    R_mag_(1,1) = config_.R_mag;
-    R_mag_(2,2) = config_.R_mag;
-
-    if (imu_.is_ready())
-    {
-        ahrs_.internal_state = AHRS_READY;
-
-        predict_step();
-
-        if (config_.use_accelerometer)
-        {
-            update_step_acc();
-        }
-
-        if (config_.use_magnetometer)
-        {
-            update_step_mag();
-        }
-    }
-    else
-    {
-        ahrs_.internal_state = AHRS_LEVELING;
-
-        // Follow accelerometer and magnetometer blindly during IMU calibration
-        R_acc_ = Mat<3,3>(0.1f,true);
-        R_mag_ = Mat<3,3>(10.0f,true);
-        P_ = Mat<7,7>(1.0f,true);
-
-        if (config_.use_accelerometer)
-        {
-            update_step_acc();
-        }
-
-        if (config_.use_magnetometer)
-        {
-            update_step_mag();
-        }
-
-        Mat<7,1> state_previous = x_;
-
-        // Re-init kalman to keep covariance high: ie we follow the raw accelero and magneto without
-        // believing them.
-        // This allows the filter to re-converge quickly after an imu calibration
-        init_kalman();
-        for (int i = 3; i < 7; ++i)
-        {
-            x_(i,0) = state_previous(i,0);
-        }
-    }
-
-    // Copy result into ahrs structure
-    ahrs_.last_update_s = last_update_s_;
-
-    // Attitude
-    ahrs_.qe.s = x_(3,0);
-    ahrs_.qe.v[0] = x_(4,0);
-    ahrs_.qe.v[1] = x_(5,0);
-    ahrs_.qe.v[2] = x_(6,0);
-
-    // Angular speed
-    ahrs_.angular_speed[X] = imu_.gyro()[X] - x_(0,0);
-    ahrs_.angular_speed[Y] = imu_.gyro()[Y] - x_(1,0);
-    ahrs_.angular_speed[Z] = imu_.gyro()[Z] - x_(2,0);
-
-    // Linear acceleration
-    float up[3] = {0.0f, 0.0f, -1.0f};
-    float up_bf[3];
-    quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), up, up_bf);
-    ahrs_.linear_acc[X] = 9.81f * (imu_.acc()[X] - up_bf[X]);
-    ahrs_.linear_acc[Y] = 9.81f * (imu_.acc()[Y] - up_bf[Y]);
-    ahrs_.linear_acc[Z] = 9.81f * (imu_.acc()[Z] - up_bf[Z]);
-
-    return task_return;
 }

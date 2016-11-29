@@ -58,7 +58,6 @@
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/rate_controller.hpp"
-// #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_matrix.hpp"
 
 #include "drivers/battery.hpp"
@@ -90,12 +89,11 @@
 
 #include "sensing/ahrs.hpp"
 #include "sensing/ahrs_ekf.hpp"
+#include "sensing/ahrs_qfilter.hpp"
 #include "sensing/altitude_estimation.hpp"
 #include "sensing/imu.hpp"
 #include "sensing/ins_complementary.hpp"
 #include "sensing/ins_kf.hpp"
-#include "sensing/qfilter.hpp"
-#include "sensing/qfilter_default_config.hpp"
 #include "sensing/ahrs_ekf_mocap.hpp"
 
 #include "simulation/simulation.hpp"
@@ -140,13 +138,11 @@ public:
         Mavlink_waypoint_handler::conf_t waypoint_handler_config;
         Mission_planner::conf_t mission_planner_config;
         Mission_handler_landing::conf_t mission_handler_landing_config;
-        qfilter_conf_t qfilter_config;
-        Ahrs_ekf::conf_t ahrs_ekf_config;
+        AHRS_qfilter::conf_t qfilter_config;
+        AHRS_ekf::conf_t ahrs_ekf_config;
         INS_complementary::conf_t ins_complementary_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        // Servos_mix_quadcopter_diag::conf_t servos_mix_config;
-        // Servos_mix_matrix<4>::conf_t servos_mix_config;
         Flight_controller_quadcopter_diag::conf_t flight_controller_config;
         Geofence_cylinder::conf_t safety_geofence_config;
         Geofence_cylinder::conf_t emergency_geofence_config;
@@ -260,7 +256,7 @@ protected:
     Barometer&      barometer;          ///< Reference to barometer
     Gps&            gps;                ///< Reference to GPS
     Sonar&          sonar;              ///< Reference to sonar
-    Px4flow_i2c&    flow;              ///< Optic flow sensor
+    Px4flow_i2c&    flow;               ///< Optic flow sensor
     Serial&         serial_mavlink;     ///< Reference to telemetry serial
     Satellite&      satellite;          ///< Reference to remote control satellite
     State_display&  state_display_;     ///< Reference to the state display
@@ -275,12 +271,9 @@ protected:
     Servo&          servo_6;            ///< Reference to servos structure
     Servo&          servo_7;            ///< Reference to servos structure
 
-
     // Motion capture, position
     Gps_mocap       gps_mocap;          ///< Position measure using mocap information
     Gps_hub<2>      gps_hub;            ///< Gps hub
-
-    // Motion capture, orientation
     Ahrs_ekf_mocap  ahrs_ekf_mocap;     ///< Attitude measure from mocap information
 
     Manual_control manual_control;                              ///< The joystick parsing structure
@@ -290,8 +283,9 @@ protected:
     Scheduler_T<20>       scheduler;
     Mavlink_communication   communication;
 
-    ahrs_t ahrs;                                                ///< The attitude estimation structure
-    Ahrs_ekf ahrs_ekf;
+    AHRS&           ahrs_;              ///< The attitude estimation structure
+    AHRS_ekf        ahrs_ekf;
+    AHRS_qfilter    ahrs_qfilter;
 
     INS*                ins_;                                   ///< Alias for the position filter in use
     INS_complementary   ins_complementary;                      ///< The position estimaton structure
@@ -299,8 +293,9 @@ protected:
 
     Flight_controller_quadcopter_diag    flight_controller_;
 
-    Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
+
+    Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
 
     Mission_handler_hold_position       hold_position_handler;
     Mission_handler_landing             landing_handler;
@@ -323,8 +318,6 @@ protected:
 
     Data_logging_T<10>    data_logging_continuous;
     Data_logging_T<10>    data_logging_stat;
-
-    command_t                       command;
 
     uint8_t sysid_;    ///< System ID
     conf_t config_;    ///< Configuration
@@ -352,9 +345,8 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf.mission_planner_config = Mission_planner::default_config();
     conf.mission_handler_landing_config = Mission_handler_landing::default_config();
 
-    conf.qfilter_config = qfilter_default_config();
-
-    conf.ahrs_ekf_config = Ahrs_ekf::default_config();
+    conf.ahrs_ekf_config = AHRS_ekf::default_config();
+    conf.qfilter_config = AHRS_qfilter::default_config();
 
     conf.ins_complementary_config = INS_complementary::default_config();
 

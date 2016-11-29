@@ -108,14 +108,15 @@ LEQuad::LEQuad(Imu& imu,
     state(communication.mavlink_stream(), battery, config.state_config),
     scheduler(config.scheduler_config),
     communication(serial_mavlink, state, file_flash, config.mavlink_communication_config),
-    ahrs(ahrs_initialized()),
-    ahrs_ekf(imu, ahrs, config.ahrs_ekf_config),
+    ahrs_(ahrs_ekf),
+    ahrs_ekf(imu, config.ahrs_ekf_config),
+    ahrs_qfilter(imu, config.qfilter_config),
     ins_(&ins_complementary),
-    ins_complementary(state, barometer, sonar, gps_hub, flow, ahrs, config.ins_complementary_config),
-    ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs),
-    flight_controller_(*ins_, ahrs, servo_0, servo_1, servo_2, servo_3, config.flight_controller_config),
-    mission_handler_registry(),
+    ins_complementary(state, barometer, sonar, gps_hub, flow, ahrs_, config.ins_complementary_config),
+    ins_kf(state, gps, gps_mocap, barometer, sonar, flow, ahrs_),
+    flight_controller_(*ins_, ahrs_, servo_0, servo_1, servo_2, servo_3, config.flight_controller_config),
     waypoint_handler(*ins_, communication.handler(), communication.mavlink_stream(), mission_handler_registry, config.waypoint_handler_config),
+    mission_handler_registry(),
     hold_position_handler(*ins_),
     landing_handler(*ins_, state),
     navigating_handler(*ins_, communication.mavlink_stream(), waypoint_handler),
@@ -124,10 +125,10 @@ LEQuad::LEQuad(Imu& imu,
     takeoff_handler(*ins_, state),
     critical_landing_handler(*ins_, state),
     critical_navigating_handler(*ins_, communication.mavlink_stream(), waypoint_handler),
-    mission_planner_(*ins_, ahrs, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
+    mission_planner_(*ins_, ahrs_, state, manual_control, safety_geofence_, communication.handler(), communication.mavlink_stream(), waypoint_handler, mission_handler_registry),
     safety_geofence_(config.safety_geofence_config),
     emergency_geofence_(config.emergency_geofence_config),
-    state_machine(state, *ins_, imu, ahrs, manual_control, safety_geofence_, emergency_geofence_, state_display_),
+    state_machine(state, *ins_, imu, ahrs_, manual_control, safety_geofence_, emergency_geofence_, state_display_),
     data_logging_continuous(file1, state, config.data_logging_continuous_config),
     data_logging_stat(file2, state, config.data_logging_stat_config),
     sysid_(communication.sysid()),
@@ -352,15 +353,15 @@ bool LEQuad::init_sonar(void)
 
 
 // -------------------------------------------------------------------------
-// AHRS
+// ahrs_
 // -------------------------------------------------------------------------
 bool LEQuad::init_ahrs(void)
 {
     bool ret = true;
 
     // DOWN telemetry
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            500000, &ahrs_telemetry_send_attitude,            &ahrs);
-    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, &ahrs_telemetry_send_attitude_quaternion, &ahrs);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE,            500000, &ahrs_telemetry_send_attitude,            &ahrs_);
+    ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, &ahrs_telemetry_send_attitude_quaternion, &ahrs_);
 
     // Parameters
     ret &= communication.parameters().add(&ahrs_ekf.config_.use_accelerometer,     "AHRSEKF_USE_ACC"    );
@@ -579,7 +580,7 @@ bool LEQuad::init_hud(void)
     bool ret = true;
 
     // Module
-    ret &= hud_telemetry_init(&hud, ins_, &flight_controller_.command(), &ahrs);
+    ret &= hud_telemetry_init(&hud, ins_, &flight_controller_.command(), &ahrs_);
 
     // DOWN telemetry
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_VFR_HUD, 500000, &hud_telemetry_send_message, &hud);

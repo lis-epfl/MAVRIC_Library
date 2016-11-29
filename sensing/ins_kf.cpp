@@ -54,7 +54,7 @@ INS_kf::INS_kf( State& state,
                 const Barometer& barometer,
                 const Sonar& sonar,
                 const Px4flow_i2c& flow,
-                const ahrs_t& ahrs,
+                const AHRS& ahrs,
                 const conf_t config):
     Kalman<11,3,3>( {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},                                              // x
                     Mat<11,11>(100, true),                                                          // P
@@ -253,9 +253,9 @@ bool INS_kf::update(void)
     }
 
     // Prediction step
-    if (ahrs_.internal_state == AHRS_READY)
+    if (ahrs_.is_healthy())
     {
-        if (last_accel_update_s_ < ahrs_.last_update_s)
+        if (last_accel_update_s_ < ahrs_.last_update_s())
         {
             // Update the delta time (in second)
             float now       = time_keeper_get_s();
@@ -266,7 +266,7 @@ bool INS_kf::update(void)
             predict_kf();
 
             // update timimg
-            last_accel_update_s_ = ahrs_.last_update_s;
+            last_accel_update_s_ = ahrs_.last_update_s();
         }
     }
     else
@@ -327,7 +327,7 @@ bool INS_kf::update(void)
 
 
     // Measure from sonar (only if small angles, to avoid peaks)
-    aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.qe);
+    aero_attitude_t current_attitude = coord_conventions_quat_to_aero(ahrs_.attitude());
     if ( (maths_f_abs(current_attitude.rpy[ROLL])  < PI / 9.0f) &&
          (maths_f_abs(current_attitude.rpy[PITCH]) < PI / 9.0f)    )
     {
@@ -370,7 +370,7 @@ void INS_kf::predict_kf(void)
     float dt2 = (dt*dt)/2.0f;
 
     // Get attitude quaternion
-    quat_t q = ahrs_.qe;
+    quat_t q = ahrs_.attitude();
     float q0 = q.s;
     float q1 = q.v[0];
     float q2 = q.v[1];
@@ -442,7 +442,7 @@ void INS_kf::predict_kf(void)
                       0,              0,              0,              0,      0,              0,              0,              0,            0,            0,            dt*sb2 });
 
     // Compute default KF prediciton step (using local accelerations as input, warning z acceleration sign)
-    predict({ahrs_.linear_acc[0], ahrs_.linear_acc[1], ahrs_.linear_acc[2]});
+    predict({ahrs_.linear_acceleration()[0], ahrs_.linear_acceleration()[1], ahrs_.linear_acceleration()[2]});
 }
 
 
@@ -553,7 +553,7 @@ void INS_kf::update_flow(void)
     float vel_bf[3] = {flow_.velocity_x(), flow_.velocity_y(), 0.0f};
     quaternions_rotate_vector(coord_conventions_quaternion_from_rpy(0.0f,
                                                                     0.0f,
-                                                                    coord_conventions_get_yaw(ahrs_.qe)),
+                                                                    coord_conventions_get_yaw(ahrs_.attitude())),
                               vel_bf,
                               vel_lf);
 

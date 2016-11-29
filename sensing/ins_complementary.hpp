@@ -122,7 +122,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const ahrs_t& ahrs, const conf_t config = default_config());
+    INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const AHRS& ahrs, const conf_t config = default_config());
 
 
     /**
@@ -182,7 +182,7 @@ public:
     conf_t config_;                          ///< Configuration containing gains
 
 private:
-    const ahrs_t& ahrs_;                     ///< Reference to the attitude estimation structure
+    const AHRS& ahrs_;                     ///< Reference to the attitude estimation structure
     State& state_;                           ///< Reference to the state structure
     const Gps& gps_;                         ///< Reference to the GPS structure
     const Barometer& barometer_;             ///< Reference to the barometer structure

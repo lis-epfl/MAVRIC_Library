@@ -103,7 +103,7 @@ void Ahrs_ekf_mocap::callback(  Ahrs_ekf_mocap* ahrs_ekf_mocap,
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Ahrs_ekf_mocap::Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_):
+Ahrs_ekf_mocap::Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, AHRS_ekf& ahrs_ekf, const conf_t config_):
     ahrs_ekf_(ahrs_ekf),
     message_handler_(message_handler),
     is_init_(false),

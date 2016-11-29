@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Basil Huber
 
- * \brief   Mockup Inertial Navigation System (INS) and Attitude Heading Reference System (AHRS) providing groundtruth 
+ * \brief   Mockup Inertial Navigation System (INS) and Attitude Heading Reference System (AHRS) providing groundtruth
  *          for position and velocity, attitude, acceleration and rates, obtained from the dynamic model
  *
  ******************************************************************************/
@@ -43,10 +43,13 @@
 
 #include "ins_ahrs_groundtruth.hpp"
 
-INS_AHRS_groundtruth::INS_AHRS_groundtruth(Dynamic_model& model, ahrs_t& ahrs, const conf_t& config):
+INS_AHRS_groundtruth::INS_AHRS_groundtruth(Dynamic_model& model, const conf_t& config):
     INS(config.origin),
     model_(model),
-    ahrs_(ahrs)
+    attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
+    angular_speed_{{0.0f, 0.0f, 0.0f}},
+    linear_acc_{{0.0f, 0.0f, 0.0f}},
+    last_update_s_(0.0f)
 {
     update();
 }
@@ -67,15 +70,32 @@ bool INS_AHRS_groundtruth::update()
     absolute_altitude_ = global_pos.altitude;
 
     /* update ahrs */
-    ahrs_.qe = model_.attitude();
-    ahrs_.angular_speed[X] = model_.angular_velocity_bf()[X];
-    ahrs_.angular_speed[Y] = model_.angular_velocity_bf()[Y];
-    ahrs_.angular_speed[Z] = model_.angular_velocity_bf()[Z];
-    ahrs_.linear_acc[X] = model_.acceleration_bf()[X];
-    ahrs_.linear_acc[Y] = model_.acceleration_bf()[Y];
-    ahrs_.linear_acc[Z] = model_.acceleration_bf()[Z];
-    ahrs_.internal_state = AHRS_READY;
-    ahrs_.last_update_s = last_update_s_;
+    attitude_       = model_.attitude();
+    angular_speed_  = model_.angular_velocity_bf();
+    linear_acc_     = model_.acceleration_bf();
 
     return true;
+}
+
+float INS_AHRS_groundtruth::last_update_s(void) const
+{
+    return last_update_s_;
+}
+
+
+quat_t INS_AHRS_groundtruth::attitude(void) const
+{
+    return attitude_;
+}
+
+
+std::array<float,3> INS_AHRS_groundtruth::angular_speed(void) const
+{
+    return angular_speed_;
+}
+
+
+std::array<float,3> INS_AHRS_groundtruth::linear_acceleration(void) const
+{
+    return linear_acc_;
 }

@@ -99,7 +99,7 @@ bool Position_controller::update()
     velocity_command_.heading = position_command_.heading;
 
     // Reduce XY velocity according to yaw error: this gives time to align to next waypoint before accelerating
-    float yaw_current = coord_conventions_get_yaw(ahrs_.qe);
+    float yaw_current = coord_conventions_get_yaw(ahrs_.attitude());
     float yaw_error_factor = 1.0f - maths_f_abs(maths_clip(maths_calc_smaller_angle(velocity_command_.heading - yaw_current), 1.0f));
     velocity_command_.xyz[X] *= yaw_error_factor;
     velocity_command_.xyz[Y] *= yaw_error_factor;

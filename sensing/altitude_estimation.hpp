@@ -79,7 +79,7 @@ class Altitude_estimation: public Kalman<3,1,1>
 public:
     Altitude_estimation(Sonar& sonar,
                         Barometer& barometer,
-                        ahrs_t& ahrs,
+                        AHRS& ahrs,
                         altitude_t& altitude,
                         altitude_estimation_conf_t config = altitude_estimation_default_config() );
 
@@ -102,7 +102,7 @@ public:
 private:
     const Sonar&        sonar_;           ///< Sonar, must be downward facing (input)
     const Barometer&    barometer_;       ///< Barometer (input)
-    const ahrs_t&       ahrs_;            ///< Attitude and acceleration (input)
+    const AHRS&       ahrs_;            ///< Attitude and acceleration (input)
     altitude_t&         altitude_;        ///< Estimated altitude (output)
 
     altitude_estimation_conf_t config_;   ///< Configuration

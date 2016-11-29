@@ -69,7 +69,7 @@ public:
      */
     struct args_t
     {
-        const ahrs_t&                ahrs;                      ///< Pointer to attitude estimation (input)
+        const AHRS&                ahrs;                      ///< Pointer to attitude estimation (input)
         const INS&                   ins;                       ///< Speed and position estimation (input)
         velocity_command_t&          velocity_command;          ///< Velocity command (input)
         attitude_command_t&          attitude_command;          ///< Attitude command (output)
@@ -149,7 +149,7 @@ protected:
                                                                 attitude_command_t& attitude_command,
                                                                 thrust_command_t& thrust_command            ) = 0;
 
-    const ahrs_t&                ahrs_;                      ///< Pointer to attitude estimation (input)
+    const AHRS&                ahrs_;                      ///< Pointer to attitude estimation (input)
     const INS&                   ins_;                       ///< Speed and position estimation (input)
     velocity_command_t&          velocity_command_;          ///< Velocity command (input)
     attitude_command_t&          attitude_command_;          ///< Attitude command (output)

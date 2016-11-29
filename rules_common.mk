@@ -118,9 +118,9 @@ LIB_SRCS += runtime/scheduler.cpp
 LIB_SRCS += runtime/scheduler_task.cpp
 LIB_SRCS += runtime/scheduler_telemetry.cpp
 
-LIB_SRCS += sensing/ahrs.cpp
 LIB_SRCS += sensing/ahrs_ekf.cpp
 LIB_SRCS += sensing/ahrs_ekf_mocap.cpp
+LIB_SRCS += sensing/ahrs_qfilter.cpp
 LIB_SRCS += sensing/ahrs_telemetry.cpp
 LIB_SRCS += sensing/ahrs_madgwick.cpp
 LIB_SRCS += sensing/altitude_estimation.cpp
@@ -130,7 +130,6 @@ LIB_SRCS += sensing/ins.cpp
 LIB_SRCS += sensing/ins_complementary.cpp
 LIB_SRCS += sensing/ins_kf.cpp
 LIB_SRCS += sensing/ins_telemetry.cpp
-LIB_SRCS += sensing/qfilter.cpp
 
 LIB_SRCS += simulation/accelerometer_sim.cpp
 LIB_SRCS += simulation/barometer_sim.cpp
