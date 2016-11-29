@@ -54,7 +54,7 @@
 #include "control/attitude_error_estimator.hpp"
 #include "util/coord_conventions.hpp"
 
-bool attitude_error_estimator_init(attitude_error_estimator_t* estimator, const ahrs_t* ahrs)
+bool attitude_error_estimator_init(attitude_error_estimator_t* estimator, const AHRS* ahrs)
 {
     // Init ref to quat_attitude
     estimator->ahrs = ahrs;
@@ -99,7 +99,7 @@ void attitude_error_estimator_set_quat_ref_from_rpy(attitude_error_estimator_t* 
 
 bool attitude_error_estimator_update(attitude_error_estimator_t* estimator)
 {
-    quat_t quat_attitude = estimator->ahrs->qe;
+    quat_t quat_attitude = estimator->ahrs->attitude();
     quat_t quat_ref = estimator->quat_ref;
     quat_t quat_error;
 

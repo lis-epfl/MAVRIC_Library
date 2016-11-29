@@ -76,7 +76,7 @@ public:
         return conf;
     };
 
-    Flight_controller_copter(const INS& ins, const ahrs_t& ahrs, typename Servos_mix_matrix<N_ROTORS>::args_t mix_args, conf_t config):
+    Flight_controller_copter(const INS& ins, const AHRS& ahrs, typename Servos_mix_matrix<N_ROTORS>::args_t mix_args, conf_t config):
         Flight_controller_stack(pos_ctrl_, vel_ctrl_, att_ctrl_, rate_ctrl_, mix_ctrl_),
         pos_ctrl_({ahrs, ins}, config.pos_config),
         vel_ctrl_({{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}}, config.vel_config),
@@ -104,7 +104,7 @@ public:
         bool ret = true;
         attitude_command_t att_command;
         thrust_command_t thrust_command;
-        manual_control.get_attitude_command(att_command, ahrs_.qe);
+        manual_control.get_attitude_command(att_command, ahrs_.attitude());
         manual_control.get_thrust_command_copter(thrust_command);
         ret &= set_command(att_command);
         ret &= set_command(thrust_command);
@@ -115,7 +115,7 @@ public:
     {
         bool ret = true;
         velocity_command_t new_vel_command;
-        manual_control.get_velocity_command_copter(new_vel_command, ahrs_.qe, command_.velocity);
+        manual_control.get_velocity_command_copter(new_vel_command, ahrs_.attitude(), command_.velocity);
         ret &= set_command(new_vel_command);
         return ret;
     };
@@ -128,14 +128,14 @@ public:
     Servos_mix_matrix<N_ROTORS> mix_ctrl_;
 
 private:
-    const ahrs_t& ahrs_;
+    const AHRS& ahrs_;
 };
 
 
 class Flight_controller_quadcopter_diag: public Flight_controller_copter<4>
 {
 public:
-    Flight_controller_quadcopter_diag(const INS& ins, const ahrs_t& ahrs, Servo& motor_rl, Servo& motor_fl, Servo& motor_fr, Servo& motor_rr, conf_t config):
+    Flight_controller_quadcopter_diag(const INS& ins, const AHRS& ahrs, Servo& motor_rl, Servo& motor_fl, Servo& motor_fr, Servo& motor_rr, conf_t config):
         Flight_controller_copter<4>(ins, ahrs, Servos_mix_matrix<4>::args_t{{{&motor_rl, &motor_fl, &motor_fr, &motor_rr}}}, config)
     {};
 
@@ -156,7 +156,7 @@ class Flight_controller_quadcopter_cross: public Flight_controller_copter<4>
 {
 public:
     Flight_controller_quadcopter_cross(  const INS& ins,
-                                        const ahrs_t& ahrs,
+                                        const AHRS& ahrs,
                                         Servo& motor_rear,
                                         Servo& motor_left,
                                         Servo& motor_front,
@@ -183,7 +183,7 @@ class Flight_controller_hexacopter: public Flight_controller_copter<6>
 {
 public:
     Flight_controller_hexacopter(   const INS& ins,
-                                    const ahrs_t& ahrs,
+                                    const AHRS& ahrs,
                                     Servo& motor_rear,
                                     Servo& motor_rear_left,
                                     Servo& motor_front_left,

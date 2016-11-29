@@ -79,7 +79,7 @@ public:
      * \param   ahrs_ekf        The reference to the ahrs_ekf object
      * \param   config          Configuration structure for the mocap
      */
-    Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, Ahrs_ekf& ahrs_ekf, const conf_t config_ = Ahrs_ekf_mocap::default_config());
+    Ahrs_ekf_mocap(Mavlink_message_handler& message_handler, AHRS_ekf& ahrs_ekf, const conf_t config_ = Ahrs_ekf_mocap::default_config());
 
     /**
      * \brief   Initializes the mocap telemetry message and callback
@@ -105,7 +105,7 @@ protected:
      */
     static void callback(Ahrs_ekf_mocap* ahrs_ekf_mocap, uint32_t sysid, const mavlink_message_t* msg);
 
-    Ahrs_ekf& ahrs_ekf_;                        ///< AHRS extended callman filter
+    AHRS_ekf& ahrs_ekf_;                        ///< AHRS extended callman filter
     Mavlink_message_handler& message_handler_;  ///< State covariance
     Mat<4,4> R_mocap_;                          ///< The mocap measurement noise matrix
     Mat<4, 7> H_;                               ///< The measurement matrix

@@ -59,7 +59,7 @@
 /**
  * \brief The AHRS EKF class
  */
-class Ahrs_ekf : public Kalman<7, 0, 3>
+class AHRS_ekf : public Kalman<7, 0, 3>, public AHRS
 {
 public:
 
@@ -85,10 +85,9 @@ public:
      * \brief   AHRS EKF controller
      *
      * \param   imu             IMU structure (input)
-     * \param   ahrs            Attitude estimation structure (output)
      * \param   config          Configuration structure
      */
-    Ahrs_ekf(const Imu& imu, ahrs_t& ahrs, const Ahrs_ekf::conf_t config = default_config());
+    AHRS_ekf(const Imu& imu, const AHRS_ekf::conf_t config = default_config());
 
     /**
      * \brief   Performs the EKF algorithm
@@ -105,7 +104,49 @@ public:
     /**
      * \brief   Default configuration structure
      */
-    static inline Ahrs_ekf::conf_t default_config();
+    static inline AHRS_ekf::conf_t default_config();
+
+
+    /**
+     * \brief     Last update in seconds
+     *
+     * \return    time
+     */
+    float last_update_s(void) const;
+
+
+    /**
+    * \brief   Indicates which estimate can be trusted
+    *
+    * \param   type    Type of estimate
+    *
+    * \return  boolean
+    */
+    bool is_healthy(void) const;
+
+
+    /**
+     * \brief     Estimated attitude
+     *
+     * \return    quaternion
+     */
+    quat_t attitude(void) const;
+
+
+    /**
+     * \brief     Estimated angular velocity
+     *
+     * \return    3D angular velocity
+     */
+    std::array<float,3> angular_speed(void) const;
+
+
+    /**
+     * \brief     Estimated linear acceleration
+     *
+     * \return    3D linear acceleration
+     */
+    std::array<float,3> linear_acceleration(void) const;
 
 
     conf_t config_;                                     ///< The config structure for the EKF module
@@ -133,7 +174,12 @@ protected:
     void update_step_mag(void);
 
     const Imu& imu_;                                    ///< The Reference to the IMU structure
-    ahrs_t& ahrs_;                                      ///< The pointer to the ahrs structure
+
+    quat_t              attitude_;              ///< Estimated attitude
+    std::array<float,3> angular_speed_;         ///< Estimated angular speed
+    std::array<float,3> linear_acc_;            ///< Estimated linear acceleration
+
+    ahrs_state_t internal_state_;
 
     Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
@@ -142,9 +188,9 @@ protected:
     float last_update_s_;                               ///< Last update time in seconds
 };
 
-Ahrs_ekf::conf_t Ahrs_ekf::default_config()
+AHRS_ekf::conf_t AHRS_ekf::default_config()
 {
-    Ahrs_ekf::conf_t conf = {};
+    AHRS_ekf::conf_t conf = {};
 
     conf.sigma_w_sqr = 0.0000000001f;
     conf.sigma_r_sqr = 0.000001f;

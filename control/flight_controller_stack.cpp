@@ -58,8 +58,8 @@ Flight_controller_stack::Flight_controller_stack(pos_ctrl_t& pos_ctrl,
     command_.torque   = torque_command_t{{{0.0f, 0.0f, 0.0f}}};
     command_.rate     = rate_command_t{{{0.0f, 0.0f, 0.0f}}};
     command_.attitude = attitude_command_t{1.0f, {0.0f, 0.0f, 0.0f}};
-    command_.velocity = velocity_command_t{{0.0f, 0.0f, 0.0f}, 0.0f};
-    command_.position = position_command_t{{0.0f, 0.0f, 0.0f}, 0.0f};
+    command_.velocity = velocity_command_t{{{0.0f, 0.0f, 0.0f}}, 0.0f};
+    command_.position = position_command_t{{{0.0f, 0.0f, 0.0f}}, 0.0f};
 };
 
 

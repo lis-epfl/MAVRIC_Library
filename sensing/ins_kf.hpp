@@ -164,7 +164,7 @@ public:
             const Barometer& barometer,
             const Sonar& sonar,
             const Px4flow_i2c& flow,
-            const ahrs_t& ahrs,
+            const AHRS& ahrs,
             const conf_t config = default_config() );
 
 
@@ -241,7 +241,7 @@ private:
     const Barometer&    barometer_;         ///< Barometer (input)
     const Sonar&        sonar_;             ///< Sonar, must be downward facing (input)
     const Px4flow_i2c&  flow_;              ///< Optical flow sensor (input)
-    const ahrs_t&       ahrs_;              ///< Attitude and acceleration (input)
+    const AHRS&       ahrs_;              ///< Attitude and acceleration (input)
 
     std::array<float,3> pos_;
     std::array<float,3> vel_;

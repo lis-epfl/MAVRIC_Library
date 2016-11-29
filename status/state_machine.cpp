@@ -149,7 +149,7 @@ void State_machine::set_custom_mode(Mav_mode::custom_mode_t *current_custom_mode
 State_machine::State_machine(State& state,
                             const INS& ins,
                             const Imu& imu,
-                            const ahrs_t& ahrs,
+                            const AHRS& ahrs,
                             Manual_control& manual_control,
                             Geofence& safety_geofence,
                             Geofence& emergency_geofence,
@@ -220,7 +220,7 @@ bool State_machine::update(void)
             break;
 
         case MAV_STATE_CALIBRATING:
-            if (imu_.is_ready() && (ahrs_.internal_state == AHRS_READY))
+            if (imu_.is_ready() && (ahrs_.is_healthy()))
             {
                 state_new = MAV_STATE_STANDBY;
             }
@@ -239,7 +239,7 @@ bool State_machine::update(void)
                 mode_custom_new = Mav_mode::CUSTOM_BASE_MODE;
             }
 
-            if (!imu_.is_ready() || !(ahrs_.internal_state == AHRS_READY))
+            if (!imu_.is_ready() || !(ahrs_.is_healthy()))
             {
                 state_new = MAV_STATE_CALIBRATING;
             }
@@ -411,7 +411,7 @@ bool State_machine::is_set_stabilize_allowed(bool stabilize)
         if(success & stabilize)
         {
             // if position_estimation is not healthy, abort
-            success &= (imu_.is_ready() && ahrs_.internal_state == AHRS_READY);
+            success &= (imu_.is_ready() && ahrs_.is_healthy());
         }
     }
     return success;

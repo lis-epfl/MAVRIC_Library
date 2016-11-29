@@ -85,7 +85,7 @@ public:
      */
     struct args_t
     {
-        const ahrs_t& ahrs;     ///< Reference to estimated attitude
+        const AHRS& ahrs;     ///< Reference to estimated attitude
         const INS& ins;         ///< Reference to estimated speed and position
     };
 
@@ -137,7 +137,7 @@ public:
 
 private:
     const INS&          ins_;                       /// inertial navigation unit ti use for position estimation
-    const ahrs_t&       ahrs_;                      ///< Attitude estimation
+    const AHRS&       ahrs_;                      ///< Attitude estimation
 
     position_command_t  position_command_;          ///< Position command in local frame; Z coord ONLY VALID if in POS_XYZ
     velocity_command_t  velocity_command_;          ///< Velocity command in local frame;

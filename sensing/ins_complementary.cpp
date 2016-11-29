@@ -54,7 +54,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-INS_complementary::INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const ahrs_t& ahrs, const conf_t config) :
+INS_complementary::INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const AHRS& ahrs, const conf_t config) :
     local_position_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     vel_{0.0f,0.0f,0.0f},
     config_(config),
@@ -89,7 +89,7 @@ bool INS_complementary::update(void)
     last_update_s_ = now;
 
 
-    if (ahrs_.internal_state == AHRS_READY)
+    if (ahrs_.is_healthy())
     {
         check_first_gps_fix();
 
@@ -193,16 +193,16 @@ void INS_complementary::integration()
 {
     // Get velocity in body frame
     float vel_bf[3];
-    quaternions_rotate_vector(quaternions_inverse(ahrs_.qe), vel_, vel_bf);
+    quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), vel_, vel_bf);
 
     // Integrate velocity using accelerometer
     for (uint32_t i = 0; i < 3; i++)
     {
-        vel_bf[i] += ahrs_.linear_acc[i] * dt_s_;
+        vel_bf[i] += ahrs_.linear_acceleration()[i] * dt_s_;
     }
 
     // Get new velocity in local frame
-    quaternions_rotate_vector(ahrs_.qe, vel_bf, vel_);
+    quaternions_rotate_vector(ahrs_.attitude(), vel_bf, vel_);
 
     // Integrate position using estimated velocity
     for (uint32_t i = 0; i < 3; i++)
@@ -386,7 +386,7 @@ void INS_complementary::correction_from_flow(void)
             float vel_bf[3] = {flow_.velocity_x(), flow_.velocity_y(), flow_.velocity_z()};
             quaternions_rotate_vector(coord_conventions_quaternion_from_rpy(0.0f,
                                                                             0.0f,
-                                                                            coord_conventions_get_yaw(ahrs_.qe)),
+                                                                            coord_conventions_get_yaw(ahrs_.attitude())),
                                       vel_bf,
                                       vel_lf);
 

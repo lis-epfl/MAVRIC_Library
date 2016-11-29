@@ -65,7 +65,7 @@ typedef struct
 {
     quat_t quat_ref;            ///<    Reference attitude, the errors in roll pitch and yaw will be computed relative to this reference
     float rpy_errors[3];        ///<    Local errors: roll, pitch and yaw
-    const ahrs_t* ahrs;         ///<    Pointer to AHRS (current attitude), must be updated externally
+    const AHRS* ahrs;         ///<    Pointer to AHRS (current attitude), must be updated externally
 } attitude_error_estimator_t;
 
 
@@ -77,7 +77,7 @@ typedef struct
  *
  * \return success
  */
-bool attitude_error_estimator_init(attitude_error_estimator_t* estimator, const ahrs_t* ahrs);
+bool attitude_error_estimator_init(attitude_error_estimator_t* estimator, const AHRS* ahrs);
 
 
 /**

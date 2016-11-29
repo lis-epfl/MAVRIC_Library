@@ -49,7 +49,7 @@
 #include "sensing/ahrs.hpp"
 #include "simulation/dynamic_model.hpp"
 
-class INS_AHRS_groundtruth : public INS
+class INS_AHRS_groundtruth : public INS, public AHRS
 {
 public:
 
@@ -64,7 +64,7 @@ public:
     /**
       * \brief Constructor
       */
-    INS_AHRS_groundtruth(Dynamic_model& model, ahrs_t& ahrs, const conf_t& config = default_config());
+    INS_AHRS_groundtruth(Dynamic_model& model, const conf_t& config = default_config());
 
     /**
      * \brief   Main update function
@@ -81,7 +81,7 @@ public:
      *
      * \return    time [seconds]
      */
-    virtual inline float last_update_s(void) const {return last_update_s_;};
+    virtual inline float last_update_s(void) const;
 
 
     /**
@@ -126,12 +126,39 @@ public:
 
 
     /**
-     * \brief   Returns the AHRS structure
-     * \details Value is only updated upon calling update()
+    * \brief   Indicates which estimate can be trusted (always returns true)
+    *
+    * \return  boolean
+    */
+    virtual inline bool is_healthy(void) const
+    {
+        return true;
+    };
+
+
+    /**
+     * \brief     Estimated attitude
      *
-     * \return ahrs
+     * \return    quaternion
      */
-     virtual inline const ahrs_t& ahrs() const {return ahrs_;};
+    quat_t attitude(void) const;
+
+
+    /**
+     * \brief     Estimated angular velocity
+     *
+     * \return    3D angular velocity
+     */
+    std::array<float,3> angular_speed(void) const;
+
+
+    /**
+     * \brief     Estimated linear acceleration
+     *
+     * \return    3D linear acceleration
+     */
+    std::array<float,3> linear_acceleration(void) const;
+
 
     /**
      * \brief   Returns the default configuration for INS_AHRS_groundtruth
@@ -144,11 +171,14 @@ public:
 protected:
     Dynamic_model& model_;              ///< Dynamic model providing position and velocity information
 
-    float last_update_s_;               ///< time stamp of last update in seconds
     local_position_t position_lf_;      ///< local position estimation (NED in meters)
     std::array<float,3> velocity_lf_;   ///< local velocity estimation (NED in meters/seconds)
     float absolute_altitude_;           ///< Absolute altitude above sea level in meters (>=0)
-    ahrs_t& ahrs_;                      ///< Attitude, acceleration and rate estimation
+
+    quat_t              attitude_;              ///< Estimated attitude
+    std::array<float,3> angular_speed_;         ///< Estimated angular speed
+    std::array<float,3> linear_acc_;            ///< Estimated linear acceleration
+    float last_update_s_;               ///< time stamp of last update in seconds
 };
 
 

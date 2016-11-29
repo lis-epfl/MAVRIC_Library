@@ -64,7 +64,7 @@ extern "C"
 //------------------------------------------------------------------------------
 
 Mission_planner::Mission_planner(   INS& ins,
-                                    const ahrs_t& ahrs,
+                                    const AHRS& ahrs,
                                     State& state,
                                     const Manual_control& manual_control,
                                     const Geofence& geofence,
@@ -498,7 +498,7 @@ mav_result_t Mission_planner::nav_land_callback(Mission_planner* mission_planner
         }
 
         // Set hold position for landing
-        float heading = coord_conventions_get_yaw(mission_planner->ahrs_.qe);
+        float heading = coord_conventions_get_yaw(mission_planner->ahrs_.attitude());
         Waypoint landing_wpt(   MAV_FRAME_LOCAL_NED,
                                 MAV_CMD_NAV_LAND,
                                 0,
@@ -559,7 +559,7 @@ void Mission_planner::state_machine()
                                             0.0f,
                                             0.0f,
                                             0.0f,
-                                            coord_conventions_get_yaw(ahrs_.qe),
+                                            coord_conventions_get_yaw(ahrs_.attitude()),
                                             ins_.position_lf()[X],
                                             ins_.position_lf()[Y],
                                             config_.takeoff_altitude);
@@ -672,7 +672,7 @@ void Mission_planner::state_machine()
                                             0.0f,
                                             0.0f,
                                             0.0f,
-                                            coord_conventions_get_yaw(ahrs_.qe),
+                                            coord_conventions_get_yaw(ahrs_.attitude()),
                                             ins_.position_lf()[X],
                                             ins_.position_lf()[Y],
                                             config_.takeoff_altitude);
@@ -688,7 +688,7 @@ void Mission_planner::state_machine()
                                             0.0f,
                                             0.0f,
                                             0.0f,
-                                            coord_conventions_get_yaw(ahrs_.qe),
+                                            coord_conventions_get_yaw(ahrs_.attitude()),
                                             ins_.position_lf()[X],
                                             ins_.position_lf()[Y],
                                             ins_.position_lf()[Z]);

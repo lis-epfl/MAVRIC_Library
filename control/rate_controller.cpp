@@ -87,9 +87,9 @@ bool Rate_controller::update(void)
 
     // Get errors on rate
     float errors[3];
-    errors[ROLL]  = rate_command_.xyz[ROLL]  - ahrs_.angular_speed[ROLL];
-    errors[PITCH] = rate_command_.xyz[PITCH] - ahrs_.angular_speed[PITCH];
-    errors[YAW]   = rate_command_.xyz[YAW]   - ahrs_.angular_speed[YAW];
+    errors[ROLL]  = rate_command_.xyz[ROLL]  - ahrs_.angular_speed()[ROLL];
+    errors[PITCH] = rate_command_.xyz[PITCH] - ahrs_.angular_speed()[PITCH];
+    errors[YAW]   = rate_command_.xyz[YAW]   - ahrs_.angular_speed()[YAW];
 
     // Update PIDs
     torque_command_.xyz[ROLL]  = pid_controller_update_dt(&pid_[ROLL],  errors[ROLL],  dt_s_);

@@ -85,7 +85,7 @@ public:
      */
     struct args_t
     {
-        const ahrs_t&         ahrs;                  ///< Ref to attitude estimation (input)
+        const AHRS&         ahrs;                  ///< Ref to attitude estimation (input)
         rate_command_t&       rate_command;          ///< Reference to rate command (input)
         torque_command_t&     torque_command;        ///< Reference to torque command (output)
     };
@@ -139,7 +139,7 @@ public:
 
 
 private:
-    const ahrs_t&         ahrs_;                  ///< Ref to attitude estimation (input)
+    const AHRS&         ahrs_;                  ///< Ref to attitude estimation (input)
     rate_command_t&       rate_command_;          ///< Reference to rate command (input)
     torque_command_t&     torque_command_;        ///< Reference to torque command (output)
 

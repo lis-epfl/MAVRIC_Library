@@ -46,7 +46,7 @@
 #include "util/print_util.hpp"
 
 
-bool hud_telemetry_init(hud_telemetry_t* hud, const INS* ins, const command_t* controls, const ahrs_t* ahrs)
+bool hud_telemetry_init(hud_telemetry_t* hud, const INS* ins, const command_t* controls, const AHRS* ahrs)
 {
     bool init_success = true;
 
@@ -64,7 +64,7 @@ void hud_telemetry_send_message(const hud_telemetry_t* hud, const Mavlink_stream
     float airspeed          = groundspeed;
 
     aero_attitude_t aero_attitude;
-    aero_attitude = coord_conventions_quat_to_aero(hud->ahrs->qe);
+    aero_attitude = coord_conventions_quat_to_aero(hud->ahrs->attitude());
 
     int16_t heading;
     if (aero_attitude.rpy[2] < 0)

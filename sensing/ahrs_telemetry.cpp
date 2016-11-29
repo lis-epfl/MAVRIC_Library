@@ -46,10 +46,11 @@
 #include "hal/common/time_keeper.hpp"
 
 
-void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void ahrs_telemetry_send_attitude(const AHRS* ahrs, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
     aero_attitude_t aero_attitude;
-    aero_attitude = coord_conventions_quat_to_aero(ahrs->qe);
+    aero_attitude = coord_conventions_quat_to_aero(ahrs->attitude());
+    std::array<float, 3> angular_speed = ahrs->angular_speed();
 
     mavlink_msg_attitude_pack(mavlink_stream->sysid(),
                               mavlink_stream->compid(),
@@ -58,22 +59,25 @@ void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const Mavlink_stream* mavl
                               aero_attitude.rpy[0],
                               aero_attitude.rpy[1],
                               aero_attitude.rpy[2],
-                              ahrs->angular_speed[0],
-                              ahrs->angular_speed[1],
-                              ahrs->angular_speed[2]);
+                              angular_speed[0],
+                              angular_speed[1],
+                              angular_speed[2]);
 }
 
-void ahrs_telemetry_send_attitude_quaternion(const ahrs_t* ahrs, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+void ahrs_telemetry_send_attitude_quaternion(const AHRS* ahrs, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
 {
+    quat_t attitude                    = ahrs->attitude();
+    std::array<float, 3> angular_speed = ahrs->angular_speed();
+
     mavlink_msg_attitude_quaternion_pack(mavlink_stream->sysid(),
                                          mavlink_stream->compid(),
                                          msg,
                                          time_keeper_get_ms(),
-                                         ahrs->qe.s,
-                                         ahrs->qe.v[0],
-                                         ahrs->qe.v[1],
-                                         ahrs->qe.v[2],
-                                         ahrs->angular_speed[0],
-                                         ahrs->angular_speed[1],
-                                         ahrs->angular_speed[2]);
+                                         attitude.s,
+                                         attitude.v[0],
+                                         attitude.v[1],
+                                         attitude.v[2],
+                                         angular_speed[0],
+                                         angular_speed[1],
+                                         angular_speed[2]);
 }

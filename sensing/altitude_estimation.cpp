@@ -53,7 +53,7 @@
 
 Altitude_estimation::Altitude_estimation(Sonar& sonar,
                                          Barometer& barometer,
-                                         ahrs_t& ahrs,
+                                         AHRS& ahrs,
                                          altitude_t& altitude,
                                          altitude_estimation_conf_t config):
     Kalman<3,1,1>(std::array<float,3>{{0.0f, 0.0f, 0.0f}},   // x
@@ -96,7 +96,7 @@ bool Altitude_estimation::init(void)
 
 bool Altitude_estimation::update(void)
 {
-    Kalman<3,1,1>::predict(Mat<1,1>({-ahrs_.linear_acc[2]}));
+    Kalman<3,1,1>::predict(Mat<1,1>({-ahrs_.linear_acceleration()[2]}));
 
     if (last_sonar_update_us_ < sonar_.last_update_us() )
     {

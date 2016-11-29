@@ -47,10 +47,10 @@
 #include "communication/mavlink_communication.hpp"
 #include "communication/mavlink_stream.hpp"
 #include "communication/mavlink_waypoint_handler.hpp"
+#include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
 #include "communication/mavlink_message_handler.hpp"
 #include "status/state.hpp"
-#include "sensing/qfilter.hpp"
 #include "manual_control/manual_control.hpp"
 #include "status/geofence.hpp"
 #include "mission/mission_handler_registry.hpp"
@@ -111,7 +111,7 @@ public:
      * \return  True if the init succeed, false otherwise
      */
     Mission_planner(    INS& ins,
-                        const ahrs_t& ahrs,
+                        const AHRS& ahrs,
                         State& state,
                         const Manual_control& manual_control,
                         const Geofence& geofence,
@@ -220,7 +220,7 @@ protected:
     const Mavlink_stream& mavlink_stream_;                      ///< The reference to MAVLink stream
     State& state_;                                              ///< The reference to the state structure
     INS& ins_;                                                  ///< The reference to the ins structure
-    const ahrs_t& ahrs_;                                        ///< The reference to the attitude estimation structure
+    const AHRS& ahrs_;                                          ///< The reference to the attitude estimation structure
     const Manual_control& manual_control_;                      ///< The reference to the manual_control structure
     const Geofence& geofence_;                                  ///< The reference to the geofence structure
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler

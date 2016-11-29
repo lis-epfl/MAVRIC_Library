@@ -75,7 +75,7 @@ public:
     State_machine(  State& state,
                     const INS& ins,
                     const Imu& imu,
-                    const ahrs_t& ahrs,
+                    const AHRS& ahrs,
                     Manual_control& manual_control,
                     Geofence& safety_geofence,
                     Geofence& emergency_geofence,
@@ -99,7 +99,7 @@ public:
     State& state_;                                       ///< State structure
     const INS& ins_;                                     ///< Inertial Navigation System
     const Imu& imu_;                                     ///< Inertial measurement unit
-    const ahrs_t& ahrs_;                                 ///< Attitude estimation
+    const AHRS& ahrs_;                                 ///< Attitude estimation
     Manual_control& manual_control_;                     ///< Manual_control
     Geofence& safety_geofence_;                          ///< Geofence the MAV should not cross
     Geofence& emergency_geofence_;                       ///< Geofence outside which emergency landing is performed

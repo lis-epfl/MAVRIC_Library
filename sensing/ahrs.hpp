@@ -34,8 +34,9 @@
  *
  * \author MAV'RIC Team
  * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *
- * \brief This file implements data structure for attitude estimate
+ * \brief  Interface for the estimated Attitude and Heading Reference System
  *
  ******************************************************************************/
 
@@ -45,6 +46,7 @@
 
 #include <cstdint>
 #include <cstdbool>
+#include <array>
 
 #include "util/coord_conventions.hpp"	/* coord_conventions_get_yaw */
 
@@ -54,57 +56,76 @@ extern "C"
 }
 
 /**
- * \brief The calibration level of the filter
+ * \brief   Interface for the estimated Attitude and Heading Reference System
  */
-typedef enum
+class AHRS
 {
-    AHRS_INITIALISING   = 0,    ///< Calibration level: Not initialised
-    AHRS_LEVELING       = 1,    ///< Calibration level: No calibration, attitude estimation correction by accelero/magneto measurements
-    AHRS_CONVERGING     = 2,    ///< Calibration level: leveling, correction of gyro biais
-    AHRS_READY          = 3,    ///< Calibration level: leveled
-} ahrs_state_t;
+public:
+
+    /**
+     * \brief The calibration level of the filter
+     */
+    enum ahrs_state_t
+    {
+        AHRS_INITIALISING   = 0,    ///< Calibration level: Not initialised
+        AHRS_LEVELING       = 1,    ///< Calibration level: No calibration, attitude estimation correction by accelero/magneto measurements
+        AHRS_CONVERGING     = 2,    ///< Calibration level: leveling, correction of gyro biais
+        AHRS_READY          = 3,    ///< Calibration level: leveled
+    };
 
 
-/**
- * \brief Structure containing the Attitude and Heading Reference System
- */
-typedef struct
-{
-    quat_t  qe;                         ///< quaternion defining the Attitude estimation of the platform
+    /**
+     * \brief     Last update in seconds
+     *
+     * \return    time
+     */
+    virtual float last_update_s(void) const = 0;
 
-    float   angular_speed[3];           ///< Gyro rates
-    float   linear_acc[3];              ///< Acceleration WITHOUT gravity
 
-    ahrs_state_t internal_state;        ///< Leveling state of the ahrs
-    float        last_update_s;         ///< The time of the last IMU update in s
+    /**
+    * \brief   Indicates which estimate can be trusted
+    *
+    * \param   type    Type of estimate
+    *
+    * \return  boolean
+    */
+    virtual bool is_healthy(void) const = 0;
+
+
+    /**
+     * \brief     Estimated attitude
+     *
+     * \return    quaternion
+     */
+    virtual quat_t attitude(void) const = 0;
+
+
+    /**
+     * \brief     Estimated angular velocity
+     *
+     * \return    3D angular velocity
+     */
+    virtual std::array<float,3> angular_speed(void) const = 0;
+
+
+    /**
+     * \brief     Estimated linear acceleration
+     *
+     * \return    3D linear acceleration
+     */
+    virtual std::array<float,3> linear_acceleration(void) const = 0;
+
 
     /**
      * \brief	Gets the yaw angle from the ahrs quaternion
      *
      * \return 	yaw
      */
-    float yaw() const { return coord_conventions_get_yaw(qe); }
-} ahrs_t;
+    virtual float yaw() const
+    {
+        return coord_conventions_get_yaw(attitude());
+    }
 
-
-/**
- * \brief   Initialiases the ahrs structure
- *
- * \param   ahrs                Pointer to ahrs structure
- *
- * \return  True if the init succeed, false otherwise
- */
-bool ahrs_init(ahrs_t* ahrs);
-
-
-/**
- * \brief   Returns an initialized ahrs_t
- *
- * \detail  Used to initialize ahrs in initalizer list
- *
- * \return  Initialized ahrs_t
- */
-ahrs_t ahrs_initialized(void);
-
+};
 
 #endif /* AHRS_HPP_ */

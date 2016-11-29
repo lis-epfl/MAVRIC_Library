@@ -56,7 +56,7 @@
 
 #include "control/attitude_controller_p2.hpp"
 
-bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs)
+bool attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const AHRS* ahrs)
 {
     bool success = true;
 
@@ -96,9 +96,9 @@ bool attitude_controller_p2_update(attitude_controller_p2_t* controller)
     errors[2] = controller->attitude_error_estimator.rpy_errors[2];
 
     // Get gyro rates
-    rates[0] = controller->ahrs->angular_speed[0];
-    rates[1] = controller->ahrs->angular_speed[1];
-    rates[2] = controller->ahrs->angular_speed[2];
+    rates[0] = controller->ahrs->angular_speed()[0];
+    rates[1] = controller->ahrs->angular_speed()[1];
+    rates[2] = controller->ahrs->angular_speed()[2];
 
     // Compute outputs
     torque_command_t& torque_command = *controller->torque_command;
