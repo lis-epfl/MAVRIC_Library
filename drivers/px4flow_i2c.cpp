@@ -80,13 +80,16 @@ bool Px4flow_i2c::update(void)
     if (res == true)
     {
         // Read optic flow and convert from decirad/s to rad/s
-        flow_x_       = 0.1f * (float)((int16_t)(rec[3] << 8 | rec[2]));
-        flow_y_       = 0.1f * (float)((int16_t)(rec[5] << 8 | rec[4]));
+        float flow_x_raw       = 0.1f * (float)((int16_t)(rec[3] << 8 | rec[2]));
+        float flow_y_raw       = 0.1f * (float)((int16_t)(rec[5] << 8 | rec[4]));
 
         // Read velocity and convert from mm/s to m/s
-        velocity_x_ = 0.001f * (float)((int16_t)(rec[7] << 8 | rec[6]));
-        velocity_y_ = 0.001f * (float)((int16_t)(rec[9] << 8 | rec[8]));
+        float velocity_x_raw = 0.001f * (float)((int16_t)(rec[7] << 8 | rec[6]));
+        float velocity_y_raw = 0.001f * (float)((int16_t)(rec[9] << 8 | rec[8]));
         flow_quality_ = (uint8_t)((int16_t)(rec[11] << 8 | rec[10]));
+
+        // Apply rotation according to how the camera is mounted
+        rotate_raw_values(flow_x_raw, flow_y_raw, velocity_x_raw, velocity_y_raw);
 
         float new_distance = 0.001f * (float)((int16_t)(rec[21] << 8 | rec[20]));
 
@@ -159,4 +162,38 @@ float Px4flow_i2c::ground_distance(void) const
 float Px4flow_i2c::last_update_s(void) const
 {
     return last_update_s_;
+}
+
+void Px4flow_i2c::rotate_raw_values(float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw)
+{
+    switch (config_.orientation)
+    {
+        case ORIENT_0_DEG:
+            flow_x_     = flow_x_raw;
+            flow_y_     = flow_y_raw;
+            velocity_x_ = velocity_x_raw;
+            velocity_y_ = velocity_y_raw;
+        break;
+
+        case ORIENT_90_DEG:
+            flow_x_     = - flow_y_raw;
+            flow_y_     = flow_x_raw;
+            velocity_x_ = - velocity_y_raw;
+            velocity_y_ = velocity_x_raw;
+        break;
+
+        case ORIENT_180_DEG:
+            flow_x_     = - flow_x_raw;
+            flow_y_     = - flow_y_raw;
+            velocity_x_ = - velocity_x_raw;
+            velocity_y_ = - velocity_y_raw;
+        break;
+
+        case ORIENT_270_DEG:
+            flow_x_     = flow_y_raw;
+            flow_y_     = - flow_x_raw;
+            velocity_x_ = velocity_y_raw;
+            velocity_y_ = - velocity_x_raw;
+        break;
+    }
 }
