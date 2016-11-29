@@ -46,36 +46,11 @@
 #ifndef SERVOS_MIX_QUADCOPTER_DIAG_HPP_
 #define SERVOS_MIX_QUADCOPTER_DIAG_HPP_
 
-#include "control/servos_mix.hpp"
+#include "control/servos_mix_matrix.hpp"
 
-
-class Servos_mix_quadcopter_diag : public Servos_mix
+class Servos_mix_quadcopter_diag: public Servos_mix_matrix<4>
 {
 public:
-
-    /**
-     * \brief Configuration
-     */
-    struct conf_t
-    {
-        rot_dir_t   motor_rear_left_dir;        ///< Rear  motor turning direction
-        rot_dir_t   motor_front_left_dir;       ///< Left  motor turning direction
-        rot_dir_t   motor_front_right_dir;      ///< Front motor turning direction
-        rot_dir_t   motor_rear_right_dir;       ///< Right motor turning direction
-        float       min_thrust;                ///< Minimal thrust
-        float       max_thrust;                ///< Maxmal thrust
-    };
-
-    /**
-     * \brief Constructor arguments
-     */
-    struct args_t
-    {
-        Servo& motor_rear_left;
-        Servo& motor_front_left;
-        Servo& motor_front_right;
-        Servo& motor_rear_right;
-    };
 
     /**
      * \brief                   Constructor (calls only super class constructor)
@@ -86,13 +61,17 @@ public:
      * \param motor_rear_right  Rear right motor
      * \param config            configuration
      */
-    Servos_mix_quadcopter_diag(args_t args, const conf_t& config = default_config());
-
-
-    /*
-     * \brief   Write motor commands to servo structure based on torque command
-     */
-    virtual bool update();
+    Servos_mix_quadcopter_diag( Servo& motor_rear_left,
+                                Servo& motor_front_left,
+                                Servo& motor_front_right,
+                                Servo& motor_rear_right,
+                                const conf_t& config = default_config()):
+        Servos_mix_matrix<4>(Servos_mix_matrix<4>::args_t{{ &motor_rear_left,
+                                                            &motor_front_left,
+                                                            &motor_front_right,
+                                                            &motor_rear_right }},
+                             config)
+    {};
 
     /*
      * \brief   Default configuration
@@ -100,33 +79,16 @@ public:
      * \return default configuration
      */
     static inline conf_t default_config();
-
-private:
-    torque_command_t torque_command_;
-    thrust_command_t thrust_command_;
-    
-    rot_dir_t   motor_rear_left_dir_;            ///< Rear  motor turning direction
-    rot_dir_t   motor_front_left_dir_;           ///< Left  motor turning direction
-    rot_dir_t   motor_front_right_dir_;          ///< Front motor turning direction
-    rot_dir_t   motor_rear_right_dir_;           ///< Right motor turning direction
-    float       min_thrust_;                     ///< Minimal thrust
-    float       max_thrust_;                     ///< Maxmal thrust
-    Servo&      motor_rear_left_;                ///< Servo for rear left motor
-    Servo&      motor_front_left_;               ///< Servo for front left motor
-    Servo&      motor_front_right_;              ///< Servo for front right motor
-    Servo&      motor_rear_right_;               ///< Servo for rear right motor
 };
 
 Servos_mix_quadcopter_diag::conf_t Servos_mix_quadcopter_diag::default_config()
 {
-    conf_t conf;
+    conf_t conf = Servos_mix_matrix<4>::default_config();
 
-    conf.motor_rear_left_dir                 = CCW;
-    conf.motor_front_left_dir                = CW;
-    conf.motor_front_right_dir               = CCW;
-    conf.motor_rear_right_dir                = CW;
-    conf.min_thrust                          = -0.9f;
-    conf.max_thrust                          = 1.0f;
+    conf.mix =  Mat<4, 6>({ 1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
+                            1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+                           -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
+                           -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f});
 
     return conf;
 }

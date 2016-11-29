@@ -52,8 +52,7 @@
 #include "util/constants.hpp"
 
 
-class Servos_mix : public Controller<torque_command_t>,
-                   public Controller<thrust_command_t>
+class Servos_mix : public Controller_2_to_1<torque_command_t, thrust_command_t, empty_command_t>
 {
 public:
 

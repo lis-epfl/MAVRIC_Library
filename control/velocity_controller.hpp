@@ -51,8 +51,7 @@
 /**
  * \brief Velocity controller for hovering platforms
  */
-class Velocity_controller : public Controller<velocity_command_t, attitude_command_t>,
-                            public Controller<velocity_command_t, thrust_command_t>
+class Velocity_controller : public Controller_1_to_2<velocity_command_t, attitude_command_t, thrust_command_t>
 {
 public:
 

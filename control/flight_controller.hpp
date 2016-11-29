@@ -46,7 +46,9 @@
 #include "manual_control/manual_control.hpp"
 #include "control/flight_command_source.hpp"
 
-
+/**
+ * \brief   Interface for flight controllers
+ */
 class Flight_controller: public Controller<position_command_t>,
                          public Controller<velocity_command_t>,
                          public Controller<attitude_command_t>,
@@ -55,8 +57,19 @@ class Flight_controller: public Controller<position_command_t>,
                          public Controller<thrust_command_t>
 {
 public:
+    /**
+     * \brief   Main update function
+     */
+    virtual bool update(void) = 0;
+
+    /**
+     * \brief   Sets actuators in safety mode
+     */
     virtual bool failsafe(void) = 0;
 
+    /**
+     * \brief   Set of command setters
+     */
     virtual bool set_command(const position_command_t& command) = 0;
     virtual bool set_command(const velocity_command_t& command) = 0;
     virtual bool set_command(const attitude_command_t& command) = 0;
@@ -64,10 +77,35 @@ public:
     virtual bool set_command(const torque_command_t& command) = 0;
     virtual bool set_command(const thrust_command_t& command) = 0;
 
+    /**
+     * \brief   Set command from manual control in rate mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     virtual bool set_manual_rate_command(const Manual_control& manual_control) = 0;
+
+
+    /**
+     * \brief   Set command from manual control in attitude mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     virtual bool set_manual_attitude_command(const Manual_control& manual_control) = 0;
+
+
+    /**
+     * \brief   Set command from manual control in velocity mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     virtual bool set_manual_velocity_command(const Manual_control& manual_control) = 0;
 
+
+    /**
+     * \brief   Set command from autonomous command source
+     *
+     * \param   command_source  Reference to source of control command
+     */
     virtual bool set_flight_command(const Flight_command_source& command_source)
     {
         return command_source.write_flight_command(*this);
