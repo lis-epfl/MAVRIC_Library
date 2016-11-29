@@ -281,12 +281,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00198"></a>00198     {
 <a name="l00199"></a>00199         conf_t conf = <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter&lt;6&gt;::default_config</a>();
 <a name="l00200"></a>00200         <span class="keywordtype">float</span> s60 = 0.866025f;
-<a name="l00201"></a>00201         conf.mix_config.mix  = <a class="code" href="classMat.html" title="Templated matrix class.">Mat&lt;6, 6&gt;</a>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear</span>
-<a name="l00202"></a>00202                                             s60, -0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear left</span>
-<a name="l00203"></a>00203                                             s60,  0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front left</span>
-<a name="l00204"></a>00204                                            0.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front</span>
-<a name="l00205"></a>00205                                            -s60,  0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front right</span>
-<a name="l00206"></a>00206                                            -s60, -0.5f,  1.0f, 0.0f, 0.0f, -1.0f}); <span class="comment">// rear right</span>
+<a name="l00201"></a>00201         conf.mix_config.mix  = <a class="code" href="classMat.html" title="Templated matrix class.">Mat&lt;6, 6&gt;</a>({ 0.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear</span>
+<a name="l00202"></a>00202                                             s60, -0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear left</span>
+<a name="l00203"></a>00203                                             s60,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front left</span>
+<a name="l00204"></a>00204                                            0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front</span>
+<a name="l00205"></a>00205                                            -s60,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front right</span>
+<a name="l00206"></a>00206                                            -s60, -0.5f, -1.0f, 0.0f, 0.0f, -1.0f}); <span class="comment">// rear right</span>
 <a name="l00207"></a>00207 
 <a name="l00208"></a>00208         <span class="keywordflow">return</span> conf;
 <a name="l00209"></a>00209     };
@@ -318,7 +318,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 19:21:06 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 20:27:46 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
