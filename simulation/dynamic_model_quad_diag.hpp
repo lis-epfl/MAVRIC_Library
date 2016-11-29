@@ -46,9 +46,7 @@
 
 #include "simulation/dynamic_model.hpp"
 #include "drivers/servo.hpp"
-#include "control/servos_mix_quadcopter_diag.hpp"
 #include "util/constants.hpp"
-
 
 /**
  * \brief Configuration for quad dynamic model

@@ -42,14 +42,12 @@
 #ifndef FLIGHT_CONTROLLER_COPTER_HPP_
 #define FLIGHT_CONTROLLER_COPTER_HPP_
 
-#include "control/controller.hpp"
 #include "control/flight_controller_stack.hpp"
 #include "control/position_controller.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/rate_controller.hpp"
 #include "control/servos_mix_matrix.hpp"
-#include "control/servos_mix_quadcopter_diag.hpp"
 
 template<uint32_t N_ROTORS>
 class Flight_controller_copter: public Flight_controller_stack

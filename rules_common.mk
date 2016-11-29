@@ -58,8 +58,6 @@ LIB_SRCS += control/velocity_controller.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
 LIB_SRCS += control/position_controller.cpp
 LIB_SRCS += control/pid_controller.cpp
-LIB_SRCS += control/servos_mix_wing.cpp
-LIB_SRCS += control/servos_mix_ywing.cpp
 
 LIB_SRCS += drivers/airspeed_analog.cpp
 LIB_SRCS += drivers/battery.cpp

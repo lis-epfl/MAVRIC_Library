@@ -297,8 +297,6 @@ protected:
     INS_complementary   ins_complementary;                      ///< The position estimaton structure
     INS_kf              ins_kf;                                 ///< The Kalman INS structure, used for position estimation
 
-    // Servos_mix_quadcopter_diag  servos_mix_;
-    // Servos_mix_matrix<4>  servos_mix_;
     Flight_controller_quadcopter_diag    flight_controller_;
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
