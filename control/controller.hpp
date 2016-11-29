@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Interface for controllers
+ * \brief   Interfaces for controllers
  *
  ******************************************************************************/
 
@@ -44,6 +44,9 @@
 
 #include "control/control_command.hpp"
 
+/**
+ * \brief  Interface for controllers with one input command type and one output command type
+ */
 template<typename in_command_T, typename out_command_T = empty_command_t>
 class Controller
 {
@@ -77,6 +80,139 @@ public:
      * \return  success
      */
     virtual bool get_command(in_command_t& command) const = 0;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    virtual bool get_output(out_command_t& command) const = 0;
+};
+
+
+/**
+ * \brief  Interface for controllers with one input command type and two output command types
+ */
+template<typename in_command_T, typename out_command_a_T, typename out_command_b_T>
+class Controller_1_to_2: public virtual Controller<in_command_T, out_command_a_T>,
+                         public virtual Controller<in_command_T, out_command_b_T>
+{
+public:
+    typedef in_command_T in_command_t;
+    typedef out_command_a_T out_command_a_t;
+    typedef out_command_b_T out_command_b_t;
+
+    /**
+     * \brief   Main update function
+     *
+     * \return  success
+     */
+    virtual bool update(void) = 0;
+
+
+    /**
+     * \brief   Sets the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool set_command(const in_command_t& command) = 0;
+
+
+    /**
+     * \brief   Returns the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool get_command(in_command_t& command) const = 0;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    virtual bool get_output(out_command_a_t& command) const = 0;
+
+
+    /**
+     * \brief   Returns the output command
+     *
+     * \param   command   output command
+     *
+     * \return  success
+     */
+    virtual bool get_output(out_command_b_t& command) const = 0;
+};
+
+
+/**
+ * \brief  Interface for controllers with two input command types and one output command type
+ */
+template<typename in_command_a_T, typename in_command_b_T, typename out_command_T>
+class Controller_2_to_1: public virtual Controller<in_command_a_T, out_command_T>,
+                         public virtual Controller<in_command_b_T, out_command_T>
+{
+public:
+    typedef in_command_a_T in_command_a_t;
+    typedef in_command_b_T in_command_b_t;
+    typedef out_command_T out_command_t;
+
+
+    /**
+     * \brief   Main update function
+     *
+     * \return  success
+     */
+    virtual bool update(void) = 0;
+
+
+    /**
+     * \brief   Sets the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool set_command(const in_command_a_t& command) = 0;
+
+
+    /**
+     * \brief   Returns the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool get_command(in_command_a_t& command) const = 0;
+
+
+    /**
+     * \brief   Sets the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool set_command(const in_command_b_t& command) = 0;
+
+
+    /**
+     * \brief   Returns the input command
+     *
+     * \param   command   Input command
+     *
+     * \return  success
+     */
+    virtual bool get_command(in_command_b_t& command) const = 0;
 
 
     /**

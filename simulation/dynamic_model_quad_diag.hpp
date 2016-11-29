@@ -46,9 +46,7 @@
 
 #include "simulation/dynamic_model.hpp"
 #include "drivers/servo.hpp"
-#include "control/servos_mix_quadcopter_diag.hpp"
 #include "util/constants.hpp"
-
 
 /**
  * \brief Configuration for quad dynamic model
@@ -79,8 +77,7 @@ typedef struct
     float gravity;                      ///< Gravity value used for the simulated forces
     float air_density;                  ///< Air density in kg/m3
 
-    Servos_mix_quadcopter_diag::conf_t  servos_mix_config;
-
+    std::array<float,4> motor_dir;
 } dynamic_model_quad_diag_conf_t;
 
 
@@ -245,8 +242,7 @@ static inline dynamic_model_quad_diag_conf_t dynamic_model_quad_diag_default_con
     conf.wind_y                 = 0.0f;                 ///< Wind in y axis, global frame
     conf.gravity                = 9.8f;                 ///< Simulation gravity
     conf.air_density            = 1.2f;                 ///< Air density
-
-    conf.servos_mix_config = Servos_mix_quadcopter_diag::default_config();
+    conf.motor_dir              = std::array<float,4>{{-1.0f, 1.0f , -1.0f, 1.0f}};
 
     return conf;
 }

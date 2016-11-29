@@ -77,7 +77,7 @@
  * \tparam  N   Number of servos
  */
 template<uint32_t N>
-class Servos_mix_matrix: Servos_mix
+class Servos_mix_matrix: public Servos_mix
 {
 public:
     /**

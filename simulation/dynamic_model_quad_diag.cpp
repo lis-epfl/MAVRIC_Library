@@ -262,10 +262,10 @@ void Dynamic_model_quad_diag::forces_from_servos(void)
 
     float old_rotor_speed;
 
-    motor_command[0] = servo_front_right_.read() - config_.rotor_rpm_offset;
+    motor_command[0] = servo_rear_left_.read()   - config_.rotor_rpm_offset;
     motor_command[1] = servo_front_left_.read()  - config_.rotor_rpm_offset;
-    motor_command[2] = servo_rear_right_.read()  - config_.rotor_rpm_offset;
-    motor_command[3] = servo_rear_left_.read()   - config_.rotor_rpm_offset;
+    motor_command[2] = servo_front_right_.read() - config_.rotor_rpm_offset;
+    motor_command[3] = servo_rear_right_.read()  - config_.rotor_rpm_offset;
 
     for (int32_t i = 0; i < 4; i++)
     {
@@ -289,24 +289,21 @@ void Dynamic_model_quad_diag::forces_from_servos(void)
     float mpos_y = config_.rotor_arm_length / 1.4142f;
 
     // torque around x axis (roll)
-    torques_bf_[ROLL] = ((rotor_lifts[1]  + rotor_lifts[3])
-                         - (rotor_lifts[0]  + rotor_lifts[2])) * mpos_y;
+    torques_bf_[ROLL] = ((rotor_lifts[0]  + rotor_lifts[1])
+                       - (rotor_lifts[2]  + rotor_lifts[3])) * mpos_y;
 
     // torque around y axis (pitch)
-    torques_bf_[PITCH] = ((rotor_lifts[1]  + rotor_lifts[0])
-                          - (rotor_lifts[3]  + rotor_lifts[2])) *  mpos_x;
+    torques_bf_[PITCH] = ((rotor_lifts[1]  + rotor_lifts[2])
+                        - (rotor_lifts[0]  + rotor_lifts[3])) *  mpos_x;
 
-    torques_bf_[YAW] = (config_.servos_mix_config.motor_front_left_dir  * (10.0f * rotor_drags[1]   + rotor_inertia[1])
-                        + config_.servos_mix_config.motor_front_right_dir * (10.0f * rotor_drags[0]     + rotor_inertia[0])
-                        + config_.servos_mix_config.motor_rear_left_dir   * (10.0f * rotor_drags[3]     + rotor_inertia[3])
-                        + config_.servos_mix_config.motor_rear_right_dir  * (10.0f * rotor_drags[2]     + rotor_inertia[2])) * config_.rotor_diameter;
+    torques_bf_[YAW] = - (config_.motor_dir[0] * (10.0f * rotor_drags[0] + rotor_inertia[0])
+                        + config_.motor_dir[1] * (10.0f * rotor_drags[1] + rotor_inertia[1])
+                        + config_.motor_dir[2] * (10.0f * rotor_drags[2] + rotor_inertia[2])
+                        + config_.motor_dir[3] * (10.0f * rotor_drags[3] + rotor_inertia[3])) * config_.rotor_diameter;
 
-    lin_forces_bf_[X] = -(vel_bf_[X] - wind_bf.v[0]) * lateral_airspeed * config_.vehicle_drag;
-    lin_forces_bf_[Y] = -(vel_bf_[Y] - wind_bf.v[1]) * lateral_airspeed * config_.vehicle_drag;
-    lin_forces_bf_[Z] = - (rotor_lifts[1]
-                           + rotor_lifts[0]
-                           + rotor_lifts[3]
-                           + rotor_lifts[2]);
+    lin_forces_bf_[X] = - (vel_bf_[X] - wind_bf.v[0]) * lateral_airspeed * config_.vehicle_drag;
+    lin_forces_bf_[Y] = - (vel_bf_[Y] - wind_bf.v[1]) * lateral_airspeed * config_.vehicle_drag;
+    lin_forces_bf_[Z] = - (rotor_lifts[0] + rotor_lifts[1] + rotor_lifts[2] + rotor_lifts[3]);
 }
 
 

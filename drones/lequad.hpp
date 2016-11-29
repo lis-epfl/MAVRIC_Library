@@ -58,7 +58,7 @@
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/rate_controller.hpp"
-#include "control/servos_mix_quadcopter_diag.hpp"
+// #include "control/servos_mix_quadcopter_diag.hpp"
 #include "control/servos_mix_matrix.hpp"
 
 #include "drivers/battery.hpp"
@@ -145,7 +145,9 @@ public:
         INS_complementary::conf_t ins_complementary_config;
         Manual_control::conf_t manual_control_config;
         remote_conf_t remote_config;
-        Flight_controller_copter::conf_t flight_controller_config;
+        // Servos_mix_quadcopter_diag::conf_t servos_mix_config;
+        // Servos_mix_matrix<4>::conf_t servos_mix_config;
+        Flight_controller_quadcopter_diag::conf_t flight_controller_config;
         Geofence_cylinder::conf_t safety_geofence_config;
         Geofence_cylinder::conf_t emergency_geofence_config;
     };
@@ -295,7 +297,7 @@ protected:
     INS_complementary   ins_complementary;                      ///< The position estimaton structure
     INS_kf              ins_kf;                                 ///< The Kalman INS structure, used for position estimation
 
-    Flight_controller_copter flight_controller_;
+    Flight_controller_quadcopter_diag    flight_controller_;
 
     Mission_handler_registry mission_handler_registry;          ///< The class for registring and obtaining mission handlers
     Mavlink_waypoint_handler waypoint_handler;                  ///< The handler for the waypoints
@@ -360,7 +362,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
 
     conf.remote_config = remote_default_config();
 
-    conf.flight_controller_config = Flight_controller_copter::default_config();
+    conf.flight_controller_config = Flight_controller_quadcopter_diag::default_config();
 
     conf.safety_geofence_config     = Geofence_cylinder::default_config();
     conf.emergency_geofence_config  = Geofence_cylinder::default_config();

@@ -42,61 +42,50 @@
 #ifndef FLIGHT_CONTROLLER_COPTER_HPP_
 #define FLIGHT_CONTROLLER_COPTER_HPP_
 
-#include "control/controller.hpp"
-#include "control/controller_stack.hpp"
+#include "control/flight_controller_stack.hpp"
 #include "control/position_controller.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"
 #include "control/rate_controller.hpp"
 #include "control/servos_mix_matrix.hpp"
 
-class Flight_controller_copter: public Controller_stack<Position_controller,
-                                                       Velocity_controller_copter,
-                                                       Attitude_controller,
-                                                       Rate_controller,
-                                                       Servos_mix_matrix<4>>
+template<uint32_t N_ROTORS>
+class Flight_controller_copter: public Flight_controller_stack
 {
 public:
-    typedef Controller_stack<  Position_controller,
-                               Velocity_controller_copter,
-                               Attitude_controller,
-                               Rate_controller,
-                               Servos_mix_matrix<4>> base_t;
 
     struct conf_t
     {
-        base_t::conf_t stack_config;
+        Position_controller::conf_t         pos_config;
+        Velocity_controller_copter::conf_t  vel_config;
+        Attitude_controller::conf_t         att_config;
+        Rate_controller::conf_t             rate_config;
+        typename Servos_mix_matrix<N_ROTORS>::conf_t mix_config;
     };
 
     static conf_t default_config(void)
     {
-        conf_t conf = {};
+        conf_t conf;
 
-        conf.stack_config = base_t::default_config();
-
-        conf.stack_config.mix_config.mix =  Mat<4, 6>({  1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
-                                                         1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-                                                        -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
-                                                        -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f});
+        conf.pos_config  = Position_controller::default_config();
+        conf.vel_config  = Velocity_controller_copter::default_config();
+        conf.att_config  = Attitude_controller::default_config();
+        conf.rate_config = Rate_controller::default_config();
+        conf.mix_config  = Servos_mix_matrix<N_ROTORS>::default_config();
 
         return conf;
     };
 
-    Flight_controller_copter(const INS& ins, const ahrs_t& ahrs, Servo& servo_rl, Servo& servo_fl, Servo& servo_fr, Servo& servo_rr, conf_t config):
-        base_t(base_t::args_t{{ahrs, ins},
-                              {{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}},
-                              {ahrs, command_.attitude, command_.rate},
-                              {ahrs, command_.rate, command_.torque},
-                              {std::array<Servo*,4>{{&servo_rl, &servo_fl, &servo_fr, &servo_rr}}}},
-                config.stack_config),
+    Flight_controller_copter(const INS& ins, const ahrs_t& ahrs, typename Servos_mix_matrix<N_ROTORS>::args_t mix_args, conf_t config):
+        Flight_controller_stack(pos_ctrl_, vel_ctrl_, att_ctrl_, rate_ctrl_, mix_ctrl_),
+        pos_ctrl_({ahrs, ins}, config.pos_config),
+        vel_ctrl_({{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}}, config.vel_config),
+        att_ctrl_({ahrs, command_.attitude, command_.rate}, config.att_config),
+        rate_ctrl_({ahrs, command_.rate, command_.torque}, config.rate_config),
+        mix_ctrl_(mix_args, config.mix_config),
         ahrs_(ahrs)
     {};
 
-
-    bool failsafe(void)
-    {
-        return mix_ctrl_.failsafe();
-    }
 
     bool set_manual_rate_command(const Manual_control& manual_control)
     {
@@ -131,8 +120,100 @@ public:
         return ret;
     };
 
+public:
+    Position_controller         pos_ctrl_;
+    Velocity_controller_copter  vel_ctrl_;
+    Attitude_controller         att_ctrl_;
+    Rate_controller             rate_ctrl_;
+    Servos_mix_matrix<N_ROTORS> mix_ctrl_;
+
 private:
     const ahrs_t& ahrs_;
 };
+
+
+class Flight_controller_quadcopter_diag: public Flight_controller_copter<4>
+{
+public:
+    Flight_controller_quadcopter_diag(const INS& ins, const ahrs_t& ahrs, Servo& motor_rl, Servo& motor_fl, Servo& motor_fr, Servo& motor_rr, conf_t config):
+        Flight_controller_copter<4>(ins, ahrs, Servos_mix_matrix<4>::args_t{{{&motor_rl, &motor_fl, &motor_fr, &motor_rr}}}, config)
+    {};
+
+    static conf_t default_config(void)
+    {
+        conf_t conf = Flight_controller_copter<4>::default_config();
+
+        conf.mix_config.mix  = Mat<4, 6>({ 1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
+                                           1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+                                          -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
+                                          -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f});
+
+        return conf;
+    };
+};
+
+class Flight_controller_quadcopter_cross: public Flight_controller_copter<4>
+{
+public:
+    Flight_controller_quadcopter_cross(  const INS& ins,
+                                        const ahrs_t& ahrs,
+                                        Servo& motor_rear,
+                                        Servo& motor_left,
+                                        Servo& motor_front,
+                                        Servo& motor_right,
+                                        conf_t config):
+        Flight_controller_copter<4>(ins, ahrs, Servos_mix_matrix<4>::args_t{{{&motor_left, &motor_front, &motor_right, &motor_rear}}}, config)
+    {};
+
+    static conf_t default_config(void)
+    {
+        conf_t conf = Flight_controller_copter<4>::default_config();
+
+        conf.mix_config.mix  = Mat<4, 6>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+                                           1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f,
+                                           0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+                                          -1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f });
+
+        return conf;
+    };
+};
+
+
+class Flight_controller_hexacopter: public Flight_controller_copter<6>
+{
+public:
+    Flight_controller_hexacopter(   const INS& ins,
+                                    const ahrs_t& ahrs,
+                                    Servo& motor_rear,
+                                    Servo& motor_rear_left,
+                                    Servo& motor_front_left,
+                                    Servo& motor_front,
+                                    Servo& motor_front_right,
+                                    Servo& motor_rear_right,
+                                    conf_t config):
+        Flight_controller_copter<6>(ins, ahrs, Servos_mix_matrix<6>::args_t{{{&motor_rear, &motor_rear_left, &motor_front_left, &motor_front, &motor_front_right, &motor_rear_right}}}, config)
+    {};
+
+    static conf_t default_config(void)
+    {
+        conf_t conf = Flight_controller_copter<6>::default_config();
+        float s60 = 0.866025f;
+        conf.mix_config.mix  = Mat<6, 6>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   // rear
+                                            s60, -0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   // rear left
+                                            s60,  0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   // front left
+                                           0.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   // front
+                                           -s60,  0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   // front right
+                                           -s60, -0.5f,  1.0f, 0.0f, 0.0f, -1.0f}); // rear right
+
+        return conf;
+    };
+};
+
+// conf.mix_config.mix  = Mat<6, 6>({ 0.0f, -1.0f, -1.0f,  1.0f, 0.0f, 1.0f,   // rear
+//                                     s60, -0.5f,  1.0f, -0.5f, -s60, 1.0f,   // rear left
+//                                     s60,  0.5f, -1.0f, -0.5f,  s60, 1.0f,   // front left
+//                                    0.0f,  1.0f,  1.0f,  1.0f, 0.0f, 1.0f,   // front
+//                                    -s60,  0.5f, -1.0f, -0.5f, -s60, 1.0f,   // front right
+//                                    -s60, -0.5f,  1.0f, -0.5f,  s60, 1.0f}); // rear right
 
 #endif  // FLIGHT_CONTROLLER_COPTER_HPP_
