@@ -1,6 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="5,211,123,296"/>
-<area shape="rect" id="node4" href="$structtorque__command__t.html" title="Torque command structure (expressed in body frame)" alt="" coords="147,211,280,296"/>
-<area shape="rect" id="node6" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="304,176,421,331"/>
-<area shape="rect" id="node8" href="$structquat__t.html" title="Unit quaternion." alt="" coords="333,6,392,109"/>
+<area shape="rect" id="node2" href="$structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="5,49,123,135"/>
+<area shape="rect" id="node4" href="$structtorque__command__t.html" title="Torque command structure (expressed in body frame)" alt="" coords="147,49,280,135"/>
+<area shape="rect" id="node6" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="304,6,453,178"/>
 </map>

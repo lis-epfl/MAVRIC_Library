@@ -60,6 +60,6 @@ var searchData=
   ['dsm_5freceiver_5fgpio_5fconfig',['dsm_receiver_gpio_config',['../structSparky__v2_1_1conf__t.html#abab3993d5ad43053448e737a5a68354c',1,'Sparky_v2::conf_t']]],
   ['dsm_5freceiver_5fpin',['dsm_receiver_pin',['../classMegafly__rev4.html#a07bf4d69cc0b14a297a7796f6382a5c8',1,'Megafly_rev4']]],
   ['dt_5fs',['dt_s',['../structpid__controller__t.html#a6d747718ef04affc6baff7dc48fcca9f',1,'pid_controller_t::dt_s()'],['../structstabilisation__wing__t.html#a0f08db234c3ece76381f8ffbfee623c1',1,'stabilisation_wing_t::dt_s()']]],
-  ['dt_5fs_5f',['dt_s_',['../classAttitude__controller.html#a49281aeb99ab1a60757bc57cb2cb5024',1,'Attitude_controller::dt_s_()'],['../classAhrs__ekf.html#a687dd587c462cb12a615a16565eb0af1',1,'Ahrs_ekf::dt_s_()']]],
+  ['dt_5fs_5f',['dt_s_',['../classAttitude__controller.html#a49281aeb99ab1a60757bc57cb2cb5024',1,'Attitude_controller::dt_s_()'],['../classAHRS__ekf.html#a2904deb1125de54d773443eafb533917',1,'AHRS_ekf::dt_s_()']]],
   ['dyn_5fmodel',['dyn_model',['../structubx__cfg__nav__settings__t.html#a1f977a007dd8fdd10a957fa52f9f2712',1,'ubx_cfg_nav_settings_t']]]
 ];

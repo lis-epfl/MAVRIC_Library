@@ -2,7 +2,6 @@
 <area shape="rect" id="node3" href="$classAccelerometer__sim.html#a536ea7ffe9f4889c1c2f88a2e99f38fb" title="Main update function &#160;Reads new values from sensor." alt="" coords="236,5,417,35"/>
 <area shape="rect" id="node5" href="$classGps__sim.html#a31264788b969fe38e96bc71e830ad0de" title="Main update function &#160;Reads new values from sensor." alt="" coords="267,59,387,88"/>
 <area shape="rect" id="node7" href="$classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="223,112,431,141"/>
-<area shape="rect" id="node11" href="$classMagnetometer__sim.html#a31831f081e9d06ccce55ac9a26e92950" title="Main update function &#160;Reads new values from sensor." alt="" coords="237,165,416,195"/>
-<area shape="rect" id="node13" href="$classSonar__sim.html#aa4fc17facb51ff8b2eea85b6b9580e60" title="Main update function &#160;Reads new values from sensor." alt="" coords="261,219,392,248"/>
-<area shape="rect" id="node9" href="$classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="481,112,791,141"/>
+<area shape="rect" id="node9" href="$classMagnetometer__sim.html#a31831f081e9d06ccce55ac9a26e92950" title="Main update function &#160;Reads new values from sensor." alt="" coords="237,165,416,195"/>
+<area shape="rect" id="node11" href="$classSonar__sim.html#aa4fc17facb51ff8b2eea85b6b9580e60" title="Main update function &#160;Reads new values from sensor." alt="" coords="261,219,392,248"/>
 </map>

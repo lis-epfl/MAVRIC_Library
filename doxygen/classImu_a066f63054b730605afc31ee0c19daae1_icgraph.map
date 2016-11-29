@@ -1,4 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classAhrs__ekf.html#af35c5a2e2b038e9196a159a025b98514" title="Performs the EKF algorithm." alt="" coords="173,5,293,35"/>
-<area shape="rect" id="node5" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="156,59,311,88"/>
+<area shape="rect" id="node3" href="$classAHRS__ekf.html#aed153b17b55483c30cf0162989b8a186" title="Performs the EKF algorithm." alt="" coords="168,5,299,35"/>
+<area shape="rect" id="node5" href="$classAHRS__qfilter.html#ac2d6983d326a1b2c363ef689d63a36c4" title="Performs the attitude estimation via a complementary filter." alt="" coords="160,59,307,88"/>
+<area shape="rect" id="node7" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="156,112,311,141"/>
 </map>

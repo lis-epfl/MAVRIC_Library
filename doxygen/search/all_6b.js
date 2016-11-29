@@ -5,9 +5,9 @@ var searchData=
   ['kalman_3c_2011_2c_203_2c_203_20_3e',['Kalman< 11, 3, 3 >',['../classKalman.html',1,'']]],
   ['kalman_3c_203_2c_201_2c_201_20_3e',['Kalman< 3, 1, 1 >',['../classKalman.html',1,'']]],
   ['kalman_3c_207_2c_200_2c_203_20_3e',['Kalman< 7, 0, 3 >',['../classKalman.html',1,'']]],
-  ['ki',['ki',['../structqfilter__conf__t.html#a82bfc358029dd22c778704c77bee76f0',1,'qfilter_conf_t::ki()'],['../structqfilter__t.html#a9ab0c422ee1a4586edac922e354d309a',1,'qfilter_t::ki()']]],
-  ['ki_5fmag',['ki_mag',['../structqfilter__conf__t.html#a167d88dbc393037993d2e34865f7966c',1,'qfilter_conf_t::ki_mag()'],['../structqfilter__t.html#a1a6080ade09117269db439f6e31192e7',1,'qfilter_t::ki_mag()']]],
-  ['kp',['kp',['../structqfilter__conf__t.html#a8260275a530ceb644d6a11a4fb22319c',1,'qfilter_conf_t::kp()'],['../structqfilter__t.html#ad6630f81781d3ebc0f9f59b52342c1dd',1,'qfilter_t::kp()']]],
+  ['ki',['ki',['../structAHRS__qfilter_1_1conf__t.html#aeb020e4c78b60188456c97ad4d8e488f',1,'AHRS_qfilter::conf_t']]],
+  ['ki_5fmag',['ki_mag',['../structAHRS__qfilter_1_1conf__t.html#a3cddac76a73afbdba5def62654540496',1,'AHRS_qfilter::conf_t']]],
+  ['kp',['kp',['../structAHRS__qfilter_1_1conf__t.html#a327586c5c0d1f6bf6e8023927c1a70f6',1,'AHRS_qfilter::conf_t']]],
   ['kp_5fbaro_5falt',['kp_baro_alt',['../structINS__complementary_1_1conf__t.html#af1d1c5e718608278483001dca6ff8194',1,'INS_complementary::conf_t']]],
   ['kp_5fbaro_5fvel',['kp_baro_vel',['../structINS__complementary_1_1conf__t.html#a65446109c4fb64828fc31cbcf910d6a5',1,'INS_complementary::conf_t']]],
   ['kp_5fflow_5fvel',['kp_flow_vel',['../structINS__complementary_1_1conf__t.html#a842b2eb27bd9a30651e26b501b6d84bd',1,'INS_complementary::conf_t']]],
@@ -23,7 +23,7 @@ var searchData=
   ['kp_5fgps_5fz_5fvel',['kp_gps_Z_vel',['../structINS__complementary_1_1conf__t.html#a10f2adc61edb7417ef02b4b216496d67',1,'INS_complementary::conf_t']]],
   ['kp_5fgps_5fz_5fvel_5fdgps',['kp_gps_Z_vel_dgps',['../structINS__complementary_1_1conf__t.html#ac73058ca4e40f1fd298e90e9c28fe894',1,'INS_complementary::conf_t']]],
   ['kp_5fgps_5fz_5fvel_5frtk',['kp_gps_Z_vel_rtk',['../structINS__complementary_1_1conf__t.html#ab84a7b0173502abd8d1ac116084227e0',1,'INS_complementary::conf_t']]],
-  ['kp_5fmag',['kp_mag',['../structqfilter__conf__t.html#aa8dc87e773de894d764c95802bbfa8be',1,'qfilter_conf_t::kp_mag()'],['../structqfilter__t.html#ae8445fb02e62262031a7e214f0f8377b',1,'qfilter_t::kp_mag()']]],
+  ['kp_5fmag',['kp_mag',['../structAHRS__qfilter_1_1conf__t.html#afc8e35775ff10942d26028c262da0a91',1,'AHRS_qfilter::conf_t']]],
   ['kp_5fsonar_5falt',['kp_sonar_alt',['../structINS__complementary_1_1conf__t.html#a71d1797760501b428e7544823d83e9ce',1,'INS_complementary::conf_t']]],
   ['kp_5fsonar_5fvel',['kp_sonar_vel',['../structINS__complementary_1_1conf__t.html#af84020cb925dac97b10a9d60d8a845be',1,'INS_complementary::conf_t']]]
 ];

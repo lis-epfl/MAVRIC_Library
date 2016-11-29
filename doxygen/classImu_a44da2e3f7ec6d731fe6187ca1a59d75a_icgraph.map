@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classAHRS__ekf.html#ab2173c6f8fb6f92741ca4fc7a42bc72f" title="Performs the update step with the magnetometer." alt="" coords="132,5,327,35"/>
+<area shape="rect" id="node7" href="$classAHRS__madgwick.html#a253c7b0f34283aec418d1bb10fa25f7f" title="Main update function." alt="" coords="143,59,316,88"/>
+<area shape="rect" id="node9" href="$classAHRS__qfilter.html#ac2d6983d326a1b2c363ef689d63a36c4" title="Performs the attitude estimation via a complementary filter." alt="" coords="156,112,303,141"/>
+<area shape="rect" id="node5" href="$classAHRS__ekf.html#aed153b17b55483c30cf0162989b8a186" title="Performs the EKF algorithm." alt="" coords="377,5,508,35"/>
+</map>

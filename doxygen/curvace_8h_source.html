@@ -227,11 +227,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00168"></a><a class="code" href="structcurvace__t.html#a1b2207f5cf259127b1af1143b047f487">00168</a>     <span class="keywordtype">float</span>                           <a class="code" href="structcurvace__t.html#a1b2207f5cf259127b1af1143b047f487" title="Low pass filter.">LPF</a>;                    
 <a name="l00169"></a><a class="code" href="structcurvace__t.html#aef909b2d041e73a5d99aaaf27300d138">00169</a>     <span class="keywordtype">float</span>                           <a class="code" href="structcurvace__t.html#aef909b2d041e73a5d99aaaf27300d138" title="Derotation factor.">derot_factor</a>;           
 <a name="l00170"></a><a class="code" href="structcurvace__t.html#a5ecffdd9f761ddb86eaa81512911f9b3">00170</a>     <a class="code" href="structquat__t.html" title="Unit quaternion.">quat_t</a>                          <a class="code" href="structcurvace__t.html#a5ecffdd9f761ddb86eaa81512911f9b3" title="unused">orientation</a>;            
-<a name="l00171"></a><a class="code" href="structcurvace__t.html#ad9afa07b9f26a699b097db5865c9f6df">00171</a>     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>*                   <a class="code" href="structcurvace__t.html#ad9afa07b9f26a699b097db5865c9f6df" title="Pointer to attitude estimation.">ahrs</a>;                   
+<a name="l00171"></a><a class="code" href="structcurvace__t.html#ad9afa07b9f26a699b097db5865c9f6df">00171</a>     <span class="keyword">const</span> ahrs_t*                   <a class="code" href="structcurvace__t.html#ad9afa07b9f26a699b097db5865c9f6df" title="Pointer to attitude estimation.">ahrs</a>;                   
 <a name="l00172"></a>00172 } <a class="code" href="structcurvace__t.html" title="Curvace data structure.">curvace_t</a>;
 <a name="l00173"></a>00173 
 <a name="l00174"></a>00174 
-<a name="l00181"></a>00181 <span class="keywordtype">void</span> curvace_init(<a class="code" href="structcurvace__t.html" title="Curvace data structure.">curvace_t</a>* curvace, <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>* ahrs);
+<a name="l00181"></a>00181 <span class="keywordtype">void</span> curvace_init(<a class="code" href="structcurvace__t.html" title="Curvace data structure.">curvace_t</a>* curvace, <span class="keyword">const</span> ahrs_t* ahrs);
 <a name="l00182"></a>00182 
 <a name="l00183"></a>00183 
 <a name="l00189"></a>00189 <span class="keywordtype">void</span> curvace_update(<a class="code" href="structcurvace__t.html" title="Curvace data structure.">curvace_t</a>* curvace);
@@ -260,7 +260,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 15:35:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:52:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

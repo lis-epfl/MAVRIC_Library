@@ -8,6 +8,5 @@
 <area shape="rect" id="node18" href="$classMission__handler__takeoff.html#a00239402258059b6cc2dbe742768a198" title="Sets up this handler class for a first time initialization." alt="" coords="299,325,501,355"/>
 <area shape="rect" id="node20" href="$classMission__handler__takeoff.html#ab1a18df9c1ab0b9610134996321b7643" title="Handles the mission every iteration." alt="" coords="295,379,505,408"/>
 <area shape="rect" id="node22" href="$classMission__handler__takeoff.html#a28119f2fc4be460e72941a0c0244fdef" title="Provides control commands to the flight controller." alt="" coords="251,432,549,461"/>
-<area shape="rect" id="node24" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="285,485,515,515"/>
 <area shape="rect" id="node9" href="$classMission__handler__landing.html#af1e37fd52608635b638c3b2130d50db4" title="Provides control commands to the flight controller." alt="" coords="653,139,952,168"/>
 </map>

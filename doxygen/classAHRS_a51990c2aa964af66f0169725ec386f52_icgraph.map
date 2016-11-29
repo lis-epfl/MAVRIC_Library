@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209" title="Set command from manual control in attitude mode." alt="" coords="167,5,543,35"/>
+<area shape="rect" id="node5" href="$classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90" title="Set command from manual control in velocity mode." alt="" coords="165,59,544,88"/>
+<area shape="rect" id="node7" href="$classPosition__controller.html#a0053e27a76331e0dadac9ce640f715b2" title="Main update function." alt="" coords="267,112,443,141"/>
+<area shape="rect" id="node9" href="$classMission__planner.html#a6ea58cd5306ecb07a76ace43e0d6a514" title="Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long." alt="" coords="240,165,469,195"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="251,219,459,248"/>
+<area shape="rect" id="node15" href="$classAHRS.html#aac9d006eae089af167221a42b905895f" title="Gets the yaw angle from the ahrs quaternion." alt="" coords="309,272,400,301"/>
+<area shape="rect" id="node17" href="$classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="300,325,409,355"/>
+<area shape="rect" id="node13" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="592,219,755,248"/>
+</map>

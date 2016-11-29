@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classMavlink__communication__T.html" title="Handles various aspect of mavlink protocol with periodic telemetry, message callback, and onboard parameters." alt="" coords="5,5,504,35"/>
+<area shape="rect" id="node1" href="$classMavlink__message__handler.html" title="Message handler base class." alt="" coords="5,5,181,35"/>
+<area shape="rect" id="node3" href="$classMavlink__message__handler__T.html" title="Message handler." alt="" coords="229,5,472,35"/>
 </map>

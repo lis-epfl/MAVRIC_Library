@@ -95,7 +95,7 @@ Collaboration diagram for attitude_error_estimator_t:</div>
 <div class="dyncontent">
 <div class="center"><img src="structattitude__error__estimator__t__coll__graph.png" border="0" usemap="#attitude__error__estimator__t_coll__map" alt="Collaboration graph"/></div>
 <map name="attitude__error__estimator__t_coll__map" id="attitude__error__estimator__t_coll__map">
-<area shape="rect" id="node2" href="structquat__t.html" title="Unit quaternion." alt="" coords="84,6,143,109"/><area shape="rect" id="node4" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="145,176,263,331"/></map>
+<area shape="rect" id="node2" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="5,6,155,178"/><area shape="rect" id="node4" href="structquat__t.html" title="Unit quaternion." alt="" coords="179,41,237,143"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="structattitude__error__estimator__t-members.html">List of all members.</a></p>
@@ -108,9 +108,9 @@ Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa7b99f9a229355fd2cfacdb7432f278e"></a><!-- doxytag: member="attitude_error_estimator_t::rpy_errors" ref="aa7b99f9a229355fd2cfacdb7432f278e" args="[3]" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structattitude__error__estimator__t.html#aa7b99f9a229355fd2cfacdb7432f278e">rpy_errors</a> [3]</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Local errors: roll, pitch and yaw. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abdb541e4bf6dacd727de5d171e0063ca"></a><!-- doxytag: member="attitude_error_estimator_t::ahrs" ref="abdb541e4bf6dacd727de5d171e0063ca" args="" -->
-const <a class="el" href="structahrs__t.html">ahrs_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structattitude__error__estimator__t.html#abdb541e4bf6dacd727de5d171e0063ca">ahrs</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to AHRS (current attitude), must be updated externally. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa32867c986ec39db6cd73c4f9d30b4d4"></a><!-- doxytag: member="attitude_error_estimator_t::ahrs" ref="aa32867c986ec39db6cd73c4f9d30b4d4" args="" -->
+const <a class="el" href="classAHRS.html">AHRS</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structattitude__error__estimator__t.html#aa32867c986ec39db6cd73c4f9d30b4d4">ahrs</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to <a class="el" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a> (current attitude), must be updated externally. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Quaternion attitude error estimator data structure. </p>
@@ -135,7 +135,7 @@ const <a class="el" href="structahrs__t.html">ahrs_t</a> *&#160;</td><td class="
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 15:35:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:52:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

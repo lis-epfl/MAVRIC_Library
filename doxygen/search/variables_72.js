@@ -1,10 +1,10 @@
 var searchData=
 [
   ['r_5f',['R_',['../classKalman.html#aed56eb17f9b2e79632d02d1a8ba1e11f',1,'Kalman']]],
-  ['r_5facc',['R_acc',['../structAhrs__ekf_1_1conf__t.html#ac8f6b0a369bbe3938e2fef1c27bf6923',1,'Ahrs_ekf::conf_t']]],
-  ['r_5facc_5f',['R_acc_',['../classAhrs__ekf.html#aa2a95f757b64e7ab2f174b30bf0efb60',1,'Ahrs_ekf']]],
-  ['r_5fmag',['R_mag',['../structAhrs__ekf_1_1conf__t.html#a59eed74ea7158ec728b841224a976b37',1,'Ahrs_ekf::conf_t']]],
-  ['r_5fmag_5f',['R_mag_',['../classAhrs__ekf.html#a9e938afcc9a479378e43a951beb2ab39',1,'Ahrs_ekf']]],
+  ['r_5facc',['R_acc',['../structAHRS__ekf_1_1conf__t.html#abacd0e5da3f09323a2491ce0dd4c84f6',1,'AHRS_ekf::conf_t']]],
+  ['r_5facc_5f',['R_acc_',['../classAHRS__ekf.html#a8eedba2885de54fb3b7382df73e193f6',1,'AHRS_ekf']]],
+  ['r_5fmag',['R_mag',['../structAHRS__ekf_1_1conf__t.html#a8c18caa7eb166a3b683c53e007fd8f0e',1,'AHRS_ekf::conf_t']]],
+  ['r_5fmag_5f',['R_mag_',['../classAHRS__ekf.html#a8c2eb27f5afc7a7ae454ca2e398b6865',1,'AHRS_ekf']]],
   ['r_5fmocap',['R_mocap',['../structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5',1,'Ahrs_ekf_mocap::conf_t']]],
   ['r_5fmocap_5f',['R_mocap_',['../classAhrs__ekf__mocap.html#a6699c1dfcf24e77b31a8b423764dadfb',1,'Ahrs_ekf_mocap']]],
   ['radius',['radius',['../structGeofence__cylinder_1_1conf__t.html#aaa187095d2eff8115c7d5d104e1dde46',1,'Geofence_cylinder::conf_t']]],

@@ -1,6 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="5,177,144,418"/>
-<area shape="rect" id="node4" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="168,220,285,375"/>
-<area shape="rect" id="node6" href="$structquat__t.html" title="Unit quaternion." alt="" coords="197,6,256,109"/>
-<area shape="rect" id="node8" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="309,194,464,401"/>
+<area shape="rect" id="node2" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="5,6,144,247"/>
+<area shape="rect" id="node4" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="168,41,317,213"/>
+<area shape="rect" id="node6" href="$structquat__t.html" title="Unit quaternion." alt="" coords="341,75,400,178"/>
+<area shape="rect" id="node8" href="$classDynamic__model.html" title="Abstract class for simulation&#39;s dynamic model." alt="" coords="424,23,579,230"/>
 </map>

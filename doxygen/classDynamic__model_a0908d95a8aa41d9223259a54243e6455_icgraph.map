@@ -1,5 +1,4 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classGyroscope__sim.html#a7bf4a12ce8b9315c3f9b4217be5718dc" title="Main update function &#160;Reads new values from sensor." alt="" coords="316,5,476,35"/>
 <area shape="rect" id="node5" href="$classINS__AHRS__groundtruth.html#a9b009a6b55c43076359e1e0eb53134cc" title="Main update function." alt="" coords="292,59,500,88"/>
-<area shape="rect" id="node7" href="$classINS__AHRS__groundtruth.html#a6642861d82973164db16af8b68b98b20" title="Constructor." alt="" coords="551,59,860,88"/>
 </map>

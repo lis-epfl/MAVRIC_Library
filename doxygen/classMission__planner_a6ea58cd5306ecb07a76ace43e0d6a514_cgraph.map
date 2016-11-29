@@ -1,13 +1,12 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMission__planner.html#a8e6878d0f506132add3403b81b08e83b" title="Gets the internal state." alt="" coords="316,96,519,125"/>
-<area shape="rect" id="node5" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="361,149,473,179"/>
-<area shape="rect" id="node7" href="$classMission__planner.html#a52445702cb5a8611abb1e4272a6b15be" title="Inserts the inputted waypoint into the mission." alt="" coords="285,203,549,232"/>
-<area shape="rect" id="node22" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="348,256,487,285"/>
-<area shape="rect" id="node9" href="$classMission__planner.html#adb37dab461884be985fa9dce1f759e3a" title="Switches the mission handler to the inputted waypoint." alt="" coords="599,125,860,155"/>
-<area shape="rect" id="node15" href="$classMission__planner.html#a3fb54cbdd4762beb6795083b4ddc1c58" title="Sets the internal state based on default waypoints." alt="" coords="943,219,1169,248"/>
-<area shape="rect" id="node11" href="$classMission__handler__registry.html#a5428f49305b49474957ef5c8dcc3ceff" title="Attempts to get the mission handler form the registry." alt="" coords="909,5,1203,35"/>
-<area shape="rect" id="node13" href="$classMission__handler.html#a4c558404def1712147a21591969ba8e4" title="Sets up this handler class for a first time initialization." alt="" coords="979,59,1133,88"/>
-<area shape="rect" id="node17" href="$classMission__handler.html#aa7716da4cc0508f4f78719c4f8194b3f" title="Gets the mission state of this handler." alt="" coords="929,112,1183,141"/>
-<area shape="rect" id="node19" href="$classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365" title="Gets the command of the waypoint." alt="" coords="985,165,1127,195"/>
-<area shape="rect" id="node24" href="$classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="688,256,771,285"/>
+<area shape="rect" id="node3" href="$classMission__planner.html#a8e6878d0f506132add3403b81b08e83b" title="Gets the internal state." alt="" coords="316,5,519,35"/>
+<area shape="rect" id="node5" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="361,59,473,88"/>
+<area shape="rect" id="node7" href="$classAHRS.html#a51990c2aa964af66f0169725ec386f52" title="Estimated attitude." alt="" coords="363,112,472,141"/>
+<area shape="rect" id="node9" href="$classMission__planner.html#a52445702cb5a8611abb1e4272a6b15be" title="Inserts the inputted waypoint into the mission." alt="" coords="285,165,549,195"/>
+<area shape="rect" id="node11" href="$classMission__planner.html#adb37dab461884be985fa9dce1f759e3a" title="Switches the mission handler to the inputted waypoint." alt="" coords="599,139,860,168"/>
+<area shape="rect" id="node17" href="$classMission__planner.html#a3fb54cbdd4762beb6795083b4ddc1c58" title="Sets the internal state based on default waypoints." alt="" coords="943,219,1169,248"/>
+<area shape="rect" id="node13" href="$classMission__handler__registry.html#a5428f49305b49474957ef5c8dcc3ceff" title="Attempts to get the mission handler form the registry." alt="" coords="909,5,1203,35"/>
+<area shape="rect" id="node15" href="$classMission__handler.html#a4c558404def1712147a21591969ba8e4" title="Sets up this handler class for a first time initialization." alt="" coords="979,59,1133,88"/>
+<area shape="rect" id="node19" href="$classMission__handler.html#aa7716da4cc0508f4f78719c4f8194b3f" title="Gets the mission state of this handler." alt="" coords="929,112,1183,141"/>
+<area shape="rect" id="node21" href="$classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365" title="Gets the command of the waypoint." alt="" coords="985,165,1127,195"/>
 </map>

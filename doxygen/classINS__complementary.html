@@ -119,8 +119,8 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#a9c14e0dece41fd603770c8bce0b0b578">INS_complementary</a> (<a class="el" href="classState.html">State</a> &amp;state, const <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, const <a class="el" href="classSonar.html">Sonar</a> &amp;sonar, const <a class="el" href="classGps.html">Gps</a> &amp;gps, const <a class="el" href="classPx4flow__i2c.html">Px4flow_i2c</a> &amp;flow, const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, const <a class="el" href="structINS__complementary_1_1conf__t.html">conf_t</a> config=default_config())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the module.  <a href="#a9c14e0dece41fd603770c8bce0b0b578"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#abcfda7655d6f050cc0b2633c194e6589">INS_complementary</a> (<a class="el" href="classState.html">State</a> &amp;state, const <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, const <a class="el" href="classSonar.html">Sonar</a> &amp;sonar, const <a class="el" href="classGps.html">Gps</a> &amp;gps, const <a class="el" href="classPx4flow__i2c.html">Px4flow_i2c</a> &amp;flow, const <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, const <a class="el" href="structINS__complementary_1_1conf__t.html">conf_t</a> config=default_config())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the module.  <a href="#abcfda7655d6f050cc0b2633c194e6589"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#a86550a7d52bbeeef30a9ffb1be4ebbb4">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Position estimation update step, performing position estimation then position correction (function to be used)  <a href="#a86550a7d52bbeeef30a9ffb1be4ebbb4"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#adf08759d16d44e7924f0e515d0d9a6e8">last_update_s</a> (void) const </td></tr>
@@ -154,12 +154,12 @@ Friends</h2></td></tr>
 class&#160;</td><td class="memItemRight" valign="bottom"><b>Mavlink_waypoint_handler</b></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a9c14e0dece41fd603770c8bce0b0b578"></a><!-- doxytag: member="INS_complementary::INS_complementary" ref="a9c14e0dece41fd603770c8bce0b0b578" args="(State &amp;state, const Barometer &amp;barometer, const Sonar &amp;sonar, const Gps &amp;gps, const Px4flow_i2c &amp;flow, const ahrs_t &amp;ahrs, const conf_t config=default_config())" -->
+<a class="anchor" id="abcfda7655d6f050cc0b2633c194e6589"></a><!-- doxytag: member="INS_complementary::INS_complementary" ref="abcfda7655d6f050cc0b2633c194e6589" args="(State &amp;state, const Barometer &amp;barometer, const Sonar &amp;sonar, const Gps &amp;gps, const Px4flow_i2c &amp;flow, const AHRS &amp;ahrs, const conf_t config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classINS__complementary.html#a9c14e0dece41fd603770c8bce0b0b578">INS_complementary::INS_complementary</a> </td>
+          <td class="memname"><a class="el" href="classINS__complementary.html#abcfda7655d6f050cc0b2633c194e6589">INS_complementary::INS_complementary</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classState.html">State</a> &amp;&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -191,7 +191,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Mavlink_waypoint_han
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classAHRS.html">AHRS</a> &amp;&#160;</td>
           <td class="paramname"><em>ahrs</em>, </td>
         </tr>
         <tr>
@@ -350,6 +350,15 @@ Here is the call graph for this function:</div>
 
 <p>Implements <a class="el" href="classINS.html#a091756ab3fd40d57c71a476b605f93e0">INS</a>.</p>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classINS__complementary_a86550a7d52bbeeef30a9ffb1be4ebbb4_cgraph.png" border="0" usemap="#classINS__complementary_a86550a7d52bbeeef30a9ffb1be4ebbb4_cgraph" alt=""/></div>
+<map name="classINS__complementary_a86550a7d52bbeeef30a9ffb1be4ebbb4_cgraph" id="classINS__complementary_a86550a7d52bbeeef30a9ffb1be4ebbb4_cgraph">
+<area shape="rect" id="node3" href="classAHRS.html#a911c1bd37e4fb69e576647a44cfe1f9c" title="Indicates which estimate can be trusted." alt="" coords="244,5,369,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="afdc578662ca8bf3bff37b448734b722b"></a><!-- doxytag: member="INS_complementary::velocity_lf" ref="afdc578662ca8bf3bff37b448734b722b" args="(void) const " -->
@@ -396,7 +405,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 15:35:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:52:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

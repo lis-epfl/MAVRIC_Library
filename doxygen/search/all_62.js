@@ -12,6 +12,7 @@ var searchData=
   ['battery_5f',['battery_',['../classState.html#aa8af6eff2f240cae87d455db9023e079',1,'State']]],
   ['battery_5fconf_5ft',['battery_conf_t',['../structbattery__conf__t.html',1,'']]],
   ['baud_5frate',['baud_rate',['../structubx__cfg__prt__t.html#a0403d8ad0dae4dcf8e693c98f159c196',1,'ubx_cfg_prt_t']]],
+  ['beta_5f',['beta_',['../classAHRS__madgwick.html#ae71669a77ab7e3ca2ed9a71cac28e0b1',1,'AHRS_madgwick']]],
   ['bias',['bias',['../structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a',1,'imu_sensor_config_t']]],
   ['bind',['bind',['../classSatellite.html#a897b03fd579a158190b4a1459ea90ec0',1,'Satellite::bind()'],['../classSpektrum__satellite.html#a53bf9883a0f358c9a1f5cb229965a472',1,'Spektrum_satellite::bind()']]],
   ['bits',['bits',['../classMav__mode.html#a8c973fcb0a6c5317c9e96bb2934dd7ee',1,'Mav_mode']]],

@@ -14,11 +14,12 @@
 <area shape="rect" id="node44" href="$classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="560,477,669,507"/>
 <area shape="rect" id="node47" href="$classState.html#a24a57c4fe42e2f8d7d3fb4601e9ac437" title="Makes the switch to active mode." alt="" coords="516,531,713,560"/>
 <area shape="rect" id="node51" href="$classImu.html#a066f63054b730605afc31ee0c19daae1" title="Get the readiness of the IMU." alt="" coords="288,741,389,771"/>
-<area shape="rect" id="node54" href="$classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))" alt="" coords="241,795,436,824"/>
-<area shape="rect" id="node57" href="$classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="283,848,395,877"/>
-<area shape="rect" id="node59" href="$classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4" title="returns whether in manual mode (MAV_MODE_FLAG_MANUAL_INPUT_ENABLED set)" alt="" coords="263,901,415,931"/>
-<area shape="rect" id="node61" href="$classState__display.html#a153183db41405626c97ad8e70d1b3113" title="Set state function &#160;Set the state to be displayed." alt="" coords="257,955,420,984"/>
-<area shape="rect" id="node63" href="$classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick." alt="" coords="220,1008,457,1037"/>
+<area shape="rect" id="node53" href="$classAHRS.html#a911c1bd37e4fb69e576647a44cfe1f9c" title="Indicates which estimate can be trusted." alt="" coords="276,795,401,824"/>
+<area shape="rect" id="node56" href="$classManual__control.html#af0ed9529564e5aa165fa5e77df3fe091" title="Return the mode source (which control source can change the mode (remote, joystick, groundstation))" alt="" coords="241,848,436,877"/>
+<area shape="rect" id="node59" href="$classINS.html#a4806a6d39547e538c4554c1b6aa7eba2" title="Indicates which estimate can be trusted." alt="" coords="283,901,395,931"/>
+<area shape="rect" id="node61" href="$classMav__mode.html#a3c4235b6649dcabb00a41d8aa3cf16a4" title="returns whether in manual mode (MAV_MODE_FLAG_MANUAL_INPUT_ENABLED set)" alt="" coords="263,955,415,984"/>
+<area shape="rect" id="node63" href="$classState__display.html#a153183db41405626c97ad8e70d1b3113" title="Set state function &#160;Set the state to be displayed." alt="" coords="257,1008,420,1037"/>
+<area shape="rect" id="node65" href="$classManual__control.html#a74ff138d9eefaef201e42ca4e9130747" title="Sets the internal state of the joystick." alt="" coords="220,1061,457,1091"/>
 <area shape="rect" id="node9" href="$classINS.html#a265b87bc040a0dfd8f8981f03c6d4ea0" title="3D Position in meters (NED frame)" alt="" coords="559,139,671,168"/>
 <area shape="rect" id="node11" href="$classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="573,85,656,115"/>
 <area shape="rect" id="node17" href="$classJoystick.html#a130d49f4bd65b110c7078816c587486d" title="Returns the current desired mode value from the joystick." alt="" coords="547,219,683,248"/>

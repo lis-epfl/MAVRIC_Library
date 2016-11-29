@@ -162,7 +162,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00082"></a><a class="code" href="structaudio__t.html#a9581ec843b7b478bd52a2a1274ec9567">00082</a>     <a class="code" href="structbyte__stream__t.html" title="Byte stream.">byte_stream_t</a> <a class="code" href="structaudio__t.html#a9581ec843b7b478bd52a2a1274ec9567" title="Acoustic in coming stream.">audio_stream_in</a>;                      
 <a name="l00083"></a>00083     <span class="comment">//byte_stream_t* audio_stream_out;                  ///&lt; Acoustic out coming stream</span>
 <a name="l00084"></a>00084 
-<a name="l00085"></a><a class="code" href="structaudio__t.html#a87e9d96babf38a2edd2eab0cf83d29fd">00085</a>     <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>*                     <a class="code" href="structaudio__t.html#a87e9d96babf38a2edd2eab0cf83d29fd" title="The pointer to the attitude estimation structure.">ahrs</a>;                   
+<a name="l00085"></a><a class="code" href="structaudio__t.html#a87e9d96babf38a2edd2eab0cf83d29fd">00085</a>     ahrs_t*                     <a class="code" href="structaudio__t.html#a87e9d96babf38a2edd2eab0cf83d29fd" title="The pointer to the attitude estimation structure.">ahrs</a>;                   
 <a name="l00086"></a><a class="code" href="structaudio__t.html#ab11636eb56cbe695325cb7180a1b3177">00086</a>     <a class="code" href="classINS.html">INS</a>*                        <a class="code" href="structaudio__t.html#ab11636eb56cbe695325cb7180a1b3177" title="The pointer to the position estimation structure.">position_estimation</a>;    
 <a name="l00087"></a><a class="code" href="structaudio__t.html#a1c1ef0bc7df83d2e362d4c5258b6be3a">00087</a>     <a class="code" href="structremote__t.html" title="The configuration structure of the remote.">remote_t</a>*                   <a class="code" href="structaudio__t.html#a1c1ef0bc7df83d2e362d4c5258b6be3a" title="The pointer to the remote structure.">remote</a>;                 
 <a name="l00088"></a><a class="code" href="structaudio__t.html#a447eb7c039465b9ea4cf36599b17406f">00088</a>     navigation_t*               <a class="code" href="structaudio__t.html#a447eb7c039465b9ea4cf36599b17406f" title="The pointer to the navigation control structure.">navigation</a>;             
@@ -175,7 +175,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00095"></a>00095 
 <a name="l00110"></a>00110 <span class="keywordtype">void</span> acoustic_init(<a class="code" href="structaudio__t.html" title="Structure of the acoustic data.">audio_t</a>*         audio_data,
 <a name="l00111"></a>00111                    int32_t                      UID,
-<a name="l00112"></a>00112                    <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>*                      ahrs,
+<a name="l00112"></a>00112                    ahrs_t*                      ahrs,
 <a name="l00113"></a>00113                    Position_estimation*       position_estimation,
 <a name="l00114"></a>00114                    <a class="code" href="structremote__t.html" title="The configuration structure of the remote.">remote_t</a>*                    remote,
 <a name="l00115"></a>00115                    navigation_t*                navigation,
@@ -211,7 +211,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 15:35:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:52:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

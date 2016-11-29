@@ -130,10 +130,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00047"></a>00047 <span class="preprocessor">#include &quot;communication/mavlink_communication.hpp&quot;</span>
 <a name="l00048"></a>00048 <span class="preprocessor">#include &quot;communication/mavlink_stream.hpp&quot;</span>
 <a name="l00049"></a>00049 <span class="preprocessor">#include &quot;communication/mavlink_waypoint_handler.hpp&quot;</span>
-<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;sensing/ins.hpp&quot;</span>
-<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;communication/mavlink_message_handler.hpp&quot;</span>
-<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;status/state.hpp&quot;</span>
-<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;sensing/qfilter.hpp&quot;</span>
+<a name="l00050"></a>00050 <span class="preprocessor">#include &quot;sensing/ahrs.hpp&quot;</span>
+<a name="l00051"></a>00051 <span class="preprocessor">#include &quot;sensing/ins.hpp&quot;</span>
+<a name="l00052"></a>00052 <span class="preprocessor">#include &quot;communication/mavlink_message_handler.hpp&quot;</span>
+<a name="l00053"></a>00053 <span class="preprocessor">#include &quot;status/state.hpp&quot;</span>
 <a name="l00054"></a>00054 <span class="preprocessor">#include &quot;manual_control/manual_control.hpp&quot;</span>
 <a name="l00055"></a>00055 <span class="preprocessor">#include &quot;status/geofence.hpp&quot;</span>
 <a name="l00056"></a>00056 <span class="preprocessor">#include &quot;mission/mission_handler_registry.hpp&quot;</span>
@@ -175,8 +175,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00095"></a>00095     };
 <a name="l00096"></a>00096 
 <a name="l00097"></a>00097 
-<a name="l00113"></a>00113     <a class="code" href="classMission__planner.html#afc5e3654c3a4468f50b30b0b1c2226d2" title="Initialize the waypoint handler.">Mission_planner</a>(    <a class="code" href="classINS.html">INS</a>&amp; ins,
-<a name="l00114"></a>00114                         <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; ahrs,
+<a name="l00113"></a>00113     <a class="code" href="classMission__planner.html#ae1b8bdd44da11b8aa3e3e65367f478a1" title="Initialize the waypoint handler.">Mission_planner</a>(    <a class="code" href="classINS.html">INS</a>&amp; ins,
+<a name="l00114"></a>00114                         <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs,
 <a name="l00115"></a>00115                         <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; state,
 <a name="l00116"></a>00116                         <span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control,
 <a name="l00117"></a>00117                         <span class="keyword">const</span> <a class="code" href="classGeofence.html" title="Interface for Geofence.">Geofence</a>&amp; geofence,
@@ -231,7 +231,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00220"></a><a class="code" href="classMission__planner.html#a1c2ed6c332af66daa3288ce0bedc39f3">00220</a>     <span class="keyword">const</span> <a class="code" href="classMavlink__stream.html" title="Main structure for the MAVLink stream module.">Mavlink_stream</a>&amp; <a class="code" href="classMission__planner.html#a1c2ed6c332af66daa3288ce0bedc39f3" title="The reference to MAVLink stream.">mavlink_stream_</a>;                      
 <a name="l00221"></a><a class="code" href="classMission__planner.html#ae3af70b0041d494d828373a06ac710bd">00221</a>     <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; <a class="code" href="classMission__planner.html#ae3af70b0041d494d828373a06ac710bd" title="The reference to the state structure.">state_</a>;                                              
 <a name="l00222"></a><a class="code" href="classMission__planner.html#a7cf7a9c69dda85f87d016c62c7b8dd1b">00222</a>     <a class="code" href="classINS.html">INS</a>&amp; <a class="code" href="classMission__planner.html#a7cf7a9c69dda85f87d016c62c7b8dd1b" title="The reference to the ins structure.">ins_</a>;                                                  
-<a name="l00223"></a><a class="code" href="classMission__planner.html#a62b71be6d9a426a90cb591c666a23e01">00223</a>     <span class="keyword">const</span> <a class="code" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System.">ahrs_t</a>&amp; <a class="code" href="classMission__planner.html#a62b71be6d9a426a90cb591c666a23e01" title="The reference to the attitude estimation structure.">ahrs_</a>;                                        
+<a name="l00223"></a><a class="code" href="classMission__planner.html#adadc2b6ac0f14809c0ed38717210b8cc">00223</a>     <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; <a class="code" href="classMission__planner.html#adadc2b6ac0f14809c0ed38717210b8cc" title="The reference to the attitude estimation structure.">ahrs_</a>;                                          
 <a name="l00224"></a><a class="code" href="classMission__planner.html#abbbeb6aa5e784036299a002db9968bf5">00224</a>     <span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; <a class="code" href="classMission__planner.html#abbbeb6aa5e784036299a002db9968bf5" title="The reference to the manual_control structure.">manual_control_</a>;                      
 <a name="l00225"></a><a class="code" href="classMission__planner.html#a07c89e1375f5617fdfaa31cfe5100f0a">00225</a>     <span class="keyword">const</span> <a class="code" href="classGeofence.html" title="Interface for Geofence.">Geofence</a>&amp; <a class="code" href="classMission__planner.html#a07c89e1375f5617fdfaa31cfe5100f0a" title="The reference to the geofence structure.">geofence_</a>;                                  
 <a name="l00226"></a><a class="code" href="classMission__planner.html#a976ec5b568dfd38add1a0f2a9a3d6e9a">00226</a>     <a class="code" href="classMavlink__message__handler.html" title="Message handler base class.">Mavlink_message_handler</a>&amp; <a class="code" href="classMission__planner.html#a976ec5b568dfd38add1a0f2a9a3d6e9a" title="The reference to the mavlink message handler.">message_handler_</a>;                  
@@ -304,7 +304,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 15:35:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:52:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

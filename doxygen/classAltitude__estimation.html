@@ -109,8 +109,8 @@ Collaboration diagram for Altitude_estimation:</div>
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1f04f2ff207848adacc2700cdd601445"></a><!-- doxytag: member="Altitude_estimation::Altitude_estimation" ref="a1f04f2ff207848adacc2700cdd601445" args="(Sonar &amp;sonar, Barometer &amp;barometer, ahrs_t &amp;ahrs, altitude_t &amp;altitude, altitude_estimation_conf_t config=altitude_estimation_default_config())" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Altitude_estimation</b> (<a class="el" href="classSonar.html">Sonar</a> &amp;sonar, <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, <a class="el" href="structaltitude__t.html">altitude_t</a> &amp;altitude, <a class="el" href="structaltitude__estimation__conf__t.html">altitude_estimation_conf_t</a> config=altitude_estimation_default_config())</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2fec41ddc8acfe8803f6e21163ebefa8"></a><!-- doxytag: member="Altitude_estimation::Altitude_estimation" ref="a2fec41ddc8acfe8803f6e21163ebefa8" args="(Sonar &amp;sonar, Barometer &amp;barometer, AHRS &amp;ahrs, altitude_t &amp;altitude, altitude_estimation_conf_t config=altitude_estimation_default_config())" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>Altitude_estimation</b> (<a class="el" href="classSonar.html">Sonar</a> &amp;sonar, <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, <a class="el" href="structaltitude__t.html">altitude_t</a> &amp;altitude, <a class="el" href="structaltitude__estimation__conf__t.html">altitude_estimation_conf_t</a> config=altitude_estimation_default_config())</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAltitude__estimation.html#a074cd11f32f798347d274bd64c2d90e7">init</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialization.  <a href="#a074cd11f32f798347d274bd64c2d90e7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAltitude__estimation.html#a961930e7a64e8f4b6703e1e71cd8235e">update</a> (void)</td></tr>
@@ -162,7 +162,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classAltitude__estimation_a961930e7a64e8f4b6703e1e71cd8235e_cgraph.png" border="0" usemap="#classAltitude__estimation_a961930e7a64e8f4b6703e1e71cd8235e_cgraph" alt=""/></div>
 <map name="classAltitude__estimation_a961930e7a64e8f4b6703e1e71cd8235e_cgraph" id="classAltitude__estimation_a961930e7a64e8f4b6703e1e71cd8235e_cgraph">
-<area shape="rect" id="node3" href="classKalman.html#a2bf20288d9e7050857ace6a70b173802" title="Predict next state without input." alt="" coords="236,5,409,35"/><area shape="rect" id="node5" href="classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="247,59,399,88"/><area shape="rect" id="node7" href="classSonar.html#a61279df583287149aa78c72fc4750e15" title="Get latest distance measure." alt="" coords="267,112,379,141"/><area shape="rect" id="node9" href="classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="269,165,376,195"/></map>
+<area shape="rect" id="node3" href="classKalman.html#a2bf20288d9e7050857ace6a70b173802" title="Predict next state without input." alt="" coords="236,5,409,35"/><area shape="rect" id="node5" href="classAHRS.html#a01b55f6181231cc2309a6563caf503c4" title="Estimated linear acceleration." alt="" coords="235,59,411,88"/><area shape="rect" id="node7" href="classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="247,112,399,141"/><area shape="rect" id="node9" href="classSonar.html#a61279df583287149aa78c72fc4750e15" title="Get latest distance measure." alt="" coords="267,165,379,195"/><area shape="rect" id="node11" href="classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="269,219,376,248"/></map>
 </div>
 </p>
 
@@ -190,7 +190,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Nov 29 2016 15:35:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:52:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,16 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classController.html" title="Controller\&lt; attitude_command_t \&gt;" alt="" coords="8,5,227,35"/>
-<area shape="rect" id="node3" href="$classFlight__controller.html" title="Interface for flight controllers." alt="" coords="277,139,392,168"/>
-<area shape="rect" id="node5" href="$classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy." alt="" coords="441,139,593,168"/>
-<area shape="rect" id="node7" href="$classFlight__controller__copter.html" title="Flight_controller_copter\&lt; N_ROTORS \&gt;" alt="" coords="644,85,897,115"/>
-<area shape="rect" id="node9" href="$classFlight__controller__copter.html" title="Flight_controller_copter\&lt; 4 \&gt;" alt="" coords="677,139,864,168"/>
-<area shape="rect" id="node15" href="$classFlight__controller__copter.html" title="Flight_controller_copter\&lt; 6 \&gt;" alt="" coords="677,192,864,221"/>
-<area shape="rect" id="node11" href="$classFlight__controller__quadcopter__cross.html" title="Flight_controller_quadcopter_cross" alt="" coords="947,85,1171,115"/>
-<area shape="rect" id="node13" href="$classFlight__controller__quadcopter__diag.html" title="Flight_controller_quadcopter_diag" alt="" coords="951,139,1167,168"/>
-<area shape="rect" id="node17" href="$classFlight__controller__hexacopter.html" title="Flight_controller_hexacopter" alt="" coords="967,192,1151,221"/>
-<area shape="rect" id="node18" href="$classController.html" title="Controller\&lt; position_command_t \&gt;" alt="" coords="7,59,228,88"/>
-<area shape="rect" id="node20" href="$classController.html" title="Controller\&lt; rate_command_t \&gt;" alt="" coords="19,112,216,141"/>
-<area shape="rect" id="node22" href="$classController.html" title="Controller\&lt; thrust_command_t \&gt;" alt="" coords="12,165,223,195"/>
-<area shape="rect" id="node24" href="$classController.html" title="Controller\&lt; torque_command_t \&gt;" alt="" coords="11,219,224,248"/>
-<area shape="rect" id="node26" href="$classController.html" title="Controller\&lt; velocity_command_t \&gt;" alt="" coords="7,272,228,301"/>
+<area shape="rect" id="node1" href="$classController.html" title="Controller\&lt; velocity_command_t, attitude_command_t \&gt;" alt="" coords="7,5,353,35"/>
+<area shape="rect" id="node3" href="$classController__1__to__2.html" title="Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;" alt="" coords="404,32,913,61"/>
+<area shape="rect" id="node5" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="964,32,1092,61"/>
+<area shape="rect" id="node7" href="$classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="1143,32,1313,61"/>
+<area shape="rect" id="node8" href="$classController.html" title="Controller\&lt; velocity_command_t, thrust_command_t \&gt;" alt="" coords="11,59,349,88"/>
 </map>

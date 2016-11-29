@@ -1,6 +1,7 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classKalman.html#a2bf20288d9e7050857ace6a70b173802" title="Predict next state without input." alt="" coords="236,5,409,35"/>
-<area shape="rect" id="node5" href="$classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="247,59,399,88"/>
-<area shape="rect" id="node7" href="$classSonar.html#a61279df583287149aa78c72fc4750e15" title="Get latest distance measure." alt="" coords="267,112,379,141"/>
-<area shape="rect" id="node9" href="$classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="269,165,376,195"/>
+<area shape="rect" id="node5" href="$classAHRS.html#a01b55f6181231cc2309a6563caf503c4" title="Estimated linear acceleration." alt="" coords="235,59,411,88"/>
+<area shape="rect" id="node7" href="$classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="247,112,399,141"/>
+<area shape="rect" id="node9" href="$classSonar.html#a61279df583287149aa78c72fc4750e15" title="Get latest distance measure." alt="" coords="267,165,379,195"/>
+<area shape="rect" id="node11" href="$classSonar.html#a60e9267a7d64420ad9b172c33f4877f4" title="Indicates whether the measurements can be trusted." alt="" coords="269,219,376,248"/>
 </map>

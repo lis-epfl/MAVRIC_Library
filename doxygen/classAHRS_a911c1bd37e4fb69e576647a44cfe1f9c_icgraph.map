@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classINS__complementary.html#a86550a7d52bbeeef30a9ffb1be4ebbb4" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="183,5,369,35"/>
+<area shape="rect" id="node5" href="$classINS__kf.html#a8ddaeecb2d2c100fddaa0de9dfb06967" title="Main update function." alt="" coords="221,59,331,88"/>
+<area shape="rect" id="node7" href="$classState__machine.html#a76607bdfa0400d58c776d50e57008d99" title="Updates the state machine." alt="" coords="199,112,353,141"/>
+</map>

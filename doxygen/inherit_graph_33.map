@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classConsole.html" title="Class template to write to any write&#45;able module in human&#45;readable format." alt="" coords="5,5,155,35"/>
+<area shape="rect" id="node1" href="$classController.html" title="Controller\&lt; attitude_command_t, rate_command_t \&gt;" alt="" coords="5,5,331,35"/>
+<area shape="rect" id="node3" href="$classAttitude__controller.html" title="Attitude_controller" alt="" coords="380,5,505,35"/>
 </map>

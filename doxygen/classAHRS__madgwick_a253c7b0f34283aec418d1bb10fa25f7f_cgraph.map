@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classImu.html#a51e30d145a6b2970d0ff8d8c6a982329" title="Get X, Y and Z components of acceleration in g." alt="" coords="305,5,377,35"/>
+<area shape="rect" id="node5" href="$classImu.html#a1c9d0538ed5e4c159de6b7dc1d44b3b2" title="Get X, Y and Z components of angular velocity in rad/s." alt="" coords="303,59,380,88"/>
+<area shape="rect" id="node7" href="$classImu.html#a44da2e3f7ec6d731fe6187ca1a59d75a" title="Get X, Y and Z components of magnetic field (normalized)" alt="" coords="303,112,380,141"/>
+<area shape="rect" id="node9" href="$classAirspeed__analog.html#ac29ad00452a0785e8d0856fbbbb0bbd8" title="Gets the current estimated airspeed." alt="" coords="241,165,441,195"/>
+<area shape="rect" id="node11" href="$classAirspeed__analog.html#a3003842d71e4c1ac5707fd5782c8d40b" title="Gets the previous estimated airspeed." alt="" coords="228,219,455,248"/>
+</map>
