@@ -198,12 +198,12 @@ public:
     {
         conf_t conf = Flight_controller_copter<6>::default_config();
         float s60 = 0.866025f;
-        conf.mix_config.mix  = Mat<6, 6>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   // rear
-                                            s60, -0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   // rear left
-                                            s60,  0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   // front left
-                                           0.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   // front
-                                           -s60,  0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   // front right
-                                           -s60, -0.5f,  1.0f, 0.0f, 0.0f, -1.0f}); // rear right
+        conf.mix_config.mix  = Mat<6, 6>({ 0.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   // rear
+                                            s60, -0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   // rear left
+                                            s60,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   // front left
+                                           0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   // front
+                                           -s60,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   // front right
+                                           -s60, -0.5f, -1.0f, 0.0f, 0.0f, -1.0f}); // rear right
 
         return conf;
     };
