@@ -79,7 +79,7 @@ public:
     Flight_controller_copter(const INS& ins, const AHRS& ahrs, typename Servos_mix_matrix<N_ROTORS>::args_t mix_args, conf_t config):
         Flight_controller_stack(pos_ctrl_, vel_ctrl_, att_ctrl_, rate_ctrl_, mix_ctrl_),
         pos_ctrl_({ahrs, ins}, config.pos_config),
-        vel_ctrl_({ahrs, ins, command_.velocity, command_.attitude, command_.thrust}, config.vel_config),
+        vel_ctrl_({{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}}, config.vel_config),
         att_ctrl_({ahrs, command_.attitude, command_.rate}, config.att_config),
         rate_ctrl_({ahrs, command_.rate, command_.torque}, config.rate_config),
         mix_ctrl_(mix_args, config.mix_config),
@@ -136,7 +136,7 @@ class Flight_controller_quadcopter_diag: public Flight_controller_copter<4>
 {
 public:
     Flight_controller_quadcopter_diag(const INS& ins, const AHRS& ahrs, Servo& motor_rl, Servo& motor_fl, Servo& motor_fr, Servo& motor_rr, conf_t config):
-        Flight_controller_copter(ins, ahrs, {&motor_rl, &motor_fl, &motor_fr, &motor_rr}, config)
+        Flight_controller_copter<4>(ins, ahrs, Servos_mix_matrix<4>::args_t{{{&motor_rl, &motor_fl, &motor_fr, &motor_rr}}}, config)
     {};
 
     static conf_t default_config(void)
@@ -162,7 +162,7 @@ public:
                                         Servo& motor_front,
                                         Servo& motor_right,
                                         conf_t config):
-        Flight_controller_copter(ins, ahrs, {&motor_left, &motor_front, &motor_right, &motor_rear}, config)
+        Flight_controller_copter<4>(ins, ahrs, Servos_mix_matrix<4>::args_t{{{&motor_left, &motor_front, &motor_right, &motor_rear}}}, config)
     {};
 
     static conf_t default_config(void)
@@ -191,7 +191,7 @@ public:
                                     Servo& motor_front_right,
                                     Servo& motor_rear_right,
                                     conf_t config):
-        Flight_controller_copter(ins, ahrs, {&motor_rear, &motor_rear_left, &motor_front_left, &motor_front, &motor_front_right, &motor_rear_right}, config)
+        Flight_controller_copter<6>(ins, ahrs, Servos_mix_matrix<6>::args_t{{{&motor_rear, &motor_rear_left, &motor_front_left, &motor_front, &motor_front_right, &motor_rear_right}}}, config)
     {};
 
     static conf_t default_config(void)

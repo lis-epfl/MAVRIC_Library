@@ -56,8 +56,8 @@ extern "C"
 AHRS_qfilter::AHRS_qfilter(const Imu& imu, const conf_t& config):
     imu_(imu),
     attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
-    angular_speed_{{0.0f, 0.0f, 0.0f}},
-    linear_acc_{{0.0f, 0.0f, 0.0f}},
+    angular_speed_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    linear_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     last_update_s_(0.0f)
 {
     //init qfilter gains according to provided configuration
