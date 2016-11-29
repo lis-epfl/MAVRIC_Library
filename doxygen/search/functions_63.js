@@ -15,7 +15,7 @@ var searchData=
   ['cmd_5fcallback_5fmax_5fcount',['cmd_callback_max_count',['../classMavlink__message__handler.html#af88012defb1eec732945ae19c498850b',1,'Mavlink_message_handler::cmd_callback_max_count()'],['../classMavlink__message__handler__T.html#a176b7fc7494ed5ee8209fcf0ad3371a7',1,'Mavlink_message_handler_T::cmd_callback_max_count()']]],
   ['cmd_5fdefault_5fdbg',['cmd_default_dbg',['../classMavlink__message__handler.html#a3593f720b33af6545dffb3d63bd82b16',1,'Mavlink_message_handler']]],
   ['cols',['cols',['../classMat.html#a4ef77ff6c7056d1e33ed9cdc22d8ad61',1,'Mat']]],
-  ['command',['command',['../classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365',1,'Waypoint']]],
+  ['command',['command',['../classFlight__controller__stack.html#a5eea09930d4cf5fd781a445df6e23e96',1,'Flight_controller_stack::command()'],['../classWaypoint.html#a63e4c0fb0fb8673b7740cceb08ff9365',1,'Waypoint::command()']]],
   ['compid',['compid',['../classMavlink__stream.html#a9f6ba4b8a474acfdf4041343ee7db441',1,'Mavlink_stream']]],
   ['compute_5faltitude_5ffrom_5fpressure',['compute_altitude_from_pressure',['../classBarometer.html#a376b868d1eae6d9698e5f20834cc391e',1,'Barometer']]],
   ['compute_5fattitude_5fand_5fthrust_5ffrom_5fdesired_5faccel',['compute_attitude_and_thrust_from_desired_accel',['../classVelocity__controller.html#a0f3292d55fb6543bd960955102b559f8',1,'Velocity_controller::compute_attitude_and_thrust_from_desired_accel()'],['../classVelocity__controller__copter.html#ac38916b698325bd2742e8791061b6c26',1,'Velocity_controller_copter::compute_attitude_and_thrust_from_desired_accel()']]],

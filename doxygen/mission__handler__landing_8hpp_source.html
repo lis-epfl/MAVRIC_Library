@@ -164,7 +164,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00122"></a>00122     <span class="keyword">virtual</span> Mission_handler::update_status_t <a class="code" href="classMission__handler__landing.html#abf91f35cc2c43a5cf3864553292b4dfb" title="Handles the mission every iteration.">update</a>();
 <a name="l00123"></a>00123 
 <a name="l00124"></a>00124 
-<a name="l00130"></a>00130     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__landing.html#af1e37fd52608635b638c3b2130d50db4" title="Provides control commands to the flight controller.">write_flight_command</a>(<a class="code" href="classFlight__controller.html">Flight_controller</a>&amp; flight_controller) <span class="keyword">const</span>;
+<a name="l00130"></a>00130     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__landing.html#af1e37fd52608635b638c3b2130d50db4" title="Provides control commands to the flight controller.">write_flight_command</a>(<a class="code" href="classFlight__controller.html" title="Interface for flight controllers.">Flight_controller</a>&amp; flight_controller) <span class="keyword">const</span>;
 <a name="l00131"></a>00131 
 <a name="l00132"></a>00132 
 <a name="l00138"></a>00138     <span class="keyword">virtual</span> Mission_planner::internal_state_t <a class="code" href="classMission__handler__landing.html#aad1586b0484eb0bd696f0050ea4273e2" title="Returns that the mission state is in POSTMISSION.">handler_mission_state</a>() <span class="keyword">const</span>;
@@ -184,9 +184,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00157"></a><a class="code" href="classMission__handler__landing.html#a8cb880c85f38b249971af070e4447a30">00157</a>     <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; <a class="code" href="classMission__handler__landing.html#a8cb880c85f38b249971af070e4447a30" title="The reference to the ins interface.">ins_</a>;                                            
 <a name="l00158"></a><a class="code" href="classMission__handler__landing.html#ae8f0c8117a95e88da3b42d90fad7eb2a">00158</a>     <a class="code" href="classState.html" title="The MAV state.">State</a>&amp; <a class="code" href="classMission__handler__landing.html#ae8f0c8117a95e88da3b42d90fad7eb2a" title="The reference to the state structure.">state_</a>;                                              
 <a name="l00159"></a>00159 
-<a name="l00166"></a>00166     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__landing.html#a4f725cce92bb52f5e3d76c64337e7830" title="Function to set the controller specific command for the descent to small altitude state...">write_desc_to_small_alt_flight_command</a>(<a class="code" href="classFlight__controller.html">Flight_controller</a>&amp; flight_controller) <span class="keyword">const</span>;
+<a name="l00166"></a>00166     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__landing.html#a4f725cce92bb52f5e3d76c64337e7830" title="Function to set the controller specific command for the descent to small altitude state...">write_desc_to_small_alt_flight_command</a>(<a class="code" href="classFlight__controller.html" title="Interface for flight controllers.">Flight_controller</a>&amp; flight_controller) <span class="keyword">const</span>;
 <a name="l00167"></a>00167 
-<a name="l00174"></a>00174     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__landing.html#a13fd46bd48de1d9a99eea8e8b11af0b3" title="Function to set the controller specific command for the descent to ground state.">write_desc_to_ground_flight_command</a>(<a class="code" href="classFlight__controller.html">Flight_controller</a>&amp; flight_controller) <span class="keyword">const</span>;
+<a name="l00174"></a>00174     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMission__handler__landing.html#a13fd46bd48de1d9a99eea8e8b11af0b3" title="Function to set the controller specific command for the descent to ground state.">write_desc_to_ground_flight_command</a>(<a class="code" href="classFlight__controller.html" title="Interface for flight controllers.">Flight_controller</a>&amp; flight_controller) <span class="keyword">const</span>;
 <a name="l00175"></a>00175 };
 <a name="l00176"></a>00176 
 <a name="l00177"></a>00177 
@@ -220,7 +220,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 25 2016 21:23:30 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:35:44 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,20 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classController.html" title="Controller\&lt; attitude_command_t \&gt;" alt="" coords="8,112,227,141"/>
-<area shape="rect" id="node3" href="$classFlight__controller.html" title="Flight_controller" alt="" coords="277,112,392,141"/>
-<area shape="rect" id="node5" href="$classController__stack.html" title="Controller_stack\&lt; POS_CTRL, VEL_CTRL, ATT_CTRL, RATE_CTRL, MIX_CTRL \&gt;" alt="" coords="564,112,1084,141"/>
-<area shape="rect" id="node7" href="$classController__stack.html" title="Controller_stack\&lt; Position_controller, Velocity_controller_copter, Attitude_controller, Rate_controller, Servos_mix_matrix\&lt; 4 \&gt; \&gt;" alt="" coords="441,59,1207,88"/>
-<area shape="rect" id="node9" href="$classFlight__controller__copter.html" title="Flight_controller_copter" alt="" coords="1256,59,1413,88"/>
-<area shape="rect" id="node10" href="$classController.html" title="Controller\&lt; position_command_t \&gt;" alt="" coords="7,165,228,195"/>
-<area shape="rect" id="node12" href="$classController.html" title="Controller\&lt; rate_command_t \&gt;" alt="" coords="19,5,216,35"/>
-<area shape="rect" id="node14" href="$classController.html" title="Controller\&lt; thrust_command_t \&gt;" alt="" coords="12,219,223,248"/>
-<area shape="rect" id="node17" href="$classServos__mix.html" title="Servos_mix" alt="" coords="289,272,380,301"/>
-<area shape="rect" id="node19" href="$classServos__mix__birotor.html" title="Servos_mix_birotor" alt="" coords="757,485,891,515"/>
-<area shape="rect" id="node21" href="$classServos__mix__matrix.html" title="Servos mix." alt="" coords="740,165,908,195"/>
-<area shape="rect" id="node23" href="$classServos__mix__matrix.html" title="Servos_mix_matrix\&lt; 4 \&gt;" alt="" coords="741,219,907,248"/>
-<area shape="rect" id="node25" href="$classServos__mix__quadcopter__cross.html" title="Servos_mix_quadcopter_cross" alt="" coords="724,272,924,301"/>
-<area shape="rect" id="node27" href="$classServos__mix__quadcopter__diag.html" title="Servos_mix_quadcopter_diag" alt="" coords="728,325,920,355"/>
-<area shape="rect" id="node29" href="$classServos__mix__wing.html" title="Servos_mix_wing" alt="" coords="761,379,887,408"/>
-<area shape="rect" id="node31" href="$classServos__mix__ywing.html" title="Servos_mix_ywing" alt="" coords="759,432,889,461"/>
-<area shape="rect" id="node32" href="$classController.html" title="Controller\&lt; torque_command_t \&gt;" alt="" coords="11,272,224,301"/>
-<area shape="rect" id="node35" href="$classController.html" title="Controller\&lt; velocity_command_t \&gt;" alt="" coords="7,59,228,88"/>
+<area shape="rect" id="node1" href="$classController.html" title="Controller\&lt; position_command_t, velocity_command_t \&gt;" alt="" coords="7,5,356,35"/>
+<area shape="rect" id="node3" href="$classPosition__controller.html" title="Position_controller" alt="" coords="407,5,535,35"/>
 </map>

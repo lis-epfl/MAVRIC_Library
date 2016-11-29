@@ -190,12 +190,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>schedule_strategy
 : <a class="el" href="structScheduler_1_1conf__t.html#add0e17c51dba8ff62c3d9afbf8622d9e">Scheduler::conf_t</a>
 </li>
+<li>Scheduler()
+: <a class="el" href="classScheduler.html#af47e13539e1251b50208e115b6241c37">Scheduler</a>
+</li>
 <li>scheduler()
 : <a class="el" href="classPeriodic__telemetry.html#abb5412138a7233c8b5d6a8ff92cf3a59">Periodic_telemetry</a>
 , <a class="el" href="classPeriodic__telemetry__T.html#a5c303c981e35f4fc1f0b52b1e6d196ab">Periodic_telemetry_T&lt; N &gt;</a>
-</li>
-<li>Scheduler()
-: <a class="el" href="classScheduler.html#af47e13539e1251b50208e115b6241c37">Scheduler</a>
 </li>
 <li>scheduler_config
 : <a class="el" href="structPeriodic__telemetry_1_1conf__t.html#a46b834d430fad274f5ebce32f52a5dc0">Periodic_telemetry::conf_t</a>
@@ -351,17 +351,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structServos__mix__matrix_1_1args__t.html#af4ed08019a14909714e6bf112cfd17d8">Servos_mix_matrix&lt; N &gt;::args_t</a>
 , <a class="el" href="structservos__telemetry__t.html#a051001ba64b00e7c08054e30b70fee31">servos_telemetry_t</a>
 </li>
-<li>Servos_mix_4dof()
-: <a class="el" href="classServos__mix__4dof.html#a5a85341e840dc7b3aceec078c42c984d">Servos_mix_4dof&lt; N &gt;</a>
-</li>
 <li>Servos_mix_matrix()
 : <a class="el" href="classServos__mix__matrix.html#ad3909b2071b77d94a4350b036ca9e3b0">Servos_mix_matrix&lt; N &gt;</a>
-</li>
-<li>Servos_mix_quadcopter_cross()
-: <a class="el" href="classServos__mix__quadcopter__cross.html#a7506b257fbcad2731c19dd92ca1e7079">Servos_mix_quadcopter_cross</a>
-</li>
-<li>Servos_mix_quadcopter_diag()
-: <a class="el" href="classServos__mix__quadcopter__diag.html#a5f6863c9cd2d0dd7f01b4fdccff67457">Servos_mix_quadcopter_diag</a>
 </li>
 <li>set_armed()
 : <a class="el" href="classState.html#a41daea810832a042add30c2c4bdbaa13">State</a>
@@ -383,8 +374,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>set_command()
 : <a class="el" href="classAttitude__controller.html#a8f1f94ab8ee92502ff4817d4c57b00e6">Attitude_controller</a>
 , <a class="el" href="classController.html#a12d397078af966cba69733d1bbcbd012">Controller&lt; in_command_T, out_command_T &gt;</a>
-, <a class="el" href="classController__stack.html#a608613a1d2465b9c5c9617a84fef209a">Controller_stack&lt; POS_CTRL, VEL_CTRL, ATT_CTRL, RATE_CTRL, MIX_CTRL &gt;</a>
+, <a class="el" href="classController__1__to__2.html#a4595829ec514d27118be2b3c96435a86">Controller_1_to_2&lt; in_command_T, out_command_a_T, out_command_b_T &gt;</a>
+, <a class="el" href="classController__2__to__1.html#a034651e104b2a2c1855ab77e306b0d4b">Controller_2_to_1&lt; in_command_a_T, in_command_b_T, out_command_T &gt;</a>
 , <a class="el" href="classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5">Flight_controller</a>
+, <a class="el" href="classFlight__controller__stack.html#a86dfdb2fc6472fddbfc6bc3369434471">Flight_controller_stack</a>
 , <a class="el" href="classPosition__controller.html#aa9ee79998f9be6cb8354a35c4386b6ac">Position_controller</a>
 , <a class="el" href="classRate__controller.html#a939ef3f98eebb065d0f95e440908adc5">Rate_controller</a>
 , <a class="el" href="classServos__mix.html#afd31ff5f561fe5e87cb63a4f3e032955">Servos_mix</a>
@@ -412,9 +405,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>set_distance()
 : <a class="el" href="classraytracing_1_1Intersection.html#aa7adecc70d0b0b558f804d857184efcc">raytracing::Intersection</a>
 </li>
+<li>set_flight_command()
+: <a class="el" href="classFlight__controller.html#ac71f682b890193ec40360da1be05f54a">Flight_controller</a>
+</li>
 <li>set_goal()
-: <a class="el" href="classNavigation__directto.html#a3ec40f46b407c2fb4673abdd78363cfb">Navigation_directto</a>
-, <a class="el" href="classNavigation.html#a9456a35e2da61d8ba2054454be5fd0b9">Navigation</a>
+: <a class="el" href="classNavigation.html#a9456a35e2da61d8ba2054454be5fd0b9">Navigation</a>
+, <a class="el" href="classNavigation__directto.html#a3ec40f46b407c2fb4673abdd78363cfb">Navigation_directto</a>
 </li>
 <li>set_guided_flag()
 : <a class="el" href="classMav__mode.html#a45a48dedc7c6b699c72660c425747e80">Mav_mode</a>
@@ -439,8 +435,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classGpio__dummy.html#a635d21feb341df45464e280e0e3c69a6">Gpio_dummy</a>
 , <a class="el" href="classGpio__stm32.html#a3f280343e23633341f19172b716f373e">Gpio_stm32</a>
 </li>
+<li>set_manual_attitude_command()
+: <a class="el" href="classFlight__controller.html#a22ddf2cc30267161f98da0dba204f601">Flight_controller</a>
+, <a class="el" href="classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209">Flight_controller_copter&lt; N_ROTORS &gt;</a>
+</li>
 <li>set_manual_flag()
 : <a class="el" href="classMav__mode.html#accc305353d3c71291ada6e11538dcebc">Mav_mode</a>
+</li>
+<li>set_manual_rate_command()
+: <a class="el" href="classFlight__controller.html#adc9ec66a45496299d534b313b128c764">Flight_controller</a>
+, <a class="el" href="classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04">Flight_controller_copter&lt; N_ROTORS &gt;</a>
+</li>
+<li>set_manual_velocity_command()
+: <a class="el" href="classFlight__controller.html#a72d029ab8cce3b52d31e896ee8033b90">Flight_controller</a>
+, <a class="el" href="classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90">Flight_controller_copter&lt; N_ROTORS &gt;</a>
 </li>
 <li>set_mode_of_source()
 : <a class="el" href="classManual__control.html#a74ff138d9eefaef201e42ca4e9130747">Manual_control</a>
@@ -460,9 +468,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 , <a class="el" href="classraytracing_1_1Ray.html#aafa151509fbf3bb9244632c92060fac5">raytracing::Ray</a>
 </li>
 <li>set_period_us()
-: <a class="el" href="classPwm__chibios.html#af8d0652e42d3bb3c7cc68c3deaa697a9">Pwm_chibios</a>
+: <a class="el" href="classPwm.html#a951e5cde686841fefc41689a690e6cf1">Pwm</a>
 , <a class="el" href="classPwm__avr32.html#a072c609f4e12555d6d04f24c988b0359">Pwm_avr32</a>
-, <a class="el" href="classPwm.html#a951e5cde686841fefc41689a690e6cf1">Pwm</a>
+, <a class="el" href="classPwm__chibios.html#af8d0652e42d3bb3c7cc68c3deaa697a9">Pwm_chibios</a>
 , <a class="el" href="classPwm__dummy.html#a1d0a873e43ac5e999848d44998d9b912">Pwm_dummy</a>
 , <a class="el" href="classPwm__stm32.html#a77b1e175ac2dbd8448947f87d5948e9c">Pwm_stm32</a>
 </li>
@@ -475,9 +483,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>set_pulse_width_us()
 : <a class="el" href="classPwm__avr32.html#a01ecd378dac69f8d99c318ac43e57b28">Pwm_avr32</a>
 , <a class="el" href="classPwm__chibios.html#a0357f8186ca6048f2f32104818ab4007">Pwm_chibios</a>
-, <a class="el" href="classPwm__dummy.html#a339b122327f5630eaad797e4db0e46bf">Pwm_dummy</a>
-, <a class="el" href="classPwm__stm32.html#ac9524ba2c47972d70f4779e394c21dbd">Pwm_stm32</a>
 , <a class="el" href="classPwm.html#ad37f30f6859c8c9e988a5e4d0ddbdb90">Pwm</a>
+, <a class="el" href="classPwm__stm32.html#ac9524ba2c47972d70f4779e394c21dbd">Pwm_stm32</a>
+, <a class="el" href="classPwm__dummy.html#a339b122327f5630eaad797e4db0e46bf">Pwm_dummy</a>
 </li>
 <li>set_radius()
 : <a class="el" href="classraytracing_1_1Sphere.html#a927e6076a0ea237cf436129709288acf">raytracing::Sphere</a>
@@ -505,13 +513,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structadaptive__parameter__t.html#a5226a7119476dbfa9e3da11aa798386a">adaptive_parameter_t</a>
 </li>
 <li>setup()
-: <a class="el" href="classMission__handler__hold__position.html#a1bafef3d3b866c4fc848284d1ffc5dcd">Mission_handler_hold_position</a>
+: <a class="el" href="classMission__handler.html#a4c558404def1712147a21591969ba8e4">Mission_handler</a>
+, <a class="el" href="classMission__handler__hold__position.html#a1bafef3d3b866c4fc848284d1ffc5dcd">Mission_handler_hold_position</a>
 , <a class="el" href="classMission__handler__landing.html#aeef5e01068bbe73b3df9cc5a14d52493">Mission_handler_landing</a>
 , <a class="el" href="classMission__handler__manual.html#aead4bb715d1e0cc57b97b007a1b2ff41">Mission_handler_manual</a>
-, <a class="el" href="classMission__handler__on__ground.html#a371e2b7f4d2576af4f590ddd9932b5c8">Mission_handler_on_ground</a>
-, <a class="el" href="classMission__handler__takeoff.html#a00239402258059b6cc2dbe742768a198">Mission_handler_takeoff</a>
 , <a class="el" href="classMission__handler__navigating.html#a0c39589ed570325c90820442d398eca6">Mission_handler_navigating</a>
-, <a class="el" href="classMission__handler.html#a4c558404def1712147a21591969ba8e4">Mission_handler</a>
+, <a class="el" href="classMission__handler__takeoff.html#a00239402258059b6cc2dbe742768a198">Mission_handler_takeoff</a>
+, <a class="el" href="classMission__handler__on__ground.html#a371e2b7f4d2576af4f590ddd9932b5c8">Mission_handler_on_ground</a>
 </li>
 <li>setvalues
 : <a class="el" href="structadaptive__parameter__t.html#af24f52ebf7fc9d40bead05710d23bc29">adaptive_parameter_t</a>
@@ -629,8 +637,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="structaudio__t.html#a5df96523b9b58148d28104f36c49bcf9">audio_t</a>
 </li>
 <li>stabiliser_stack
-: <a class="el" href="structstabilisation__wing__t.html#aaf465289d6897bd69962696e45ccd6cd">stabilisation_wing_t</a>
-, <a class="el" href="structstabilisation__wing__conf__t.html#a8134d7b8c95a9887517b7930c22da1c3">stabilisation_wing_conf_t</a>
+: <a class="el" href="structstabilisation__wing__conf__t.html#a8134d7b8c95a9887517b7930c22da1c3">stabilisation_wing_conf_t</a>
+, <a class="el" href="structstabilisation__wing__t.html#aaf465289d6897bd69962696e45ccd6cd">stabilisation_wing_t</a>
 </li>
 <li>start()
 : <a class="el" href="classData__logging.html#a37f718933dd21cf2ba27f1ca98348072">Data_logging</a>
@@ -671,13 +679,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>state_
 : <a class="el" href="classMission__handler__takeoff.html#ade008124ac7bddb27ad18b2a4b9acef5">Mission_handler_takeoff</a>
-, <a class="el" href="classState__machine.html#a1d458bc645f27269f102e6048d122e91">State_machine</a>
 , <a class="el" href="classMission__planner.html#ae3af70b0041d494d828373a06ac710bd">Mission_planner</a>
+, <a class="el" href="classState__machine.html#a1d458bc645f27269f102e6048d122e91">State_machine</a>
 , <a class="el" href="classMission__handler__landing.html#ae8f0c8117a95e88da3b42d90fad7eb2a">Mission_handler_landing</a>
 </li>
 <li>state_display_
-: <a class="el" href="classState__machine.html#a1b3b4a239057c04e71bbcc54acd71dbd">State_machine</a>
-, <a class="el" href="classLEQuad.html#a39193f372eda8874cbd98f51677becdb">LEQuad</a>
+: <a class="el" href="classLEQuad.html#a39193f372eda8874cbd98f51677becdb">LEQuad</a>
+, <a class="el" href="classState__machine.html#a1b3b4a239057c04e71bbcc54acd71dbd">State_machine</a>
 </li>
 <li>State_display_mavrimini()
 : <a class="el" href="classState__display__mavrimini.html#a99692333cff122041366e5d5438bb179">State_display_mavrimini</a>
@@ -691,12 +699,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>State_display_sparky_v2()
 : <a class="el" href="classState__display__sparky__v2.html#a7493f1949dbfbfd1de55591880896d41">State_display_sparky_v2</a>
 </li>
+<li>state_machine()
+: <a class="el" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753">Mission_planner</a>
+</li>
 <li>State_machine()
 : <a class="el" href="classState__machine.html#a57f24b6f11100ab904a7b0d856c22a0a">State_machine</a>
 </li>
 <li>state_machine
 : <a class="el" href="classLEQuad.html#aca96fddc8a43b0ca4b51cdffcdf79718">LEQuad</a>
-, <a class="el" href="classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753">Mission_planner</a>
 </li>
 <li>state_t
 : <a class="el" href="classBarometer__MS5611.html#a6c6a20257f8295c8054a1ad43176961a">Barometer_MS5611</a>
@@ -709,9 +719,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>status
 : <a class="el" href="structMavlink__stream_1_1msg__received__t.html#aeaf94fd0cc0a6502fd88f7e55476ee55">Mavlink_stream::msg_received_t</a>
+, <a class="el" href="structubx__cfg__tp__t.html#aa5f0e32aacd0be25df50ca023a788208">ubx_cfg_tp_t</a>
 , <a class="el" href="structgps__t.html#aad28348e1c78537111eabd454d667608">gps_t</a>
 , <a class="el" href="structubx__nav__dgps__t.html#a7ab02de10dbd66a6a6d049ba80cad3b8">ubx_nav_dgps_t</a>
-, <a class="el" href="structubx__cfg__tp__t.html#aa5f0e32aacd0be25df50ca023a788208">ubx_cfg_tp_t</a>
 </li>
 <li>step
 : <a class="el" href="structgps__t.html#acc0f0e2065502d06f14e57e98b7252d4">gps_t</a>
@@ -738,10 +748,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 : <a class="el" href="classScheduler.html#a33c91e878162f3c20cfc799922fe1c93">Scheduler</a>
 </li>
 <li>subtract()
-: <a class="el" href="classmat_1_1op.html#abc31fcd595274d85e97ce04b7e95e3ff">mat::op</a>
-, <a class="el" href="classMat.html#a00d2f92b87913f16eca31c7f3c68ee3c">Mat&lt; N, P, T &gt;</a>
-, <a class="el" href="classmat_1_1op.html#a0f5c6ba7ac4a5dd98aefdf236c6d009e">mat::op</a>
+: <a class="el" href="classMat.html#a00d2f92b87913f16eca31c7f3c68ee3c">Mat&lt; N, P, T &gt;</a>
+, <a class="el" href="classmat_1_1op.html#abc31fcd595274d85e97ce04b7e95e3ff">mat::op</a>
 , <a class="el" href="classMat.html#afedb04fc63233308ac2c32f9dcc943d4">Mat&lt; N, P, T &gt;</a>
+, <a class="el" href="classmat_1_1op.html#a0f5c6ba7ac4a5dd98aefdf236c6d009e">mat::op</a>
 </li>
 <li>subtract_inplace()
 : <a class="el" href="classMat.html#ac94fe73e9a03b22a7e77261972837ae4">Mat&lt; N, P, T &gt;</a>
@@ -770,14 +780,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>sys_mounted
 : <a class="el" href="structfat__fs__mounting__t.html#a80c89e0286934b4013a22809091d0394">fat_fs_mounting_t</a>
 </li>
-<li>sysid()
-: <a class="el" href="classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87">Mavlink_stream</a>
-, <a class="el" href="structMavlink__stream_1_1conf__t.html#aec1e69848bfbccbdc1d2e28ab77f6ed6">Mavlink_stream::conf_t</a>
+<li>sysid
+: <a class="el" href="structMavlink__stream_1_1conf__t.html#aec1e69848bfbccbdc1d2e28ab77f6ed6">Mavlink_stream::conf_t</a>
 , <a class="el" href="classMavlink__communication__T.html#a961ac8912b11c53577a47efe769649b2">Mavlink_communication_T&lt; N_TELEM, N_MSG_CB, N_CMD_CB, N_PARAM &gt;</a>
+, <a class="el" href="classMavlink__stream.html#a9c107e822e225e84e619a13328a95a87">Mavlink_stream</a>
 </li>
 <li>sysid_
-: <a class="el" href="classLEQuad.html#a886784d5864c65cf442460cac47d48d3">LEQuad</a>
-, <a class="el" href="classMavlink__stream.html#a6b1b3449c75ec16f2ab10ee21556db74">Mavlink_stream</a>
+: <a class="el" href="classMavlink__stream.html#a6b1b3449c75ec16f2ab10ee21556db74">Mavlink_stream</a>
+, <a class="el" href="classLEQuad.html#a886784d5864c65cf442460cac47d48d3">LEQuad</a>
 </li>
 <li>sysid_filter
 : <a class="el" href="structMavlink__message__handler_1_1cmd__callback__t.html#a01ebd622ecff1ef72cbcd48ce8da0fb0">Mavlink_message_handler::cmd_callback_t</a>
@@ -802,7 +812,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 25 2016 21:23:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:35:46 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -1,8 +1,11 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classManual__control.html#a224f579fb29807afdae8a04627602210" title="Compute torque command from the manual input." alt="" coords="248,5,491,35"/>
 <area shape="rect" id="node5" href="$classManual__control.html#a20503e7bc964e689a5e32b9b90852246" title="Compute rate command from the manual input." alt="" coords="255,59,484,88"/>
-<area shape="rect" id="node7" href="$classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="201,112,537,141"/>
-<area shape="rect" id="node9" href="$classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="244,165,495,195"/>
-<area shape="rect" id="node11" href="$classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="231,219,508,248"/>
-<area shape="rect" id="node13" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="223,272,516,301"/>
+<area shape="rect" id="node9" href="$classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="201,112,537,141"/>
+<area shape="rect" id="node11" href="$classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="244,165,495,195"/>
+<area shape="rect" id="node15" href="$classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="231,219,508,248"/>
+<area shape="rect" id="node17" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="223,272,516,301"/>
+<area shape="rect" id="node7" href="$classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04" title="Set command from manual control in rate mode." alt="" coords="599,59,953,88"/>
+<area shape="rect" id="node13" href="$classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209" title="Set command from manual control in attitude mode." alt="" coords="588,165,964,195"/>
+<area shape="rect" id="node19" href="$classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90" title="Set command from manual control in velocity mode." alt="" coords="587,272,965,301"/>
 </map>

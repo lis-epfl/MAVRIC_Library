@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classController.html" title="Controller\&lt; in_command_T, out_command_T \&gt;" alt="" coords="5,5,301,35"/>
+<area shape="rect" id="node1" href="$classController.html" title="Controller\&lt; in_command_a_T, out_command_T \&gt;" alt="" coords="7,5,316,35"/>
+<area shape="rect" id="node3" href="$classController__2__to__1.html" title="Interface for controllers with two input command types and one output command type." alt="" coords="365,32,832,61"/>
+<area shape="rect" id="node4" href="$classController.html" title="Controller\&lt; in_command_b_T, out_command_T \&gt;" alt="" coords="7,59,316,88"/>
 </map>

@@ -1,6 +1,6 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classWaypoint.html#a0aa7594662a253a289cb2f9da0b3b1f9" title="Gets the heading of the waypoint." alt="" coords="389,5,520,35"/>
 <area shape="rect" id="node5" href="$classWaypoint.html#a6c500cee0255693487b8cc97371b9c64" title="Gets the waypoint in local coordinates." alt="" coords="385,59,524,88"/>
-<area shape="rect" id="node9" href="$classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5" title="Sets the input command." alt="" coords="353,112,556,141"/>
+<area shape="rect" id="node9" href="$classFlight__controller.html#ac30986f16b6f3a2d93283e50380a56c5" title="Set of command setters." alt="" coords="353,112,556,141"/>
 <area shape="rect" id="node7" href="$classINS.html#a80b65bcba9f35450c2d350768d2199ae" title="Position of origin in global coordinates." alt="" coords="607,59,689,88"/>
 </map>

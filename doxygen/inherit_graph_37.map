@@ -1,4 +1,3 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classController.html" title="Controller\&lt; rate_command_t, torque_command_t \&gt;" alt="" coords="7,5,324,35"/>
-<area shape="rect" id="node3" href="$classRate__controller.html" title="Rate_controller" alt="" coords="375,5,484,35"/>
+<area shape="rect" id="node1" href="$classController.html" title="Interface for controllers with one input command type and one output command type." alt="" coords="5,5,301,35"/>
 </map>

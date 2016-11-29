@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>MAV&#39;RIC: Flight_controller_copter Class Reference</title>
+<title>MAV&#39;RIC: Flight_controller_copter&lt; N_ROTORS &gt; Class Template Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -81,27 +81,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a>  </div>
   <div class="headertitle">
-<div class="title">Flight_controller_copter Class Reference</div>  </div>
+<div class="title">Flight_controller_copter&lt; N_ROTORS &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Flight_controller_copter" --><!-- doxytag: inherits="Controller_stack&lt; Position_controller, Velocity_controller_copter, Attitude_controller, Rate_controller, Servos_mix_matrix&lt; 4 &gt; &gt;" --><div class="dynheader">
-Inheritance diagram for Flight_controller_copter:</div>
+<!-- doxytag: class="Flight_controller_copter" --><!-- doxytag: inherits="Flight_controller_stack" --><div class="dynheader">
+Inheritance diagram for Flight_controller_copter&lt; N_ROTORS &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classFlight__controller__copter__inherit__graph.png" border="0" usemap="#Flight__controller__copter_inherit__map" alt="Inheritance graph"/></div>
-<map name="Flight__controller__copter_inherit__map" id="Flight__controller__copter_inherit__map">
-<area shape="rect" id="node2" href="classController__stack.html" title="{Controller_stack\&lt; Position_controller, Velocity_controller_copter, Attitude_controller, Rate_controller, Servos_mix_matrix\&lt; 4 \&gt; \&gt;\n|# pos_ctrl_\l# vel_ctrl_\l# att_ctrl_\l# rate_ctrl_\l# mix_ctrl_\l# command_\l|+ Controller_stack()\l+ update_cascade_level()\l+ update_cascade_level()\l+ update()\l+ update_in_thrust_and_torque_mode()\l+ update_in_thrust_and_rate_mode()\l+ update_in_thrust_and_attitude_mode()\l+ update_in_velocity_mode()\l+ update_in_position_mode()\l+ set_command()\land 12 more...+ default_config()\l}" alt="" coords="339,499,1104,845"/><area shape="rect" id="node4" href="classFlight__controller.html" title="{Flight_controller\n||+ failsafe()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ set_flight_command()\l}" alt="" coords="609,192,833,451"/><area shape="rect" id="node6" href="classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,227,143"/><area shape="rect" id="node8" href="classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="251,6,472,143"/><area shape="rect" id="node10" href="classController.html" title="{Controller\&lt; attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="496,6,715,143"/><area shape="rect" id="node12" href="classController.html" title="{Controller\&lt; rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="739,6,936,143"/><area shape="rect" id="node14" href="classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="960,6,1173,143"/><area shape="rect" id="node16" href="classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1197,6,1408,143"/></map>
+<div class="center"><img src="classFlight__controller__copter__inherit__graph.png" border="0" usemap="#Flight__controller__copter_3_01N__ROTORS_01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="Flight__controller__copter_3_01N__ROTORS_01_4_inherit__map" id="Flight__controller__copter_3_01N__ROTORS_01_4_inherit__map">
+<area shape="rect" id="node2" href="classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy." alt="" coords="560,517,883,845"/><area shape="rect" id="node4" href="classFlight__controller.html" title="Interface for flight controllers." alt="" coords="609,193,833,469"/><area shape="rect" id="node6" href="classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,227,143"/><area shape="rect" id="node8" href="classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="251,6,472,143"/><area shape="rect" id="node10" href="classController.html" title="{Controller\&lt; attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="496,6,715,143"/><area shape="rect" id="node12" href="classController.html" title="{Controller\&lt; rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="739,6,936,143"/><area shape="rect" id="node14" href="classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="960,6,1173,143"/><area shape="rect" id="node16" href="classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1197,6,1408,143"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for Flight_controller_copter:</div>
+Collaboration diagram for Flight_controller_copter&lt; N_ROTORS &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classFlight__controller__copter__coll__graph.png" border="0" usemap="#Flight__controller__copter_coll__map" alt="Collaboration graph"/></div>
-<map name="Flight__controller__copter_coll__map" id="Flight__controller__copter_coll__map">
-<area shape="rect" id="node2" href="classController__stack.html" title="{Controller_stack\&lt; Position_controller, Velocity_controller_copter, Attitude_controller, Rate_controller, Servos_mix_matrix\&lt; 4 \&gt; \&gt;\n|# pos_ctrl_\l# vel_ctrl_\l# att_ctrl_\l# rate_ctrl_\l# mix_ctrl_\l# command_\l|+ Controller_stack()\l+ update_cascade_level()\l+ update_cascade_level()\l+ update()\l+ update_in_thrust_and_torque_mode()\l+ update_in_thrust_and_rate_mode()\l+ update_in_thrust_and_attitude_mode()\l+ update_in_velocity_mode()\l+ update_in_position_mode()\l+ set_command()\land 12 more...+ default_config()\l}" alt="" coords="2617,1347,3383,1693"/><area shape="rect" id="node4" href="classFlight__controller.html" title="{Flight_controller\n||+ failsafe()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_command()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ set_flight_command()\l}" alt="" coords="713,529,937,788"/><area shape="rect" id="node6" href="classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="715,263,936,401"/><area shape="rect" id="node8" href="classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,263,227,401"/><area shape="rect" id="node10" href="classController.html" title="{Controller\&lt; attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="251,263,469,401"/><area shape="rect" id="node12" href="classController.html" title="{Controller\&lt; rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="493,263,691,401"/><area shape="rect" id="node14" href="classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1195,263,1408,401"/><area shape="rect" id="node45" href="classServos__mix.html" title="{Servos_mix\n||+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1240,564,1363,753"/><area shape="rect" id="node16" href="classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="960,263,1171,401"/><area shape="rect" id="node18" href="classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="2283,1029,2611,1149"/><area shape="rect" id="node20" href="classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="2272,521,2600,797"/><area shape="rect" id="node22" href="classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1584,263,1931,401"/><area shape="rect" id="node24" href="classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="2117,263,2456,401"/><area shape="rect" id="node26" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="2812,289,2943,375"/><area shape="rect" id="node43" href="classServos__mix__matrix.html" title="{Servos_mix_matrix\&lt; 4 \&gt;\n|# servos_\l# torque_command_\l# thrust_command_\l# mix_\l# trim_\l# min_\l# max_\l|+ mix_()\l+ trim_()\l+ min_()\l+ max_()\l+ Servos_mix_matrix()\l+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ default_config()\l}" alt="" coords="2676,899,2841,1279"/><area shape="rect" id="node77" href="structcommand__t.html" title="Global command structure." alt="" coords="3103,564,3193,753"/><area shape="rect" id="node28" href="structquat__t.html" title="Unit quaternion." alt="" coords="3415,23,3473,126"/><area shape="rect" id="node34" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="3385,255,3503,409"/><area shape="rect" id="node56" href="classAttitude__controller.html" title="{Attitude_controller\n|# ahrs_\l# attitude_command_\l# rate_command_\l# attitude_error_estimator_\l# pid_\l# dt_s_\l# last_update_s_\l|+ Attitude_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="3288,951,3464,1227"/><area shape="rect" id="node62" href="structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="3327,599,3497,719"/><area shape="rect" id="node30" href="structvelocity__command__t.html" title="Velocity command structure." alt="" coords="2647,281,2788,383"/><area shape="rect" id="node32" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="1955,211,2093,453"/><area shape="rect" id="node37" href="structpid__controller__t.html" title="PID controller." alt="" coords="1432,211,1560,453"/><area shape="rect" id="node39" href="structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="1508,15,1612,135"/><area shape="rect" id="node41" href="structintegrator__t.html" title="Integrator part of PID." alt="" coords="1380,6,1484,143"/><area shape="rect" id="node50" href="classMat.html" title="{Mat\&lt; N, 6 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 34 more...}" alt="" coords="2064,529,2171,788"/><area shape="rect" id="node52" href="structtorque__command__t.html" title="Torque command structure (expressed in body frame)" alt="" coords="2967,289,3100,375"/><area shape="rect" id="node54" href="classMat.html" title="{Mat\&lt; N, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 34 more...}" alt="" coords="2655,529,2761,788"/><area shape="rect" id="node58" href="classController.html" title="{Controller\&lt; attitude_command_t, rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3667,590,3992,727"/><area shape="rect" id="node60" href="structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="3527,289,3644,375"/><area shape="rect" id="node69" href="classRate__controller.html" title="{Rate_controller\n||+ Rate_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="3824,1003,3955,1175"/><area shape="rect" id="node71" href="classController.html" title="{Controller\&lt; rate_command_t, torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="4067,590,4384,727"/><area shape="rect" id="node73" href="classPosition__controller.html" title="{Position_controller\n||+ Position_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="4243,1003,4392,1175"/><area shape="rect" id="node75" href="classController.html" title="{Controller\&lt; position_command_t, velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="4408,590,4757,727"/><area shape="rect" id="node81" href="structposition__command__t.html" title="Position command structure." alt="" coords="3220,281,3361,383"/></map>
+<div class="center"><img src="classFlight__controller__copter__coll__graph.png" border="0" usemap="#Flight__controller__copter_3_01N__ROTORS_01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="Flight__controller__copter_3_01N__ROTORS_01_4_coll__map" id="Flight__controller__copter_3_01N__ROTORS_01_4_coll__map">
+<area shape="rect" id="node2" href="classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy." alt="" coords="1180,1243,1503,1571"/><area shape="rect" id="node4" href="classFlight__controller.html" title="Interface for flight controllers." alt="" coords="721,847,945,1123"/><area shape="rect" id="node6" href="classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,495,227,633"/><area shape="rect" id="node8" href="classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="723,495,944,633"/><area shape="rect" id="node10" href="classController.html" title="{Controller\&lt; attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="968,495,1187,633"/><area shape="rect" id="node12" href="classController.html" title="{Controller\&lt; rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1211,495,1408,633"/><area shape="rect" id="node14" href="classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="251,495,464,633"/><area shape="rect" id="node16" href="classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="488,495,699,633"/><area shape="rect" id="node18" href="structcommand__t.html" title="Global command structure." alt="" coords="1552,891,1643,1080"/><area shape="rect" id="node20" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="3464,521,3595,607"/><area shape="rect" id="node34" href="classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="2589,847,2917,1123"/><area shape="rect" id="node76" href="classServos__mix__matrix.html" title="{Servos_mix_matrix\&lt; N_ROTORS \&gt;\n|# servos_\l# torque_command_\l# thrust_command_\l# mix_\l# trim_\l# min_\l# max_\l|+ mix_()\l+ trim_()\l+ min_()\l+ max_()\l+ Servos_mix_matrix()\l+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ default_config()\l}" alt="" coords="3272,795,3504,1175"/><area shape="rect" id="node22" href="structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="1432,521,1549,607"/><area shape="rect" id="node56" href="classAttitude__controller.html" title="{Attitude_controller\n|# ahrs_\l# attitude_command_\l# rate_command_\l# attitude_error_estimator_\l# pid_\l# dt_s_\l# last_update_s_\l|+ Attitude_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="2055,1269,2231,1545"/><area shape="rect" id="node24" href="structposition__command__t.html" title="Position command structure." alt="" coords="1669,513,1811,615"/><area shape="rect" id="node26" href="structtorque__command__t.html" title="Torque command structure (expressed in body frame)" alt="" coords="3144,521,3277,607"/><area shape="rect" id="node28" href="structquat__t.html" title="Unit quaternion." alt="" coords="1880,230,1939,333"/><area shape="rect" id="node47" href="structahrs__t.html" title="Structure containing the Attitude and Heading Reference System." alt="" coords="2151,487,2268,641"/><area shape="rect" id="node61" href="structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="2067,925,2237,1045"/><area shape="rect" id="node30" href="structvelocity__command__t.html" title="Velocity command structure." alt="" coords="1985,513,2127,615"/><area shape="rect" id="node32" href="classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="2819,1347,3147,1467"/><area shape="rect" id="node36" href="classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="2611,487,3120,641"/><area shape="rect" id="node38" href="classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="2645,213,2992,350"/><area shape="rect" id="node40" href="classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3016,213,3355,350"/><area shape="rect" id="node45" href="classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="3301,443,3440,685"/><area shape="rect" id="node50" href="structpid__controller__t.html" title="PID controller." alt="" coords="2459,443,2587,685"/><area shape="rect" id="node52" href="structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="2367,221,2471,341"/><area shape="rect" id="node54" href="structintegrator__t.html" title="Integrator part of PID." alt="" coords="2495,213,2599,350"/><area shape="rect" id="node58" href="classController.html" title="{Controller\&lt; attitude_command_t, rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1667,917,1992,1054"/><area shape="rect" id="node68" href="classRate__controller.html" title="{Rate_controller\n||+ Rate_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="3525,1321,3656,1493"/><area shape="rect" id="node70" href="classController.html" title="{Controller\&lt; rate_command_t, torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3528,917,3845,1054"/><area shape="rect" id="node72" href="classPosition__controller.html" title="{Position_controller\n||+ Position_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="3844,1321,3993,1493"/><area shape="rect" id="node74" href="classController.html" title="{Controller\&lt; position_command_t, velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3869,917,4219,1054"/><area shape="rect" id="node78" href="classServos__mix.html" title="{Servos_mix\n||+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3619,469,3741,659"/><area shape="rect" id="node80" href="classController__2__to__1.html" title="{Controller_2_to_1\&lt; torque_command_t, thrust_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3433,195,3927,367"/><area shape="rect" id="node82" href="classController.html" title="{Controller\&lt; torque_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3337,6,3668,143"/><area shape="rect" id="node84" href="classController.html" title="{Controller\&lt; thrust_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3692,6,4020,143"/><area shape="rect" id="node87" href="classMat.html" title="{Mat\&lt; N, 6 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 34 more...}" alt="" coords="3765,435,3872,693"/><area shape="rect" id="node90" href="classMat.html" title="{Mat\&lt; N, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 34 more...}" alt="" coords="3896,435,4003,693"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classFlight__controller__copter-members.html">List of all members.</a></p>
@@ -109,38 +108,141 @@ Collaboration diagram for Flight_controller_copter:</div>
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a></td></tr>
-<tr><td colspan="2"><h2><a name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9fcb6d93afdedd983ca7d77236692cf0"></a><!-- doxytag: member="Flight_controller_copter::base_t" ref="a9fcb6d93afdedd983ca7d77236692cf0" args="" -->
-typedef <a class="el" href="classController__stack.html">Controller_stack</a><br class="typebreak"/>
-&lt; <a class="el" href="classPosition__controller.html">Position_controller</a>, <br class="typebreak"/>
-<a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>, <br class="typebreak"/>
-<a class="el" href="classAttitude__controller.html">Attitude_controller</a>, <br class="typebreak"/>
-<a class="el" href="classRate__controller.html">Rate_controller</a>, <br class="typebreak"/>
-<a class="el" href="classServos__mix__matrix.html">Servos_mix_matrix</a>&lt; 4 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>base_t</b></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ba5acb6727131c399c394e0631af78b"></a><!-- doxytag: member="Flight_controller_copter::Flight_controller_copter" ref="a6ba5acb6727131c399c394e0631af78b" args="(const INS &amp;ins, const ahrs_t &amp;ahrs, Servo &amp;servo_rl, Servo &amp;servo_fl, Servo &amp;servo_fr, Servo &amp;servo_rr, conf_t config)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Flight_controller_copter</b> (const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, <a class="el" href="classServo.html">Servo</a> &amp;servo_rl, <a class="el" href="classServo.html">Servo</a> &amp;servo_fl, <a class="el" href="classServo.html">Servo</a> &amp;servo_fr, <a class="el" href="classServo.html">Servo</a> &amp;servo_rr, <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a> config)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07b460dfcabea1261441b88a9176604c"></a><!-- doxytag: member="Flight_controller_copter::ahrs_" ref="a07b460dfcabea1261441b88a9176604c" args="(ahrs)" -->
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0388092994fb3f5d8e6afc9a5eea69e7"></a><!-- doxytag: member="Flight_controller_copter::Flight_controller_copter" ref="a0388092994fb3f5d8e6afc9a5eea69e7" args="(const INS &amp;ins, const ahrs_t &amp;ahrs, typename Servos_mix_matrix&lt; N_ROTORS &gt;::args_t mix_args, conf_t config)" -->
+&#160;</td><td class="memItemRight" valign="bottom"><b>Flight_controller_copter</b> (const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="structahrs__t.html">ahrs_t</a> &amp;ahrs, typename <a class="el" href="classServos__mix__matrix.html">Servos_mix_matrix</a>&lt; N_ROTORS &gt;::args_t mix_args, <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a> config)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae9be2ad6e7b3fec4d69bb763f80f60cd"></a><!-- doxytag: member="Flight_controller_copter::vel_ctrl_" ref="ae9be2ad6e7b3fec4d69bb763f80f60cd" args="({{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}}, config.vel_config)" -->
+config&#160;</td><td class="memItemRight" valign="bottom"><b>vel_ctrl_</b> ({{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}}, config.vel_config)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa8dfaf25b2e30d720d86801eae372f68"></a><!-- doxytag: member="Flight_controller_copter::att_ctrl_" ref="aa8dfaf25b2e30d720d86801eae372f68" args="({ahrs, command_.attitude, command_.rate}, config.att_config)" -->
+config&#160;</td><td class="memItemRight" valign="bottom"><b>att_ctrl_</b> ({ahrs, command_.attitude, command_.rate}, config.att_config)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af742f9579b339e9a0efcddc1d10c9ba5"></a><!-- doxytag: member="Flight_controller_copter::rate_ctrl_" ref="af742f9579b339e9a0efcddc1d10c9ba5" args="({ahrs, command_.rate, command_.torque}, config.rate_config)" -->
+config&#160;</td><td class="memItemRight" valign="bottom"><b>rate_ctrl_</b> ({ahrs, command_.rate, command_.torque}, config.rate_config)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a9e3a73976bf4c592ecf3100fce2cfe"></a><!-- doxytag: member="Flight_controller_copter::mix_ctrl_" ref="a4a9e3a73976bf4c592ecf3100fce2cfe" args="(mix_args, config.mix_config)" -->
+config&#160;</td><td class="memItemRight" valign="bottom"><b>mix_ctrl_</b> (mix_args, config.mix_config)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aede96b6ffb232cb1df44720e6f3f9084"></a><!-- doxytag: member="Flight_controller_copter::ahrs_" ref="aede96b6ffb232cb1df44720e6f3f9084" args="(ahrs)" -->
 config&#160;</td><td class="memItemRight" valign="bottom"><b>ahrs_</b> (ahrs)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0e03fc77292b07b9e824156c909ceb45"></a><!-- doxytag: member="Flight_controller_copter::failsafe" ref="a0e03fc77292b07b9e824156c909ceb45" args="(void)" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>failsafe</b> (void)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab553c484754e0cb0db5a9032b23fed52"></a><!-- doxytag: member="Flight_controller_copter::set_manual_rate_command" ref="ab553c484754e0cb0db5a9032b23fed52" args="(const Manual_control &amp;manual_control)" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>set_manual_rate_command</b> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adc6d9860cb4abc29a8bc78f8f758ac0c"></a><!-- doxytag: member="Flight_controller_copter::set_manual_attitude_command" ref="adc6d9860cb4abc29a8bc78f8f758ac0c" args="(const Manual_control &amp;manual_control)" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>set_manual_attitude_command</b> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6a1912822b8f6fa32b33b2ac559d4b62"></a><!-- doxytag: member="Flight_controller_copter::set_manual_velocity_command" ref="a6a1912822b8f6fa32b33b2ac559d4b62" args="(const Manual_control &amp;manual_control)" -->
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>set_manual_velocity_command</b> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04">set_manual_rate_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set command from manual control in rate mode.  <a href="#af766d9f0e24f880b3dec28a887696c04"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209">set_manual_attitude_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set command from manual control in attitude mode.  <a href="#a8bd76c13e84c76d672eb269d76c1a209"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90">set_manual_velocity_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set command from manual control in velocity mode.  <a href="#a29ffbb8273bda31078754d508f6b9e90"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad613cc576f517052e61a642e5deda22e"></a><!-- doxytag: member="Flight_controller_copter::default_config" ref="ad613cc576f517052e61a642e5deda22e" args="(void)" -->
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e4d70a8bba95f43ddb768ef380ce47a"></a><!-- doxytag: member="Flight_controller_copter::default_config" ref="a1e4d70a8bba95f43ddb768ef380ce47a" args="(void)" -->
 static <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>default_config</b> (void)</td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac1db47709cc6fc7a0e14722e0f352388"></a><!-- doxytag: member="Flight_controller_copter::stack_config" ref="ac1db47709cc6fc7a0e14722e0f352388" args="" -->
-config&#160;</td><td class="memItemRight" valign="bottom"><b>stack_config</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a125c8cfab4dfceea78d7f81db0d8fc52"></a><!-- doxytag: member="Flight_controller_copter::pos_config" ref="a125c8cfab4dfceea78d7f81db0d8fc52" args="" -->
+config&#160;</td><td class="memItemRight" valign="bottom"><b>pos_config</b></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af26ff82fffa30e5ac66404558cc0af84"></a><!-- doxytag: member="Flight_controller_copter::pos_ctrl_" ref="af26ff82fffa30e5ac66404558cc0af84" args="" -->
+<a class="el" href="classPosition__controller.html">Position_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84">pos_ctrl_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in position. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07c9ace2b314468bce770acf00e9e3f8"></a><!-- doxytag: member="Flight_controller_copter::vel_ctrl_" ref="a07c9ace2b314468bce770acf00e9e3f8" args="" -->
+<a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a07c9ace2b314468bce770acf00e9e3f8">vel_ctrl_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in velocity. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35fa39269e1f8582d2e475ebbfc192f2"></a><!-- doxytag: member="Flight_controller_copter::att_ctrl_" ref="a35fa39269e1f8582d2e475ebbfc192f2" args="" -->
+<a class="el" href="classAttitude__controller.html">Attitude_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a35fa39269e1f8582d2e475ebbfc192f2">att_ctrl_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in attitude. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ce830d4b927b6a16c25a1f45c2e296d"></a><!-- doxytag: member="Flight_controller_copter::rate_ctrl_" ref="a5ce830d4b927b6a16c25a1f45c2e296d" args="" -->
+<a class="el" href="classRate__controller.html">Rate_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a5ce830d4b927b6a16c25a1f45c2e296d">rate_ctrl_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in rate. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80013a94e5d733bd3b335c94d175cb9f"></a><!-- doxytag: member="Flight_controller_copter::mix_ctrl_" ref="a80013a94e5d733bd3b335c94d175cb9f" args="" -->
+<a class="el" href="classServos__mix__matrix.html">Servos_mix_matrix</a>&lt; N_ROTORS &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a80013a94e5d733bd3b335c94d175cb9f">mix_ctrl_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to servo mixing. <br/></td></tr>
 </table>
+<h3>template&lt;uint32_t N_ROTORS&gt;<br/>
+ class Flight_controller_copter&lt; N_ROTORS &gt;</h3>
+
+<hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a8bd76c13e84c76d672eb269d76c1a209"></a><!-- doxytag: member="Flight_controller_copter::set_manual_attitude_command" ref="a8bd76c13e84c76d672eb269d76c1a209" args="(const Manual_control &amp;manual_control)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N_ROTORS&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classFlight__controller__copter.html">Flight_controller_copter</a>&lt; N_ROTORS &gt;::<a class="el" href="classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209">set_manual_attitude_command</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classManual__control.html">Manual_control</a> &amp;&#160;</td>
+          <td class="paramname"><em>manual_control</em></td><td>)</td>
+          <td><code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Set command from manual control in attitude mode. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">manual_control</td><td>Reference to manual_control </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classFlight__controller.html#a22ddf2cc30267161f98da0dba204f601">Flight_controller</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af766d9f0e24f880b3dec28a887696c04"></a><!-- doxytag: member="Flight_controller_copter::set_manual_rate_command" ref="af766d9f0e24f880b3dec28a887696c04" args="(const Manual_control &amp;manual_control)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N_ROTORS&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classFlight__controller__copter.html">Flight_controller_copter</a>&lt; N_ROTORS &gt;::<a class="el" href="classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04">set_manual_rate_command</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classManual__control.html">Manual_control</a> &amp;&#160;</td>
+          <td class="paramname"><em>manual_control</em></td><td>)</td>
+          <td><code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Set command from manual control in rate mode. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">manual_control</td><td>Reference to manual_control </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classFlight__controller.html#adc9ec66a45496299d534b313b128c764">Flight_controller</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a29ffbb8273bda31078754d508f6b9e90"></a><!-- doxytag: member="Flight_controller_copter::set_manual_velocity_command" ref="a29ffbb8273bda31078754d508f6b9e90" args="(const Manual_control &amp;manual_control)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N_ROTORS&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="classFlight__controller__copter.html">Flight_controller_copter</a>&lt; N_ROTORS &gt;::<a class="el" href="classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90">set_manual_velocity_command</a> </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classManual__control.html">Manual_control</a> &amp;&#160;</td>
+          <td class="paramname"><em>manual_control</em></td><td>)</td>
+          <td><code> [inline, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Set command from manual control in velocity mode. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">manual_control</td><td>Reference to manual_control </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classFlight__controller.html#a72d029ab8cce3b52d31e896ee8033b90">Flight_controller</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="flight__controller__copter_8hpp_source.html">flight_controller_copter.hpp</a></li>
 </ul>
@@ -162,7 +264,7 @@ config&#160;</td><td class="memItemRight" valign="bottom"><b>stack_config</b></t
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:35:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

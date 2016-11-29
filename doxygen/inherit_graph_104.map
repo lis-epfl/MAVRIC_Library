@@ -1,4 +1,7 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classKalman.html" title="Kalman\&lt; 3, 1, 1 \&gt;" alt="" coords="7,5,132,35"/>
-<area shape="rect" id="node3" href="$classAltitude__estimation.html" title="Altitude estimator." alt="" coords="181,5,315,35"/>
+<area shape="rect" id="node1" href="$classINS.html" title="INS" alt="" coords="51,59,96,88"/>
+<area shape="rect" id="node3" href="$classINS__AHRS__groundtruth.html" title="INS_AHRS_groundtruth" alt="" coords="189,5,352,35"/>
+<area shape="rect" id="node5" href="$classINS__complementary.html" title="INS_complementary" alt="" coords="200,59,341,88"/>
+<area shape="rect" id="node7" href="$classINS__kf.html" title="Altitude estimator." alt="" coords="240,112,301,141"/>
+<area shape="rect" id="node8" href="$classKalman.html" title="Kalman\&lt; 11, 3, 3 \&gt;" alt="" coords="7,112,140,141"/>
 </map>

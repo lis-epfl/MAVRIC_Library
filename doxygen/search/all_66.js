@@ -1,7 +1,7 @@
 var searchData=
 [
   ['f_5f',['F_',['../classKalman.html#a3e44fd095eced8ba2ee14037df601788',1,'Kalman']]],
-  ['failsafe',['failsafe',['../structservo__conf__t.html#a8a120c6a6429a5070a2aaa63274b7eb0',1,'servo_conf_t::failsafe()'],['../classServo.html#a2b5d2ce904f65a74afad4e62c49938bf',1,'Servo::failsafe()']]],
+  ['failsafe',['failsafe',['../structservo__conf__t.html#a8a120c6a6429a5070a2aaa63274b7eb0',1,'servo_conf_t::failsafe()'],['../classFlight__controller.html#a296ba53f78c43a7406e55105ccfa682b',1,'Flight_controller::failsafe()'],['../classFlight__controller__stack.html#abb26ff64ab20d6348d32fdf1930bb275',1,'Flight_controller_stack::failsafe()'],['../classServo.html#a2b5d2ce904f65a74afad4e62c49938bf',1,'Servo::failsafe()']]],
   ['fat_5ffs_5fmounting_5ft',['fat_fs_mounting_t',['../structfat__fs__mounting__t.html',1,'']]],
   ['fifo_5ffill',['fifo_fill',['../structlsm__read__fifo__fill__t.html#a9f787be7c7d76a77cc3748f2e2e744f6',1,'lsm_read_fifo_fill_t']]],
   ['file',['File',['../classFile.html',1,'']]],
@@ -28,6 +28,12 @@ var searchData=
   ['flight_5fcommand_5fsource',['Flight_command_source',['../classFlight__command__source.html',1,'']]],
   ['flight_5fcontroller',['Flight_controller',['../classFlight__controller.html',1,'']]],
   ['flight_5fcontroller_5fcopter',['Flight_controller_copter',['../classFlight__controller__copter.html',1,'']]],
+  ['flight_5fcontroller_5fcopter_3c_204_20_3e',['Flight_controller_copter< 4 >',['../classFlight__controller__copter.html',1,'']]],
+  ['flight_5fcontroller_5fcopter_3c_206_20_3e',['Flight_controller_copter< 6 >',['../classFlight__controller__copter.html',1,'']]],
+  ['flight_5fcontroller_5fhexacopter',['Flight_controller_hexacopter',['../classFlight__controller__hexacopter.html',1,'']]],
+  ['flight_5fcontroller_5fquadcopter_5fcross',['Flight_controller_quadcopter_cross',['../classFlight__controller__quadcopter__cross.html',1,'']]],
+  ['flight_5fcontroller_5fquadcopter_5fdiag',['Flight_controller_quadcopter_diag',['../classFlight__controller__quadcopter__diag.html',1,'']]],
+  ['flight_5fcontroller_5fstack',['Flight_controller_stack',['../classFlight__controller__stack.html',1,'Flight_controller_stack'],['../classFlight__controller__stack.html#ac2d0be74af67c53942029171f3c30fa0',1,'Flight_controller_stack::Flight_controller_stack()']]],
   ['flow',['Flow',['../classFlow.html',1,'Flow'],['../classLEQuad.html#a4a822a6d8b96974d73ca192b8fb1a9e2',1,'LEQuad::flow()']]],
   ['flow_5fdata_5ft',['flow_data_t',['../structflow__data__t.html',1,'']]],
   ['flow_5fpx4',['Flow_px4',['../classFlow__px4.html',1,'Flow_px4'],['../classFlow__px4.html#a369ea53b6998e90aa12581995f1793c6',1,'Flow_px4::Flow_px4()']]],
@@ -45,8 +51,8 @@ var searchData=
   ['freq_5fperiod',['freq_period',['../structubx__cfg__tp5__t.html#a56d67441fdba5e011aded8f204b0729e',1,'ubx_cfg_tp5_t']]],
   ['fs',['fs',['../structfat__fs__mounting__t.html#a6559a26f8510813780bb53fad8260d02',1,'fat_fs_mounting_t']]],
   ['full',['full',['../classBuffer__T.html#a015a62a50cd6931d44e4d6b3176fcc94',1,'Buffer_T']]],
-  ['function',['function',['../structScheduler__task_1_1function.html',1,'Scheduler_task']]],
   ['function',['function',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry']]],
-  ['function',['FUNCTION',['../structtLED__DESCRIPTOR.html#aa887761788f738fa9e3962ff3d550d68',1,'tLED_DESCRIPTOR::FUNCTION()'],['../structMavlink__message__handler_1_1msg__callback__t.html#a15b1ca8eacaa9fba1eb12d53b160059f',1,'Mavlink_message_handler::msg_callback_t::function()'],['../structMavlink__message__handler_1_1cmd__callback__t.html#af0714c3bc1479f7e97a8a12f00a4751e',1,'Mavlink_message_handler::cmd_callback_t::function()'],['../structPeriodic__telemetry_1_1telemetry__entry__t.html#ac251a3ef6f3cc6e1888840a7e6d1b878',1,'Periodic_telemetry::telemetry_entry_t::function()'],['../structserial__avr32__gpio__map__t.html#afea7a90cb66b46621468f5b52d477b13',1,'serial_avr32_gpio_map_t::function()'],['../structspi__avr32__gpio__map__t.html#a045cd6b7ffd9b71b75fa4aaa42fb0b3d',1,'spi_avr32_gpio_map_t::function()']]],
-  ['function_3c_20void_20_3e',['function< void >',['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;'],['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;']]]
+  ['function',['function',['../structMavlink__message__handler_1_1msg__callback__t.html#a15b1ca8eacaa9fba1eb12d53b160059f',1,'Mavlink_message_handler::msg_callback_t::function()'],['../structMavlink__message__handler_1_1cmd__callback__t.html#af0714c3bc1479f7e97a8a12f00a4751e',1,'Mavlink_message_handler::cmd_callback_t::function()'],['../structPeriodic__telemetry_1_1telemetry__entry__t.html#ac251a3ef6f3cc6e1888840a7e6d1b878',1,'Periodic_telemetry::telemetry_entry_t::function()'],['../structserial__avr32__gpio__map__t.html#afea7a90cb66b46621468f5b52d477b13',1,'serial_avr32_gpio_map_t::function()'],['../structspi__avr32__gpio__map__t.html#a045cd6b7ffd9b71b75fa4aaa42fb0b3d',1,'spi_avr32_gpio_map_t::function()'],['../structtLED__DESCRIPTOR.html#aa887761788f738fa9e3962ff3d550d68',1,'tLED_DESCRIPTOR::FUNCTION()']]],
+  ['function',['function',['../structScheduler__task_1_1function.html',1,'Scheduler_task']]],
+  ['function_3c_20void_20_3e',['function< void >',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;'],['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;']]]
 ];

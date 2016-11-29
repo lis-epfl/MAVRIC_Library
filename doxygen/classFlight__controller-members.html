@@ -84,7 +84,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 This is the complete list of members for <a class="el" href="classFlight__controller.html">Flight_controller</a>, including all inherited members.<table>
-  <tr bgcolor="#f0f0f0"><td><b>failsafe</b>(void)=0 (defined in <a class="el" href="classFlight__controller.html">Flight_controller</a>)</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFlight__controller.html#a296ba53f78c43a7406e55105ccfa682b">failsafe</a>(void)=0</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classController.html#a9adabf87cf02bda367db9be841e88b41">Controller&lt; position_command_t &gt;::get_command</a>(in_command_t &amp;command) const =0</td><td><a class="el" href="classController.html">Controller&lt; position_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classController.html#a9adabf87cf02bda367db9be841e88b41">Controller&lt; velocity_command_t &gt;::get_command</a>(in_command_t &amp;command) const =0</td><td><a class="el" href="classController.html">Controller&lt; velocity_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classController.html#a9adabf87cf02bda367db9be841e88b41">Controller&lt; attitude_command_t &gt;::get_command</a>(in_command_t &amp;command) const =0</td><td><a class="el" href="classController.html">Controller&lt; attitude_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
@@ -115,16 +115,11 @@ This is the complete list of members for <a class="el" href="classFlight__contro
   <tr class="memlist"><td><a class="el" href="classFlight__controller.html#a424305441655edc4340889294c5a5254">set_command</a>(const rate_command_t &amp;command)=0</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classFlight__controller.html#a02c8de2be097444716286b7ca77a5bc1">set_command</a>(const torque_command_t &amp;command)=0</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classFlight__controller.html#a3f9c9847d42e61dc098b251420116376">set_command</a>(const thrust_command_t &amp;command)=0</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>set_flight_command</b>(const Flight_command_source &amp;command_source) (defined in <a class="el" href="classFlight__controller.html">Flight_controller</a>)</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [inline, virtual]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>set_manual_attitude_command</b>(const Manual_control &amp;manual_control)=0 (defined in <a class="el" href="classFlight__controller.html">Flight_controller</a>)</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>set_manual_rate_command</b>(const Manual_control &amp;manual_control)=0 (defined in <a class="el" href="classFlight__controller.html">Flight_controller</a>)</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr bgcolor="#f0f0f0"><td><b>set_manual_velocity_command</b>(const Manual_control &amp;manual_control)=0 (defined in <a class="el" href="classFlight__controller.html">Flight_controller</a>)</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classController.html#aa9c92bc7999828a025feda54ce30e874">Controller&lt; position_command_t &gt;::update</a>(void)=0</td><td><a class="el" href="classController.html">Controller&lt; position_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classController.html#aa9c92bc7999828a025feda54ce30e874">Controller&lt; velocity_command_t &gt;::update</a>(void)=0</td><td><a class="el" href="classController.html">Controller&lt; velocity_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classController.html#aa9c92bc7999828a025feda54ce30e874">Controller&lt; attitude_command_t &gt;::update</a>(void)=0</td><td><a class="el" href="classController.html">Controller&lt; attitude_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classController.html#aa9c92bc7999828a025feda54ce30e874">Controller&lt; rate_command_t &gt;::update</a>(void)=0</td><td><a class="el" href="classController.html">Controller&lt; rate_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classController.html#aa9c92bc7999828a025feda54ce30e874">Controller&lt; torque_command_t &gt;::update</a>(void)=0</td><td><a class="el" href="classController.html">Controller&lt; torque_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classController.html#aa9c92bc7999828a025feda54ce30e874">Controller&lt; thrust_command_t &gt;::update</a>(void)=0</td><td><a class="el" href="classController.html">Controller&lt; thrust_command_t &gt;</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFlight__controller.html#ac71f682b890193ec40360da1be05f54a">set_flight_command</a>(const Flight_command_source &amp;command_source)</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [inline, virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFlight__controller.html#a22ddf2cc30267161f98da0dba204f601">set_manual_attitude_command</a>(const Manual_control &amp;manual_control)=0</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFlight__controller.html#adc9ec66a45496299d534b313b128c764">set_manual_rate_command</a>(const Manual_control &amp;manual_control)=0</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFlight__controller.html#a72d029ab8cce3b52d31e896ee8033b90">set_manual_velocity_command</a>(const Manual_control &amp;manual_control)=0</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classFlight__controller.html#a17db38ddc5b3f1ed6c044ba6ee170ed3">update</a>(void)=0</td><td><a class="el" href="classFlight__controller.html">Flight_controller</a></td><td><code> [pure virtual]</code></td></tr>
 </table></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -143,7 +138,7 @@ This is the complete list of members for <a class="el" href="classFlight__contro
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Nov 25 2016 21:23:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Nov 29 2016 15:35:45 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

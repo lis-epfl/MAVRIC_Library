@@ -1,7 +1,10 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classManual__control.html#a96ba44d8d90624864782cfb53fee0e99" title="Compute thrust command from the manual input." alt="" coords="220,5,503,35"/>
-<area shape="rect" id="node5" href="$classManual__control.html#afee5e87b0049ea5101325433ad1b8505" title="Compute thrust command from the manual input." alt="" coords="224,59,499,88"/>
-<area shape="rect" id="node7" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="215,112,508,141"/>
-<area shape="rect" id="node9" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="257,165,465,195"/>
-<area shape="rect" id="node11" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="557,165,720,195"/>
+<area shape="rect" id="node3" href="$classManual__control.html#a96ba44d8d90624864782cfb53fee0e99" title="Compute thrust command from the manual input." alt="" coords="220,32,503,61"/>
+<area shape="rect" id="node9" href="$classManual__control.html#afee5e87b0049ea5101325433ad1b8505" title="Compute thrust command from the manual input." alt="" coords="224,85,499,115"/>
+<area shape="rect" id="node11" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="215,139,508,168"/>
+<area shape="rect" id="node15" href="$classMission__planner.html#a71ec5a95225f120820e3ec11eb7e4753" title="State machine to drive the navigation module." alt="" coords="257,192,465,221"/>
+<area shape="rect" id="node5" href="$classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04" title="Set command from manual control in rate mode." alt="" coords="569,5,924,35"/>
+<area shape="rect" id="node7" href="$classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209" title="Set command from manual control in attitude mode." alt="" coords="559,59,935,88"/>
+<area shape="rect" id="node13" href="$classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90" title="Set command from manual control in velocity mode." alt="" coords="557,139,936,168"/>
+<area shape="rect" id="node17" href="$classMission__planner.html#ae6b9122a579958b27e683d268e37201a" title="The mission planner tasks, gives a goal for the navigation module." alt="" coords="665,192,828,221"/>
 </map>

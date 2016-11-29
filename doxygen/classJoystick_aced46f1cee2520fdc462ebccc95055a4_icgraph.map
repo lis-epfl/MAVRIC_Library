@@ -2,8 +2,11 @@
 <area shape="rect" id="node3" href="$classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="160,139,307,168"/>
 <area shape="rect" id="node5" href="$classManual__control.html#a224f579fb29807afdae8a04627602210" title="Compute torque command from the manual input." alt="" coords="403,5,645,35"/>
 <area shape="rect" id="node7" href="$classManual__control.html#a20503e7bc964e689a5e32b9b90852246" title="Compute rate command from the manual input." alt="" coords="409,59,639,88"/>
-<area shape="rect" id="node9" href="$classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="356,112,692,141"/>
-<area shape="rect" id="node11" href="$classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="399,165,649,195"/>
-<area shape="rect" id="node13" href="$classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="385,219,663,248"/>
-<area shape="rect" id="node15" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="377,272,671,301"/>
+<area shape="rect" id="node11" href="$classManual__control.html#a4c242a6332968b98e9d7eb36d40ccca0" title="Compute attitude command from the manual input (absolute angles)" alt="" coords="356,112,692,141"/>
+<area shape="rect" id="node13" href="$classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="399,165,649,195"/>
+<area shape="rect" id="node17" href="$classManual__control.html#a09757cbbfd086292519e5ae1d2512fdb" title="Compute attitude command from the manual input (absolute roll and pitch, integrated yaw)..." alt="" coords="385,219,663,248"/>
+<area shape="rect" id="node19" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="377,272,671,301"/>
+<area shape="rect" id="node9" href="$classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04" title="Set command from manual control in rate mode." alt="" coords="753,59,1108,88"/>
+<area shape="rect" id="node15" href="$classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209" title="Set command from manual control in attitude mode." alt="" coords="743,165,1119,195"/>
+<area shape="rect" id="node21" href="$classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90" title="Set command from manual control in velocity mode." alt="" coords="741,272,1120,301"/>
 </map>

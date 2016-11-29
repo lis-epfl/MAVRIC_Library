@@ -32,6 +32,7 @@ var searchData=
   ['pitch_5fangle_5fapriori_5fgain',['pitch_angle_apriori_gain',['../structstabilisation__wing__t.html#aab8c4da7a7d03ebb1682fb6a23425409',1,'stabilisation_wing_t::pitch_angle_apriori_gain()'],['../structstabilisation__wing__conf__t.html#a42340b7e146edc4b386a7b9910269c2b',1,'stabilisation_wing_conf_t::pitch_angle_apriori_gain()']]],
   ['port',['PORT',['../structtLED__DESCRIPTOR.html#a8667c3416593fe47da449b8f55d9f581',1,'tLED_DESCRIPTOR::PORT()'],['../structgpio__stm32__conf__t.html#af4a6276ca149b211620a903f7723bccd',1,'gpio_stm32_conf_t::port()']]],
   ['port_5fid',['port_id',['../structubx__cfg__prt__t.html#a15037ec3ab559dec206f6914acf6e0ee',1,'ubx_cfg_prt_t']]],
+  ['pos_5fctrl_5f',['pos_ctrl_',['../classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84',1,'Flight_controller_copter']]],
   ['position',['position',['../structcommand__t.html#a3314e8bdc60f5b2db1d3ad937be9eb55',1,'command_t']]],
   ['position_5faccuracy_5f3d',['position_accuracy_3d',['../structubx__nav__solution__t.html#aa8f22e1a1fd97eed7f372aa1cc87c3a0',1,'ubx_nav_solution_t']]],
   ['position_5fcommand_5f',['position_command_',['../classMission__handler__navigating.html#a51ffd1b38abe4bbaabd24ac34a184c1e',1,'Mission_handler_navigating']]],

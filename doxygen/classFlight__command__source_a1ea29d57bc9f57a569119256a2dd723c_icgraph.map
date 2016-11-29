@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classMission__planner.html#a30491eb9651316ba0bbc7dd4f7371dfb" title="Provides control commands to the flight controller." alt="" coords="352,5,603,35"/>
+<area shape="rect" id="node3" href="$classFlight__controller.html#ac71f682b890193ec40360da1be05f54a" title="Set command from autonomous command source." alt="" coords="359,5,596,35"/>
+<area shape="rect" id="node5" href="$classMission__planner.html#a30491eb9651316ba0bbc7dd4f7371dfb" title="Provides control commands to the flight controller." alt="" coords="352,59,603,88"/>
 </map>

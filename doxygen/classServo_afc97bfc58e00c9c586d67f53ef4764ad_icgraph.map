@@ -1,11 +1,10 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classServos__mix__quadcopter__cross.html#a1086c09ac38a3bcca0188f661610c279" title="Main update function." alt="" coords="147,5,395,35"/>
-<area shape="rect" id="node5" href="$classServos__mix__quadcopter__diag.html#adaf68b4c9aa29a817585905f8a7cddd0" title="Main update function." alt="" coords="151,59,391,88"/>
-<area shape="rect" id="node7" href="$classServos__mix__ywing.html#a6d420617398234a52e18f701d625bd90" title="Main update function." alt="" coords="181,112,360,141"/>
-<area shape="rect" id="node9" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="200,165,341,195"/>
-<area shape="rect" id="node11" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="195,219,347,248"/>
-<area shape="rect" id="node19" href="$classServo.html#a91d7c835b5b0e44a9c57f34ea24affe5" title="Sets the minimum value to the servo." alt="" coords="196,272,345,301"/>
-<area shape="rect" id="node13" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="455,165,556,195"/>
-<area shape="rect" id="node15" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="443,219,568,248"/>
-<area shape="rect" id="node17" href="$classSparky__v2.html#a3a0b29e6eb7bfdf74e914453d138e61d" title="Hardware initialisation." alt="" coords="451,272,560,301"/>
+<area shape="rect" id="node3" href="$classServos__mix__wing.html#acdd8aced365e4fb3d03643b7043bac75" title="Main update function." alt="" coords="151,5,321,35"/>
+<area shape="rect" id="node5" href="$classServos__mix__ywing.html#a6d420617398234a52e18f701d625bd90" title="Main update function." alt="" coords="147,59,325,88"/>
+<area shape="rect" id="node7" href="$classServo.html#a7d5d00f65fc8a68b22a3959f1d082a3a" title="Perform ESC calibration." alt="" coords="165,112,307,141"/>
+<area shape="rect" id="node9" href="$classServo.html#af8a414bfdd3d55cb55fa7155e17d4396" title="Sets the maximum value to the servo." alt="" coords="160,165,312,195"/>
+<area shape="rect" id="node17" href="$classServo.html#a91d7c835b5b0e44a9c57f34ea24affe5" title="Sets the minimum value to the servo." alt="" coords="161,219,311,248"/>
+<area shape="rect" id="node11" href="$classMavrimini.html#a64f985ba7b4e2241ef5a8fdbd1ff94f9" title="Hardware initialisation." alt="" coords="385,112,487,141"/>
+<area shape="rect" id="node13" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="373,165,499,195"/>
+<area shape="rect" id="node15" href="$classSparky__v2.html#a3a0b29e6eb7bfdf74e914453d138e61d" title="Hardware initialisation." alt="" coords="381,219,491,248"/>
 </map>

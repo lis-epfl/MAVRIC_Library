@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classController.html" title="{Controller\&lt; in_command_T, out_command_a_T \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,315,143"/>
+<area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; in_command_T, out_command_b_T \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="339,6,648,143"/>
+</map>
