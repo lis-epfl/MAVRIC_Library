@@ -48,15 +48,25 @@
 
 class  Px4flow_i2c
 {
-  struct conf_t
-  {
-      uint8_t i2c_address;
-  };
-
-  static const uint8_t GET_FRAME_COMMAND           = 0x0;      ///< Command to receive 22 bytes i2c frame
-  static const uint8_t GET_INTEGRAL_FRAME_COMMAND  = 0x16;     ///< Command to receive 25 bytes i2c integral frame
-
 public:
+    
+    enum orientation_t
+    {
+        ORIENT_0_DEG   = 0,
+        ORIENT_90_DEG  = 1,
+        ORIENT_180_DEG = 2,
+        ORIENT_270_DEG = 3,
+    };
+
+    struct conf_t
+    {
+        uint8_t       i2c_address;
+        orientation_t orientation;
+    };
+
+    static const uint8_t GET_FRAME_COMMAND           = 0x0;      ///< Command to receive 22 bytes i2c frame
+    static const uint8_t GET_INTEGRAL_FRAME_COMMAND  = 0x16;     ///< Command to receive 25 bytes i2c integral frame
+
     Px4flow_i2c(I2c& i2c, conf_t config = default_config() );
 
     /**
@@ -148,7 +158,13 @@ public:
      */
     float last_update_s(void) const;
 
-private:
+protected:
+    /**
+     * \brief   Applies rotation to raw readings based on how the camera is mounted on drone
+     */
+    void rotate_raw_values(float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw);
+
+protected:
     float               flow_x_;                    ///< Optic flow in x direction (rad/s)
     float               flow_y_;                    ///< Optic flow in y direction (rad/s)
     uint8_t             flow_quality_;              ///< Quality of optic flow measurement (between 0 and 255)
@@ -175,6 +191,7 @@ Px4flow_i2c::conf_t Px4flow_i2c::default_config(void)
     conf_t conf = {};
 
     conf.i2c_address = 0x42;
+    conf.orientation = ORIENT_0_DEG;
 
     return conf;
 }
