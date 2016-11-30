@@ -145,7 +145,7 @@ Mission_handler::update_status_t Mission_handler_navigating::update()
     }
 
     // Check if we reached the waypoint
-    bool is_arrived = (dist2wp_sqr < (radius * radius)) && (vel_sqr < 0.5f); // TODO use a config for this speed threshold
+    bool is_arrived = (dist2wp_sqr < (radius * radius)) && (vel_sqr < 1.0f); // TODO use a config for this speed threshold
     if (is_arrived)
     {
         // If we are near the waypoint but the flag has not been set, do this once ...
