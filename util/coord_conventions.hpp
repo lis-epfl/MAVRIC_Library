@@ -156,4 +156,15 @@ void coord_conventions_rpy_from_quaternion(const quat_t& quat, float rpy[3]);
 float coord_conventions_get_yaw(quat_t qe);
 
 
+/**
+ * \brief         Converts axis-angle representation to quaternion
+ *
+ * \param angle     Angle in radians
+ * \param axis      Axis vecotr (should be of norm 1)
+ *
+ * \return quat
+ */
+quat_t coord_conventions_quaternion_from_angle_axis(float angle, const float axis[3]);
+
+
 #endif /* STABILISATION_HPP_ */

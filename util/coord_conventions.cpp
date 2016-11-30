@@ -155,3 +155,16 @@ float coord_conventions_get_yaw(quat_t qe)
 {
     return  atan2(2 * (qe.s * qe.v[2] + qe.v[0] * qe.v[1]) , (qe.s * qe.s + qe.v[0] * qe.v[0] - qe.v[1] * qe.v[1] - qe.v[2] * qe.v[2]));
 }
+
+
+quat_t coord_conventions_quaternion_from_angle_axis(float angle, const float axis[3])
+{
+    quat_t quat;
+
+    quat.s      = quick_trig_cos(0.5f * angle);
+    quat.v[0]   = axis[X] * quick_trig_sin(0.5f * angle);
+    quat.v[1]   = axis[Y] * quick_trig_sin(0.5f * angle);
+    quat.v[2]   = axis[Z] * quick_trig_sin(0.5f * angle);
+
+    return quat;
+}
