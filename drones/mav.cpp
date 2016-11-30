@@ -527,7 +527,7 @@ bool MAV::init_mission_planning(void)
     bool ret = true;
 
     // Initialize
-    // ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
+    ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
     ret &= mission_handler_registry.register_mission_handler(landing_handler);
     ret &= mission_handler_registry.register_mission_handler(manual_ctrl_handler);
     ret &= mission_handler_registry.register_mission_handler(navigating_handler);
@@ -631,9 +631,8 @@ bool MAV::main_task(void)
     {
         switch (state.mav_mode().ctrl_mode())
         {
-            case Mav_mode::GPS_NAV:
+            case Mav_mode::AUTO:
             case Mav_mode::POSITION_HOLD:
-                // mission_planner_.write_autonomous_flight_command(flight_controller_);
                 flight_controller_.set_flight_command(mission_planner_);
             break;
 
