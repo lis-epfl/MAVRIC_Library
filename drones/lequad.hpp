@@ -102,6 +102,7 @@ public:
             Servo& servo_3,
             const conf_t& config = default_config());
 
+    bool init_controller(void);
 
 protected:
     Flight_controller_quadcopter_diag    flight_controller_quadcopter_diag_;

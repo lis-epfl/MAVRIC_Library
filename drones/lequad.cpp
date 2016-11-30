@@ -82,3 +82,11 @@ LEQuad::LEQuad(Imu& imu,
     MAV(imu, barometer, gps, sonar, flow, serial_mavlink, satellite, state_display, file_flash, battery, file1, file2, flight_controller_quadcopter_diag_, config.mav_config),
     flight_controller_quadcopter_diag_(ins_, ahrs_, servo_0, servo_1, servo_2, servo_3, config.flight_controller_config)
 {}
+
+
+bool LEQuad::init_controller(void)
+{
+    bool ret = true;
+
+    return ret;
+}
