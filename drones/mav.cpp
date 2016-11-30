@@ -349,8 +349,13 @@ bool MAV::init_ahrs(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, &ahrs_telemetry_send_attitude_quaternion, &ahrs_);
 
     // Parameters
-    ret &= communication.parameters().add(&ahrs_ekf.config_.use_accelerometer,     "AHRSEKF_USE_ACC"    );
-    ret &= communication.parameters().add(&ahrs_ekf.config_.use_magnetometer,      "AHRSEKF_USE_MAG"    );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_accelerometer,  "AHRS_USE_ACC"  );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_magnetometer,   "AHRS_USE_MAG"  );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.sigma_w_sqr,        "AHRS_SIG_GYRO" );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.sigma_r_sqr,        "AHRS_SIG_QUAT" );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.R_acc,              "AHRS_R_ACC"    );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.R_acc_norm,         "AHRS_R_ACCNORM");
+    ret &= communication.parameters().add(&ahrs_ekf.config_.R_mag,              "AHRS_R_MAG");
 
     return ret;
 }

@@ -71,10 +71,8 @@ public:
         float sigma_w_sqr;                            ///< The square of the variance on the gyro bias
         float sigma_r_sqr;                            ///< The square of the variance on the quaternion
 
-        float acc_norm_noise;                         ///< The noise gain depending on the norm of the acceleration
-        float acc_multi_noise;                        ///< The multiplication factor in the computation of the noise for the accelerometer
-
         float R_acc;                                  ///< The variance of the accelerometer
+        float R_acc_norm;                             ///< The variance added to the accelerometer variance when the measurement norm is different from 1.0g
         float R_mag;                                  ///< The variance of the magnetometer
 
         uint32_t use_accelerometer;                   ///< Boolean indicating if accelerometer is used for correction
@@ -182,6 +180,7 @@ protected:
     ahrs_state_t internal_state_;
 
     Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
+    Mat<3,3> R_acc_norm_;                               ///< The additonal accelerometer measurement noise matrix when acceleration norm is different from 1.0g
     Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
 
     float dt_s_;                                        ///< Time interval since last update in seconds
@@ -195,9 +194,9 @@ AHRS_ekf::conf_t AHRS_ekf::default_config()
     conf.sigma_w_sqr = 0.0000000001f;
     conf.sigma_r_sqr = 0.000001f;
     conf.R_acc = 0.004f;
-    conf.R_mag = 0.040f;
-    conf.acc_norm_noise = 0.05f;
-    conf.acc_multi_noise = 4.0f;
+    conf.R_acc_norm = 0.05f;
+    // conf.R_mag = 0.040f;
+    conf.R_mag = 0.0040f;
 
     conf.use_accelerometer = 1;
     conf.use_magnetometer  = 1;
