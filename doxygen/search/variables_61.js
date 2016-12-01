@@ -42,7 +42,7 @@ var searchData=
   ['apy',['Apy',['../structderotation__matrix__t.html#aa26cd3174403b17bdaf104edd38170c6',1,'derotation_matrix_t']]],
   ['arx',['Arx',['../structderotation__matrix__t.html#ac830964ab71c18125116001c75d8729f',1,'derotation_matrix_t']]],
   ['ary',['Ary',['../structderotation__matrix__t.html#a1d3cf2f49038b3b7eb492656476228e3',1,'derotation_matrix_t']]],
-  ['att_5fctrl_5f',['att_ctrl_',['../classFlight__controller__copter.html#a35fa39269e1f8582d2e475ebbfc192f2',1,'Flight_controller_copter']]],
+  ['att_5fctrl_5f',['att_ctrl_',['../classFlight__controller__copter.html#a35fa39269e1f8582d2e475ebbfc192f2',1,'Flight_controller_copter::att_ctrl_()'],['../classFlight__controller__hexhog.html#a74c42353e38525426c08bdcb966ee11b',1,'Flight_controller_hexhog::att_ctrl_()']]],
   ['attitude',['attitude',['../structcommand__t.html#ac51293f44de7c017186dcaff83b3e336',1,'command_t']]],
   ['attitude_5f',['attitude_',['../classAHRS__ekf.html#aa54cae6dd0a856add33d0d6cafd005b6',1,'AHRS_ekf::attitude_()'],['../classAHRS__madgwick.html#a149106e33e54a67cd8ca79ee8dc48727',1,'AHRS_madgwick::attitude_()'],['../classAHRS__qfilter.html#a4e52ec3acba6f8cf845277a41ced0eb2',1,'AHRS_qfilter::attitude_()'],['../classINS__AHRS__groundtruth.html#a2ea467fd598049b2f620236edce07b43',1,'INS_AHRS_groundtruth::attitude_()']]],
   ['attitude_5fcommand',['attitude_command',['../structAttitude__controller_1_1args__t.html#a6255edbfea70901c52f0c0e2bb7d3bd8',1,'Attitude_controller::args_t::attitude_command()'],['../structattitude__controller__p2__t.html#ab1b342ff2559c4831e64657ad9c3fce1',1,'attitude_controller_p2_t::attitude_command()'],['../structVelocity__controller_1_1args__t.html#a002cfa50ccd4742b3d801915b33baaaf',1,'Velocity_controller::args_t::attitude_command()']]],

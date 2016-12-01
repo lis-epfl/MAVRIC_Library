@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['failsafe',['failsafe',['../classFlight__controller.html#a296ba53f78c43a7406e55105ccfa682b',1,'Flight_controller::failsafe()'],['../classFlight__controller__stack.html#abb26ff64ab20d6348d32fdf1930bb275',1,'Flight_controller_stack::failsafe()'],['../classServo.html#a2b5d2ce904f65a74afad4e62c49938bf',1,'Servo::failsafe()']]],
+  ['failsafe',['failsafe',['../classServo.html#a2b5d2ce904f65a74afad4e62c49938bf',1,'Servo::failsafe()'],['../classFlight__controller.html#a296ba53f78c43a7406e55105ccfa682b',1,'Flight_controller::failsafe()'],['../classFlight__controller__stack.html#abb26ff64ab20d6348d32fdf1930bb275',1,'Flight_controller_stack::failsafe()']]],
   ['file_5fdummy',['File_dummy',['../classFile__dummy.html#a276ebac56da140011a18239514e8e9e0',1,'File_dummy']]],
   ['file_5ffat_5ffs',['File_fat_fs',['../classFile__fat__fs.html#a03f91469470859c0088754d6310f7bba',1,'File_fat_fs']]],
   ['file_5fflash_5favr32',['File_flash_avr32',['../classFile__flash__avr32.html#a52e841a8840f50385751a4cf0a191789',1,'File_flash_avr32']]],

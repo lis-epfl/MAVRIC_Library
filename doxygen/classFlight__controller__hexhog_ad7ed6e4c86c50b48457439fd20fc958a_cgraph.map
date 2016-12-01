@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="409,112,703,141"/>
+<area shape="rect" id="node21" href="$classAHRS.html#a51990c2aa964af66f0169725ec386f52" title="Estimated attitude." alt="" coords="501,165,611,195"/>
+<area shape="rect" id="node23" href="$classFlight__controller__stack.html#a86dfdb2fc6472fddbfc6bc3369434471" title="Set of command setters." alt="" coords="435,219,677,248"/>
+<area shape="rect" id="node5" href="$classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="763,5,909,35"/>
+<area shape="rect" id="node9" href="$classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="769,59,903,88"/>
+<area shape="rect" id="node13" href="$classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="757,112,915,141"/>
+<area shape="rect" id="node17" href="$classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="765,165,907,195"/>
+<area shape="rect" id="node7" href="$classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="975,5,1081,35"/>
+<area shape="rect" id="node11" href="$classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="980,59,1076,88"/>
+<area shape="rect" id="node15" href="$classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="969,112,1087,141"/>
+<area shape="rect" id="node19" href="$classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="977,165,1079,195"/>
+<area shape="rect" id="node25" href="$classController.html#a12d397078af966cba69733d1bbcbd012" title="Sets the input command." alt="" coords="752,219,920,248"/>
+</map>

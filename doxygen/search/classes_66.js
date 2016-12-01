@@ -12,8 +12,8 @@ var searchData=
   ['flight_5fcontroller_5fcopter_3c_204_20_3e',['Flight_controller_copter< 4 >',['../classFlight__controller__copter.html',1,'']]],
   ['flight_5fcontroller_5fcopter_3c_206_20_3e',['Flight_controller_copter< 6 >',['../classFlight__controller__copter.html',1,'']]],
   ['flight_5fcontroller_5fhexacopter',['Flight_controller_hexacopter',['../classFlight__controller__hexacopter.html',1,'']]],
-  ['flight_5fcontroller_5fquadcopter_5fcross',['Flight_controller_quadcopter_cross',['../classFlight__controller__quadcopter__cross.html',1,'']]],
-  ['flight_5fcontroller_5fquadcopter_5fdiag',['Flight_controller_quadcopter_diag',['../classFlight__controller__quadcopter__diag.html',1,'']]],
+  ['flight_5fcontroller_5fhexhog',['Flight_controller_hexhog',['../classFlight__controller__hexhog.html',1,'']]],
+  ['flight_5fcontroller_5fquadcopter',['Flight_controller_quadcopter',['../classFlight__controller__quadcopter.html',1,'']]],
   ['flight_5fcontroller_5fstack',['Flight_controller_stack',['../classFlight__controller__stack.html',1,'']]],
   ['flow',['Flow',['../classFlow.html',1,'']]],
   ['flow_5fdata_5ft',['flow_data_t',['../structflow__data__t.html',1,'']]],
@@ -22,5 +22,5 @@ var searchData=
   ['flow_5fsim',['Flow_sim',['../classFlow__sim.html',1,'']]],
   ['function',['function',['../structScheduler__task_1_1function.html',1,'Scheduler_task']]],
   ['function',['function',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry']]],
-  ['function_3c_20void_20_3e',['function< void >',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;'],['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;']]]
+  ['function_3c_20void_20_3e',['function< void >',['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;'],['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;']]]
 ];

@@ -52,7 +52,7 @@ var searchData=
   ['point',['point',['../classraytracing_1_1Intersection.html#a600d264348af69ace9509abccb6c31a6',1,'raytracing::Intersection']]],
   ['port',['port',['../structgpio__stm32__conf__t.html#af4a6276ca149b211620a903f7723bccd',1,'gpio_stm32_conf_t::port()'],['../structtLED__DESCRIPTOR.html#a8667c3416593fe47da449b8f55d9f581',1,'tLED_DESCRIPTOR::PORT()']]],
   ['port_5fid',['port_id',['../structubx__cfg__prt__t.html#a15037ec3ab559dec206f6914acf6e0ee',1,'ubx_cfg_prt_t']]],
-  ['pos_5fctrl_5f',['pos_ctrl_',['../classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84',1,'Flight_controller_copter']]],
+  ['pos_5fctrl_5f',['pos_ctrl_',['../classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84',1,'Flight_controller_copter::pos_ctrl_()'],['../classFlight__controller__hexhog.html#a65522d6ef534e2d14c961690eafbf373',1,'Flight_controller_hexhog::pos_ctrl_()']]],
   ['pos_5fctrl_5ft',['pos_ctrl_t',['../classFlight__controller__stack.html#ade3d2c8bf8aa152a76841047292b6e4f',1,'Flight_controller_stack']]],
   ['pos_5fxy_5fvel_5fz',['POS_XY_VEL_Z',['../classNavigation__directto.html#a6d7bc5259c53a5ab47bae232c442a1eaa3b36fbe169d7ee2b4ce353ab46bc4ead',1,'Navigation_directto']]],
   ['pos_5fxyz',['POS_XYZ',['../classNavigation__directto.html#a6d7bc5259c53a5ab47bae232c442a1eaa95b97812bd63e704f6abaca83a5305ab',1,'Navigation_directto']]],

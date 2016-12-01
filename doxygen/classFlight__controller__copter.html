@@ -112,16 +112,6 @@ Classes</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd447a3d4cbb120297bc6ad31d9caa71"></a><!-- doxytag: member="Flight_controller_copter::Flight_controller_copter" ref="acd447a3d4cbb120297bc6ad31d9caa71" args="(const INS &amp;ins, const AHRS &amp;ahrs, typename Servos_mix_matrix&lt; N_ROTORS &gt;::args_t mix_args, conf_t config)" -->
 &#160;</td><td class="memItemRight" valign="bottom"><b>Flight_controller_copter</b> (const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, typename <a class="el" href="classServos__mix__matrix.html">Servos_mix_matrix</a>&lt; N_ROTORS &gt;::args_t mix_args, <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a> config)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae9be2ad6e7b3fec4d69bb763f80f60cd"></a><!-- doxytag: member="Flight_controller_copter::vel_ctrl_" ref="ae9be2ad6e7b3fec4d69bb763f80f60cd" args="({{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}}, config.vel_config)" -->
-config&#160;</td><td class="memItemRight" valign="bottom"><b>vel_ctrl_</b> ({{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}}, config.vel_config)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa8dfaf25b2e30d720d86801eae372f68"></a><!-- doxytag: member="Flight_controller_copter::att_ctrl_" ref="aa8dfaf25b2e30d720d86801eae372f68" args="({ahrs, command_.attitude, command_.rate}, config.att_config)" -->
-config&#160;</td><td class="memItemRight" valign="bottom"><b>att_ctrl_</b> ({ahrs, command_.attitude, command_.rate}, config.att_config)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af742f9579b339e9a0efcddc1d10c9ba5"></a><!-- doxytag: member="Flight_controller_copter::rate_ctrl_" ref="af742f9579b339e9a0efcddc1d10c9ba5" args="({ahrs, command_.rate, command_.torque}, config.rate_config)" -->
-config&#160;</td><td class="memItemRight" valign="bottom"><b>rate_ctrl_</b> ({ahrs, command_.rate, command_.torque}, config.rate_config)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a9e3a73976bf4c592ecf3100fce2cfe"></a><!-- doxytag: member="Flight_controller_copter::mix_ctrl_" ref="a4a9e3a73976bf4c592ecf3100fce2cfe" args="(mix_args, config.mix_config)" -->
-config&#160;</td><td class="memItemRight" valign="bottom"><b>mix_ctrl_</b> (mix_args, config.mix_config)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aede96b6ffb232cb1df44720e6f3f9084"></a><!-- doxytag: member="Flight_controller_copter::ahrs_" ref="aede96b6ffb232cb1df44720e6f3f9084" args="(ahrs)" -->
-config&#160;</td><td class="memItemRight" valign="bottom"><b>ahrs_</b> (ahrs)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04">set_manual_rate_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set command from manual control in rate mode.  <a href="#af766d9f0e24f880b3dec28a887696c04"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209">set_manual_attitude_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
@@ -134,8 +124,6 @@ Static Public Member Functions</h2></td></tr>
 static <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>default_config</b> (void)</td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a125c8cfab4dfceea78d7f81db0d8fc52"></a><!-- doxytag: member="Flight_controller_copter::pos_config" ref="a125c8cfab4dfceea78d7f81db0d8fc52" args="" -->
-config&#160;</td><td class="memItemRight" valign="bottom"><b>pos_config</b></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af26ff82fffa30e5ac66404558cc0af84"></a><!-- doxytag: member="Flight_controller_copter::pos_ctrl_" ref="af26ff82fffa30e5ac66404558cc0af84" args="" -->
 <a class="el" href="classPosition__controller.html">Position_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84">pos_ctrl_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in position. <br/></td></tr>
@@ -167,7 +155,7 @@ template&lt;uint32_t N_ROTORS&gt; </div>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classManual__control.html">Manual_control</a> &amp;&#160;</td>
           <td class="paramname"><em>manual_control</em></td><td>)</td>
-          <td><code> [inline, virtual]</code></td>
+          <td><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -183,6 +171,15 @@ template&lt;uint32_t N_ROTORS&gt; </div>
 
 <p>Implements <a class="el" href="classFlight__controller.html#a22ddf2cc30267161f98da0dba204f601">Flight_controller</a>.</p>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFlight__controller__copter_a8bd76c13e84c76d672eb269d76c1a209_cgraph.png" border="0" usemap="#classFlight__controller__copter_a8bd76c13e84c76d672eb269d76c1a209_cgraph" alt=""/></div>
+<map name="classFlight__controller__copter_a8bd76c13e84c76d672eb269d76c1a209_cgraph" id="classFlight__controller__copter_a8bd76c13e84c76d672eb269d76c1a209_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#afba8c5de46eec802a9487b53185f2ca9" title="Compute attitude command from manual control source (absolute roll and pitch, relative yaw)..." alt="" coords="416,72,667,101"/><area shape="rect" id="node17" href="classManual__control.html#a96ba44d8d90624864782cfb53fee0e99" title="Compute thrust command from the manual input." alt="" coords="400,152,683,181"/><area shape="rect" id="node5" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="744,5,877,35"/><area shape="rect" id="node9" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="737,59,884,88"/><area shape="rect" id="node13" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="740,112,881,141"/><area shape="rect" id="node7" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="951,5,1047,35"/><area shape="rect" id="node11" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="945,59,1052,88"/><area shape="rect" id="node15" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="948,112,1049,141"/><area shape="rect" id="node19" href="classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="732,165,889,195"/><area shape="rect" id="node21" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="940,165,1057,195"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="af766d9f0e24f880b3dec28a887696c04"></a><!-- doxytag: member="Flight_controller_copter::set_manual_rate_command" ref="af766d9f0e24f880b3dec28a887696c04" args="(const Manual_control &amp;manual_control)" -->
@@ -196,7 +193,7 @@ template&lt;uint32_t N_ROTORS&gt; </div>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classManual__control.html">Manual_control</a> &amp;&#160;</td>
           <td class="paramname"><em>manual_control</em></td><td>)</td>
-          <td><code> [inline, virtual]</code></td>
+          <td><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -212,6 +209,15 @@ template&lt;uint32_t N_ROTORS&gt; </div>
 
 <p>Implements <a class="el" href="classFlight__controller.html#adc9ec66a45496299d534b313b128c764">Flight_controller</a>.</p>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFlight__controller__copter_af766d9f0e24f880b3dec28a887696c04_cgraph.png" border="0" usemap="#classFlight__controller__copter_af766d9f0e24f880b3dec28a887696c04_cgraph" alt=""/></div>
+<map name="classFlight__controller__copter_af766d9f0e24f880b3dec28a887696c04_cgraph" id="classFlight__controller__copter_af766d9f0e24f880b3dec28a887696c04_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#a20503e7bc964e689a5e32b9b90852246" title="Compute rate command from the manual input." alt="" coords="405,72,635,101"/><area shape="rect" id="node17" href="classManual__control.html#a96ba44d8d90624864782cfb53fee0e99" title="Compute thrust command from the manual input." alt="" coords="379,152,661,181"/><area shape="rect" id="node5" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="723,5,856,35"/><area shape="rect" id="node9" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="716,59,863,88"/><area shape="rect" id="node13" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="719,112,860,141"/><area shape="rect" id="node7" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="929,5,1025,35"/><area shape="rect" id="node11" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="924,59,1031,88"/><area shape="rect" id="node15" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="927,112,1028,141"/><area shape="rect" id="node19" href="classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="711,165,868,195"/><area shape="rect" id="node21" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="919,165,1036,195"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="a29ffbb8273bda31078754d508f6b9e90"></a><!-- doxytag: member="Flight_controller_copter::set_manual_velocity_command" ref="a29ffbb8273bda31078754d508f6b9e90" args="(const Manual_control &amp;manual_control)" -->
@@ -225,7 +231,7 @@ template&lt;uint32_t N_ROTORS&gt; </div>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classManual__control.html">Manual_control</a> &amp;&#160;</td>
           <td class="paramname"><em>manual_control</em></td><td>)</td>
-          <td><code> [inline, virtual]</code></td>
+          <td><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -241,10 +247,20 @@ template&lt;uint32_t N_ROTORS&gt; </div>
 
 <p>Implements <a class="el" href="classFlight__controller.html#a72d029ab8cce3b52d31e896ee8033b90">Flight_controller</a>.</p>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFlight__controller__copter_a29ffbb8273bda31078754d508f6b9e90_cgraph.png" border="0" usemap="#classFlight__controller__copter_a29ffbb8273bda31078754d508f6b9e90_cgraph" alt=""/></div>
+<map name="classFlight__controller__copter_a29ffbb8273bda31078754d508f6b9e90_cgraph" id="classFlight__controller__copter_a29ffbb8273bda31078754d508f6b9e90_cgraph">
+<area shape="rect" id="node3" href="classManual__control.html#ad6f5811301b7b80b9f308e4fd6d315d8" title="Compute velocity command from the manual input." alt="" coords="404,85,697,115"/><area shape="rect" id="node5" href="classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="753,5,900,35"/><area shape="rect" id="node9" href="classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="760,59,893,88"/><area shape="rect" id="node13" href="classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="748,112,905,141"/><area shape="rect" id="node17" href="classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="756,165,897,195"/><area shape="rect" id="node7" href="classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="961,5,1068,35"/><area shape="rect" id="node11" href="classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="967,59,1063,88"/><area shape="rect" id="node15" href="classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="956,112,1073,141"/><area shape="rect" id="node19" href="classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="964,165,1065,195"/></map>
+</div>
+</p>
+
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/travis/build/lis-epfl/MAVRIC_Library/control/<a class="el" href="flight__controller__copter_8hpp_source.html">flight_controller_copter.hpp</a></li>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/flight_controller/<a class="el" href="flight__controller__copter_8hpp_source.html">flight_controller_copter.hpp</a></li>
+<li>/home/travis/build/lis-epfl/MAVRIC_Library/flight_controller/<a class="el" href="flight__controller__copter_8hxx_source.html">flight_controller_copter.hxx</a></li>
 </ul>
 </div><!-- contents -->
 <!-- window showing the filter options -->
@@ -264,7 +280,7 @@ template&lt;uint32_t N_ROTORS&gt; </div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 13:05:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 14:23:04 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

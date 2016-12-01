@@ -25,6 +25,7 @@ var searchData=
   ['servo_5fconf_5ft',['servo_conf_t',['../structservo__conf__t.html',1,'']]],
   ['servos_5fmix',['Servos_mix',['../classServos__mix.html',1,'']]],
   ['servos_5fmix_5fmatrix',['Servos_mix_matrix',['../classServos__mix__matrix.html',1,'']]],
+  ['servos_5fmix_5fmatrix_3c_206_20_3e',['Servos_mix_matrix< 6 >',['../classServos__mix__matrix.html',1,'']]],
   ['servos_5fmix_5fmatrix_3c_20n_5frotors_20_3e',['Servos_mix_matrix< N_ROTORS >',['../classServos__mix__matrix.html',1,'']]],
   ['servos_5fmix_5fwing',['Servos_mix_wing',['../classServos__mix__wing.html',1,'']]],
   ['servos_5fmix_5fywing',['Servos_mix_ywing',['../classServos__mix__ywing.html',1,'']]],

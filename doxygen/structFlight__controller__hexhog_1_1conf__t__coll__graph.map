@@ -1,0 +1,19 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classServos__mix__matrix.html" title="{Servos_mix_matrix\&lt; 6 \&gt;\n|# servos_\l# torque_command_\l# thrust_command_\l# mix_\l# trim_\l# min_\l# max_\l|+ thrust_command_()\l+ mix_()\l+ trim_()\l+ min_()\l+ max_()\l+ Servos_mix_matrix()\l+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ default_config()\l}" alt="" coords="617,912,783,1309"/>
+<area shape="rect" id="node4" href="$classServos__mix.html" title="{Servos_mix\n||+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="285,485,408,675"/>
+<area shape="rect" id="node6" href="$classController__2__to__1.html" title="{Controller_2_to_1\&lt; torque_command_t, thrust_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="100,211,593,383"/>
+<area shape="rect" id="node8" href="$classController.html" title="{Controller\&lt; torque_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,336,143"/>
+<area shape="rect" id="node10" href="$classController.html" title="{Controller\&lt; thrust_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="360,6,688,143"/>
+<area shape="rect" id="node12" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="432,537,563,623"/>
+<area shape="rect" id="node14" href="$classMat.html" title="{Mat\&lt; N, 6 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 34 more...}" alt="" coords="587,451,693,709"/>
+<area shape="rect" id="node16" href="$structtorque__command__t.html" title="Torque command structure (expressed in body frame)" alt="" coords="717,537,851,623"/>
+<area shape="rect" id="node18" href="$classMat.html" title="{Mat\&lt; N, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 34 more...}" alt="" coords="875,451,981,709"/>
+<area shape="rect" id="node20" href="$structRate__controller_1_1conf__t.html" title="Rate controller configuration." alt="" coords="967,768,1121,853"/>
+<area shape="rect" id="node22" href="$structpid__controller__conf__t.html" title="Configuration for PID controller." alt="" coords="1173,211,1315,383"/>
+<area shape="rect" id="node30" href="$structVelocity__controller_1_1conf__t.html" title="Velocity controller configuration." alt="" coords="1081,537,1255,623"/>
+<area shape="rect" id="node33" href="$structAttitude__controller_1_1conf__t.html" title="Attitude controller configuration." alt="" coords="1197,768,1368,853"/>
+<area shape="rect" id="node36" href="$structPosition__controller_1_1conf__t.html" title="Configuration." alt="" coords="1375,733,1548,888"/>
+<area shape="rect" id="node24" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="1128,15,1232,135"/>
+<area shape="rect" id="node26" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="1256,6,1360,143"/>
+<area shape="rect" id="node28" href="$structVelocity__controller__copter_1_1conf__t.html" title="Velocity controller configuration." alt="" coords="1060,1068,1276,1153"/>
+</map>

@@ -5,7 +5,7 @@ var searchData=
   ['validity',['validity',['../structdate__time__t.html#a99bbc0ec72327b004d7eea070ae1c14b',1,'date_time_t']]],
   ['vehicle_5fdrag',['vehicle_drag',['../structdynamic__model__quad__diag__conf__t.html#aca09aa9cb9752ebd5a00355586ec73fe',1,'dynamic_model_quad_diag_conf_t']]],
   ['vel_5f',['vel_',['../classINS__complementary.html#af7fb50518c901bc0d42db2e06d904d75',1,'INS_complementary']]],
-  ['vel_5fctrl_5f',['vel_ctrl_',['../classFlight__controller__copter.html#a07c9ace2b314468bce770acf00e9e3f8',1,'Flight_controller_copter']]],
+  ['vel_5fctrl_5f',['vel_ctrl_',['../classFlight__controller__copter.html#a07c9ace2b314468bce770acf00e9e3f8',1,'Flight_controller_copter::vel_ctrl_()'],['../classFlight__controller__hexhog.html#aa572fa94811a69168447dc9cdfbdfe64',1,'Flight_controller_hexhog::vel_ctrl_()']]],
   ['velocity',['velocity',['../structcommand__t.html#afa35a9fcb7d7ff418fc77466429e17a4',1,'command_t']]],
   ['velocity_5fcommand',['velocity_command',['../structVelocity__controller_1_1args__t.html#add90d60f41afa04eb2d2af83bcede831',1,'Velocity_controller::args_t::velocity_command()'],['../structvector__field__waypoint__t.html#aad0f05784741fd6318d77fe2f4ef66d2',1,'vector_field_waypoint_t::velocity_command()']]],
   ['velocity_5fcommand_5f',['velocity_command_',['../classVelocity__controller.html#a25a0d5fff77eeacab6f9dad7103f8bbe',1,'Velocity_controller']]],

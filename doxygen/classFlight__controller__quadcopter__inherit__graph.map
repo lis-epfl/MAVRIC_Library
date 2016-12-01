@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classFlight__controller__copter.html" title="{Flight_controller_copter\&lt; 4 \&gt;\n|+ pos_config\l+ pos_ctrl_\l+ vel_ctrl_\l+ att_ctrl_\l+ rate_ctrl_\l+ mix_ctrl_\l|+ vel_ctrl_()\l+ att_ctrl_()\l+ rate_ctrl_()\l+ mix_ctrl_()\l+ ahrs_()\l+ Flight_controller_copter()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ default_config()\l}" alt="" coords="609,909,833,1237"/>
+<area shape="rect" id="node2" href="$classFlight__controller__copter.html" title="{Flight_controller_copter\&lt; 4 \&gt;\n|+ pos_ctrl_\l+ vel_ctrl_\l+ att_ctrl_\l+ rate_ctrl_\l+ mix_ctrl_\l|+ Flight_controller_copter()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ default_config()\l}" alt="" coords="609,909,833,1133"/>
 <area shape="rect" id="node4" href="$classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy." alt="" coords="560,533,883,861"/>
 <area shape="rect" id="node6" href="$classFlight__controller.html" title="Interface for flight controllers." alt="" coords="609,192,833,485"/>
 <area shape="rect" id="node8" href="$classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,227,143"/>

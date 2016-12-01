@@ -49,7 +49,7 @@ var searchData=
   ['mission_5fhandler_5fregistry_5f',['mission_handler_registry_',['../classMavlink__waypoint__handler.html#af5b1b7f462377b3c500a046bb9007418',1,'Mavlink_waypoint_handler::mission_handler_registry_()'],['../classMission__planner.html#a83fece756b93b8986eb0ded219629805',1,'Mission_planner::mission_handler_registry_()']]],
   ['mission_5fplanner_5f',['mission_planner_',['../classMAV.html#a99562c310c8380aabd145b2d793f8498',1,'MAV']]],
   ['mix',['mix',['../structServos__mix__matrix_1_1conf__t.html#a06dbdd926dfabef9f728bfbc1e73f1ca',1,'Servos_mix_matrix::conf_t']]],
-  ['mix_5fctrl_5f',['mix_ctrl_',['../classFlight__controller__copter.html#a80013a94e5d733bd3b335c94d175cb9f',1,'Flight_controller_copter']]],
+  ['mix_5fctrl_5f',['mix_ctrl_',['../classFlight__controller__copter.html#a80013a94e5d733bd3b335c94d175cb9f',1,'Flight_controller_copter::mix_ctrl_()'],['../classFlight__controller__hexhog.html#a6ca0f71e741785b273a7a7a66cc25253',1,'Flight_controller_hexhog::mix_ctrl_()']]],
   ['mode',['mode',['../structcommand__t.html#ada6f9d9092f2528c3e5ef378a163216f',1,'command_t::mode()'],['../structubx__cfg__prt__t.html#acc1b3f54a0b6dd3d53dc06e6ca9b6f23',1,'ubx_cfg_prt_t::mode()'],['../structubx__cfg__sbas__t.html#a75c3baa981508bf69bff75277c3bd8a5',1,'ubx_cfg_sbas_t::mode()'],['../structspi__stm32__conf__t.html#a96735da4687616cf81b1f06d599b71c3',1,'spi_stm32_conf_t::mode()'],['../structremote__t.html#a51d0a966b43de8bbe17b942b94d0382e',1,'remote_t::mode()']]],
   ['mode_5fconfig',['mode_config',['../structremote__conf__t.html#afb0477d7a256c834c8c06eab1292ecc4',1,'remote_conf_t']]],
   ['mode_5fsource',['mode_source',['../structManual__control_1_1conf__t.html#a2fff32df86cd4d84f0f6ad7d84761dba',1,'Manual_control::conf_t']]],

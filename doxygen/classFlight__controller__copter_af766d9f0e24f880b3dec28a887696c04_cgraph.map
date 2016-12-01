@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classManual__control.html#a20503e7bc964e689a5e32b9b90852246" title="Compute rate command from the manual input." alt="" coords="405,72,635,101"/>
+<area shape="rect" id="node17" href="$classManual__control.html#a96ba44d8d90624864782cfb53fee0e99" title="Compute thrust command from the manual input." alt="" coords="379,152,661,181"/>
+<area shape="rect" id="node5" href="$classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269" title="Selects the source input and returns the roll." alt="" coords="723,5,856,35"/>
+<area shape="rect" id="node9" href="$classManual__control.html#af46ed3f6af5e52d9764a958aba46d09b" title="Selects the source input and returns the pitch." alt="" coords="716,59,863,88"/>
+<area shape="rect" id="node13" href="$classManual__control.html#a7ba9eae74ab3a7d5af8c2461903ea971" title="Selects the source input and returns the yaw." alt="" coords="719,112,860,141"/>
+<area shape="rect" id="node7" href="$classJoystick.html#a9914a442bcc376a452fcf01c0007e738" title="Returns the roll value from the joystick." alt="" coords="929,5,1025,35"/>
+<area shape="rect" id="node11" href="$classJoystick.html#aced46f1cee2520fdc462ebccc95055a4" title="Returns the pitch value from the joystick." alt="" coords="924,59,1031,88"/>
+<area shape="rect" id="node15" href="$classJoystick.html#a12b1fd6c8826ee5ab95db0dadd2523b9" title="Returns the yaw value from the joystick." alt="" coords="927,112,1028,141"/>
+<area shape="rect" id="node19" href="$classManual__control.html#a021f6b93df57e980d80a4339ed950cc3" title="Selects the source input and returns the throttle." alt="" coords="711,165,868,195"/>
+<area shape="rect" id="node21" href="$classJoystick.html#ad07bc5eafdffd8e9aad8c9572a449b9e" title="Returns the throttle value from the joystick." alt="" coords="919,165,1036,195"/>
+</map>

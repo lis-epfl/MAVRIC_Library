@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209" title="Set command from manual control in attitude mode." alt="" coords="305,5,681,35"/>
+<area shape="rect" id="node3" href="$classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209" title="Set command from manual control in attitude mode." alt="" coords="307,5,653,35"/>
+<area shape="rect" id="node5" href="$classFlight__controller__hexhog.html#a11b0d9db6eef620914a26bfc61b249e4" title="Set command from manual control in attitude mode." alt="" coords="304,59,656,88"/>
 </map>

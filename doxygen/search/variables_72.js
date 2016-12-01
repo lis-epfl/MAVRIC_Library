@@ -15,7 +15,7 @@ var searchData=
   ['rate',['rate',['../structcommand__t.html#abe03f9ba4c033a2c08b6a8238ae290dc',1,'command_t::rate()'],['../structubx__cfg__msg__rate__t.html#a67ce70a804cdc9898a00e0fbcd3ca63a',1,'ubx_cfg_msg_rate_t::rate()'],['../structubx__cfg__msg__rate__send__t.html#a1a8425c3eff13f17b0028d435eca3885',1,'ubx_cfg_msg_rate_send_t::rate()']]],
   ['rate_5fcommand',['rate_command',['../structAttitude__controller_1_1args__t.html#a050e1da7ef16e247bf76bad5b5b2e1db',1,'Attitude_controller::args_t::rate_command()'],['../structRate__controller_1_1args__t.html#aeee6f35a8a80d3806948f0c4adc24077',1,'Rate_controller::args_t::rate_command()']]],
   ['rate_5fcommand_5f',['rate_command_',['../classAttitude__controller.html#ae42b8cab4062e4433e6dbbdb93425066',1,'Attitude_controller']]],
-  ['rate_5fctrl_5f',['rate_ctrl_',['../classFlight__controller__copter.html#a5ce830d4b927b6a16c25a1f45c2e296d',1,'Flight_controller_copter']]],
+  ['rate_5fctrl_5f',['rate_ctrl_',['../classFlight__controller__copter.html#a5ce830d4b927b6a16c25a1f45c2e296d',1,'Flight_controller_copter::rate_ctrl_()'],['../classFlight__controller__hexhog.html#a99b4274cd24561b6cc39d199c6d8420c',1,'Flight_controller_hexhog::rate_ctrl_()']]],
   ['rate_5fstabiliser',['rate_stabiliser',['../structstabiliser__stack__wing__t.html#acdc38c2a0d16bf9f1fcd6ac284317960',1,'stabiliser_stack_wing_t']]],
   ['raw_5fairspeed',['raw_airspeed',['../structairspeed__analog__t.html#a1e622dcb3c634b942bfc94b11db5a0ee',1,'airspeed_analog_t']]],
   ['raw_5fdata',['raw_data',['../structacc__data__t.html#a3c0dbde41f621206d71edbd244a22ca0',1,'acc_data_t']]],

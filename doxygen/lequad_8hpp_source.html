@@ -126,7 +126,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define LEQUAD_HPP_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 <span class="preprocessor">#include &quot;drones/mav.hpp&quot;</span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;control/flight_controller_copter.hpp&quot;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;flight_controller/flight_controller_quadcopter.hpp&quot;</span>
 <a name="l00047"></a>00047 
 <a name="l00051"></a><a class="code" href="classLEQuad.html">00051</a> <span class="keyword">class </span><a class="code" href="classLEQuad.html" title="MAV class.">LEQuad</a>: <span class="keyword">public</span> <a class="code" href="classMAV.html" title="MAV class.">MAV</a>
 <a name="l00052"></a>00052 {
@@ -135,7 +135,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00058"></a><a class="code" href="structLEQuad_1_1conf__t.html">00058</a>     <span class="keyword">struct </span><a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a>
 <a name="l00059"></a>00059     {
 <a name="l00060"></a>00060         <a class="code" href="structMAV_1_1conf__t.html" title="Configuration structure.">MAV::conf_t</a> mav_config;
-<a name="l00061"></a>00061         Flight_controller_quadcopter_diag::conf_t flight_controller_config;
+<a name="l00061"></a>00061         Flight_controller_quadcopter::conf_t flight_controller_config;
 <a name="l00062"></a>00062     };
 <a name="l00063"></a>00063 
 <a name="l00071"></a>00071     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">default_config</a>(uint8_t sysid = 1);
@@ -165,7 +165,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00105"></a>00105     <span class="keywordtype">bool</span> init_controller(<span class="keywordtype">void</span>);
 <a name="l00106"></a>00106 
 <a name="l00107"></a>00107 <span class="keyword">protected</span>:
-<a name="l00108"></a>00108     <a class="code" href="classFlight__controller__quadcopter__diag.html">Flight_controller_quadcopter_diag</a>    flight_controller_quadcopter_diag_;
+<a name="l00108"></a>00108     <a class="code" href="classFlight__controller__quadcopter.html">Flight_controller_quadcopter</a>    flight_controller_quadcopter_;
 <a name="l00109"></a>00109 };
 <a name="l00110"></a>00110 
 <a name="l00111"></a>00111 
@@ -174,7 +174,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00114"></a>00114     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                                                = {};
 <a name="l00115"></a>00115 
 <a name="l00116"></a>00116     conf.mav_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">MAV::default_config</a>();
-<a name="l00117"></a>00117     conf.flight_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Flight_controller_quadcopter_diag::default_config</a>();
+<a name="l00117"></a>00117     conf.flight_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Flight_controller_quadcopter::default_config</a>();
 <a name="l00118"></a>00118 
 <a name="l00119"></a>00119     <span class="keywordflow">return</span> conf;
 <a name="l00120"></a>00120 };
@@ -185,7 +185,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00125"></a>00125     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                                                = {};
 <a name="l00126"></a>00126 
 <a name="l00127"></a>00127     conf.mav_config = <a class="code" href="classLEQuad.html#a68c1925ad3474528ed8ece3657dad7f4" title="Configuration for use in drone dome.">MAV::dronedome_config</a>(sysid);
-<a name="l00128"></a>00128     conf.flight_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Flight_controller_quadcopter_diag::default_config</a>();
+<a name="l00128"></a>00128     conf.flight_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Flight_controller_quadcopter::default_config</a>();
 <a name="l00129"></a>00129 
 <a name="l00130"></a>00130     <span class="keywordflow">return</span> conf;
 <a name="l00131"></a>00131 }
@@ -209,7 +209,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 13:05:40 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 14:23:03 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
