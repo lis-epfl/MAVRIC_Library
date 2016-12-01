@@ -55,7 +55,7 @@
 #include "status/geofence.hpp"
 #include "mission/mission_handler_registry.hpp"
 #include "navigation/dubin.hpp"
-#include "control/flight_controller.hpp"
+#include "flight_controller/flight_controller.hpp"
 
 class Mission_handler;
 

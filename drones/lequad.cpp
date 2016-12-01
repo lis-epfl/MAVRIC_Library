@@ -79,8 +79,8 @@ LEQuad::LEQuad(Imu& imu,
                Servo& servo_2,
                Servo& servo_3,
                const conf_t& config):
-    MAV(imu, barometer, gps, sonar, flow, serial_mavlink, satellite, state_display, file_flash, battery, file1, file2, flight_controller_quadcopter_diag_, config.mav_config),
-    flight_controller_quadcopter_diag_(ins_, ahrs_, servo_0, servo_1, servo_2, servo_3, config.flight_controller_config)
+    MAV(imu, barometer, gps, sonar, flow, serial_mavlink, satellite, state_display, file_flash, battery, file1, file2, flight_controller_quadcopter_, config.mav_config),
+    flight_controller_quadcopter_(ins_, ahrs_, servo_0, servo_1, servo_2, servo_3, config.flight_controller_config)
 {}
 
 
@@ -89,54 +89,54 @@ bool LEQuad::init_controller(void)
     bool ret = true;
 
     // Parameters
-    Onboard_parameters& op            = communication.parameters();
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_X().p_gain,               "C_RAT_X_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_X().integrator.clip_pre,  "C_RAT_X_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_X().integrator.gain,      "C_RAT_X_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_X().integrator.clip,      "C_RAT_X_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_X().differentiator.gain,  "C_RAT_X_KD");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Y().p_gain,               "C_RAT_Y_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Y().integrator.clip_pre,  "C_RAT_Y_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Y().integrator.gain,      "C_RAT_Y_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Y().integrator.clip,      "C_RAT_Y_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Y().differentiator.gain,  "C_RAT_Y_KD");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Z().p_gain,               "C_RAT_Z_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Z().integrator.clip_pre,  "C_RAT_Z_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Z().integrator.gain,      "C_RAT_Z_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Z().integrator.clip,      "C_RAT_Z_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.rate_ctrl_.get_pid_Z().differentiator.gain,  "C_RAT_Z_KD");
+    Onboard_parameters& op = communication.parameters();
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_X().p_gain,               "C_RAT_X_KP");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_X().integrator.clip_pre,  "C_RAT_X_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_X().integrator.gain,      "C_RAT_X_KI");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_X().integrator.clip,      "C_RAT_X_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_X().differentiator.gain,  "C_RAT_X_KD");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Y().p_gain,               "C_RAT_Y_KP");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Y().integrator.clip_pre,  "C_RAT_Y_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Y().integrator.gain,      "C_RAT_Y_KI");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Y().integrator.clip,      "C_RAT_Y_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Y().differentiator.gain,  "C_RAT_Y_KD");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Z().p_gain,               "C_RAT_Z_KP");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Z().integrator.clip_pre,  "C_RAT_Z_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Z().integrator.gain,      "C_RAT_Z_KI");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Z().integrator.clip,      "C_RAT_Z_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.rate_ctrl_.get_pid_Z().differentiator.gain,  "C_RAT_Z_KD");
 
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_X().p_gain,               "C_ATT_X_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_X().integrator.clip_pre,  "C_ATT_X_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_X().integrator.gain,      "C_ATT_X_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_X().integrator.clip,      "C_ATT_X_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_X().differentiator.gain,  "C_ATT_X_KD");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Y().p_gain,               "C_ATT_Y_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Y().integrator.clip_pre,  "C_ATT_Y_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Y().integrator.gain,      "C_ATT_Y_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Y().integrator.clip,      "C_ATT_Y_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Y().differentiator.gain,  "C_ATT_Y_KD");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Z().p_gain,               "C_ATT_Z_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Z().integrator.clip_pre,  "C_ATT_Z_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Z().integrator.gain,      "C_ATT_Z_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Z().integrator.clip,      "C_ATT_Z_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.att_ctrl_.get_pid_Z().differentiator.gain,  "C_ATT_Z_KD");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_X().p_gain,               "C_ATT_X_KP");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_X().integrator.clip_pre,  "C_ATT_X_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_X().integrator.gain,      "C_ATT_X_KI");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_X().integrator.clip,      "C_ATT_X_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_X().differentiator.gain,  "C_ATT_X_KD");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Y().p_gain,               "C_ATT_Y_KP");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Y().integrator.clip_pre,  "C_ATT_Y_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Y().integrator.gain,      "C_ATT_Y_KI");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Y().integrator.clip,      "C_ATT_Y_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Y().differentiator.gain,  "C_ATT_Y_KD");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Z().p_gain,               "C_ATT_Z_KP");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Z().integrator.clip_pre,  "C_ATT_Z_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Z().integrator.gain,      "C_ATT_Z_KI");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Z().integrator.clip,      "C_ATT_Z_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.att_ctrl_.get_pid_Z().differentiator.gain,  "C_ATT_Z_KD");
 
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_X().p_gain,               "C_VEL_X_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_X().integrator.clip_pre,  "C_VEL_X_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_X().integrator.gain,      "C_VEL_X_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_X().integrator.clip,      "C_VEL_X_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_X().differentiator.gain,  "C_VEL_X_KD");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Y().p_gain,               "C_VEL_Y_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Y().integrator.clip_pre,  "C_VEL_Y_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Y().integrator.gain,      "C_VEL_Y_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Y().integrator.clip,      "C_VEL_Y_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Y().differentiator.gain,  "C_VEL_Y_KD");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Z().p_gain,               "C_VEL_Z_KP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Z().integrator.clip_pre,  "C_VEL_Z_I_CLPRE");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Z().integrator.gain,      "C_VEL_Z_KI");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Z().integrator.clip,      "C_VEL_Z_I_CLIP");
-    ret &= op.add(&flight_controller_quadcopter_diag_.vel_ctrl_.get_pid_Z().differentiator.gain,  "C_VEL_Z_KD");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_X().p_gain,               "C_VEL_X_KP");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_X().integrator.clip_pre,  "C_VEL_X_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_X().integrator.gain,      "C_VEL_X_KI");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_X().integrator.clip,      "C_VEL_X_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_X().differentiator.gain,  "C_VEL_X_KD");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Y().p_gain,               "C_VEL_Y_KP");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Y().integrator.clip_pre,  "C_VEL_Y_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Y().integrator.gain,      "C_VEL_Y_KI");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Y().integrator.clip,      "C_VEL_Y_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Y().differentiator.gain,  "C_VEL_Y_KD");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Z().p_gain,               "C_VEL_Z_KP");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Z().integrator.clip_pre,  "C_VEL_Z_I_CLPRE");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Z().integrator.gain,      "C_VEL_Z_KI");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Z().integrator.clip,      "C_VEL_Z_I_CLIP");
+    ret &= op.add(&flight_controller_quadcopter_.vel_ctrl_.get_pid_Z().differentiator.gain,  "C_VEL_Z_KD");
 
     return ret;
 }

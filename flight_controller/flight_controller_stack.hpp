@@ -46,7 +46,7 @@
 
 #include "control/control_command.hpp"
 #include "control/controller.hpp"
-#include "control/flight_controller.hpp"
+#include "flight_controller/flight_controller.hpp"
 #include "control/servos_mix.hpp"
 
 /**
