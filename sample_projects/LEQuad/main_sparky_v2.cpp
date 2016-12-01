@@ -95,8 +95,6 @@ int main(int argc, char** argv)
 
     Sparky_v2 board(board_config);
 
-
-
     // Board initialisation
     init_success &= board.init();
 
@@ -109,58 +107,14 @@ int main(int argc, char** argv)
     File_dummy          file_dummy;
     Gpio_dummy          gpio_dummy;
     Spektrum_satellite  satellite_dummy(serial_dummy, gpio_dummy, gpio_dummy);
+    Adc_dummy           adc_dummy(11.1f);
+
+    // Dummy sensors
     Px4flow_i2c         flow_dummy(i2c_dummy);
-
-    // -------------------------------------------------------------------------
-    // Create simulation
-    // -------------------------------------------------------------------------
-    // Simulated servos
-    Pwm_dummy pwm[8];
-    Servo sim_servo_0(pwm[0], servo_default_config_esc());
-    Servo sim_servo_1(pwm[1], servo_default_config_esc());
-    Servo sim_servo_2(pwm[2], servo_default_config_esc());
-    Servo sim_servo_3(pwm[3], servo_default_config_esc());
-    Servo sim_servo_4(pwm[4], servo_default_config_esc());
-    Servo sim_servo_5(pwm[5], servo_default_config_esc());
-    Servo sim_servo_6(pwm[6], servo_default_config_esc());
-    Servo sim_servo_7(pwm[7], servo_default_config_esc());
-
-    // Simulated dynamic model
-    Dynamic_model_quad_diag     sim_model(sim_servo_0, sim_servo_1, sim_servo_2, sim_servo_3);
-    Simulation                  sim(sim_model);
-
-    // // Simulated battery
-    Adc_dummy   sim_adc_battery(11.1f);
-    Battery     sim_battery(sim_adc_battery);
-
-    // // Simulated IMU
-    // Imu     sim_imu( sim.accelerometer(),
-    //                  sim.gyroscope(),
-    //                  sim.magnetometer() );
-
-    // // set the flag to simulation
-    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
-    // LEQuad mav = LEQuad( sim_imu,
-    //                      sim.barometer(),
-    //                      sim.gps(),
-    //                      sim.sonar(),
-    //                      flow_dummy,
-    //                      board.serial_,                // mavlink serial
-    //                      satellite_dummy,
-    //                      board.state_display_sparky_v2_,
-    //                      file_dummy,
-    //                      sim_battery,
-    //                      sim_servo_0,
-    //                      sim_servo_1,
-    //                      sim_servo_2,
-    //                      sim_servo_3 ,
-    //                      sim_servo_4,
-    //                      sim_servo_5,
-    //                      sim_servo_6,
-    //                      sim_servo_7 ,
-    //                      file_dummy,
-    //                      file_dummy,
-    //                      mav_config );
+    Battery             battery_dummy(adc_dummy);
+    Gps_ublox           gps_dummy(serial_dummy);
+    Sonar_i2cxl         sonar_dummy(i2c_dummy);
+    Barometer_MS5611    barometer_dummy(i2c_dummy);
 
     // -------------------------------------------------------------------------
     // Create MAV
@@ -168,6 +122,7 @@ int main(int argc, char** argv)
     // Create MAV using real sensors
     //LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
     LEQuad::conf_t mav_config = LEQuad::dronedome_config(MAVLINK_SYS_ID);
+    mav_config.mav_config.ahrs_ekf_config.use_magnetometer = 0;
 
     //use joystick by default
     mav_config.mav_config.manual_control_config.mode_source = Manual_control::MODE_SOURCE_JOYSTICK;
@@ -181,22 +136,15 @@ int main(int argc, char** argv)
     // mav_config.stabilisation_copter_config.thrust_hover_point      = 0.0f;
 
     LEQuad mav = LEQuad(board.imu_,
-                        sim.barometer(),
-                        sim.gps(),
-                        sim.sonar(),
+                        barometer_dummy,
+                        gps_dummy,
+                        sonar_dummy,
                         flow_dummy,
-                        // board.bmp085,
-                        // board.gps_ublox,
-                        // board.sonar_i2cxl,
                         board.serial_1_,                // mavlink serial
-                        // board.serial_,                // mavlink serial
                         satellite_dummy,
-                        // board.spektrum_satellite,
                         board.state_display_sparky_v2_,
                         file_dummy,
-                        // board.file_flash,
-                        sim_battery,
-    //                  board.battery,
+                        battery_dummy,
                         file_dummy,
                         file_dummy,
                         board.servo_[0],
@@ -211,56 +159,6 @@ int main(int argc, char** argv)
     // -------------------------------------------------------------------------
     mav.loop();
 
-    // board.led_err_.off();
-    // board.led_stat_.off();
-    // board.led_rf_.off();
-
-    // Console<Serial> console(board.serial_);
-
-    // while (1)
-    // {
-
-        // Write mavlink message
-        // mavlink_msg_heartbeat_pack( 11,     // uint8_t system_id,
-        //                             50,     // uint8_t component_id,
-        //                             &msg,   // mavlink_message_t* msg,
-        //                             0,      // uint8_t type,
-        //                             0,      // uint8_t autopilot,
-        //                             0,      // uint8_t base_mode,
-        //                             0,      // uint32_t custom_mode,
-        //                             0);     //uint8_t system_status)
-        // mavlink_stream.send(&msg);
-
-    //     time_keeper_delay_ms(500);
-
-
-    //     const char* sep = "\t";
-    //     uint64_t delay = 25;
-
-    //     console.write(valx);
-    //     time_keeper_delay_ms(delay);
-    //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     time_keeper_delay_ms(delay);
-    //     console.write(valy);
-    //     time_keeper_delay_ms(delay);
-    //     board.serial_.write((const uint8_t*)sep, sizeof(sep));
-    //     time_keeper_delay_ms(delay);
-    //     console.write(valz);
-    //     time_keeper_delay_ms(delay);
-
-    //     const char* newline = "\r\n";
-    //     board.serial_.write((const uint8_t*)newline, sizeof(newline));
-
-    //     if (bo)
-    //     {
-    //         board.led_stat_.toggle();
-    //     }
-    //     else
-    //     {
-    //         board.led_err_.toggle();
-    //     }
-
-    // }
 
     return 0;
 }
