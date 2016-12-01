@@ -580,7 +580,7 @@ bool MAV::main_task(void)
             break;
 
             case Mav_mode::RATE:
-                flight_controller_.set_manual_attitude_command(manual_control);
+                flight_controller_.set_manual_rate_command(manual_control);
             break;
 
             default:
