@@ -130,6 +130,13 @@ public:
     bool get_output(velocity_command_t& vel) const;
 
 
+    /**
+     * \brief   Gives acces to internal pid_controller
+     *
+     * \return  pid     reference to pid controller
+     */
+    pid_controller_t& get_pid(void);
+
 private:
     const INS&          ins_;                       /// inertial navigation unit ti use for position estimation
     const AHRS&       ahrs_;                      ///< Attitude estimation

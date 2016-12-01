@@ -128,3 +128,21 @@ bool Attitude_controller::get_output(rate_command_t& command) const
     command = rate_command_;
     return true;
 }
+
+
+pid_controller_t& Attitude_controller::get_pid_X(void)
+{
+    return pid_[X];
+}
+
+
+pid_controller_t& Attitude_controller::get_pid_Y(void)
+{
+    return pid_[Y];
+}
+
+
+pid_controller_t& Attitude_controller::get_pid_Z(void)
+{
+    return pid_[Z];
+}

@@ -139,6 +139,16 @@ public:
     bool get_output(rate_command_t& command) const;
 
 
+    /**
+     * \brief   Gives acces to internal pid_controller
+     *
+     * \return  pid     reference to pid controller
+     */
+    pid_controller_t& get_pid_X(void);
+    pid_controller_t& get_pid_Y(void);
+    pid_controller_t& get_pid_Z(void);
+
+
 protected:
     const AHRS&               ahrs_;                       ///< Ref to attitude estimation (input)
     attitude_command_t&         attitude_command_;           ///< Reference to attitude command (input)

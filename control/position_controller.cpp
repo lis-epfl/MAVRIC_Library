@@ -134,3 +134,9 @@ bool Position_controller::get_output(velocity_command_t& vel) const
     vel = velocity_command_;
     return true;
 }
+
+
+pid_controller_t& Position_controller::get_pid(void)
+{
+    return pid_controller_;
+}
