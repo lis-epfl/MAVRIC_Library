@@ -43,7 +43,7 @@
 #define LEQUAD_HPP_
 
 #include "drones/mav.hpp"
-#include "flight_controller/flight_controller_quadcopter_diag.hpp"
+#include "flight_controller/flight_controller_quadcopter.hpp"
 
 /**
  * \brief MAV class
@@ -58,7 +58,7 @@ public:
     struct conf_t
     {
         MAV::conf_t mav_config;
-        Flight_controller_quadcopter_diag::conf_t flight_controller_config;
+        Flight_controller_quadcopter::conf_t flight_controller_config;
     };
 
     /**
@@ -105,7 +105,7 @@ public:
     bool init_controller(void);
 
 protected:
-    Flight_controller_quadcopter_diag    flight_controller_quadcopter_diag_;
+    Flight_controller_quadcopter    flight_controller_quadcopter_;
 };
 
 
@@ -114,7 +114,7 @@ LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
     conf_t conf                                                = {};
 
     conf.mav_config = MAV::default_config();
-    conf.flight_controller_config = Flight_controller_quadcopter_diag::default_config();
+    conf.flight_controller_config = Flight_controller_quadcopter::default_config();
 
     return conf;
 };
@@ -125,7 +125,7 @@ LEQuad::conf_t LEQuad::dronedome_config(uint8_t sysid)
     conf_t conf                                                = {};
 
     conf.mav_config = MAV::dronedome_config(sysid);
-    conf.flight_controller_config = Flight_controller_quadcopter_diag::default_config();
+    conf.flight_controller_config = Flight_controller_quadcopter::default_config();
 
     return conf;
 }

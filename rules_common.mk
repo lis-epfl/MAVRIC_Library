@@ -93,7 +93,7 @@ LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
 
 LIB_SRCS += flight_controller/flight_controller_stack.cpp
-# LIB_SRCS += flight_controller/flight_controller_copter.cpp
+LIB_SRCS += flight_controller/flight_controller_hexhog.cpp
 
 LIB_SRCS += manual_control/joystick.cpp
 LIB_SRCS += manual_control/joystick_telemetry.cpp

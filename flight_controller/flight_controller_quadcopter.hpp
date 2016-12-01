@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file flight_controller_quadcopter_diag.hpp
+ * \file flight_controller_quadcopter.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -39,19 +39,24 @@
  *
  ******************************************************************************/
 
-#ifndef FLIGHT_CONTROLLER_QUADCOPTER_DIAG_HPP_
-#define FLIGHT_CONTROLLER_QUADCOPTER_DIAG_HPP_
+#ifndef FLIGHT_CONTROLLER_QUADCOPTER_HPP_
+#define FLIGHT_CONTROLLER_QUADCOPTER_HPP_
 
 #include "flight_controller/flight_controller_copter.hpp"
 
-class Flight_controller_quadcopter_diag: public Flight_controller_copter<4>
+class Flight_controller_quadcopter: public Flight_controller_copter<4>
 {
 public:
-    Flight_controller_quadcopter_diag(const INS& ins, const AHRS& ahrs, Servo& motor_rl, Servo& motor_fl, Servo& motor_fr, Servo& motor_rr, conf_t config):
+    Flight_controller_quadcopter(const INS& ins, const AHRS& ahrs, Servo& motor_rl, Servo& motor_fl, Servo& motor_fr, Servo& motor_rr, conf_t config):
         Flight_controller_copter<4>(ins, ahrs, Servos_mix_matrix<4>::args_t{{{&motor_rl, &motor_fl, &motor_fr, &motor_rr}}}, config)
     {};
 
     static conf_t default_config(void)
+    {
+        return default_config_diag();
+    };
+
+    static conf_t default_config_diag(void)
     {
         conf_t conf = Flight_controller_copter<4>::default_config();
 
@@ -62,6 +67,18 @@ public:
 
         return conf;
     };
+
+    static conf_t default_config_cross(void)
+    {
+        conf_t conf = Flight_controller_copter<4>::default_config();
+
+        conf.mix_config.mix  = Mat<4, 6>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+                                           1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f,
+                                           0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+                                          -1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f });
+
+        return conf;
+    };
 };
 
-#endif  // FLIGHT_CONTROLLER_QUADCOPTER_DIAG_HPP_
+#endif  // FLIGHT_CONTROLLER_QUADCOPTER_HPP_
