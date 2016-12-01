@@ -51,7 +51,6 @@ LIB_SRCS += communication/periodic_telemetry.cpp
 
 LIB_SRCS += control/attitude_controller_p2.cpp
 LIB_SRCS += control/attitude_error_estimator.cpp
-LIB_SRCS += control/flight_controller_stack.cpp
 LIB_SRCS += control/rate_controller.cpp
 LIB_SRCS += control/attitude_controller.cpp
 LIB_SRCS += control/velocity_controller.cpp
@@ -92,6 +91,9 @@ LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
 LIB_SRCS += hal/common/serial.cpp
+
+LIB_SRCS += flight_controller/flight_controller_stack.cpp
+# LIB_SRCS += flight_controller/flight_controller_copter.cpp
 
 LIB_SRCS += manual_control/joystick.cpp
 LIB_SRCS += manual_control/joystick_telemetry.cpp

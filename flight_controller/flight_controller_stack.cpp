@@ -40,7 +40,7 @@
  *
  ******************************************************************************/
 
-#include "control/flight_controller_stack.hpp"
+#include "flight_controller/flight_controller_stack.hpp"
 
 Flight_controller_stack::Flight_controller_stack(pos_ctrl_t& pos_ctrl,
                         vel_ctrl_t& vel_ctrl,

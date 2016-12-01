@@ -45,7 +45,7 @@
 
 #include "mission/mission_planner.hpp"
 #include "mission/waypoint.hpp"
-#include "control/flight_controller.hpp"
+#include "flight_controller/flight_controller.hpp"
 
 /*
  * \brief   Interface for mission planner handler

@@ -53,7 +53,7 @@
 #include "communication/mavlink_waypoint_handler.hpp"
 #include "communication/onboard_parameters.hpp"
 
-#include "control/flight_controller_copter.hpp"
+#include "flight_controller/flight_controller_copter.hpp"
 #include "control/position_controller.hpp"
 #include "control/velocity_controller_copter.hpp"
 #include "control/attitude_controller.hpp"

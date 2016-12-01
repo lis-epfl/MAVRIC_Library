@@ -44,7 +44,7 @@
 
 #include "control/controller.hpp"
 #include "manual_control/manual_control.hpp"
-#include "control/flight_command_source.hpp"
+#include "flight_controller/flight_command_source.hpp"
 
 /**
  * \brief   Interface for flight controllers

@@ -43,7 +43,7 @@
 #define LEQUAD_HPP_
 
 #include "drones/mav.hpp"
-#include "control/flight_controller_copter.hpp"
+#include "flight_controller/flight_controller_quadcopter_diag.hpp"
 
 /**
  * \brief MAV class
