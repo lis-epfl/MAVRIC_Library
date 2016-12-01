@@ -65,7 +65,7 @@ var searchData=
   ['lp_5fmode',['lp_mode',['../structubx__cfg__rxm__t.html#a4ff05819515300e6d25706198328411f',1,'ubx_cfg_rxm_t']]],
   ['lpf',['LPF',['../structcurvace__t.html#a1b2207f5cf259127b1af1143b047f487',1,'curvace_t']]],
   ['lpf_5facc',['lpf_acc',['../structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8',1,'imu_conf_t']]],
-  ['lpf_5fgain',['LPF_gain',['../structMission__handler__landing_1_1conf__t.html#a74f7172ac64f3899e69551a7376fe6f0',1,'Mission_handler_landing::conf_t::LPF_gain()'],['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()']]],
+  ['lpf_5fgain',['lpf_gain',['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()'],['../structMission__handler__landing_1_1conf__t.html#a74f7172ac64f3899e69551a7376fe6f0',1,'Mission_handler_landing::conf_t::LPF_gain()']]],
   ['lpf_5fgain_5f',['LPF_gain_',['../classMission__handler__landing.html#ae90fa4bd8245553fa838ef58eaac7109',1,'Mission_handler_landing']]],
   ['lpf_5fgyro',['lpf_gyro',['../structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd',1,'imu_conf_t']]],
   ['lpf_5fmag',['lpf_mag',['../structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82',1,'imu_conf_t']]],

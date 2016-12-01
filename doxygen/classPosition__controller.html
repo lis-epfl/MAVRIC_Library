@@ -123,6 +123,8 @@ virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the input command.  <a href="#a6b65f720d40df1f64a8ae758ccf1c402"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#a6d75d33d5bfb0898635f4464ff090a18">get_output</a> (<a class="el" href="structvelocity__command__t.html">velocity_command_t</a> &amp;vel) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the output command.  <a href="#a6d75d33d5bfb0898635f4464ff090a18"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#ab128db09ca372ec34853f4ca0838eacc">get_pid</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives acces to internal pid_controller.  <a href="#ab128db09ca372ec34853f4ca0838eacc"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structPosition__controller_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297">default_config</a> ()</td></tr>
@@ -242,6 +244,26 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab128db09ca372ec34853f4ca0838eacc"></a><!-- doxytag: member="Position_controller::get_pid" ref="ab128db09ca372ec34853f4ca0838eacc" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp; <a class="el" href="classPosition__controller.html#ab128db09ca372ec34853f4ca0838eacc">Position_controller::get_pid</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gives acces to internal pid_controller. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>pid reference to pid controller </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="aa9ee79998f9be6cb8354a35c4386b6ac"></a><!-- doxytag: member="Position_controller::set_command" ref="aa9ee79998f9be6cb8354a35c4386b6ac" args="(const position_command_t &amp;pos)" -->
 <div class="memitem">
 <div class="memproto">
@@ -292,7 +314,7 @@ Static Public Member Functions</h2></td></tr>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 10:02:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 13:05:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

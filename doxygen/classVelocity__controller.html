@@ -98,7 +98,7 @@ Inheritance diagram for Velocity_controller:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVelocity__controller__inherit__graph.png" border="0" usemap="#Velocity__controller_inherit__map" alt="Inheritance graph"/></div>
 <map name="Velocity__controller_inherit__map" id="Velocity__controller_inherit__map">
-<area shape="rect" id="node9" href="classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="197,720,525,840"/><area shape="rect" id="node2" href="classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="107,192,616,347"/><area shape="rect" id="node4" href="classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/><area shape="rect" id="node6" href="classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/><area shape="rect" id="node11" href="classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="197,888,525,1008"/></map>
+<area shape="rect" id="node9" href="classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="197,771,525,891"/><area shape="rect" id="node2" href="classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="107,192,616,347"/><area shape="rect" id="node4" href="classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/><area shape="rect" id="node6" href="classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/><area shape="rect" id="node11" href="classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="197,939,525,1059"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Velocity_controller:</div>
@@ -130,6 +130,12 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the output command.  <a href="#a9a65103e887e25ae58d4bbf1f1ff070b"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller.html#a620b628a566ac568b8eac04008fc6b7f">get_output</a> (<a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;thrust) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the output command.  <a href="#a620b628a566ac568b8eac04008fc6b7f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller.html#af8fa1443ce2ee2d4f27f85dfc785b56f">get_pid_X</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives acces to internal pid_controller.  <a href="#af8fa1443ce2ee2d4f27f85dfc785b56f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3076c6567b182b3efaa9f6307a307ed3"></a><!-- doxytag: member="Velocity_controller::get_pid_Y" ref="a3076c6567b182b3efaa9f6307a307ed3" args="(void)" -->
+<a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_pid_Y</b> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a21cbf416d5caaf46194c8c635b9fa789"></a><!-- doxytag: member="Velocity_controller::get_pid_Z" ref="a21cbf416d5caaf46194c8c635b9fa789" args="(void)" -->
+<a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_pid_Z</b> (void)</td></tr>
 <tr><td colspan="2"><h2><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller.html#a0f3292d55fb6543bd960955102b559f8">compute_attitude_and_thrust_from_desired_accel</a> (const std::array&lt; float, 3 &gt; &amp;accel_vector, <a class="el" href="structquat__t.html">attitude_command_t</a> &amp;attitude_command, <a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;thrust_command)=0</td></tr>
@@ -334,6 +340,26 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a class="anchor" id="af8fa1443ce2ee2d4f27f85dfc785b56f"></a><!-- doxytag: member="Velocity_controller::get_pid_X" ref="af8fa1443ce2ee2d4f27f85dfc785b56f" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp; <a class="el" href="classVelocity__controller.html#af8fa1443ce2ee2d4f27f85dfc785b56f">Velocity_controller::get_pid_X</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gives acces to internal pid_controller. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>pid reference to pid controller </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a1f496ec712f6fc6fe3c4fb639f3711db"></a><!-- doxytag: member="Velocity_controller::set_command" ref="a1f496ec712f6fc6fe3c4fb639f3711db" args="(const velocity_command_t &amp;vel)" -->
 <div class="memitem">
 <div class="memproto">
@@ -415,7 +441,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 10:02:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 13:05:42 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

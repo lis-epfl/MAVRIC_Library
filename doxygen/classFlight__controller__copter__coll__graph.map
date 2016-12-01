@@ -1,6 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy." alt="" coords="1261,1720,1584,2048"/>
-<area shape="rect" id="node4" href="$classFlight__controller.html" title="Interface for flight controllers." alt="" coords="820,1259,1044,1552"/>
+<area shape="rect" id="node2" href="$classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy." alt="" coords="1261,1755,1584,2083"/>
+<area shape="rect" id="node4" href="$classFlight__controller.html" title="Interface for flight controllers." alt="" coords="820,1276,1044,1569"/>
 <area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="699,925,920,1062"/>
 <area shape="rect" id="node8" href="$classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="944,925,1165,1062"/>
 <area shape="rect" id="node10" href="$classController.html" title="{Controller\&lt; attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1189,925,1408,1062"/>
@@ -9,16 +9,16 @@
 <area shape="rect" id="node16" href="$classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="464,925,675,1062"/>
 <area shape="rect" id="node18" href="$structcommand__t.html" title="Global command structure." alt="" coords="1584,899,1675,1088"/>
 <area shape="rect" id="node20" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="3260,521,3391,607"/>
-<area shape="rect" id="node35" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="2777,855,3105,1131"/>
+<area shape="rect" id="node35" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="2777,829,3105,1157"/>
 <area shape="rect" id="node76" href="$classServos__mix__matrix.html" title="{Servos_mix_matrix\&lt; N_ROTORS \&gt;\n|# servos_\l# torque_command_\l# thrust_command_\l# mix_\l# trim_\l# min_\l# max_\l|+ thrust_command_()\l+ mix_()\l+ trim_()\l+ min_()\l+ max_()\l+ Servos_mix_matrix()\l+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ default_config()\l}" alt="" coords="3283,795,3515,1192"/>
 <area shape="rect" id="node22" href="$structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="1341,521,1459,607"/>
-<area shape="rect" id="node56" href="$classAttitude__controller.html" title="{Attitude_controller\n|# ahrs_\l# attitude_command_\l# rate_command_\l# attitude_error_estimator_\l# pid_\l# dt_s_\l# last_update_s_\l|+ Attitude_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="2223,1267,2399,1543"/>
+<area shape="rect" id="node56" href="$classAttitude__controller.html" title="{Attitude_controller\n|# ahrs_\l# attitude_command_\l# rate_command_\l# attitude_error_estimator_\l# pid_\l# dt_s_\l# last_update_s_\l|+ Attitude_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_pid_X()\l+ get_pid_Y()\l+ get_pid_Z()\l+ default_config()\l}" alt="" coords="2223,1259,2399,1587"/>
 <area shape="rect" id="node24" href="$structposition__command__t.html" title="Position command structure." alt="" coords="1483,513,1624,615"/>
 <area shape="rect" id="node26" href="$structtorque__command__t.html" title="Torque command structure (expressed in body frame)" alt="" coords="2407,521,2540,607"/>
 <area shape="rect" id="node28" href="$structquat__t.html" title="Unit quaternion." alt="" coords="1943,513,2001,615"/>
 <area shape="rect" id="node61" href="$structattitude__error__estimator__t.html" title="Quaternion attitude error estimator data structure." alt="" coords="2497,933,2668,1053"/>
 <area shape="rect" id="node30" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="1648,513,1789,615"/>
-<area shape="rect" id="node33" href="$classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="2609,1576,2937,1696"/>
+<area shape="rect" id="node33" href="$classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="2609,1611,2937,1731"/>
 <area shape="rect" id="node37" href="$classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="2564,487,3073,641"/>
 <area shape="rect" id="node39" href="$classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="2817,213,3164,350"/>
 <area shape="rect" id="node41" href="$classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="2455,213,2793,350"/>
@@ -28,10 +28,10 @@
 <area shape="rect" id="node52" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="2141,221,2245,341"/>
 <area shape="rect" id="node54" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="2013,213,2117,350"/>
 <area shape="rect" id="node58" href="$classController.html" title="{Controller\&lt; attitude_command_t, rate_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="2148,925,2473,1062"/>
-<area shape="rect" id="node68" href="$classRate__controller.html" title="{Rate_controller\n||+ Rate_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="3052,1798,3183,1970"/>
-<area shape="rect" id="node70" href="$classController.html" title="{Controller\&lt; rate_command_t, torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3005,1337,3323,1474"/>
-<area shape="rect" id="node72" href="$classPosition__controller.html" title="{Position_controller\n||+ Position_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ default_config()\l}" alt="" coords="3327,1798,3476,1970"/>
-<area shape="rect" id="node74" href="$classController.html" title="{Controller\&lt; position_command_t, velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3347,1337,3696,1474"/>
+<area shape="rect" id="node68" href="$classRate__controller.html" title="{Rate_controller\n||+ Rate_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_pid_X()\l+ get_pid_Y()\l+ get_pid_Z()\l+ default_config()\l}" alt="" coords="3052,1807,3183,2031"/>
+<area shape="rect" id="node70" href="$classController.html" title="{Controller\&lt; rate_command_t, torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3005,1354,3323,1491"/>
+<area shape="rect" id="node72" href="$classPosition__controller.html" title="{Position_controller\n||+ Position_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_pid()\l+ default_config()\l}" alt="" coords="3327,1824,3476,2013"/>
+<area shape="rect" id="node74" href="$classController.html" title="{Controller\&lt; position_command_t, velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3347,1354,3696,1491"/>
 <area shape="rect" id="node78" href="$classServos__mix.html" title="{Servos_mix\n||+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3545,469,3668,659"/>
 <area shape="rect" id="node80" href="$classController__2__to__1.html" title="{Controller_2_to_1\&lt; torque_command_t, thrust_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3360,195,3853,367"/>
 <area shape="rect" id="node82" href="$classController.html" title="{Controller\&lt; torque_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="3264,6,3595,143"/>

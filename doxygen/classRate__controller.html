@@ -122,6 +122,12 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the input command.  <a href="#a1736d30b2e44791ccfec8ae52359aed2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRate__controller.html#a6650b59fc856bfbb648bfdf8e7833ebf">get_output</a> (<a class="el" href="structtorque__command__t.html">torque_command_t</a> &amp;command) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the output command.  <a href="#a6650b59fc856bfbb648bfdf8e7833ebf"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRate__controller.html#a40e81f5cd5f1cb3e095ae96ba7468a26">get_pid_X</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gives access to internal pid_controller.  <a href="#a40e81f5cd5f1cb3e095ae96ba7468a26"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af4caf7901e8da2b1ad564a9d0d452bf7"></a><!-- doxytag: member="Rate_controller::get_pid_Y" ref="af4caf7901e8da2b1ad564a9d0d452bf7" args="(void)" -->
+<a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_pid_Y</b> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3a18cc3babf6cad0fd24d70ee026d202"></a><!-- doxytag: member="Rate_controller::get_pid_Z" ref="a3a18cc3babf6cad0fd24d70ee026d202" args="(void)" -->
+<a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_pid_Z</b> (void)</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structRate__controller_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classRate__controller.html#a4574b703f8da6e771582f33b0c6156a1">default_config</a> ()</td></tr>
@@ -241,6 +247,26 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a40e81f5cd5f1cb3e095ae96ba7468a26"></a><!-- doxytag: member="Rate_controller::get_pid_X" ref="a40e81f5cd5f1cb3e095ae96ba7468a26" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structpid__controller__t.html">pid_controller_t</a> &amp; <a class="el" href="classRate__controller.html#a40e81f5cd5f1cb3e095ae96ba7468a26">Rate_controller::get_pid_X</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gives access to internal pid_controller. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>pid reference to pid controller </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a939ef3f98eebb065d0f95e440908adc5"></a><!-- doxytag: member="Rate_controller::set_command" ref="a939ef3f98eebb065d0f95e440908adc5" args="(const rate_command_t &amp;command)" -->
 <div class="memitem">
 <div class="memproto">
@@ -322,7 +348,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 10:02:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 13:05:41 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
