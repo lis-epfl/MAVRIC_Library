@@ -135,3 +135,21 @@ bool Velocity_controller::get_output(thrust_command_t& thrust) const
     thrust = thrust_command_;
     return true;
 }
+
+
+pid_controller_t& Velocity_controller::get_pid_X(void)
+{
+    return pid_[X];
+}
+
+
+pid_controller_t& Velocity_controller::get_pid_Y(void)
+{
+    return pid_[Y];
+}
+
+
+pid_controller_t& Velocity_controller::get_pid_Z(void)
+{
+    return pid_[Z];
+}

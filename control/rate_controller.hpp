@@ -138,6 +138,15 @@ public:
     bool get_output(torque_command_t& command) const;
 
 
+    /**
+     * \brief   Gives access to internal pid_controller
+     *
+     * \return  pid     reference to pid controller
+     */
+    pid_controller_t& get_pid_X(void);
+    pid_controller_t& get_pid_Y(void);
+    pid_controller_t& get_pid_Z(void);
+
 private:
     const AHRS&         ahrs_;                  ///< Ref to attitude estimation (input)
     rate_command_t&       rate_command_;          ///< Reference to rate command (input)

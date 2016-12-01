@@ -134,6 +134,15 @@ public:
     bool get_output(thrust_command_t& thrust) const;
 
 
+    /**
+     * \brief   Gives acces to internal pid_controller
+     *
+     * \return  pid     reference to pid controller
+     */
+    pid_controller_t& get_pid_X(void);
+    pid_controller_t& get_pid_Y(void);
+    pid_controller_t& get_pid_Z(void);
+
 protected:
 
     /**
