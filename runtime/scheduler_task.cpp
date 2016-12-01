@@ -110,7 +110,7 @@ bool Scheduler_task::execute()
 
             case PERIODIC_RELATIVE:
                 // Take call_delays into account
-                next_run = time_keeper_get_us() + repeat_period;
+                next_run = task_start_time + repeat_period;
                 break;
         }
     }
