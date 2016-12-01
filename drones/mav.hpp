@@ -232,7 +232,7 @@ protected:
     virtual bool init_ins(void);
     virtual bool init_mocap(void);
     virtual bool init_flow(void);
-    virtual bool init_stabilisers(void);
+    virtual bool init_controller(void) = 0;
     virtual bool init_mission_planning(void);
     virtual bool init_hud(void);
     // virtual bool init_servos(void);

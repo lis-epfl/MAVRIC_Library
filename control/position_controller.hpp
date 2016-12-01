@@ -59,6 +59,8 @@ public:
      */
     struct conf_t
     {
+        float cruise_speed;
+        float cruise_dist;
         float max_climb_rate;
 		float kp_yaw;
         pid_controller_conf_t pid_config;
@@ -71,13 +73,6 @@ public:
      * \return  config
      */
     static inline conf_t default_config();
-
-
-    enum class ctrl_mode_t
-    {
-        POS_XYZ,        ///< 3D position control
-        POS_XY_VEL_Z    ///< Horizontal position control + vertical velocity control
-    };
 
 
     /**
@@ -143,11 +138,9 @@ private:
     velocity_command_t  velocity_command_;          ///< Velocity command in local frame;
 
     pid_controller_t    pid_controller_;            //< position pid controller
-    float               zvel_command_;              ///< Velocity command in z direction (local frame); ONLY VALID if in POS_XY_VELZ mode
-    ctrl_mode_t         ctrl_mode_;
-
-    /* parameters */
-    float max_climb_rate_;                           //< maximal climb rate (velocity is scaled so that output velocity in Z <= max_climb_rate)
+    float cruise_speed_;                            ///< Maximal speed when at more than cruise_dist_from the goal
+    float cruise_dist_;                             ///< Distance from the goal at which the cruise_speed is reached
+    float max_climb_rate_;                          ///< maximal climb rate (velocity is scaled so that output velocity in Z <= max_climb_rate)
     float kp_yaw_;
 };
 
@@ -155,18 +148,19 @@ private:
 Position_controller::conf_t Position_controller::default_config()
 {
     conf_t conf;
+    conf.cruise_speed       = 3.0f;
+    conf.cruise_dist        = 10.0f;
     conf.max_climb_rate     = 1.0f;
     conf.kp_yaw             = 0.5f;
 
-    conf.pid_config.p_gain                  = 0.4f;
+    conf.pid_config.p_gain                  = 1.0f;
     conf.pid_config.clip_min                = 0.0f;
     conf.pid_config.clip_max                = 3.0f;
     conf.pid_config.integrator.gain         = 0.0f;
     conf.pid_config.integrator.clip_pre     = 0.0f;
     conf.pid_config.integrator.clip         = 0.0f;
-    //conf.pid_config.differentiator.gain     = 0.28f;
     conf.pid_config.differentiator.gain     = 0.0f;
-    conf.pid_config.differentiator.clip     = 0.46f;
+    conf.pid_config.differentiator.clip     = 0.0f;
     conf.pid_config.soft_zone_width         = 0.0f;
 
     return conf;

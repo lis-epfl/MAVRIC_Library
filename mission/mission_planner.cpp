@@ -195,7 +195,7 @@ bool Mission_planner::update(Mission_planner* mission_planner)
         break;
 
     case MAV_STATE_CRITICAL:
-        // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
+        // In MAV_MODE_VELOCITY_CONTROL, MAV_MODE::POSITION_HOLD and MAV_MODE::AUTO
         if (mode_local.is_guided())
         {
             mission_planner->critical_handler();
@@ -661,6 +661,7 @@ void Mission_planner::state_machine()
             }
         }
     }
+    // TODO remove the POSITION_HOLD case as this seems to cause problems if there is not handler for position hold
     else if (state_.mav_mode().ctrl_mode() == Mav_mode::POSITION_HOLD) // Do position hold
     {
         // Set hold position waypoint

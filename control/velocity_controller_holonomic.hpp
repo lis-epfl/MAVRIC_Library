@@ -30,104 +30,73 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file lequad.hpp
+ * \file velocity_controller_holonomic.hpp
  *
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
+
  *
- * \brief MAV class
+ * \brief A velocity controller for holonomic hovering platform capable of generating 3D thrust
+ *
+ * \details It takes a velocity command as input and computes an attitude
+ * command and thrust command as output.
  *
  ******************************************************************************/
 
 
-#ifndef LEQUAD_HPP_
-#define LEQUAD_HPP_
+#ifndef VELOCITY_CONTROLLER_HOLONOMIC_HPP_
+#define VELOCITY_CONTROLLER_HOLONOMIC_HPP_
 
-#include "drones/mav.hpp"
-#include "control/flight_controller_copter.hpp"
+#include "control/velocity_controller_copter.hpp"
 
 /**
- * \brief MAV class
+ * \brief Velocity controller for hovering platforms
  */
-class LEQuad: public MAV
+class Velocity_controller_holonomic : public Velocity_controller_copter
 {
 public:
+    /**
+    * \brief   Default Configuration
+    *
+    * /return  config
+    */
+    static inline conf_t default_config(void);
 
     /**
-     * \brief   Configuration structure
-     */
-    struct conf_t
-    {
-        MAV::conf_t mav_config;
-        Flight_controller_quadcopter_diag::conf_t flight_controller_config;
-    };
-
-    /**
-     * \brief   Default configuration
+     * \brief                       Constructor
      *
-     * \param   sysid       System id (default value = 1)
-     *
-     * \return  Config structure
+     * \param   ahrs                Reference to estimated attitude
+     * \param   ins                 Reference to estimated speed and position
+     * \param   config              Configuration
      */
-    static inline conf_t default_config(uint8_t sysid = 1);
+    Velocity_controller_holonomic(const args_t& args, const conf_t& config = default_config());
 
-
-    /**
-     * \brief   Configuration for use in drone dome
-     *
-     * \param   sysid       System id (default value = 1)
-     *
-     * \return  Config structure
-     */
-    static inline conf_t dronedome_config(uint8_t sysid = 1);
-
-
-    /**
-     * \brief   Constructor
-     */
-    LEQuad( Imu& imu,
-            Barometer& barometer,
-            Gps& gps,
-            Sonar& sonar,
-            Px4flow_i2c& flow,
-            Serial& serial_mavlink,
-            Satellite& satellite,
-            State_display& state_display,
-            File& file_flash,
-            Battery& battery,
-            File& file1,
-            File& file2,
-            Servo& servo_0,
-            Servo& servo_1,
-            Servo& servo_2,
-            Servo& servo_3,
-            const conf_t& config = default_config());
-
-    bool init_controller(void);
 
 protected:
-    Flight_controller_quadcopter_diag    flight_controller_quadcopter_diag_;
+
+    /**
+     * \brief   Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics
+     *
+     * \param   accel_vector        Desired acceleration vectors (input)
+     * \param   attitude_command    Attitude command (output)
+     * \param   thrust_command      Thrust command (output)
+     *
+     * \return  success
+     */
+    virtual bool compute_attitude_and_thrust_from_desired_accel(const std::array<float,3>& accel_command,
+                                                                attitude_command_t& attitude_command,
+                                                                thrust_command_t& thrust_command);
+
+protected:
+    uint32_t use_3d_thrust_;         ///< Boolean indicating if 3D thrust is generated instead of banking
 };
 
 
-LEQuad::conf_t LEQuad::default_config(uint8_t sysid)
+Velocity_controller_holonomic::conf_t Velocity_controller_holonomic::default_config(void)
 {
-    conf_t conf                                                = {};
-
-    conf.mav_config = MAV::default_config();
-    conf.flight_controller_config = Flight_controller_quadcopter_diag::default_config();
-
-    return conf;
-};
-
-
-LEQuad::conf_t LEQuad::dronedome_config(uint8_t sysid)
-{
-    conf_t conf                                                = {};
-
-    conf.mav_config = MAV::dronedome_config(sysid);
-    conf.flight_controller_config = Flight_controller_quadcopter_diag::default_config();
+    conf_t conf = Velocity_controller_copter::default_config();
 
     return conf;
 }
 
-#endif /* LEQUAD_HPP_ */
+#endif /* VELOCITY_CONTROLLER_HOLONOMIC_HPP_ */

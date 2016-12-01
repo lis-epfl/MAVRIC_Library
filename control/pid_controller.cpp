@@ -162,6 +162,7 @@ bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf
     controller->error         = 0.0f;
     controller->last_update_s = t;
     controller->dt_s          = 1.0f;
+    controller->is_saturated  = false;
 
     return true;
 }
@@ -198,7 +199,8 @@ void pid_controller_init_pass_through(pid_controller_t* controller)
     controller->clip_max    = 10000.0f;
     controller->error       = 0.0f;
     controller->output      = 0.0f;
-    controller->soft_zone_width         = 0.0f;
+    controller->soft_zone_width = 0.0f;
+    controller->is_saturated    = false;
     controller->differentiator.previous = 0.0f;
 
     pid_controller_init_differenciator(&(controller->differentiator),
@@ -216,68 +218,44 @@ void pid_controller_reset_integrator(pid_controller_t* controller)
 
 float pid_controller_update(pid_controller_t* controller, float error)
 {
-    float t                   = time_keeper_get_s();
-    controller->error         = maths_soft_zone(error, controller->soft_zone_width);
-    controller->dt_s          = t - controller->last_update_s;
-    controller->last_update_s = t;
-    controller->output      = controller->p_gain * controller->error
-                              + pid_controller_integrate(&controller->integrator, controller->error, controller->dt_s)
-                              + pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt_s);
-
-    if (controller->output < controller->clip_min)
-    {
-        controller->output = controller->clip_min;
-    }
-
-    if (controller->output > controller->clip_max)
-    {
-        controller->output = controller->clip_max;
-    }
-
-    return controller->output;
+    float dt = time_keeper_get_s() - controller->last_update_s;
+    return pid_controller_update_dt(controller, error, dt);
 }
 
 
 float pid_controller_update_dt(pid_controller_t* controller, float error, float dt)
 {
-    controller->error         = error;
+    controller->error         = maths_soft_zone(error, controller->soft_zone_width);;
     controller->dt_s          = dt;
     controller->last_update_s = time_keeper_get_s();
-    controller->output      = controller->p_gain * controller->error
-                              + pid_controller_integrate(&controller->integrator, controller->error, controller->dt_s)
+
+    // Compute output with P and D terms (no integration yet)
+    controller->output        = controller->p_gain * controller->error
                               + pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt_s);
+
+    // do integration only if we are not saturated
+    if (controller->is_saturated == false)
+    {
+        controller->output += pid_controller_integrate(&controller->integrator, controller->error, controller->dt_s);
+    }
+    else
+    {
+        controller->output += controller->integrator.accumulator;
+    }
 
     if (controller->output < controller->clip_min)
     {
         controller->output = controller->clip_min;
+        controller->is_saturated = true;
     }
-
-    if (controller->output > controller->clip_max)
+    else if (controller->output > controller->clip_max)
     {
         controller->output = controller->clip_max;
+        controller->is_saturated = true;
     }
-
-    return controller->output;
-}
-
-float pid_controller_update_feedforward_dt(pid_controller_t* controller, float error, float feedforward, float dt)
-{
-    controller->error         = error;
-    controller->dt_s          = dt;
-    controller->last_update_s = time_keeper_get_s();
-    controller->output        = controller->p_gain * controller->error
-                                + pid_controller_integrate( &controller->integrator, controller->error, controller->dt_s)
-                                + pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt_s)
-                                + feedforward;
-
-    if( controller->output < controller->clip_min )
+    else
     {
-        controller->output=controller->clip_min;
-    }
-
-    if( controller->output > controller->clip_max )
-    {
-        controller->output=controller->clip_max;
+        controller->is_saturated = false;
     }
 
     return controller->output;

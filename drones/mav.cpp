@@ -141,7 +141,7 @@ bool MAV::init(void)
     success &= init_mocap();
     success &= init_flow();
     success &= init_mission_planning();
-    success &= init_stabilisers();
+    success &= init_controller();
     success &= init_hud();
     // success &= init_servos();
     success &= init_ground_control();
@@ -349,8 +349,13 @@ bool MAV::init_ahrs(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_ATTITUDE_QUATERNION, 500000, &ahrs_telemetry_send_attitude_quaternion, &ahrs_);
 
     // Parameters
-    ret &= communication.parameters().add(&ahrs_ekf.config_.use_accelerometer,     "AHRSEKF_USE_ACC"    );
-    ret &= communication.parameters().add(&ahrs_ekf.config_.use_magnetometer,      "AHRSEKF_USE_MAG"    );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_accelerometer,  "AHRS_USE_ACC"  );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_magnetometer,   "AHRS_USE_MAG"  );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.sigma_w_sqr,        "AHRS_SIG_GYRO" );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.sigma_r_sqr,        "AHRS_SIG_QUAT" );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.R_acc,              "AHRS_R_ACC"    );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.R_acc_norm,         "AHRS_R_ACCNORM");
+    ret &= communication.parameters().add(&ahrs_ekf.config_.R_mag,              "AHRS_R_MAG");
 
     return ret;
 }
@@ -395,7 +400,7 @@ bool MAV::init_ins(void)
     ret &= communication.parameters().add(&ins_complementary.config_.use_flow,          "POS_USE_FLOW"    );
 
     // -------------------------------------------------------------------------
-    // Kalman INS specifi
+    // Kalman INS specific
     // -------------------------------------------------------------------------
     // Parameters
     ret &= communication.parameters().add(&ins_kf.config_.sigma_z_gnd,      "INS_X_Z_GND"       );
@@ -450,76 +455,6 @@ bool MAV::init_flow(void)
 
 
 // -------------------------------------------------------------------------
-// Stabilisers
-// -------------------------------------------------------------------------
-bool MAV::init_stabilisers(void)
-{
-    bool ret = true;
-
-    // -------------------------------------------------------------------------
-    // Stabilisation copter
-    // -------------------------------------------------------------------------
-    // Module
-
-    // Parameters
-    // Onboard_parameters& op            = communication.parameters();
-    // stabiliser_t* rate_stabiliser     = &stabilisation_copter.stabiliser_stack.rate_stabiliser;
-    // stabiliser_t* attitude_stabiliser = &stabilisation_copter.stabiliser_stack.attitude_stabiliser;
-    // stabiliser_t* velocity_stabiliser = &stabilisation_copter.stabiliser_stack.velocity_stabiliser;
-    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].p_gain,                    "ROLL_R_KP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].integrator.clip,           "ROLL_R_I_CLIP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].integrator.gain,           "ROLL_R_KI");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip,       "ROLL_R_D_CLIP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain,       "ROLL_R_KD");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_A_KP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_A_I_CLIP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_A_KI");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip,   "ROLL_A_D_CLIP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_A_KD");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].p_gain,                   "PITCH_R_KP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].integrator.clip,          "PITCH_R_I_CLIP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].integrator.gain,          "PITCH_R_KI");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip,      "PITCH_R_D_CLIP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain,      "PITCH_R_KD");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_A_KP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_A_I_CLIP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_A_KI");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip,  "PITCH_A_D_CLIP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_A_KD");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].p_gain,                     "YAW_R_KP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].clip_max,                   "YAW_R_P_CLMX");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].clip_min,                   "YAW_R_P_CLMN");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].integrator.clip,            "YAW_R_I_CLIP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].integrator.gain,            "YAW_R_KI");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].differentiator.clip,        "YAW_R_D_CLIP");
-    // ret &= op.add(&rate_stabiliser->rpy_controller[YAW].differentiator.gain,        "YAW_R_KD");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].p_gain,                 "YAW_A_KP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].clip_max,               "YAW_A_P_CLMX");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].clip_min,               "YAW_A_P_CLMN");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].integrator.clip,        "YAW_A_I_CLIP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].integrator.gain,        "YAW_A_KI");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip,    "YAW_A_D_CLIP");
-    // ret &= op.add(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain,    "YAW_A_KD");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].p_gain,                "ROLL_V_KP");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip_pre,   "ROLL_V_I_CLPRE");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.gain,       "ROLL_V_KI");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].integrator.clip,       "ROLL_V_I_CLIP");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain,   "ROLL_V_KD");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].p_gain,               "PITCH_V_KP");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip_pre,  "PITCH_V_I_CLPRE");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.gain,      "PITCH_V_KI");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].integrator.clip,      "PITCH_V_I_CLIP");
-    // ret &= op.add(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain,  "PITCH_V_KD");
-    // ret &= op.add(&velocity_stabiliser->thrust_controller.p_gain,                   "THRV_KP");
-    // ret &= op.add(&velocity_stabiliser->thrust_controller.integrator.clip_pre,      "THRV_I_PREG");
-    // ret &= op.add(&velocity_stabiliser->thrust_controller.differentiator.gain,      "THRV_KD");
-    // ret &= op.add(&velocity_stabiliser->thrust_controller.soft_zone_width,          "THRV_SOFT");
-
-    return ret;
-}
-
-
-// -------------------------------------------------------------------------
 // Navigation
 // -------------------------------------------------------------------------
 bool MAV::init_mission_planning(void)
@@ -527,7 +462,7 @@ bool MAV::init_mission_planning(void)
     bool ret = true;
 
     // Initialize
-    // ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
+    ret &= mission_handler_registry.register_mission_handler(hold_position_handler);
     ret &= mission_handler_registry.register_mission_handler(landing_handler);
     ret &= mission_handler_registry.register_mission_handler(manual_ctrl_handler);
     ret &= mission_handler_registry.register_mission_handler(navigating_handler);
@@ -631,9 +566,8 @@ bool MAV::main_task(void)
     {
         switch (state.mav_mode().ctrl_mode())
         {
-            case Mav_mode::GPS_NAV:
+            case Mav_mode::AUTO:
             case Mav_mode::POSITION_HOLD:
-                // mission_planner_.write_autonomous_flight_command(flight_controller_);
                 flight_controller_.set_flight_command(mission_planner_);
             break;
 

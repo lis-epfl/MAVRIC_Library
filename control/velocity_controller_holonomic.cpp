@@ -33,63 +33,42 @@
  * \file velocity_controller_copter.cpp
  *
  * \author MAV'RIC Team
- * \author Felix Schill
- * \author Nicolas Dousse
  * \author Julien Lecoeur
  *
- * \brief A velocity controller for copters.
+ * \brief A velocity controller for holonomic hovering platform capable of generating 3D thrust
+ *
+ * \details It takes a velocity command as input and computes an attitude
+ * command and thrust command as output.
  *
  ******************************************************************************/
 
 #include <array>
 
-#include "control/velocity_controller_copter.hpp"
+#include "control/velocity_controller_holonomic.hpp"
 #include "util/coord_conventions.hpp"
-#include "util/constants.hpp"
-#include "util/quick_trig.hpp"
 
-extern "C"
-{
-#include "util/quaternions.h"
-#include "util/maths.h"
-#include "util/vectors.h"
-}
-
-
-Velocity_controller_copter::Velocity_controller_copter(const args_t& args, const conf_t& config) :
-    Velocity_controller(args.vel_args, config),
-    thrust_hover_point_(config.thrust_hover_point)
+Velocity_controller_holonomic::Velocity_controller_holonomic(const args_t& args, const conf_t& config) :
+    Velocity_controller_copter(args, config),
+    use_3d_thrust_(1)
 {}
 
 
-bool Velocity_controller_copter::compute_attitude_and_thrust_from_desired_accel(const std::array<float,3>& accel_vector,
+bool Velocity_controller_holonomic::compute_attitude_and_thrust_from_desired_accel(const std::array<float,3>& accel_vector,
                                                                                 attitude_command_t& attitude_command,
                                                                                 thrust_command_t& thrust_command)
 {
-    // Desired attitude with yaw facing north using axis/angle representation
-    float alpha   = maths_clip(maths_fast_sqrt(accel_vector[X]*accel_vector[X] + accel_vector[Y]*accel_vector[Y]), 1);
-    float axis[3] = {0.0f, 0.0f, 0.0f};
-    if (alpha != 0.0f)
+    if (use_3d_thrust_)
     {
-        axis[X] =   accel_vector[Y] / alpha;
-        axis[Y] = - accel_vector[X] / alpha;
-        axis[Z] =  0.0f;
+        attitude_command = coord_conventions_quaternion_from_rpy( 0.0f,
+                                                                  0.0f,
+                                                                  velocity_command_.heading );
+        thrust_command.xyz[X] = accel_vector[X];
+        thrust_command.xyz[Y] = accel_vector[Y];
+        thrust_command.xyz[Z] = accel_vector[Z] + thrust_hover_point_;
+        return true;
     }
-    quat_t qrollpitch = coord_conventions_quaternion_from_angle_axis(alpha, axis);
-
-    // Rotation to face the goal
-    quat_t qyaw = coord_conventions_quaternion_from_rpy(  0.0f,
-                                                          0.0f,
-                                                          velocity_command_.heading );
-
-    // Desired thrust
-    float thrust = thrust_hover_point_ + accel_vector[Z] / quick_trig_cos(alpha);
-
-    // Output
-    attitude_command      = quaternions_multiply(qrollpitch, qyaw);
-    thrust_command.xyz[X] = 0.0f;
-    thrust_command.xyz[Y] = 0.0f;
-    thrust_command.xyz[Z] = thrust;
-
-    return true;
+    else
+    {
+        return Velocity_controller_copter::compute_attitude_and_thrust_from_desired_accel(accel_vector, attitude_command, thrust_command);
+    }
 }

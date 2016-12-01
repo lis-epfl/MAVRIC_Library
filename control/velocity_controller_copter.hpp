@@ -133,40 +133,42 @@ Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(vo
     conf.pid_config[X].clip_max                = 0.5f;
     conf.pid_config[X].integrator              = {};
     conf.pid_config[X].integrator.gain         = 0.0125f;
-    conf.pid_config[X].integrator.clip_pre     = 1.0f;
+    // conf.pid_config[X].integrator.gain         = 0.0f;
+    conf.pid_config[X].integrator.clip_pre     = 0.1f;
     conf.pid_config[X].integrator.accumulator  = 0.0f;
     conf.pid_config[X].integrator.clip         = 0.5f;
     conf.pid_config[X].differentiator          = {};
-    conf.pid_config[X].differentiator.gain     = 0.001f;
+    conf.pid_config[X].differentiator.gain     = 0.01f;
     conf.pid_config[X].differentiator.previous = 0.0f;
     conf.pid_config[X].differentiator.clip     = 1.0f;
-    conf.pid_config[X].soft_zone_width         = 0.2f;
+    conf.pid_config[X].soft_zone_width         = 0.0f;
 
     // -----------------------------------------------------------------
     // ------ Y PID ----------------------------------------------------
     // -----------------------------------------------------------------
     conf.pid_config[Y]                         = {};
-    conf.pid_config[Y].p_gain                  = 0.15f;
+    conf.pid_config[Y].p_gain                  = 0.2f;
     conf.pid_config[Y].clip_min                = -0.5f;
     conf.pid_config[Y].clip_max                = 0.5f;
     conf.pid_config[Y].integrator              = {};
     conf.pid_config[Y].integrator.gain         = 0.0125f;
-    conf.pid_config[Y].integrator.clip_pre     = 1.0f;
+    // conf.pid_config[Y].integrator.gain         = 0.0f;
+    conf.pid_config[Y].integrator.clip_pre     = 0.1f;
     conf.pid_config[Y].integrator.accumulator  = 0.0f;
     conf.pid_config[Y].integrator.clip         = 0.5f;
     conf.pid_config[Y].differentiator          = {};
-    conf.pid_config[Y].differentiator.gain     = 0.001f;
+    conf.pid_config[Y].differentiator.gain     = 0.01f;
     conf.pid_config[Y].differentiator.previous = 0.0f;
     conf.pid_config[Y].differentiator.clip     = 1.0f;
-    conf.pid_config[Y].soft_zone_width         = 0.2f;
+    conf.pid_config[Y].soft_zone_width         = 0.0f;
 
     // ---------------------------------------------------------------------
     // ------ Z PID --------------------------------------------------------
     // ---------------------------------------------------------------------
     conf.pid_config[Z]                         = {};
     conf.pid_config[Z].p_gain                  = 0.20f;
-    conf.pid_config[Z].clip_min                = -0.9f;
-    conf.pid_config[Z].clip_max                = 0.65f;
+    conf.pid_config[Z].clip_min                = -1.0f;
+    conf.pid_config[Z].clip_max                = 0.0f;
     conf.pid_config[Z].integrator              = {};
     conf.pid_config[Z].integrator.gain         = 0.01f;
     conf.pid_config[Z].integrator.clip_pre     = 2.0f;

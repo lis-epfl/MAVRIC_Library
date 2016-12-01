@@ -142,7 +142,7 @@ void Joystick::button_update(uint16_t buttons)
     }
 
     // set ctrl mode according to buttons (precedence for ctrl mode if several buttons are pressed:
-    // ATTIUDE -> VELOCITY -> POSITION_HOLD -> GPS_NAV
+    // ATTIUDE -> VELOCITY -> POSITION_HOLD -> AUTO
     if((buttons & 0x0004) == 0x0004)        // check if ATTITUDE button pressed
     {
         mav_mode_desired_.set_ctrl_mode(Mav_mode::ATTITUDE);
@@ -155,9 +155,9 @@ void Joystick::button_update(uint16_t buttons)
     {
         mav_mode_desired_.set_ctrl_mode(Mav_mode::POSITION_HOLD);
     }
-    else if((buttons & 0x0020) == 0x0020)   // check if GPS_NAV button pressed
+    else if((buttons & 0x0020) == 0x0020)   // check if AUTO button pressed
     {
-        mav_mode_desired_.set_ctrl_mode(Mav_mode::GPS_NAV);
+        mav_mode_desired_.set_ctrl_mode(Mav_mode::AUTO);
     }
 
     buttons_.button_mask = buttons;

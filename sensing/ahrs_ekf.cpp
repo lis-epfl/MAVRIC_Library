@@ -100,6 +100,10 @@ bool AHRS_ekf::update(void)
     R_acc_(1,1) = config_.R_acc;
     R_acc_(2,2) = config_.R_acc;
 
+    R_acc_norm_(0,0) = config_.R_acc_norm;
+    R_acc_norm_(1,1) = config_.R_acc_norm;
+    R_acc_norm_(2,2) = config_.R_acc_norm;
+
     R_mag_(0,0) = config_.R_mag;
     R_mag_(1,1) = config_.R_mag;
     R_mag_(2,2) = config_.R_mag;
@@ -406,16 +410,8 @@ void AHRS_ekf::update_step_acc(void)
     // Innovation y(k) = z(k) - h(x(k,k-1))
     Mat<3,1> yk_acc = z_acc - h_acc_xkk1;
 
-    float acc[3];
-    acc[0] = imu_.acc()[0];
-    acc[1] = imu_.acc()[1];
-    acc[2] = imu_.acc()[2];
-    float acc_norm = vectors_norm(acc);
-    float acc_norm_diff = maths_f_abs(1.0f-acc_norm);
-    float noise = 1.0f - maths_center_window_4(config_.acc_multi_noise*acc_norm_diff);
-
     // Innovation covariance S(k) = H(k) * P_(k,k-1) * H(k)' + R
-    Mat<3,3> Sk_acc = (H_acc_k % P_ % H_acc_k.transpose()) + R_acc_ + Mat<3,3>(noise*config_.acc_norm_noise,true);
+    Mat<3,3> Sk_acc = (H_acc_k % P_ % H_acc_k.transpose()) + R_acc_ + R_acc_norm_ * maths_f_abs(1.0f - vectors_norm(imu_.acc().data()));
 
     // Kalman gain: K(k) = P_(k,k-1) * H(k)' * S(k)^-1
     Mat<3,3> Sk_inv;

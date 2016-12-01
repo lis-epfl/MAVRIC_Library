@@ -64,7 +64,7 @@ static inline remote_conf_t remote_default_config()
     // conf.mode_config.mode_switch_middle.flags        = {};
     // conf.mode_config.mode_switch_middle.flags.MANUAL = MANUAL_ON;
     // conf.mode_config.mode_switch_middle.flags.GUIDED = GUIDED_ON;
-    conf.mode_config.mode_switch_down                   = Mav_mode::GPS_NAV;
+    conf.mode_config.mode_switch_down                   = Mav_mode::AUTO;
     // conf.mode_config.mode_switch_down.flags          = {};
     // conf.mode_config.mode_switch_down.flags.AUTO     = AUTO_ON;
     conf.mode_config.use_custom_switch                  = true; //false,

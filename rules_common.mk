@@ -56,6 +56,7 @@ LIB_SRCS += control/rate_controller.cpp
 LIB_SRCS += control/attitude_controller.cpp
 LIB_SRCS += control/velocity_controller.cpp
 LIB_SRCS += control/velocity_controller_copter.cpp
+LIB_SRCS += control/velocity_controller_holonomic.cpp
 LIB_SRCS += control/position_controller.cpp
 LIB_SRCS += control/pid_controller.cpp
 

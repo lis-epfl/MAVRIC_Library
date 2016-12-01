@@ -91,7 +91,7 @@ public:
         ATTITUDE =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED,
         VELOCITY =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
         POSITION_HOLD = MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
-        GPS_NAV =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED
+        AUTO =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED
     };
 
     /* describes which flags are used for ctrl_mode */
@@ -248,7 +248,7 @@ public:
     inline void set_custom_flag(bool value)  { set_flag(MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, value);};
 
     /**
-     * \brief   set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV);
+     * \brief   set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, AUTO);
      *
      * \details affects only manual, stabilize, guided and auto flag
      */
