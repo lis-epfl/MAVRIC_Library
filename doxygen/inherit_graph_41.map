@@ -3,5 +3,6 @@
 <area shape="rect" id="node3" href="$classController__1__to__2.html" title="Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;" alt="" coords="404,32,913,61"/>
 <area shape="rect" id="node5" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="964,32,1092,61"/>
 <area shape="rect" id="node7" href="$classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="1143,32,1313,61"/>
-<area shape="rect" id="node8" href="$classController.html" title="Controller\&lt; velocity_command_t, thrust_command_t \&gt;" alt="" coords="11,59,349,88"/>
+<area shape="rect" id="node9" href="$classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="1363,32,1557,61"/>
+<area shape="rect" id="node10" href="$classController.html" title="Controller\&lt; velocity_command_t, thrust_command_t \&gt;" alt="" coords="11,59,349,88"/>
 </map>

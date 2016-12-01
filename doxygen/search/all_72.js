@@ -3,6 +3,8 @@ var searchData=
   ['r_5f',['R_',['../classKalman.html#aed56eb17f9b2e79632d02d1a8ba1e11f',1,'Kalman']]],
   ['r_5facc',['R_acc',['../structAHRS__ekf_1_1conf__t.html#abacd0e5da3f09323a2491ce0dd4c84f6',1,'AHRS_ekf::conf_t']]],
   ['r_5facc_5f',['R_acc_',['../classAHRS__ekf.html#a8eedba2885de54fb3b7382df73e193f6',1,'AHRS_ekf']]],
+  ['r_5facc_5fnorm',['R_acc_norm',['../structAHRS__ekf_1_1conf__t.html#a4e0cb640a57b51ee0ae925aee715c134',1,'AHRS_ekf::conf_t']]],
+  ['r_5facc_5fnorm_5f',['R_acc_norm_',['../classAHRS__ekf.html#a72c97b6a09d3e1ccaf51d2385066fd04',1,'AHRS_ekf']]],
   ['r_5fmag',['R_mag',['../structAHRS__ekf_1_1conf__t.html#a8c18caa7eb166a3b683c53e007fd8f0e',1,'AHRS_ekf::conf_t']]],
   ['r_5fmag_5f',['R_mag_',['../classAHRS__ekf.html#a8c2eb27f5afc7a7ae454ca2e398b6865',1,'AHRS_ekf']]],
   ['r_5fmocap',['R_mocap',['../structAhrs__ekf__mocap_1_1conf__t.html#a344552f085b6e85bf527e6d1bc2217c5',1,'Ahrs_ekf_mocap::conf_t']]],

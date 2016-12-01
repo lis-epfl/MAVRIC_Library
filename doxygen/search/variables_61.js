@@ -4,8 +4,6 @@ var searchData=
   ['above_5fsea',['above_sea',['../structaltitude__t.html#aebebc045369813f9db1711973d1fc10e',1,'altitude_t']]],
   ['absolute_5faltitude_5f',['absolute_altitude_',['../classINS__AHRS__groundtruth.html#aa40a8838970349f8fa28015b67261e09',1,'INS_AHRS_groundtruth']]],
   ['acc_5ffilter',['acc_filter',['../structMpu__9250_1_1conf__t.html#aeffc3428e76650d21ecea78fd35dbc93',1,'Mpu_9250::conf_t']]],
-  ['acc_5fmulti_5fnoise',['acc_multi_noise',['../structAHRS__ekf_1_1conf__t.html#a2a272c4babd0d43f54af2a6eafe94901',1,'AHRS_ekf::conf_t']]],
-  ['acc_5fnorm_5fnoise',['acc_norm_noise',['../structAHRS__ekf_1_1conf__t.html#ac0ad64ca021e09d37cd483ed2f04d4c5',1,'AHRS_ekf::conf_t']]],
   ['acc_5frange',['acc_range',['../structMpu__9250_1_1conf__t.html#adf1c2e39fb188cf270676a47ae373385',1,'Mpu_9250::conf_t']]],
   ['acceleration_5fcorrection_5f',['acceleration_correction_',['../classAHRS__madgwick.html#a517ab4d038454f86fad4feccd4ff3ec4',1,'AHRS_madgwick']]],
   ['accelerometer',['accelerometer',['../structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f',1,'imu_conf_t']]],

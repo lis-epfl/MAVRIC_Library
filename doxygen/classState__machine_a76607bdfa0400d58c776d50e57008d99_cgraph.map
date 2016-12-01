@@ -8,7 +8,7 @@
 <area shape="rect" id="node25" href="$classMav__mode.html#ad7bf8a3e9165fd922c6e36bf0679d4b1" title="returns whether armed (MAV_MODE_FLAG_SAFETY_ARMED set)" alt="" coords="781,325,928,355"/>
 <area shape="rect" id="node27" href="$classBattery.html#aed1638135e4a066740a8e2b184f41684" title="Updates the battery voltage level." alt="" coords="284,528,393,557"/>
 <area shape="rect" id="node33" href="$classState.html#af9414375a28112394b48994db66743b6" title="Check the connection status with the GND station." alt="" coords="256,581,421,611"/>
-<area shape="rect" id="node35" href="$classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60" title="set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV);" alt="" coords="251,635,427,664"/>
+<area shape="rect" id="node35" href="$classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60" title="set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, AUTO);" alt="" coords="251,635,427,664"/>
 <area shape="rect" id="node37" href="$classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a" title="returns the ctrl_mode (defined by manual, stabilize, guided and auto flag)" alt="" coords="264,688,413,717"/>
 <area shape="rect" id="node39" href="$classState.html#a41daea810832a042add30c2c4bdbaa13" title="tries to arm/disarm; checks performed for arming" alt="" coords="277,373,400,403"/>
 <area shape="rect" id="node44" href="$classBattery.html#a361e328ffe03fd81791c45b6e58fc8f0" title="Indicates if the battery is low." alt="" coords="560,477,669,507"/>

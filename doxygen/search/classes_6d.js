@@ -16,7 +16,7 @@ var searchData=
   ['mat_3c_20m_2c_201_20_3e',['Mat< m, 1 >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_20m_20_3e',['Mat< m, m >',['../classMat.html',1,'']]],
   ['mat_3c_20m_2c_20n_20_3e',['Mat< m, n >',['../classMat.html',1,'']]],
-  ['mat_3c_20n_2c_201_20_3e',['Mat< n, 1 >',['../classMat.html',1,'Mat&lt; n, 1 &gt;'],['../classMat.html',1,'Mat&lt; N, 1 &gt;']]],
+  ['mat_3c_20n_2c_201_20_3e',['Mat< N, 1 >',['../classMat.html',1,'Mat&lt; N, 1 &gt;'],['../classMat.html',1,'Mat&lt; n, 1 &gt;']]],
   ['mat_3c_20n_2c_206_20_3e',['Mat< N, 6 >',['../classMat.html',1,'']]],
   ['mat_3c_20n_2c_20m_20_3e',['Mat< n, m >',['../classMat.html',1,'']]],
   ['mat_3c_20n_2c_20n_20_3e',['Mat< n, n >',['../classMat.html',1,'']]],

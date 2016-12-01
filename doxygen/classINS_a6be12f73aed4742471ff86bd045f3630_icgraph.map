@@ -1,4 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classVelocity__controller.html#abfb5d1693fb09235f4d5654af3bd34b4" title="Main update function." alt="" coords="192,5,368,35"/>
-<area shape="rect" id="node5" href="$classMission__handler__navigating.html#afde956e68864854438ae5727ddbd5b27" title="Handles the mission every iteration." alt="" coords="165,59,395,88"/>
+<area shape="rect" id="node3" href="$classPosition__controller.html#a0053e27a76331e0dadac9ce640f715b2" title="Main update function." alt="" coords="192,5,368,35"/>
+<area shape="rect" id="node5" href="$classVelocity__controller.html#abfb5d1693fb09235f4d5654af3bd34b4" title="Main update function." alt="" coords="192,59,368,88"/>
+<area shape="rect" id="node7" href="$classMission__handler__navigating.html#afde956e68864854438ae5727ddbd5b27" title="Handles the mission every iteration." alt="" coords="165,112,395,141"/>
 </map>

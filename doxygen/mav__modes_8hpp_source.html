@@ -174,7 +174,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00091"></a>00091         ATTITUDE =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED,
 <a name="l00092"></a>00092         VELOCITY =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
 <a name="l00093"></a>00093         POSITION_HOLD = MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
-<a name="l00094"></a>00094         GPS_NAV =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED
+<a name="l00094"></a>00094         AUTO =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED
 <a name="l00095"></a>00095     };
 <a name="l00096"></a>00096 
 <a name="l00097"></a>00097     <span class="comment">/* describes which flags are used for ctrl_mode */</span>
@@ -225,7 +225,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00241"></a>00241 
 <a name="l00248"></a><a class="code" href="classMav__mode.html#a1f501d5b5a3ac0fb08e505c41209b00d">00248</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classMav__mode.html#a1f501d5b5a3ac0fb08e505c41209b00d" title="set custom_mode flag">set_custom_flag</a>(<span class="keywordtype">bool</span> value)  { set_flag(MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, value);};
 <a name="l00249"></a>00249 
-<a name="l00255"></a><a class="code" href="classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60">00255</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60" title="set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV);">set_ctrl_mode</a>(ctrl_mode_t <a class="code" href="classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a" title="returns the ctrl_mode (defined by manual, stabilize, guided and auto flag)">ctrl_mode</a>) {bits_ = (bits_ &amp; ~CTRL_MODE_BITFIELD) + (ctrl_mode &amp; CTRL_MODE_BITFIELD);};
+<a name="l00255"></a><a class="code" href="classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60">00255</a>     <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60" title="set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, AUTO);">set_ctrl_mode</a>(ctrl_mode_t <a class="code" href="classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a" title="returns the ctrl_mode (defined by manual, stabilize, guided and auto flag)">ctrl_mode</a>) {bits_ = (bits_ &amp; ~CTRL_MODE_BITFIELD) + (ctrl_mode &amp; CTRL_MODE_BITFIELD);};
 <a name="l00256"></a>00256 
 <a name="l00262"></a><a class="code" href="classMav__mode.html#aa8b26743cc47a43ed8dcf2343a476c24">00262</a>     <span class="keywordtype">bool</span> <a class="code" href="classMav__mode.html#aa8b26743cc47a43ed8dcf2343a476c24" title="operator overload for == (calls this.equal(mav_mode) )">operator == </a>(<span class="keyword">const</span> <a class="code" href="classMav__mode.html">Mav_mode</a>&amp; mav_mode)<span class="keyword"> const </span>{<span class="keywordflow">return</span> equal(mav_mode);};
 <a name="l00263"></a>00263 
@@ -270,7 +270,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 09:26:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 09:36:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

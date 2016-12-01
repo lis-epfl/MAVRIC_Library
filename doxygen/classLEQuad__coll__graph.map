@@ -20,7 +20,7 @@
 <area shape="rect" id="node32" href="$classAHRS__qfilter.html" title="The structure for the quaternion&#45;based attitude estimation." alt="" coords="1533,1493,1683,1769"/>
 <area shape="rect" id="node34" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="1304,692,1453,881"/>
 <area shape="rect" id="node76" href="$structhud__telemetry__t.html" title="The HUD structure to send the MAVLink HUD message." alt="" coords="944,1562,1069,1699"/>
-<area shape="rect" id="node88" href="$classAHRS__ekf.html" title="The AHRS EKF class." alt="" coords="1331,1406,1509,1855"/>
+<area shape="rect" id="node88" href="$classAHRS__ekf.html" title="The AHRS EKF class." alt="" coords="1331,1397,1509,1864"/>
 <area shape="rect" id="node36" href="$classImu.html" title="Inertial measurement unit (IMU)" alt="" coords="1555,657,1685,916"/>
 <area shape="rect" id="node39" href="$structMAV_1_1conf__t.html" title="Configuration structure." alt="" coords="3617,2363,3836,2621"/>
 <area shape="rect" id="node41" href="$classMission__handler__hold__position.html" title="{Mission_handler_hold_position\n|# waypoint_\l# start_time_\l# within_radius_\l# ins_\l|+ Mission_handler_hold_position()\l+ can_handle()\l+ setup()\l+ update()\l+ write_flight_command()\l+ handler_mission_state()\l}" alt="" coords="679,1071,897,1295"/>

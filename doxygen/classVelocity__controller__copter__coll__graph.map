@@ -1,14 +1,14 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="808,521,1136,797"/>
-<area shape="rect" id="node4" href="$classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="107,255,616,409"/>
+<area shape="rect" id="node2" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="808,537,1136,813"/>
+<area shape="rect" id="node4" href="$classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="107,263,616,417"/>
 <area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/>
 <area shape="rect" id="node8" href="$classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/>
-<area shape="rect" id="node10" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="640,289,771,375"/>
-<area shape="rect" id="node12" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="795,237,944,427"/>
-<area shape="rect" id="node14" href="$structquat__t.html" title="Unit quaternion." alt="" coords="968,281,1027,383"/>
-<area shape="rect" id="node16" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="1051,281,1192,383"/>
-<area shape="rect" id="node18" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="1216,211,1355,453"/>
-<area shape="rect" id="node20" href="$structpid__controller__t.html" title="PID controller." alt="" coords="1379,211,1507,453"/>
+<area shape="rect" id="node10" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="640,297,771,383"/>
+<area shape="rect" id="node12" href="$classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System." alt="" coords="795,245,944,435"/>
+<area shape="rect" id="node14" href="$structquat__t.html" title="Unit quaternion." alt="" coords="968,289,1027,391"/>
+<area shape="rect" id="node16" href="$structvelocity__command__t.html" title="Velocity command structure." alt="" coords="1051,289,1192,391"/>
+<area shape="rect" id="node18" href="$classINS.html" title="{INS\n||+ INS()\l+ update()\l+ last_update_s()\l+ position_lf()\l+ velocity_lf()\l+ absolute_altitude()\l+ is_healthy()\l+ position_gf()\l+ origin()\l# set_origin()\l}" alt="" coords="1216,219,1355,461"/>
+<area shape="rect" id="node20" href="$structpid__controller__t.html" title="PID controller." alt="" coords="1379,211,1507,469"/>
 <area shape="rect" id="node22" href="$structdifferentiator__t.html" title="Derivative part of PID." alt="" coords="1327,15,1431,135"/>
 <area shape="rect" id="node24" href="$structintegrator__t.html" title="Integrator part of PID." alt="" coords="1455,6,1559,143"/>
 </map>

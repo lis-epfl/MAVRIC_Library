@@ -117,7 +117,7 @@ Public Types</h2></td></tr>
 <b>VELOCITY</b> =  MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED, 
 <b>POSITION_HOLD</b> =  MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED, 
 <br/>
-&#160;&#160;<b>GPS_NAV</b> =  MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED
+&#160;&#160;<b>AUTO</b> =  MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED
 <br/>
  }</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38e0e7f5d50e5a53820ad73c12c574de"></a><!-- doxytag: member="Mav_mode::mode_bits_t" ref="a38e0e7f5d50e5a53820ad73c12c574de" args="" -->
@@ -171,7 +171,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMav__mode.html#a1f501d5b5a3ac0fb08e505c41209b00d">set_custom_flag</a> (bool value)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set custom_mode flag  <a href="#a1f501d5b5a3ac0fb08e505c41209b00d"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMav__mode.html#a7b3a292f1ce2cbaaa41b73a66348ca60">set_ctrl_mode</a> (ctrl_mode_t <a class="el" href="classMav__mode.html#ada6c7e1e31874b351fc6c540f75f5b7a">ctrl_mode</a>)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV);  <a href="#a7b3a292f1ce2cbaaa41b73a66348ca60"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, AUTO);  <a href="#a7b3a292f1ce2cbaaa41b73a66348ca60"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMav__mode.html#aa8b26743cc47a43ed8dcf2343a476c24">operator==</a> (const <a class="el" href="classMav__mode.html">Mav_mode</a> &amp;mav_mode) const </td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">operator overload for == (calls this.equal(mav_mode) )  <a href="#aa8b26743cc47a43ed8dcf2343a476c24"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
@@ -619,7 +619,7 @@ Here is the caller graph for this function:</div>
 </div>
 <div class="memdoc">
 
-<p>set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, GPS_NAV); </p>
+<p>set ctrl_mode (RATE, ATTITUDE, VELOCITY, POSITION_HOLD, AUTO); </p>
 <p>affects only manual, stabilize, guided and auto flag </p>
 
 <p><div class="dynheader">
@@ -813,7 +813,7 @@ Here is the caller graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 09:26:10 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 09:36:32 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

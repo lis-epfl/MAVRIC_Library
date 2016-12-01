@@ -15,7 +15,7 @@
 <area shape="rect" id="node26" href="$structremote__mode__conf__t.html" title="The configuration structure of the remote mode." alt="" coords="1441,382,1676,658"/>
 <area shape="rect" id="node28" href="$classMav__mode.html" title="{Mav_mode\n|+ CTRL_MODE_BITFIELD\l|+ Mav_mode()\l+ Mav_mode()\l+ Mav_mode()\l+ bits()\l+ bits_ptr()\l+ is_armed()\l+ is_manual()\l+ is_hil()\l+ is_stabilize()\l+ is_guided()\land 13 more...}" alt="" coords="1548,5,1729,264"/>
 <area shape="rect" id="node48" href="$structState_1_1conf__t.html" title="Configuration structure." alt="" coords="1641,683,1815,941"/>
-<area shape="rect" id="node31" href="$structAHRS__ekf_1_1conf__t.html" title="The AHRS EKF config structure." alt="" coords="1803,991,1947,1198"/>
+<area shape="rect" id="node31" href="$structAHRS__ekf_1_1conf__t.html" title="The AHRS EKF config structure." alt="" coords="1803,1000,1947,1189"/>
 <area shape="rect" id="node33" href="$structManual__control_1_1conf__t.html" title="Configuration for manual control." alt="" coords="1971,1035,2125,1155"/>
 <area shape="rect" id="node35" href="$structJoystick_1_1conf__t.html" title="Configuration for joystick." alt="" coords="1989,460,2107,580"/>
 <area shape="rect" id="node37" href="$structJoystick_1_1channels__t.html" title="Joystick Channels." alt="" coords="1977,66,2119,203"/>

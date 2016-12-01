@@ -162,34 +162,35 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00102"></a>00102             <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; servo_3,
 <a name="l00103"></a>00103             <span class="keyword">const</span> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a>&amp; config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">default_config</a>());
 <a name="l00104"></a>00104 
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106 <span class="keyword">protected</span>:
-<a name="l00107"></a>00107     <a class="code" href="classFlight__controller__quadcopter__diag.html">Flight_controller_quadcopter_diag</a>    flight_controller_quadcopter_diag_;
-<a name="l00108"></a>00108 };
-<a name="l00109"></a>00109 
+<a name="l00105"></a>00105     <span class="keywordtype">bool</span> init_controller(<span class="keywordtype">void</span>);
+<a name="l00106"></a>00106 
+<a name="l00107"></a>00107 <span class="keyword">protected</span>:
+<a name="l00108"></a>00108     <a class="code" href="classFlight__controller__quadcopter__diag.html">Flight_controller_quadcopter_diag</a>    flight_controller_quadcopter_diag_;
+<a name="l00109"></a>00109 };
 <a name="l00110"></a>00110 
-<a name="l00111"></a><a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76">00111</a> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">LEQuad::conf_t</a> <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">LEQuad::default_config</a>(uint8_t sysid)
-<a name="l00112"></a>00112 {
-<a name="l00113"></a>00113     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                                                = {};
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115     conf.mav_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">MAV::default_config</a>();
-<a name="l00116"></a>00116     conf.flight_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Flight_controller_quadcopter_diag::default_config</a>();
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118     <span class="keywordflow">return</span> conf;
-<a name="l00119"></a>00119 };
-<a name="l00120"></a>00120 
+<a name="l00111"></a>00111 
+<a name="l00112"></a><a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76">00112</a> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">LEQuad::conf_t</a> <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">LEQuad::default_config</a>(uint8_t sysid)
+<a name="l00113"></a>00113 {
+<a name="l00114"></a>00114     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                                                = {};
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116     conf.mav_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">MAV::default_config</a>();
+<a name="l00117"></a>00117     conf.flight_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Flight_controller_quadcopter_diag::default_config</a>();
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119     <span class="keywordflow">return</span> conf;
+<a name="l00120"></a>00120 };
 <a name="l00121"></a>00121 
-<a name="l00122"></a><a class="code" href="classLEQuad.html#a68c1925ad3474528ed8ece3657dad7f4">00122</a> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">LEQuad::conf_t</a> <a class="code" href="classLEQuad.html#a68c1925ad3474528ed8ece3657dad7f4" title="Configuration for use in drone dome.">LEQuad::dronedome_config</a>(uint8_t sysid)
-<a name="l00123"></a>00123 {
-<a name="l00124"></a>00124     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                                                = {};
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126     conf.mav_config = <a class="code" href="classLEQuad.html#a68c1925ad3474528ed8ece3657dad7f4" title="Configuration for use in drone dome.">MAV::dronedome_config</a>(sysid);
-<a name="l00127"></a>00127     conf.flight_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Flight_controller_quadcopter_diag::default_config</a>();
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129     <span class="keywordflow">return</span> conf;
-<a name="l00130"></a>00130 }
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132 <span class="preprocessor">#endif </span><span class="comment">/* LEQUAD_HPP_ */</span>
+<a name="l00122"></a>00122 
+<a name="l00123"></a><a class="code" href="classLEQuad.html#a68c1925ad3474528ed8ece3657dad7f4">00123</a> <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">LEQuad::conf_t</a> <a class="code" href="classLEQuad.html#a68c1925ad3474528ed8ece3657dad7f4" title="Configuration for use in drone dome.">LEQuad::dronedome_config</a>(uint8_t sysid)
+<a name="l00124"></a>00124 {
+<a name="l00125"></a>00125     <a class="code" href="structLEQuad_1_1conf__t.html" title="Configuration structure.">conf_t</a> conf                                                = {};
+<a name="l00126"></a>00126 
+<a name="l00127"></a>00127     conf.mav_config = <a class="code" href="classLEQuad.html#a68c1925ad3474528ed8ece3657dad7f4" title="Configuration for use in drone dome.">MAV::dronedome_config</a>(sysid);
+<a name="l00128"></a>00128     conf.flight_controller_config = <a class="code" href="classLEQuad.html#a1112f833422ec062edab301433a40c76" title="Default configuration.">Flight_controller_quadcopter_diag::default_config</a>();
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130     <span class="keywordflow">return</span> conf;
+<a name="l00131"></a>00131 }
+<a name="l00132"></a>00132 
+<a name="l00133"></a>00133 <span class="preprocessor">#endif </span><span class="comment">/* LEQUAD_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -208,7 +209,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 09:26:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 09:36:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -276,7 +276,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00232"></a>00232     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_ins(<span class="keywordtype">void</span>);
 <a name="l00233"></a>00233     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_mocap(<span class="keywordtype">void</span>);
 <a name="l00234"></a>00234     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_flow(<span class="keywordtype">void</span>);
-<a name="l00235"></a>00235     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_stabilisers(<span class="keywordtype">void</span>);
+<a name="l00235"></a>00235     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_controller(<span class="keywordtype">void</span>) = 0;
 <a name="l00236"></a>00236     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_mission_planning(<span class="keywordtype">void</span>);
 <a name="l00237"></a>00237     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> init_hud(<span class="keywordtype">void</span>);
 <a name="l00238"></a>00238     <span class="comment">// virtual bool init_servos(void);</span>
@@ -436,7 +436,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 09:26:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Dec 1 2016 09:36:31 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -59,6 +59,7 @@ var searchData=
   ['uptime',['uptime',['../structubx__nav__status__t.html#abd9ec9616b8492fcf59ae96db0ed4e01',1,'ubx_nav_status_t']]],
   ['usage',['usage',['../structubx__cfg__sbas__t.html#ab944befaa4f5e004082c44eab06263cb',1,'ubx_cfg_sbas_t']]],
   ['usb_5fdevice_5fvendor_5fid',['USB_DEVICE_VENDOR_ID',['../conf__usb_8h.html#a4426e943fe29660402150df6d3f3dcaa',1,'conf_usb.h']]],
+  ['use_5f3d_5fthrust_5f',['use_3d_thrust_',['../classVelocity__controller__holonomic.html#a6abc1acabf87fa8f55c215403c5e5e06',1,'Velocity_controller_holonomic']]],
   ['use_5faccelerometer',['use_accelerometer',['../structAHRS__ekf_1_1conf__t.html#a5f814aca8599817f512b9a4602a5c828',1,'AHRS_ekf::conf_t']]],
   ['use_5faop',['use_aop',['../structubx__cfg__nav__expert__settings__t.html#a868508c593bd108052e97df479cccf76',1,'ubx_cfg_nav_expert_settings_t']]],
   ['use_5fbaro',['use_baro',['../structINS__complementary_1_1conf__t.html#a77dbc91e2c2264f3fa5682a2dd188db5',1,'INS_complementary::conf_t']]],
