@@ -59,12 +59,19 @@ bool Velocity_controller_holonomic::compute_attitude_and_thrust_from_desired_acc
 {
     if (use_3d_thrust_)
     {
+        // Stay horizontal, with commanded heading
         attitude_command = coord_conventions_quaternion_from_rpy( 0.0f,
                                                                   0.0f,
                                                                   velocity_command_.heading );
-        thrust_command.xyz[X] = accel_vector[X];
-        thrust_command.xyz[Y] = accel_vector[Y];
-        thrust_command.xyz[Z] = accel_vector[Z] + thrust_hover_point_;
+
+        // Desired thrust in local frame
+        float thrust_lf[3] = {  accel_vector[X],
+                                accel_vector[Y],
+                                accel_vector[Z] + thrust_hover_point_};
+
+        // Rotate it to get thrust command in body frame
+        quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), thrust_lf, thrust_command.xyz.data());
+
         return true;
     }
     else

@@ -87,7 +87,7 @@ protected:
                                                                 attitude_command_t& attitude_command,
                                                                 thrust_command_t& thrust_command);
 
-protected:
+public:
     uint32_t use_3d_thrust_;         ///< Boolean indicating if 3D thrust is generated instead of banking
 };
 
