@@ -44,9 +44,15 @@
 
 #include "flight_controller/flight_controller_copter.hpp"
 
+/**
+ * \brief   Full flight controller for hexacopter
+ */
 class Flight_controller_hexacopter: public Flight_controller_copter<6>
 {
 public:
+    /**
+     * \brief   Constructor
+     */
     Flight_controller_hexacopter(   const INS& ins,
                                     const AHRS& ahrs,
                                     Servo& motor_rear,
@@ -59,6 +65,11 @@ public:
         Flight_controller_copter<6>(ins, ahrs, Servos_mix_matrix<6>::args_t{{{&motor_rear, &motor_rear_left, &motor_front_left, &motor_front, &motor_front_right, &motor_rear_right}}}, config)
     {};
 
+    /**
+     * \brief   Default Configuration
+     *
+     * /return  config
+     */
     static conf_t default_config(void)
     {
         conf_t conf = Flight_controller_copter<6>::default_config();

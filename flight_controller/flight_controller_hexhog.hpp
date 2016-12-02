@@ -49,10 +49,15 @@
 #include "control/rate_controller.hpp"
 #include "control/servos_mix_matrix.hpp"
 
+/**
+ * \brief   Flight controller for the HexHog
+ */
 class Flight_controller_hexhog: public Flight_controller_stack
 {
 public:
-
+    /**
+     * \brief Configuration structure
+     */
     struct conf_t
     {
         Position_controller::conf_t         pos_config;
@@ -62,6 +67,11 @@ public:
         Servos_mix_matrix<6>::conf_t        mix_config;
     };
 
+    /**
+     * \brief   Default Configuration
+     *
+     * /return  config
+     */
     static conf_t default_config(void)
     {
         conf_t conf;
@@ -82,6 +92,9 @@ public:
         return conf;
     };
 
+    /**
+     * \brief   Constructor
+     */
     Flight_controller_hexhog(const INS& ins,
                             const AHRS& ahrs,
                             Servo& motor_rear,
@@ -92,21 +105,36 @@ public:
                             Servo& motor_rear_right,
                             conf_t config = default_config());
 
+    /**
+     * \brief   Set command from manual control in rate mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     bool set_manual_rate_command(const Manual_control& manual_control);
 
+    /**
+     * \brief   Set command from manual control in attitude mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     bool set_manual_attitude_command(const Manual_control& manual_control);
 
+    /**
+     * \brief   Set command from manual control in velocity mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     bool set_manual_velocity_command(const Manual_control& manual_control);
 
 public:
-    Position_controller             pos_ctrl_;
-    Velocity_controller_holonomic   vel_ctrl_;
-    Attitude_controller             att_ctrl_;
-    Rate_controller                 rate_ctrl_;
-    Servos_mix_matrix<6>            mix_ctrl_;
+    Position_controller             pos_ctrl_;  ///< Position controller
+    Velocity_controller_holonomic   vel_ctrl_;  ///< Velocity controller
+    Attitude_controller             att_ctrl_;  ///< Attitude controller
+    Rate_controller                 rate_ctrl_; ///< Rate controller
+    Servos_mix_matrix<6>            mix_ctrl_;  ///< Servos mix
 
 private:
-    const AHRS& ahrs_;
+    const AHRS& ahrs_;                          ///< Reference to estimated attitude
 };
 
 #endif  // FLIGHT_CONTROLLER_HEXHOG_HPP_
