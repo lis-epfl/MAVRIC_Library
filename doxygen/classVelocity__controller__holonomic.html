@@ -82,8 +82,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a>  </div>
+<a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Velocity_controller_holonomic Class Reference</div>  </div>
 </div><!--header-->
@@ -118,15 +118,15 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structVelocity__controller_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__holonomic.html#a5957b8393e164b754643ea3b9d272bc7">default_config</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Configuration.  <a href="#a5957b8393e164b754643ea3b9d272bc7"></a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6abc1acabf87fa8f55c215403c5e5e06"></a><!-- doxytag: member="Velocity_controller_holonomic::use_3d_thrust_" ref="a6abc1acabf87fa8f55c215403c5e5e06" args="" -->
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__holonomic.html#a6abc1acabf87fa8f55c215403c5e5e06">use_3d_thrust_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean indicating if 3D thrust is generated instead of banking. <br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__holonomic.html#a41dd809936c89364fae9ff47170cdd0c">compute_attitude_and_thrust_from_desired_accel</a> (const std::array&lt; float, 3 &gt; &amp;accel_command, <a class="el" href="structquat__t.html">attitude_command_t</a> &amp;attitude_command, <a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;thrust_command)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics.  <a href="#a41dd809936c89364fae9ff47170cdd0c"></a><br/></td></tr>
-<tr><td colspan="2"><h2><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6abc1acabf87fa8f55c215403c5e5e06"></a><!-- doxytag: member="Velocity_controller_holonomic::use_3d_thrust_" ref="a6abc1acabf87fa8f55c215403c5e5e06" args="" -->
-uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller__holonomic.html#a6abc1acabf87fa8f55c215403c5e5e06">use_3d_thrust_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean indicating if 3D thrust is generated instead of banking. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Velocity controller for hovering platforms. </p>
@@ -213,6 +213,15 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 
 <p>Reimplemented from <a class="el" href="classVelocity__controller__copter.html#ac38916b698325bd2742e8791061b6c26">Velocity_controller_copter</a>.</p>
 
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classVelocity__controller__holonomic_a41dd809936c89364fae9ff47170cdd0c_cgraph.png" border="0" usemap="#classVelocity__controller__holonomic_a41dd809936c89364fae9ff47170cdd0c_cgraph" alt=""/></div>
+<map name="classVelocity__controller__holonomic_a41dd809936c89364fae9ff47170cdd0c_cgraph" id="classVelocity__controller__holonomic_a41dd809936c89364fae9ff47170cdd0c_cgraph">
+<area shape="rect" id="node3" href="classAHRS.html#a51990c2aa964af66f0169725ec386f52" title="Estimated attitude." alt="" coords="545,5,655,35"/></map>
+</div>
+</p>
+
 </div>
 </div>
 <a class="anchor" id="a5957b8393e164b754643ea3b9d272bc7"></a><!-- doxytag: member="Velocity_controller_holonomic::default_config" ref="a5957b8393e164b754643ea3b9d272bc7" args="(void)" -->
@@ -259,7 +268,7 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 14:23:04 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 2 2016 12:40:06 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

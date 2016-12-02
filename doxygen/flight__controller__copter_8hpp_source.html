@@ -132,55 +132,54 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00049"></a>00049 <span class="preprocessor">#include &quot;control/rate_controller.hpp&quot;</span>
 <a name="l00050"></a>00050 <span class="preprocessor">#include &quot;control/servos_mix_matrix.hpp&quot;</span>
 <a name="l00051"></a>00051 
-<a name="l00052"></a>00052 <span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>32_t N_ROTORS&gt;
-<a name="l00053"></a><a class="code" href="classFlight__controller__copter.html">00053</a> <span class="keyword">class </span><a class="code" href="classFlight__controller__copter.html">Flight_controller_copter</a>: <span class="keyword">public</span> <a class="code" href="classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy.">Flight_controller_stack</a>
-<a name="l00054"></a>00054 {
-<a name="l00055"></a>00055 <span class="keyword">public</span>:
-<a name="l00056"></a>00056 
-<a name="l00057"></a><a class="code" href="structFlight__controller__copter_1_1conf__t.html">00057</a>     <span class="keyword">struct </span><a class="code" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a>
-<a name="l00058"></a>00058     {
-<a name="l00059"></a>00059         <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">Position_controller::conf_t</a>         pos_config;
-<a name="l00060"></a>00060         <a class="code" href="structVelocity__controller__copter_1_1conf__t.html" title="Velocity controller configuration.">Velocity_controller_copter::conf_t</a>  vel_config;
-<a name="l00061"></a>00061         <a class="code" href="structAttitude__controller_1_1conf__t.html" title="Attitude controller configuration.">Attitude_controller::conf_t</a>         att_config;
-<a name="l00062"></a>00062         <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">Rate_controller::conf_t</a>             rate_config;
-<a name="l00063"></a>00063         <span class="keyword">typename</span> <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix&lt;N_ROTORS&gt;::conf_t</a> mix_config;
-<a name="l00064"></a>00064     };
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066     <span class="keyword">static</span> <a class="code" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a> default_config(<span class="keywordtype">void</span>)
-<a name="l00067"></a>00067     {
-<a name="l00068"></a>00068         <a class="code" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a> conf;
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070         conf.pos_config  = <a class="code" href="classPosition__controller.html#af3b56bc035c2629202df6f68b467a297" title="Default configuration.">Position_controller::default_config</a>();
-<a name="l00071"></a>00071         conf.vel_config  = <a class="code" href="classVelocity__controller__copter.html#ad224948baf1ad774fb4518acce93a90f" title="Default Configuration.">Velocity_controller_copter::default_config</a>();
-<a name="l00072"></a>00072         conf.att_config  = <a class="code" href="classAttitude__controller.html#acd2648ec63771158ae369f0a771c18b8" title="Default Configuration.">Attitude_controller::default_config</a>();
-<a name="l00073"></a>00073         conf.rate_config = <a class="code" href="classRate__controller.html#a4574b703f8da6e771582f33b0c6156a1" title="Default Configuration.">Rate_controller::default_config</a>();
-<a name="l00074"></a>00074         conf.mix_config  = <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix&lt;N_ROTORS&gt;::default_config</a>();
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076         <span class="keywordflow">return</span> conf;
-<a name="l00077"></a>00077     };
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079     <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter</a>(<span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; ins, <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs, <span class="keyword">typename</span> <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix&lt;N_ROTORS&gt;::args_t</a> mix_args, conf_t config);
-<a name="l00080"></a>00080 
-<a name="l00081"></a>00081     <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04" title="Set command from manual control in rate mode.">set_manual_rate_command</a>(<span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control);
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083     <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209" title="Set command from manual control in attitude mode.">set_manual_attitude_command</a>(<span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control);
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085     <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90" title="Set command from manual control in velocity mode.">set_manual_velocity_command</a>(<span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control);
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087 <span class="keyword">public</span>:
-<a name="l00088"></a><a class="code" href="classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84">00088</a>     <a class="code" href="classPosition__controller.html">Position_controller</a>         <a class="code" href="classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84" title="Reference to controller in position.">pos_ctrl_</a>;
-<a name="l00089"></a><a class="code" href="classFlight__controller__copter.html#a07c9ace2b314468bce770acf00e9e3f8">00089</a>     <a class="code" href="classVelocity__controller__copter.html" title="Velocity controller for hovering platforms.">Velocity_controller_copter</a>  <a class="code" href="classFlight__controller__copter.html#a07c9ace2b314468bce770acf00e9e3f8" title="Reference to controller in velocity.">vel_ctrl_</a>;
-<a name="l00090"></a><a class="code" href="classFlight__controller__copter.html#a35fa39269e1f8582d2e475ebbfc192f2">00090</a>     <a class="code" href="classAttitude__controller.html">Attitude_controller</a>         <a class="code" href="classFlight__controller__copter.html#a35fa39269e1f8582d2e475ebbfc192f2" title="Reference to controller in attitude.">att_ctrl_</a>;
-<a name="l00091"></a><a class="code" href="classFlight__controller__copter.html#a5ce830d4b927b6a16c25a1f45c2e296d">00091</a>     <a class="code" href="classRate__controller.html">Rate_controller</a>             <a class="code" href="classFlight__controller__copter.html#a5ce830d4b927b6a16c25a1f45c2e296d" title="Reference to controller in rate.">rate_ctrl_</a>;
-<a name="l00092"></a><a class="code" href="classFlight__controller__copter.html#a80013a94e5d733bd3b335c94d175cb9f">00092</a>     <a class="code" href="classServos__mix__matrix.html">Servos_mix_matrix&lt;N_ROTORS&gt;</a> <a class="code" href="classFlight__controller__copter.html#a80013a94e5d733bd3b335c94d175cb9f" title="Reference to servo mixing.">mix_ctrl_</a>;
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094 <span class="keyword">private</span>:
-<a name="l00095"></a>00095     <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs_;
-<a name="l00096"></a>00096 };
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098 <span class="preprocessor">#include &quot;flight_controller/flight_controller_copter.hxx&quot;</span>
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100 <span class="preprocessor">#endif  // FLIGHT_CONTROLLER_COPTER_HPP_</span>
+<a name="l00057"></a>00057 <span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>32_t N_ROTORS&gt;
+<a name="l00058"></a><a class="code" href="classFlight__controller__copter.html">00058</a> <span class="keyword">class </span><a class="code" href="classFlight__controller__copter.html" title="Full flight controller for copter.">Flight_controller_copter</a>: <span class="keyword">public</span> <a class="code" href="classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy.">Flight_controller_stack</a>
+<a name="l00059"></a>00059 {
+<a name="l00060"></a>00060 <span class="keyword">public</span>:
+<a name="l00064"></a><a class="code" href="structFlight__controller__copter_1_1conf__t.html">00064</a>     <span class="keyword">struct </span><a class="code" href="structFlight__controller__copter_1_1conf__t.html" title="Configuration structure.">conf_t</a>
+<a name="l00065"></a>00065     {
+<a name="l00066"></a>00066         <a class="code" href="structPosition__controller_1_1conf__t.html" title="Configuration.">Position_controller::conf_t</a>         pos_config;
+<a name="l00067"></a>00067         <a class="code" href="structVelocity__controller__copter_1_1conf__t.html" title="Velocity controller configuration.">Velocity_controller_copter::conf_t</a>  vel_config;
+<a name="l00068"></a>00068         <a class="code" href="structAttitude__controller_1_1conf__t.html" title="Attitude controller configuration.">Attitude_controller::conf_t</a>         att_config;
+<a name="l00069"></a>00069         <a class="code" href="structRate__controller_1_1conf__t.html" title="Rate controller configuration.">Rate_controller::conf_t</a>             rate_config;
+<a name="l00070"></a>00070         <span class="keyword">typename</span> <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix&lt;N_ROTORS&gt;::conf_t</a> mix_config;
+<a name="l00071"></a>00071     };
+<a name="l00072"></a>00072 
+<a name="l00078"></a><a class="code" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a">00078</a>     <span class="keyword">static</span> conf_t <a class="code" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a" title="Default Configuration.">default_config</a>(<span class="keywordtype">void</span>)
+<a name="l00079"></a>00079     {
+<a name="l00080"></a>00080         conf_t conf;
+<a name="l00081"></a>00081 
+<a name="l00082"></a>00082         conf.pos_config  = <a class="code" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a" title="Default Configuration.">Position_controller::default_config</a>();
+<a name="l00083"></a>00083         conf.vel_config  = <a class="code" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a" title="Default Configuration.">Velocity_controller_copter::default_config</a>();
+<a name="l00084"></a>00084         conf.att_config  = <a class="code" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a" title="Default Configuration.">Attitude_controller::default_config</a>();
+<a name="l00085"></a>00085         conf.rate_config = <a class="code" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a" title="Default Configuration.">Rate_controller::default_config</a>();
+<a name="l00086"></a>00086         conf.mix_config  = <a class="code" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a" title="Default Configuration.">Servos_mix_matrix&lt;N_ROTORS&gt;::default_config</a>();
+<a name="l00087"></a>00087 
+<a name="l00088"></a>00088         <span class="keywordflow">return</span> conf;
+<a name="l00089"></a>00089     };
+<a name="l00090"></a>00090 
+<a name="l00094"></a>00094     <a class="code" href="classFlight__controller__copter.html#acd447a3d4cbb120297bc6ad31d9caa71" title="Constructor.">Flight_controller_copter</a>(<span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; ins, <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs, <span class="keyword">typename</span> <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix&lt;N_ROTORS&gt;::args_t</a> mix_args, conf_t config);
+<a name="l00095"></a>00095 
+<a name="l00101"></a>00101     <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04" title="Set command from manual control in rate mode.">set_manual_rate_command</a>(<span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control);
+<a name="l00102"></a>00102 
+<a name="l00108"></a>00108     <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209" title="Set command from manual control in attitude mode.">set_manual_attitude_command</a>(<span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control);
+<a name="l00109"></a>00109 
+<a name="l00115"></a>00115     <span class="keywordtype">bool</span> <a class="code" href="classFlight__controller__copter.html#a29ffbb8273bda31078754d508f6b9e90" title="Set command from manual control in velocity mode.">set_manual_velocity_command</a>(<span class="keyword">const</span> <a class="code" href="classManual__control.html" title="The manual control structure.">Manual_control</a>&amp; manual_control);
+<a name="l00116"></a>00116 
+<a name="l00117"></a>00117 <span class="keyword">public</span>:
+<a name="l00118"></a><a class="code" href="classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84">00118</a>     <a class="code" href="classPosition__controller.html">Position_controller</a>         <a class="code" href="classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84" title="Position controller.">pos_ctrl_</a>;      
+<a name="l00119"></a><a class="code" href="classFlight__controller__copter.html#a07c9ace2b314468bce770acf00e9e3f8">00119</a>     <a class="code" href="classVelocity__controller__copter.html" title="Velocity controller for hovering platforms.">Velocity_controller_copter</a>  <a class="code" href="classFlight__controller__copter.html#a07c9ace2b314468bce770acf00e9e3f8" title="Velocity controller.">vel_ctrl_</a>;      
+<a name="l00120"></a><a class="code" href="classFlight__controller__copter.html#a35fa39269e1f8582d2e475ebbfc192f2">00120</a>     <a class="code" href="classAttitude__controller.html">Attitude_controller</a>         <a class="code" href="classFlight__controller__copter.html#a35fa39269e1f8582d2e475ebbfc192f2" title="Attitude controller.">att_ctrl_</a>;      
+<a name="l00121"></a><a class="code" href="classFlight__controller__copter.html#a5ce830d4b927b6a16c25a1f45c2e296d">00121</a>     <a class="code" href="classRate__controller.html">Rate_controller</a>             <a class="code" href="classFlight__controller__copter.html#a5ce830d4b927b6a16c25a1f45c2e296d" title="Rate controller.">rate_ctrl_</a>;     
+<a name="l00122"></a><a class="code" href="classFlight__controller__copter.html#a80013a94e5d733bd3b335c94d175cb9f">00122</a>     <a class="code" href="classServos__mix__matrix.html">Servos_mix_matrix&lt;N_ROTORS&gt;</a> <a class="code" href="classFlight__controller__copter.html#a80013a94e5d733bd3b335c94d175cb9f" title="Servos mix.">mix_ctrl_</a>;      
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124 <span class="keyword">private</span>:
+<a name="l00125"></a>00125     <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs_;                          
+<a name="l00126"></a>00126 };
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 <span class="preprocessor">#include &quot;flight_controller/flight_controller_copter.hxx&quot;</span>
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130 <span class="preprocessor">#endif  // FLIGHT_CONTROLLER_COPTER_HPP_</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -199,7 +198,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 14:23:03 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 2 2016 12:40:05 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

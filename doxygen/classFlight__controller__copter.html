@@ -88,7 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Flight_controller_copter&lt; N_ROTORS &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Flight_controller_copter" --><!-- doxytag: inherits="Flight_controller_stack" --><div class="dynheader">
+<!-- doxytag: class="Flight_controller_copter" --><!-- doxytag: inherits="Flight_controller_stack" -->
+<p>Full flight controller for copter.  
+ <a href="classFlight__controller__copter.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="flight__controller__copter_8hpp_source.html">flight_controller_copter.hpp</a>&gt;</code></p>
+<div class="dynheader">
 Inheritance diagram for Flight_controller_copter&lt; N_ROTORS &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classFlight__controller__copter__inherit__graph.png" border="0" usemap="#Flight__controller__copter_3_01N__ROTORS_01_4_inherit__map" alt="Inheritance graph"/></div>
@@ -108,10 +113,12 @@ Collaboration diagram for Flight_controller_copter&lt; N_ROTORS &gt;:</div>
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration structure.  <a href="structFlight__controller__copter_1_1conf__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acd447a3d4cbb120297bc6ad31d9caa71"></a><!-- doxytag: member="Flight_controller_copter::Flight_controller_copter" ref="acd447a3d4cbb120297bc6ad31d9caa71" args="(const INS &amp;ins, const AHRS &amp;ahrs, typename Servos_mix_matrix&lt; N_ROTORS &gt;::args_t mix_args, conf_t config)" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Flight_controller_copter</b> (const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, typename <a class="el" href="classServos__mix__matrix.html">Servos_mix_matrix</a>&lt; N_ROTORS &gt;::args_t mix_args, <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a> config)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#acd447a3d4cbb120297bc6ad31d9caa71">Flight_controller_copter</a> (const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, typename <a class="el" href="classServos__mix__matrix.html">Servos_mix_matrix</a>&lt; N_ROTORS &gt;::args_t mix_args, <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a> config)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#af766d9f0e24f880b3dec28a887696c04">set_manual_rate_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set command from manual control in rate mode.  <a href="#af766d9f0e24f880b3dec28a887696c04"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a8bd76c13e84c76d672eb269d76c1a209">set_manual_attitude_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
@@ -120,30 +127,71 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set command from manual control in velocity mode.  <a href="#a29ffbb8273bda31078754d508f6b9e90"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1e4d70a8bba95f43ddb768ef380ce47a"></a><!-- doxytag: member="Flight_controller_copter::default_config" ref="a1e4d70a8bba95f43ddb768ef380ce47a" args="(void)" -->
-static <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>default_config</b> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a">default_config</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Configuration.  <a href="#a1e4d70a8bba95f43ddb768ef380ce47a"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af26ff82fffa30e5ac66404558cc0af84"></a><!-- doxytag: member="Flight_controller_copter::pos_ctrl_" ref="af26ff82fffa30e5ac66404558cc0af84" args="" -->
 <a class="el" href="classPosition__controller.html">Position_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#af26ff82fffa30e5ac66404558cc0af84">pos_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in position. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Position controller. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07c9ace2b314468bce770acf00e9e3f8"></a><!-- doxytag: member="Flight_controller_copter::vel_ctrl_" ref="a07c9ace2b314468bce770acf00e9e3f8" args="" -->
 <a class="el" href="classVelocity__controller__copter.html">Velocity_controller_copter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a07c9ace2b314468bce770acf00e9e3f8">vel_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in velocity. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity controller. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a35fa39269e1f8582d2e475ebbfc192f2"></a><!-- doxytag: member="Flight_controller_copter::att_ctrl_" ref="a35fa39269e1f8582d2e475ebbfc192f2" args="" -->
 <a class="el" href="classAttitude__controller.html">Attitude_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a35fa39269e1f8582d2e475ebbfc192f2">att_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in attitude. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Attitude controller. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5ce830d4b927b6a16c25a1f45c2e296d"></a><!-- doxytag: member="Flight_controller_copter::rate_ctrl_" ref="a5ce830d4b927b6a16c25a1f45c2e296d" args="" -->
 <a class="el" href="classRate__controller.html">Rate_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a5ce830d4b927b6a16c25a1f45c2e296d">rate_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in rate. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Rate controller. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a80013a94e5d733bd3b335c94d175cb9f"></a><!-- doxytag: member="Flight_controller_copter::mix_ctrl_" ref="a80013a94e5d733bd3b335c94d175cb9f" args="" -->
 <a class="el" href="classServos__mix__matrix.html">Servos_mix_matrix</a>&lt; N_ROTORS &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__copter.html#a80013a94e5d733bd3b335c94d175cb9f">mix_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to servo mixing. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Servos mix. <br/></td></tr>
 </table>
-<h3>template&lt;uint32_t N_ROTORS&gt;<br/>
- class Flight_controller_copter&lt; N_ROTORS &gt;</h3>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><h3>template&lt;uint32_t N_ROTORS&gt;<br/>
+class Flight_controller_copter&lt; N_ROTORS &gt;</h3>
 
-<hr/><h2>Member Function Documentation</h2>
+<p>Full flight controller for copter. </p>
+<dl class=""><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">N_ROTORS</td><td>Number of rotors </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a1e4d70a8bba95f43ddb768ef380ce47a"></a><!-- doxytag: member="Flight_controller_copter::default_config" ref="a1e4d70a8bba95f43ddb768ef380ce47a" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;uint32_t N_ROTORS&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structFlight__controller__copter_1_1conf__t.html">conf_t</a> <a class="el" href="classFlight__controller__copter.html">Flight_controller_copter</a>&lt; N_ROTORS &gt;::<a class="el" href="classFlight__controller__copter.html#a1e4d70a8bba95f43ddb768ef380ce47a">default_config</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Default Configuration. </p>
+<p>/return config </p>
+
+<p>Reimplemented in <a class="el" href="classFlight__controller__hexacopter.html#aec91c204ddb78a96191021b6382d1347">Flight_controller_hexacopter</a>, and <a class="el" href="classFlight__controller__quadcopter.html#ac43c9ef165ae38f07ff2279e2121fb7a">Flight_controller_quadcopter</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classFlight__controller__copter_a1e4d70a8bba95f43ddb768ef380ce47a_icgraph.png" border="0" usemap="#classFlight__controller__copter_a1e4d70a8bba95f43ddb768ef380ce47a_icgraph" alt=""/></div>
+<map name="classFlight__controller__copter_a1e4d70a8bba95f43ddb768ef380ce47a_icgraph" id="classFlight__controller__copter_a1e4d70a8bba95f43ddb768ef380ce47a_icgraph">
+</map>
+</div>
+</p>
+
+</div>
+</div>
 <a class="anchor" id="a8bd76c13e84c76d672eb269d76c1a209"></a><!-- doxytag: member="Flight_controller_copter::set_manual_attitude_command" ref="a8bd76c13e84c76d672eb269d76c1a209" args="(const Manual_control &amp;manual_control)" -->
 <div class="memitem">
 <div class="memproto">
@@ -280,7 +328,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 14:23:04 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 2 2016 12:40:06 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -127,37 +127,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 <span class="preprocessor">#include &quot;flight_controller/flight_controller_copter.hpp&quot;</span>
 <a name="l00046"></a>00046 
-<a name="l00047"></a><a class="code" href="classFlight__controller__hexacopter.html">00047</a> <span class="keyword">class </span><a class="code" href="classFlight__controller__hexacopter.html">Flight_controller_hexacopter</a>: <span class="keyword">public</span> <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter</a>&lt;6&gt;
-<a name="l00048"></a>00048 {
-<a name="l00049"></a>00049 <span class="keyword">public</span>:
-<a name="l00050"></a>00050     <a class="code" href="classFlight__controller__hexacopter.html">Flight_controller_hexacopter</a>(   <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; ins,
-<a name="l00051"></a>00051                                     <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs,
-<a name="l00052"></a>00052                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_rear,
-<a name="l00053"></a>00053                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_rear_left,
-<a name="l00054"></a>00054                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_front_left,
-<a name="l00055"></a>00055                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_front,
-<a name="l00056"></a>00056                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_front_right,
-<a name="l00057"></a>00057                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_rear_right,
-<a name="l00058"></a>00058                                     conf_t config):
-<a name="l00059"></a>00059         <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter&lt;6&gt;</a>(ins, ahrs, <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix&lt;6&gt;::args_t</a>{{{&amp;motor_rear, &amp;motor_rear_left, &amp;motor_front_left, &amp;motor_front, &amp;motor_front_right, &amp;motor_rear_right}}}, config)
-<a name="l00060"></a>00060     {};
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062     <span class="keyword">static</span> conf_t default_config(<span class="keywordtype">void</span>)
-<a name="l00063"></a>00063     {
-<a name="l00064"></a>00064         conf_t conf = <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter&lt;6&gt;::default_config</a>();
-<a name="l00065"></a>00065         <span class="keywordtype">float</span> s60 = 0.866025f;
-<a name="l00066"></a>00066         conf.mix_config.mix  = <a class="code" href="classMat.html" title="Templated matrix class.">Mat&lt;6, 6&gt;</a>({ 0.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear</span>
-<a name="l00067"></a>00067                                             s60, -0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear left</span>
-<a name="l00068"></a>00068                                             s60,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front left</span>
-<a name="l00069"></a>00069                                            0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front</span>
-<a name="l00070"></a>00070                                            -s60,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front right</span>
-<a name="l00071"></a>00071                                            -s60, -0.5f, -1.0f, 0.0f, 0.0f, -1.0f}); <span class="comment">// rear right</span>
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073         <span class="keywordflow">return</span> conf;
-<a name="l00074"></a>00074     };
-<a name="l00075"></a>00075 };
-<a name="l00076"></a>00076 
-<a name="l00077"></a>00077 <span class="preprocessor">#endif  // FLIGHT_CONTROLLER_HEXACOPTER_HPP_</span>
+<a name="l00050"></a><a class="code" href="classFlight__controller__hexacopter.html">00050</a> <span class="keyword">class </span><a class="code" href="classFlight__controller__hexacopter.html" title="Full flight controller for hexacopter.">Flight_controller_hexacopter</a>: <span class="keyword">public</span> <a class="code" href="classFlight__controller__copter.html" title="Full flight controller for copter.">Flight_controller_copter</a>&lt;6&gt;
+<a name="l00051"></a>00051 {
+<a name="l00052"></a>00052 <span class="keyword">public</span>:
+<a name="l00056"></a><a class="code" href="classFlight__controller__hexacopter.html#a49e2ed719b4159e6227a039c221bec85">00056</a>     <a class="code" href="classFlight__controller__hexacopter.html#a49e2ed719b4159e6227a039c221bec85" title="Constructor.">Flight_controller_hexacopter</a>(   <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; ins,
+<a name="l00057"></a>00057                                     <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs,
+<a name="l00058"></a>00058                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_rear,
+<a name="l00059"></a>00059                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_rear_left,
+<a name="l00060"></a>00060                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_front_left,
+<a name="l00061"></a>00061                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_front,
+<a name="l00062"></a>00062                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_front_right,
+<a name="l00063"></a>00063                                     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_rear_right,
+<a name="l00064"></a>00064                                     conf_t config):
+<a name="l00065"></a>00065         <a class="code" href="classFlight__controller__copter.html" title="Full flight controller for copter.">Flight_controller_copter</a>&lt;6&gt;(ins, ahrs, <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix</a>&lt;6&gt;::args_t{{{&amp;motor_rear, &amp;motor_rear_left, &amp;motor_front_left, &amp;motor_front, &amp;motor_front_right, &amp;motor_rear_right}}}, config)
+<a name="l00066"></a>00066     {};
+<a name="l00067"></a>00067 
+<a name="l00073"></a><a class="code" href="classFlight__controller__hexacopter.html#aec91c204ddb78a96191021b6382d1347">00073</a>     <span class="keyword">static</span> conf_t <a class="code" href="classFlight__controller__hexacopter.html#aec91c204ddb78a96191021b6382d1347" title="Default Configuration.">default_config</a>(<span class="keywordtype">void</span>)
+<a name="l00074"></a>00074     {
+<a name="l00075"></a>00075         conf_t conf = <a class="code" href="classFlight__controller__hexacopter.html#aec91c204ddb78a96191021b6382d1347" title="Default Configuration.">Flight_controller_copter&lt;6&gt;::default_config</a>();
+<a name="l00076"></a>00076         <span class="keywordtype">float</span> s60 = 0.866025f;
+<a name="l00077"></a>00077         <span class="comment">//                                 roll, pitch,   yaw,   X,    Y,     Z</span>
+<a name="l00078"></a>00078         conf.mix_config.mix  = <a class="code" href="classMat.html" title="Templated matrix class.">Mat&lt;6, 6&gt;</a>({ 0.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear</span>
+<a name="l00079"></a>00079                                             s60, -0.5f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear left</span>
+<a name="l00080"></a>00080                                             s60,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front left</span>
+<a name="l00081"></a>00081                                            0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front</span>
+<a name="l00082"></a>00082                                            -s60,  0.5f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front right</span>
+<a name="l00083"></a>00083                                            -s60, -0.5f, -1.0f, 0.0f, 0.0f, -1.0f}); <span class="comment">// rear right</span>
+<a name="l00084"></a>00084 
+<a name="l00085"></a>00085         <span class="keywordflow">return</span> conf;
+<a name="l00086"></a>00086     };
+<a name="l00087"></a>00087 };
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089 <span class="preprocessor">#endif  // FLIGHT_CONTROLLER_HEXACOPTER_HPP_</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -176,7 +177,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 14:23:03 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 2 2016 12:40:05 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

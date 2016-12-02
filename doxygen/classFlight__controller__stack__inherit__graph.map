@@ -1,8 +1,8 @@
 <map id="G" name="G">
-<area shape="rect" id="node17" href="$classFlight__controller__copter.html" title="{Flight_controller_copter\&lt; N_ROTORS \&gt;\n|+ pos_ctrl_\l+ vel_ctrl_\l+ att_ctrl_\l+ rate_ctrl_\l+ mix_ctrl_\l|+ Flight_controller_copter()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ default_config()\l}" alt="" coords="208,909,461,1133"/>
+<area shape="rect" id="node17" href="$classFlight__controller__copter.html" title="Full flight controller for copter." alt="" coords="208,909,461,1133"/>
 <area shape="rect" id="node19" href="$classFlight__controller__copter.html" title="{Flight_controller_copter\&lt; 4 \&gt;\n|+ pos_ctrl_\l+ vel_ctrl_\l+ att_ctrl_\l+ rate_ctrl_\l+ mix_ctrl_\l|+ Flight_controller_copter()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ default_config()\l}" alt="" coords="485,909,709,1133"/>
 <area shape="rect" id="node23" href="$classFlight__controller__copter.html" title="{Flight_controller_copter\&lt; 6 \&gt;\n|+ pos_ctrl_\l+ vel_ctrl_\l+ att_ctrl_\l+ rate_ctrl_\l+ mix_ctrl_\l|+ Flight_controller_copter()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ default_config()\l}" alt="" coords="733,909,957,1133"/>
-<area shape="rect" id="node27" href="$classFlight__controller__hexhog.html" title="{Flight_controller_hexhog\n|+ pos_ctrl_\l+ vel_ctrl_\l+ att_ctrl_\l+ rate_ctrl_\l+ mix_ctrl_\l|+ Flight_controller_hexhog()\l+ set_manual_rate_command()\l+ set_manual_attitude_command()\l+ set_manual_velocity_command()\l+ default_config()\l}" alt="" coords="981,909,1205,1133"/>
+<area shape="rect" id="node27" href="$classFlight__controller__hexhog.html" title="Flight controller for the HexHog." alt="" coords="981,909,1205,1133"/>
 <area shape="rect" id="node2" href="$classFlight__controller.html" title="Interface for flight controllers." alt="" coords="609,192,833,485"/>
 <area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; position_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,227,143"/>
 <area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; velocity_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="251,6,472,143"/>
@@ -11,5 +11,5 @@
 <area shape="rect" id="node12" href="$classController.html" title="{Controller\&lt; torque_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="960,6,1173,143"/>
 <area shape="rect" id="node14" href="$classController.html" title="{Controller\&lt; thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1197,6,1408,143"/>
 <area shape="rect" id="node21" href="$classFlight__controller__quadcopter.html" title="{Flight_controller_quadcopter\n||+ Flight_controller_quadcopter()\l+ default_config()\l+ default_config_diag()\l+ default_config_cross()\l}" alt="" coords="495,1182,700,1319"/>
-<area shape="rect" id="node25" href="$classFlight__controller__hexacopter.html" title="{Flight_controller_hexacopter\n|+ config\l|+ Flight_controller_hexacopter()\l+ default_config()\l}" alt="" coords="743,1199,948,1302"/>
+<area shape="rect" id="node25" href="$classFlight__controller__hexacopter.html" title="Full flight controller for hexacopter." alt="" coords="743,1199,948,1302"/>
 </map>

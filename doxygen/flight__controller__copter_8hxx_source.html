@@ -126,7 +126,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor"> #define FLIGHT_CONTROLLER_COPTER_HXX_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 <span class="keyword">template</span>&lt;u<span class="keywordtype">int</span>32_t N_ROTORS&gt;
-<a name="l00046"></a>00046 <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter&lt;N_ROTORS&gt;::Flight_controller_copter</a>(<span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; ins, <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs, <span class="keyword">typename</span> <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix&lt;N_ROTORS&gt;::args_t</a> mix_args, conf_t config):
+<a name="l00046"></a><a class="code" href="classFlight__controller__copter.html#acd447a3d4cbb120297bc6ad31d9caa71">00046</a> <a class="code" href="classFlight__controller__copter.html#acd447a3d4cbb120297bc6ad31d9caa71" title="Constructor.">Flight_controller_copter&lt;N_ROTORS&gt;::Flight_controller_copter</a>(<span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; ins, <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs, <span class="keyword">typename</span> <a class="code" href="classServos__mix__matrix.html" title="Servos mix.">Servos_mix_matrix&lt;N_ROTORS&gt;::args_t</a> mix_args, <a class="code" href="structFlight__controller__copter_1_1conf__t.html" title="Configuration structure.">conf_t</a> config):
 <a name="l00047"></a>00047     <a class="code" href="classFlight__controller__stack.html" title="Base class for cascade style controller hierarchy.">Flight_controller_stack</a>(pos_ctrl_, vel_ctrl_, att_ctrl_, rate_ctrl_, mix_ctrl_),
 <a name="l00048"></a>00048     pos_ctrl_({ahrs, ins}, config.pos_config),
 <a name="l00049"></a>00049     vel_ctrl_({{ahrs, ins, command_.velocity, command_.attitude, command_.thrust}}, config.vel_config),
@@ -194,7 +194,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 14:23:03 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 2 2016 12:40:05 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

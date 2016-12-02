@@ -88,7 +88,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Flight_controller_hexhog Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="Flight_controller_hexhog" --><!-- doxytag: inherits="Flight_controller_stack" --><div class="dynheader">
+<!-- doxytag: class="Flight_controller_hexhog" --><!-- doxytag: inherits="Flight_controller_stack" -->
+<p>Flight controller for the HexHog.  
+ <a href="classFlight__controller__hexhog.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="flight__controller__hexhog_8hpp_source.html">flight_controller_hexhog.hpp</a>&gt;</code></p>
+<div class="dynheader">
 Inheritance diagram for Flight_controller_hexhog:</div>
 <div class="dyncontent">
 <div class="center"><img src="classFlight__controller__hexhog__inherit__graph.png" border="0" usemap="#Flight__controller__hexhog_inherit__map" alt="Inheritance graph"/></div>
@@ -108,10 +113,12 @@ Collaboration diagram for Flight_controller_hexhog:</div>
 <tr><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structFlight__controller__hexhog_1_1conf__t.html">conf_t</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration structure.  <a href="structFlight__controller__hexhog_1_1conf__t.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a50fcc53afa4e72d4734319fbdd475e75"></a><!-- doxytag: member="Flight_controller_hexhog::Flight_controller_hexhog" ref="a50fcc53afa4e72d4734319fbdd475e75" args="(const INS &amp;ins, const AHRS &amp;ahrs, Servo &amp;motor_rear, Servo &amp;motor_rear_left, Servo &amp;motor_front_left, Servo &amp;motor_front, Servo &amp;motor_front_right, Servo &amp;motor_rear_right, conf_t config=default_config())" -->
-&#160;</td><td class="memItemRight" valign="bottom"><b>Flight_controller_hexhog</b> (const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, <a class="el" href="classServo.html">Servo</a> &amp;motor_rear, <a class="el" href="classServo.html">Servo</a> &amp;motor_rear_left, <a class="el" href="classServo.html">Servo</a> &amp;motor_front_left, <a class="el" href="classServo.html">Servo</a> &amp;motor_front, <a class="el" href="classServo.html">Servo</a> &amp;motor_front_right, <a class="el" href="classServo.html">Servo</a> &amp;motor_rear_right, <a class="el" href="structFlight__controller__hexhog_1_1conf__t.html">conf_t</a> config=default_config())</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#a50fcc53afa4e72d4734319fbdd475e75">Flight_controller_hexhog</a> (const <a class="el" href="classINS.html">INS</a> &amp;ins, const <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, <a class="el" href="classServo.html">Servo</a> &amp;motor_rear, <a class="el" href="classServo.html">Servo</a> &amp;motor_rear_left, <a class="el" href="classServo.html">Servo</a> &amp;motor_front_left, <a class="el" href="classServo.html">Servo</a> &amp;motor_front, <a class="el" href="classServo.html">Servo</a> &amp;motor_front_right, <a class="el" href="classServo.html">Servo</a> &amp;motor_rear_right, <a class="el" href="structFlight__controller__hexhog_1_1conf__t.html">conf_t</a> config=<a class="el" href="classFlight__controller__hexhog.html#a779deff8aa9470ea1a243c85c4844120">default_config</a>())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#aa31c0d6d429ded0796284310c5e95e18">set_manual_rate_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set command from manual control in rate mode.  <a href="#aa31c0d6d429ded0796284310c5e95e18"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#a11b0d9db6eef620914a26bfc61b249e4">set_manual_attitude_command</a> (const <a class="el" href="classManual__control.html">Manual_control</a> &amp;manual_control)</td></tr>
@@ -120,27 +127,49 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set command from manual control in velocity mode.  <a href="#ad7ed6e4c86c50b48457439fd20fc958a"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a779deff8aa9470ea1a243c85c4844120"></a><!-- doxytag: member="Flight_controller_hexhog::default_config" ref="a779deff8aa9470ea1a243c85c4844120" args="(void)" -->
-static <a class="el" href="structFlight__controller__hexhog_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>default_config</b> (void)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structFlight__controller__hexhog_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#a779deff8aa9470ea1a243c85c4844120">default_config</a> (void)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Default Configuration.  <a href="#a779deff8aa9470ea1a243c85c4844120"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a65522d6ef534e2d14c961690eafbf373"></a><!-- doxytag: member="Flight_controller_hexhog::pos_ctrl_" ref="a65522d6ef534e2d14c961690eafbf373" args="" -->
 <a class="el" href="classPosition__controller.html">Position_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#a65522d6ef534e2d14c961690eafbf373">pos_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in position. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Position controller. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa572fa94811a69168447dc9cdfbdfe64"></a><!-- doxytag: member="Flight_controller_hexhog::vel_ctrl_" ref="aa572fa94811a69168447dc9cdfbdfe64" args="" -->
 <a class="el" href="classVelocity__controller__holonomic.html">Velocity_controller_holonomic</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#aa572fa94811a69168447dc9cdfbdfe64">vel_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in velocity. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity controller. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a74c42353e38525426c08bdcb966ee11b"></a><!-- doxytag: member="Flight_controller_hexhog::att_ctrl_" ref="a74c42353e38525426c08bdcb966ee11b" args="" -->
 <a class="el" href="classAttitude__controller.html">Attitude_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#a74c42353e38525426c08bdcb966ee11b">att_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in attitude. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Attitude controller. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a99b4274cd24561b6cc39d199c6d8420c"></a><!-- doxytag: member="Flight_controller_hexhog::rate_ctrl_" ref="a99b4274cd24561b6cc39d199c6d8420c" args="" -->
 <a class="el" href="classRate__controller.html">Rate_controller</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#a99b4274cd24561b6cc39d199c6d8420c">rate_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to controller in rate. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Rate controller. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ca0f71e741785b273a7a7a66cc25253"></a><!-- doxytag: member="Flight_controller_hexhog::mix_ctrl_" ref="a6ca0f71e741785b273a7a7a66cc25253" args="" -->
 <a class="el" href="classServos__mix__matrix.html">Servos_mix_matrix</a>&lt; 6 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classFlight__controller__hexhog.html#a6ca0f71e741785b273a7a7a66cc25253">mix_ctrl_</a></td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to servo mixing. <br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Servos mix. <br/></td></tr>
 </table>
-<hr/><h2>Member Function Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>Flight controller for the HexHog. </p>
+</div><hr/><h2>Member Function Documentation</h2>
+<a class="anchor" id="a779deff8aa9470ea1a243c85c4844120"></a><!-- doxytag: member="Flight_controller_hexhog::default_config" ref="a779deff8aa9470ea1a243c85c4844120" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="structFlight__controller__hexhog_1_1conf__t.html">conf_t</a> <a class="el" href="classFlight__controller__hexhog.html#a779deff8aa9470ea1a243c85c4844120">Flight_controller_hexhog::default_config</a> </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Default Configuration. </p>
+<p>/return config </p>
+
+</div>
+</div>
 <a class="anchor" id="a11b0d9db6eef620914a26bfc61b249e4"></a><!-- doxytag: member="Flight_controller_hexhog::set_manual_attitude_command" ref="a11b0d9db6eef620914a26bfc61b249e4" args="(const Manual_control &amp;manual_control)" -->
 <div class="memitem">
 <div class="memproto">
@@ -271,7 +300,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 14:23:04 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 2 2016 12:40:06 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -127,38 +127,38 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 <span class="preprocessor">#include &quot;flight_controller/flight_controller_copter.hpp&quot;</span>
 <a name="l00046"></a>00046 
-<a name="l00047"></a><a class="code" href="classFlight__controller__quadcopter.html">00047</a> <span class="keyword">class </span><a class="code" href="classFlight__controller__quadcopter.html">Flight_controller_quadcopter</a>: <span class="keyword">public</span> <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter</a>&lt;4&gt;
+<a name="l00047"></a><a class="code" href="classFlight__controller__quadcopter.html">00047</a> <span class="keyword">class </span><a class="code" href="classFlight__controller__quadcopter.html">Flight_controller_quadcopter</a>: <span class="keyword">public</span> <a class="code" href="classFlight__controller__copter.html" title="Full flight controller for copter.">Flight_controller_copter</a>&lt;4&gt;
 <a name="l00048"></a>00048 {
 <a name="l00049"></a>00049 <span class="keyword">public</span>:
 <a name="l00050"></a>00050     <a class="code" href="classFlight__controller__quadcopter.html">Flight_controller_quadcopter</a>(<span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp; ins, <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp; ahrs, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_rl, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_fl, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_fr, <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>&amp; motor_rr, conf_t config):
 <a name="l00051"></a>00051         <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter&lt;4&gt;</a>(ins, ahrs, <a class="code" href="structServos__mix__matrix_1_1args__t.html" title="Required arguments.">Servos_mix_matrix&lt;4&gt;::args_t</a>{{{&amp;motor_rl, &amp;motor_fl, &amp;motor_fr, &amp;motor_rr}}}, config)
 <a name="l00052"></a>00052     {};
 <a name="l00053"></a>00053 
-<a name="l00054"></a>00054     <span class="keyword">static</span> conf_t default_config(<span class="keywordtype">void</span>)
+<a name="l00054"></a><a class="code" href="classFlight__controller__quadcopter.html#ac43c9ef165ae38f07ff2279e2121fb7a">00054</a>     <span class="keyword">static</span> conf_t <a class="code" href="classFlight__controller__quadcopter.html#ac43c9ef165ae38f07ff2279e2121fb7a" title="Default Configuration.">default_config</a>(<span class="keywordtype">void</span>)
 <a name="l00055"></a>00055     {
 <a name="l00056"></a>00056         <span class="keywordflow">return</span> default_config_diag();
 <a name="l00057"></a>00057     };
 <a name="l00058"></a>00058 
 <a name="l00059"></a>00059     <span class="keyword">static</span> conf_t default_config_diag(<span class="keywordtype">void</span>)
 <a name="l00060"></a>00060     {
-<a name="l00061"></a>00061         conf_t conf = <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter&lt;4&gt;::default_config</a>();
-<a name="l00062"></a>00062 
-<a name="l00063"></a>00063         conf.mix_config.mix  = <a class="code" href="classMat.html" title="Templated matrix class.">Mat&lt;4, 6&gt;</a>({ 1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
-<a name="l00064"></a>00064                                            1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-<a name="l00065"></a>00065                                           -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
-<a name="l00066"></a>00066                                           -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f});
+<a name="l00061"></a>00061         conf_t conf = <a class="code" href="classFlight__controller__quadcopter.html#ac43c9ef165ae38f07ff2279e2121fb7a" title="Default Configuration.">Flight_controller_copter&lt;4&gt;::default_config</a>();
+<a name="l00062"></a>00062         <span class="comment">//                                 roll, pitch,   yaw,   X,    Y,     Z</span>
+<a name="l00063"></a>00063         conf.mix_config.mix  = <a class="code" href="classMat.html" title="Templated matrix class.">Mat&lt;4, 6&gt;</a>({ 1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// rear left</span>
+<a name="l00064"></a>00064                                            1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front left</span>
+<a name="l00065"></a>00065                                           -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   <span class="comment">// front right</span>
+<a name="l00066"></a>00066                                           -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f}); <span class="comment">// rear right</span>
 <a name="l00067"></a>00067 
 <a name="l00068"></a>00068         <span class="keywordflow">return</span> conf;
 <a name="l00069"></a>00069     };
 <a name="l00070"></a>00070 
 <a name="l00071"></a>00071     <span class="keyword">static</span> conf_t default_config_cross(<span class="keywordtype">void</span>)
 <a name="l00072"></a>00072     {
-<a name="l00073"></a>00073         conf_t conf = <a class="code" href="classFlight__controller__copter.html">Flight_controller_copter&lt;4&gt;::default_config</a>();
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075         conf.mix_config.mix  = <a class="code" href="classMat.html" title="Templated matrix class.">Mat&lt;4, 6&gt;</a>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-<a name="l00076"></a>00076                                            1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f,
-<a name="l00077"></a>00077                                            0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-<a name="l00078"></a>00078                                           -1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f });
+<a name="l00073"></a>00073         conf_t conf = <a class="code" href="classFlight__controller__quadcopter.html#ac43c9ef165ae38f07ff2279e2121fb7a" title="Default Configuration.">Flight_controller_copter&lt;4&gt;::default_config</a>();
+<a name="l00074"></a>00074         <span class="comment">//                                 roll, pitch,   yaw,   X,    Y,     Z</span>
+<a name="l00075"></a>00075         conf.mix_config.mix  = <a class="code" href="classMat.html" title="Templated matrix class.">Mat&lt;4, 6&gt;</a>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,    <span class="comment">// rear</span>
+<a name="l00076"></a>00076                                            1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f,    <span class="comment">// left</span>
+<a name="l00077"></a>00077                                            0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,    <span class="comment">// front</span>
+<a name="l00078"></a>00078                                           -1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f }); <span class="comment">// right</span>
 <a name="l00079"></a>00079 
 <a name="l00080"></a>00080         <span class="keywordflow">return</span> conf;
 <a name="l00081"></a>00081     };
@@ -183,7 +183,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 1 2016 14:23:03 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 2 2016 12:40:05 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
