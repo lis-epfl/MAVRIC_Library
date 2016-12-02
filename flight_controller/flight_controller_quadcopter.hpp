@@ -59,11 +59,11 @@ public:
     static conf_t default_config_diag(void)
     {
         conf_t conf = Flight_controller_copter<4>::default_config();
-
-        conf.mix_config.mix  = Mat<4, 6>({ 1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
-                                           1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-                                          -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,
-                                          -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f});
+        //                                 roll, pitch,   yaw,   X,    Y,     Z
+        conf.mix_config.mix  = Mat<4, 6>({ 1.0f, -1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   // rear left
+                                           1.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,   // front left
+                                          -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,   // front right
+                                          -1.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f}); // rear right
 
         return conf;
     };
@@ -71,11 +71,11 @@ public:
     static conf_t default_config_cross(void)
     {
         conf_t conf = Flight_controller_copter<4>::default_config();
-
-        conf.mix_config.mix  = Mat<4, 6>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-                                           1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f,
-                                           0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,
-                                          -1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f });
+        //                                 roll, pitch,   yaw,   X,    Y,     Z
+        conf.mix_config.mix  = Mat<4, 6>({ 0.0f, -1.0f, -1.0f, 0.0f, 0.0f, -1.0f,    // rear
+                                           1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f,    // left
+                                           0.0f,  1.0f, -1.0f, 0.0f, 0.0f, -1.0f,    // front
+                                          -1.0f,  0.0f,  1.0f, 0.0f, 0.0f, -1.0f }); // right
 
         return conf;
     };
