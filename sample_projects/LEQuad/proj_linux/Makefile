@@ -127,6 +127,9 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 	@$(CXX) -c $< -o $@ $(CXXFLAGS)
 	@$(BUILD_CMD)
 
+run: proj
+	./${PROJ_NAME}.elf
+
 .PHONY: clean rebuild
 clean:
 	@rm -f $(OBJS) $(DEPS)

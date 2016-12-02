@@ -144,7 +144,7 @@ protected:
 
 
 protected:
-    command_t command_;             ///< Flight commands
+    command_t command_;      ///< Flight commands
 
 private:
     pos_ctrl_t&  pos_ctrl_;  ///< Reference to controller in position

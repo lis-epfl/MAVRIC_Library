@@ -49,11 +49,18 @@
 #include "control/rate_controller.hpp"
 #include "control/servos_mix_matrix.hpp"
 
+/**
+ * \brief   Full flight controller for copter
+ *
+ * \tparam  N_ROTORS     Number of rotors
+ */
 template<uint32_t N_ROTORS>
 class Flight_controller_copter: public Flight_controller_stack
 {
 public:
-
+    /**
+     * \brief Configuration structure
+     */
     struct conf_t
     {
         Position_controller::conf_t         pos_config;
@@ -63,6 +70,11 @@ public:
         typename Servos_mix_matrix<N_ROTORS>::conf_t mix_config;
     };
 
+    /**
+     * \brief   Default Configuration
+     *
+     * /return  config
+     */
     static conf_t default_config(void)
     {
         conf_t conf;
@@ -76,23 +88,41 @@ public:
         return conf;
     };
 
+    /**
+     * \brief   Constructor
+     */
     Flight_controller_copter(const INS& ins, const AHRS& ahrs, typename Servos_mix_matrix<N_ROTORS>::args_t mix_args, conf_t config);
 
+    /**
+     * \brief   Set command from manual control in rate mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     bool set_manual_rate_command(const Manual_control& manual_control);
 
+    /**
+     * \brief   Set command from manual control in attitude mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     bool set_manual_attitude_command(const Manual_control& manual_control);
 
+    /**
+     * \brief   Set command from manual control in velocity mode
+     *
+     * \param   manual_control  Reference to manual_control
+     */
     bool set_manual_velocity_command(const Manual_control& manual_control);
 
 public:
-    Position_controller         pos_ctrl_;
-    Velocity_controller_copter  vel_ctrl_;
-    Attitude_controller         att_ctrl_;
-    Rate_controller             rate_ctrl_;
-    Servos_mix_matrix<N_ROTORS> mix_ctrl_;
+    Position_controller         pos_ctrl_;      ///< Position controller
+    Velocity_controller_copter  vel_ctrl_;      ///< Velocity controller
+    Attitude_controller         att_ctrl_;      ///< Attitude controller
+    Rate_controller             rate_ctrl_;     ///< Rate controller
+    Servos_mix_matrix<N_ROTORS> mix_ctrl_;      ///< Servos mix
 
 private:
-    const AHRS& ahrs_;
+    const AHRS& ahrs_;                          ///< Reference to estimated attitude
 };
 
 #include "flight_controller/flight_controller_copter.hxx"
