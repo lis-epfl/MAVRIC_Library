@@ -1,4 +1,6 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classINS.html#a6be12f73aed4742471ff86bd045f3630" title="Velocity in meters/seconds in NED frame." alt="" coords="387,5,499,35"/>
-<area shape="rect" id="node5" href="$classVelocity__controller.html#a0f3292d55fb6543bd960955102b559f8" title="Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics..." alt="" coords="231,59,655,88"/>
+<area shape="rect" id="node5" href="$classAHRS.html#aac9d006eae089af167221a42b905895f" title="Gets the yaw angle from the ahrs quaternion." alt="" coords="397,59,488,88"/>
+<area shape="rect" id="node7" href="$classAHRS.html#a51990c2aa964af66f0169725ec386f52" title="Estimated attitude." alt="" coords="705,85,815,115"/>
+<area shape="rect" id="node10" href="$classVelocity__controller.html#a0f3292d55fb6543bd960955102b559f8" title="Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics..." alt="" coords="231,163,655,192"/>
 </map>

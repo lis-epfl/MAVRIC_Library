@@ -10,7 +10,7 @@
 <area shape="rect" id="node18" href="$structcommand__t.html" title="Global command structure." alt="" coords="624,899,715,1088"/>
 <area shape="rect" id="node20" href="$structthrust__command__t.html" title="Thrust command type for vehicles with multi&#45;lifting devices." alt="" coords="779,521,909,607"/>
 <area shape="rect" id="node33" href="$classServos__mix__matrix.html" title="{Servos_mix_matrix\&lt; 6 \&gt;\n|# servos_\l# torque_command_\l# thrust_command_\l# mix_\l# trim_\l# min_\l# max_\l|+ thrust_command_()\l+ mix_()\l+ trim_()\l+ min_()\l+ max_()\l+ Servos_mix_matrix()\l+ update()\l+ failsafe()\l+ set_command()\l+ set_command()\l+ get_command()\l+ get_command()\l+ default_config()\l}" alt="" coords="407,795,572,1192"/>
-<area shape="rect" id="node53" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="2311,829,2639,1157"/>
+<area shape="rect" id="node53" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="2311,821,2639,1166"/>
 <area shape="rect" id="node22" href="$structrate__command__t.html" title="Rate command structure (expressed in body frame)" alt="" coords="1551,521,1668,607"/>
 <area shape="rect" id="node74" href="$classAttitude__controller.html" title="{Attitude_controller\n|# ahrs_\l# attitude_command_\l# rate_command_\l# attitude_error_estimator_\l# pid_\l# dt_s_\l# last_update_s_\l|+ Attitude_controller()\l+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_pid_X()\l+ get_pid_Y()\l+ get_pid_Z()\l+ default_config()\l}" alt="" coords="2663,1259,2839,1587"/>
 <area shape="rect" id="node24" href="$structposition__command__t.html" title="Position command structure." alt="" coords="933,513,1075,615"/>

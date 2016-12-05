@@ -17,6 +17,7 @@ var searchData=
   ['bind',['bind',['../classSatellite.html#a897b03fd579a158190b4a1459ea90ec0',1,'Satellite::bind()'],['../classSpektrum__satellite.html#a53bf9883a0f358c9a1f5cb229965a472',1,'Spektrum_satellite::bind()']]],
   ['bits',['bits',['../classMav__mode.html#a8c973fcb0a6c5317c9e96bb2934dd7ee',1,'Mav_mode']]],
   ['bits_5fptr',['bits_ptr',['../classMav__mode.html#adc24c9962e58f193dc1e8b6606123305',1,'Mav_mode']]],
+  ['body_5fframe',['BODY_FRAME',['../classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2aae1c11bbcc3bf9f463bc7b187ef4779b',1,'Velocity_controller']]],
   ['buffer',['buffer',['../structanalog__monitor__t.html#a35f8538aac910387a48b3d90d2e7d91a',1,'analog_monitor_t']]],
   ['buffer_5fempty',['buffer_empty',['../structbyte__stream__t.html#a562e6ae27ebe8ec887eb002291095cb7',1,'byte_stream_t']]],
   ['buffer_5ft',['Buffer_T',['../classBuffer__T.html',1,'Buffer_T&lt; S, T &gt;'],['../classBuffer__T.html#a54234fbcf8708651efeb0b5103f884ba',1,'Buffer_T::Buffer_T()']]],

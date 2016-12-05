@@ -1,6 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="808,915,1136,1035"/>
-<area shape="rect" id="node4" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="808,536,1136,864"/>
+<area shape="rect" id="node2" href="$classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="808,933,1136,1053"/>
+<area shape="rect" id="node4" href="$classVelocity__controller.html" title="Velocity controller for hovering platforms." alt="" coords="808,537,1136,882"/>
 <area shape="rect" id="node6" href="$classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="107,263,616,417"/>
 <area shape="rect" id="node8" href="$classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/>
 <area shape="rect" id="node10" href="$classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/>

@@ -50,6 +50,8 @@ var searchData=
   ['configure_5ftimer',['configure_timer',['../structgps__t.html#aa4d3be82d28fb99dcc48f36e93ab46e2',1,'gps_t']]],
   ['connection_5flost',['connection_lost',['../structState_1_1conf__t.html#aeb0c4f23300021dda36d418f1b577737',1,'State::conf_t::connection_lost()'],['../classState.html#aaebfe88d27bc9add93483b7a813bc427',1,'State::connection_lost()']]],
   ['continuous_5fwrite',['continuous_write',['../structData__logging_1_1conf__t.html#ab29d6a4cc417af488e6ab1b2918c64c0',1,'Data_logging::conf_t']]],
+  ['control_5fframe',['control_frame',['../structVelocity__controller_1_1conf__t.html#a0a3d914128559f21f9ff296e033d9f6a',1,'Velocity_controller::conf_t']]],
+  ['control_5fframe_5f',['control_frame_',['../classVelocity__controller.html#a6e4720d777a02ff41a4a565ac7ef031a',1,'Velocity_controller']]],
   ['control_5fsource',['control_source',['../structManual__control_1_1conf__t.html#a83277f0a71332139896e070c4533d392',1,'Manual_control::conf_t']]],
   ['control_5fsource_5f',['control_source_',['../classManual__control.html#aecee2adbc3aacb491be533976fa5f4e0',1,'Manual_control']]],
   ['control_5fvariable',['control_variable',['../structadaptive__parameter__t.html#a2214c801b54e043dba02bd31247350d7',1,'adaptive_parameter_t']]],

@@ -135,60 +135,70 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00055"></a>00055 {
 <a name="l00056"></a>00056 <span class="keyword">public</span>:
 <a name="l00057"></a>00057 
-<a name="l00061"></a><a class="code" href="structVelocity__controller_1_1conf__t.html">00061</a>     <span class="keyword">struct </span><a class="code" href="structVelocity__controller_1_1conf__t.html" title="Velocity controller configuration.">conf_t</a>
+<a name="l00061"></a><a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2">00061</a>     <span class="keyword">enum</span> <a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2" title="Reference frame in which the control is done.">control_frame_t</a>
 <a name="l00062"></a>00062     {
-<a name="l00063"></a><a class="code" href="structVelocity__controller_1_1conf__t.html#a4b757e982b5c82fe5059d309f635dd23">00063</a>         <a class="code" href="structpid__controller__conf__t.html" title="Configuration for PID controller.">pid_controller_conf_t</a>   <a class="code" href="structVelocity__controller_1_1conf__t.html#a4b757e982b5c82fe5059d309f635dd23" title="Config for PID controller on velocity along X, Y and Z in global frame.">pid_config</a>[3];          
-<a name="l00064"></a>00064     };
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066 
-<a name="l00070"></a><a class="code" href="structVelocity__controller_1_1args__t.html">00070</a>     <span class="keyword">struct </span><a class="code" href="structVelocity__controller_1_1args__t.html" title="Required arguments.">args_t</a>
-<a name="l00071"></a>00071     {
-<a name="l00072"></a><a class="code" href="structVelocity__controller_1_1args__t.html#ae3195936f91469c456e2c7f5d229e8a7">00072</a>         <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp;                  <a class="code" href="structVelocity__controller_1_1args__t.html#ae3195936f91469c456e2c7f5d229e8a7" title="Pointer to attitude estimation (input)">ahrs</a>;                      
-<a name="l00073"></a><a class="code" href="structVelocity__controller_1_1args__t.html#a00d907dbff5a87b69c4355266eb03f4d">00073</a>         <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp;                   <a class="code" href="structVelocity__controller_1_1args__t.html#a00d907dbff5a87b69c4355266eb03f4d" title="Speed and position estimation (input)">ins</a>;                       
-<a name="l00074"></a><a class="code" href="structVelocity__controller_1_1args__t.html#add90d60f41afa04eb2d2af83bcede831">00074</a>         <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp;          <a class="code" href="structVelocity__controller_1_1args__t.html#add90d60f41afa04eb2d2af83bcede831" title="Velocity command (input)">velocity_command</a>;          
-<a name="l00075"></a><a class="code" href="structVelocity__controller_1_1args__t.html#a002cfa50ccd4742b3d801915b33baaaf">00075</a>         <a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp;          <a class="code" href="structVelocity__controller_1_1args__t.html#a002cfa50ccd4742b3d801915b33baaaf" title="Attitude command (output)">attitude_command</a>;          
-<a name="l00076"></a><a class="code" href="structVelocity__controller_1_1args__t.html#a86750e1bba075ad745d11b6c4fa14fbe">00076</a>         <a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>&amp;            <a class="code" href="structVelocity__controller_1_1args__t.html#a86750e1bba075ad745d11b6c4fa14fbe" title="Thrust command (output)">thrust_command</a>;            
-<a name="l00077"></a>00077     };
+<a name="l00063"></a><a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2a2a83d1d667ea7a67332098d1b210e48d">00063</a>         <a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2a2a83d1d667ea7a67332098d1b210e48d" title="Local (NED frame)">LOCAL_FRAME</a>     = 0,    
+<a name="l00064"></a><a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2a2f54838e3937df9c62f1144084a9dd4d">00064</a>         <a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2a2f54838e3937df9c62f1144084a9dd4d" title="Semilocal frame (ie. NED rotated with current heading)">SEMILOCAL_FRAME</a> = 1,    
+<a name="l00065"></a><a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2aae1c11bbcc3bf9f463bc7b187ef4779b">00065</a>         <a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2aae1c11bbcc3bf9f463bc7b187ef4779b" title="Body frame.">BODY_FRAME</a>      = 2     
+<a name="l00066"></a>00066     };
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 
+<a name="l00072"></a><a class="code" href="structVelocity__controller_1_1conf__t.html">00072</a>     <span class="keyword">struct </span><a class="code" href="structVelocity__controller_1_1conf__t.html" title="Velocity controller configuration.">conf_t</a>
+<a name="l00073"></a>00073     {
+<a name="l00074"></a><a class="code" href="structVelocity__controller_1_1conf__t.html#a0a3d914128559f21f9ff296e033d9f6a">00074</a>         <a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2" title="Reference frame in which the control is done.">control_frame_t</a>         <a class="code" href="structVelocity__controller_1_1conf__t.html#a0a3d914128559f21f9ff296e033d9f6a" title="Reference frame in which the control is don.">control_frame</a>;          
+<a name="l00075"></a><a class="code" href="structVelocity__controller_1_1conf__t.html#a4b757e982b5c82fe5059d309f635dd23">00075</a>         <a class="code" href="structpid__controller__conf__t.html" title="Configuration for PID controller.">pid_controller_conf_t</a>   <a class="code" href="structVelocity__controller_1_1conf__t.html#a4b757e982b5c82fe5059d309f635dd23" title="Config for PID controller on velocity along X, Y and Z in global frame.">pid_config</a>[3];          
+<a name="l00076"></a>00076     };
+<a name="l00077"></a>00077 
 <a name="l00078"></a>00078 
-<a name="l00079"></a>00079 
-<a name="l00086"></a>00086     <a class="code" href="classVelocity__controller.html#a1720c6ec911466e9632d220a4fd0ee58" title="Constructor.">Velocity_controller</a>(<span class="keyword">const</span> <a class="code" href="structVelocity__controller_1_1args__t.html" title="Required arguments.">args_t</a>&amp; args, <span class="keyword">const</span> <a class="code" href="structVelocity__controller_1_1conf__t.html" title="Velocity controller configuration.">conf_t</a>&amp; config);
-<a name="l00087"></a>00087 
-<a name="l00088"></a>00088 
-<a name="l00094"></a>00094     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#abfb5d1693fb09235f4d5654af3bd34b4" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096 
-<a name="l00104"></a>00104     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a1f496ec712f6fc6fe3c4fb639f3711db" title="Sets the input command.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp; vel);
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106 
-<a name="l00114"></a>00114     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a6ac5f4d6b36430119df30b3e8e45e775" title="Returns the input command.">get_command</a>(<a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp; vel) <span class="keyword">const</span>;
-<a name="l00115"></a>00115 
-<a name="l00116"></a>00116 
-<a name="l00124"></a>00124     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a9a65103e887e25ae58d4bbf1f1ff070b" title="Returns the output command.">get_output</a>(<a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp; att) <span class="keyword">const</span>;
-<a name="l00125"></a>00125 
-<a name="l00126"></a>00126 
-<a name="l00134"></a>00134     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a9a65103e887e25ae58d4bbf1f1ff070b" title="Returns the output command.">get_output</a>(<a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>&amp; thrust) <span class="keyword">const</span>;
-<a name="l00135"></a>00135 
-<a name="l00136"></a>00136 
-<a name="l00142"></a>00142     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>&amp; <a class="code" href="classVelocity__controller.html#af8fa1443ce2ee2d4f27f85dfc785b56f" title="Gives acces to internal pid_controller.">get_pid_X</a>(<span class="keywordtype">void</span>);
-<a name="l00143"></a>00143     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>&amp; get_pid_Y(<span class="keywordtype">void</span>);
-<a name="l00144"></a>00144     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>&amp; get_pid_Z(<span class="keywordtype">void</span>);
-<a name="l00145"></a>00145 
-<a name="l00146"></a>00146 <span class="keyword">protected</span>:
+<a name="l00082"></a><a class="code" href="structVelocity__controller_1_1args__t.html">00082</a>     <span class="keyword">struct </span><a class="code" href="structVelocity__controller_1_1args__t.html" title="Required arguments.">args_t</a>
+<a name="l00083"></a>00083     {
+<a name="l00084"></a><a class="code" href="structVelocity__controller_1_1args__t.html#ae3195936f91469c456e2c7f5d229e8a7">00084</a>         <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp;                  <a class="code" href="structVelocity__controller_1_1args__t.html#ae3195936f91469c456e2c7f5d229e8a7" title="Pointer to attitude estimation (input)">ahrs</a>;                      
+<a name="l00085"></a><a class="code" href="structVelocity__controller_1_1args__t.html#a00d907dbff5a87b69c4355266eb03f4d">00085</a>         <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp;                   <a class="code" href="structVelocity__controller_1_1args__t.html#a00d907dbff5a87b69c4355266eb03f4d" title="Speed and position estimation (input)">ins</a>;                       
+<a name="l00086"></a><a class="code" href="structVelocity__controller_1_1args__t.html#add90d60f41afa04eb2d2af83bcede831">00086</a>         <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp;          <a class="code" href="structVelocity__controller_1_1args__t.html#add90d60f41afa04eb2d2af83bcede831" title="Velocity command (input)">velocity_command</a>;          
+<a name="l00087"></a><a class="code" href="structVelocity__controller_1_1args__t.html#a002cfa50ccd4742b3d801915b33baaaf">00087</a>         <a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp;          <a class="code" href="structVelocity__controller_1_1args__t.html#a002cfa50ccd4742b3d801915b33baaaf" title="Attitude command (output)">attitude_command</a>;          
+<a name="l00088"></a><a class="code" href="structVelocity__controller_1_1args__t.html#a86750e1bba075ad745d11b6c4fa14fbe">00088</a>         <a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>&amp;            <a class="code" href="structVelocity__controller_1_1args__t.html#a86750e1bba075ad745d11b6c4fa14fbe" title="Thrust command (output)">thrust_command</a>;            
+<a name="l00089"></a>00089     };
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091 
+<a name="l00098"></a>00098     <a class="code" href="classVelocity__controller.html#a1720c6ec911466e9632d220a4fd0ee58" title="Constructor.">Velocity_controller</a>(<span class="keyword">const</span> <a class="code" href="structVelocity__controller_1_1args__t.html" title="Required arguments.">args_t</a>&amp; args, <span class="keyword">const</span> <a class="code" href="structVelocity__controller_1_1conf__t.html" title="Velocity controller configuration.">conf_t</a>&amp; config);
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100 
+<a name="l00106"></a>00106     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#abfb5d1693fb09235f4d5654af3bd34b4" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108 
+<a name="l00116"></a>00116     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a1f496ec712f6fc6fe3c4fb639f3711db" title="Sets the input command.">set_command</a>(<span class="keyword">const</span> <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp; vel);
+<a name="l00117"></a>00117 
+<a name="l00118"></a>00118 
+<a name="l00126"></a>00126     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a6ac5f4d6b36430119df30b3e8e45e775" title="Returns the input command.">get_command</a>(<a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp; vel) <span class="keyword">const</span>;
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128 
+<a name="l00136"></a>00136     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a9a65103e887e25ae58d4bbf1f1ff070b" title="Returns the output command.">get_output</a>(<a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp; att) <span class="keyword">const</span>;
+<a name="l00137"></a>00137 
+<a name="l00138"></a>00138 
+<a name="l00146"></a>00146     <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a9a65103e887e25ae58d4bbf1f1ff070b" title="Returns the output command.">get_output</a>(<a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>&amp; thrust) <span class="keyword">const</span>;
 <a name="l00147"></a>00147 
-<a name="l00157"></a>00157     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a0f3292d55fb6543bd960955102b559f8" title="Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics...">compute_attitude_and_thrust_from_desired_accel</a>(<span class="keyword">const</span> std::array&lt;float,3&gt;&amp; accel_vector,
-<a name="l00158"></a>00158                                                                 <a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp; attitude_command,
-<a name="l00159"></a>00159                                                                 <a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>&amp; thrust_command            ) = 0;
-<a name="l00160"></a>00160 
-<a name="l00161"></a><a class="code" href="classVelocity__controller.html#ae6158a3143fb1b3a47609a804c1069e8">00161</a>     <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp;          <a class="code" href="classVelocity__controller.html#ae6158a3143fb1b3a47609a804c1069e8" title="Pointer to attitude estimation (input)">ahrs_</a>;                      
-<a name="l00162"></a><a class="code" href="classVelocity__controller.html#a8eafd84581e9f70a3d5792fba3daa6cf">00162</a>     <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp;           <a class="code" href="classVelocity__controller.html#a8eafd84581e9f70a3d5792fba3daa6cf" title="Speed and position estimation (input)">ins_</a>;                       
-<a name="l00163"></a><a class="code" href="classVelocity__controller.html#a25a0d5fff77eeacab6f9dad7103f8bbe">00163</a>     <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp;  <a class="code" href="classVelocity__controller.html#a25a0d5fff77eeacab6f9dad7103f8bbe" title="Velocity command (input)">velocity_command_</a>;          
-<a name="l00164"></a><a class="code" href="classVelocity__controller.html#a5bd58bd5c52f338351e872257b78e80a">00164</a>     <a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp;  <a class="code" href="classVelocity__controller.html#a5bd58bd5c52f338351e872257b78e80a" title="Attitude command (output)">attitude_command_</a>;          
-<a name="l00165"></a><a class="code" href="classVelocity__controller.html#ac4a8f9326a20b04f866b235f4115710f">00165</a>     <a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>&amp;    <a class="code" href="classVelocity__controller.html#ac4a8f9326a20b04f866b235f4115710f" title="Thrust command (output)">thrust_command_</a>;            
-<a name="l00166"></a>00166 
-<a name="l00167"></a><a class="code" href="classVelocity__controller.html#ac95045e0231e38d2a2a0f8f92b6f15db">00167</a>     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>     <a class="code" href="classVelocity__controller.html#ac95045e0231e38d2a2a0f8f92b6f15db" title="PID controller for velocity along X, Y and Z in global frame.">pid_</a>[3];                    
-<a name="l00168"></a>00168 };
-<a name="l00169"></a>00169 
-<a name="l00170"></a>00170 <span class="preprocessor">#endif </span><span class="comment">/* VELOCITY_CONTROLLER_HPP_ */</span>
+<a name="l00148"></a>00148 
+<a name="l00154"></a>00154     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>&amp; <a class="code" href="classVelocity__controller.html#af8fa1443ce2ee2d4f27f85dfc785b56f" title="Gives acces to internal pid_controller.">get_pid_X</a>(<span class="keywordtype">void</span>);
+<a name="l00155"></a>00155     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>&amp; get_pid_Y(<span class="keywordtype">void</span>);
+<a name="l00156"></a>00156     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>&amp; get_pid_Z(<span class="keywordtype">void</span>);
+<a name="l00157"></a>00157 
+<a name="l00158"></a>00158 <span class="keyword">protected</span>:
+<a name="l00159"></a>00159 
+<a name="l00169"></a>00169     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classVelocity__controller.html#a0f3292d55fb6543bd960955102b559f8" title="Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics...">compute_attitude_and_thrust_from_desired_accel</a>(<span class="keyword">const</span> std::array&lt;float,3&gt;&amp; accel_vector,
+<a name="l00170"></a>00170                                                                 <a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp; attitude_command,
+<a name="l00171"></a>00171                                                                 <a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>&amp; thrust_command            ) = 0;
+<a name="l00172"></a>00172 
+<a name="l00173"></a><a class="code" href="classVelocity__controller.html#ae6158a3143fb1b3a47609a804c1069e8">00173</a>     <span class="keyword">const</span> <a class="code" href="classAHRS.html" title="Interface for the estimated Attitude and Heading Reference System.">AHRS</a>&amp;          <a class="code" href="classVelocity__controller.html#ae6158a3143fb1b3a47609a804c1069e8" title="Pointer to attitude estimation (input)">ahrs_</a>;                      
+<a name="l00174"></a><a class="code" href="classVelocity__controller.html#a8eafd84581e9f70a3d5792fba3daa6cf">00174</a>     <span class="keyword">const</span> <a class="code" href="classINS.html">INS</a>&amp;           <a class="code" href="classVelocity__controller.html#a8eafd84581e9f70a3d5792fba3daa6cf" title="Speed and position estimation (input)">ins_</a>;                       
+<a name="l00175"></a><a class="code" href="classVelocity__controller.html#a25a0d5fff77eeacab6f9dad7103f8bbe">00175</a>     <a class="code" href="structvelocity__command__t.html" title="Velocity command structure.">velocity_command_t</a>&amp;  <a class="code" href="classVelocity__controller.html#a25a0d5fff77eeacab6f9dad7103f8bbe" title="Velocity command (input)">velocity_command_</a>;          
+<a name="l00176"></a><a class="code" href="classVelocity__controller.html#a5bd58bd5c52f338351e872257b78e80a">00176</a>     <a class="code" href="structquat__t.html" title="Unit quaternion.">attitude_command_t</a>&amp;  <a class="code" href="classVelocity__controller.html#a5bd58bd5c52f338351e872257b78e80a" title="Attitude command (output)">attitude_command_</a>;          
+<a name="l00177"></a><a class="code" href="classVelocity__controller.html#ac4a8f9326a20b04f866b235f4115710f">00177</a>     <a class="code" href="structthrust__command__t.html" title="Thrust command type for vehicles with multi-lifting devices.">thrust_command_t</a>&amp;    <a class="code" href="classVelocity__controller.html#ac4a8f9326a20b04f866b235f4115710f" title="Thrust command (output)">thrust_command_</a>;            
+<a name="l00178"></a>00178 
+<a name="l00179"></a><a class="code" href="classVelocity__controller.html#a6e4720d777a02ff41a4a565ac7ef031a">00179</a>     <a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2" title="Reference frame in which the control is done.">control_frame_t</a>      <a class="code" href="classVelocity__controller.html#a6e4720d777a02ff41a4a565ac7ef031a" title="Reference frame in which the control is don.">control_frame_</a>;             
+<a name="l00180"></a><a class="code" href="classVelocity__controller.html#ac95045e0231e38d2a2a0f8f92b6f15db">00180</a>     <a class="code" href="structpid__controller__t.html" title="PID controller.">pid_controller_t</a>     <a class="code" href="classVelocity__controller.html#ac95045e0231e38d2a2a0f8f92b6f15db" title="PID controller for velocity along X, Y and Z in global frame.">pid_</a>[3];                    
+<a name="l00181"></a>00181 };
+<a name="l00182"></a>00182 
+<a name="l00183"></a>00183 <span class="preprocessor">#endif </span><span class="comment">/* VELOCITY_CONTROLLER_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -207,7 +217,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 2 2016 12:40:05 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 5 2016 08:57:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

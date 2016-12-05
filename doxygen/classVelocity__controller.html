@@ -81,6 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a>  </div>
@@ -98,7 +99,7 @@ Inheritance diagram for Velocity_controller:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVelocity__controller__inherit__graph.png" border="0" usemap="#Velocity__controller_inherit__map" alt="Inheritance graph"/></div>
 <map name="Velocity__controller_inherit__map" id="Velocity__controller_inherit__map">
-<area shape="rect" id="node9" href="classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="197,771,525,891"/><area shape="rect" id="node2" href="classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="107,192,616,347"/><area shape="rect" id="node4" href="classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/><area shape="rect" id="node6" href="classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/><area shape="rect" id="node11" href="classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="197,939,525,1059"/></map>
+<area shape="rect" id="node9" href="classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="197,789,525,909"/><area shape="rect" id="node2" href="classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="107,192,616,347"/><area shape="rect" id="node4" href="classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/><area shape="rect" id="node6" href="classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/><area shape="rect" id="node11" href="classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="197,957,525,1077"/></map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for Velocity_controller:</div>
@@ -116,6 +117,13 @@ Classes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Required arguments.  <a href="structVelocity__controller_1_1args__t.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structVelocity__controller_1_1conf__t.html">conf_t</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Velocity controller configuration.  <a href="structVelocity__controller_1_1conf__t.html#details">More...</a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2">control_frame_t</a> { <a class="el" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2a2a83d1d667ea7a67332098d1b210e48d">LOCAL_FRAME</a> =  0, 
+<a class="el" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2a2f54838e3937df9c62f1144084a9dd4d">SEMILOCAL_FRAME</a> =  1, 
+<a class="el" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2aae1c11bbcc3bf9f463bc7b187ef4779b">BODY_FRAME</a> =  2
+ }</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference frame in which the control is done.  <a href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller.html#a1720c6ec911466e9632d220a4fd0ee58">Velocity_controller</a> (const <a class="el" href="structVelocity__controller_1_1args__t.html">args_t</a> &amp;args, const <a class="el" href="structVelocity__controller_1_1conf__t.html">conf_t</a> &amp;config)</td></tr>
@@ -157,13 +165,45 @@ const <a class="el" href="classINS.html">INS</a> &amp;&#160;</td><td class="memI
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac4a8f9326a20b04f866b235f4115710f"></a><!-- doxytag: member="Velocity_controller::thrust_command_" ref="ac4a8f9326a20b04f866b235f4115710f" args="" -->
 <a class="el" href="structthrust__command__t.html">thrust_command_t</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller.html#ac4a8f9326a20b04f866b235f4115710f">thrust_command_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Thrust command (output) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6e4720d777a02ff41a4a565ac7ef031a"></a><!-- doxytag: member="Velocity_controller::control_frame_" ref="a6e4720d777a02ff41a4a565ac7ef031a" args="" -->
+<a class="el" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2">control_frame_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller.html#a6e4720d777a02ff41a4a565ac7ef031a">control_frame_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference frame in which the control is don. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac95045e0231e38d2a2a0f8f92b6f15db"></a><!-- doxytag: member="Velocity_controller::pid_" ref="ac95045e0231e38d2a2a0f8f92b6f15db" args="[3]" -->
 <a class="el" href="structpid__controller__t.html">pid_controller_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVelocity__controller.html#ac95045e0231e38d2a2a0f8f92b6f15db">pid_</a> [3]</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">PID controller for velocity along X, Y and Z in global frame. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Velocity controller for hovering platforms. </p>
-</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+</div><hr/><h2>Member Enumeration Documentation</h2>
+<a class="anchor" id="aab07813e3a963ae7525f21deb15edcc2"></a><!-- doxytag: member="Velocity_controller::control_frame_t" ref="aab07813e3a963ae7525f21deb15edcc2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2">Velocity_controller::control_frame_t</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Reference frame in which the control is done. </p>
+<dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
+<tr><td valign="top"><em><a class="anchor" id="aab07813e3a963ae7525f21deb15edcc2a2a83d1d667ea7a67332098d1b210e48d"></a><!-- doxytag: member="LOCAL_FRAME" ref="aab07813e3a963ae7525f21deb15edcc2a2a83d1d667ea7a67332098d1b210e48d" args="" -->LOCAL_FRAME</em>&nbsp;</td><td>
+<p>Local (NED frame) </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="aab07813e3a963ae7525f21deb15edcc2a2f54838e3937df9c62f1144084a9dd4d"></a><!-- doxytag: member="SEMILOCAL_FRAME" ref="aab07813e3a963ae7525f21deb15edcc2a2f54838e3937df9c62f1144084a9dd4d" args="" -->SEMILOCAL_FRAME</em>&nbsp;</td><td>
+<p>Semilocal frame (ie. NED rotated with current heading) </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="aab07813e3a963ae7525f21deb15edcc2aae1c11bbcc3bf9f463bc7b187ef4779b"></a><!-- doxytag: member="BODY_FRAME" ref="aab07813e3a963ae7525f21deb15edcc2aae1c11bbcc3bf9f463bc7b187ef4779b" args="" -->BODY_FRAME</em>&nbsp;</td><td>
+<p>Body frame. </p>
+</td></tr>
+</table>
+</dd>
+</dl>
+
+</div>
+</div>
+<hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a1720c6ec911466e9632d220a4fd0ee58"></a><!-- doxytag: member="Velocity_controller::Velocity_controller" ref="a1720c6ec911466e9632d220a4fd0ee58" args="(const args_t &amp;args, const conf_t &amp;config)" -->
 <div class="memitem">
 <div class="memproto">
@@ -413,7 +453,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classVelocity__controller_abfb5d1693fb09235f4d5654af3bd34b4_cgraph.png" border="0" usemap="#classVelocity__controller_abfb5d1693fb09235f4d5654af3bd34b4_cgraph" alt=""/></div>
 <map name="classVelocity__controller_abfb5d1693fb09235f4d5654af3bd34b4_cgraph" id="classVelocity__controller_abfb5d1693fb09235f4d5654af3bd34b4_cgraph">
-<area shape="rect" id="node3" href="classINS.html#a6be12f73aed4742471ff86bd045f3630" title="Velocity in meters/seconds in NED frame." alt="" coords="387,5,499,35"/><area shape="rect" id="node5" href="classVelocity__controller.html#a0f3292d55fb6543bd960955102b559f8" title="Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics..." alt="" coords="231,59,655,88"/></map>
+<area shape="rect" id="node3" href="classINS.html#a6be12f73aed4742471ff86bd045f3630" title="Velocity in meters/seconds in NED frame." alt="" coords="387,5,499,35"/><area shape="rect" id="node5" href="classAHRS.html#aac9d006eae089af167221a42b905895f" title="Gets the yaw angle from the ahrs quaternion." alt="" coords="397,59,488,88"/><area shape="rect" id="node7" href="classAHRS.html#a51990c2aa964af66f0169725ec386f52" title="Estimated attitude." alt="" coords="705,85,815,115"/><area shape="rect" id="node10" href="classVelocity__controller.html#a0f3292d55fb6543bd960955102b559f8" title="Computes attitude and thrust command based on desired acceleration. Depends on robot dynamics..." alt="" coords="231,163,655,192"/></map>
 </div>
 </p>
 
@@ -441,7 +481,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 2 2016 12:40:06 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 5 2016 08:57:11 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -155,10 +155,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00096"></a>00096 {
 <a name="l00097"></a>00097     <a class="code" href="structVelocity__controller_1_1conf__t.html" title="Velocity controller configuration.">conf_t</a> conf = <a class="code" href="classVelocity__controller__holonomic.html#a5957b8393e164b754643ea3b9d272bc7" title="Default Configuration.">Velocity_controller_copter::default_config</a>();
 <a name="l00098"></a>00098 
-<a name="l00099"></a>00099     <span class="keywordflow">return</span> conf;
-<a name="l00100"></a>00100 }
+<a name="l00099"></a>00099     <span class="comment">// Do control in semilocal frame</span>
+<a name="l00100"></a>00100     conf.<a class="code" href="structVelocity__controller_1_1conf__t.html#a0a3d914128559f21f9ff296e033d9f6a" title="Reference frame in which the control is don.">control_frame</a> = <a class="code" href="classVelocity__controller.html#aab07813e3a963ae7525f21deb15edcc2a2f54838e3937df9c62f1144084a9dd4d" title="Semilocal frame (ie. NED rotated with current heading)">SEMILOCAL_FRAME</a>;
 <a name="l00101"></a>00101 
-<a name="l00102"></a>00102 <span class="preprocessor">#endif </span><span class="comment">/* VELOCITY_CONTROLLER_HOLONOMIC_HPP_ */</span>
+<a name="l00102"></a>00102     <span class="keywordflow">return</span> conf;
+<a name="l00103"></a>00103 }
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105 <span class="preprocessor">#endif </span><span class="comment">/* VELOCITY_CONTROLLER_HOLONOMIC_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -177,7 +180,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Dec 2 2016 12:40:05 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 5 2016 08:57:09 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>
