@@ -210,6 +210,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
         // -- no break here  - we want to run the lower level modes as well! --
 
         case ATTITUDE_COMMAND_MODE:
+
             // run absolute attitude_filter controller
             rpyt_errors[0] = input.rpy[0] + up_vec.v[1];
             rpyt_errors[1] = input.rpy[1] - up_vec.v[0];
