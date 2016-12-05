@@ -60,7 +60,8 @@ Velocity_controller::Velocity_controller(const args_t& args, const conf_t& confi
     ins_(args.ins),
     velocity_command_(args.velocity_command),
     attitude_command_(args.attitude_command),
-    thrust_command_(args.thrust_command)
+    thrust_command_(args.thrust_command),
+    control_frame_(config.control_frame)
 {
     // Init PID gains
     pid_controller_init(&pid_[X], &config.pid_config[X]);
@@ -88,21 +89,49 @@ Velocity_controller::Velocity_controller(const args_t& args, const conf_t& confi
 
 bool Velocity_controller::update(void)
 {
-    // Get current velocity
+    // Get current velocity in NED
     std::array<float,3> velocity = ins_.velocity_lf();
 
-    // Compute errors in local NED frame
+    // Get rotation betwen NED and control frame
+    quat_t q_ctrl_frame;
+    switch (control_frame_)
+    {
+        case LOCAL_FRAME:
+            q_ctrl_frame = coord_conventions_quaternion_from_rpy(0.0f, 0.0f, 0.0f);
+        break;
+
+        case SEMILOCAL_FRAME:
+            q_ctrl_frame = coord_conventions_quaternion_from_rpy(0.0f, 0.0f, ahrs_.yaw());
+        break;
+
+        case BODY_FRAME:
+            q_ctrl_frame = ahrs_.attitude();
+        break;
+    }
+
+    // Convert command and measurement to control frame
+    std::array<float,3> velocity_ctrl_frame;
+    std::array<float,3> velocity_command_ctrl_frame;
+    quaternions_rotate_vector(quaternions_inverse(q_ctrl_frame), velocity.data(), velocity_ctrl_frame.data());
+    quaternions_rotate_vector(quaternions_inverse(q_ctrl_frame), velocity_command_.xyz.data(), velocity_command_ctrl_frame.data());
+
+    // Compute errors in control frame
     float errors[3];
-    errors[X] = velocity_command_.xyz[X] - velocity[X];
-    errors[Y] = velocity_command_.xyz[Y] - velocity[Y];
-    errors[Z] = velocity_command_.xyz[Z] - velocity[Z];
+    errors[X] = velocity_command_ctrl_frame[X] - velocity_ctrl_frame[X];
+    errors[Y] = velocity_command_ctrl_frame[Y] - velocity_ctrl_frame[Y];
+    errors[Z] = velocity_command_ctrl_frame[Z] - velocity_ctrl_frame[Z];
 
     // Update PID
-    std::array<float,3> accel_vector;
-    accel_vector[X] = pid_controller_update(&pid_[X], errors[X]);
-    accel_vector[Y] = pid_controller_update(&pid_[Y], errors[Y]);
-    accel_vector[Z] = pid_controller_update(&pid_[Z], errors[Z]);
+    std::array<float,3> accel_vector_ctrl_frame;
+    accel_vector_ctrl_frame[X] = pid_controller_update(&pid_[X], errors[X]);
+    accel_vector_ctrl_frame[Y] = pid_controller_update(&pid_[Y], errors[Y]);
+    accel_vector_ctrl_frame[Z] = pid_controller_update(&pid_[Z], errors[Z]);
 
+    // Convert output to NED frame
+    std::array<float,3> accel_vector;
+    quaternions_rotate_vector(q_ctrl_frame, accel_vector_ctrl_frame.data(), accel_vector.data());
+
+    // Convert accel vector to attitude and thrust command
     bool ret = compute_attitude_and_thrust_from_desired_accel(accel_vector, attitude_command_, thrust_command_);
 
     return ret;

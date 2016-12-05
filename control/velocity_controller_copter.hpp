@@ -120,8 +120,7 @@ Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(vo
 {
     conf_t conf = {};
 
-    // conf.thrust_hover_point                    = -0.26f;
-    // conf.thrust_hover_point                    = -0.13f;
+    conf.control_frame                         = LOCAL_FRAME;
     conf.thrust_hover_point                    = -0.52f;
 
     // -----------------------------------------------------------------
@@ -133,7 +132,6 @@ Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(vo
     conf.pid_config[X].clip_max                = 0.5f;
     conf.pid_config[X].integrator              = {};
     conf.pid_config[X].integrator.gain         = 0.0125f;
-    // conf.pid_config[X].integrator.gain         = 0.0f;
     conf.pid_config[X].integrator.clip_pre     = 0.1f;
     conf.pid_config[X].integrator.accumulator  = 0.0f;
     conf.pid_config[X].integrator.clip         = 0.5f;
@@ -152,7 +150,6 @@ Velocity_controller_copter::conf_t Velocity_controller_copter::default_config(vo
     conf.pid_config[Y].clip_max                = 0.5f;
     conf.pid_config[Y].integrator              = {};
     conf.pid_config[Y].integrator.gain         = 0.0125f;
-    // conf.pid_config[Y].integrator.gain         = 0.0f;
     conf.pid_config[Y].integrator.clip_pre     = 0.1f;
     conf.pid_config[Y].integrator.accumulator  = 0.0f;
     conf.pid_config[Y].integrator.clip         = 0.5f;
