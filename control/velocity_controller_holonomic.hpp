@@ -96,6 +96,9 @@ Velocity_controller_holonomic::conf_t Velocity_controller_holonomic::default_con
 {
     conf_t conf = Velocity_controller_copter::default_config();
 
+    // Do control in semilocal frame
+    conf.control_frame = SEMILOCAL_FRAME;
+
     return conf;
 }
 

@@ -56,10 +56,22 @@ class Velocity_controller : public Controller_1_to_2<velocity_command_t, attitud
 public:
 
     /**
+     * \brief Reference frame in which the control is done
+     */
+    enum control_frame_t
+    {
+        LOCAL_FRAME     = 0,    ///< Local (NED frame)
+        SEMILOCAL_FRAME = 1,    ///< Semilocal frame (ie. NED rotated with current heading)
+        BODY_FRAME      = 2     ///< Body frame
+    };
+
+
+    /**
      * \brief Velocity controller configuration
      */
     struct conf_t
     {
+        control_frame_t         control_frame;          ///< Reference frame in which the control is don
         pid_controller_conf_t   pid_config[3];          ///< Config for PID controller on velocity along X, Y and Z in global frame
     };
 
@@ -164,6 +176,7 @@ protected:
     attitude_command_t&  attitude_command_;          ///< Attitude command (output)
     thrust_command_t&    thrust_command_;            ///< Thrust command (output)
 
+    control_frame_t      control_frame_;             ///< Reference frame in which the control is don
     pid_controller_t     pid_[3];                    ///< PID controller for velocity along X, Y and Z in global frame
 };
 
