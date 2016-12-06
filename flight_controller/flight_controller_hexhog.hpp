@@ -60,11 +60,11 @@ public:
      */
     struct conf_t
     {
-        Position_controller::conf_t         pos_config;
-        Velocity_controller_copter::conf_t  vel_config;
-        Attitude_controller::conf_t         att_config;
-        Rate_controller::conf_t             rate_config;
-        Servos_mix_matrix<6>::conf_t        mix_config;
+        Position_controller::conf_t            pos_config;
+        Velocity_controller_holonomic::conf_t  vel_config;
+        Attitude_controller::conf_t            att_config;
+        Rate_controller::conf_t                rate_config;
+        Servos_mix_matrix<6>::conf_t           mix_config;
     };
 
     /**
@@ -77,7 +77,7 @@ public:
         conf_t conf;
 
         conf.pos_config  = Position_controller::default_config();
-        conf.vel_config  = Velocity_controller_copter::default_config();
+        conf.vel_config  = Velocity_controller_holonomic::default_config();
         conf.att_config  = Attitude_controller::default_config();
         conf.rate_config = Rate_controller::default_config();
 
