@@ -56,6 +56,14 @@ class Velocity_controller_holonomic : public Velocity_controller_copter
 {
 public:
     /**
+     * \brief Velocity controller configuration
+     */
+    struct conf_t: public Velocity_controller_copter::conf_t
+    {
+        pid_controller_conf_t attitude_offset_config[2];
+    };
+
+    /**
     * \brief   Default Configuration
     *
     * /return  config
@@ -88,16 +96,55 @@ protected:
                                                                 thrust_command_t& thrust_command);
 
 public:
-    uint32_t use_3d_thrust_;         ///< Boolean indicating if 3D thrust is generated instead of banking
+    uint32_t          use_3d_thrust_;           ///< Boolean indicating if 3D thrust is generated instead of banking
+    pid_controller_t  attitude_offset_pid_[2];  ///< Attitude offset
 };
 
 
 Velocity_controller_holonomic::conf_t Velocity_controller_holonomic::default_config(void)
 {
-    conf_t conf = Velocity_controller_copter::default_config();
+    conf_t conf;
+
+    (*(Velocity_controller_copter::conf_t*)&conf) = Velocity_controller_copter::default_config();
 
     // Do control in semilocal frame
     conf.control_frame = SEMILOCAL_FRAME;
+
+    // -----------------------------------------------------------------
+    // ------ ROLL OFFSET ----------------------------------------------
+    // -----------------------------------------------------------------
+    conf.attitude_offset_config[X]                         = {};
+    conf.attitude_offset_config[X].p_gain                  = 0.0f;
+    conf.attitude_offset_config[X].clip_min                = -0.5f;
+    conf.attitude_offset_config[X].clip_max                = 0.5f;
+    conf.attitude_offset_config[X].integrator              = {};
+    conf.attitude_offset_config[X].integrator.gain         = 0.001f;
+    conf.attitude_offset_config[X].integrator.clip_pre     = 0.1f;
+    conf.attitude_offset_config[X].integrator.accumulator  = 0.0f;
+    conf.attitude_offset_config[X].integrator.clip         = 0.5f;
+    conf.attitude_offset_config[X].differentiator          = {};
+    conf.attitude_offset_config[X].differentiator.gain     = 0.0f;
+    conf.attitude_offset_config[X].differentiator.previous = 0.0f;
+    conf.attitude_offset_config[X].differentiator.clip     = 0.0f;
+    conf.attitude_offset_config[X].soft_zone_width         = 0.0f;
+
+    // -----------------------------------------------------------------
+    // ------ PITCH OFFSET ---------------------------------------------
+    // -----------------------------------------------------------------
+    conf.attitude_offset_config[Y]                         = {};
+    conf.attitude_offset_config[Y].p_gain                  = 0.0f;
+    conf.attitude_offset_config[Y].clip_min                = -0.5f;
+    conf.attitude_offset_config[Y].clip_max                = 0.5f;
+    conf.attitude_offset_config[Y].integrator              = {};
+    conf.attitude_offset_config[Y].integrator.gain         = 0.001f;
+    conf.attitude_offset_config[Y].integrator.clip_pre     = 0.1f;
+    conf.attitude_offset_config[Y].integrator.accumulator  = 0.0f;
+    conf.attitude_offset_config[Y].integrator.clip         = 0.5f;
+    conf.attitude_offset_config[Y].differentiator          = {};
+    conf.attitude_offset_config[Y].differentiator.gain     = 0.0f;
+    conf.attitude_offset_config[Y].differentiator.previous = 0.0f;
+    conf.attitude_offset_config[Y].differentiator.clip     = 0.0f;
+    conf.attitude_offset_config[Y].soft_zone_width         = 0.0f;
 
     return conf;
 }
