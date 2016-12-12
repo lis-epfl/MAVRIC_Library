@@ -50,7 +50,10 @@
 Velocity_controller_holonomic::Velocity_controller_holonomic(const args_t& args, const conf_t& config) :
     Velocity_controller_copter(args, config),
     use_3d_thrust_(1)
-{}
+{
+    pid_controller_init(&attitude_offset_pid_[X], &config.attitude_offset_config[X]);
+    pid_controller_init(&attitude_offset_pid_[Y], &config.attitude_offset_config[Y]);
+}
 
 
 bool Velocity_controller_holonomic::compute_attitude_and_thrust_from_desired_accel(const std::array<float,3>& accel_vector,
@@ -59,15 +62,19 @@ bool Velocity_controller_holonomic::compute_attitude_and_thrust_from_desired_acc
 {
     if (use_3d_thrust_)
     {
-        // Stay horizontal, with commanded heading
-        attitude_command = coord_conventions_quaternion_from_rpy( 0.0f,
-                                                                  0.0f,
-                                                                  velocity_command_.heading );
 
         // Desired thrust in local frame
         float thrust_lf[3] = {  accel_vector[X],
                                 accel_vector[Y],
                                 accel_vector[Z] + thrust_hover_point_};
+
+        // Stay horizontal, with commanded heading
+        attitude_command = coord_conventions_quaternion_from_rpy( 0.0f,
+                                                                  0.0f,
+                                                                  velocity_command_.heading );
+        // attitude_command = coord_conventions_quaternion_from_rpy( pid_controller_update(&attitude_offset_pid_[X], thrust_lf[Y]),
+        //                                                           pid_controller_update(&attitude_offset_pid_[Y], -thrust_lf[X]),
+        //                                                           velocity_command_.heading );
 
         // Rotate it to get thrust command in body frame
         quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), thrust_lf, thrust_command.xyz.data());
