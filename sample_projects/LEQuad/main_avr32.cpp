@@ -150,6 +150,8 @@ int main(void)
     // -------------------------------------------------------------------------
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
     // board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
+    board_config.px4flow_config.i2c_address += 2; 
+
     Megafly_rev4 board = Megafly_rev4(board_config);
 
     // Board initialisation
