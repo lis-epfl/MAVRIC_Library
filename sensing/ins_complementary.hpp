@@ -98,6 +98,9 @@ public:
         float kp_flow_vel;                      ///< Gain to correct the XY velocity estimation from optical flow
         float timeout_flow_us;                  ///< Time after witch a measure stops being used
         uint32_t use_flow;                      ///< Boolean that indicates if the sensor must be used
+
+        float kp_acc_bias;                      ///< Gain to estimate accelerometer biais from all sensors (weighted by respective gains)
+        uint32_t use_acc_bias;                  ///< Boolean that indicates if the accel bias should be estimated
     };
 
 
@@ -216,6 +219,14 @@ private:
      */
     void integration(void);
 
+    /**
+     * \brief   State correction
+     */
+    void correction_from_3d_pos(std::array<float,3> error, std::array<float,3> gain);
+    void correction_from_3d_vel(std::array<float,3> error, std::array<float,3> gain);
+    void correction_from_z_pos(float error, float gain);
+    void correction_from_z_vel(float error, float gain);
+
 
     /**
      * \brief   State correction with gps position
@@ -316,6 +327,10 @@ INS_complementary::conf_t INS_complementary::default_config()
     conf.kp_flow_vel     = 4.0f;
     conf.timeout_flow_us = 1e6f;
     conf.use_flow        = 1;
+
+    // Accelerometer bias
+    conf.kp_acc_bias     = 0.001f;
+    conf.use_acc_bias    = 0;
 
     return conf;
 };

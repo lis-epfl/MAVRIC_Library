@@ -379,7 +379,7 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     // Px4Flow config
     // -------------------------------------------------------------------------
     conf.px4flow_config = Px4flow_i2c::default_config();
-    
+
     return conf;
 }
 

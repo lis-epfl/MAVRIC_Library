@@ -212,6 +212,38 @@ void INS_complementary::integration()
 }
 
 
+void INS_complementary::correction_from_3d_pos(std::array<float,3> error, std::array<float,3> gain)
+{
+    // Apply error correction to position estimates
+    local_position_[X] += gain[X] * error[X] * dt_s_;
+    local_position_[Y] += gain[Y] * error[Y] * dt_s_;
+    local_position_[Z] += gain[Z] * error[Z] * dt_s_;
+}
+
+
+void INS_complementary::correction_from_z_pos(float error, float gain)
+{
+    // Apply error correction to position estimates
+    local_position_[Z] += gain * error * dt_s_;
+}
+
+
+void INS_complementary::correction_from_3d_vel(std::array<float,3> error, std::array<float,3> gain)
+{
+    // Apply error correction to velocity estimates
+    vel_[X] += gain[X] * error[X] * dt_s_;
+    vel_[Y] += gain[Y] * error[Y] * dt_s_;
+    vel_[Z] += gain[Z] * error[Z] * dt_s_;
+}
+
+
+void INS_complementary::correction_from_z_vel(float error, float gain)
+{
+    // Apply error correction to velocity estimates
+    vel_[Z] += gain * error * dt_s_;
+}
+
+
 void INS_complementary::correction_from_gps_pos(void)
 {
     if (gps_.healthy() == true)
@@ -225,35 +257,35 @@ void INS_complementary::correction_from_gps_pos(void)
             coord_conventions_global_to_local_position(gps_.position_gf(), origin(), gps_pos);
 
             // Compute position error and velocity error from gps
-            float pos_error[3];
+            std::array<float,3> pos_error;
             for (uint32_t i = 0; i < 3; i++)
             {
                 pos_error[i] = gps_pos[i] - local_position_[i];
             }
 
             // Get correct gain
-            float gain_XY = 0.0f;
-            float gain_Z  = 0.0f;
+            std::array<float,3> gain = {{0.0f, 0.0f, 0.0f}};
             if (gps_.fix() == FIX_RTK)
             {
-                gain_XY = config_.kp_gps_XY_pos_rtk;
-                gain_Z  = config_.kp_gps_Z_pos_rtk;
+                gain[X] = config_.kp_gps_XY_pos_rtk;
+                gain[Y] = config_.kp_gps_XY_pos_rtk;
+                gain[Z] = config_.kp_gps_Z_pos_rtk;
             }
             else if (gps_.fix() == FIX_DGPS)
             {
-                gain_XY = config_.kp_gps_XY_pos_dgps;
-                gain_Z  = config_.kp_gps_Z_pos_dgps;
+                gain[X] = config_.kp_gps_XY_pos_dgps;
+                gain[Y] = config_.kp_gps_XY_pos_dgps;
+                gain[Z] = config_.kp_gps_Z_pos_dgps;
             }
             else if (gps_.fix() == FIX_3D)
             {
-                gain_XY = config_.kp_gps_XY_pos;
-                gain_Z  = config_.kp_gps_Z_pos;
+                gain[X] = config_.kp_gps_XY_pos;
+                gain[Y] = config_.kp_gps_XY_pos;
+                gain[Z] = config_.kp_gps_Z_pos;
             }
 
             // Apply error correction to position estimates
-            local_position_[X] += gain_XY * pos_error[X] * dt_s_;
-            local_position_[Y] += gain_XY * pos_error[Y] * dt_s_;
-            local_position_[Z] += gain_Z  * pos_error[Z] * dt_s_;
+            correction_from_3d_pos(pos_error, gain);
         }
     }
 }
@@ -268,35 +300,35 @@ void INS_complementary::correction_from_gps_vel(void)
             last_gps_vel_update_us_ = gps_.last_velocity_update_us();
 
             // Compute position error and velocity error from gps
-            float vel_error[3];
+            std::array<float,3> vel_error;
             for (uint32_t i = 0; i < 3; i++)
             {
                 vel_error[i] = gps_.velocity_lf()[i] - vel_[i];
             }
 
             // Get correct gain
-            float gain_XY = 0.0f;
-            float gain_Z  = 0.0f;
+            std::array<float,3> gain = {{0.0f, 0.0f, 0.0f}};
             if (gps_.fix() == FIX_RTK)
             {
-                gain_XY = config_.kp_gps_XY_vel_rtk;
-                gain_Z  = config_.kp_gps_Z_vel_rtk;
+                gain[X] = config_.kp_gps_XY_vel_rtk;
+                gain[Y] = config_.kp_gps_XY_vel_rtk;
+                gain[Z] = config_.kp_gps_Z_vel_rtk;
             }
             else if (gps_.fix() == FIX_DGPS)
             {
-                gain_XY = config_.kp_gps_XY_vel_dgps;
-                gain_Z  = config_.kp_gps_Z_vel_dgps;
+                gain[X] = config_.kp_gps_XY_vel_dgps;
+                gain[Y] = config_.kp_gps_XY_vel_dgps;
+                gain[Z] = config_.kp_gps_Z_vel_dgps;
             }
             else if (gps_.fix() == FIX_3D)
             {
-                gain_XY = config_.kp_gps_XY_vel;
-                gain_Z  = config_.kp_gps_Z_vel;
+                gain[X] = config_.kp_gps_XY_vel;
+                gain[Y] = config_.kp_gps_XY_vel;
+                gain[Z] = config_.kp_gps_Z_vel;
             }
 
             // Apply error correction to velocity estimates
-            vel_[X] += gain_XY * vel_error[X] * dt_s_;
-            vel_[Y] += gain_XY * vel_error[Y] * dt_s_;
-            vel_[Z] += gain_Z  * vel_error[Z] * dt_s_;
+            correction_from_3d_vel(vel_error, gain);
         }
     }
 }
@@ -339,8 +371,8 @@ void INS_complementary::correction_from_barometer(void)
     }
 
     // Apply corrections
-    local_position_[Z] += gain_alt * baro_alt_error * dt_s_;
-    vel_[Z]            += gain_vel * baro_vel_error * dt_s_;
+    correction_from_z_pos(baro_alt_error, gain_alt);
+    correction_from_z_vel(baro_vel_error, gain_vel);
 }
 
 
@@ -363,23 +395,23 @@ void INS_complementary::correction_from_sonar(void)
     }
 
     // Apply corrections
-    local_position_[Z] += config_.kp_sonar_alt * gain_alt * sonar_alt_error * dt_s_;
-    vel_[Z]            += config_.kp_sonar_vel * gain_vel * sonar_vel_error * dt_s_;
+    correction_from_z_pos(sonar_alt_error, config_.kp_sonar_alt * gain_alt);
+    correction_from_z_vel(sonar_vel_error, config_.kp_sonar_vel * gain_vel);
 }
 
 
 void INS_complementary::correction_from_flow(void)
 {
-    float vel_error[3] = {0.0f, 0.0f, 0.0f};
-    float alt_error    = 0.0f;
-    float gain         = 0.0f;
+    std::array<float,3> vel_error = {{0.0f, 0.0f, 0.0f}};
+    std::array<float,3> vel_gain   = {{config_.kp_flow_vel, config_.kp_flow_vel, config_.kp_sonar_vel}};
+    float alt_error = 0.0f;
+    float alt_gain  = config_.kp_sonar_alt;
 
     if (flow_.healthy())
     {
         if (last_flow_update_us_ < (flow_.last_update_s() * 1e6f) + config_.timeout_flow_us)
         {
             last_flow_update_us_ = (flow_.last_update_s() * 1e6f);
-            gain           = 1.0f;
 
             // Get velocity in NED frame
             float vel_lf[3];
@@ -395,14 +427,13 @@ void INS_complementary::correction_from_flow(void)
             vel_error[1] = vel_lf[Y] - vel_[Y];
             vel_error[2] = vel_lf[Z] - vel_[Z];
             alt_error    = - flow_.ground_distance() - local_position_[Z];
+
+            // Apply corrections
+            correction_from_3d_vel(vel_error, vel_gain);
+            correction_from_z_pos(alt_error, alt_gain);
         }
     }
 
-    // Apply corrections
-    vel_[X]            += config_.kp_flow_vel  * gain * vel_error[X] * dt_s_;
-    vel_[Y]            += config_.kp_flow_vel  * gain * vel_error[Y] * dt_s_;
-    vel_[Z]            += config_.kp_sonar_vel * gain * vel_error[Z] * dt_s_;
-    local_position_[Z] += config_.kp_sonar_alt * gain * alt_error    * dt_s_;
 }
 
 
