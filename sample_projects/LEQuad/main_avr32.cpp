@@ -62,6 +62,82 @@ extern "C"
 #include "libs/asf/avr32/services/delay/delay.h"
 }
 
+#include "hal/dummy/serial_dummy.hpp"
+#include "sensing/ins_telemetry.hpp"
+class My_LEQuad: public LEQuad
+{
+public:
+    My_LEQuad( Imu& imu,
+            Barometer& barometer,
+            Gps& gps,
+            Sonar& sonar,
+            Px4flow_i2c& flow,
+            Serial& serial_mavlink,
+            Satellite& satellite,
+            State_display& state_display,
+            File& file_flash,
+            Battery& battery,
+            File& file1,
+            File& file2,
+            Servo& servo_0,
+            Servo& servo_1,
+            Servo& servo_2,
+            Servo& servo_3,
+            const conf_t& config = default_config()):
+        LEQuad(imu, barometer, gps, sonar, flow, serial_mavlink, satellite, state_display, file_flash, battery, file1, file2, servo_0, servo_1, servo_2, servo_3, config),
+        serial_dummy_(),
+        gps_dummy_(serial_dummy_),
+        ins_no_gps_(state, barometer, sonar, gps_dummy_, flow, ahrs_, config.mav_config.ins_complementary_config)
+    {};
+
+    bool init(void)
+    {
+        bool ret = LEQuad::init();
+        ret &= init_ins_no_gps();
+        return ret;
+    }
+
+    bool main_task(void)
+    {
+        bool ret = LEQuad::main_task();
+        ret &= ins_no_gps_.update();
+        return ret;
+    }
+
+    bool init_ins_no_gps(void)
+    {
+        bool ret = true;
+        // DOWN telemetry
+        ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV, 250000, &ins_telemetry_send_local_position_ned_cov,  &ins_no_gps_);
+
+        // Parameters
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_XY_pos,     "POS2_K_GPS_XY"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_Z_pos,      "POS2_K_GPS_Z"     );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_XY_vel,     "POS2_K_GPS_V_XY"  );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_Z_vel,      "POS2_K_GPS_V_Z"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_XY_pos_rtk, "POS2_K_RTK_XY"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_Z_pos_rtk,  "POS2_K_RTK_Z"     );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_XY_vel_rtk, "POS2_K_RTK_V_XY"  );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_Z_vel_rtk,  "POS2_K_RTK_V_Z"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_baro_alt,       "POS2_K_BARO_Z"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_baro_vel,       "POS2_K_BARO_V_Z"  );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_sonar_alt,      "POS2_K_SONAR_Z"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_sonar_vel,      "POS2_K_SONAR_V_Z" );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_flow_vel,       "POS2_K_OF_V_XY"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_gps,           "POS2_USE_GPS"     );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_baro,          "POS2_USE_BARO"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_sonar,         "POS2_USE_SONAR"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_flow,          "POS2_USE_FLOW"    );
+
+        return ret;
+    }
+
+protected:
+    Serial_dummy        serial_dummy_;
+    Gps_ublox           gps_dummy_;
+    INS_complementary   ins_no_gps_;
+};
+
 
 int main(void)
 {
@@ -88,9 +164,9 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
     LEQuad::conf_t mav_config = LEQuad::dronedome_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad(board.imu,
+    // LEQuad mav = LEQuad(board.imu,
+    My_LEQuad mav = My_LEQuad(board.imu,
                         board.barometer,
                         board.gps_ublox,
                         board.sonar_i2cxl,
