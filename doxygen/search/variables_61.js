@@ -52,6 +52,7 @@ var searchData=
   ['attitude_5fcommand_5frange_5fconfig',['attitude_command_range_config',['../structgimbal__controller__conf__t.html#ab762e5d354c0b88030a2e1f26fd70c4a',1,'gimbal_controller_conf_t']]],
   ['attitude_5ferror_5festimator',['attitude_error_estimator',['../structattitude__controller__p2__t.html#a877e0ef5949a6fb8280d9e6d0a078641',1,'attitude_controller_p2_t']]],
   ['attitude_5ferror_5festimator_5f',['attitude_error_estimator_',['../classAttitude__controller.html#addcdc1610024b935611e34cfa2e5894d',1,'Attitude_controller']]],
+  ['attitude_5foffset_5fpid_5f',['attitude_offset_pid_',['../classVelocity__controller__holonomic.html#add20db2b93aef501c515fa65f4771c0d',1,'Velocity_controller_holonomic']]],
   ['attitude_5foutput_5fconfig',['attitude_output_config',['../structgimbal__controller__conf__t.html#acdeff91f7ff30b23fe649eb7f0459351',1,'gimbal_controller_conf_t']]],
   ['attitude_5fstabiliser',['attitude_stabiliser',['../structstabiliser__stack__wing__t.html#a2a1d0bd50f192aac50c517949ce06b33',1,'stabiliser_stack_wing_t']]],
   ['audio_5fbuffer',['audio_buffer',['../structaudio__t.html#ae55dc6809cb30b6a360ef600454332c4',1,'audio_t']]],

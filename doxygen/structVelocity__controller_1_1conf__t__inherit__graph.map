@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$structVelocity__controller__copter_1_1conf__t.html" title="Velocity controller configuration." alt="" coords="5,157,221,243"/>
+<area shape="rect" id="node3" href="$structVelocity__controller__copter_1_1conf__t.html" title="Velocity controller configuration." alt="" coords="16,157,232,243"/>
+<area shape="rect" id="node5" href="$structVelocity__controller__holonomic_1_1conf__t.html" title="Velocity controller configuration." alt="" coords="5,291,243,376"/>
 </map>

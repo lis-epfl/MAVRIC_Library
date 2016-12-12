@@ -3,5 +3,5 @@
 <area shape="rect" id="node2" href="$classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="107,192,616,347"/>
 <area shape="rect" id="node4" href="$classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="5,6,352,143"/>
 <area shape="rect" id="node6" href="$classController.html" title="{Controller\&lt; velocity_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="376,6,715,143"/>
-<area shape="rect" id="node11" href="$classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="197,957,525,1077"/>
+<area shape="rect" id="node11" href="$classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="197,958,525,1095"/>
 </map>
