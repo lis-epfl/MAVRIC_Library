@@ -122,7 +122,7 @@ public:
         ret &= communication.parameters().add(&ins_no_gps_.config_.kp_baro_alt,       "POS2_K_BARO_Z"    );
         ret &= communication.parameters().add(&ins_no_gps_.config_.kp_baro_vel,       "POS2_K_BARO_V_Z"  );
         ret &= communication.parameters().add(&ins_no_gps_.config_.kp_sonar_alt,      "POS2_K_SONAR_Z"   );
-        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_sonar_vel,      "POS2_K_SONAR_V_Z" );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_sonar_vel,      "POS2_K_SONAR_VZ" );
         ret &= communication.parameters().add(&ins_no_gps_.config_.kp_flow_vel,       "POS2_K_OF_V_XY"   );
         ret &= communication.parameters().add(&ins_no_gps_.config_.use_gps,           "POS2_USE_GPS"     );
         ret &= communication.parameters().add(&ins_no_gps_.config_.use_baro,          "POS2_USE_BARO"    );
