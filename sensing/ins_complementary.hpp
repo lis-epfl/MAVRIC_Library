@@ -181,7 +181,8 @@ public:
 
 
     local_position_t local_position_;        ///< Local position
-    float vel_[3];                           ///< 3D velocity in ned frame
+    std::array<float,3> vel_;                ///< 3D velocity in ned frame
+    std::array<float,3> acc_bias_;           ///< Accelerometer bias in body frame
     conf_t config_;                          ///< Configuration containing gains
 
 private:

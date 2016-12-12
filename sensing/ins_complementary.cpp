@@ -56,7 +56,8 @@ extern "C"
 
 INS_complementary::INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const AHRS& ahrs, const conf_t config) :
     local_position_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
-    vel_{0.0f,0.0f,0.0f},
+    vel_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+    acc_bias_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     config_(config),
     ahrs_(ahrs),
     state_(state),
@@ -193,16 +194,21 @@ void INS_complementary::integration()
 {
     // Get velocity in body frame
     float vel_bf[3];
-    quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), vel_, vel_bf);
+    quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), vel_.data(), vel_bf);
 
     // Integrate velocity using accelerometer
     for (uint32_t i = 0; i < 3; i++)
     {
         vel_bf[i] += ahrs_.linear_acceleration()[i] * dt_s_;
+
+        if (config_.use_acc_bias)
+        {
+            vel_bf[i] += acc_bias_[i] * dt_s_;
+        }
     }
 
     // Get new velocity in local frame
-    quaternions_rotate_vector(ahrs_.attitude(), vel_bf, vel_);
+    quaternions_rotate_vector(ahrs_.attitude(), vel_bf, vel_.data());
 
     // Integrate position using estimated velocity
     for (uint32_t i = 0; i < 3; i++)
@@ -218,6 +224,16 @@ void INS_complementary::correction_from_3d_pos(std::array<float,3> error, std::a
     local_position_[X] += gain[X] * error[X] * dt_s_;
     local_position_[Y] += gain[Y] * error[Y] * dt_s_;
     local_position_[Z] += gain[Z] * error[Z] * dt_s_;
+
+    if (config_.use_acc_bias)
+    {
+        std::array<float,3> error_lf = {{gain[X] * error[X], gain[Y] * error[Y], gain[Z] * error[Z]}};
+        std::array<float,3> error_bf;
+        quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), error_lf.data(), error_bf.data());
+        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * 0.5f * SQR(dt_s_);
+        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * 0.5f * SQR(dt_s_);
+        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * 0.5f * SQR(dt_s_);
+    }
 }
 
 
@@ -225,6 +241,16 @@ void INS_complementary::correction_from_z_pos(float error, float gain)
 {
     // Apply error correction to position estimates
     local_position_[Z] += gain * error * dt_s_;
+
+    if (config_.use_acc_bias)
+    {
+        std::array<float,3> error_lf = {{0.0f, 0.0f, gain * error}};
+        std::array<float,3> error_bf;
+        quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), error_lf.data(), error_bf.data());
+        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * 0.5f * SQR(dt_s_);
+        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * 0.5f * SQR(dt_s_);
+        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * 0.5f * SQR(dt_s_);
+    }
 }
 
 
@@ -234,6 +260,16 @@ void INS_complementary::correction_from_3d_vel(std::array<float,3> error, std::a
     vel_[X] += gain[X] * error[X] * dt_s_;
     vel_[Y] += gain[Y] * error[Y] * dt_s_;
     vel_[Z] += gain[Z] * error[Z] * dt_s_;
+
+    if (config_.use_acc_bias)
+    {
+        std::array<float,3> error_lf = {{gain[X] * error[X], gain[Y] * error[Y], gain[Z] * error[Z]}};
+        std::array<float,3> error_bf;
+        quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), error_lf.data(), error_bf.data());
+        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * dt_s_;
+        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * dt_s_;
+        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * dt_s_;
+    }
 }
 
 
@@ -241,6 +277,16 @@ void INS_complementary::correction_from_z_vel(float error, float gain)
 {
     // Apply error correction to velocity estimates
     vel_[Z] += gain * error * dt_s_;
+
+    if (config_.use_acc_bias)
+    {
+        std::array<float,3> error_lf = {{0.0f, 0.0f, gain * error}};
+        std::array<float,3> error_bf;
+        quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), error_lf.data(), error_bf.data());
+        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * dt_s_;
+        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * dt_s_;
+        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * dt_s_;
+    }
 }
 
 
