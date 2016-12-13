@@ -52,10 +52,11 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-PX4Flow_serial::PX4Flow_serial(Serial& uart):
+PX4Flow_serial::PX4Flow_serial(Serial& uart, conf_t config):
     PX4Flow(),
     uart_(uart),
-    mavlink_stream_(uart_, Mavlink_stream::default_config())
+    mavlink_stream_(uart_, Mavlink_stream::default_config()),
+    config_(config)
 {}
 
 
@@ -73,9 +74,56 @@ bool PX4Flow_serial::update(void)
         {
             case MAVLINK_MSG_ID_OPTICAL_FLOW_RAD:
             {
-                mavlink_optical_flow_rad_t optical_flow_msg;
                 // Decode message
-                mavlink_msg_optical_flow_rad_decode(msg, &optical_flow_msg);
+                mavlink_optical_flow_rad_t of_msg;
+                mavlink_msg_optical_flow_rad_decode(msg, &of_msg);
+
+
+                // Get optic flow
+                flow_quality_  = of_msg.quality;
+                flow_x_ = (of_msg.integrated_x - of_msg.integrated_xgyro);
+                flow_y_ = (of_msg.integrated_y - of_msg.integrated_ygyro);
+                if (of_msg.integration_time_us != 0)
+                {
+                    flow_x_ /= (1e-6f * (float)(of_msg.integration_time_us));
+                    flow_y_ /= (1e-6f * (float)(of_msg.integration_time_us));
+                }
+
+                // Get new distance
+                float new_distance = of_msg.distance;
+                if (new_distance < 4.5f)
+                {
+                    ground_distance_buffer_.put_lossy(new_distance);
+                }
+
+                // Get new filtered ground distance from 3 last measures
+                float gd[3] = {0.0f, 0.0f, 0.0f};
+                ground_distance_buffer_.get_element(0, gd[0]);
+                ground_distance_buffer_.get_element(1, gd[1]);
+                ground_distance_buffer_.get_element(2, gd[2]);
+                float new_distance_filtered = 0.2f * ground_distance_ + 0.8f * maths_median_filter_3x(gd[0], gd[1], gd[2]);
+
+                // Keep values
+                velocity_z_      = - (new_distance_filtered - ground_distance_) / (time_keeper_get_s() - last_update_s_);
+                ground_distance_ = new_distance_filtered;
+
+                // Compute XY velocity
+                velocity_x_ = flow_x_ * ground_distance_;
+                velocity_y_ = flow_y_ * ground_distance_;
+
+                // Apply rotation according to how the camera is mounted
+                rotate_raw_values(config_.orientation, flow_x_, flow_y_, velocity_x_, velocity_y_);
+
+                // Update healthiness
+                last_update_s_ = time_keeper_get_s();
+                if (ground_distance_ < 4.5f)
+                {
+                    is_healthy_ = true;
+                }
+                else
+                {
+                    is_healthy_ = false;
+                }
             }
             break;
 

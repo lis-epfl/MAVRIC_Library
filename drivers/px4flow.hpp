@@ -42,11 +42,8 @@
 #ifndef PX4FLOW_HPP_
 #define PX4FLOW_HPP_
 
-#include "hal/common/serial.hpp"
-#include "communication/mavlink_stream.hpp"
 #include "util/buffer.hpp"
 #include <cstdint>
-
 
 /**
  * \brief   Interface for Optic Flow sensors

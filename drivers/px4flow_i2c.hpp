@@ -49,7 +49,9 @@
 class  PX4Flow_i2c: public PX4Flow
 {
 public:
-
+    /**
+     * \brief Configuration
+     */
     struct conf_t
     {
         uint8_t       i2c_address;
@@ -59,6 +61,9 @@ public:
     static const uint8_t GET_FRAME_COMMAND           = 0x0;      ///< Command to receive 22 bytes i2c frame
     static const uint8_t GET_INTEGRAL_FRAME_COMMAND  = 0x16;     ///< Command to receive 25 bytes i2c integral frame
 
+    /**
+     * \brief Constructor
+     */
     PX4Flow_i2c(I2c& i2c, conf_t config = default_config() );
 
     /**

@@ -47,32 +47,6 @@
 #include <cstdint>
 #include "hal/common/serial.hpp"
 
-const float filter_constant = (1./250.)/((1./100.) + (1./500.) );
-
-/**
- * \brief   Array of 2-D optic flow vectors
- */
-typedef union
-{
-    struct
-    {
-        int16_t x[125];     ///< Horizontal component
-        int16_t y[125];     ///< Vertical component
-    };
-    uint8_t data[500];      ///< Raw access to data
-} flow_px4_data_t;
-
-
-/**
- * \brief   State of encapsulated data transfer
- */
-typedef enum
-{
-    FLOW_NO_HANDSHAKE       = 0,    ///< No handshake received
-    FLOW_HANDSHAKE_DATA     = 1,    ///< Normal data will be received
-    FLOW_HANDSHAKE_METADATA = 2,    ///< Metadata will be received
-} flow_px4_handshake_state_t;
-
 
 /**
  * \brief   Driver for PX4Flow
@@ -81,11 +55,19 @@ class  PX4Flow_serial: public PX4Flow
 {
 public:
     /**
-    * \brief    Init function
-    * \param    uart    Pointer to serial peripheral
-    * \return   Success
-    */
-    PX4Flow_serial(Serial& uart);
+     * \brief Configuration
+     */
+    struct conf_t
+    {
+        orientation_t orientation;
+    };
+
+    /**
+     * \brief Constructor
+     *
+     * \param    uart    Pointer to serial peripheral
+     */
+    PX4Flow_serial(Serial& uart, conf_t config = default_config());
 
     /**
     * \brief    Update function
@@ -93,19 +75,33 @@ public:
     */
     bool update(void);
 
+    /**
+     * \brief   Default configuration
+     *
+     * \return  Configuration structure
+     */
+    static inline conf_t default_config(void);
+
 private:
     Serial&             uart_;               ///< Serial device
     Mavlink_stream      mavlink_stream_;     ///< Mavlink interface using streams
 
-    flow_px4_data_t of_tmp_;        ///< Temporary optic flow vectors
-    flow_px4_data_t of_loc_tmp_;    ///< Temporary location of optic flow vectors
-    uint16_t    packet_count_;  ///< Number of encapsulated data packets expected
-    uint32_t    byte_count_;    ///< Total size of data to receive (in bytes)
-
-    flow_px4_handshake_state_t  handshake_state;    ///< Indicates the current reception state for encapsulated data
+    conf_t              config_;            ///< Configuration
 };
 
 
+/**
+ * \brief   Default configuration
+ *
+ * \return  Configuration structure
+ */
+PX4Flow_serial::conf_t PX4Flow_serial::default_config(void)
+{
+    conf_t conf = {};
 
+    conf.orientation = ORIENT_0_DEG;
+
+    return conf;
+}
 
 #endif /* PX4FLOW_SERIAL_HPP_ */

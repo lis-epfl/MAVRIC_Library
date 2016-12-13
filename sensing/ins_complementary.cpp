@@ -230,9 +230,9 @@ void INS_complementary::correction_from_3d_pos(std::array<float,3> error, std::a
         std::array<float,3> error_lf = {{gain[X] * error[X], gain[Y] * error[Y], gain[Z] * error[Z]}};
         std::array<float,3> error_bf;
         quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), error_lf.data(), error_bf.data());
-        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * 0.5f * SQR(dt_s_);
-        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * 0.5f * SQR(dt_s_);
-        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * 0.5f * SQR(dt_s_);
+        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * dt_s_;
+        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * dt_s_;
+        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * dt_s_;
     }
 }
 
@@ -247,9 +247,9 @@ void INS_complementary::correction_from_z_pos(float error, float gain)
         std::array<float,3> error_lf = {{0.0f, 0.0f, gain * error}};
         std::array<float,3> error_bf;
         quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), error_lf.data(), error_bf.data());
-        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * 0.5f * SQR(dt_s_);
-        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * 0.5f * SQR(dt_s_);
-        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * 0.5f * SQR(dt_s_);
+        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * dt_s_;
+        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * dt_s_;
+        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * dt_s_;
     }
 }
 
@@ -266,9 +266,9 @@ void INS_complementary::correction_from_3d_vel(std::array<float,3> error, std::a
         std::array<float,3> error_lf = {{gain[X] * error[X], gain[Y] * error[Y], gain[Z] * error[Z]}};
         std::array<float,3> error_bf;
         quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), error_lf.data(), error_bf.data());
-        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * dt_s_;
-        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * dt_s_;
-        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * dt_s_;
+        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * SQR(dt_s_);
+        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * SQR(dt_s_);
+        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * SQR(dt_s_);
     }
 }
 
@@ -283,9 +283,9 @@ void INS_complementary::correction_from_z_vel(float error, float gain)
         std::array<float,3> error_lf = {{0.0f, 0.0f, gain * error}};
         std::array<float,3> error_bf;
         quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), error_lf.data(), error_bf.data());
-        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * dt_s_;
-        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * dt_s_;
-        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * dt_s_;
+        acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * SQR(dt_s_);
+        acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * SQR(dt_s_);
+        acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * SQR(dt_s_);
     }
 }
 

@@ -76,15 +76,9 @@ bool PX4Flow_i2c::update(void)
         rotate_raw_values(config_.orientation, flow_x_raw, flow_y_raw, velocity_x_raw, velocity_y_raw);
 
         float new_distance = 0.001f * (float)((int16_t)(rec[21] << 8 | rec[20]));
-
-        if ((flow_quality_ > 50) && (new_distance < 4.5f))
+        if (new_distance < 4.5f)
         {
-            is_healthy_ = true;
             ground_distance_buffer_.put_lossy(new_distance);
-        }
-        else
-        {
-            is_healthy_ = false;
         }
 
         // Get new filtered ground distance from 3 last measures
@@ -94,9 +88,19 @@ bool PX4Flow_i2c::update(void)
         ground_distance_buffer_.get_element(2, gd[2]);
         float new_distance_filtered = 0.2f * ground_distance_ + 0.8f * maths_median_filter_3x(gd[0], gd[1], gd[2]);
 
-        // Kepp values
+        // Keep values
         velocity_z_      = - (new_distance_filtered - ground_distance_) / (time_keeper_get_s() - last_update_s_);
         ground_distance_ = new_distance_filtered;
+
+        // Update healthiness
+        if ((flow_quality_ > 30) && (ground_distance_ < 4.5f))
+        {
+            is_healthy_ = true;
+        }
+        else
+        {
+            is_healthy_ = false;
+        }
     }
     else
     {

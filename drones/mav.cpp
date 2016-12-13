@@ -449,7 +449,7 @@ bool MAV::init_flow(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_OPTICAL_FLOW, 200000, &px4flow_telemetry_send, &flow);
 
     // Task
-    ret &= scheduler.add_task<PX4Flow>(10000, &PX4Flow::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, &PX4Flow::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
 
 
     return ret;
