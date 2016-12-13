@@ -394,6 +394,7 @@ bool MAV::init_ins(void)
     ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_alt,      "POS_K_SONAR_Z"   );
     ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_vel,      "POS_K_SONAR_V_Z" );
     ret &= communication.parameters().add(&ins_complementary.config_.kp_flow_vel,       "POS_K_OF_V_XY"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.flow_gyro_comp_threshold, "POS_OFGYR_THR"   );
     ret &= communication.parameters().add(&ins_complementary.config_.kp_acc_bias,       "POS_K_ACC_BIAS"  );
     ret &= communication.parameters().add(&ins_complementary.config_.use_gps,           "POS_USE_GPS"     );
     ret &= communication.parameters().add(&ins_complementary.config_.use_baro,          "POS_USE_BARO"    );

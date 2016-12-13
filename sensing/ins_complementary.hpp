@@ -96,6 +96,7 @@ public:
         uint32_t use_baro;                      ///< Boolean that indicates if the sensor must be used
 
         float kp_flow_vel;                      ///< Gain to correct the XY velocity estimation from optical flow
+        float flow_gyro_comp_threshold;         ///< Maximum gyroscope value bellow which flow is used
         float timeout_flow_us;                  ///< Time after witch a measure stops being used
         uint32_t use_flow;                      ///< Boolean that indicates if the sensor must be used
 
@@ -325,9 +326,10 @@ INS_complementary::conf_t INS_complementary::default_config()
     conf.use_sonar          = 1;
 
     // Optic flow
-    conf.kp_flow_vel     = 4.0f;
-    conf.timeout_flow_us = 1e6f;
-    conf.use_flow        = 1;
+    conf.kp_flow_vel                = 4.0f;
+    conf.flow_gyro_comp_threshold   = 0.5f;
+    conf.timeout_flow_us            = 1e6f;
+    conf.use_flow                   = 1;
 
     // Accelerometer bias
     conf.kp_acc_bias     = 0.001f;

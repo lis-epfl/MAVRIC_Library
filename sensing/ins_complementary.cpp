@@ -449,7 +449,6 @@ void INS_complementary::correction_from_sonar(void)
 void INS_complementary::correction_from_flow(void)
 {
     std::array<float,3> vel_error = {{0.0f, 0.0f, 0.0f}};
-    std::array<float,3> vel_gain   = {{config_.kp_flow_vel, config_.kp_flow_vel, config_.kp_sonar_vel}};
     float alt_error = 0.0f;
     float alt_gain  = config_.kp_sonar_alt;
 
@@ -474,6 +473,18 @@ void INS_complementary::correction_from_flow(void)
             vel_error[2] = vel_lf[Z] - vel_[Z];
             alt_error    = - flow_.ground_distance() - local_position_[Z];
 
+            // Factor to reduce trust in velocity estimate with decreasing flow quality
+            // float gain_factor = (float)(flow_.flow_quality()) / 255.0f;
+            float gain_factor = 1.0f;
+
+            // Reduce gain factor with increasing gyro rate
+            float rate = vectors_norm(ahrs_.angular_speed().data());
+            gain_factor *= 1.0f - maths_clip(rate / config_.flow_gyro_comp_threshold, 1.0f);
+
+            // Compute gains
+            std::array<float,3> vel_gain   = {{ gain_factor * config_.kp_flow_vel,
+                                                gain_factor * config_.kp_flow_vel,
+                                                config_.kp_sonar_vel}};
             // Apply corrections
             correction_from_3d_vel(vel_error, vel_gain);
             correction_from_z_pos(alt_error, alt_gain);
