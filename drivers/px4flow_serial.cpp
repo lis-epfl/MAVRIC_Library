@@ -81,8 +81,8 @@ bool PX4Flow_serial::update(void)
 
                 // Get optic flow
                 flow_quality_  = of_msg.quality;
-                flow_x_ = (of_msg.integrated_x - of_msg.integrated_xgyro);
-                flow_y_ = (of_msg.integrated_y - of_msg.integrated_ygyro);
+                flow_x_ = (of_msg.integrated_y - of_msg.integrated_ygyro);
+                flow_y_ = - (of_msg.integrated_x - of_msg.integrated_xgyro);
                 if (of_msg.integration_time_us != 0)
                 {
                     flow_x_ /= (1e-6f * (float)(of_msg.integration_time_us));
