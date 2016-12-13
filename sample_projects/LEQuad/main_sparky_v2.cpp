@@ -48,6 +48,7 @@
 #include "drivers/mpu_9250.hpp"
 #include "drivers/sonar_i2cxl.hpp"
 #include "drivers/spektrum_satellite.hpp"
+#include "drivers/px4flow_i2c.hpp"
 
 #include "hal/common/time_keeper.hpp"
 #include "hal/dummy/serial_dummy.hpp"
