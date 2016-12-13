@@ -71,7 +71,7 @@ public:
             Barometer& barometer,
             Gps& gps,
             Sonar& sonar,
-            PX4Flow_i2c& flow,
+            PX4Flow& flow,
             Serial& serial_mavlink,
             Satellite& satellite,
             State_display& state_display,
@@ -84,7 +84,7 @@ public:
             Servo& servo_2,
             Servo& servo_3,
             const conf_t& config = default_config()):
-        LEQuad(imu, barometer, gps, sonar, flow, serial_mavlink, satellite, state_display, file_flash, battery, file1, file2, servo_0, servo_1, servo_2, servo_3, config),
+        LEQuad(imu, barometer, gps_dummy_, sonar, flow, serial_mavlink, satellite, state_display, file_flash, battery, file1, file2, servo_0, servo_1, servo_2, servo_3, config),
         serial_dummy_(),
         gps_dummy_(serial_dummy_),
         ins_no_gps_(state, barometer, sonar, gps_dummy_, flow, ahrs_, config.mav_config.ins_complementary_config)
@@ -148,11 +148,20 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
+    // Board configuration
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
-    // board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
-    Megafly_rev4 board = Megafly_rev4(board_config);
+    board_config.uart3_config.serial_device         = AVR32_SERIAL_3;
+    board_config.uart3_config.mode                  = AVR32_SERIAL_IN_OUT;
+    board_config.uart3_config.options.baudrate      = 115200;
+    board_config.uart3_config.options.charlength    = 8;
+    board_config.uart3_config.options.paritytype    = USART_NO_PARITY;
+    board_config.uart3_config.options.stopbits      = USART_1_STOPBIT;
+    board_config.uart3_config.options.channelmode   = USART_NORMAL_CHMODE;
+    board_config.uart3_config.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
+    board_config.uart3_config.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
 
     // Board initialisation
+    Megafly_rev4 board = Megafly_rev4(board_config);
     init_success &= board.init();
 
     fat_fs_mounting_t fat_fs_mounting;
@@ -172,7 +181,7 @@ int main(void)
                         board.barometer,
                         board.gps_ublox,
                         board.sonar_i2cxl,
-                        board.flow,
+                        board.flow_serial,
                         board.uart0,
                         board.spektrum_satellite,
                         board.state_display_megafly_rev4_,
