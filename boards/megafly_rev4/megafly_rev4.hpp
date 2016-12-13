@@ -140,48 +140,48 @@ public:
     /**
      * Public Members
      */
-    Gpio_avr32                  dsm_receiver_pin;
-    Gpio_avr32                  dsm_power_pin;
-    Serial_avr32                uart0;
-    Serial_avr32                uart1;
-    Serial_avr32                uart3;
-    Serial_usb_avr32            uart_usb;
-    I2c_avr32                   i2c0;
-    I2c_avr32                   i2c1;
-    Hmc5883l                    hmc5883l;
-    Lsm330dlc                   lsm330dlc;
-    Barometer_BMP085            barometer;
-    Spektrum_satellite          spektrum_satellite;
-    Led_avr32                   red_led;
-    Led_avr32                   green_led;
-    State_display_megafly_rev4  state_display_megafly_rev4_;
-    Imu                         imu;
-    File_flash_avr32            file_flash;
-    Gps_ublox                   gps_ublox;
-    Sonar_i2cxl                 sonar_i2cxl;
-    PX4Flow_i2c                 flow_i2c;
-    PX4Flow_serial              flow_serial;
-    analog_monitor_t            analog_monitor;
-    Adc_avr32                   adc_battery;
-    Adc_avr32                   adc_airspeed;
-    Battery                     battery;
-    Airspeed_analog             airspeed_analog;
-    Pwm_avr32                   pwm_0;
-    Pwm_avr32                   pwm_1;
-    Pwm_avr32                   pwm_2;
-    Pwm_avr32                   pwm_3;
-    Pwm_avr32                   pwm_4;
-    Pwm_avr32                   pwm_5;
-    Pwm_avr32                   pwm_6;
-    Pwm_avr32                   pwm_7;
-    Servo                       servo_0;
-    Servo                       servo_1;
-    Servo                       servo_2;
-    Servo                       servo_3;
-    Servo                       servo_4;
-    Servo                       servo_5;
-    Servo                       servo_6;
-    Servo                       servo_7;
+    Gpio_avr32                  dsm_receiver_pin;               ///< GPIO for dsm receiver data
+    Gpio_avr32                  dsm_power_pin;                  ///< GPIO for dsm receiver power
+    Serial_avr32                uart0;                          ///< UART 0
+    Serial_avr32                uart1;                          ///< UART 1
+    Serial_avr32                uart3;                          ///< UART 3
+    Serial_usb_avr32            uart_usb;                       ///< USB serial
+    I2c_avr32                   i2c0;                           ///< I2C0
+    I2c_avr32                   i2c1;                           ///< I2C1
+    Hmc5883l                    hmc5883l;                       ///< Magnetometer HMC5883l
+    Lsm330dlc                   lsm330dlc;                      ///< Accelerometer/Gyroscope LSM330DLC
+    Barometer_BMP085            barometer;                      ///< Barometer BMP085
+    Spektrum_satellite          spektrum_satellite;             ///< DSM receiver
+    Led_avr32                   red_led;                        ///< Red LED
+    Led_avr32                   green_led;                      ///< Green LED
+    State_display_megafly_rev4  state_display_megafly_rev4_;    ///< State indicator using LEDs
+    Imu                         imu;                            ///< IMU
+    File_flash_avr32            file_flash;                     ///< File for persistent storage on flash memory
+    Gps_ublox                   gps_ublox;                      ///< GPS ublox
+    Sonar_i2cxl                 sonar_i2cxl;                    ///< Sonar on i2C
+    PX4Flow_i2c                 flow_i2c;                       ///< PX4Flow on I2C port
+    PX4Flow_serial              flow_serial;                    ///< PX4Flow on serial port
+    analog_monitor_t            analog_monitor;                 ///< Battery voltage monitor
+    Adc_avr32                   adc_battery;                    ///< ADC for battery
+    Adc_avr32                   adc_airspeed;                   ///< ADC for airspeed sensor
+    Battery                     battery;                        ///< Battery
+    Airspeed_analog             airspeed_analog;                ///< Airspeed sensor
+    Pwm_avr32                   pwm_0;                          ///< PWM 0
+    Pwm_avr32                   pwm_1;                          ///< PWM 1
+    Pwm_avr32                   pwm_2;                          ///< PWM 2
+    Pwm_avr32                   pwm_3;                          ///< PWM 3
+    Pwm_avr32                   pwm_4;                          ///< PWM 4
+    Pwm_avr32                   pwm_5;                          ///< PWM 5
+    Pwm_avr32                   pwm_6;                          ///< PWM 6
+    Pwm_avr32                   pwm_7;                          ///< PWM 7
+    Servo                       servo_0;                        ///< Servo 0
+    Servo                       servo_1;                        ///< Servo 1
+    Servo                       servo_2;                        ///< Servo 2
+    Servo                       servo_3;                        ///< Servo 3
+    Servo                       servo_4;                        ///< Servo 4
+    Servo                       servo_5;                        ///< Servo 5
+    Servo                       servo_6;                        ///< Servo 6
+    Servo                       servo_7;                        ///< Servo 7
 
 private:
     byte_stream_t   dbg_stream_;  ///< Temporary member to make print_util work TODO: remove

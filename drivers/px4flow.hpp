@@ -153,6 +153,12 @@ public:
 protected:
     /**
      * \brief   Applies rotation to raw readings based on how the camera is mounted on drone
+     *
+     * \param   orientation     Orientation of camera
+     * \param   flow_x_raw      X flow in camera frmae
+     * \param   flow_y_raw      Y flow in camera frmae
+     * \param   velocity_x_raw  X velocity in camera frmae
+     * \param   velocity_y_raw  Y velocity in camera frmae
      */
     void rotate_raw_values(orientation_t orientation, float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw);
 

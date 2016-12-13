@@ -44,7 +44,7 @@
 PX4Flow::PX4Flow(void):
     flow_x_(0.0f),
     flow_y_(0.0f),
-    flow_quality_(0.0f),
+    flow_quality_(0),
     velocity_x_(0.0f),
     velocity_y_(0.0f),
     velocity_z_(0.0f),
