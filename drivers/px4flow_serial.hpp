@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file flow.hpp
+ * \file px4flow_serial.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -39,10 +39,10 @@
  *
  ******************************************************************************/
 
-#ifndef FLOW_PX4_HPP_
-#define FLOW_PX4_HPP_
+#ifndef PX4FLOW_SERIAL_HPP_
+#define PX4FLOW_SERIAL_HPP_
 
-#include "drivers/flow.hpp"
+#include "drivers/px4flow.hpp"
 #include "communication/mavlink_stream.hpp"
 #include <cstdint>
 #include "hal/common/serial.hpp"
@@ -77,7 +77,7 @@ typedef enum
 /**
  * \brief   Driver for PX4Flow
  */
-class  Flow_px4: public Flow
+class  PX4Flow_serial: public PX4Flow
 {
 public:
     /**
@@ -85,7 +85,7 @@ public:
     * \param    uart    Pointer to serial peripheral
     * \return   Success
     */
-    Flow_px4(Serial& uart);
+    PX4Flow_serial(Serial& uart);
 
     /**
     * \brief    Update function
@@ -108,4 +108,4 @@ private:
 
 
 
-#endif /* FLOW_PX4_HPP_ */
+#endif /* PX4FLOW_SERIAL_HPP_ */

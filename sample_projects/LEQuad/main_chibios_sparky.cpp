@@ -79,7 +79,7 @@ int main(void)
     Gpio_dummy          gpio_dummy;
     Spektrum_satellite  satellite_dummy(serial_dummy, gpio_dummy, gpio_dummy);
     Led_gpio            led_dummy(gpio_dummy);
-    Px4flow_i2c         flow_dummy(i2c_dummy);
+    PX4Flow_i2c         flow_dummy(i2c_dummy);
 
     // -------------------------------------------------------------------------
     // Create simulation

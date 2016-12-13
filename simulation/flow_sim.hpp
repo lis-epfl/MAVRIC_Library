@@ -42,7 +42,7 @@
 #ifndef FLOW_SIM_HPP_
 #define FLOW_SIM_HPP_
 
-#include "drivers/flow.hpp"
+#include "simulation/flow_dense.hpp"
 #include "util/raytracing.hpp"
 #include "util/matrix.hpp"
 #include "simulation/dynamic_model.hpp"
@@ -50,7 +50,7 @@
 /**
  * \brief   Interface for Optic Flow sensors
  */
-class  Flow_sim: public Flow
+class  Flow_sim: public Flow_dense
 {
     static const uint32_t ray_count_ = 90;
 public:

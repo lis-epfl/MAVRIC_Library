@@ -30,47 +30,60 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file flow.hpp
+ * \file px4flow_serial.cpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Interface for Optic Flow sensors
+ * \brief Driver for optic flow sensors
  *
  ******************************************************************************/
 
-#ifndef FLOW_HPP_
-#define FLOW_HPP_
+#include "drivers/px4flow_serial.hpp"
+#include "hal/common/time_keeper.hpp"
+#include "util/print_util.hpp"
 
-#include "drivers/flow.hpp"
-#include "communication/mavlink_stream.hpp"
-#include <cstdint>
-#include "hal/common/serial.hpp"
-
-
-/**
- * \brief   Array of 2-D optic flow vectors
- */
-typedef struct
+extern "C"
 {
-    float x[125];     ///< Horizontal component
-    float y[125];     ///< Vertical component
-} flow_data_t;
+#include "hal/common/mavric_endian.h"
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+PX4Flow_serial::PX4Flow_serial(Serial& uart):
+    PX4Flow(),
+    uart_(uart),
+    mavlink_stream_(uart_, Mavlink_stream::default_config())
+{}
 
 
-/**
- * \brief   Interface for Optic Flow sensors
- */
-class  Flow
+bool PX4Flow_serial::update(void)
 {
-public:
+    Mavlink_stream::msg_received_t rec;
 
-    virtual bool update(void) = 0;
+    // Receive incoming bytes
+    while (mavlink_stream_.receive(&rec))
+    {
+        // Get pointer to new message
+        mavlink_message_t* msg = &rec.msg;
 
-    flow_data_t of;               ///< Optic flow vectors
-    uint8_t     of_count;         ///< Number of optic flow vectors
-    flow_data_t of_loc;           ///< Location of optic flow vectors
-    uint32_t    last_update_us;   ///< Last update time in microseconds
-};
+        switch (msg->msgid)
+        {
+            case MAVLINK_MSG_ID_OPTICAL_FLOW_RAD:
+            {
+                mavlink_optical_flow_rad_t optical_flow_msg;
+                // Decode message
+                mavlink_msg_optical_flow_rad_decode(msg, &optical_flow_msg);
+            }
+            break;
 
-#endif /* FLOW_HPP_ */
+
+            default:
+            break;
+        }
+    }
+
+    return true;
+}

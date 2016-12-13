@@ -101,7 +101,7 @@ typedef struct
     i2c_avr32_conf_t        i2c1_config;
     imu_conf_t              imu_config;
     servo_conf_t            servo_config[8];
-    Px4flow_i2c::conf_t     px4flow_config;
+    PX4Flow_i2c::conf_t     px4flow_config;
 } megafly_rev4_conf_t;
 
 
@@ -157,7 +157,7 @@ public:
     File_flash_avr32            file_flash;
     Gps_ublox                   gps_ublox;
     Sonar_i2cxl                 sonar_i2cxl;
-    Px4flow_i2c                 flow;
+    PX4Flow_i2c                 flow;
     analog_monitor_t            analog_monitor;
     Adc_avr32                   adc_battery;
     Adc_avr32                   adc_airspeed;
@@ -378,7 +378,7 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
     // -------------------------------------------------------------------------
     // Px4Flow config
     // -------------------------------------------------------------------------
-    conf.px4flow_config = Px4flow_i2c::default_config();
+    conf.px4flow_config = PX4Flow_i2c::default_config();
 
     return conf;
 }

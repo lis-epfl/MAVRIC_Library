@@ -44,7 +44,7 @@
 #define PX4FLOW_TELEMETRY_HPP_
 
 
-#include "drivers/px4flow_i2c.hpp"
+#include "drivers/px4flow.hpp"
 #include "communication/mavlink_stream.hpp"
 
 /**
@@ -54,6 +54,6 @@
  * \param   mavlink_stream  The pointer to the MAVLink stream structure
  * \param   msg             The pointer to the MAVLink message
  */
-void px4flow_telemetry_send(const Px4flow_i2c* flow, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
+void px4flow_telemetry_send(const PX4Flow* flow, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* PX4FLOW_TELEMETRY_HPP_ */

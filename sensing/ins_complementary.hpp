@@ -50,7 +50,7 @@
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
-#include "drivers/px4flow_i2c.hpp"
+#include "drivers/px4flow.hpp"
 
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
@@ -125,7 +125,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const AHRS& ahrs, const conf_t config = default_config());
+    INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const PX4Flow& flow, const AHRS& ahrs, const conf_t config = default_config());
 
 
     /**
@@ -186,12 +186,12 @@ public:
     conf_t config_;                          ///< Configuration containing gains
 
 private:
-    const AHRS& ahrs_;                     ///< Reference to the attitude estimation structure
+    const AHRS& ahrs_;                       ///< Reference to the attitude estimation structure
     State& state_;                           ///< Reference to the state structure
     const Gps& gps_;                         ///< Reference to the GPS structure
     const Barometer& barometer_;             ///< Reference to the barometer structure
     const Sonar& sonar_;                     ///< Reference to the sonar structure
-    const Px4flow_i2c& flow_;                ///< Reference to the flow structure
+    const PX4Flow& flow_;                    ///< Reference to the flow structure
 
     float dt_s_;                            ///< Time interval between updates
     float last_update_s_;                   ///< Last update time in seconds

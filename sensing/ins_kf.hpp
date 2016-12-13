@@ -50,7 +50,7 @@
 #include "drivers/gps_mocap.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
-#include "drivers/px4flow_i2c.hpp"
+#include "drivers/px4flow.hpp"
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
 
@@ -163,7 +163,7 @@ public:
             const Gps_mocap& gps_mocap,
             const Barometer& barometer,
             const Sonar& sonar,
-            const Px4flow_i2c& flow,
+            const PX4Flow& flow,
             const AHRS& ahrs,
             const conf_t config = default_config() );
 
@@ -240,8 +240,8 @@ private:
     const Gps_mocap&    gps_mocap_;         ///< Gps from motion capture system (input)
     const Barometer&    barometer_;         ///< Barometer (input)
     const Sonar&        sonar_;             ///< Sonar, must be downward facing (input)
-    const Px4flow_i2c&  flow_;              ///< Optical flow sensor (input)
-    const AHRS&       ahrs_;              ///< Attitude and acceleration (input)
+    const PX4Flow&      flow_;              ///< Optical flow sensor (input)
+    const AHRS&         ahrs_;              ///< Attitude and acceleration (input)
 
     std::array<float,3> pos_;
     std::array<float,3> vel_;

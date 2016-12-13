@@ -71,7 +71,7 @@ public:
             Barometer& barometer,
             Gps& gps,
             Sonar& sonar,
-            Px4flow_i2c& flow,
+            PX4Flow_i2c& flow,
             Serial& serial_mavlink,
             Satellite& satellite,
             State_display& state_display,

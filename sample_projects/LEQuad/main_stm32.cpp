@@ -67,7 +67,7 @@ int main(int argc, char** argv)
     File_dummy dummy_file_log;
     File_dummy dummy_file_stat;
     I2c_dummy  i2c_dummy;
-    Px4flow_i2c flow_dummy(i2c_dummy);
+    PX4Flow_i2c flow_dummy(i2c_dummy);
 
     // -------------------------------------------------------------------------
     // Create MAV

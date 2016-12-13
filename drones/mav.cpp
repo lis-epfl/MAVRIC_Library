@@ -62,20 +62,20 @@
 #include "util/print_util.hpp"
 
 
-MAV::MAV(Imu& imu,
-               Barometer& barometer,
-               Gps& gps,
-               Sonar& sonar,
-               Px4flow_i2c& flow,
-               Serial& serial_mavlink,
-               Satellite& satellite,
-               State_display& state_display,
-               File& file_flash,
-               Battery& battery,
-               File& file1,
-               File& file2,
-               Flight_controller& flight_controller,
-               const conf_t& config):
+MAV::MAV(  Imu& imu,
+           Barometer& barometer,
+           Gps& gps,
+           Sonar& sonar,
+           PX4Flow& flow,
+           Serial& serial_mavlink,
+           Satellite& satellite,
+           State_display& state_display,
+           File& file_flash,
+           Battery& battery,
+           File& file1,
+           File& file2,
+           Flight_controller& flight_controller,
+           const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -449,7 +449,7 @@ bool MAV::init_flow(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_OPTICAL_FLOW, 200000, &px4flow_telemetry_send, &flow);
 
     // Task
-    ret &= scheduler.add_task(10000, &Px4flow_i2c::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task<PX4Flow>(10000, &PX4Flow::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
 
 
     return ret;

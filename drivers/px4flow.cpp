@@ -30,71 +30,108 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file px4flow_i2c.hpp
+ * \file px4flow.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *
- * \brief   Driver for PX4Flow optical flow smart camera using I2C
+ * \brief   Interface for Optic Flow sensors
  *
  ******************************************************************************/
 
-#ifndef PX4FLOW_I2C_HPP_
-#define PX4FLOW_I2C_HPP_
-
-#include <cstdint>
 #include "drivers/px4flow.hpp"
-#include "hal/common/i2c.hpp"
 
-class  PX4Flow_i2c: public PX4Flow
+PX4Flow::PX4Flow(void):
+    flow_x_(0.0f),
+    flow_y_(0.0f),
+    flow_quality_(0.0f),
+    velocity_x_(0.0f),
+    velocity_y_(0.0f),
+    velocity_z_(0.0f),
+    ground_distance_(0.0f),
+    last_update_s_(0.0f),
+    is_healthy_(false)
 {
-public:
-
-    struct conf_t
-    {
-        uint8_t       i2c_address;
-        orientation_t orientation;
-    };
-
-    static const uint8_t GET_FRAME_COMMAND           = 0x0;      ///< Command to receive 22 bytes i2c frame
-    static const uint8_t GET_INTEGRAL_FRAME_COMMAND  = 0x16;     ///< Command to receive 25 bytes i2c integral frame
-
-    PX4Flow_i2c(I2c& i2c, conf_t config = default_config() );
-
-    /**
-     * \brief   Main update function
-     *
-     * \return  success
-     */
-    bool update(void);
-
-
-    /**
-     * \brief   Default configuration
-     *
-     * \return  Configuration structure
-     */
-    static inline conf_t default_config(void);
-
-protected:
-    I2c&                i2c_;                       ///< reference to I2C
-    conf_t              config_;                    ///< Configuration
-};
-
-
-/**
- * \brief   Default configuration
- *
- * \return  Configuration structure
- */
-PX4Flow_i2c::conf_t PX4Flow_i2c::default_config(void)
-{
-    conf_t conf = {};
-
-    conf.i2c_address = 0x42;
-    conf.orientation = ORIENT_0_DEG;
-
-    return conf;
+    // fill buffer
+    while(ground_distance_buffer_.put(0.0f))
+    {;}
 }
 
-#endif /* PX4FLOW_I2C_HPP_ */
+bool PX4Flow::healthy(void) const
+{
+    return is_healthy_;
+}
+
+float PX4Flow::flow_x(void) const
+{
+    return flow_x_;
+}
+
+float PX4Flow::flow_y(void) const
+{
+    return flow_y_;
+}
+
+uint8_t PX4Flow::flow_quality(void) const
+{
+    return flow_quality_;
+}
+
+float PX4Flow::velocity_x(void) const
+{
+    return velocity_x_;
+}
+
+float PX4Flow::velocity_y(void) const
+{
+    return velocity_y_;
+}
+
+float PX4Flow::velocity_z(void) const
+{
+    return velocity_z_;
+}
+
+float PX4Flow::ground_distance(void) const
+{
+    return ground_distance_;
+}
+
+float PX4Flow::last_update_s(void) const
+{
+    return last_update_s_;
+}
+
+void PX4Flow::rotate_raw_values(orientation_t orientation, float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw)
+{
+    switch (orientation)
+    {
+        case ORIENT_0_DEG:
+            flow_x_     = flow_x_raw;
+            flow_y_     = flow_y_raw;
+            velocity_x_ = velocity_x_raw;
+            velocity_y_ = velocity_y_raw;
+        break;
+
+        case ORIENT_90_DEG:
+            flow_x_     = - flow_y_raw;
+            flow_y_     = flow_x_raw;
+            velocity_x_ = - velocity_y_raw;
+            velocity_y_ = velocity_x_raw;
+        break;
+
+        case ORIENT_180_DEG:
+            flow_x_     = - flow_x_raw;
+            flow_y_     = - flow_y_raw;
+            velocity_x_ = - velocity_x_raw;
+            velocity_y_ = - velocity_y_raw;
+        break;
+
+        case ORIENT_270_DEG:
+            flow_x_     = flow_y_raw;
+            flow_y_     = - flow_x_raw;
+            velocity_x_ = velocity_y_raw;
+            velocity_y_ = - velocity_x_raw;
+        break;
+    }
+}

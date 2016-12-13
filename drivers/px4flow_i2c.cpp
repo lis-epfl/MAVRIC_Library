@@ -43,30 +43,14 @@
 #include "hal/common/time_keeper.hpp"
 #include "util/maths.h"
 
-Px4flow_i2c::Px4flow_i2c(I2c& i2c, conf_t config):
-  flow_x_(0.0f),
-  flow_y_(0.0f),
-  flow_quality_(0),
-  velocity_x_(0.0f),
-  velocity_y_(0.0f),
-  velocity_z_(0.0f),
-  ground_distance_(0.0f),
-  last_update_s_(0.0f),
-  is_healthy_(false),
-  i2c_(i2c),
-  config_(config)
-{
-    // fill buffer
-    while(ground_distance_buffer_.put(0.0f))
-    {;}
-}
+PX4Flow_i2c::PX4Flow_i2c(I2c& i2c, conf_t config):
+    PX4Flow(),
+    i2c_(i2c),
+    config_(config)
+{}
 
-bool Px4flow_i2c::healthy(void) const
-{
-    return is_healthy_;
-}
 
-bool Px4flow_i2c::update(void)
+bool PX4Flow_i2c::update(void)
 {
     bool res = true;
 
@@ -89,7 +73,7 @@ bool Px4flow_i2c::update(void)
         flow_quality_ = (uint8_t)((int16_t)(rec[11] << 8 | rec[10]));
 
         // Apply rotation according to how the camera is mounted
-        rotate_raw_values(flow_x_raw, flow_y_raw, velocity_x_raw, velocity_y_raw);
+        rotate_raw_values(config_.orientation, flow_x_raw, flow_y_raw, velocity_x_raw, velocity_y_raw);
 
         float new_distance = 0.001f * (float)((int16_t)(rec[21] << 8 | rec[20]));
 
@@ -122,78 +106,4 @@ bool Px4flow_i2c::update(void)
     last_update_s_ = time_keeper_get_s();
 
     return res;
-}
-
-float Px4flow_i2c::flow_x(void) const
-{
-    return flow_x_;
-}
-
-float Px4flow_i2c::flow_y(void) const
-{
-    return flow_y_;
-}
-
-uint8_t Px4flow_i2c::flow_quality(void) const
-{
-    return flow_quality_;
-}
-
-float Px4flow_i2c::velocity_x(void) const
-{
-    return velocity_x_;
-}
-
-float Px4flow_i2c::velocity_y(void) const
-{
-    return velocity_y_;
-}
-
-float Px4flow_i2c::velocity_z(void) const
-{
-    return velocity_z_;
-}
-
-float Px4flow_i2c::ground_distance(void) const
-{
-    return ground_distance_;
-}
-
-float Px4flow_i2c::last_update_s(void) const
-{
-    return last_update_s_;
-}
-
-void Px4flow_i2c::rotate_raw_values(float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw)
-{
-    switch (config_.orientation)
-    {
-        case ORIENT_0_DEG:
-            flow_x_     = flow_x_raw;
-            flow_y_     = flow_y_raw;
-            velocity_x_ = velocity_x_raw;
-            velocity_y_ = velocity_y_raw;
-        break;
-
-        case ORIENT_90_DEG:
-            flow_x_     = - flow_y_raw;
-            flow_y_     = flow_x_raw;
-            velocity_x_ = - velocity_y_raw;
-            velocity_y_ = velocity_x_raw;
-        break;
-
-        case ORIENT_180_DEG:
-            flow_x_     = - flow_x_raw;
-            flow_y_     = - flow_y_raw;
-            velocity_x_ = - velocity_x_raw;
-            velocity_y_ = - velocity_y_raw;
-        break;
-
-        case ORIENT_270_DEG:
-            flow_x_     = flow_y_raw;
-            flow_y_     = - flow_x_raw;
-            velocity_x_ = velocity_y_raw;
-            velocity_y_ = - velocity_x_raw;
-        break;
-    }
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009-2016, MAV'RIC Development Team
+ * Copyright (c) 2009-2015, MAV'RIC Development Team
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,31 +30,46 @@
  ******************************************************************************/
 
 /*******************************************************************************
-* \file px4flow_telemetry.cpp
-*
-* \author MAV'RIC Team
-* \author Julien Lecoeur
-*
-* \brief Periodic telemetry for optic flow
+ * \file flow_dense.hpp
+ *
+ * \author MAV'RIC Team
+ * \author Julien Lecoeur
+ *
+ * \brief   Interface for Optic Flow sensors
  *
  ******************************************************************************/
 
+#ifndef FLOW_DENSE_HPP_
+#define FLOW_DENSE_HPP_
 
-#include "drivers/px4flow_telemetry.hpp"
-#include "hal/common/time_keeper.hpp"
+#include "communication/mavlink_stream.hpp"
+#include <cstdint>
+#include "hal/common/serial.hpp"
 
 
-void px4flow_telemetry_send(const PX4Flow* flow, const Mavlink_stream* mavlink_stream, mavlink_message_t* msg)
+/**
+ * \brief   Array of 2-D optic flow vectors
+ */
+typedef struct
 {
-    mavlink_msg_optical_flow_pack(   mavlink_stream->sysid(),
-                                     mavlink_stream->compid(),
-                                     msg,
-                                     time_keeper_get_us(),
-                                     flow->healthy(),
-                                     100 * flow->flow_x(),
-                                     100 * flow->flow_y(),
-                                     flow->velocity_x(),
-                                     flow->velocity_y(),
-                                     flow->flow_quality(),
-                                     flow->ground_distance());
-}
+    float x[125];     ///< Horizontal component
+    float y[125];     ///< Vertical component
+} flow_data_t;
+
+
+/**
+ * \brief   Interface for Optic Flow sensors
+ */
+class  Flow_dense
+{
+public:
+
+    virtual bool update(void) = 0;
+
+    flow_data_t of;               ///< Optic flow vectors
+    uint8_t     of_count;         ///< Number of optic flow vectors
+    flow_data_t of_loc;           ///< Location of optic flow vectors
+    uint32_t    last_update_us;   ///< Last update time in microseconds
+};
+
+#endif /* FLOW_DENSE_HPP_ */

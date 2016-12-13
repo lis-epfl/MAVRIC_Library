@@ -54,7 +54,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-INS_complementary::INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const AHRS& ahrs, const conf_t config) :
+INS_complementary::INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const PX4Flow& flow, const AHRS& ahrs, const conf_t config) :
     local_position_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     vel_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     acc_bias_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
