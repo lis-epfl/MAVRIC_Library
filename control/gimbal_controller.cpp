@@ -127,7 +127,7 @@ bool Gimbal_controller::update(Gimbal_controller *gimbal_controller)
 	att_mimick_plane.rpy[2] = 0.0f;
 
 	//apply the angle correction only if the quad as a given forward velocity
-	if(semilocal_vel[0] < 1.0f) //m/s
+	if(semilocal_vel[0] < 2.0f) //m/s
 		att_mimick_plane.rpy[1] = 0.0f;
 
 	/*print_util_dbg_print("semilocal_vel\r\n");

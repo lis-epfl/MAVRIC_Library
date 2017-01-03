@@ -231,6 +231,7 @@ bool LEQuad_symbiotic::main_task(void)
 				}
 				else if(outside_fence)
 				{
+					// parameters taken from onboard parameters
 					//center point (0,0,-10.0)
 					//z_min = -5.0f;//[m]
 					//z_max = -20.0f;//[m]

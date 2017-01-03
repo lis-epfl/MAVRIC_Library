@@ -172,7 +172,7 @@ bool LEQuad::init_state(void)
 
     // DOWN telemetry
     ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_HEARTBEAT,  1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_heartbeat, &state);
-    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SYS_STATUS, 1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_status,    &state);
+    ret &= mavlink_communication.add_msg_send(MAVLINK_MSG_ID_SYS_STATUS, 1000000, (Mavlink_communication::send_msg_function_t)&state_telemetry_send_status,    &state); //battery voltage
 
     // Data logging
     ret &= data_logging_stat.add_field((uint32_t*)&state.mav_state_,   "mav_state");
@@ -347,6 +347,9 @@ bool LEQuad::init_position_estimation(void)
     ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[0], "local_x", 3);
     ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[1], "local_y", 3);
     ret &= data_logging_continuous.add_field(&position_estimation.local_position.pos[2], "local_z", 3);
+    ret &= data_logging_continuous.add_field(&position_estimation.vel[0], "vel_x", 3);
+    ret &= data_logging_continuous.add_field(&position_estimation.vel[1], "vel_y", 3);
+    ret &= data_logging_continuous.add_field(&position_estimation.vel[2], "vel_z", 3);
     ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.latitude,  "origin_lat", 7);
     ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.longitude, "origin_lon", 7);
     ret &= data_logging_stat.add_field(&position_estimation.local_position.origin.altitude,  "origin_alt", 3);
