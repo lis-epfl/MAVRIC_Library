@@ -62,6 +62,85 @@ extern "C"
 #include "libs/asf/avr32/services/delay/delay.h"
 }
 
+#include "hal/dummy/serial_dummy.hpp"
+#include "sensing/ins_telemetry.hpp"
+class My_LEQuad: public LEQuad
+{
+public:
+    My_LEQuad( Imu& imu,
+            Barometer& barometer,
+            Gps& gps,
+            Sonar& sonar,
+            PX4Flow& flow,
+            Serial& serial_mavlink,
+            Satellite& satellite,
+            State_display& state_display,
+            File& file_flash,
+            Battery& battery,
+            File& file1,
+            File& file2,
+            Servo& servo_0,
+            Servo& servo_1,
+            Servo& servo_2,
+            Servo& servo_3,
+            const conf_t& config = default_config()):
+        LEQuad(imu, barometer, gps_dummy_, sonar, flow, serial_mavlink, satellite, state_display, file_flash, battery, file1, file2, servo_0, servo_1, servo_2, servo_3, config),
+        serial_dummy_(),
+        gps_dummy_(serial_dummy_),
+        ins_no_gps_(state, barometer, sonar, gps_dummy_, flow, ahrs_, config.mav_config.ins_complementary_config)
+    {};
+
+    bool init(void)
+    {
+        bool ret = LEQuad::init();
+        ret &= init_ins_no_gps();
+        return ret;
+    }
+
+    bool main_task(void)
+    {
+        bool ret = LEQuad::main_task();
+        ret &= ins_no_gps_.update();
+        return ret;
+    }
+
+    bool init_ins_no_gps(void)
+    {
+        bool ret = true;
+        // DOWN telemetry
+        ret &= communication.telemetry().add<INS>(MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV, 250000, &ins_telemetry_send_local_position_ned_cov,  &ins_no_gps_);
+
+        // Parameters
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_XY_pos,     "POS2_K_GPS_XY"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_Z_pos,      "POS2_K_GPS_Z"     );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_XY_vel,     "POS2_K_GPS_V_XY"  );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_Z_vel,      "POS2_K_GPS_V_Z"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_XY_pos_rtk, "POS2_K_RTK_XY"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_Z_pos_rtk,  "POS2_K_RTK_Z"     );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_XY_vel_rtk, "POS2_K_RTK_V_XY"  );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_gps_Z_vel_rtk,  "POS2_K_RTK_V_Z"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_baro_alt,       "POS2_K_BARO_Z"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_baro_vel,       "POS2_K_BARO_V_Z"  );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_sonar_alt,      "POS2_K_SONAR_Z"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_sonar_vel,      "POS2_K_SONAR_VZ" );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_flow_vel,       "POS2_K_OF_V_XY"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.flow_gyro_comp_threshold, "POS2_OFGYR_THR"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.kp_acc_bias,       "POS2_K_ACC_BIAS"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_gps,           "POS2_USE_GPS"     );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_baro,          "POS2_USE_BARO"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_sonar,         "POS2_USE_SONAR"   );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_flow,          "POS2_USE_FLOW"    );
+        ret &= communication.parameters().add(&ins_no_gps_.config_.use_acc_bias,      "POS2_USE_ACBIAS");
+
+        return ret;
+    }
+
+protected:
+    Serial_dummy        serial_dummy_;
+    Gps_ublox           gps_dummy_;
+    INS_complementary   ins_no_gps_;
+};
+
 
 int main(void)
 {
@@ -70,11 +149,20 @@ int main(void)
     // -------------------------------------------------------------------------
     // Create board
     // -------------------------------------------------------------------------
+    // Board configuration
     megafly_rev4_conf_t board_config    = megafly_rev4_default_config();
-    // board_config.imu_config             = imu_config();                         // Load custom imu config (cf conf_imu.h)
-    Megafly_rev4 board = Megafly_rev4(board_config);
+    board_config.uart3_config.serial_device         = AVR32_SERIAL_3;
+    board_config.uart3_config.mode                  = AVR32_SERIAL_IN_OUT;
+    board_config.uart3_config.options.baudrate      = 115200;
+    board_config.uart3_config.options.charlength    = 8;
+    board_config.uart3_config.options.paritytype    = USART_NO_PARITY;
+    board_config.uart3_config.options.stopbits      = USART_1_STOPBIT;
+    board_config.uart3_config.options.channelmode   = USART_NORMAL_CHMODE;
+    board_config.uart3_config.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
+    board_config.uart3_config.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
 
     // Board initialisation
+    Megafly_rev4 board = Megafly_rev4(board_config);
     init_success &= board.init();
 
     fat_fs_mounting_t fat_fs_mounting;
@@ -88,13 +176,13 @@ int main(void)
     // Create MAV
     // -------------------------------------------------------------------------
     // Create MAV using real sensors
-    // LEQuad::conf_t mav_config = LEQuad::default_config(MAVLINK_SYS_ID);
     LEQuad::conf_t mav_config = LEQuad::dronedome_config(MAVLINK_SYS_ID);
-    LEQuad mav = LEQuad(board.imu,
+    // LEQuad mav = LEQuad(board.imu,
+    My_LEQuad mav = My_LEQuad(board.imu,
                         board.barometer,
                         board.gps_ublox,
                         board.sonar_i2cxl,
-                        board.flow,
+                        board.flow_serial,
                         board.uart0,
                         board.spektrum_satellite,
                         board.state_display_megafly_rev4_,

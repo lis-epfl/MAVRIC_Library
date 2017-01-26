@@ -43,21 +43,15 @@
 #define PX4FLOW_I2C_HPP_
 
 #include <cstdint>
+#include "drivers/px4flow.hpp"
 #include "hal/common/i2c.hpp"
-#include "util/buffer.hpp"
 
-class  Px4flow_i2c
+class  PX4Flow_i2c: public PX4Flow
 {
 public:
-    
-    enum orientation_t
-    {
-        ORIENT_0_DEG   = 0,
-        ORIENT_90_DEG  = 1,
-        ORIENT_180_DEG = 2,
-        ORIENT_270_DEG = 3,
-    };
-
+    /**
+     * \brief Configuration
+     */
     struct conf_t
     {
         uint8_t       i2c_address;
@@ -67,14 +61,10 @@ public:
     static const uint8_t GET_FRAME_COMMAND           = 0x0;      ///< Command to receive 22 bytes i2c frame
     static const uint8_t GET_INTEGRAL_FRAME_COMMAND  = 0x16;     ///< Command to receive 25 bytes i2c integral frame
 
-    Px4flow_i2c(I2c& i2c, conf_t config = default_config() );
-
     /**
-     * \brief   Indicates whether the measurements can be trusted
-     *
-     * \return  Value
+     * \brief Constructor
      */
-    bool healthy(void) const;
+    PX4Flow_i2c(I2c& i2c, conf_t config = default_config() );
 
     /**
      * \brief   Main update function
@@ -83,17 +73,6 @@ public:
      */
     bool update(void);
 
-    /**
-     * \brief   Glue function used for scheduler
-     *
-     * \param   flow  Pointer to flow object
-
-     * \return  success
-     */
-    static bool update_task(Px4flow_i2c* flow)
-    {
-        return flow->update();
-    }
 
     /**
      * \brief   Default configuration
@@ -102,80 +81,7 @@ public:
      */
     static inline conf_t default_config(void);
 
-    /**
-     * \brief   Get flow in x direction
-     *
-     * \return  Value
-     */
-    float flow_x(void) const;
-
-    /**
-     * \brief   Get flow in y direction
-     *
-     * \return  Value
-     */
-    float flow_y(void) const;
-
-    /**
-     * \brief   Get flow quality
-     *
-     * \return  Value
-     */
-    uint8_t flow_quality(void) const;
-
-    /**
-     * \brief   Get velocity in x direction
-     *
-     * \return  Value
-     */
-    float velocity_x(void) const;
-
-    /**
-     * \brief   Get velocity in y direction
-     *
-     * \return  Value
-     */
-    float velocity_y(void) const;
-
-    /**
-     * \brief   Get velocity in z direction
-     *
-     * \return  Value
-     */
-    float velocity_z(void) const;
-
-    /**
-     * \brief   Get ground distance
-     *
-     * \return  Value
-     */
-    float ground_distance(void) const;
-
-    /**
-     * \brief   Get last update time in seconds
-     *
-     * \return  Value
-     */
-    float last_update_s(void) const;
-
 protected:
-    /**
-     * \brief   Applies rotation to raw readings based on how the camera is mounted on drone
-     */
-    void rotate_raw_values(float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw);
-
-protected:
-    float               flow_x_;                    ///< Optic flow in x direction (rad/s)
-    float               flow_y_;                    ///< Optic flow in y direction (rad/s)
-    uint8_t             flow_quality_;              ///< Quality of optic flow measurement (between 0 and 255)
-    float               velocity_x_;                ///< Velocity in x direction (m/s)
-    float               velocity_y_;                ///< Velocity in y direction (m/s)
-    float               velocity_z_;                ///< Velocity in z direction (m/s)
-    float               ground_distance_;           ///< Ground distance (m)
-    Buffer_T<3,float>   ground_distance_buffer_;    ///< Buffer used to filter sonar measurement
-    float               last_update_s_;             ///< Last update time in seconds
-    bool                is_healthy_;                ///< Indicates if sensor data can be trusted
-
     I2c&                i2c_;                       ///< reference to I2C
     conf_t              config_;                    ///< Configuration
 };
@@ -186,7 +92,7 @@ protected:
  *
  * \return  Configuration structure
  */
-Px4flow_i2c::conf_t Px4flow_i2c::default_config(void)
+PX4Flow_i2c::conf_t PX4Flow_i2c::default_config(void)
 {
     conf_t conf = {};
 

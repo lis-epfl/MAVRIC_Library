@@ -67,6 +67,7 @@
 #include "drivers/sonar.hpp"
 #include "drivers/servos_telemetry.hpp"
 #include "drivers/state_display.hpp"
+#include "drivers/px4flow.hpp"
 
 #include "hal/common/file.hpp"
 #include "hal/common/led.hpp"
@@ -174,7 +175,7 @@ public:
             Barometer& barometer,
             Gps& gps,
             Sonar& sonar,
-            Px4flow_i2c& flow,
+            PX4Flow& flow,
             Serial& serial_mavlink,
             Satellite& satellite,
             State_display& state_display,
@@ -248,7 +249,7 @@ protected:
     Barometer&      barometer;          ///< Reference to barometer
     Gps&            gps;                ///< Reference to GPS
     Sonar&          sonar;              ///< Reference to sonar
-    Px4flow_i2c&    flow;               ///< Optic flow sensor
+    PX4Flow&        flow;               ///< Optic flow sensor
     Serial&         serial_mavlink;     ///< Reference to telemetry serial
     Satellite&      satellite;          ///< Reference to remote control satellite
     State_display&  state_display_;     ///< Reference to the state display

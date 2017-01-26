@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file flow.hpp
+ * \file px4flow.hpp
  *
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -39,38 +39,99 @@
  *
  ******************************************************************************/
 
-#ifndef FLOW_HPP_
-#define FLOW_HPP_
+#include "drivers/px4flow.hpp"
 
-#include "drivers/flow.hpp"
-#include "communication/mavlink_stream.hpp"
-#include <cstdint>
-#include "hal/common/serial.hpp"
-
-
-/**
- * \brief   Array of 2-D optic flow vectors
- */
-typedef struct
+PX4Flow::PX4Flow(void):
+    flow_x_(0.0f),
+    flow_y_(0.0f),
+    flow_quality_(0),
+    velocity_x_(0.0f),
+    velocity_y_(0.0f),
+    velocity_z_(0.0f),
+    ground_distance_(0.0f),
+    last_update_s_(0.0f),
+    is_healthy_(false)
 {
-    float x[125];     ///< Horizontal component
-    float y[125];     ///< Vertical component
-} flow_data_t;
+    // fill buffer
+    while(ground_distance_buffer_.put(0.0f))
+    {;}
+}
 
-
-/**
- * \brief   Interface for Optic Flow sensors
- */
-class  Flow
+bool PX4Flow::healthy(void) const
 {
-public:
+    return is_healthy_;
+}
 
-    virtual bool update(void) = 0;
+float PX4Flow::flow_x(void) const
+{
+    return flow_x_;
+}
 
-    flow_data_t of;               ///< Optic flow vectors
-    uint8_t     of_count;         ///< Number of optic flow vectors
-    flow_data_t of_loc;           ///< Location of optic flow vectors
-    uint32_t    last_update_us;   ///< Last update time in microseconds
-};
+float PX4Flow::flow_y(void) const
+{
+    return flow_y_;
+}
 
-#endif /* FLOW_HPP_ */
+uint8_t PX4Flow::flow_quality(void) const
+{
+    return flow_quality_;
+}
+
+float PX4Flow::velocity_x(void) const
+{
+    return velocity_x_;
+}
+
+float PX4Flow::velocity_y(void) const
+{
+    return velocity_y_;
+}
+
+float PX4Flow::velocity_z(void) const
+{
+    return velocity_z_;
+}
+
+float PX4Flow::ground_distance(void) const
+{
+    return ground_distance_;
+}
+
+float PX4Flow::last_update_s(void) const
+{
+    return last_update_s_;
+}
+
+void PX4Flow::rotate_raw_values(orientation_t orientation, float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw)
+{
+    switch (orientation)
+    {
+        case ORIENT_0_DEG:
+            flow_x_     = flow_x_raw;
+            flow_y_     = flow_y_raw;
+            velocity_x_ = velocity_x_raw;
+            velocity_y_ = velocity_y_raw;
+        break;
+
+        case ORIENT_90_DEG:
+            flow_x_     = - flow_y_raw;
+            flow_y_     = flow_x_raw;
+            velocity_x_ = - velocity_y_raw;
+            velocity_y_ = velocity_x_raw;
+        break;
+
+        case ORIENT_180_DEG:
+            flow_x_     = - flow_x_raw;
+            flow_y_     = - flow_y_raw;
+            velocity_x_ = - velocity_x_raw;
+            velocity_y_ = - velocity_y_raw;
+        break;
+
+        case ORIENT_270_DEG:
+            flow_x_     = flow_y_raw;
+            flow_y_     = - flow_x_raw;
+            velocity_x_ = velocity_y_raw;
+            velocity_y_ = - velocity_x_raw;
+        break;
+    }
+}

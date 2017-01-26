@@ -62,20 +62,20 @@
 #include "util/print_util.hpp"
 
 
-MAV::MAV(Imu& imu,
-               Barometer& barometer,
-               Gps& gps,
-               Sonar& sonar,
-               Px4flow_i2c& flow,
-               Serial& serial_mavlink,
-               Satellite& satellite,
-               State_display& state_display,
-               File& file_flash,
-               Battery& battery,
-               File& file1,
-               File& file2,
-               Flight_controller& flight_controller,
-               const conf_t& config):
+MAV::MAV(  Imu& imu,
+           Barometer& barometer,
+           Gps& gps,
+           Sonar& sonar,
+           PX4Flow& flow,
+           Serial& serial_mavlink,
+           Satellite& satellite,
+           State_display& state_display,
+           File& file_flash,
+           Battery& battery,
+           File& file1,
+           File& file2,
+           Flight_controller& flight_controller,
+           const conf_t& config):
     imu(imu),
     barometer(barometer),
     gps(gps),
@@ -394,10 +394,13 @@ bool MAV::init_ins(void)
     ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_alt,      "POS_K_SONAR_Z"   );
     ret &= communication.parameters().add(&ins_complementary.config_.kp_sonar_vel,      "POS_K_SONAR_V_Z" );
     ret &= communication.parameters().add(&ins_complementary.config_.kp_flow_vel,       "POS_K_OF_V_XY"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.flow_gyro_comp_threshold, "POS_OFGYR_THR"   );
+    ret &= communication.parameters().add(&ins_complementary.config_.kp_acc_bias,       "POS_K_ACC_BIAS"  );
     ret &= communication.parameters().add(&ins_complementary.config_.use_gps,           "POS_USE_GPS"     );
     ret &= communication.parameters().add(&ins_complementary.config_.use_baro,          "POS_USE_BARO"    );
     ret &= communication.parameters().add(&ins_complementary.config_.use_sonar,         "POS_USE_SONAR"   );
     ret &= communication.parameters().add(&ins_complementary.config_.use_flow,          "POS_USE_FLOW"    );
+    ret &= communication.parameters().add(&ins_complementary.config_.use_acc_bias,      "POS_USE_ACBIAS"  );
 
     // -------------------------------------------------------------------------
     // Kalman INS specific
@@ -447,7 +450,7 @@ bool MAV::init_flow(void)
     ret &= communication.telemetry().add(MAVLINK_MSG_ID_OPTICAL_FLOW, 200000, &px4flow_telemetry_send, &flow);
 
     // Task
-    ret &= scheduler.add_task(10000, &Px4flow_i2c::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
+    ret &= scheduler.add_task(10000, &PX4Flow::update_task, &flow, Scheduler_task::PRIORITY_HIGH);
 
 
     return ret;

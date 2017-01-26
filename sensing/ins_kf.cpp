@@ -53,7 +53,7 @@ INS_kf::INS_kf( State& state,
                 const Gps_mocap& gps_mocap,
                 const Barometer& barometer,
                 const Sonar& sonar,
-                const Px4flow_i2c& flow,
+                const PX4Flow& flow,
                 const AHRS& ahrs,
                 const conf_t config):
     Kalman<11,3,3>( {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},                                              // x

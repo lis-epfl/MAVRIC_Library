@@ -130,8 +130,8 @@ public:
     Servo       servo_1;
     Servo       servo_2;
     Servo       servo_3;
-    Servo		    servo_4;
-	  Servo		    servo_5;
+    Servo		servo_4;
+    Servo		servo_5;
     Servo       servo_6;
     Servo       servo_7;
 
@@ -140,7 +140,7 @@ public:
     Imu                       imu;
 
     I2c_dummy           i2c_dummy;
-    Px4flow_i2c         flow;
+    PX4Flow_i2c         flow;
 
     Adc_dummy           adc_battery;
     Battery             battery;

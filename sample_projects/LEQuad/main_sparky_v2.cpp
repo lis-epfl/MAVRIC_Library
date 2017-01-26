@@ -48,6 +48,7 @@
 #include "drivers/mpu_9250.hpp"
 #include "drivers/sonar_i2cxl.hpp"
 #include "drivers/spektrum_satellite.hpp"
+#include "drivers/px4flow_i2c.hpp"
 
 #include "hal/common/time_keeper.hpp"
 #include "hal/dummy/serial_dummy.hpp"
@@ -110,7 +111,7 @@ int main(int argc, char** argv)
     Adc_dummy           adc_dummy(11.1f);
 
     // Dummy sensors
-    Px4flow_i2c         flow_dummy(i2c_dummy);
+    PX4Flow_i2c         flow_dummy(i2c_dummy);
     Battery             battery_dummy(adc_dummy);
     Gps_ublox           gps_dummy(serial_dummy);
     Sonar_i2cxl         sonar_dummy(i2c_dummy);

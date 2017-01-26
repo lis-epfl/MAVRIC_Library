@@ -50,7 +50,7 @@
 #include "drivers/gps.hpp"
 #include "drivers/barometer.hpp"
 #include "drivers/sonar.hpp"
-#include "drivers/px4flow_i2c.hpp"
+#include "drivers/px4flow.hpp"
 
 #include "sensing/ahrs.hpp"
 #include "sensing/ins.hpp"
@@ -96,8 +96,12 @@ public:
         uint32_t use_baro;                      ///< Boolean that indicates if the sensor must be used
 
         float kp_flow_vel;                      ///< Gain to correct the XY velocity estimation from optical flow
+        float flow_gyro_comp_threshold;         ///< Maximum gyroscope value bellow which flow is used
         float timeout_flow_us;                  ///< Time after witch a measure stops being used
         uint32_t use_flow;                      ///< Boolean that indicates if the sensor must be used
+
+        float kp_acc_bias;                      ///< Gain to estimate accelerometer biais from all sensors (weighted by respective gains)
+        uint32_t use_acc_bias;                  ///< Boolean that indicates if the accel bias should be estimated
     };
 
 
@@ -122,7 +126,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const Px4flow_i2c& flow, const AHRS& ahrs, const conf_t config = default_config());
+    INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const PX4Flow& flow, const AHRS& ahrs, const conf_t config = default_config());
 
 
     /**
@@ -178,16 +182,17 @@ public:
 
 
     local_position_t local_position_;        ///< Local position
-    float vel_[3];                           ///< 3D velocity in ned frame
+    std::array<float,3> vel_;                ///< 3D velocity in ned frame
+    std::array<float,3> acc_bias_;           ///< Accelerometer bias in body frame
     conf_t config_;                          ///< Configuration containing gains
 
 private:
-    const AHRS& ahrs_;                     ///< Reference to the attitude estimation structure
+    const AHRS& ahrs_;                       ///< Reference to the attitude estimation structure
     State& state_;                           ///< Reference to the state structure
     const Gps& gps_;                         ///< Reference to the GPS structure
     const Barometer& barometer_;             ///< Reference to the barometer structure
     const Sonar& sonar_;                     ///< Reference to the sonar structure
-    const Px4flow_i2c& flow_;                ///< Reference to the flow structure
+    const PX4Flow& flow_;                    ///< Reference to the flow structure
 
     float dt_s_;                            ///< Time interval between updates
     float last_update_s_;                   ///< Last update time in seconds
@@ -215,6 +220,14 @@ private:
      *
      */
     void integration(void);
+
+    /**
+     * \brief   State correction
+     */
+    void correction_from_3d_pos(std::array<float,3> error, std::array<float,3> gain);
+    void correction_from_3d_vel(std::array<float,3> error, std::array<float,3> gain);
+    void correction_from_z_pos(float error, float gain);
+    void correction_from_z_vel(float error, float gain);
 
 
     /**
@@ -313,9 +326,14 @@ INS_complementary::conf_t INS_complementary::default_config()
     conf.use_sonar          = 1;
 
     // Optic flow
-    conf.kp_flow_vel     = 4.0f;
-    conf.timeout_flow_us = 1e6f;
-    conf.use_flow        = 1;
+    conf.kp_flow_vel                = 4.0f;
+    conf.flow_gyro_comp_threshold   = 0.5f;
+    conf.timeout_flow_us            = 1e6f;
+    conf.use_flow                   = 1;
+
+    // Accelerometer bias
+    conf.kp_acc_bias     = 0.001f;
+    conf.use_acc_bias    = 0;
 
     return conf;
 };
