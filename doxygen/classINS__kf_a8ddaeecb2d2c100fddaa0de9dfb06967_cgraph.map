@@ -10,7 +10,7 @@
 <area shape="rect" id="node21" href="$classBarometer.html#a0c9353d8be366f2f5eec9550ba837af3" title="Get the last update time in microseconds." alt="" coords="196,432,375,461"/>
 <area shape="rect" id="node23" href="$classAHRS.html#a51990c2aa964af66f0169725ec386f52" title="Estimated attitude." alt="" coords="231,485,340,515"/>
 <area shape="rect" id="node25" href="$classSonar.html#a2af1f7009270c5b9614ab542f869570f" title="Get last update time in microseconds." alt="" coords="209,539,361,568"/>
-<area shape="rect" id="node27" href="$classPx4flow__i2c.html#a08460836c10b0f71090686429a2531ba" title="Indicates whether the measurements can be trusted." alt="" coords="215,592,356,621"/>
-<area shape="rect" id="node29" href="$classPx4flow__i2c.html#a9492c325db9c5b6685ba0e5935303684" title="Get last update time in seconds." alt="" coords="195,645,376,675"/>
+<area shape="rect" id="node27" href="$classPX4Flow.html#a4d7118ee30735c0d306e0339f62b7a1c" title="Indicates whether the measurements can be trusted." alt="" coords="223,592,348,621"/>
+<area shape="rect" id="node29" href="$classPX4Flow.html#a5df91b707180d3be937196a1d1d8fb66" title="Get last update time in seconds." alt="" coords="204,645,367,675"/>
 <area shape="rect" id="node7" href="$classGps__mocap.html#a4c99f6c501479c24bfdbac6a3ccc2310" title="Get last update time in microseconds." alt="" coords="455,59,641,88"/>
 </map>

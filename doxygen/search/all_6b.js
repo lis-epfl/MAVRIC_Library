@@ -8,6 +8,7 @@ var searchData=
   ['ki',['ki',['../structAHRS__qfilter_1_1conf__t.html#aeb020e4c78b60188456c97ad4d8e488f',1,'AHRS_qfilter::conf_t']]],
   ['ki_5fmag',['ki_mag',['../structAHRS__qfilter_1_1conf__t.html#a3cddac76a73afbdba5def62654540496',1,'AHRS_qfilter::conf_t']]],
   ['kp',['kp',['../structAHRS__qfilter_1_1conf__t.html#a327586c5c0d1f6bf6e8023927c1a70f6',1,'AHRS_qfilter::conf_t']]],
+  ['kp_5facc_5fbias',['kp_acc_bias',['../structINS__complementary_1_1conf__t.html#a326645a95287aa868d8bea9b4f2e846d',1,'INS_complementary::conf_t']]],
   ['kp_5fbaro_5falt',['kp_baro_alt',['../structINS__complementary_1_1conf__t.html#af1d1c5e718608278483001dca6ff8194',1,'INS_complementary::conf_t']]],
   ['kp_5fbaro_5fvel',['kp_baro_vel',['../structINS__complementary_1_1conf__t.html#a65446109c4fb64828fc31cbcf910d6a5',1,'INS_complementary::conf_t']]],
   ['kp_5fflow_5fvel',['kp_flow_vel',['../structINS__complementary_1_1conf__t.html#a842b2eb27bd9a30651e26b501b6d84bd',1,'INS_complementary::conf_t']]],

@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['of',['of',['../classFlow.html#a2e40007cb869003b5879103e435976ac',1,'Flow::of()'],['../structcurvace__t.html#aab6d02878b29b1bfcf7f60f8d764604d',1,'curvace_t::of()']]],
-  ['of_5fcount',['of_count',['../classFlow.html#a7863ea43464518fd30ee304402be0ea7',1,'Flow']]],
-  ['of_5floc',['of_loc',['../classFlow.html#a5f7666054c014a911bd4ca8f694ce987',1,'Flow']]],
+  ['of',['of',['../structcurvace__t.html#aab6d02878b29b1bfcf7f60f8d764604d',1,'curvace_t::of()'],['../classFlow__dense.html#a2d8877f0093f3968456a6bf3418e4659',1,'Flow_dense::of()']]],
+  ['of_5fcount',['of_count',['../classFlow__dense.html#a399b83e9bb297ae7083d5a730369e920',1,'Flow_dense']]],
+  ['of_5floc',['of_loc',['../classFlow__dense.html#ae8e4e001d4c0956baffc8ca77eafb43a',1,'Flow_dense']]],
   ['on_5ftime',['on_time',['../structubx__cfg__pm__t.html#ad2cd93e453954b80aa08f2ba45be5522',1,'ubx_cfg_pm_t::on_time()'],['../structubx__cfg__pm2__t.html#aa28a87305691aa097474d961f9321c9e',1,'ubx_cfg_pm2_t::on_time()']]],
   ['orientation',['orientation',['../structcurvace__t.html#a5ecffdd9f761ddb86eaa81512911f9b3',1,'curvace_t']]],
   ['orientation_5fbf',['orientation_bf',['../structsonar__i2cxl__conf__t.html#a352bb2169accb4128183d7cbc784f5a2',1,'sonar_i2cxl_conf_t::orientation_bf()'],['../structsonar__sim__conf__t.html#ab3ab14858c0195b0b2370e3ef99b7128',1,'sonar_sim_conf_t::orientation_bf()']]],

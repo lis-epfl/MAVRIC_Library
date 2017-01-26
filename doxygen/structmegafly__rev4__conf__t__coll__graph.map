@@ -1,12 +1,13 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$structPx4flow__i2c_1_1conf__t.html" title="{Px4flow_i2c::conf_t\n|+ i2c_address\l+ orientation\l|}" alt="" coords="5,366,141,469"/>
-<area shape="rect" id="node4" href="$structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="165,297,365,538"/>
-<area shape="rect" id="node6" href="$structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="195,5,336,195"/>
-<area shape="rect" id="node8" href="$structi2c__avr32__conf__t.html" title="Configuration structure." alt="" coords="389,340,509,495"/>
-<area shape="rect" id="node10" href="$structserial__avr32__conf__t.html" title="Configuration structure." alt="" coords="533,340,667,495"/>
-<area shape="rect" id="node12" href="$structserial__avr32__gpio__map__t.html" title="Gpio map." alt="" coords="517,49,683,151"/>
-<area shape="rect" id="node14" href="$structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="691,323,843,512"/>
-<area shape="rect" id="node16" href="$structgpio__avr32__conf__t.html" title="{gpio_avr32_conf_t\n|+ pin\l+ dir\l+ pull\l|}" alt="" coords="867,357,995,477"/>
-<area shape="rect" id="node18" href="$structbattery__conf__t.html" title="Configuration for Battery." alt="" coords="1019,357,1136,477"/>
-<area shape="rect" id="node20" href="$structserial__usb__avr32__conf__t.html" title="Configuration structure." alt="" coords="1160,375,1323,460"/>
+<area shape="rect" id="node2" href="$structimu__conf__t.html" title="The configuration IMU structure." alt="" coords="5,297,205,538"/>
+<area shape="rect" id="node4" href="$structimu__sensor__config__t.html" title="Sensor configuration." alt="" coords="35,5,176,195"/>
+<area shape="rect" id="node6" href="$structi2c__avr32__conf__t.html" title="Configuration structure." alt="" coords="229,340,349,495"/>
+<area shape="rect" id="node8" href="$structPX4Flow__serial_1_1conf__t.html" title="Configuration." alt="" coords="373,375,531,460"/>
+<area shape="rect" id="node10" href="$structserial__avr32__conf__t.html" title="Configuration structure." alt="" coords="555,340,688,495"/>
+<area shape="rect" id="node12" href="$structserial__avr32__gpio__map__t.html" title="Gpio map." alt="" coords="539,49,704,151"/>
+<area shape="rect" id="node14" href="$structservo__conf__t.html" title="Configuration structure for servo." alt="" coords="712,323,864,512"/>
+<area shape="rect" id="node16" href="$structgpio__avr32__conf__t.html" title="{gpio_avr32_conf_t\n|+ pin\l+ dir\l+ pull\l|}" alt="" coords="888,357,1016,477"/>
+<area shape="rect" id="node18" href="$structbattery__conf__t.html" title="Configuration for Battery." alt="" coords="1040,357,1157,477"/>
+<area shape="rect" id="node20" href="$structPX4Flow__i2c_1_1conf__t.html" title="Configuration." alt="" coords="1181,366,1323,469"/>
+<area shape="rect" id="node22" href="$structserial__usb__avr32__conf__t.html" title="Configuration structure." alt="" coords="1347,375,1509,460"/>
 </map>

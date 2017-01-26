@@ -1,3 +1,4 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structMavlink__communication__T_1_1conf__t.html" title="Configuration of the module Mavlink Communication." alt="" coords="7,5,548,35"/>
+<area shape="rect" id="node1" href="$classMavlink__message__handler.html" title="Message handler base class." alt="" coords="5,5,181,35"/>
+<area shape="rect" id="node3" href="$classMavlink__message__handler__T.html" title="Message handler." alt="" coords="229,5,472,35"/>
 </map>

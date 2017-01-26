@@ -126,90 +126,45 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define PX4FLOW_I2C_HPP_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
 <a name="l00045"></a>00045 <span class="preprocessor">#include &lt;cstdint&gt;</span>
-<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;hal/common/i2c.hpp&quot;</span>
-<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;util/buffer.hpp&quot;</span>
+<a name="l00046"></a>00046 <span class="preprocessor">#include &quot;drivers/px4flow.hpp&quot;</span>
+<a name="l00047"></a>00047 <span class="preprocessor">#include &quot;hal/common/i2c.hpp&quot;</span>
 <a name="l00048"></a>00048 
-<a name="l00049"></a><a class="code" href="classPx4flow__i2c.html">00049</a> <span class="keyword">class  </span><a class="code" href="classPx4flow__i2c.html">Px4flow_i2c</a>
+<a name="l00049"></a><a class="code" href="classPX4Flow__i2c.html">00049</a> <span class="keyword">class  </span><a class="code" href="classPX4Flow__i2c.html">PX4Flow_i2c</a>: <span class="keyword">public</span> <a class="code" href="classPX4Flow.html" title="Interface for Optic Flow sensors.">PX4Flow</a>
 <a name="l00050"></a>00050 {
 <a name="l00051"></a>00051 <span class="keyword">public</span>:
-<a name="l00052"></a>00052     
-<a name="l00053"></a>00053     <span class="keyword">enum</span> orientation_t
-<a name="l00054"></a>00054     {
-<a name="l00055"></a>00055         ORIENT_0_DEG   = 0,
-<a name="l00056"></a>00056         ORIENT_90_DEG  = 1,
-<a name="l00057"></a>00057         ORIENT_180_DEG = 2,
-<a name="l00058"></a>00058         ORIENT_270_DEG = 3,
+<a name="l00055"></a><a class="code" href="structPX4Flow__i2c_1_1conf__t.html">00055</a>     <span class="keyword">struct </span><a class="code" href="structPX4Flow__i2c_1_1conf__t.html" title="Configuration.">conf_t</a>
+<a name="l00056"></a>00056     {
+<a name="l00057"></a>00057         uint8_t       i2c_address;
+<a name="l00058"></a>00058         <a class="code" href="classPX4Flow.html#a8b29ba8bd4bd4485686412c222e4e7fe" title="Enumeration of possible orientations for the sensor rel. to the drone.">orientation_t</a> orientation;
 <a name="l00059"></a>00059     };
 <a name="l00060"></a>00060 
-<a name="l00061"></a><a class="code" href="structPx4flow__i2c_1_1conf__t.html">00061</a>     <span class="keyword">struct </span><a class="code" href="structPx4flow__i2c_1_1conf__t.html">conf_t</a>
-<a name="l00062"></a>00062     {
-<a name="l00063"></a>00063         uint8_t       i2c_address;
-<a name="l00064"></a>00064         orientation_t orientation;
-<a name="l00065"></a>00065     };
-<a name="l00066"></a>00066 
-<a name="l00067"></a><a class="code" href="classPx4flow__i2c.html#ab4396136b8e994fe2f2def1c25744071">00067</a>     <span class="keyword">static</span> <span class="keyword">const</span> uint8_t <a class="code" href="classPx4flow__i2c.html#ab4396136b8e994fe2f2def1c25744071" title="Command to receive 22 bytes i2c frame.">GET_FRAME_COMMAND</a>           = 0x0;      
-<a name="l00068"></a><a class="code" href="classPx4flow__i2c.html#a195bd3faa44767d0b7258bbccf55c464">00068</a>     <span class="keyword">static</span> <span class="keyword">const</span> uint8_t <a class="code" href="classPx4flow__i2c.html#a195bd3faa44767d0b7258bbccf55c464" title="Command to receive 25 bytes i2c integral frame.">GET_INTEGRAL_FRAME_COMMAND</a>  = 0x16;     
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070     <a class="code" href="classPx4flow__i2c.html">Px4flow_i2c</a>(<a class="code" href="classI2c.html">I2c</a>&amp; i2c, <a class="code" href="structPx4flow__i2c_1_1conf__t.html">conf_t</a> config = <a class="code" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56" title="Default configuration.">default_config</a>() );
-<a name="l00071"></a>00071 
-<a name="l00077"></a>00077     <span class="keywordtype">bool</span> <a class="code" href="classPx4flow__i2c.html#a08460836c10b0f71090686429a2531ba" title="Indicates whether the measurements can be trusted.">healthy</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00078"></a>00078 
-<a name="l00084"></a>00084     <span class="keywordtype">bool</span> <a class="code" href="classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
-<a name="l00085"></a>00085 
-<a name="l00093"></a><a class="code" href="classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885">00093</a>     <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code" href="classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler.">update_task</a>(<a class="code" href="classPx4flow__i2c.html">Px4flow_i2c</a>* flow)
-<a name="l00094"></a>00094     {
-<a name="l00095"></a>00095         <span class="keywordflow">return</span> flow-&gt;<a class="code" href="classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function.">update</a>();
-<a name="l00096"></a>00096     }
-<a name="l00097"></a>00097 
-<a name="l00103"></a>00103     <span class="keyword">static</span> <span class="keyword">inline</span> conf_t <a class="code" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56" title="Default configuration.">default_config</a>(<span class="keywordtype">void</span>);
+<a name="l00061"></a><a class="code" href="classPX4Flow__i2c.html#a640bb8f327a1ff0509c04ad2061282b3">00061</a>     <span class="keyword">static</span> <span class="keyword">const</span> uint8_t <a class="code" href="classPX4Flow__i2c.html#a640bb8f327a1ff0509c04ad2061282b3" title="Command to receive 22 bytes i2c frame.">GET_FRAME_COMMAND</a>           = 0x0;      
+<a name="l00062"></a><a class="code" href="classPX4Flow__i2c.html#a386f9243a668926ef754a09b823a770a">00062</a>     <span class="keyword">static</span> <span class="keyword">const</span> uint8_t <a class="code" href="classPX4Flow__i2c.html#a386f9243a668926ef754a09b823a770a" title="Command to receive 25 bytes i2c integral frame.">GET_INTEGRAL_FRAME_COMMAND</a>  = 0x16;     
+<a name="l00063"></a>00063 
+<a name="l00067"></a>00067     <a class="code" href="classPX4Flow__i2c.html#ade780bdb8ae153e5f29faf7df2b0149b" title="Constructor.">PX4Flow_i2c</a>(<a class="code" href="classI2c.html">I2c</a>&amp; i2c, <a class="code" href="structPX4Flow__i2c_1_1conf__t.html" title="Configuration.">conf_t</a> config = <a class="code" href="classPX4Flow__i2c.html#aa4d56eef5a3d020ad6c18fe3d9c803c9" title="Default configuration.">default_config</a>() );
+<a name="l00068"></a>00068 
+<a name="l00074"></a>00074     <span class="keywordtype">bool</span> <a class="code" href="classPX4Flow__i2c.html#a1d72c9f582cb161259c4a29a006f83af" title="Main update function.">update</a>(<span class="keywordtype">void</span>);
+<a name="l00075"></a>00075 
+<a name="l00076"></a>00076 
+<a name="l00082"></a>00082     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structPX4Flow__i2c_1_1conf__t.html" title="Configuration.">conf_t</a> <a class="code" href="classPX4Flow__i2c.html#aa4d56eef5a3d020ad6c18fe3d9c803c9" title="Default configuration.">default_config</a>(<span class="keywordtype">void</span>);
+<a name="l00083"></a>00083 
+<a name="l00084"></a>00084 <span class="keyword">protected</span>:
+<a name="l00085"></a><a class="code" href="classPX4Flow__i2c.html#a624b5f0338c1ae0e85622b0c56119e05">00085</a>     <a class="code" href="classI2c.html">I2c</a>&amp;                <a class="code" href="classPX4Flow__i2c.html#a624b5f0338c1ae0e85622b0c56119e05" title="reference to I2C">i2c_</a>;                       
+<a name="l00086"></a><a class="code" href="classPX4Flow__i2c.html#a3ac54098140ef50b413bb44916353cca">00086</a>     <a class="code" href="structPX4Flow__i2c_1_1conf__t.html" title="Configuration.">conf_t</a>              <a class="code" href="classPX4Flow__i2c.html#a3ac54098140ef50b413bb44916353cca" title="Configuration.">config_</a>;                    
+<a name="l00087"></a>00087 };
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089 
+<a name="l00095"></a><a class="code" href="classPX4Flow__i2c.html#aa4d56eef5a3d020ad6c18fe3d9c803c9">00095</a> <a class="code" href="structPX4Flow__i2c_1_1conf__t.html" title="Configuration.">PX4Flow_i2c::conf_t</a> <a class="code" href="classPX4Flow__i2c.html#aa4d56eef5a3d020ad6c18fe3d9c803c9" title="Default configuration.">PX4Flow_i2c::default_config</a>(<span class="keywordtype">void</span>)
+<a name="l00096"></a>00096 {
+<a name="l00097"></a>00097     <a class="code" href="structPX4Flow__i2c_1_1conf__t.html" title="Configuration.">conf_t</a> conf = {};
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099     conf.i2c_address = 0x42;
+<a name="l00100"></a>00100     conf.orientation = ORIENT_0_DEG;
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102     <span class="keywordflow">return</span> conf;
+<a name="l00103"></a>00103 }
 <a name="l00104"></a>00104 
-<a name="l00110"></a>00110     <span class="keywordtype">float</span> <a class="code" href="classPx4flow__i2c.html#a404c998b0a1dc9d5d5eff322d6b1035c" title="Get flow in x direction.">flow_x</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00111"></a>00111 
-<a name="l00117"></a>00117     <span class="keywordtype">float</span> <a class="code" href="classPx4flow__i2c.html#a7ac4616fc84a9c5741cd8efc90a9a210" title="Get flow in y direction.">flow_y</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00118"></a>00118 
-<a name="l00124"></a>00124     uint8_t <a class="code" href="classPx4flow__i2c.html#a0428b865803bbae141d21ff1b1c68556" title="Get flow quality.">flow_quality</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00125"></a>00125 
-<a name="l00131"></a>00131     <span class="keywordtype">float</span> <a class="code" href="classPx4flow__i2c.html#aa94acefcb33b998427fddc9efc0b0d7f" title="Get velocity in x direction.">velocity_x</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00132"></a>00132 
-<a name="l00138"></a>00138     <span class="keywordtype">float</span> <a class="code" href="classPx4flow__i2c.html#a31c1212f2d5d0f25e5ebe91c12006d68" title="Get velocity in y direction.">velocity_y</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00139"></a>00139 
-<a name="l00145"></a>00145     <span class="keywordtype">float</span> <a class="code" href="classPx4flow__i2c.html#ab901b5c5a7601c704075dafbc07d7a24" title="Get velocity in z direction.">velocity_z</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00146"></a>00146 
-<a name="l00152"></a>00152     <span class="keywordtype">float</span> <a class="code" href="classPx4flow__i2c.html#ad40e731550a95232b7c20d4bdd92957e" title="Get ground distance.">ground_distance</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00153"></a>00153 
-<a name="l00159"></a>00159     <span class="keywordtype">float</span> <a class="code" href="classPx4flow__i2c.html#a9492c325db9c5b6685ba0e5935303684" title="Get last update time in seconds.">last_update_s</a>(<span class="keywordtype">void</span>) <span class="keyword">const</span>;
-<a name="l00160"></a>00160 
-<a name="l00161"></a>00161 <span class="keyword">protected</span>:
-<a name="l00165"></a>00165     <span class="keywordtype">void</span> <a class="code" href="classPx4flow__i2c.html#a9ccac19d2f118a8269eef500b1932ebf" title="Applies rotation to raw readings based on how the camera is mounted on drone.">rotate_raw_values</a>(<span class="keywordtype">float</span> flow_x_raw, <span class="keywordtype">float</span> flow_y_raw, <span class="keywordtype">float</span> velocity_x_raw, <span class="keywordtype">float</span> velocity_y_raw);
-<a name="l00166"></a>00166 
-<a name="l00167"></a>00167 <span class="keyword">protected</span>:
-<a name="l00168"></a><a class="code" href="classPx4flow__i2c.html#a0b87ead488d94e903a988565309e8cad">00168</a>     <span class="keywordtype">float</span>               <a class="code" href="classPx4flow__i2c.html#a0b87ead488d94e903a988565309e8cad" title="Optic flow in x direction (rad/s)">flow_x_</a>;                    
-<a name="l00169"></a><a class="code" href="classPx4flow__i2c.html#a281ec6622ae8d5b1ad1f6536ae4f2616">00169</a>     <span class="keywordtype">float</span>               <a class="code" href="classPx4flow__i2c.html#a281ec6622ae8d5b1ad1f6536ae4f2616" title="Optic flow in y direction (rad/s)">flow_y_</a>;                    
-<a name="l00170"></a><a class="code" href="classPx4flow__i2c.html#adf80e76c8a66deaaf3552c2d5be44a1a">00170</a>     uint8_t             <a class="code" href="classPx4flow__i2c.html#adf80e76c8a66deaaf3552c2d5be44a1a" title="Quality of optic flow measurement (between 0 and 255)">flow_quality_</a>;              
-<a name="l00171"></a><a class="code" href="classPx4flow__i2c.html#a659c939473a22c3c4f1e59833490249e">00171</a>     <span class="keywordtype">float</span>               <a class="code" href="classPx4flow__i2c.html#a659c939473a22c3c4f1e59833490249e" title="Velocity in x direction (m/s)">velocity_x_</a>;                
-<a name="l00172"></a><a class="code" href="classPx4flow__i2c.html#ac22fd84343895792f5612ce6ce3e996d">00172</a>     <span class="keywordtype">float</span>               <a class="code" href="classPx4flow__i2c.html#ac22fd84343895792f5612ce6ce3e996d" title="Velocity in y direction (m/s)">velocity_y_</a>;                
-<a name="l00173"></a><a class="code" href="classPx4flow__i2c.html#a5ecbb624e8100fc0059d0e4c73c6e68d">00173</a>     <span class="keywordtype">float</span>               <a class="code" href="classPx4flow__i2c.html#a5ecbb624e8100fc0059d0e4c73c6e68d" title="Velocity in z direction (m/s)">velocity_z_</a>;                
-<a name="l00174"></a><a class="code" href="classPx4flow__i2c.html#a8f8217cf98bbd516b66e3e3a791e2f77">00174</a>     <span class="keywordtype">float</span>               <a class="code" href="classPx4flow__i2c.html#a8f8217cf98bbd516b66e3e3a791e2f77" title="Ground distance (m)">ground_distance_</a>;           
-<a name="l00175"></a><a class="code" href="classPx4flow__i2c.html#a351d7126047026d28c8e54f7439e1b39">00175</a>     <a class="code" href="classBuffer__T.html">Buffer_T&lt;3,float&gt;</a>   <a class="code" href="classPx4flow__i2c.html#a351d7126047026d28c8e54f7439e1b39" title="Buffer used to filter sonar measurement.">ground_distance_buffer_</a>;    
-<a name="l00176"></a><a class="code" href="classPx4flow__i2c.html#aa819439b507f3219d9d82ad1a50eed1a">00176</a>     <span class="keywordtype">float</span>               <a class="code" href="classPx4flow__i2c.html#aa819439b507f3219d9d82ad1a50eed1a" title="Last update time in seconds.">last_update_s_</a>;             
-<a name="l00177"></a><a class="code" href="classPx4flow__i2c.html#a210ba438d856c6eaf229c4883dcbb54e">00177</a>     <span class="keywordtype">bool</span>                <a class="code" href="classPx4flow__i2c.html#a210ba438d856c6eaf229c4883dcbb54e" title="Indicates if sensor data can be trusted.">is_healthy_</a>;                
-<a name="l00178"></a>00178 
-<a name="l00179"></a><a class="code" href="classPx4flow__i2c.html#a4e720676ecbc4f5bc49dd10dedcb82d7">00179</a>     <a class="code" href="classI2c.html">I2c</a>&amp;                <a class="code" href="classPx4flow__i2c.html#a4e720676ecbc4f5bc49dd10dedcb82d7" title="reference to I2C">i2c_</a>;                       
-<a name="l00180"></a><a class="code" href="classPx4flow__i2c.html#a97b9085e3313c9ef933c6f4dce5a2b70">00180</a>     <a class="code" href="structPx4flow__i2c_1_1conf__t.html">conf_t</a>              <a class="code" href="classPx4flow__i2c.html#a97b9085e3313c9ef933c6f4dce5a2b70" title="Configuration.">config_</a>;                    
-<a name="l00181"></a>00181 };
-<a name="l00182"></a>00182 
-<a name="l00183"></a>00183 
-<a name="l00189"></a><a class="code" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56">00189</a> <a class="code" href="structPx4flow__i2c_1_1conf__t.html">Px4flow_i2c::conf_t</a> <a class="code" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56" title="Default configuration.">Px4flow_i2c::default_config</a>(<span class="keywordtype">void</span>)
-<a name="l00190"></a>00190 {
-<a name="l00191"></a>00191     <a class="code" href="structPx4flow__i2c_1_1conf__t.html">conf_t</a> conf = {};
-<a name="l00192"></a>00192 
-<a name="l00193"></a>00193     conf.i2c_address = 0x42;
-<a name="l00194"></a>00194     conf.orientation = ORIENT_0_DEG;
-<a name="l00195"></a>00195 
-<a name="l00196"></a>00196     <span class="keywordflow">return</span> conf;
-<a name="l00197"></a>00197 }
-<a name="l00198"></a>00198 
-<a name="l00199"></a>00199 <span class="preprocessor">#endif </span><span class="comment">/* PX4FLOW_I2C_HPP_ */</span>
+<a name="l00105"></a>00105 <span class="preprocessor">#endif </span><span class="comment">/* PX4FLOW_I2C_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -228,7 +183,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 12 2016 11:05:13 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 26 2017 09:32:19 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

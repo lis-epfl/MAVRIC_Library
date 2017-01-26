@@ -15,12 +15,10 @@ var searchData=
   ['flight_5fcontroller_5fhexhog',['Flight_controller_hexhog',['../classFlight__controller__hexhog.html',1,'']]],
   ['flight_5fcontroller_5fquadcopter',['Flight_controller_quadcopter',['../classFlight__controller__quadcopter.html',1,'']]],
   ['flight_5fcontroller_5fstack',['Flight_controller_stack',['../classFlight__controller__stack.html',1,'']]],
-  ['flow',['Flow',['../classFlow.html',1,'']]],
   ['flow_5fdata_5ft',['flow_data_t',['../structflow__data__t.html',1,'']]],
-  ['flow_5fpx4',['Flow_px4',['../classFlow__px4.html',1,'']]],
-  ['flow_5fpx4_5fdata_5ft',['flow_px4_data_t',['../unionflow__px4__data__t.html',1,'']]],
+  ['flow_5fdense',['Flow_dense',['../classFlow__dense.html',1,'']]],
   ['flow_5fsim',['Flow_sim',['../classFlow__sim.html',1,'']]],
   ['function',['function',['../structScheduler__task_1_1function.html',1,'Scheduler_task']]],
   ['function',['function',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry']]],
-  ['function_3c_20void_20_3e',['function< void >',['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;'],['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;']]]
+  ['function_3c_20void_20_3e',['function< void >',['../structPeriodic__telemetry_1_1function.html',1,'Periodic_telemetry::function&lt; void &gt;'],['../structScheduler__task_1_1function.html',1,'Scheduler_task::function&lt; void &gt;']]]
 ];

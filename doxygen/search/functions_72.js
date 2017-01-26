@@ -11,7 +11,7 @@ var searchData=
   ['receive',['receive',['../classMavlink__message__handler.html#a1995272754096f600a80c1e188ac7953',1,'Mavlink_message_handler::receive()'],['../classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764',1,'Mavlink_stream::receive()']]],
   ['register_5fmission_5fhandler',['register_mission_handler',['../classMission__handler__registry.html#ae5572746176af10079c7b7190c1dfcd6',1,'Mission_handler_registry']]],
   ['roll',['roll',['../classJoystick.html#a9914a442bcc376a452fcf01c0007e738',1,'Joystick::roll()'],['../classManual__control.html#a8baecbca2bc17799bf59d70a5fc7d269',1,'Manual_control::roll()']]],
-  ['rotate_5fraw_5fvalues',['rotate_raw_values',['../classPx4flow__i2c.html#a9ccac19d2f118a8269eef500b1932ebf',1,'Px4flow_i2c']]],
+  ['rotate_5fraw_5fvalues',['rotate_raw_values',['../classPX4Flow.html#a678a3ee6caa1ea82602e6f629ed19b65',1,'PX4Flow']]],
   ['rows',['rows',['../classMat.html#a066ecd63d924b097cde4653d69bc77ab',1,'Mat']]],
   ['run_5fall_5ftasks_5fnow',['run_all_tasks_now',['../classScheduler.html#a42bdc07e8914f6309be98e38e216c1bd',1,'Scheduler']]],
   ['run_5fnow',['run_now',['../classScheduler__task.html#adc0e604f86fd585d32b94bb845d0eb8c',1,'Scheduler_task']]],

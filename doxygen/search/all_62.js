@@ -1,14 +1,14 @@
 var searchData=
 [
   ['b_5f',['B_',['../classKalman.html#acf8e90cf222702a93cc079769813c7c0',1,'Kalman']]],
-  ['barometer',['Barometer',['../classBarometer.html',1,'Barometer'],['../classMAV.html#adb7d75b8ad55eb7b3a61722b7e962893',1,'MAV::barometer()'],['../classSimulation.html#a368aa6c86a02f49a56f83df509c6d9e7',1,'Simulation::barometer()']]],
+  ['barometer',['Barometer',['../classBarometer.html',1,'Barometer'],['../classMegafly__rev4.html#aa3cbda587e3d9ca16d2155a871ec1e65',1,'Megafly_rev4::barometer()'],['../classMAV.html#adb7d75b8ad55eb7b3a61722b7e962893',1,'MAV::barometer()'],['../classSimulation.html#a368aa6c86a02f49a56f83df509c6d9e7',1,'Simulation::barometer()']]],
   ['barometer_5fbmp085',['Barometer_BMP085',['../classBarometer__BMP085.html',1,'Barometer_BMP085'],['../classBarometer__BMP085.html#a4c01183bdda76c70ab2af4c8d19ad86c',1,'Barometer_BMP085::Barometer_BMP085()']]],
   ['barometer_5fms5611',['Barometer_MS5611',['../classBarometer__MS5611.html',1,'Barometer_MS5611'],['../classBarometer__MS5611.html#a864d13342e2da35e4d4f679c2bd62e62',1,'Barometer_MS5611::Barometer_MS5611()']]],
   ['barometer_5fsim',['Barometer_sim',['../classBarometer__sim.html',1,'Barometer_sim'],['../classBarometer__sim.html#a8cb0b945413cb2c0be355240648dd56a',1,'Barometer_sim::Barometer_sim()']]],
   ['base_5fhealth',['base_health',['../structubx__nav__dgps__t.html#ae32b24ce493c04451063f95f7c8e5c0d',1,'ubx_nav_dgps_t']]],
   ['base_5fid',['base_id',['../structubx__nav__dgps__t.html#a943b371eb1753d81aeaf082310b2a407',1,'ubx_nav_dgps_t']]],
   ['base_5ftow',['base_tow',['../structubx__cfg__fxn__t.html#ad67f012b730f61443ffba40bda2c5755',1,'ubx_cfg_fxn_t']]],
-  ['battery',['Battery',['../classBattery.html',1,'Battery'],['../classMAV.html#ace8fe6c173e46083998e76c29d014023',1,'MAV::battery()'],['../classBattery.html#ad655b142d6c2cd21fd7a2f8f13a8ff77',1,'Battery::Battery()']]],
+  ['battery',['Battery',['../classBattery.html',1,'Battery'],['../classMegafly__rev4.html#ac21f72ed056278a400bf9e9dc628fcc0',1,'Megafly_rev4::battery()'],['../classMAV.html#ace8fe6c173e46083998e76c29d014023',1,'MAV::battery()'],['../classBattery.html#ad655b142d6c2cd21fd7a2f8f13a8ff77',1,'Battery::Battery()']]],
   ['battery_5f',['battery_',['../classState.html#aa8af6eff2f240cae87d455db9023e079',1,'State']]],
   ['battery_5fconf_5ft',['battery_conf_t',['../structbattery__conf__t.html',1,'']]],
   ['baud_5frate',['baud_rate',['../structubx__cfg__prt__t.html#a0403d8ad0dae4dcf8e693c98f159c196',1,'ubx_cfg_prt_t']]],

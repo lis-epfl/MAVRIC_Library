@@ -125,12 +125,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00042"></a>00042 <span class="preprocessor">#ifndef FLOW_SIM_HPP_</span>
 <a name="l00043"></a>00043 <span class="preprocessor"></span><span class="preprocessor">#define FLOW_SIM_HPP_</span>
 <a name="l00044"></a>00044 <span class="preprocessor"></span>
-<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;drivers/flow.hpp&quot;</span>
+<a name="l00045"></a>00045 <span class="preprocessor">#include &quot;simulation/flow_dense.hpp&quot;</span>
 <a name="l00046"></a>00046 <span class="preprocessor">#include &quot;util/raytracing.hpp&quot;</span>
 <a name="l00047"></a>00047 <span class="preprocessor">#include &quot;util/matrix.hpp&quot;</span>
 <a name="l00048"></a>00048 <span class="preprocessor">#include &quot;simulation/dynamic_model.hpp&quot;</span>
 <a name="l00049"></a>00049 
-<a name="l00053"></a><a class="code" href="classFlow__sim.html">00053</a> <span class="keyword">class  </span><a class="code" href="classFlow__sim.html" title="Interface for Optic Flow sensors.">Flow_sim</a>: <span class="keyword">public</span> <a class="code" href="classFlow.html" title="Interface for Optic Flow sensors.">Flow</a>
+<a name="l00053"></a><a class="code" href="classFlow__sim.html">00053</a> <span class="keyword">class  </span><a class="code" href="classFlow__sim.html" title="Interface for Optic Flow sensors.">Flow_sim</a>: <span class="keyword">public</span> <a class="code" href="classFlow__dense.html" title="Interface for Optic Flow sensors.">Flow_dense</a>
 <a name="l00054"></a>00054 {
 <a name="l00055"></a>00055     <span class="keyword">static</span> <span class="keyword">const</span> uint32_t ray_count_ = 90;
 <a name="l00056"></a>00056 <span class="keyword">public</span>:
@@ -170,7 +170,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 12 2016 11:05:13 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 26 2017 09:32:19 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

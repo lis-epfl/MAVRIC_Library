@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764" title="Mavlink parsing of message; the message is not available in this module afterwards." alt="" coords="227,32,389,61"/>
+<area shape="rect" id="node9" href="$classBuffer__T.html#a88378087609442dc301bcdfef4bb8f34" title="Stores data in the buffer even of it overwrites existing data." alt="" coords="240,85,376,115"/>
+<area shape="rect" id="node11" href="$classBuffer__T.html#ab02b06e057265507e5e5d9e5d8e87d1e" title="Get value of i&#45;th element in buffer, but does not modify anything." alt="" coords="233,139,383,168"/>
+<area shape="rect" id="node13" href="$classPX4Flow.html#a678a3ee6caa1ea82602e6f629ed19b65" title="Applies rotation to raw readings based on how the camera is mounted on drone." alt="" coords="213,192,403,221"/>
+<area shape="rect" id="node5" href="$classSerial.html#a7defcc73aba6631c903b58641362aa5f" title="Test if there are bytes available to read." alt="" coords="451,5,563,35"/>
+<area shape="rect" id="node7" href="$classSerial.html#a863184953fb46582053208c076e75656" title="Read bytes from the serial line." alt="" coords="463,59,551,88"/>
+</map>

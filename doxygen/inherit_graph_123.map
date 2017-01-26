@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$classMat.html" title="Templated matrix class." alt="" coords="7,5,116,35"/>
+<area shape="rect" id="node1" href="$classMAV.html" title="MAV class." alt="" coords="5,5,56,35"/>
+<area shape="rect" id="node3" href="$classLEQuad.html" title="MAV class." alt="" coords="104,5,173,35"/>
+<area shape="rect" id="node5" href="$classMy__LEQuad.html" title="My_LEQuad" alt="" coords="223,5,316,35"/>
 </map>

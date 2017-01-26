@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$structPwm__stm32_1_1config__t.html" title="STM32_PWM configuration structure." alt="" coords="5,5,155,35"/>
+<area shape="rect" id="node1" href="$classPX4Flow.html" title="Interface for Optic Flow sensors." alt="" coords="5,32,80,61"/>
+<area shape="rect" id="node3" href="$classPX4Flow__i2c.html" title="PX4Flow_i2c" alt="" coords="136,5,235,35"/>
+<area shape="rect" id="node5" href="$classPX4Flow__serial.html" title="Driver for PX4Flow." alt="" coords="129,59,241,88"/>
 </map>

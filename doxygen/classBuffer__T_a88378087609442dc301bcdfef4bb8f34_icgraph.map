@@ -1,6 +1,6 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="216,5,355,35"/>
-<area shape="rect" id="node7" href="$classSerial__chibios.html#a8312593c11885a9ef9dab02f4b31a370" title="Default RX interrupt&#45;handling function." alt="" coords="189,59,381,88"/>
-<area shape="rect" id="node9" href="$classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="201,112,369,141"/>
-<area shape="rect" id="node5" href="$classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="431,5,601,35"/>
+<area shape="rect" id="node3" href="$classPX4Flow__i2c.html#a1d72c9f582cb161259c4a29a006f83af" title="Main update function." alt="" coords="212,5,359,35"/>
+<area shape="rect" id="node5" href="$classPX4Flow__serial.html#a75a62bef5d56839845befbf5ab676317" title="Update function." alt="" coords="205,59,365,88"/>
+<area shape="rect" id="node7" href="$classSerial__chibios.html#a8312593c11885a9ef9dab02f4b31a370" title="Default RX interrupt&#45;handling function." alt="" coords="189,112,381,141"/>
+<area shape="rect" id="node9" href="$classSerial__stm32.html#a883789759916689a6fe66b25db5249a7" title="Default interrupt&#45;handling function." alt="" coords="201,165,369,195"/>
 </map>

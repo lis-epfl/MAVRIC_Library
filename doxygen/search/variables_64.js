@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['data',['data',['../unionflow__px4__data__t.html#a4dd9f118a3dc7979a657d723f717f44f',1,'flow_px4_data_t::data()'],['../structubx__cfg__rinv__t.html#a3fa9f41515c8f081d09e11b1b909d25f',1,'ubx_cfg_rinv_t::data()'],['../unioncurvace__raw__data__t.html#adfaf89be931842a1024ce47375f65de9',1,'curvace_raw_data_t::data()'],['../unioncurvace__data__t.html#a6ace687c49872eb27c818bbf2d3c9cab',1,'curvace_data_t::data()'],['../unioncurvace__roi__coord__t.html#a93e9e30a1042bcf9b12d99f8dbecdc6e',1,'curvace_roi_coord_t::data()'],['../unioncurvace__calibration__factor__t.html#afb029132adb6d7d6f676a3d1b697f404',1,'curvace_calibration_factor_t::data()'],['../unioncurvace__calibration__matrix__t.html#a8ba34e2f2d836e26453e6f85485a440e',1,'curvace_calibration_matrix_t::data()'],['../structbyte__stream__t.html#a2869ca97951516e26f6dd0b215d9d4f8',1,'byte_stream_t::data()']]],
+  ['data',['data',['../structubx__cfg__rinv__t.html#a3fa9f41515c8f081d09e11b1b909d25f',1,'ubx_cfg_rinv_t::data()'],['../unioncurvace__raw__data__t.html#adfaf89be931842a1024ce47375f65de9',1,'curvace_raw_data_t::data()'],['../unioncurvace__data__t.html#a6ace687c49872eb27c818bbf2d3c9cab',1,'curvace_data_t::data()'],['../unioncurvace__roi__coord__t.html#a93e9e30a1042bcf9b12d99f8dbecdc6e',1,'curvace_roi_coord_t::data()'],['../unioncurvace__calibration__factor__t.html#afb029132adb6d7d6f676a3d1b697f404',1,'curvace_calibration_factor_t::data()'],['../unioncurvace__calibration__matrix__t.html#a8ba34e2f2d836e26453e6f85485a440e',1,'curvace_calibration_matrix_t::data()'],['../structbyte__stream__t.html#a2869ca97951516e26f6dd0b215d9d4f8',1,'byte_stream_t::data()']]],
   ['data10',['data10',['../structubx__cfg__rinv__t.html#aa0d17b6d6989a90c6e76737b9109f81d',1,'ubx_cfg_rinv_t']]],
   ['data11',['data11',['../structubx__cfg__rinv__t.html#a252e0cc5f6424fec98fd6a42dbaa6048',1,'ubx_cfg_rinv_t']]],
   ['data12',['data12',['../structubx__cfg__rinv__t.html#a066e624a8007e3493b27b66d473482ba',1,'ubx_cfg_rinv_t']]],
@@ -56,6 +56,7 @@ var searchData=
   ['dr_5flimit',['dr_limit',['../structubx__cfg__nav__settings__t.html#ad02b1221ed5776015f072faf84338689',1,'ubx_cfg_nav_settings_t']]],
   ['driver',['driver',['../structPwm__chibios_1_1conf__t.html#aa3cfaebbf9c78fce2e14156733bca8f5',1,'Pwm_chibios::conf_t']]],
   ['dsm_5fpower_5fgpio_5fconfig',['dsm_power_gpio_config',['../structSparky__v2_1_1conf__t.html#a2b285be7a7afe70ba5079c2e8abd0d52',1,'Sparky_v2::conf_t']]],
+  ['dsm_5fpower_5fpin',['dsm_power_pin',['../classMegafly__rev4.html#af2866398bbebe42c3bc15e48e0c64831',1,'Megafly_rev4']]],
   ['dsm_5freceiver_5fgpio',['dsm_receiver_gpio',['../classMavrimini.html#a8fcc6be7df1538104653c3c918ca9a4f',1,'Mavrimini']]],
   ['dsm_5freceiver_5fgpio_5fconfig',['dsm_receiver_gpio_config',['../structSparky__v2_1_1conf__t.html#abab3993d5ad43053448e737a5a68354c',1,'Sparky_v2::conf_t']]],
   ['dsm_5freceiver_5fpin',['dsm_receiver_pin',['../classMegafly__rev4.html#a07bf4d69cc0b14a297a7796f6382a5c8',1,'Megafly_rev4']]],

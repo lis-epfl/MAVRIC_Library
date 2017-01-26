@@ -144,293 +144,297 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00061"></a>00061 <span class="preprocessor">#include &quot;drivers/servo.hpp&quot;</span>
 <a name="l00062"></a>00062 <span class="preprocessor">#include &quot;drivers/sonar_i2cxl.hpp&quot;</span>
 <a name="l00063"></a>00063 <span class="preprocessor">#include &quot;drivers/px4flow_i2c.hpp&quot;</span>
-<a name="l00064"></a>00064 <span class="preprocessor">#include &quot;drivers/spektrum_satellite.hpp&quot;</span>
-<a name="l00065"></a>00065 <span class="preprocessor">#include &quot;drivers/state_display_megafly_rev4.hpp&quot;</span>
-<a name="l00066"></a>00066 
-<a name="l00067"></a>00067 <span class="preprocessor">#include &quot;sensing/imu.hpp&quot;</span>
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
-<a name="l00070"></a>00070 {
-<a name="l00071"></a>00071 <span class="preprocessor">#include &quot;hal/avr32/twim_default_config.h&quot;</span>
-<a name="l00072"></a>00072 <span class="preprocessor">#include &quot;util/streams.h&quot;</span>
-<a name="l00073"></a>00073 <span class="preprocessor">#include &quot;hal/analog_monitor.h&quot;</span>
-<a name="l00074"></a>00074 }
-<a name="l00075"></a>00075 
+<a name="l00064"></a>00064 <span class="preprocessor">#include &quot;drivers/px4flow_serial.hpp&quot;</span>
+<a name="l00065"></a>00065 <span class="preprocessor">#include &quot;drivers/spektrum_satellite.hpp&quot;</span>
+<a name="l00066"></a>00066 <span class="preprocessor">#include &quot;drivers/state_display_megafly_rev4.hpp&quot;</span>
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 <span class="preprocessor">#include &quot;sensing/imu.hpp&quot;</span>
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070 <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span>
+<a name="l00071"></a>00071 {
+<a name="l00072"></a>00072 <span class="preprocessor">#include &quot;hal/avr32/twim_default_config.h&quot;</span>
+<a name="l00073"></a>00073 <span class="preprocessor">#include &quot;util/streams.h&quot;</span>
+<a name="l00074"></a>00074 <span class="preprocessor">#include &quot;hal/analog_monitor.h&quot;</span>
+<a name="l00075"></a>00075 }
 <a name="l00076"></a>00076 
-<a name="l00077"></a>00077 <span class="comment">// Preprocessor definitions</span>
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079 <span class="comment">/*</span>
-<a name="l00080"></a>00080 <span class="comment"> * Should the ESC be calibrated?</span>
-<a name="l00081"></a>00081 <span class="comment"> * 0 for false (normal flight)</span>
-<a name="l00082"></a>00082 <span class="comment"> * 1 for true (calibration)</span>
-<a name="l00083"></a>00083 <span class="comment"> * !!!IMPORTANT!!!</span>
-<a name="l00084"></a>00084 <span class="comment"> * IF CALIBRATING, TAKE OFF PROPS</span>
-<a name="l00085"></a>00085 <span class="comment"> */</span>
-<a name="l00086"></a>00086 <span class="preprocessor">#define CALIBRATE_ESC 0</span>
-<a name="l00087"></a>00087 <span class="preprocessor"></span>
-<a name="l00091"></a><a class="code" href="structmegafly__rev4__conf__t.html">00091</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
-<a name="l00092"></a>00092 {
-<a name="l00093"></a>00093     <a class="code" href="structgpio__avr32__conf__t.html">gpio_avr32_conf_t</a>       dsm_receiver_pin_config;
-<a name="l00094"></a>00094     <a class="code" href="structgpio__avr32__conf__t.html">gpio_avr32_conf_t</a>       dsm_power_pin_config;
-<a name="l00095"></a>00095     <a class="code" href="structbattery__conf__t.html" title="Configuration for Battery.">battery_conf_t</a>          battery_config;
-<a name="l00096"></a>00096     <a class="code" href="structserial__avr32__conf__t.html" title="Configuration structure.">serial_avr32_conf_t</a>     uart0_config;
-<a name="l00097"></a>00097     <a class="code" href="structserial__avr32__conf__t.html" title="Configuration structure.">serial_avr32_conf_t</a>     uart1_config;
-<a name="l00098"></a>00098     <a class="code" href="structserial__avr32__conf__t.html" title="Configuration structure.">serial_avr32_conf_t</a>     uart3_config;
-<a name="l00099"></a>00099     <a class="code" href="structserial__usb__avr32__conf__t.html" title="Configuration structure.">serial_usb_avr32_conf_t</a> uart_usb_config;
-<a name="l00100"></a>00100     <a class="code" href="structi2c__avr32__conf__t.html" title="Configuration structure.">i2c_avr32_conf_t</a>        i2c0_config;
-<a name="l00101"></a>00101     <a class="code" href="structi2c__avr32__conf__t.html" title="Configuration structure.">i2c_avr32_conf_t</a>        i2c1_config;
-<a name="l00102"></a>00102     <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a>              imu_config;
-<a name="l00103"></a>00103     <a class="code" href="structservo__conf__t.html" title="Configuration structure for servo.">servo_conf_t</a>            servo_config[8];
-<a name="l00104"></a>00104     <a class="code" href="structPx4flow__i2c_1_1conf__t.html">Px4flow_i2c::conf_t</a>     px4flow_config;
-<a name="l00105"></a>00105 } <a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a>;
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107 
-<a name="l00113"></a>00113 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a> megafly_rev4_default_config();
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115 
-<a name="l00120"></a><a class="code" href="classMegafly__rev4.html">00120</a> <span class="keyword">class </span><a class="code" href="classMegafly__rev4.html" title="Boardsupport for the MegaFly board (rev4)">Megafly_rev4</a>
-<a name="l00121"></a>00121 {
-<a name="l00122"></a>00122 <span class="keyword">public</span>:
-<a name="l00128"></a>00128     <a class="code" href="classMegafly__rev4.html#ae9d9107f12e56cc1e4a5cb6d53b8d0c3" title="Constructor.">Megafly_rev4</a>(<a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a> config = megafly_rev4_default_config());
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130 
-<a name="l00136"></a>00136     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation.">init</a>(<span class="keywordtype">void</span>);
-<a name="l00137"></a>00137 
-<a name="l00141"></a><a class="code" href="classMegafly__rev4.html#a07bf4d69cc0b14a297a7796f6382a5c8">00141</a>     <a class="code" href="classGpio__avr32.html">Gpio_avr32</a>                  <a class="code" href="classMegafly__rev4.html#a07bf4d69cc0b14a297a7796f6382a5c8">dsm_receiver_pin</a>;
-<a name="l00142"></a>00142     <a class="code" href="classGpio__avr32.html">Gpio_avr32</a>                  dsm_power_pin;
-<a name="l00143"></a>00143     <a class="code" href="classSerial__avr32.html" title="Implementation of serial peripheral for avr32.">Serial_avr32</a>                uart0;
-<a name="l00144"></a>00144     <a class="code" href="classSerial__avr32.html" title="Implementation of serial peripheral for avr32.">Serial_avr32</a>                uart1;
-<a name="l00145"></a>00145     <a class="code" href="classSerial__avr32.html" title="Implementation of serial peripheral for avr32.">Serial_avr32</a>                uart3;
-<a name="l00146"></a>00146     <a class="code" href="classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32.">Serial_usb_avr32</a>            uart_usb;
-<a name="l00147"></a>00147     <a class="code" href="classI2c__avr32.html" title="I2C peripheral driver for AVR32.">I2c_avr32</a>                   i2c0;
-<a name="l00148"></a>00148     <a class="code" href="classI2c__avr32.html" title="I2C peripheral driver for AVR32.">I2c_avr32</a>                   i2c1;
-<a name="l00149"></a>00149     <a class="code" href="classHmc5883l.html" title="Driver for HMC5883L magnetometer.">Hmc5883l</a>                    hmc5883l;
-<a name="l00150"></a>00150     <a class="code" href="classLsm330dlc.html" title="Driver for sensor LSM330DLC.">Lsm330dlc</a>                   lsm330dlc;
-<a name="l00151"></a>00151     <a class="code" href="classBarometer__BMP085.html" title="Driver for the BMP085 barometer.">Barometer_BMP085</a>            barometer;
-<a name="l00152"></a>00152     <a class="code" href="classSpektrum__satellite.html">Spektrum_satellite</a>          spektrum_satellite;
-<a name="l00153"></a>00153     <a class="code" href="classLed__avr32.html">Led_avr32</a>                   red_led;
-<a name="l00154"></a>00154     <a class="code" href="classLed__avr32.html">Led_avr32</a>                   green_led;
-<a name="l00155"></a>00155     <a class="code" href="classState__display__megafly__rev4.html">State_display_megafly_rev4</a>  state_display_megafly_rev4_;
-<a name="l00156"></a>00156     <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>                         imu;
-<a name="l00157"></a>00157     <a class="code" href="classFile__flash__avr32.html" title="File objects on linux platforms.">File_flash_avr32</a>            file_flash;
-<a name="l00158"></a>00158     <a class="code" href="classGps__ublox.html" title="Driver for UBLOX GPS.">Gps_ublox</a>                   gps_ublox;
-<a name="l00159"></a>00159     <a class="code" href="classSonar__i2cxl.html">Sonar_i2cxl</a>                 sonar_i2cxl;
-<a name="l00160"></a>00160     <a class="code" href="classPx4flow__i2c.html">Px4flow_i2c</a>                 flow;
-<a name="l00161"></a>00161     <a class="code" href="structanalog__monitor__t.html" title="Analog monitor structure.">analog_monitor_t</a>            analog_monitor;
-<a name="l00162"></a>00162     <a class="code" href="classAdc__avr32.html" title="Implementation of Analog to digital converters on avr32 *.">Adc_avr32</a>                   adc_battery;
-<a name="l00163"></a>00163     <a class="code" href="classAdc__avr32.html" title="Implementation of Analog to digital converters on avr32 *.">Adc_avr32</a>                   adc_airspeed;
-<a name="l00164"></a>00164     <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>                     battery;
-<a name="l00165"></a>00165     <a class="code" href="classAirspeed__analog.html">Airspeed_analog</a>             airspeed_analog;
-<a name="l00166"></a>00166     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   pwm_0;
-<a name="l00167"></a>00167     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   pwm_1;
-<a name="l00168"></a>00168     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   pwm_2;
-<a name="l00169"></a>00169     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   pwm_3;
-<a name="l00170"></a>00170     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   pwm_4;
-<a name="l00171"></a>00171     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   pwm_5;
-<a name="l00172"></a>00172     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   pwm_6;
-<a name="l00173"></a>00173     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   pwm_7;
-<a name="l00174"></a>00174     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       servo_0;
-<a name="l00175"></a>00175     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       servo_1;
-<a name="l00176"></a>00176     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       servo_2;
-<a name="l00177"></a>00177     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       servo_3;
-<a name="l00178"></a>00178     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       servo_4;
-<a name="l00179"></a>00179     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       servo_5;
-<a name="l00180"></a>00180     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       servo_6;
-<a name="l00181"></a>00181     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       servo_7;
-<a name="l00182"></a>00182 
-<a name="l00183"></a>00183 <span class="keyword">private</span>:
-<a name="l00184"></a>00184     <a class="code" href="structbyte__stream__t.html" title="Byte stream.">byte_stream_t</a>   dbg_stream_;  
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078 <span class="comment">// Preprocessor definitions</span>
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080 <span class="comment">/*</span>
+<a name="l00081"></a>00081 <span class="comment"> * Should the ESC be calibrated?</span>
+<a name="l00082"></a>00082 <span class="comment"> * 0 for false (normal flight)</span>
+<a name="l00083"></a>00083 <span class="comment"> * 1 for true (calibration)</span>
+<a name="l00084"></a>00084 <span class="comment"> * !!!IMPORTANT!!!</span>
+<a name="l00085"></a>00085 <span class="comment"> * IF CALIBRATING, TAKE OFF PROPS</span>
+<a name="l00086"></a>00086 <span class="comment"> */</span>
+<a name="l00087"></a>00087 <span class="preprocessor">#define CALIBRATE_ESC 0</span>
+<a name="l00088"></a>00088 <span class="preprocessor"></span>
+<a name="l00092"></a><a class="code" href="structmegafly__rev4__conf__t.html">00092</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00093"></a>00093 {
+<a name="l00094"></a>00094     <a class="code" href="structgpio__avr32__conf__t.html">gpio_avr32_conf_t</a>       dsm_receiver_pin_config;
+<a name="l00095"></a>00095     <a class="code" href="structgpio__avr32__conf__t.html">gpio_avr32_conf_t</a>       dsm_power_pin_config;
+<a name="l00096"></a>00096     <a class="code" href="structbattery__conf__t.html" title="Configuration for Battery.">battery_conf_t</a>          battery_config;
+<a name="l00097"></a>00097     <a class="code" href="structserial__avr32__conf__t.html" title="Configuration structure.">serial_avr32_conf_t</a>     uart0_config;
+<a name="l00098"></a>00098     <a class="code" href="structserial__avr32__conf__t.html" title="Configuration structure.">serial_avr32_conf_t</a>     uart1_config;
+<a name="l00099"></a>00099     <a class="code" href="structserial__avr32__conf__t.html" title="Configuration structure.">serial_avr32_conf_t</a>     uart3_config;
+<a name="l00100"></a>00100     <a class="code" href="structserial__usb__avr32__conf__t.html" title="Configuration structure.">serial_usb_avr32_conf_t</a> uart_usb_config;
+<a name="l00101"></a>00101     <a class="code" href="structi2c__avr32__conf__t.html" title="Configuration structure.">i2c_avr32_conf_t</a>        i2c0_config;
+<a name="l00102"></a>00102     <a class="code" href="structi2c__avr32__conf__t.html" title="Configuration structure.">i2c_avr32_conf_t</a>        i2c1_config;
+<a name="l00103"></a>00103     <a class="code" href="structimu__conf__t.html" title="The configuration IMU structure.">imu_conf_t</a>              imu_config;
+<a name="l00104"></a>00104     <a class="code" href="structservo__conf__t.html" title="Configuration structure for servo.">servo_conf_t</a>            servo_config[8];
+<a name="l00105"></a>00105     <a class="code" href="structPX4Flow__i2c_1_1conf__t.html" title="Configuration.">PX4Flow_i2c::conf_t</a>     px4flow_i2c_config;
+<a name="l00106"></a>00106     <a class="code" href="structPX4Flow__serial_1_1conf__t.html" title="Configuration.">PX4Flow_serial::conf_t</a>  px4flow_serial_config;
+<a name="l00107"></a>00107 } <a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a>;
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 
+<a name="l00115"></a>00115 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a> megafly_rev4_default_config();
+<a name="l00116"></a>00116 
+<a name="l00117"></a>00117 
+<a name="l00122"></a><a class="code" href="classMegafly__rev4.html">00122</a> <span class="keyword">class </span><a class="code" href="classMegafly__rev4.html" title="Boardsupport for the MegaFly board (rev4)">Megafly_rev4</a>
+<a name="l00123"></a>00123 {
+<a name="l00124"></a>00124 <span class="keyword">public</span>:
+<a name="l00130"></a>00130     <a class="code" href="classMegafly__rev4.html#ae9d9107f12e56cc1e4a5cb6d53b8d0c3" title="Constructor.">Megafly_rev4</a>(<a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a> config = megafly_rev4_default_config());
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132 
+<a name="l00138"></a>00138     <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code" href="classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation.">init</a>(<span class="keywordtype">void</span>);
+<a name="l00139"></a>00139 
+<a name="l00143"></a><a class="code" href="classMegafly__rev4.html#a07bf4d69cc0b14a297a7796f6382a5c8">00143</a>     <a class="code" href="classGpio__avr32.html">Gpio_avr32</a>                  <a class="code" href="classMegafly__rev4.html#a07bf4d69cc0b14a297a7796f6382a5c8" title="GPIO for dsm receiver data.">dsm_receiver_pin</a>;               
+<a name="l00144"></a><a class="code" href="classMegafly__rev4.html#af2866398bbebe42c3bc15e48e0c64831">00144</a>     <a class="code" href="classGpio__avr32.html">Gpio_avr32</a>                  <a class="code" href="classMegafly__rev4.html#af2866398bbebe42c3bc15e48e0c64831" title="GPIO for dsm receiver power.">dsm_power_pin</a>;                  
+<a name="l00145"></a><a class="code" href="classMegafly__rev4.html#a9682cbd60cfd51cc040b59595d57f662">00145</a>     <a class="code" href="classSerial__avr32.html" title="Implementation of serial peripheral for avr32.">Serial_avr32</a>                <a class="code" href="classMegafly__rev4.html#a9682cbd60cfd51cc040b59595d57f662" title="UART 0.">uart0</a>;                          
+<a name="l00146"></a><a class="code" href="classMegafly__rev4.html#a35563ca0bf3abd665f8328fdd6f35316">00146</a>     <a class="code" href="classSerial__avr32.html" title="Implementation of serial peripheral for avr32.">Serial_avr32</a>                <a class="code" href="classMegafly__rev4.html#a35563ca0bf3abd665f8328fdd6f35316" title="UART 1.">uart1</a>;                          
+<a name="l00147"></a><a class="code" href="classMegafly__rev4.html#aa0df17090a87f6d8818761d010c3b52b">00147</a>     <a class="code" href="classSerial__avr32.html" title="Implementation of serial peripheral for avr32.">Serial_avr32</a>                <a class="code" href="classMegafly__rev4.html#aa0df17090a87f6d8818761d010c3b52b" title="UART 3.">uart3</a>;                          
+<a name="l00148"></a><a class="code" href="classMegafly__rev4.html#a247334e4ea743202a45b08aab47032e7">00148</a>     <a class="code" href="classSerial__usb__avr32.html" title="Implementation of serial peripheral for avr32.">Serial_usb_avr32</a>            <a class="code" href="classMegafly__rev4.html#a247334e4ea743202a45b08aab47032e7" title="USB serial.">uart_usb</a>;                       
+<a name="l00149"></a><a class="code" href="classMegafly__rev4.html#a475c19f2182c0da98c2d7e32d93605c0">00149</a>     <a class="code" href="classI2c__avr32.html" title="I2C peripheral driver for AVR32.">I2c_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a475c19f2182c0da98c2d7e32d93605c0" title="I2C0.">i2c0</a>;                           
+<a name="l00150"></a><a class="code" href="classMegafly__rev4.html#a350a788d1e09b4cd65669ea94d5f86f1">00150</a>     <a class="code" href="classI2c__avr32.html" title="I2C peripheral driver for AVR32.">I2c_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a350a788d1e09b4cd65669ea94d5f86f1" title="I2C1.">i2c1</a>;                           
+<a name="l00151"></a><a class="code" href="classMegafly__rev4.html#af40dfc96c4f1388adeb70ff80f25fc2d">00151</a>     <a class="code" href="classHmc5883l.html" title="Driver for HMC5883L magnetometer.">Hmc5883l</a>                    <a class="code" href="classMegafly__rev4.html#af40dfc96c4f1388adeb70ff80f25fc2d" title="Magnetometer HMC5883l.">hmc5883l</a>;                       
+<a name="l00152"></a><a class="code" href="classMegafly__rev4.html#ad7bb0f5c73ae9ad9d77a3f7304a698cf">00152</a>     <a class="code" href="classLsm330dlc.html" title="Driver for sensor LSM330DLC.">Lsm330dlc</a>                   <a class="code" href="classMegafly__rev4.html#ad7bb0f5c73ae9ad9d77a3f7304a698cf" title="Accelerometer/Gyroscope LSM330DLC.">lsm330dlc</a>;                      
+<a name="l00153"></a><a class="code" href="classMegafly__rev4.html#aa3cbda587e3d9ca16d2155a871ec1e65">00153</a>     <a class="code" href="classBarometer__BMP085.html" title="Driver for the BMP085 barometer.">Barometer_BMP085</a>            <a class="code" href="classMegafly__rev4.html#aa3cbda587e3d9ca16d2155a871ec1e65" title="Barometer BMP085.">barometer</a>;                      
+<a name="l00154"></a><a class="code" href="classMegafly__rev4.html#a2033927087148960eaf6a7b23fedc939">00154</a>     <a class="code" href="classSpektrum__satellite.html">Spektrum_satellite</a>          <a class="code" href="classMegafly__rev4.html#a2033927087148960eaf6a7b23fedc939" title="DSM receiver.">spektrum_satellite</a>;             
+<a name="l00155"></a><a class="code" href="classMegafly__rev4.html#a01ce87bfc8cbc7b4772c7bf553d7037a">00155</a>     <a class="code" href="classLed__avr32.html">Led_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a01ce87bfc8cbc7b4772c7bf553d7037a" title="Red LED.">red_led</a>;                        
+<a name="l00156"></a><a class="code" href="classMegafly__rev4.html#ac6b2853383c5871e2919444331cb4b14">00156</a>     <a class="code" href="classLed__avr32.html">Led_avr32</a>                   <a class="code" href="classMegafly__rev4.html#ac6b2853383c5871e2919444331cb4b14" title="Green LED.">green_led</a>;                      
+<a name="l00157"></a><a class="code" href="classMegafly__rev4.html#a8c53ef5c6b466f6885386e7d8dfe5c7f">00157</a>     <a class="code" href="classState__display__megafly__rev4.html">State_display_megafly_rev4</a>  <a class="code" href="classMegafly__rev4.html#a8c53ef5c6b466f6885386e7d8dfe5c7f" title="State indicator using LEDs.">state_display_megafly_rev4_</a>;    
+<a name="l00158"></a><a class="code" href="classMegafly__rev4.html#a1e7326cb079f39c5a8dedf5d17b70c6b">00158</a>     <a class="code" href="classImu.html" title="Inertial measurement unit (IMU)">Imu</a>                         <a class="code" href="classMegafly__rev4.html#a1e7326cb079f39c5a8dedf5d17b70c6b" title="IMU.">imu</a>;                            
+<a name="l00159"></a><a class="code" href="classMegafly__rev4.html#af8680be411c12d9a086b22c78b2f8eff">00159</a>     <a class="code" href="classFile__flash__avr32.html" title="File objects on linux platforms.">File_flash_avr32</a>            <a class="code" href="classMegafly__rev4.html#af8680be411c12d9a086b22c78b2f8eff" title="File for persistent storage on flash memory.">file_flash</a>;                     
+<a name="l00160"></a><a class="code" href="classMegafly__rev4.html#aeca8fe0ad89f75bfbd3984315bd34892">00160</a>     <a class="code" href="classGps__ublox.html" title="Driver for UBLOX GPS.">Gps_ublox</a>                   <a class="code" href="classMegafly__rev4.html#aeca8fe0ad89f75bfbd3984315bd34892" title="GPS ublox.">gps_ublox</a>;                      
+<a name="l00161"></a><a class="code" href="classMegafly__rev4.html#addb99e3749f9d0afc439aa3305d3d243">00161</a>     <a class="code" href="classSonar__i2cxl.html">Sonar_i2cxl</a>                 <a class="code" href="classMegafly__rev4.html#addb99e3749f9d0afc439aa3305d3d243" title="Sonar on i2C.">sonar_i2cxl</a>;                    
+<a name="l00162"></a><a class="code" href="classMegafly__rev4.html#ab2a36617dfd6788531e012584d28ab47">00162</a>     <a class="code" href="classPX4Flow__i2c.html">PX4Flow_i2c</a>                 <a class="code" href="classMegafly__rev4.html#ab2a36617dfd6788531e012584d28ab47" title="PX4Flow on I2C port.">flow_i2c</a>;                       
+<a name="l00163"></a><a class="code" href="classMegafly__rev4.html#a0e35130502b929b90f2d1489f974f980">00163</a>     <a class="code" href="classPX4Flow__serial.html" title="Driver for PX4Flow.">PX4Flow_serial</a>              <a class="code" href="classMegafly__rev4.html#a0e35130502b929b90f2d1489f974f980" title="PX4Flow on serial port.">flow_serial</a>;                    
+<a name="l00164"></a><a class="code" href="classMegafly__rev4.html#a5ead12728c7e305ca696a366b3cca5c9">00164</a>     <a class="code" href="structanalog__monitor__t.html" title="Analog monitor structure.">analog_monitor_t</a>            <a class="code" href="classMegafly__rev4.html#a5ead12728c7e305ca696a366b3cca5c9" title="Battery voltage monitor.">analog_monitor</a>;                 
+<a name="l00165"></a><a class="code" href="classMegafly__rev4.html#a76eada5c5f91da5ec6b546390a958760">00165</a>     <a class="code" href="classAdc__avr32.html" title="Implementation of Analog to digital converters on avr32 *.">Adc_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a76eada5c5f91da5ec6b546390a958760" title="ADC for battery.">adc_battery</a>;                    
+<a name="l00166"></a><a class="code" href="classMegafly__rev4.html#a667c558f27b16c98ffc9d92aff0d7f9a">00166</a>     <a class="code" href="classAdc__avr32.html" title="Implementation of Analog to digital converters on avr32 *.">Adc_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a667c558f27b16c98ffc9d92aff0d7f9a" title="ADC for airspeed sensor.">adc_airspeed</a>;                   
+<a name="l00167"></a><a class="code" href="classMegafly__rev4.html#ac21f72ed056278a400bf9e9dc628fcc0">00167</a>     <a class="code" href="classBattery.html" title="Battery voltage monitor.">Battery</a>                     <a class="code" href="classMegafly__rev4.html#ac21f72ed056278a400bf9e9dc628fcc0" title="Battery.">battery</a>;                        
+<a name="l00168"></a><a class="code" href="classMegafly__rev4.html#ab5b7f045f4cd181be50d9ab11db1fb67">00168</a>     <a class="code" href="classAirspeed__analog.html">Airspeed_analog</a>             <a class="code" href="classMegafly__rev4.html#ab5b7f045f4cd181be50d9ab11db1fb67" title="Airspeed sensor.">airspeed_analog</a>;                
+<a name="l00169"></a><a class="code" href="classMegafly__rev4.html#a9f8446d087872c64a001f2c395012b9b">00169</a>     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a9f8446d087872c64a001f2c395012b9b" title="PWM 0.">pwm_0</a>;                          
+<a name="l00170"></a><a class="code" href="classMegafly__rev4.html#ab4ecef472f77b5aad500fdaea0ca9262">00170</a>     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   <a class="code" href="classMegafly__rev4.html#ab4ecef472f77b5aad500fdaea0ca9262" title="PWM 1.">pwm_1</a>;                          
+<a name="l00171"></a><a class="code" href="classMegafly__rev4.html#a72e28af5367db449bcee0b4c87d5847a">00171</a>     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a72e28af5367db449bcee0b4c87d5847a" title="PWM 2.">pwm_2</a>;                          
+<a name="l00172"></a><a class="code" href="classMegafly__rev4.html#a8b477901973db785ff30a11ef29f7362">00172</a>     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a8b477901973db785ff30a11ef29f7362" title="PWM 3.">pwm_3</a>;                          
+<a name="l00173"></a><a class="code" href="classMegafly__rev4.html#a01c264ad3fcdd886e48f130c14968933">00173</a>     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   <a class="code" href="classMegafly__rev4.html#a01c264ad3fcdd886e48f130c14968933" title="PWM 4.">pwm_4</a>;                          
+<a name="l00174"></a><a class="code" href="classMegafly__rev4.html#af1d517d0bc23549b4bc9c197dc10976f">00174</a>     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   <a class="code" href="classMegafly__rev4.html#af1d517d0bc23549b4bc9c197dc10976f" title="PWM 5.">pwm_5</a>;                          
+<a name="l00175"></a><a class="code" href="classMegafly__rev4.html#aa9cfde1b2f6fb688bcc392ec6bcda708">00175</a>     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   <a class="code" href="classMegafly__rev4.html#aa9cfde1b2f6fb688bcc392ec6bcda708" title="PWM 6.">pwm_6</a>;                          
+<a name="l00176"></a><a class="code" href="classMegafly__rev4.html#aa56f94cbd7bff52b73155727885055aa">00176</a>     <a class="code" href="classPwm__avr32.html">Pwm_avr32</a>                   <a class="code" href="classMegafly__rev4.html#aa56f94cbd7bff52b73155727885055aa" title="PWM 7.">pwm_7</a>;                          
+<a name="l00177"></a><a class="code" href="classMegafly__rev4.html#ad46fde71ac72ea0673e7b917df0f0ce7">00177</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       <a class="code" href="classMegafly__rev4.html#ad46fde71ac72ea0673e7b917df0f0ce7" title="Servo 0.">servo_0</a>;                        
+<a name="l00178"></a><a class="code" href="classMegafly__rev4.html#a37e262374c6df58cfa7451b6d73aac7f">00178</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       <a class="code" href="classMegafly__rev4.html#a37e262374c6df58cfa7451b6d73aac7f" title="Servo 1.">servo_1</a>;                        
+<a name="l00179"></a><a class="code" href="classMegafly__rev4.html#a92e9f72fbe3fadc6e56e9f8165b63078">00179</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       <a class="code" href="classMegafly__rev4.html#a92e9f72fbe3fadc6e56e9f8165b63078" title="Servo 2.">servo_2</a>;                        
+<a name="l00180"></a><a class="code" href="classMegafly__rev4.html#a0de2e4d66e1556d9de60bbb679a91c2e">00180</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       <a class="code" href="classMegafly__rev4.html#a0de2e4d66e1556d9de60bbb679a91c2e" title="Servo 3.">servo_3</a>;                        
+<a name="l00181"></a><a class="code" href="classMegafly__rev4.html#a66c9e280fe9515635e0bd9fb5bb8fb47">00181</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       <a class="code" href="classMegafly__rev4.html#a66c9e280fe9515635e0bd9fb5bb8fb47" title="Servo 4.">servo_4</a>;                        
+<a name="l00182"></a><a class="code" href="classMegafly__rev4.html#a03d8fcc88a1b5932e95ef2edd95669bd">00182</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       <a class="code" href="classMegafly__rev4.html#a03d8fcc88a1b5932e95ef2edd95669bd" title="Servo 5.">servo_5</a>;                        
+<a name="l00183"></a><a class="code" href="classMegafly__rev4.html#a738ba689693aea8093f78f04c8e6993c">00183</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       <a class="code" href="classMegafly__rev4.html#a738ba689693aea8093f78f04c8e6993c" title="Servo 6.">servo_6</a>;                        
+<a name="l00184"></a><a class="code" href="classMegafly__rev4.html#a1b802a26046380ba47a04f72fe0c333e">00184</a>     <a class="code" href="classServo.html" title="Driver for servomotors using PWM.">Servo</a>                       <a class="code" href="classMegafly__rev4.html#a1b802a26046380ba47a04f72fe0c333e" title="Servo 7.">servo_7</a>;                        
 <a name="l00185"></a>00185 
-<a name="l00186"></a>00186 
-<a name="l00194"></a>00194     <span class="keywordtype">bool</span> boardsupport_init(<span class="keywordtype">void</span>);
-<a name="l00195"></a>00195 
-<a name="l00196"></a>00196 };
-<a name="l00197"></a>00197 
+<a name="l00186"></a>00186 <span class="keyword">private</span>:
+<a name="l00187"></a>00187     <a class="code" href="structbyte__stream__t.html" title="Byte stream.">byte_stream_t</a>   dbg_stream_;  
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189 
+<a name="l00197"></a>00197     <span class="keywordtype">bool</span> boardsupport_init(<span class="keywordtype">void</span>);
 <a name="l00198"></a>00198 
-<a name="l00204"></a>00204 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a> megafly_rev4_default_config()
-<a name="l00205"></a>00205 {
-<a name="l00206"></a>00206     <a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a> conf = {};
-<a name="l00207"></a>00207 
-<a name="l00208"></a>00208     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00209"></a>00209     <span class="comment">// GPIO dsm receiver pin configuration</span>
-<a name="l00210"></a>00210     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00211"></a>00211     conf.dsm_receiver_pin_config     = gpio_avr32_default_config();
-<a name="l00212"></a>00212     conf.dsm_receiver_pin_config.<a class="code" href="structgpio__avr32__conf__t.html#a94d7d2ce7ff1da08f0328bfd945fa1ef" title="pin number">pin</a> = AVR32_PIN_PD12;
-<a name="l00213"></a>00213 
-<a name="l00214"></a>00214 
-<a name="l00215"></a>00215     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00216"></a>00216     <span class="comment">// GPIO dsm power pin configuration</span>
-<a name="l00217"></a>00217     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00218"></a>00218     conf.dsm_power_pin_config     = gpio_avr32_default_config();
-<a name="l00219"></a>00219     conf.dsm_power_pin_config.<a class="code" href="structgpio__avr32__conf__t.html#a94d7d2ce7ff1da08f0328bfd945fa1ef" title="pin number">pin</a> = AVR32_PIN_PC01;
-<a name="l00220"></a>00220 
-<a name="l00221"></a>00221     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00222"></a>00222     <span class="comment">// Battery config</span>
-<a name="l00223"></a>00223     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00224"></a>00224     conf.battery_config = battery_default_config();
-<a name="l00225"></a>00225 
+<a name="l00199"></a>00199 };
+<a name="l00200"></a>00200 
+<a name="l00201"></a>00201 
+<a name="l00207"></a>00207 <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a> megafly_rev4_default_config()
+<a name="l00208"></a>00208 {
+<a name="l00209"></a>00209     <a class="code" href="structmegafly__rev4__conf__t.html" title="Configuration structure.">megafly_rev4_conf_t</a> conf = {};
+<a name="l00210"></a>00210 
+<a name="l00211"></a>00211     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00212"></a>00212     <span class="comment">// GPIO dsm receiver pin configuration</span>
+<a name="l00213"></a>00213     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00214"></a>00214     conf.dsm_receiver_pin_config     = gpio_avr32_default_config();
+<a name="l00215"></a>00215     conf.dsm_receiver_pin_config.<a class="code" href="structgpio__avr32__conf__t.html#a94d7d2ce7ff1da08f0328bfd945fa1ef" title="pin number">pin</a> = AVR32_PIN_PD12;
+<a name="l00216"></a>00216 
+<a name="l00217"></a>00217 
+<a name="l00218"></a>00218     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00219"></a>00219     <span class="comment">// GPIO dsm power pin configuration</span>
+<a name="l00220"></a>00220     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00221"></a>00221     conf.dsm_power_pin_config     = gpio_avr32_default_config();
+<a name="l00222"></a>00222     conf.dsm_power_pin_config.<a class="code" href="structgpio__avr32__conf__t.html#a94d7d2ce7ff1da08f0328bfd945fa1ef" title="pin number">pin</a> = AVR32_PIN_PC01;
+<a name="l00223"></a>00223 
+<a name="l00224"></a>00224     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00225"></a>00225     <span class="comment">// Battery config</span>
 <a name="l00226"></a>00226     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00227"></a>00227     <span class="comment">// UART0 configuration</span>
-<a name="l00228"></a>00228     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00229"></a>00229     conf.uart0_config                       = {};
-<a name="l00230"></a>00230     conf.uart0_config.serial_device         = AVR32_SERIAL_0;
-<a name="l00231"></a>00231     conf.uart0_config.mode                  = AVR32_SERIAL_IN_OUT;
-<a name="l00232"></a>00232     conf.uart0_config.options               = {};
-<a name="l00233"></a>00233     conf.uart0_config.options.baudrate      = 57600;
-<a name="l00234"></a>00234     conf.uart0_config.options.charlength    = 8;
-<a name="l00235"></a>00235     conf.uart0_config.options.paritytype    = USART_NO_PARITY;
-<a name="l00236"></a>00236     conf.uart0_config.options.stopbits      = USART_1_STOPBIT;
-<a name="l00237"></a>00237     conf.uart0_config.options.channelmode   = USART_NORMAL_CHMODE;
-<a name="l00238"></a>00238     conf.uart0_config.rx_pin_map            = {AVR32_USART0_RXD_0_0_PIN, AVR32_USART0_RXD_0_0_FUNCTION};
-<a name="l00239"></a>00239     conf.uart0_config.tx_pin_map            = {AVR32_USART0_TXD_0_0_PIN, AVR32_USART0_TXD_0_0_FUNCTION};
-<a name="l00240"></a>00240 
-<a name="l00241"></a>00241 
-<a name="l00242"></a>00242     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00243"></a>00243     <span class="comment">// UART1 configuration</span>
-<a name="l00244"></a>00244     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00245"></a>00245     conf.uart1_config                       = {};
-<a name="l00246"></a>00246     conf.uart1_config.serial_device         = AVR32_SERIAL_1;
-<a name="l00247"></a>00247     conf.uart1_config.mode                  = AVR32_SERIAL_IN_OUT;
-<a name="l00248"></a>00248     conf.uart1_config.options               = {};
-<a name="l00249"></a>00249     conf.uart1_config.options.baudrate      = 115200;
-<a name="l00250"></a>00250     conf.uart1_config.options.charlength    = 8;
-<a name="l00251"></a>00251     conf.uart1_config.options.paritytype    = USART_NO_PARITY;
-<a name="l00252"></a>00252     conf.uart1_config.options.stopbits      = USART_1_STOPBIT;
-<a name="l00253"></a>00253     conf.uart1_config.options.channelmode   = USART_NORMAL_CHMODE;
-<a name="l00254"></a>00254     conf.uart1_config.rx_pin_map            = {AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION};
-<a name="l00255"></a>00255     conf.uart1_config.tx_pin_map            = {AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION};
-<a name="l00256"></a>00256 
-<a name="l00257"></a>00257 
-<a name="l00258"></a>00258     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00259"></a>00259     <span class="comment">// UART3 configuration</span>
-<a name="l00260"></a>00260     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00261"></a>00261     conf.uart3_config                       = {};
-<a name="l00262"></a>00262     conf.uart3_config.serial_device         = AVR32_SERIAL_3;
-<a name="l00263"></a>00263     conf.uart3_config.mode                  = AVR32_SERIAL_IN_OUT;
-<a name="l00264"></a>00264     conf.uart3_config.options               = {};
-<a name="l00265"></a>00265     conf.uart3_config.options.baudrate      = 38400;
-<a name="l00266"></a>00266     conf.uart3_config.options.charlength    = 8;
-<a name="l00267"></a>00267     conf.uart3_config.options.paritytype    = USART_NO_PARITY;
-<a name="l00268"></a>00268     conf.uart3_config.options.stopbits      = USART_1_STOPBIT;
-<a name="l00269"></a>00269     conf.uart3_config.options.channelmode   = USART_NORMAL_CHMODE;
-<a name="l00270"></a>00270     conf.uart3_config.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
-<a name="l00271"></a>00271     conf.uart3_config.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
-<a name="l00272"></a>00272 
-<a name="l00273"></a>00273 
-<a name="l00274"></a>00274     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00275"></a>00275     <span class="comment">// UART USB configuration</span>
-<a name="l00276"></a>00276     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00277"></a>00277     conf.uart_usb_config        = {};
-<a name="l00278"></a>00278 
-<a name="l00279"></a>00279 
-<a name="l00280"></a>00280     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00281"></a>00281     <span class="comment">// I2C0 configuration</span>
-<a name="l00282"></a>00282     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00283"></a>00283     conf.i2c0_config            = {};
-<a name="l00284"></a>00284     conf.i2c0_config.i2c_device = AVR32_I2C0;
-<a name="l00285"></a>00285     conf.i2c0_config.twi_opt    = twim_default_config();
-<a name="l00286"></a>00286     conf.i2c0_config.tenbit     = <span class="keyword">false</span>;
-<a name="l00287"></a>00287     conf.i2c0_config.sda_pin    = AVR32_TWIMS0_TWD_0_0_PIN;
-<a name="l00288"></a>00288     conf.i2c0_config.clk_pin    = AVR32_TWIMS0_TWCK_0_0_PIN;
-<a name="l00289"></a>00289 
-<a name="l00290"></a>00290 
-<a name="l00291"></a>00291     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00292"></a>00292     <span class="comment">// I2C1 configuration</span>
-<a name="l00293"></a>00293     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00294"></a>00294     conf.i2c1_config            = {};
-<a name="l00295"></a>00295     conf.i2c1_config.i2c_device = AVR32_I2C1;
-<a name="l00296"></a>00296     conf.i2c1_config.twi_opt    = twim_default_config();
-<a name="l00297"></a>00297     conf.i2c1_config.twi_opt.speed = 100000;
-<a name="l00298"></a>00298     conf.i2c1_config.tenbit     = <span class="keyword">false</span>;
-<a name="l00299"></a>00299     conf.i2c1_config.sda_pin    = AVR32_TWIMS1_TWD_0_0_PIN;
-<a name="l00300"></a>00300     conf.i2c1_config.clk_pin    = AVR32_TWIMS1_TWCK_0_0_PIN;
-<a name="l00301"></a>00301 
-<a name="l00302"></a>00302 
-<a name="l00303"></a>00303     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00304"></a>00304     <span class="comment">// Imu config</span>
-<a name="l00305"></a>00305     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00306"></a>00306     conf.imu_config = imu_default_config();
-<a name="l00307"></a>00307     <span class="comment">// Accelerometer</span>
-<a name="l00308"></a>00308     <span class="comment">// Bias</span>
-<a name="l00309"></a>00309     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;           
-<a name="l00310"></a>00310     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
-<a name="l00311"></a>00311     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
-<a name="l00312"></a>00312 
-<a name="l00313"></a>00313     <span class="comment">// Scale</span>
-<a name="l00314"></a>00314     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 4000.0f;    
-<a name="l00315"></a>00315     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 4000.0f;
-<a name="l00316"></a>00316     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 4000.0f;
-<a name="l00317"></a>00317 
-<a name="l00318"></a>00318     <span class="comment">// Axis and sign</span>
-<a name="l00319"></a>00319     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f;  
-<a name="l00320"></a>00320     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = -1.0f;
-<a name="l00321"></a>00321     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = -1.0f;
-<a name="l00322"></a>00322     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;      
-<a name="l00323"></a>00323     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
-<a name="l00324"></a>00324     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
-<a name="l00325"></a>00325 
-<a name="l00326"></a>00326     <span class="comment">// Gyroscope</span>
-<a name="l00327"></a>00327     <span class="comment">// Bias</span>
-<a name="l00328"></a>00328     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;       
-<a name="l00329"></a>00329     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
-<a name="l00330"></a>00330     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
-<a name="l00331"></a>00331 
-<a name="l00332"></a>00332     <span class="comment">// Scale</span>
-<a name="l00333"></a>00333     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 818.5111f;      
-<a name="l00334"></a>00334     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 818.5111;
-<a name="l00335"></a>00335     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 818.5111f;
-<a name="l00336"></a>00336 
-<a name="l00337"></a>00337     <span class="comment">// Axis and sign</span>
-<a name="l00338"></a>00338     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f;  
-<a name="l00339"></a>00339     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = -1.0f;
-<a name="l00340"></a>00340     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = -1.0f;
-<a name="l00341"></a>00341     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;      
-<a name="l00342"></a>00342     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
-<a name="l00343"></a>00343     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
-<a name="l00344"></a>00344 
-<a name="l00345"></a>00345     <span class="comment">// Magnetometer</span>
-<a name="l00346"></a>00346     <span class="comment">// Bias</span>
-<a name="l00347"></a>00347     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;        
-<a name="l00348"></a>00348     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
-<a name="l00349"></a>00349     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
-<a name="l00350"></a>00350 
-<a name="l00351"></a>00351     <span class="comment">// Scale</span>
-<a name="l00352"></a>00352     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 600.0f;      
-<a name="l00353"></a>00353     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 600.0f;
-<a name="l00354"></a>00354     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 600.0f;
-<a name="l00355"></a>00355 
-<a name="l00356"></a>00356     <span class="comment">// Axis and sign</span>
-<a name="l00357"></a>00357     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = -1.0f;   
-<a name="l00358"></a>00358     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = -1.0f;
-<a name="l00359"></a>00359     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = -1.0f;
-<a name="l00360"></a>00360     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 2;       
-<a name="l00361"></a>00361     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 0;
-<a name="l00362"></a>00362     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 1;
-<a name="l00363"></a>00363 
-<a name="l00364"></a>00364 
-<a name="l00365"></a>00365 
-<a name="l00366"></a>00366     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00367"></a>00367     <span class="comment">// Servo config</span>
-<a name="l00368"></a>00368     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00369"></a>00369     conf.servo_config[0] = servo_default_config_esc();
-<a name="l00370"></a>00370     conf.servo_config[1] = servo_default_config_esc();
-<a name="l00371"></a>00371     conf.servo_config[2] = servo_default_config_esc();
-<a name="l00372"></a>00372     conf.servo_config[3] = servo_default_config_esc();
-<a name="l00373"></a>00373     conf.servo_config[4] = servo_default_config_esc();
-<a name="l00374"></a>00374     conf.servo_config[5] = servo_default_config_esc();
-<a name="l00375"></a>00375     conf.servo_config[6] = servo_default_config_esc();
-<a name="l00376"></a>00376     conf.servo_config[7] = servo_default_config_esc();
-<a name="l00377"></a>00377 
-<a name="l00378"></a>00378     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00379"></a>00379     <span class="comment">// Px4Flow config</span>
-<a name="l00380"></a>00380     <span class="comment">// -------------------------------------------------------------------------</span>
-<a name="l00381"></a>00381     conf.px4flow_config = <a class="code" href="classPx4flow__i2c.html#a913b653a9ea43c11df2bc03f94d2bd56" title="Default configuration.">Px4flow_i2c::default_config</a>();
-<a name="l00382"></a>00382     
-<a name="l00383"></a>00383     <span class="keywordflow">return</span> conf;
-<a name="l00384"></a>00384 }
-<a name="l00385"></a>00385 
+<a name="l00227"></a>00227     conf.battery_config = battery_default_config();
+<a name="l00228"></a>00228 
+<a name="l00229"></a>00229     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00230"></a>00230     <span class="comment">// UART0 configuration</span>
+<a name="l00231"></a>00231     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00232"></a>00232     conf.uart0_config                       = {};
+<a name="l00233"></a>00233     conf.uart0_config.serial_device         = AVR32_SERIAL_0;
+<a name="l00234"></a>00234     conf.uart0_config.mode                  = AVR32_SERIAL_IN_OUT;
+<a name="l00235"></a>00235     conf.uart0_config.options               = {};
+<a name="l00236"></a>00236     conf.uart0_config.options.baudrate      = 57600;
+<a name="l00237"></a>00237     conf.uart0_config.options.charlength    = 8;
+<a name="l00238"></a>00238     conf.uart0_config.options.paritytype    = USART_NO_PARITY;
+<a name="l00239"></a>00239     conf.uart0_config.options.stopbits      = USART_1_STOPBIT;
+<a name="l00240"></a>00240     conf.uart0_config.options.channelmode   = USART_NORMAL_CHMODE;
+<a name="l00241"></a>00241     conf.uart0_config.rx_pin_map            = {AVR32_USART0_RXD_0_0_PIN, AVR32_USART0_RXD_0_0_FUNCTION};
+<a name="l00242"></a>00242     conf.uart0_config.tx_pin_map            = {AVR32_USART0_TXD_0_0_PIN, AVR32_USART0_TXD_0_0_FUNCTION};
+<a name="l00243"></a>00243 
+<a name="l00244"></a>00244 
+<a name="l00245"></a>00245     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00246"></a>00246     <span class="comment">// UART1 configuration</span>
+<a name="l00247"></a>00247     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00248"></a>00248     conf.uart1_config                       = {};
+<a name="l00249"></a>00249     conf.uart1_config.serial_device         = AVR32_SERIAL_1;
+<a name="l00250"></a>00250     conf.uart1_config.mode                  = AVR32_SERIAL_IN_OUT;
+<a name="l00251"></a>00251     conf.uart1_config.options               = {};
+<a name="l00252"></a>00252     conf.uart1_config.options.baudrate      = 115200;
+<a name="l00253"></a>00253     conf.uart1_config.options.charlength    = 8;
+<a name="l00254"></a>00254     conf.uart1_config.options.paritytype    = USART_NO_PARITY;
+<a name="l00255"></a>00255     conf.uart1_config.options.stopbits      = USART_1_STOPBIT;
+<a name="l00256"></a>00256     conf.uart1_config.options.channelmode   = USART_NORMAL_CHMODE;
+<a name="l00257"></a>00257     conf.uart1_config.rx_pin_map            = {AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION};
+<a name="l00258"></a>00258     conf.uart1_config.tx_pin_map            = {AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION};
+<a name="l00259"></a>00259 
+<a name="l00260"></a>00260 
+<a name="l00261"></a>00261     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00262"></a>00262     <span class="comment">// UART3 configuration</span>
+<a name="l00263"></a>00263     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00264"></a>00264     conf.uart3_config                       = {};
+<a name="l00265"></a>00265     conf.uart3_config.serial_device         = AVR32_SERIAL_3;
+<a name="l00266"></a>00266     conf.uart3_config.mode                  = AVR32_SERIAL_IN_OUT;
+<a name="l00267"></a>00267     conf.uart3_config.options               = {};
+<a name="l00268"></a>00268     conf.uart3_config.options.baudrate      = 38400;
+<a name="l00269"></a>00269     conf.uart3_config.options.charlength    = 8;
+<a name="l00270"></a>00270     conf.uart3_config.options.paritytype    = USART_NO_PARITY;
+<a name="l00271"></a>00271     conf.uart3_config.options.stopbits      = USART_1_STOPBIT;
+<a name="l00272"></a>00272     conf.uart3_config.options.channelmode   = USART_NORMAL_CHMODE;
+<a name="l00273"></a>00273     conf.uart3_config.rx_pin_map            = {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
+<a name="l00274"></a>00274     conf.uart3_config.tx_pin_map            = {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
+<a name="l00275"></a>00275 
+<a name="l00276"></a>00276 
+<a name="l00277"></a>00277     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00278"></a>00278     <span class="comment">// UART USB configuration</span>
+<a name="l00279"></a>00279     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00280"></a>00280     conf.uart_usb_config        = {};
+<a name="l00281"></a>00281 
+<a name="l00282"></a>00282 
+<a name="l00283"></a>00283     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00284"></a>00284     <span class="comment">// I2C0 configuration</span>
+<a name="l00285"></a>00285     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00286"></a>00286     conf.i2c0_config            = {};
+<a name="l00287"></a>00287     conf.i2c0_config.i2c_device = AVR32_I2C0;
+<a name="l00288"></a>00288     conf.i2c0_config.twi_opt    = twim_default_config();
+<a name="l00289"></a>00289     conf.i2c0_config.tenbit     = <span class="keyword">false</span>;
+<a name="l00290"></a>00290     conf.i2c0_config.sda_pin    = AVR32_TWIMS0_TWD_0_0_PIN;
+<a name="l00291"></a>00291     conf.i2c0_config.clk_pin    = AVR32_TWIMS0_TWCK_0_0_PIN;
+<a name="l00292"></a>00292 
+<a name="l00293"></a>00293 
+<a name="l00294"></a>00294     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00295"></a>00295     <span class="comment">// I2C1 configuration</span>
+<a name="l00296"></a>00296     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00297"></a>00297     conf.i2c1_config            = {};
+<a name="l00298"></a>00298     conf.i2c1_config.i2c_device = AVR32_I2C1;
+<a name="l00299"></a>00299     conf.i2c1_config.twi_opt    = twim_default_config();
+<a name="l00300"></a>00300     conf.i2c1_config.twi_opt.speed = 100000;
+<a name="l00301"></a>00301     conf.i2c1_config.tenbit     = <span class="keyword">false</span>;
+<a name="l00302"></a>00302     conf.i2c1_config.sda_pin    = AVR32_TWIMS1_TWD_0_0_PIN;
+<a name="l00303"></a>00303     conf.i2c1_config.clk_pin    = AVR32_TWIMS1_TWCK_0_0_PIN;
+<a name="l00304"></a>00304 
+<a name="l00305"></a>00305 
+<a name="l00306"></a>00306     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00307"></a>00307     <span class="comment">// Imu config</span>
+<a name="l00308"></a>00308     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00309"></a>00309     conf.imu_config = imu_default_config();
+<a name="l00310"></a>00310     <span class="comment">// Accelerometer</span>
+<a name="l00311"></a>00311     <span class="comment">// Bias</span>
+<a name="l00312"></a>00312     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;           
+<a name="l00313"></a>00313     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
+<a name="l00314"></a>00314     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
+<a name="l00315"></a>00315 
+<a name="l00316"></a>00316     <span class="comment">// Scale</span>
+<a name="l00317"></a>00317     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 4000.0f;    
+<a name="l00318"></a>00318     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 4000.0f;
+<a name="l00319"></a>00319     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 4000.0f;
+<a name="l00320"></a>00320 
+<a name="l00321"></a>00321     <span class="comment">// Axis and sign</span>
+<a name="l00322"></a>00322     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f;  
+<a name="l00323"></a>00323     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = -1.0f;
+<a name="l00324"></a>00324     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = -1.0f;
+<a name="l00325"></a>00325     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;      
+<a name="l00326"></a>00326     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
+<a name="l00327"></a>00327     conf.imu_config.<a class="code" href="structimu__conf__t.html#a972915be8d26a9899613b2b5b00d454f" title="The gyroscope configuration structure.">accelerometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
+<a name="l00328"></a>00328 
+<a name="l00329"></a>00329     <span class="comment">// Gyroscope</span>
+<a name="l00330"></a>00330     <span class="comment">// Bias</span>
+<a name="l00331"></a>00331     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;       
+<a name="l00332"></a>00332     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
+<a name="l00333"></a>00333     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
+<a name="l00334"></a>00334 
+<a name="l00335"></a>00335     <span class="comment">// Scale</span>
+<a name="l00336"></a>00336     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 818.5111f;      
+<a name="l00337"></a>00337     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 818.5111;
+<a name="l00338"></a>00338     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 818.5111f;
+<a name="l00339"></a>00339 
+<a name="l00340"></a>00340     <span class="comment">// Axis and sign</span>
+<a name="l00341"></a>00341     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = +1.0f;  
+<a name="l00342"></a>00342     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = -1.0f;
+<a name="l00343"></a>00343     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = -1.0f;
+<a name="l00344"></a>00344     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 0;      
+<a name="l00345"></a>00345     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 1;
+<a name="l00346"></a>00346     conf.imu_config.<a class="code" href="structimu__conf__t.html#a368f667de156819b9f3127be7f3086da" title="The accelerometer configuration structure.">gyroscope</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 2;
+<a name="l00347"></a>00347 
+<a name="l00348"></a>00348     <span class="comment">// Magnetometer</span>
+<a name="l00349"></a>00349     <span class="comment">// Bias</span>
+<a name="l00350"></a>00350     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[0] = 0.0f;        
+<a name="l00351"></a>00351     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[1] = 0.0f;
+<a name="l00352"></a>00352     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#ae6d9baf6844a58363e60cdd66410019a" title="The biais of the sensor.">bias</a>[2] = 0.0f;
+<a name="l00353"></a>00353 
+<a name="l00354"></a>00354     <span class="comment">// Scale</span>
+<a name="l00355"></a>00355     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[0] = 600.0f;      
+<a name="l00356"></a>00356     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[1] = 600.0f;
+<a name="l00357"></a>00357     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a64c7c6d574a9b2b6c8dade0ef1b3036e" title="The scale factors of the sensor.">scale_factor</a>[2] = 600.0f;
+<a name="l00358"></a>00358 
+<a name="l00359"></a>00359     <span class="comment">// Axis and sign</span>
+<a name="l00360"></a>00360     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[0] = -1.0f;   
+<a name="l00361"></a>00361     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[1] = -1.0f;
+<a name="l00362"></a>00362     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a1f9293b2802ba16f2e029e37f34ceaf4" title="The orientation of the sensor (+1 or -1)">sign</a>[2] = -1.0f;
+<a name="l00363"></a>00363     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[0] = 2;       
+<a name="l00364"></a>00364     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[1] = 0;
+<a name="l00365"></a>00365     conf.imu_config.<a class="code" href="structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0" title="The compass configuration structure.">magnetometer</a>.<a class="code" href="structimu__sensor__config__t.html#a6ff36e9837f38d99809a3721f39f0361" title="The axis number (X,Y,Z) referring to the sensor datasheet.">axis</a>[2] = 1;
+<a name="l00366"></a>00366 
+<a name="l00367"></a>00367 
+<a name="l00368"></a>00368 
+<a name="l00369"></a>00369     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00370"></a>00370     <span class="comment">// Servo config</span>
+<a name="l00371"></a>00371     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00372"></a>00372     conf.servo_config[0] = servo_default_config_esc();
+<a name="l00373"></a>00373     conf.servo_config[1] = servo_default_config_esc();
+<a name="l00374"></a>00374     conf.servo_config[2] = servo_default_config_esc();
+<a name="l00375"></a>00375     conf.servo_config[3] = servo_default_config_esc();
+<a name="l00376"></a>00376     conf.servo_config[4] = servo_default_config_esc();
+<a name="l00377"></a>00377     conf.servo_config[5] = servo_default_config_esc();
+<a name="l00378"></a>00378     conf.servo_config[6] = servo_default_config_esc();
+<a name="l00379"></a>00379     conf.servo_config[7] = servo_default_config_esc();
+<a name="l00380"></a>00380 
+<a name="l00381"></a>00381     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00382"></a>00382     <span class="comment">// Px4Flow config</span>
+<a name="l00383"></a>00383     <span class="comment">// -------------------------------------------------------------------------</span>
+<a name="l00384"></a>00384     conf.px4flow_i2c_config     = <a class="code" href="classPX4Flow__i2c.html#aa4d56eef5a3d020ad6c18fe3d9c803c9" title="Default configuration.">PX4Flow_i2c::default_config</a>();
+<a name="l00385"></a>00385     conf.px4flow_serial_config  = <a class="code" href="classPX4Flow__serial.html#a70b77b0d3ef790d4cb0e4a6745f670d9" title="Default configuration.">PX4Flow_serial::default_config</a>();
 <a name="l00386"></a>00386 
-<a name="l00387"></a>00387 <span class="preprocessor">#endif </span><span class="comment">/* MEGAFLY_REV4_HPP_ */</span>
+<a name="l00387"></a>00387     <span class="keywordflow">return</span> conf;
+<a name="l00388"></a>00388 }
+<a name="l00389"></a>00389 
+<a name="l00390"></a>00390 
+<a name="l00391"></a>00391 <span class="preprocessor">#endif </span><span class="comment">/* MEGAFLY_REV4_HPP_ */</span>
 </pre></div></div><!-- contents -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -449,7 +453,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 12 2016 11:05:12 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 26 2017 09:32:18 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

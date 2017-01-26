@@ -7,8 +7,8 @@ var searchData=
   ['last_5fheartbeat_5fmsg',['last_heartbeat_msg',['../structState_1_1conf__t.html#a8d681b5bdb91acefeef4fb64f2be46a4',1,'State::conf_t::last_heartbeat_msg()'],['../classState.html#af0385b450d3af94a99270134bbd442f4',1,'State::last_heartbeat_msg()']]],
   ['last_5fsatellite_5fupdate',['last_satellite_update',['../structremote__t.html#a5c2ef89ddf281d357248f03b216fea02',1,'remote_t']]],
   ['last_5fupdate_5fs',['last_update_s',['../structpid__controller__t.html#a3bdcdcc5c5f4134536a52fc8c72c7895',1,'pid_controller_t::last_update_s()'],['../structstabilisation__wing__t.html#a0538703ec30600e0ff937793b15f3bd4',1,'stabilisation_wing_t::last_update_s()']]],
-  ['last_5fupdate_5fs_5f',['last_update_s_',['../classAttitude__controller.html#a1c37f9d7c3ed8f7c08f7ae701689fa3a',1,'Attitude_controller::last_update_s_()'],['../classPx4flow__i2c.html#aa819439b507f3219d9d82ad1a50eed1a',1,'Px4flow_i2c::last_update_s_()'],['../classAHRS__ekf.html#a657a7331d751116e00603041425946b2',1,'AHRS_ekf::last_update_s_()'],['../classAHRS__madgwick.html#a107bc7139b5c03bc2ffe7c16f525a6ba',1,'AHRS_madgwick::last_update_s_()'],['../classAHRS__qfilter.html#aaebf1171c22315fa9a6619b3f2fd3800',1,'AHRS_qfilter::last_update_s_()'],['../classINS__AHRS__groundtruth.html#ad02f41f3c011f5183aafc9e5c9e3790e',1,'INS_AHRS_groundtruth::last_update_s_()']]],
-  ['last_5fupdate_5fus',['last_update_us',['../classFlow.html#acc04aa9b0b912198c001f62ef49ae41b',1,'Flow']]],
+  ['last_5fupdate_5fs_5f',['last_update_s_',['../classAttitude__controller.html#a1c37f9d7c3ed8f7c08f7ae701689fa3a',1,'Attitude_controller::last_update_s_()'],['../classPX4Flow.html#a743aaa4eb6c6fe4ea3a548aca21df0f7',1,'PX4Flow::last_update_s_()'],['../classAHRS__ekf.html#a657a7331d751116e00603041425946b2',1,'AHRS_ekf::last_update_s_()'],['../classAHRS__madgwick.html#a107bc7139b5c03bc2ffe7c16f525a6ba',1,'AHRS_madgwick::last_update_s_()'],['../classAHRS__qfilter.html#aaebf1171c22315fa9a6619b3f2fd3800',1,'AHRS_qfilter::last_update_s_()'],['../classINS__AHRS__groundtruth.html#ad02f41f3c011f5183aafc9e5c9e3790e',1,'INS_AHRS_groundtruth::last_update_s_()']]],
+  ['last_5fupdate_5fus',['last_update_us',['../classFlow__dense.html#a210e11cd43f68ec390aec2f3788123e8',1,'Flow_dense']]],
   ['last_5fupdate_5fus_5f',['last_update_us_',['../classAhrs__ekf__mocap.html#a73505a89f74869aac417ffa96f84fb56',1,'Ahrs_ekf_mocap']]],
   ['latitude',['latitude',['../structubx__nav__pos__llh__t.html#a7d1ba587900afd53e25a0cf7cf17c8c0',1,'ubx_nav_pos_llh_t::latitude()'],['../structgps__t.html#af54fe11cbde7878a0727616f24dd8fc7',1,'gps_t::latitude()'],['../structglobal__position__t.html#abb11cc9a6ed7de72abdfc4eaedfb5b69',1,'global_position_t::latitude()']]],
   ['led_5ferr_5fgpio_5f',['led_err_gpio_',['../classSparky__v2.html#ac904c85e7a0db1699a2abd1b1b1f80d2',1,'Sparky_v2']]],
@@ -38,9 +38,10 @@ var searchData=
   ['lp_5fmode',['lp_mode',['../structubx__cfg__rxm__t.html#a4ff05819515300e6d25706198328411f',1,'ubx_cfg_rxm_t']]],
   ['lpf',['LPF',['../structcurvace__t.html#a1b2207f5cf259127b1af1143b047f487',1,'curvace_t']]],
   ['lpf_5facc',['lpf_acc',['../structimu__conf__t.html#ae48b480b103059075827bca31a13b2d8',1,'imu_conf_t']]],
-  ['lpf_5fgain',['lpf_gain',['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()'],['../structMission__handler__landing_1_1conf__t.html#a74f7172ac64f3899e69551a7376fe6f0',1,'Mission_handler_landing::conf_t::LPF_gain()']]],
+  ['lpf_5fgain',['LPF_gain',['../structMission__handler__landing_1_1conf__t.html#a74f7172ac64f3899e69551a7376fe6f0',1,'Mission_handler_landing::conf_t::LPF_gain()'],['../structbattery__conf__t.html#ab78c3b2900fdff959d73f5a6a6c7a56e',1,'battery_conf_t::lpf_gain()']]],
   ['lpf_5fgain_5f',['LPF_gain_',['../classMission__handler__landing.html#ae90fa4bd8245553fa838ef58eaac7109',1,'Mission_handler_landing']]],
   ['lpf_5fgyro',['lpf_gyro',['../structimu__conf__t.html#a5b9c91f7a02a7c84e87ec4013ac8e0cd',1,'imu_conf_t']]],
   ['lpf_5fmag',['lpf_mag',['../structimu__conf__t.html#ab24b19616fe6a83106ca33e183dbbc82',1,'imu_conf_t']]],
-  ['lpf_5fmean',['lpf_mean',['../structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e',1,'imu_conf_t']]]
+  ['lpf_5fmean',['lpf_mean',['../structimu__conf__t.html#a73d96ec5ff2c0670964b397bd38e6f5e',1,'imu_conf_t']]],
+  ['lsm330dlc',['lsm330dlc',['../classMegafly__rev4.html#ad7bb0f5c73ae9ad9d77a3f7304a698cf',1,'Megafly_rev4']]]
 ];

@@ -119,8 +119,8 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#abcfda7655d6f050cc0b2633c194e6589">INS_complementary</a> (<a class="el" href="classState.html">State</a> &amp;state, const <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, const <a class="el" href="classSonar.html">Sonar</a> &amp;sonar, const <a class="el" href="classGps.html">Gps</a> &amp;gps, const <a class="el" href="classPx4flow__i2c.html">Px4flow_i2c</a> &amp;flow, const <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, const <a class="el" href="structINS__complementary_1_1conf__t.html">conf_t</a> config=default_config())</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the module.  <a href="#abcfda7655d6f050cc0b2633c194e6589"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#aefbecdb00e4b2e78ad2a0fba2a6264b8">INS_complementary</a> (<a class="el" href="classState.html">State</a> &amp;state, const <a class="el" href="classBarometer.html">Barometer</a> &amp;barometer, const <a class="el" href="classSonar.html">Sonar</a> &amp;sonar, const <a class="el" href="classGps.html">Gps</a> &amp;gps, const <a class="el" href="classPX4Flow.html">PX4Flow</a> &amp;flow, const <a class="el" href="classAHRS.html">AHRS</a> &amp;ahrs, const <a class="el" href="structINS__complementary_1_1conf__t.html">conf_t</a> config=default_config())</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the module.  <a href="#aefbecdb00e4b2e78ad2a0fba2a6264b8"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#a86550a7d52bbeeef30a9ffb1be4ebbb4">update</a> (void)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Position estimation update step, performing position estimation then position correction (function to be used)  <a href="#a86550a7d52bbeeef30a9ffb1be4ebbb4"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#adf08759d16d44e7924f0e515d0d9a6e8">last_update_s</a> (void) const </td></tr>
@@ -142,9 +142,12 @@ Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67cf49b9538ae0f160d7b813c7213ca0"></a><!-- doxytag: member="INS_complementary::local_position_" ref="a67cf49b9538ae0f160d7b813c7213ca0" args="" -->
 local_position_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#a67cf49b9538ae0f160d7b813c7213ca0">local_position_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Local position. <br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af7fb50518c901bc0d42db2e06d904d75"></a><!-- doxytag: member="INS_complementary::vel_" ref="af7fb50518c901bc0d42db2e06d904d75" args="[3]" -->
-float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#af7fb50518c901bc0d42db2e06d904d75">vel_</a> [3]</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a67a2ea015c1aef5df81b58c1d3ee278b"></a><!-- doxytag: member="INS_complementary::vel_" ref="a67a2ea015c1aef5df81b58c1d3ee278b" args="" -->
+std::array&lt; float, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#a67a2ea015c1aef5df81b58c1d3ee278b">vel_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">3D velocity in ned frame <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d193c142b75ddf4856eb956cbd8da82"></a><!-- doxytag: member="INS_complementary::acc_bias_" ref="a4d193c142b75ddf4856eb956cbd8da82" args="" -->
+std::array&lt; float, 3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#a4d193c142b75ddf4856eb956cbd8da82">acc_bias_</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classAccelerometer.html" title="Abstract class for accelerometers.">Accelerometer</a> bias in body frame. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a34a28ecd3dcd3f1a64858d32a36a6585"></a><!-- doxytag: member="INS_complementary::config_" ref="a34a28ecd3dcd3f1a64858d32a36a6585" args="" -->
 <a class="el" href="structINS__complementary_1_1conf__t.html">conf_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classINS__complementary.html#a34a28ecd3dcd3f1a64858d32a36a6585">config_</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration containing gains. <br/></td></tr>
@@ -154,12 +157,12 @@ Friends</h2></td></tr>
 class&#160;</td><td class="memItemRight" valign="bottom"><b>Mavlink_waypoint_handler</b></td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="abcfda7655d6f050cc0b2633c194e6589"></a><!-- doxytag: member="INS_complementary::INS_complementary" ref="abcfda7655d6f050cc0b2633c194e6589" args="(State &amp;state, const Barometer &amp;barometer, const Sonar &amp;sonar, const Gps &amp;gps, const Px4flow_i2c &amp;flow, const AHRS &amp;ahrs, const conf_t config=default_config())" -->
+<a class="anchor" id="aefbecdb00e4b2e78ad2a0fba2a6264b8"></a><!-- doxytag: member="INS_complementary::INS_complementary" ref="aefbecdb00e4b2e78ad2a0fba2a6264b8" args="(State &amp;state, const Barometer &amp;barometer, const Sonar &amp;sonar, const Gps &amp;gps, const PX4Flow &amp;flow, const AHRS &amp;ahrs, const conf_t config=default_config())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classINS__complementary.html#abcfda7655d6f050cc0b2633c194e6589">INS_complementary::INS_complementary</a> </td>
+          <td class="memname"><a class="el" href="classINS__complementary.html#aefbecdb00e4b2e78ad2a0fba2a6264b8">INS_complementary::INS_complementary</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classState.html">State</a> &amp;&#160;</td>
           <td class="paramname"><em>state</em>, </td>
@@ -185,7 +188,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>Mavlink_waypoint_han
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classPx4flow__i2c.html">Px4flow_i2c</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="classPX4Flow.html">PX4Flow</a> &amp;&#160;</td>
           <td class="paramname"><em>flow</em>, </td>
         </tr>
         <tr>
@@ -405,7 +408,7 @@ Here is the call graph for this function:</div>
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 12 2016 11:05:14 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 26 2017 09:32:20 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

@@ -2,6 +2,6 @@
 <area shape="rect" id="node3" href="$classMavlink__stream.html#ac4eadc870ba6fa53fb73a6adfce79764" title="Mavlink parsing of message; the message is not available in this module afterwards." alt="" coords="176,32,339,61"/>
 <area shape="rect" id="node11" href="$classSpektrum__satellite.html#adb6188c9e279d061ea4b524201975c33" title="Takes care of incoming data." alt="" coords="143,85,372,115"/>
 <area shape="rect" id="node5" href="$classMavlink__communication__T.html#aca017c98e946dce52ea2a6934c09c42c" title="Main update function." alt="" coords="421,5,645,35"/>
-<area shape="rect" id="node9" href="$classFlow__px4.html#a04bbe222cd92cae344e75e69b1d6a513" title="Update function." alt="" coords="471,59,596,88"/>
+<area shape="rect" id="node9" href="$classPX4Flow__serial.html#a75a62bef5d56839845befbf5ab676317" title="Update function." alt="" coords="453,59,613,88"/>
 <area shape="rect" id="node7" href="$classMavlink__communication__T.html#ad252b552103bc2f128214db13ba838b9" title="Main update function, static version." alt="" coords="693,5,949,35"/>
 </map>

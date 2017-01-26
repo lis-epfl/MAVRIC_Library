@@ -14,5 +14,7 @@ var searchData=
   ['pwm_5fchibios',['Pwm_chibios',['../classPwm__chibios.html',1,'']]],
   ['pwm_5fdummy',['Pwm_dummy',['../classPwm__dummy.html',1,'']]],
   ['pwm_5fstm32',['Pwm_stm32',['../classPwm__stm32.html',1,'']]],
-  ['px4flow_5fi2c',['Px4flow_i2c',['../classPx4flow__i2c.html',1,'']]]
+  ['px4flow',['PX4Flow',['../classPX4Flow.html',1,'']]],
+  ['px4flow_5fi2c',['PX4Flow_i2c',['../classPX4Flow__i2c.html',1,'']]],
+  ['px4flow_5fserial',['PX4Flow_serial',['../classPX4Flow__serial.html',1,'']]]
 ];

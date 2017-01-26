@@ -194,12 +194,21 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a842b2eb27bd9a30651e26b501b6d84bd"></a><!-- doxytag: member="INS_complementary::conf_t::kp_flow_vel" ref="a842b2eb27bd9a30651e26b501b6d84bd" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structINS__complementary_1_1conf__t.html#a842b2eb27bd9a30651e26b501b6d84bd">kp_flow_vel</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain to correct the XY velocity estimation from optical flow. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5df92d536d61a902d7d9e2e85fd462db"></a><!-- doxytag: member="INS_complementary::conf_t::flow_gyro_comp_threshold" ref="a5df92d536d61a902d7d9e2e85fd462db" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structINS__complementary_1_1conf__t.html#a5df92d536d61a902d7d9e2e85fd462db">flow_gyro_comp_threshold</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum gyroscope value bellow which flow is used. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3a0ff366f2ccebd8416c020084fd924a"></a><!-- doxytag: member="INS_complementary::conf_t::timeout_flow_us" ref="a3a0ff366f2ccebd8416c020084fd924a" args="" -->
 float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structINS__complementary_1_1conf__t.html#a3a0ff366f2ccebd8416c020084fd924a">timeout_flow_us</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Time after witch a measure stops being used. <br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeff7186aab4098f40ba53038165883a7"></a><!-- doxytag: member="INS_complementary::conf_t::use_flow" ref="aeff7186aab4098f40ba53038165883a7" args="" -->
 uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structINS__complementary_1_1conf__t.html#aeff7186aab4098f40ba53038165883a7">use_flow</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean that indicates if the sensor must be used. <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a326645a95287aa868d8bea9b4f2e846d"></a><!-- doxytag: member="INS_complementary::conf_t::kp_acc_bias" ref="a326645a95287aa868d8bea9b4f2e846d" args="" -->
+float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structINS__complementary_1_1conf__t.html#a326645a95287aa868d8bea9b4f2e846d">kp_acc_bias</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Gain to estimate accelerometer biais from all sensors (weighted by respective gains) <br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16f552a25cbd478e54f123eb79f0580c"></a><!-- doxytag: member="INS_complementary::conf_t::use_acc_bias" ref="a16f552a25cbd478e54f123eb79f0580c" args="" -->
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structINS__complementary_1_1conf__t.html#a16f552a25cbd478e54f123eb79f0580c">use_acc_bias</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Boolean that indicates if the accel bias should be estimated. <br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Configuration structure. </p>
@@ -224,7 +233,7 @@ uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 12 2016 11:05:14 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 26 2017 09:32:20 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

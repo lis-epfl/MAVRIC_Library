@@ -85,13 +85,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 This is the complete list of members for <a class="el" href="classINS__complementary.html">INS_complementary</a>, including all inherited members.<table>
   <tr class="memlist"><td><a class="el" href="classINS__complementary.html#ab647bbb3968c81393f7f143e2e9aaaa9">absolute_altitude</a>(void) const </td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td><code> [virtual]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS__complementary.html#a4d193c142b75ddf4856eb956cbd8da82">acc_bias_</a></td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__complementary.html#a34a28ecd3dcd3f1a64858d32a36a6585">config_</a></td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>default_config</b>() (defined in <a class="el" href="classINS__complementary.html">INS_complementary</a>)</td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td><code> [inline, static]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>fence_violation_state_t</b> enum name (defined in <a class="el" href="classINS__complementary.html">INS_complementary</a>)</td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS.html#ac9fe239752c8cce15ed745015b0a29a2">healthy_t</a> enum name</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>IN_FENCE</b> enum value (defined in <a class="el" href="classINS__complementary.html">INS_complementary</a>)</td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS.html#a72b551f6ce6cf46b33d1699618b44937">INS</a>(global_position_t origin=ORIGIN_EPFL)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
-  <tr class="memlist"><td><a class="el" href="classINS__complementary.html#abcfda7655d6f050cc0b2633c194e6589">INS_complementary</a>(State &amp;state, const Barometer &amp;barometer, const Sonar &amp;sonar, const Gps &amp;gps, const Px4flow_i2c &amp;flow, const AHRS &amp;ahrs, const conf_t config=default_config())</td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS__complementary.html#aefbecdb00e4b2e78ad2a0fba2a6264b8">INS_complementary</a>(State &amp;state, const Barometer &amp;barometer, const Sonar &amp;sonar, const Gps &amp;gps, const PX4Flow &amp;flow, const AHRS &amp;ahrs, const conf_t config=default_config())</td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__complementary.html#acc29785d9c4639c4cd87860ed0efc206">is_healthy</a>(INS::healthy_t type) const </td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__complementary.html#adf08759d16d44e7924f0e515d0d9a6e8">last_update_s</a>(void) const </td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__complementary.html#a67cf49b9538ae0f160d7b813c7213ca0">local_position_</a></td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
@@ -103,7 +104,7 @@ This is the complete list of members for <a class="el" href="classINS__complemen
   <tr class="memlist"><td><a class="el" href="classINS__complementary.html#a2952f56a8ebd281b0f57e3aae65b6db7">position_lf</a>(void) const </td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td><code> [virtual]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS.html#aa14cc9f393d1567f96a7f03c3c8894a9">set_origin</a>(global_position_t origin)</td><td><a class="el" href="classINS.html">INS</a></td><td><code> [protected, static]</code></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__complementary.html#a86550a7d52bbeeef30a9ffb1be4ebbb4">update</a>(void)</td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td><code> [virtual]</code></td></tr>
-  <tr class="memlist"><td><a class="el" href="classINS__complementary.html#af7fb50518c901bc0d42db2e06d904d75">vel_</a></td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="classINS__complementary.html#a67a2ea015c1aef5df81b58c1d3ee278b">vel_</a></td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td></td></tr>
   <tr class="memlist"><td><a class="el" href="classINS__complementary.html#afdc578662ca8bf3bff37b448734b722b">velocity_lf</a>(void) const </td><td><a class="el" href="classINS__complementary.html">INS_complementary</a></td><td><code> [virtual]</code></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>XY_ABS_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
   <tr bgcolor="#f0f0f0"><td><b>XY_REL_POSITION</b> enum value (defined in <a class="el" href="classINS.html">INS</a>)</td><td><a class="el" href="classINS.html">INS</a></td><td></td></tr>
@@ -132,7 +133,7 @@ This is the complete list of members for <a class="el" href="classINS__complemen
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 12 2016 11:05:14 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 26 2017 09:32:20 for MAV'RIC by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.7.6.1
 </small></address>

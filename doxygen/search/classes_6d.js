@@ -57,5 +57,6 @@ var searchData=
   ['msg_5fcallback_5ft',['msg_callback_t',['../structMavlink__message__handler_1_1msg__callback__t.html',1,'Mavlink_message_handler']]],
   ['msg_5ffunction',['msg_function',['../structMavlink__message__handler_1_1msg__function.html',1,'Mavlink_message_handler']]],
   ['msg_5ffunction_3c_20void_20_3e',['msg_function< void >',['../structMavlink__message__handler_1_1msg__function.html',1,'Mavlink_message_handler']]],
-  ['msg_5freceived_5ft',['msg_received_t',['../structMavlink__stream_1_1msg__received__t.html',1,'Mavlink_stream']]]
+  ['msg_5freceived_5ft',['msg_received_t',['../structMavlink__stream_1_1msg__received__t.html',1,'Mavlink_stream']]],
+  ['my_5flequad',['My_LEQuad',['../classMy__LEQuad.html',1,'']]]
 ];

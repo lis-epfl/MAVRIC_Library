@@ -1,3 +1,4 @@
 <map id="G" name="G">
 <area shape="rect" id="node3" href="$classLEQuad.html" title="MAV class." alt="" coords="12,678,209,815"/>
+<area shape="rect" id="node5" href="$classMy__LEQuad.html" title="{My_LEQuad\n|# serial_dummy_\l# gps_dummy_\l# ins_no_gps_\l|+ My_LEQuad()\l+ init()\l+ main_task()\l+ init_ins_no_gps()\l}" alt="" coords="45,865,176,1037"/>
 </map>

@@ -11,7 +11,7 @@ var searchData=
   ['magnetometer',['Magnetometer',['../classMagnetometer.html',1,'Magnetometer'],['../structimu__conf__t.html#a6c573aa72d49d4ee84dd4f13f5c58dc0',1,'imu_conf_t::magnetometer()'],['../classSimulation.html#ac45b5eab0d4031225b402079d941823b',1,'Simulation::magnetometer()']]],
   ['magnetometer_5fsim',['Magnetometer_sim',['../classMagnetometer__sim.html',1,'Magnetometer_sim'],['../classMagnetometer__sim.html#a6c85e1deb5c9b68cf8e595ae276056af',1,'Magnetometer_sim::Magnetometer_sim()']]],
   ['mak2',['mak2',['../structubx__cfg__nav__expert__settings__t.html#a03ddf27e7a4a029a3fb7a24a5865599b',1,'ubx_cfg_nav_expert_settings_t']]],
-  ['manual_5fcontrol',['Manual_control',['../classManual__control.html',1,'Manual_control'],['../classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b',1,'Manual_control::Manual_control()'],['../classMAV.html#a918e97c9adaf0a0d9d7f983d5cfa4604',1,'MAV::manual_control()']]],
+  ['manual_5fcontrol',['Manual_control',['../classManual__control.html',1,'Manual_control'],['../classMAV.html#a918e97c9adaf0a0d9d7f983d5cfa4604',1,'MAV::manual_control()'],['../classManual__control.html#abdd8dda0390014247e8c3c4e489ef17b',1,'Manual_control::Manual_control()']]],
   ['manual_5fcontrol_5f',['manual_control_',['../classMission__planner.html#abbbeb6aa5e784036299a002db9968bf5',1,'Mission_planner::manual_control_()'],['../classState__machine.html#a77bc60b6c71ba27ef92ccf021de2d17f',1,'State_machine::manual_control_()']]],
   ['mask',['mask',['../structubx__cfg__nav__settings__t.html#a7affa443e519b735a2bac1197a6b67f1',1,'ubx_cfg_nav_settings_t']]],
   ['mask1',['mask1',['../structubx__cfg__nav__expert__settings__t.html#a238e1b79b8880f1f4a1ebdccf2e2bd79',1,'ubx_cfg_nav_expert_settings_t']]],
@@ -33,7 +33,7 @@ var searchData=
   ['mat_3c_20n_2c_20m_20_3e',['Mat< n, m >',['../classMat.html',1,'']]],
   ['mat_3c_20n_2c_20n_20_3e',['Mat< n, n >',['../classMat.html',1,'']]],
   ['mat_3c_20n_2c_20p_20_3e',['Mat< n, p >',['../classMat.html',1,'']]],
-  ['mav',['MAV',['../classMAV.html',1,'MAV'],['../classMAV.html#ae79768f96b8671f471521f80aaa27c43',1,'MAV::MAV()']]],
+  ['mav',['MAV',['../classMAV.html',1,'MAV'],['../classMAV.html#ad9b2ecf785f7eccf1552350cb9bbed49',1,'MAV::MAV()']]],
   ['mav_5fcomponent_5ft',['mav_component_t',['../classMavlink__message__handler.html#a89f6704fca454949d1565731d0d9631b',1,'Mavlink_message_handler']]],
   ['mav_5fmode',['Mav_mode',['../classMav__mode.html',1,'Mav_mode'],['../structState_1_1conf__t.html#a8c4495f9efd3fcb2d0dd8aa05e3795fb',1,'State::conf_t::mav_mode()'],['../classState.html#a9bf37e3784367761637c2c5a7c2b1b16',1,'State::mav_mode()']]],
   ['mav_5fmode_5f',['mav_mode_',['../classState.html#aa672801a9b348573320bf97462b3efc2',1,'State']]],
@@ -145,5 +145,6 @@ var searchData=
   ['msg_5freceived_5ft',['msg_received_t',['../structMavlink__stream_1_1msg__received__t.html',1,'Mavlink_stream']]],
   ['multiply',['multiply',['../classmat_1_1op.html#ac432bca76fb1e08daf389ede95918105',1,'mat::op::multiply(const Mat&lt; N, P, T &gt; &amp;m1, const Mat&lt; N, P, T &gt; &amp;m2, Mat&lt; N, P, T &gt; &amp;res)'],['../classmat_1_1op.html#ae31a07ca6ab6171909b2d7d2983418d3',1,'mat::op::multiply(const Mat&lt; N, P, T &gt; &amp;m1, const T value, Mat&lt; N, P, T &gt; &amp;res)'],['../classMat.html#a297986cd3d5772a2698a2b8b930dd34b',1,'Mat::multiply(const Mat &amp;m) const '],['../classMat.html#a7697ab3cd1dc042f7550007d8e5e341d',1,'Mat::multiply(const T value) const ']]],
   ['multiply_5finplace',['multiply_inplace',['../classMat.html#a9735113a8979b4aa2d162e8455fe2607',1,'Mat::multiply_inplace(const Mat &amp;m)'],['../classMat.html#afe0f1a4c749dd84c5427275db826d006',1,'Mat::multiply_inplace(const T value)']]],
+  ['my_5flequad',['My_LEQuad',['../classMy__LEQuad.html',1,'']]],
   ['op',['op',['../classMat.html#a587cc7480e4fe018f43e60b8bc20265e',1,'Mat']]]
 ];

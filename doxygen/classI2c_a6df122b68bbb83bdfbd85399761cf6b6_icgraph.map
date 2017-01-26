@@ -8,11 +8,10 @@
 <area shape="rect" id="node25" href="$classLsm330dlc.html#a2b1f8508e986a9d15b9638dd4e0d82a6" title="Main update function." alt="" coords="192,320,352,349"/>
 <area shape="rect" id="node27" href="$classMpu__6050.html#acac68dd3f9ff860aa1c6b9e66e2eda88" title="Initialise the sensor." alt="" coords="219,373,325,403"/>
 <area shape="rect" id="node29" href="$classMpu__6050.html#ae23ffc947827a02f18f0f8c7dccc3a57" title="Main update function." alt="" coords="193,427,351,456"/>
-<area shape="rect" id="node31" href="$classPx4flow__i2c.html#a2c83263486535f4becc95f71201f9ca8" title="Main update function." alt="" coords="203,480,341,509"/>
-<area shape="rect" id="node35" href="$classI2c.html#a5a8fb204c7af27e971b74112a1ee16f2" title="Write then Read data to/from an I2C device." alt="" coords="227,533,317,563"/>
+<area shape="rect" id="node31" href="$classPX4Flow__i2c.html#a1d72c9f582cb161259c4a29a006f83af" title="Main update function." alt="" coords="199,480,345,509"/>
+<area shape="rect" id="node33" href="$classI2c.html#a5a8fb204c7af27e971b74112a1ee16f2" title="Write then Read data to/from an I2C device." alt="" coords="227,533,317,563"/>
 <area shape="rect" id="node5" href="$classBarometer__BMP085.html#a70fe08b39b8f79068779fa9f4848f4e9" title="Initialise the sensor." alt="" coords="472,5,635,35"/>
 <area shape="rect" id="node7" href="$classMegafly__rev4.html#ab4cfe020248ad6aec9486b81bb342257" title="Hardware initialisation." alt="" coords="693,165,819,195"/>
 <area shape="rect" id="node13" href="$classSparky__chibi.html#a11ac79dbd29abeed3bcb800a726ee56f" title="Hardware initialisation." alt="" coords="492,59,615,88"/>
 <area shape="rect" id="node15" href="$classBarometer__MS5611.html#a0674c51bec727bc276be6614bbe41801" title="Main update function &#160;Reads new values from sensor." alt="" coords="461,112,645,141"/>
-<area shape="rect" id="node33" href="$classPx4flow__i2c.html#a028c6c1db84e829be94b67cc12c10885" title="Glue function used for scheduler." alt="" coords="468,480,639,509"/>
 </map>
