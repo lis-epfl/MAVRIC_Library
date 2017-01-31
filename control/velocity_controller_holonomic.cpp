@@ -49,7 +49,9 @@
 
 Velocity_controller_holonomic::Velocity_controller_holonomic(const args_t& args, const conf_t& config) :
     Velocity_controller_copter(args, config),
-    use_3d_thrust_(1)
+    use_3d_thrust_(0),
+    use_3d_thrust_threshold_(1),
+    accel_threshold_3d_thrust_(0.3f)
 {
     pid_controller_init(&attitude_offset_pid_[X], &config.attitude_offset_config[X]);
     pid_controller_init(&attitude_offset_pid_[Y], &config.attitude_offset_config[Y]);
@@ -60,7 +62,17 @@ bool Velocity_controller_holonomic::compute_attitude_and_thrust_from_desired_acc
                                                                                 attitude_command_t& attitude_command,
                                                                                 thrust_command_t& thrust_command)
 {
-    if (use_3d_thrust_)
+    // Decide whether control will use 3D thrust or not
+    bool do_3d_thrust = false;
+    if ((use_3d_thrust_ == true) ||
+        (   (use_3d_thrust_threshold_ == true)
+         && (maths_fast_sqrt(SQR(accel_vector[X]) + SQR(accel_vector[Y])) < accel_threshold_3d_thrust_))
+       )
+    {
+        do_3d_thrust = true;
+    }
+
+    if (do_3d_thrust)
     {
 
         // Desired thrust in local frame
