@@ -24,7 +24,7 @@
 <area shape="rect" id="node41" href="$classController.html" title="{Controller\&lt; thrust_command_t, empty_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="1087,6,1415,143"/>
 <area shape="rect" id="node44" href="$classMat.html" title="{Mat\&lt; N, 6 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 34 more...}" alt="" coords="1159,435,1265,693"/>
 <area shape="rect" id="node47" href="$classMat.html" title="{Mat\&lt; N, 1 \&gt;\n||+ Mat()\l+ Mat()\l+ Mat()\l+ Mat()\l+ rows()\l+ cols()\l+ index()\l+ operator()()\l+ operator()()\l+ operator[]()\land 34 more...}" alt="" coords="1289,435,1396,693"/>
-<area shape="rect" id="node49" href="$classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="2572,1749,2900,1886"/>
+<area shape="rect" id="node49" href="$classVelocity__controller__holonomic.html" title="Velocity controller for hovering platforms." alt="" coords="2572,1731,2900,1903"/>
 <area shape="rect" id="node51" href="$classVelocity__controller__copter.html" title="Velocity controller for hovering platforms." alt="" coords="2407,1363,2735,1483"/>
 <area shape="rect" id="node55" href="$classController__1__to__2.html" title="{Controller_1_to_2\&lt; velocity_command_t, attitude_command_t, thrust_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l+ get_output()\l}" alt="" coords="2204,487,2713,641"/>
 <area shape="rect" id="node57" href="$classController.html" title="{Controller\&lt; velocity_command_t, attitude_command_t \&gt;\n||+ update()\l+ set_command()\l+ get_command()\l+ get_output()\l}" alt="" coords="2381,213,2728,350"/>
