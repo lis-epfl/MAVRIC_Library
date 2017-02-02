@@ -96,8 +96,10 @@ protected:
                                                                 thrust_command_t& thrust_command);
 
 public:
-    uint32_t          use_3d_thrust_;           ///< Boolean indicating if 3D thrust is generated instead of banking
-    pid_controller_t  attitude_offset_pid_[2];  ///< Attitude offset
+    uint32_t          use_3d_thrust_;               ///< Boolean indicating if 3D thrust is generated instead of banking
+    uint32_t          use_3d_thrust_threshold_;     ///< Boolean indicating if 3D thrust is generated instead of banking only for low desired accel_vector
+    float             accel_threshold_3d_thrust_;   ///< Maximum accel command bellow which 3d thrust will be used if *use_3d_thrust_threshold_* is set to true
+    pid_controller_t  attitude_offset_pid_[2];      ///< Attitude offset
 };
 
 
