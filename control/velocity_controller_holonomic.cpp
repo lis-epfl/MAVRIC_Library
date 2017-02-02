@@ -49,7 +49,7 @@
 
 Velocity_controller_holonomic::Velocity_controller_holonomic(const args_t& args, const conf_t& config) :
     Velocity_controller_copter(args, config),
-    use_3d_thrust_(0),
+    use_3d_thrust_(1),
     use_3d_thrust_threshold_(1),
     accel_threshold_3d_thrust_(0.3f)
 {
@@ -62,31 +62,37 @@ bool Velocity_controller_holonomic::compute_attitude_and_thrust_from_desired_acc
                                                                                 attitude_command_t& attitude_command,
                                                                                 thrust_command_t& thrust_command)
 {
-    // Decide whether control will use 3D thrust or not
-    bool do_3d_thrust = false;
-    if ((use_3d_thrust_ == true) ||
-        (   (use_3d_thrust_threshold_ == true)
-         && (maths_fast_sqrt(SQR(accel_vector[X]) + SQR(accel_vector[Y])) < accel_threshold_3d_thrust_))
-       )
+    if (use_3d_thrust_)
     {
-        do_3d_thrust = true;
-    }
-
-    if (do_3d_thrust)
-    {
-
         // Desired thrust in local frame
         float thrust_lf[3] = {  accel_vector[X],
                                 accel_vector[Y],
                                 accel_vector[Z] + thrust_hover_point_};
 
-        // Stay horizontal, with commanded heading
-        attitude_command = coord_conventions_quaternion_from_rpy( 0.0f,
-                                                                  0.0f,
-                                                                  velocity_command_.heading );
-        // attitude_command = coord_conventions_quaternion_from_rpy( pid_controller_update(&attitude_offset_pid_[X], thrust_lf[Y]),
-        //                                                           pid_controller_update(&attitude_offset_pid_[Y], -thrust_lf[X]),
-        //                                                           velocity_command_.heading );
+        // Norm of desired accel vector on XY plane
+        float xy_accel_norm = maths_fast_sqrt(SQR(accel_vector[X]) + SQR(accel_vector[Y]));
+
+        if ((use_3d_thrust_threshold_ == true) && (xy_accel_norm > accel_threshold_3d_thrust_))
+        {
+            // Desired accel is above threshold -> use both 3d thrust and attitude
+            float alpha = accel_threshold_3d_thrust_ / xy_accel_norm;
+            thrust_lf[X] *= alpha;
+            thrust_lf[Y] *= alpha;
+
+            std::array<float,3> sup_accel_vector = {{   accel_vector[X] * (1.0f - alpha),
+                                                        accel_vector[Y] * (1.0f - alpha),
+                                                        0.0f}};
+
+            Velocity_controller_copter::compute_attitude_and_thrust_from_desired_accel(sup_accel_vector, attitude_command, thrust_command);
+        }
+        else
+        {
+            // Use 3D thrust only
+            // Stay horizontal, with commanded heading
+            attitude_command = coord_conventions_quaternion_from_rpy( 0.0f,
+                                                                      0.0f,
+                                                                      velocity_command_.heading );
+        }
 
         // Rotate it to get thrust command in body frame
         quaternions_rotate_vector(quaternions_inverse(ahrs_.attitude()), thrust_lf, thrust_command.xyz.data());
