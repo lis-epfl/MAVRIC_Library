@@ -2939,7 +2939,7 @@ static void gps_ublox_update(gps_t* gps)
     {
         if ((tnow - gps->idle_timer) > gps->idle_timeout)
         {
-            gps->status = FIX_NONE;
+            gps->status = FIX_ERR;
 
             gps->healthy = false;
 
