@@ -244,8 +244,8 @@ bool MAV::init_data_logging(void)
     ret &= data_logging_telemetry_init(&data_logging_stat, &communication.handler());
 
     // Task
-    ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_continuous);
-    ret &= scheduler.add_task<Data_logging>(10000, &task_data_logging_update, &data_logging_stat);
+    ret &= scheduler.add_task<Data_logging>(50000, &task_data_logging_update, &data_logging_continuous);
+    ret &= scheduler.add_task<Data_logging>(50000, &task_data_logging_update, &data_logging_stat);
 
     return ret;
 }

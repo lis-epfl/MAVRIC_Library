@@ -301,7 +301,7 @@ protected:
     hud_telemetry_t hud;                                        ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    Data_logging_T<10>    data_logging_continuous;
+    Data_logging_T<100>    data_logging_continuous;
     Data_logging_T<10>    data_logging_stat;
 
     uint8_t sysid_;    ///< System ID
@@ -317,11 +317,11 @@ MAV::conf_t MAV::default_config(uint8_t sysid)
 
     conf.data_logging_continuous_config                  = Data_logging::default_config();
     conf.data_logging_continuous_config.continuous_write = true;
-    conf.data_logging_continuous_config.log_data         = 0;
+    conf.data_logging_continuous_config.log_data         = 1;
 
     conf.data_logging_stat_config                  = Data_logging::default_config();
     conf.data_logging_stat_config.continuous_write = false;
-    conf.data_logging_stat_config.log_data         = 0;
+    conf.data_logging_stat_config.log_data         = 1;
 
     conf.scheduler_config = Scheduler::default_config();
 
