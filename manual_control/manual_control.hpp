@@ -247,6 +247,25 @@ public:
 
 
     /**
+     * \brief   Compute velocity command from the manual input
+     *
+     * \param   command                     Velocity command (output)
+     * \param   current_attitude            Current attitude of the vehicle
+     * \param   current_velocity_command    Current velocity command
+     * \param   min_vel         Minimum norm of velocity (when throttle stick is low)
+     * \param   max_vel         Maximum norm of velocity (when throttle stick is high)
+     * \param   scale_pitch     Scale (maximum output / max remote input)
+     */
+    void get_velocity_command_wing(velocity_command_t& command,
+                                    const quat_t& current_attitude,
+                                    const velocity_command_t& current_velocity_command,
+                                    float min_vel = 0.0f,
+                                    float max_vel = 20.0f,
+                                    float scale_pitch = 1.0f,
+                                    float scale_heading = 0.25f) const;
+
+
+    /**
      * \brief   Returns the value of the mode from the desired source input
      *
      * \param   mode_current            The current mode of the MAV

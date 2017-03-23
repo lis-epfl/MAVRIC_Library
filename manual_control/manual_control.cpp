@@ -252,6 +252,36 @@ void Manual_control::get_velocity_command_copter(velocity_command_t& command,
     }
 }
 
+void Manual_control::get_velocity_command_wing(velocity_command_t& command,
+                                                const quat_t& current_attitude,
+                                                const velocity_command_t& current_velocity_command,
+                                                float min_vel,
+                                                float max_vel,
+                                                float scale_pitch,
+                                                float scale_heading) const
+{
+    // Desired norm of velocity
+    float vel_norm = min_vel + (max_vel - min_vel) * (0.5f * throttle() + 0.5f);
+
+    // Heading command
+    // (not sure if all calc_smaller_angle are necessary...)
+    float heading   = coord_conventions_get_yaw(current_attitude);
+    float heading_increment = scale_heading * yaw();
+    float new_heading_command = maths_calc_smaller_angle(current_velocity_command.heading + heading_increment);
+    float heading_error = maths_calc_smaller_angle(new_heading_command - heading);
+    new_heading_command = maths_calc_smaller_angle(heading + maths_clip(heading_error, PI/8.0f));
+
+    //
+    float cos_pitch = quick_trig_cos(pitch() * scale_pitch);
+    float sin_pitch = quick_trig_sin(pitch() * scale_pitch);
+    float cos_yaw   = quick_trig_cos(new_heading_command);
+    float sin_yaw   = quick_trig_sin(new_heading_command);
+    command.xyz[X]  = vel_norm * cos_pitch * cos_yaw;
+    command.xyz[Y]  = vel_norm * cos_pitch * sin_yaw;
+    command.xyz[Z]  = vel_norm * sin_pitch;
+    command.heading = new_heading_command;
+}
+
 
 Mav_mode Manual_control::get_mode_from_source(Mav_mode mode_current)
 {
