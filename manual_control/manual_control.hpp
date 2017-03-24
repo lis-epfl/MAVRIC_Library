@@ -153,9 +153,9 @@ public:
      * \param   scale_yaw       Scale (maximum output / max remote input)
      */
     void get_rate_command(rate_command_t& command,
-                          float scale_roll = 1.0f,
-                          float scale_pitch = 1.0f,
-                          float scale_yaw = 1.0f) const;
+                          float scale_roll = 10.0f,
+                          float scale_pitch = 10.0f,
+                          float scale_yaw = 10.0f) const;
 
 
     /**

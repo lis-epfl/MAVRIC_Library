@@ -74,7 +74,7 @@ bool Flight_controller_fixedwing<N_ROTORS>::set_manual_rate_command(const Manual
     bool ret = true;
     rate_command_t rate_command;
     thrust_command_t thrust_command;
-    manual_control.get_rate_command(rate_command, 3.0f, 3.0f, 0.0f);
+    manual_control.get_rate_command(rate_command, 10.0f, 10.0f, 0.0f);
     manual_control.get_thrust_command_wing(thrust_command);
     ret &= set_command(rate_command);
     ret &= set_command(thrust_command);

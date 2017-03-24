@@ -55,6 +55,12 @@ public:
     {
         conf_t conf = Flight_controller_fixedwing<3>::default_config();
 
+        // Gains
+        conf.rate_config.pid_config[ROLL].p_gain                    = 0.15f;
+        conf.rate_config.pid_config[PITCH].p_gain                   = 0.2f;
+
+
+        // Servo mix configuration
         //                                 roll, pitch,   yaw,   X,    Y,     Z
         conf.mix_config.mix  = Mat<3, 6>({ 0.0f,  0.0f,  0.0f, 2.0f, 0.0f,  0.0f,   // motor
                                           -1.0f, -1.0f,  0.0f, 0.0f, 0.0f,  0.0f,   // elevon right
