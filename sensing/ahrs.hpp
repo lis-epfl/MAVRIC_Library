@@ -80,7 +80,7 @@ public:
      */
     virtual bool update(void) = 0;
 
-    
+
     /**
      * \brief     Last update in seconds
      *
@@ -121,6 +121,28 @@ public:
      * \return    3D linear acceleration
      */
     virtual std::array<float,3> linear_acceleration(void) const = 0;
+
+
+    /**
+     * \brief	Gets the roll angle from the ahrs quaternion
+     *
+     * \return 	roll
+     */
+    virtual float roll() const
+    {
+        return coord_conventions_get_roll(attitude());
+    }
+
+
+    /**
+     * \brief	Gets the pitch angle from the ahrs quaternion
+     *
+     * \return 	pitch
+     */
+    virtual float pitch() const
+    {
+        return coord_conventions_get_pitch(attitude());
+    }
 
 
     /**

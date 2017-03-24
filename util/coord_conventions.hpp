@@ -147,6 +147,25 @@ void coord_conventions_rpy_from_quaternion(const quat_t& quat, float rpy[3]);
 
 
 /**
+ * \brief      Computes the roll angle from an attitude quaternion
+ *
+ * \param qe   Attitude quaternion
+ *
+ * \return     Roll angle in radians
+ */
+float coord_conventions_get_roll(quat_t qe);
+
+/**
+ * \brief      Computes the pitch angle from an attitude quaternion
+ *
+ * \param qe   Attitude quaternion
+ *
+ * \return     Pitch angle in radians
+ */
+float coord_conventions_get_pitch(quat_t qe);
+
+
+/**
  * \brief      Computes the yaw angle from an attitude quaternion
  *
  * \param qe   Attitude quaternion
