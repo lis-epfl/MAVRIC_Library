@@ -56,7 +56,7 @@ public:
         conf_t conf = Flight_controller_fixedwing<3>::default_config();
 
         //                                 roll, pitch,   yaw,   X,    Y,     Z
-        conf.mix_config.mix  = Mat<3, 6>({ 0.0f,  0.0f,  0.0f, 1.0f, 0.0f,  0.0f,   // motor
+        conf.mix_config.mix  = Mat<3, 6>({ 0.0f,  0.0f,  0.0f, 2.0f, 0.0f,  0.0f,   // motor
                                           -1.0f, -1.0f,  0.0f, 0.0f, 0.0f,  0.0f,   // elevon right
                                            1.0f, -1.0f,  0.0f, 0.0f, 0.0f,  0.0f}); // elevon left
 
