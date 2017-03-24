@@ -94,6 +94,13 @@ public:
     Flight_controller_copter(const INS& ins, const AHRS& ahrs, typename Servos_mix_matrix<N_ROTORS>::args_t mix_args, conf_t config);
 
     /**
+     * \brief   Set command from manual control
+     *
+     * \param   manual_control  Reference to manual_control
+     */
+    bool set_manual_command(const Manual_control& manual_control);
+
+    /**
      * \brief   Set command from manual control in rate mode
      *
      * \param   manual_control  Reference to manual_control

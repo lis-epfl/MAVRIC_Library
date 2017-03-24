@@ -55,6 +55,20 @@ Flight_controller_copter<N_ROTORS>::Flight_controller_copter(const INS& ins, con
 
 
 template<uint32_t N_ROTORS>
+bool Flight_controller_copter<N_ROTORS>::set_manual_command(const Manual_control& manual_control)
+{
+    bool ret = true;
+    torque_command_t torque_command;
+    thrust_command_t thrust_command;
+    manual_control.get_torque_command(torque_command);
+    manual_control.get_thrust_command_copter(thrust_command);
+    ret &= set_command(torque_command);
+    ret &= set_command(thrust_command);
+    return ret;
+};
+
+
+template<uint32_t N_ROTORS>
 bool Flight_controller_copter<N_ROTORS>::set_manual_rate_command(const Manual_control& manual_control)
 {
     bool ret = true;

@@ -55,12 +55,26 @@ Flight_controller_fixedwing<N_ROTORS>::Flight_controller_fixedwing(const INS& in
 
 
 template<uint32_t N_ROTORS>
+bool Flight_controller_fixedwing<N_ROTORS>::set_manual_command(const Manual_control& manual_control)
+{
+    bool ret = true;
+    torque_command_t torque_command;
+    thrust_command_t thrust_command;
+    manual_control.get_torque_command(torque_command);
+    manual_control.get_thrust_command_wing(thrust_command);
+    ret &= set_command(torque_command);
+    ret &= set_command(thrust_command);
+    return ret;
+};
+
+
+template<uint32_t N_ROTORS>
 bool Flight_controller_fixedwing<N_ROTORS>::set_manual_rate_command(const Manual_control& manual_control)
 {
     bool ret = true;
     rate_command_t rate_command;
     thrust_command_t thrust_command;
-    manual_control.get_rate_command(rate_command, 1.0f, 1.0f, 0.0f);
+    manual_control.get_rate_command(rate_command, 3.0f, 3.0f, 0.0f);
     manual_control.get_thrust_command_wing(thrust_command);
     ret &= set_command(rate_command);
     ret &= set_command(thrust_command);

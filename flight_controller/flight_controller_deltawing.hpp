@@ -57,8 +57,20 @@ public:
 
         //                                 roll, pitch,   yaw,   X,    Y,     Z
         conf.mix_config.mix  = Mat<3, 6>({ 0.0f,  0.0f,  0.0f, 1.0f, 0.0f,  0.0f,   // motor
-                                           1.0f,  1.0f,  0.0f, 0.0f, 0.0f,  0.0f,   // elevon right
-                                          -1.0f, -1.0f,  0.0f, 0.0f, 0.0f,  0.0f}); // elevon left
+                                          -1.0f, -1.0f,  0.0f, 0.0f, 0.0f,  0.0f,   // elevon right
+                                           1.0f, -1.0f,  0.0f, 0.0f, 0.0f,  0.0f}); // elevon left
+
+        conf.mix_config.trim = Mat<3,1>({ -1.0f,        // motor
+                                           0.0f,        // elevon right
+                                           0.0f});      // elevon left
+
+        conf.mix_config.min = Mat<3,1>({ -1.0f,        // motor
+                                         -1.0f,        // elevon right
+                                         -1.0f});      // elevon left
+
+        conf.mix_config.max = Mat<3,1>({ 1.0f,        // motor
+                                         1.0f,        // elevon right
+                                         1.0f});      // elevon left
 
         return conf;
     };

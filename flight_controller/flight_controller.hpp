@@ -78,6 +78,14 @@ public:
     virtual bool set_command(const thrust_command_t& command) = 0;
 
     /**
+     * \brief   Set command from manual control
+     *
+     * \param   manual_control  Reference to manual_control
+     */
+    virtual bool set_manual_command(const Manual_control& manual_control) = 0;
+
+
+    /**
      * \brief   Set command from manual control in rate mode
      *
      * \param   manual_control  Reference to manual_control

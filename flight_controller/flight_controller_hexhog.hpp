@@ -106,6 +106,13 @@ public:
                             conf_t config = default_config());
 
     /**
+     * \brief   Set command from manual control
+     *
+     * \param   manual_control  Reference to manual_control
+     */
+    bool set_manual_command(const Manual_control& manual_control);
+
+    /**
      * \brief   Set command from manual control in rate mode
      *
      * \param   manual_control  Reference to manual_control

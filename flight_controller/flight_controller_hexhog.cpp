@@ -60,6 +60,19 @@ Flight_controller_hexhog::Flight_controller_hexhog( const INS& ins,
 {};
 
 
+bool Flight_controller_hexhog::set_manual_command(const Manual_control& manual_control)
+{
+    bool ret = true;
+    torque_command_t torque_command;
+    thrust_command_t thrust_command;
+    manual_control.get_torque_command(torque_command);
+    manual_control.get_thrust_command_copter(thrust_command);
+    ret &= set_command(torque_command);
+    ret &= set_command(thrust_command);
+    return ret;
+};
+
+
 bool Flight_controller_hexhog::set_manual_rate_command(const Manual_control& manual_control)
 {
     bool ret = true;
