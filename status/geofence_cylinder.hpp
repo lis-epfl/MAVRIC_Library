@@ -58,6 +58,7 @@ public:
      */
     struct conf_t
     {
+        bool                enabled;            ///< Whether the geofence is active. If false, is_allowed will always return true.
         global_position_t   center;             ///< Center of the cylinder
         float               radius;             ///< Radius of the cylinder in meters
         float               height;             ///< Height of the cylinder in meters
@@ -109,6 +110,7 @@ Geofence_cylinder::conf_t Geofence_cylinder::default_config(void)
 {
     conf_t config;
 
+    config.enabled          = true;
     config.center           = ORIGIN_EPFL;
     config.radius           = 200.0f;
     config.height           = 150.0f;
