@@ -60,6 +60,24 @@
 class State_machine
 {
 public:
+
+    /**
+     * \brief   Configuration
+     */
+    struct conf_t
+    {
+        bool is_emergency_disarming_enabled; ///< Indicates if motors should be cut off  when in emergency mode and manual mode
+    };
+
+
+    /**
+     * \brief Default configuration
+     *
+     * \return config
+     */
+    static inline conf_t default_config(void);
+
+
     /**
      * \brief Constructor
      *
@@ -79,7 +97,8 @@ public:
                     Manual_control& manual_control,
                     Geofence& safety_geofence,
                     Geofence& emergency_geofence,
-                    State_display& state_display);
+                    State_display& state_display,
+                    conf_t config = default_config());
 
     /**
      * \brief   Updates the state machine
@@ -96,10 +115,11 @@ public:
      */
     bool set_ctrl_mode(Mav_mode mode);
 
+    conf_t config_;                                      ///< Configuration structure
     State& state_;                                       ///< State structure
     const INS& ins_;                                     ///< Inertial Navigation System
     const Imu& imu_;                                     ///< Inertial measurement unit
-    const AHRS& ahrs_;                                 ///< Attitude estimation
+    const AHRS& ahrs_;                                   ///< Attitude estimation
     Manual_control& manual_control_;                     ///< Manual_control
     Geofence& safety_geofence_;                          ///< Geofence the MAV should not cross
     Geofence& emergency_geofence_;                       ///< Geofence outside which emergency landing is performed
@@ -143,6 +163,15 @@ private:
 };
 
 
+
+State_machine::conf_t State_machine::default_config(void)
+{
+    conf_t conf = {};
+
+    conf.is_emergency_disarming_enabled = true;
+
+    return conf;
+}
 
 
 

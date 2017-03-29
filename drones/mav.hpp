@@ -132,6 +132,7 @@ public:
      struct conf_t
     {
         State::conf_t state_config;
+        State_machine::conf_t state_machine_config;
         Data_logging::conf_t data_logging_continuous_config;
         Data_logging::conf_t data_logging_stat_config;
         Scheduler::conf_t scheduler_config;
@@ -314,6 +315,8 @@ MAV::conf_t MAV::default_config(uint8_t sysid)
     conf_t conf                                                = {};
 
     conf.state_config = State::default_config();
+
+    conf.state_machine_config = State_machine::default_config();
 
     conf.data_logging_continuous_config                  = Data_logging::default_config();
     conf.data_logging_continuous_config.continuous_write = true;

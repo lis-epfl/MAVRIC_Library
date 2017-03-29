@@ -153,7 +153,9 @@ State_machine::State_machine(State& state,
                             Manual_control& manual_control,
                             Geofence& safety_geofence,
                             Geofence& emergency_geofence,
-                            State_display& state_display) :
+                            State_display& state_display,
+                            conf_t config):
+    config_(config),
     state_(state),
     ins_(ins),
     imu_(imu),
@@ -231,7 +233,7 @@ bool State_machine::update(void)
             state_.out_of_safety_geofence = false;
             state_.out_of_emergency_geofence = false;
 
-            if (mode_new.is_armed())
+            if (mode_new.is_armed() && config_.is_emergency_disarming_enabled)
             {
                 print_util_dbg_print("Switching from state_machine.\r\n");
                 state_.switch_to_active_mode(&state_new);
