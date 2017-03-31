@@ -87,11 +87,11 @@ public:
     /* Control modes (predefined mode taking into account manual, stabilize, guided, and auto flag) */
     enum ctrl_mode_t
     {
-        RATE =          MAV_MODE_FLAG_MANUAL_INPUT_ENABLED,
-        ATTITUDE =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED,
-        VELOCITY =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
-        POSITION_HOLD = MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,
-        AUTO =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED
+        RATE =          MAV_MODE_FLAG_MANUAL_INPUT_ENABLED,                                                                   ///< RATE:        64 (192 if armed)
+        ATTITUDE =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED,                                 ///< ATTTITUDE:   80 (208 if armed)
+        VELOCITY =      MAV_MODE_FLAG_MANUAL_INPUT_ENABLED + MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,  ///< VELOCITY:    88 (216 if armed)
+        POSITION_HOLD = MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED,                                       ///< POS HOLD:    24 (152 if armed)
+        AUTO =       MAV_MODE_FLAG_STABILIZE_ENABLED + MAV_MODE_FLAG_GUIDED_ENABLED + MAV_MODE_FLAG_AUTO_ENABLED              ///< AUTO:        28 (156 if armed)
     };
 
     /* describes which flags are used for ctrl_mode */
