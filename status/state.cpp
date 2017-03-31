@@ -71,8 +71,6 @@ State::State(Mavlink_stream& mavlink_stream, Battery& battery, State::conf_t con
     out_of_safety_geofence = false;
     out_of_emergency_geofence = false;
 
-    reset_position = false;
-
     last_heartbeat_msg = time_keeper_get_s();
     max_lost_connection = config.max_lost_connection;
     connection_lost = false;
@@ -84,9 +82,6 @@ State::State(Mavlink_stream& mavlink_stream, Battery& battery, State::conf_t con
 void State::switch_to_active_mode(mav_state_t* mav_state_)
 {
     *mav_state_ = MAV_STATE_ACTIVE;
-
-    // Tell other modules to reset position and re-compute waypoints
-    reset_position = true;
 
     print_util_dbg_print("Switching to active mode.\r\n");
 }

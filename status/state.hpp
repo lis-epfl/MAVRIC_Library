@@ -83,8 +83,6 @@ public:
         bool out_of_safety_geofence;                        ///< Flag to tell whether we are out the first fence or not
         bool out_of_emergency_geofence;                     ///< Flag to tell whether we are out the second fence or not
 
-        bool reset_position;                                ///< Flag to enable the reset of the position estimation
-
         double last_heartbeat_msg;                          ///< Time of reception of the last heartbeat message from the ground station
         double max_lost_connection;                         ///< Maximum time without reception of a heartbeat message from the ground station
 
@@ -239,8 +237,6 @@ public:
 
     bool out_of_safety_geofence;                                ///< Flag to tell whether we are out the first fence or not
     bool out_of_emergency_geofence;                                ///< Flag to tell whether we are out the second fence or not
-
-    bool reset_position;                                ///< Flag to enable the reset of the position estimation
 
     double last_heartbeat_msg;                          ///< Time of reception of the last heartbeat message from the ground station
     double max_lost_connection;                         ///< Maximum time without reception of a heartbeat message from the ground station

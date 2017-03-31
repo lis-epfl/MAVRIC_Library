@@ -102,6 +102,9 @@ public:
 
         float kp_acc_bias;                      ///< Gain to estimate accelerometer biais from all sensors (weighted by respective gains)
         uint32_t use_acc_bias;                  ///< Boolean that indicates if the accel bias should be estimated
+
+        float kp_baro_bias;                     ///< Gain to estimate barometer biais from all sensors (weighted by respective gains)
+        uint32_t use_baro_bias;                 ///< Boolean that indicates if the baro bias should be estimated
     };
 
 
@@ -126,7 +129,7 @@ public:
      *
      * \return  True if the init succeed, false otherwise
      */
-    INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const PX4Flow& flow, const AHRS& ahrs, const conf_t config = default_config());
+    INS_complementary(const State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const PX4Flow& flow, const AHRS& ahrs, const conf_t config = default_config());
 
 
     /**
@@ -188,7 +191,7 @@ public:
 
 private:
     const AHRS& ahrs_;                       ///< Reference to the attitude estimation structure
-    State& state_;                           ///< Reference to the state structure
+    const State& state_;                           ///< Reference to the state structure
     const Gps& gps_;                         ///< Reference to the GPS structure
     const Barometer& barometer_;             ///< Reference to the barometer structure
     const Sonar& sonar_;                     ///< Reference to the sonar structure
@@ -333,7 +336,11 @@ INS_complementary::conf_t INS_complementary::default_config()
 
     // Accelerometer bias
     conf.kp_acc_bias     = 0.001f;
-    conf.use_acc_bias    = 0;
+    conf.use_acc_bias    = 1;
+
+    // Barometer bias
+    conf.kp_baro_bias    = 0.001f;
+    conf.use_baro_bias   = 1;
 
     return conf;
 };

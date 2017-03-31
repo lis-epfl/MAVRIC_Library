@@ -54,7 +54,7 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-INS_complementary::INS_complementary(State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const PX4Flow& flow, const AHRS& ahrs, const conf_t config) :
+INS_complementary::INS_complementary(const State& state, const Barometer& barometer, const Sonar& sonar, const Gps& gps, const PX4Flow& flow, const AHRS& ahrs, const conf_t config) :
     local_position_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     vel_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     acc_bias_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
@@ -94,12 +94,6 @@ bool INS_complementary::update(void)
     {
         check_first_gps_fix();
 
-        if (state_.reset_position)
-        {
-            state_.reset_position = false;
-            reset_velocity_altitude();
-        }
-
         integration();
 
         if (config_.use_gps)
@@ -121,6 +115,14 @@ bool INS_complementary::update(void)
         if (config_.use_flow)
         {
             correction_from_flow();
+        }
+
+        if (state_.is_armed() == false)
+        {
+            correction_from_z_pos(0.0f - local_position_[Z], 100.0f);
+            std::array<float,3> vel_error{{0.0f - vel_[X], 0.0f - vel_[Y], 0.0f - vel_[Z]}};
+            std::array<float,3> vel_gains{{100.0f, 100.0f, 100.0f}};
+            correction_from_3d_vel(vel_error, vel_gains);
         }
 
         return true;
@@ -234,6 +236,11 @@ void INS_complementary::correction_from_3d_pos(std::array<float,3> error, std::a
         acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * dt_s_;
         acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * dt_s_;
     }
+
+    if (config_.use_baro_bias)
+    {
+        barometer_bias_ -= config_.kp_baro_bias * gain[Z] * error[Z] * dt_s_;
+    }
 }
 
 
@@ -250,6 +257,11 @@ void INS_complementary::correction_from_z_pos(float error, float gain)
         acc_bias_[X] += config_.kp_acc_bias * error_bf[X] * dt_s_;
         acc_bias_[Y] += config_.kp_acc_bias * error_bf[Y] * dt_s_;
         acc_bias_[Z] += config_.kp_acc_bias * error_bf[Z] * dt_s_;
+    }
+
+    if (config_.use_baro_bias)
+    {
+        barometer_bias_ -= config_.kp_baro_bias * gain * error * dt_s_;
     }
 }
 
@@ -384,36 +396,26 @@ void INS_complementary::correction_from_barometer(void)
 {
     float baro_alt_error = 0.0f;
     float baro_vel_error = 0.0f;
-    float gain_alt;
-    float gain_vel;
+    float gain_alt = config_.kp_baro_alt;
+    float gain_vel = config_.kp_baro_vel;
 
-    if (is_barometer_calibrated_)
+    if (is_barometer_calibrated_ == false)
     {
-        // Enable correction from barometer
-        gain_alt = config_.kp_baro_alt;
-        gain_vel = config_.kp_baro_vel;
-
-        // altimeter correction
-        if (last_barometer_update_us_ < barometer_.last_update_us() + config_.timeout_baro_us)
-        {
-            baro_alt_error = - (barometer_.altitude_gf() - origin().altitude - barometer_bias_) - local_position_[Z];
-            baro_vel_error = barometer_.vertical_speed_lf() - vel_[Z];
-
-            last_barometer_update_us_ = barometer_.last_update_us();
-        }
-    }
-    else
-    {
-        // Disable correction from barometer
-        gain_alt = 0.0f;
-        gain_vel = 0.0f;
-
         // Wait for gps to initialized as we need an absolute altitude
         if (is_gps_pos_initialized_)
         {
             // Correct barometer bias
             calibrate_barometer();
         }
+    }
+
+    // altimeter correction
+    if (last_barometer_update_us_ < barometer_.last_update_us() + config_.timeout_baro_us)
+    {
+        baro_alt_error = - (barometer_.altitude_gf() - origin().altitude - barometer_bias_) - local_position_[Z];
+        baro_vel_error = barometer_.vertical_speed_lf() - vel_[Z];
+
+        last_barometer_update_us_ = barometer_.last_update_us();
     }
 
     // Apply corrections
