@@ -121,7 +121,14 @@ bool AHRS_ekf::update(void)
 
         if (config_.use_magnetometer)
         {
-            update_step_mag();
+            if (config_.use_magnetometer_3d)
+            {
+                update_step_mag_3d();
+            }
+            else
+            {
+                update_step_mag_2d();
+            }
         }
     }
     else
@@ -140,7 +147,14 @@ bool AHRS_ekf::update(void)
 
         if (config_.use_magnetometer)
         {
-            update_step_mag();
+            if (config_.use_magnetometer_3d)
+            {
+                update_step_mag_3d();
+            }
+            else
+            {
+                update_step_mag_2d();
+            }
         }
 
         Mat<7,1> state_previous = x_;
@@ -438,7 +452,7 @@ void AHRS_ekf::update_step_acc(void)
     P_ = (I_ - (K_acc % H_acc_k)) % P_;
 }
 
-void AHRS_ekf::update_step_mag(void)
+void AHRS_ekf::update_step_mag_3d(void)
 {
     uint16_t i;
 
@@ -474,6 +488,92 @@ void AHRS_ekf::update_step_mag(void)
     H_mag_k(2,4) =  2.0f*x_kk1(6,0)*mag_global[0] - 2.0f*x_kk1(3,0)*mag_global[1] - 4.0f*x_kk1(4,0)*mag_global[2];
     H_mag_k(2,5) =  2.0f*x_kk1(3,0)*mag_global[0] + 2.0f*x_kk1(6,0)*mag_global[1] - 4.0f*x_kk1(5,0)*mag_global[2];
     H_mag_k(2,6) =  2.0f*x_kk1(4,0)*mag_global[0] + 2.0f*x_kk1(5,0)*mag_global[1];
+
+    // Innovation y(k) = z(k) - h(x(k,k-1))
+    Mat<3,1> yk_mag = z_mag - h_mag_xkk1;
+
+    // Innovation covariance S(k) = H(k) * P_(k,k-1) * H(k)' + R
+    Mat<3,3> Sk_mag = (H_mag_k % P_ % H_mag_k.transpose()) + R_mag_;
+
+    // Kalman gain: K(k) = P_(k,k-1) * H(k)' * S(k)^-1
+    Mat<3,3> Sk_inv;
+    op::inverse(Sk_mag, Sk_inv);
+    Mat<7,3> K_mag = P_ % (H_mag_k.transpose() % Sk_inv);
+
+    // Updated state estimate: x(k,k) = x(k,k-1) + K(k)*y_k
+    Mat<7,1> x_kk = x_kk1 + (K_mag % yk_mag);
+    //Mat<7,1> x_kk = x_kk1;
+
+    quat_t quat;
+    quat.s = x_kk(3,0);
+    quat.v[0] = x_kk(4,0);
+    quat.v[1] = x_kk(5,0);
+    quat.v[2] = x_kk(6,0);
+
+    quat = quaternions_normalise(quat);
+    x_ = x_kk;
+    x_(3,0) = quat.s;
+    x_(4,0) = quat.v[0];
+    x_(5,0) = quat.v[1];
+    x_(6,0) = quat.v[2];
+
+    // Update covariance estimate
+    P_ = (I_ - (K_mag % H_mag_k)) % P_;
+}
+
+
+void AHRS_ekf::update_step_mag_2d(void)
+{
+    uint16_t i;
+
+    Mat<7,1> x_kk1 = x_;
+
+    // 3D magnetometer measurement in body frame
+    Mat<3,1> z_mag;
+    for (i = 0; i < 3; ++i)
+    {
+        z_mag(i,0) = imu_.mag()[i];
+    }
+
+    // Vertical unit vector in body frame
+    std::array<float,3> down_ned = {{0.0f, 0.0f, 1.0f}};
+    std::array<float,3> down_bf  = {{0.0f, 0.0f, 0.0f}};
+    quaternions_rotate_vector(quaternions_inverse(attitude()), down_ned.data(), down_bf.data());
+    Mat<3,1> down_bf_mat(down_bf);
+
+    // Remove vertical component of magnetometer mesurement
+    z_mag = z_mag - (~z_mag).dot(down_bf_mat)[0] * down_bf_mat;
+
+    // Normalize
+    float norm = maths_fast_sqrt(z_mag[0]*z_mag[0] + z_mag[1]*z_mag[1] + z_mag[2]*z_mag[2]);
+    if (norm <= 0.0f)
+    {
+        return;
+    }
+    z_mag = z_mag * (1.0f / norm);
+
+    // h_mag(x(k,k-1))
+    Mat<3,1> h_mag_xkk1;
+    h_mag_xkk1(0,0) = (1.0f + 2.0f*(-x_kk1(5,0)*x_kk1(5,0) - x_kk1(6,0)*x_kk1(6,0)));
+    h_mag_xkk1(1,0) =         2.0f*( x_kk1(4,0)*x_kk1(5,0) - x_kk1(3,0)*x_kk1(6,0));
+    h_mag_xkk1(2,0) =         2.0f*( x_kk1(4,0)*x_kk1(6,0) + x_kk1(3,0)*x_kk1(5,0));
+
+    Mat<3,7> H_mag_k;
+
+    H_mag_k(0,3) = 0.0f;
+    H_mag_k(0,4) = 0.0f;
+    H_mag_k(0,5) = -4.0f * x_kk1(5,0);
+    H_mag_k(0,6) = -4.0f * x_kk1(6,0);
+
+    H_mag_k(1,3) = -2.0f*x_kk1(6,0);
+    H_mag_k(1,4) =  2.0f*x_kk1(5,0);
+    H_mag_k(1,5) =  2.0f*x_kk1(4,0);
+    H_mag_k(1,6) = -2.0f*x_kk1(3,0);
+
+    H_mag_k(2,3) =  2.0f*x_kk1(5,0);
+    H_mag_k(2,4) =  2.0f*x_kk1(6,0);
+    H_mag_k(2,5) =  2.0f*x_kk1(3,0);
+    H_mag_k(2,6) =  2.0f*x_kk1(4,0);
 
     // Innovation y(k) = z(k) - h(x(k,k-1))
     Mat<3,1> yk_mag = z_mag - h_mag_xkk1;

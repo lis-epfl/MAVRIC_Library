@@ -77,6 +77,7 @@ public:
 
         uint32_t use_accelerometer;                   ///< Boolean indicating if accelerometer is used for correction
         uint32_t use_magnetometer;                    ///< Boolean indicating if magnetometer is used for correction
+        uint32_t use_magnetometer_3d;                 ///< Boolean indicating if all components of magnetometer should be used for correction. If 0, only horizontal magnetic field is used.
     };
 
     /**
@@ -169,7 +170,13 @@ protected:
     /**
      * \brief   Performs the update step with the magnetometer
      */
-    void update_step_mag(void);
+    void update_step_mag_3d(void);
+
+    /**
+     * \brief   Performs the update step with the magnetometer
+     *          using only the horizontal components of mgnetic field
+     */
+    void update_step_mag_2d(void);
 
     const Imu& imu_;                                    ///< The Reference to the IMU structure
 
@@ -198,8 +205,9 @@ AHRS_ekf::conf_t AHRS_ekf::default_config()
     // conf.R_mag = 0.040f;
     conf.R_mag = 0.0040f;
 
-    conf.use_accelerometer = 1;
-    conf.use_magnetometer  = 1;
+    conf.use_accelerometer   = 1;
+    conf.use_magnetometer    = 1;
+    conf.use_magnetometer_3d = 0;
 
     return conf;
 };

@@ -351,6 +351,7 @@ bool MAV::init_ahrs(void)
     // Parameters
     ret &= communication.parameters().add(&ahrs_ekf.config_.use_accelerometer,  "AHRS_USE_ACC"  );
     ret &= communication.parameters().add(&ahrs_ekf.config_.use_magnetometer,   "AHRS_USE_MAG"  );
+    ret &= communication.parameters().add(&ahrs_ekf.config_.use_magnetometer_3d,"AHRS_USE_MAG_3D");
     ret &= communication.parameters().add(&ahrs_ekf.config_.sigma_w_sqr,        "AHRS_SIG_GYRO" );
     ret &= communication.parameters().add(&ahrs_ekf.config_.sigma_r_sqr,        "AHRS_SIG_QUAT" );
     ret &= communication.parameters().add(&ahrs_ekf.config_.R_acc,              "AHRS_R_ACC"    );
