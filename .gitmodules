@@ -13,3 +13,6 @@
 [submodule "libs/ChibiOS"]
 	path = libs/ChibiOS
 	url = https://github.com/ChibiOS/ChibiOS.git
+[submodule "libs/freertos"]
+	path = libs/freertos
+	url = https://github.com/cjlano/freertos.git
