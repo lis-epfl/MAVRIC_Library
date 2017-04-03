@@ -30,10 +30,13 @@ include ${MAVRIC_LIB}rules_common.mk
 include ${MAVRIC_LIB}rules_libs.mk
 include ${MAVRIC_LIB}rules_avr32.mk
 include ${MAVRIC_LIB}rules_dummy.mk
+include ${MAVRIC_LIB}rules_freertos.mk
 
 # add headers for libs/asf and for boards/mega_fly library (from includes)
 LIB_INC += $(addprefix -I${MAVRIC_LIB}, ${LIB_ASF_INC})
 LIB_INC += $(addprefix -I${MAVRIC_LIB}, ${LIB_MEGAFLY_INC})
+LIB_INC += $(addprefix -I${MAVRIC_LIB}, ${LIB_FREERTOS_INC})
+LIB_INC += -Iconfig
 
 # ------------------------------------------------------------------------------
 # PREPROCESSOR OPTIONS

@@ -133,6 +133,7 @@ public:
     {
         State::conf_t state_config;
         State_machine::conf_t state_machine_config;
+        bool do_data_logging;
         Data_logging::conf_t data_logging_continuous_config;
         Data_logging::conf_t data_logging_stat_config;
         Scheduler::conf_t scheduler_config;
@@ -220,6 +221,24 @@ public:
     inline Scheduler& get_scheduler(){return scheduler;};
 
 
+    /**
+     * \brief   Returns non-const reference to data_logging stat
+     * \details This is used to optionnally run data logging in a separate thread
+     *
+     * \return  Data logging stat module
+     */
+   inline Data_logging& get_data_logging_stat(){return data_logging_stat;};
+
+
+   /**
+    * \brief   Returns non-const reference to data_logging continuous
+    * \details This is used to optionnally run data logging in a separate thread
+    *
+    * \return  Data logging continuous module
+    */
+  inline Data_logging& get_data_logging_continuous(){return data_logging_continuous;};
+
+
 protected:
 
     virtual bool init_main_task(void);
@@ -302,9 +321,10 @@ protected:
     hud_telemetry_t hud;                                        ///< The HUD structure
     servos_telemetry_t servos_telemetry;
 
-    Data_logging_T<100>    data_logging_continuous;
-    Data_logging_T<10>    data_logging_stat;
+    Data_logging_T<100> data_logging_continuous;
+    Data_logging_T<10>  data_logging_stat;
 
+public:
     uint8_t sysid_;    ///< System ID
     conf_t config_;    ///< Configuration
 };
@@ -318,10 +338,10 @@ MAV::conf_t MAV::default_config(uint8_t sysid)
 
     conf.state_machine_config = State_machine::default_config();
 
+    conf.do_data_logging = true;
     conf.data_logging_continuous_config                  = Data_logging::default_config();
     conf.data_logging_continuous_config.continuous_write = true;
     conf.data_logging_continuous_config.log_data         = 1;
-
     conf.data_logging_stat_config                  = Data_logging::default_config();
     conf.data_logging_stat_config.continuous_write = false;
     conf.data_logging_stat_config.log_data         = 1;
