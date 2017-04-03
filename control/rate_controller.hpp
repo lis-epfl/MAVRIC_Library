@@ -148,13 +148,13 @@ public:
     pid_controller_t& get_pid_Z(void);
 
 private:
-    const AHRS&         ahrs_;                  ///< Ref to attitude estimation (input)
+    const AHRS&         ahrs_;                    ///< Ref to attitude estimation (input)
     rate_command_t&       rate_command_;          ///< Reference to rate command (input)
     torque_command_t&     torque_command_;        ///< Reference to torque command (output)
 
     pid_controller_t      pid_[3];                ///< Angular rate PID controller for roll, pitch and yaw
-    float                 dt_s_;                  ///< The time interval between two updates
-    float                 last_update_s_;         ///< The time of the last update in s
+    time_s_t              dt_s_;                  ///< The time interval between two updates
+    time_us_t             last_update_us_;        ///< The time of the last update in us
 };
 
 Rate_controller::conf_t Rate_controller::default_config()

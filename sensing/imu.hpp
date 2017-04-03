@@ -49,6 +49,7 @@
 #include <cstdbool>
 #include <array>
 
+#include "hal/common/time_keeper.hpp"
 #include "drivers/accelerometer.hpp"
 #include "drivers/gyroscope.hpp"
 #include "drivers/magnetometer.hpp"
@@ -139,7 +140,7 @@ public:
      *
      * \return  Value
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**
@@ -147,7 +148,7 @@ public:
      *
      * \return  Value
      */
-    const float& dt_s(void) const;
+    const time_s_t& dt_s(void) const;
 
 
     /**
@@ -347,9 +348,9 @@ private:
     bool do_magnetic_north_calibration_;        ///< Flag indicating if calibration should be done
     bool is_ready_;                             ///< Flag indicating the readiness of the IMU
 
-    float dt_s_;                        ///< Time interval between two updates (in microseconds)
-    float last_update_us_;              ///< Last update time in microseconds
-    float startup_calibration_start_time_;       ///< The moment from which the gyroscope is not varying too much
+    time_s_t dt_s_;                             ///< Time interval between two updates (in seconds)
+    time_us_t last_update_us_;                  ///< Last update time in microseconds
+    time_s_t startup_calibration_start_time_s_; ///< The moment from which the gyroscope is not varying too much
 };
 
 

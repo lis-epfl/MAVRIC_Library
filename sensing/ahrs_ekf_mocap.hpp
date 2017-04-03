@@ -109,12 +109,12 @@ protected:
     Mavlink_message_handler& message_handler_;  ///< State covariance
     Mat<4,4> R_mocap_;                          ///< The mocap measurement noise matrix
     Mat<4, 7> H_;                               ///< The measurement matrix
-    Mat<4, 1> z_;                                ///< The measurement vector
+    Mat<4, 1> z_;                               ///< The measurement vector
     bool is_init_;                              ///< Boolean flag stating if this module has been initialized
 
-    conf_t config_;                                     ///< The config structure for the EKF mocap module
+    conf_t config_;                             ///< The config structure for the EKF mocap module
 
-    float last_update_us_;                              ///< The last time the mocap was updated
+    time_us_t last_update_us_;                  ///< The last time the mocap was updated
 };
 
 Ahrs_ekf_mocap::conf_t Ahrs_ekf_mocap::default_config()

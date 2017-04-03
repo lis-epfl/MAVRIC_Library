@@ -238,7 +238,7 @@ public:
      *
      * \return  Update time
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**
@@ -531,7 +531,7 @@ private:
     std::array<float, 3>    gyro_data_;        ///< Gyroscope data
     std::array<float, 3>    mag_data_;         ///< Magnetometer data
     float                   temperature_;      ///< Temperature
-    float                   last_update_us_;   ///< Last udate time in microseconds
+    time_us_t               last_update_us_;   ///< Last udate time in microseconds
     conf_t                  config_;           ///< Device configuration
     float                   acc_scale_;        ///< Acceleromter data scaling factor
     float                   gyro_scale_;       ///< Gyroscope data scaling factor

@@ -84,7 +84,7 @@ void Ahrs_ekf_mocap::callback(  Ahrs_ekf_mocap* ahrs_ekf_mocap,
     mavlink_msg_att_pos_mocap_decode(msg, &packet);
 
     // Get timing
-    float t = time_keeper_get_us();
+    time_us_t t = time_keeper_get_us();
 
     // Create matrices for the update
     ahrs_ekf_mocap->z_(0, 0) = packet.q[0];

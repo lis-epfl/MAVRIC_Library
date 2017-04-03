@@ -104,7 +104,7 @@ public:
      *
      * \return  Update time
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**
@@ -144,7 +144,7 @@ private:
     sonar_sim_conf_t    config_;        ///< Configuration
     float               distance_;      ///< Current distance
     float               velocity_;      ///< Current velocity
-    float               last_update_us_;///< Last update time in microseconds
+    time_us_t           last_update_us_;///< Last update time in microseconds
     bool                healthy_;       ///< Sensor status
 };
 

@@ -294,7 +294,7 @@ bool Barometer_BMP085::update(void)
             }
 
             // Time interval since last update
-            dt_s_ = (time_keeper_get_us() - last_update_us_) / 1000000.0f;
+            dt_s_ = (time_keeper_get_us() - last_update_us_) / 1e6f;
 
             // Compute new vertical speed from two last filtered altitudes
             new_speed_lf = - (altitude_gf_ - altitude_filtered_old) / dt_s_;
@@ -321,7 +321,7 @@ bool Barometer_BMP085::update(void)
 }
 
 
-uint64_t Barometer_BMP085::last_update_us(void) const
+time_us_t Barometer_BMP085::last_update_us(void) const
 {
     return last_update_us_;
 }

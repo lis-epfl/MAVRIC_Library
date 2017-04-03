@@ -188,7 +188,7 @@ bool Hmc5883l::update(void)
 }
 
 
-const float& Hmc5883l::last_update_us(void) const
+const time_us_t& Hmc5883l::last_update_us(void) const
 {
     return last_update_us_;
 }

@@ -125,7 +125,7 @@ public:
      *
      * \return  Update time
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**
@@ -195,8 +195,8 @@ private:
     local_position_t local_position_;       ///< Simulated local position
     global_position_t global_position_;     ///< Simulated global position
 
-    float last_update_us_;                  ///< The last update in micro seconds
-    float dt_s_;                            ///< The time delta since last update in seconds
+    time_us_t last_update_us_;              ///< The last update in micro seconds
+    time_s_t dt_s_;                         ///< The time delta since last update in seconds
 
 
     /**

@@ -48,6 +48,8 @@
 #include <cstdbool>
 #include <array>
 
+#include "hal/common/time_keeper.hpp"
+
 extern "C"
 {
 #include "util/quaternions.h"
@@ -82,7 +84,7 @@ public:
      *
      * \return  Update time
      */
-    virtual const float& last_update_us(void) const = 0;
+    virtual const time_us_t& last_update_us(void) const = 0;
 
 
     /**

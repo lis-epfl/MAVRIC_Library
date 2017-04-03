@@ -46,6 +46,8 @@
 #include <cstdint>
 #include <cstdbool>
 
+#include "hal/common/time_keeper.hpp"
+
 /**
  * \brief Radio protocols
  */
@@ -91,7 +93,7 @@ public:
     *
     * \return   Last update time
     */
-    virtual uint32_t last_update(void) const = 0;
+    virtual time_us_t last_update_us(void) const = 0;
 
 
     /**
@@ -99,7 +101,7 @@ public:
     *
     * \return   dt
     */
-    virtual uint32_t dt(void) const = 0;
+    virtual time_us_t dt_us(void) const = 0;
 };
 
 

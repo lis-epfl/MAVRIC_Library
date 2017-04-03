@@ -134,7 +134,7 @@ public:
      *
      * \return  Update time
      */
-    float last_update_us(void) const
+    time_us_t last_update_us(void) const
     {
         return current_gps_->last_update_us();
     };
@@ -145,7 +145,7 @@ public:
      *
      * \return  Update time
      */
-    float last_position_update_us(void) const
+    time_us_t last_position_update_us(void) const
     {
         return current_gps_->last_position_update_us();
     };
@@ -156,7 +156,7 @@ public:
      *
      * \return  Update time
      */
-    float last_velocity_update_us(void) const
+    time_us_t last_velocity_update_us(void) const
     {
         return current_gps_->last_velocity_update_us();
     };

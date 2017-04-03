@@ -105,7 +105,7 @@ public:
     *
     * \return   Value
     */
-    uint64_t last_update_us(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -194,9 +194,9 @@ private:
 
     float   last_altitudes_[3];     ///< Array to store previous value of the altitude for low pass filtering the output
 
-    float   last_update_us_;        ///< Time of the last update
-    float   last_state_update_us_;  ///< Time of the last state update
-    float   dt_s_;                  ///< Time step for the derivative
+    time_us_t last_update_us_;        ///< Time of the last update
+    time_us_t last_state_update_us_;  ///< Time of the last state update
+    time_s_t  dt_s_;                  ///< Time step for the derivative
 
     bmp085_state_t  state_;         ///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 };

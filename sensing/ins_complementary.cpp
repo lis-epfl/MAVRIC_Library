@@ -66,7 +66,7 @@ INS_complementary::INS_complementary(const State& state, const Barometer& barome
     sonar_(sonar),
     flow_(flow),
     dt_s_(0.0f),
-    last_update_s_(0.0f),
+    last_update_us_(0),
     last_gps_pos_update_us_(0),
     last_gps_vel_update_us_(0),
     last_barometer_update_us_(0),
@@ -85,9 +85,9 @@ INS_complementary::INS_complementary(const State& state, const Barometer& barome
 bool INS_complementary::update(void)
 {
     // Updat timing
-    float now      = time_keeper_get_s();
-    dt_s_          = now - last_update_s_;
-    last_update_s_ = now;
+    time_us_t now_us      = time_keeper_get_us();
+    dt_s_          = (now_us - last_update_us_) / 1e6f;
+    last_update_us_ = now_us;
 
 
     if (ahrs_.is_healthy())
@@ -158,9 +158,9 @@ void INS_complementary::reset_velocity_altitude()
 }
 
 
-float INS_complementary::last_update_s(void) const
+time_us_t INS_complementary::last_update_us(void) const
 {
-    return last_update_s_;
+    return last_update_us_;
 }
 
 
@@ -456,9 +456,9 @@ void INS_complementary::correction_from_flow(void)
 
     if (flow_.healthy())
     {
-        if (last_flow_update_us_ < (flow_.last_update_s() * 1e6f) + config_.timeout_flow_us)
+        if (last_flow_update_us_ < flow_.last_update_us() + config_.timeout_flow_us)
         {
-            last_flow_update_us_ = (flow_.last_update_s() * 1e6f);
+            last_flow_update_us_ = flow_.last_update_us();
 
             // Get velocity in NED frame
             float vel_lf[3];

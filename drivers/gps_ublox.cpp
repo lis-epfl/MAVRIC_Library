@@ -5292,9 +5292,9 @@ static ubx_nav_dgps_t* ubx_get_nav_dgps()
 
 Gps_ublox::Gps_ublox(Serial& serial):
     serial_(serial),
-    last_update_us_(0.0f),
-    last_position_update_us_(0.0f),
-    last_velocity_update_us_(0.0f),
+    last_update_us_(0),
+    last_position_update_us_(0),
+    last_velocity_update_us_(0),
     position_gf_({0.0, 0.0, 0.0f}),
     horizontal_position_accuracy_(0.0f),
     vertical_position_accuracy_(0.0f),
@@ -5345,19 +5345,19 @@ bool Gps_ublox::update(void)
 }
 
 
-float Gps_ublox::last_update_us(void) const
+time_us_t Gps_ublox::last_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-float Gps_ublox::last_position_update_us(void) const
+time_us_t Gps_ublox::last_position_update_us(void) const
 {
     return last_position_update_us_;
 }
 
 
-float Gps_ublox::last_velocity_update_us(void) const
+time_us_t Gps_ublox::last_velocity_update_us(void) const
 {
     return last_velocity_update_us_;
 }

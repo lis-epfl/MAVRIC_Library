@@ -60,7 +60,7 @@ Rate_controller::Rate_controller(const args_t& args, const conf_t& config) :
     rate_command_(args.rate_command),
     torque_command_(args.torque_command),
     dt_s_(0.0f),
-    last_update_s_(0.0f)
+    last_update_us_(0)
 {
     // set initial rate command
     rate_command_.xyz[X]  = 0.0f;
@@ -81,9 +81,9 @@ Rate_controller::Rate_controller(const args_t& args, const conf_t& config) :
 
 bool Rate_controller::update(void)
 {
-    float now      = time_keeper_get_s();
-    dt_s_          = now - last_update_s_;
-    last_update_s_ = now;
+    time_us_t now_us = time_keeper_get_us();
+    dt_s_            = (now_us - last_update_us_) / 1e6f;
+    last_update_us_  = now_us;
 
     // Get errors on rate
     float errors[3];

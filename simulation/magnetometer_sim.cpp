@@ -84,7 +84,7 @@ bool Magnetometer_sim::update(void)
 }
 
 
-const float& Magnetometer_sim::last_update_us(void) const
+const time_us_t& Magnetometer_sim::last_update_us(void) const
 {
     return dynamic_model_.last_update_us();
 }

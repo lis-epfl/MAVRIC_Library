@@ -119,7 +119,7 @@ public:
      *
      * \return    time
      */
-    float last_update_s(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -162,7 +162,7 @@ protected:
     quat_t              attitude_;              ///< Estimated attitude
     std::array<float,3> angular_speed_;         ///< Estimated angular speed
     std::array<float,3> linear_acc_;            ///< Estimated linear acceleration
-    float               last_update_s_;         ///< Last update time
+    time_us_t           last_update_us_;        ///< Last update time in us
 
     float            beta_;                     ///< 2 * proportional gain (Kp)
     float            zeta_;                     ///< Gyro drift bias gain

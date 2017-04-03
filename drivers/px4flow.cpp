@@ -49,7 +49,7 @@ PX4Flow::PX4Flow(void):
     velocity_y_(0.0f),
     velocity_z_(0.0f),
     ground_distance_(0.0f),
-    last_update_s_(0.0f),
+    last_update_us_(0),
     is_healthy_(false)
 {
     // fill buffer
@@ -97,9 +97,9 @@ float PX4Flow::ground_distance(void) const
     return ground_distance_;
 }
 
-float PX4Flow::last_update_s(void) const
+time_us_t PX4Flow::last_update_us(void) const
 {
-    return last_update_s_;
+    return last_update_us_;
 }
 
 void PX4Flow::rotate_raw_values(orientation_t orientation, float flow_x_raw, float flow_y_raw, float velocity_x_raw, float velocity_y_raw)

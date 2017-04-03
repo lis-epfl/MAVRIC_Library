@@ -71,7 +71,7 @@ AHRS_madgwick::AHRS_madgwick(const Imu& imu, const Airspeed_analog& airspeed, co
     attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
     angular_speed_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     linear_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
-    last_update_s_(0.0f)
+    last_update_us_(0)
 {
     // Init config
     beta_                       = config.beta;
@@ -93,8 +93,8 @@ AHRS_madgwick::AHRS_madgwick(const Imu& imu, const Airspeed_analog& airspeed, co
 bool AHRS_madgwick::update(void)
 {
     // Compute time
-    float t = time_keeper_get_s();
-    float dt_s = (float)(t - last_update_s_);
+    time_us_t now_us = time_keeper_get_us();
+    time_s_t dt_s = (now_us - last_update_us_) / 1e6f;
 
     std::array<float, 3> acc  = imu_.acc();
     std::array<float, 3> gyro = imu_.gyro();
@@ -164,7 +164,7 @@ bool AHRS_madgwick::update(void)
     quat_t q_ned = quaternions_multiply(qtmp,q_nwu2ned);
 
     // Time
-    last_update_s_    = t;
+    last_update_us_    = now_us;
 
     // Quaternion in NED
     attitude_ = q_ned;
@@ -188,9 +188,9 @@ bool AHRS_madgwick::update(void)
 }
 
 
-float AHRS_madgwick::last_update_s(void) const
+time_us_t AHRS_madgwick::last_update_us(void) const
 {
-    return last_update_s_;
+    return last_update_us_;
 }
 
 

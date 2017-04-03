@@ -47,7 +47,7 @@
 #include <array>
 #include "sensing/imu.hpp"
 #include "util/coord_conventions.hpp"
-
+#include "hal/common/time_keeper.hpp"
 
 /**
  * \brief   Abstract class for simulation's dynamic model
@@ -69,7 +69,7 @@ public:
      *
      * \return  Update time
      */
-    virtual const float& last_update_us(void) const = 0;
+    virtual const time_us_t& last_update_us(void) const = 0;
 
 
     /**

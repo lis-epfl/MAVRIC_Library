@@ -89,7 +89,7 @@ bool Accelerometer_sim::update(void)
 }
 
 
-const float& Accelerometer_sim::last_update_us(void) const
+const time_us_t& Accelerometer_sim::last_update_us(void) const
 {
     return dynamic_model_.last_update_us();
 }

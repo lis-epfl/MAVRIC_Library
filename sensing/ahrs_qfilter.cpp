@@ -58,7 +58,7 @@ AHRS_qfilter::AHRS_qfilter(const Imu& imu, const conf_t& config):
     attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
     angular_speed_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     linear_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
-    last_update_s_(0.0f)
+    last_update_us_(0)
 {
     //init qfilter gains according to provided configuration
     kp_ = config.kp;
@@ -88,13 +88,13 @@ bool AHRS_qfilter::update(void)
     float ki_mag = ki_mag_;
 
     // Update time in us
-    float now_s    = time_keeper_get_s();
+    time_us_t now_us    = time_keeper_get_us();
 
     // Delta t in seconds
-    float dt_s     = (float)(now_s - last_update_s_);
+    time_s_t dt_s     = (now_us - last_update_us_) / 1e6f;
 
     // Write to ahrs structure
-    last_update_s_ = now_s;
+    last_update_us_ = now_us;
 
     // up_bf = qe^-1 *(0,0,0,-1) * qe
     up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;
@@ -263,9 +263,9 @@ bool AHRS_qfilter::update(void)
 }
 
 
-float AHRS_qfilter::last_update_s(void) const
+time_us_t AHRS_qfilter::last_update_us(void) const
 {
-    return last_update_s_;
+    return last_update_us_;
 }
 
 

@@ -170,7 +170,7 @@ typedef struct
     signal_quality_t signal_quality;                        ///< The quality of signal
     remote_type_t type;                                     ///< The type of remote
     remote_mode_t mode;                                     ///< The remote mode structure
-    uint32_t last_satellite_update;                         ///< Last time the satellite was read
+    time_us_t last_satellite_update_us;                     ///< Last time the satellite was read
     Satellite* sat;                                         ///< The pointer to the raw values of the remote received by the interrupt
 } remote_t;
 

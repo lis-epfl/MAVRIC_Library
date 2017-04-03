@@ -84,7 +84,7 @@ public:
      *
      * \return  Update time
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**

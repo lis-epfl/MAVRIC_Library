@@ -108,7 +108,7 @@ public:
     *
     * \return   Last update time
     */
-    uint32_t last_update(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -116,7 +116,7 @@ public:
     *
     * \return   dt
     */
-    uint32_t dt(void) const;
+    time_us_t dt_us(void) const;
 
 
     /**
@@ -131,9 +131,9 @@ private:
     Gpio&                   power_pin_;             ///< Receiver power enable pin
     Buffer                  receiver_;              ///< Buffer for incoming data
     int16_t                 channels_[16];          ///< Array to contain the 16 remote channels
-    uint32_t                last_interrupt_;        ///< Last time a byte was received
-    uint32_t                last_update_;           ///< Last update time
-    uint32_t                dt_;                    ///< Duration between two updates
+    time_us_t               last_interrupt_us_;     ///< Last time a byte was received
+    time_us_t               last_update_us_;        ///< Last update time
+    time_us_t               dt_us_;                 ///< Duration between two updates
     dsm2_protocol_proba_t   protocol_proba_;        ///< Indicates number of frames received
     radio_protocol_t        protocol_;              ///< Defines in which mode the remote is configured
 

@@ -98,7 +98,7 @@ public:
      *
      * \return  Update time
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**
@@ -152,14 +152,14 @@ public:
 private:
     Dynamic_model&      dynamic_model_;         ///< Reference to dynamic model
     simulation_conf_t   config_;                ///< Configuration
-    
+
     Accelerometer_sim   accelerometer_;         ///< Simulated accelerometer
     Gyroscope_sim       gyroscope_;             ///< Simulated gyroscope
     Magnetometer_sim    magnetometer_;          ///< Simulated magnetometer
     Barometer_sim       barometer_;             ///< Simulated barometer
     Sonar_sim           sonar_;                 ///< Simulated sonar
     Gps_sim             gps_;                   ///< Simulated gps
-    float               last_update_us_;        ///< Last update time in microseconds
+    time_us_t           last_update_us_;        ///< Last update time in microseconds
 };
 
 

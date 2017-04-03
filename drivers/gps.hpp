@@ -48,7 +48,7 @@
 #include <array>
 
 #include "util/coord_conventions.hpp"
-
+#include "hal/common/time_keeper.hpp"
 
 typedef enum
 {
@@ -93,7 +93,7 @@ public:
      *
      * \return  Update time
      */
-    virtual float last_update_us(void) const = 0;
+    virtual time_us_t last_update_us(void) const = 0;
 
 
     /**
@@ -101,7 +101,7 @@ public:
      *
      * \return  Update time
      */
-    virtual float last_position_update_us(void) const = 0;
+    virtual time_us_t last_position_update_us(void) const = 0;
 
 
     /**
@@ -109,7 +109,7 @@ public:
      *
      * \return  Update time
      */
-    virtual float last_velocity_update_us(void) const = 0;
+    virtual time_us_t last_velocity_update_us(void) const = 0;
 
 
     /**

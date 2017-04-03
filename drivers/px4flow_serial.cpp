@@ -104,7 +104,8 @@ bool PX4Flow_serial::update(void)
                 float new_distance_filtered = 0.2f * ground_distance_ + 0.8f * maths_median_filter_3x(gd[0], gd[1], gd[2]);
 
                 // Keep values
-                velocity_z_      = - (new_distance_filtered - ground_distance_) / (time_keeper_get_s() - last_update_s_);
+                time_s_t dt_s = (time_keeper_get_us() - last_update_us_) / 1e6f;
+                velocity_z_      = - (new_distance_filtered - ground_distance_) / dt_s;
                 ground_distance_ = new_distance_filtered;
 
                 // Compute XY velocity
@@ -115,7 +116,7 @@ bool PX4Flow_serial::update(void)
                 rotate_raw_values(config_.orientation, flow_x_, flow_y_, velocity_x_, velocity_y_);
 
                 // Update healthiness
-                last_update_s_ = time_keeper_get_s();
+                last_update_us_ = time_keeper_get_us();
                 if (ground_distance_ < 4.5f)
                 {
                     is_healthy_ = true;

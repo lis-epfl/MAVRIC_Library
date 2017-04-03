@@ -101,19 +101,19 @@ void Gps_sim::configure(void)
     ;
 }
 
-float Gps_sim::last_update_us(void) const
+time_us_t Gps_sim::last_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-float Gps_sim::last_position_update_us(void) const
+time_us_t Gps_sim::last_position_update_us(void) const
 {
     return last_position_update_us_;
 }
 
 
-float Gps_sim::last_velocity_update_us(void) const
+time_us_t Gps_sim::last_velocity_update_us(void) const
 {
     return last_velocity_update_us_;
 }

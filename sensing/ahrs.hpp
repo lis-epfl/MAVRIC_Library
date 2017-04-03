@@ -49,6 +49,7 @@
 #include <array>
 
 #include "util/coord_conventions.hpp"	/* coord_conventions_get_yaw */
+#include "hal/common/time_keeper.hpp"
 
 extern "C"
 {
@@ -86,7 +87,7 @@ public:
      *
      * \return    time
      */
-    virtual float last_update_s(void) const = 0;
+    virtual time_us_t last_update_us(void) const = 0;
 
 
     /**

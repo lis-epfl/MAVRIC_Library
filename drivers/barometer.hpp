@@ -47,6 +47,8 @@
 #include <cstdint>
 #include <cfloat>
 
+#include "hal/common/time_keeper.hpp"
+
 /**
  * \brief   Interface class for barometers
  */
@@ -77,7 +79,7 @@ public:
     *
     * \return   Value
     */
-    virtual uint64_t last_update_us(void) const = 0;
+    virtual time_us_t last_update_us(void) const = 0;
 
 
     /**

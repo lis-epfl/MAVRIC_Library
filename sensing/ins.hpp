@@ -70,7 +70,7 @@ public:
      *
      * \return    time
      */
-    virtual float last_update_s(void) const = 0;
+    virtual time_us_t last_update_us(void) const = 0;
 
 
     /**

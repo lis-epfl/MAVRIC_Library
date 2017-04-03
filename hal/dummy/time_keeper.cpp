@@ -53,31 +53,31 @@ double time_keeper_get_s(void)
 }
 
 
-uint64_t time_keeper_get_ms(void)
+time_ms_t time_keeper_get_ms(void)
 {
     return 0;
 }
 
 
-uint64_t time_keeper_get_us(void)
+time_us_t time_keeper_get_us(void)
 {
     return 0;
 }
 
 
-void time_keeper_delay_us(uint64_t microseconds)
+void time_keeper_delay_us(time_us_t microseconds)
 {
     ;
 }
 
 
-void time_keeper_delay_ms(uint64_t milliseconds)
+void time_keeper_delay_ms(time_ms_t milliseconds)
 {
     ;
 }
 
 
-void time_keeper_sleep_us(uint64_t microseconds)
+void time_keeper_sleep_us(time_us_t microseconds)
 {
     ;
 }

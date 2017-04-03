@@ -98,7 +98,7 @@ public:
      *
      * \return  Waypoint list reception time
      */
-    inline uint64_t waypoint_received_time_ms() const { return waypoint_received_time_ms_; };
+    inline time_ms_t waypoint_received_time_ms() const { return waypoint_received_time_ms_; };
 
     /**
      * \brief   Default configuration
@@ -182,7 +182,7 @@ protected:
     Mavlink_message_handler& message_handler_;                  ///< The reference to the mavlink message handler
     Mission_handler_registry& mission_handler_registry_;        ///< The reference to the mission handler registry
 private:
-    uint64_t waypoint_received_time_ms_;                        ///< The time that the waypoint list was received
+    time_ms_t waypoint_received_time_ms_;                        ///< The time that the waypoint list was received
 
     uint16_t requested_waypoint_count_;                         ///< The number of waypoints requested from the GCS
 

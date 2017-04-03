@@ -49,6 +49,7 @@
 #include <cstdint>
 
 #include "hal/common/adc.hpp"
+#include "hal/common/time_keeper.hpp"
 
 /**
  * \brief Battery type
@@ -140,7 +141,7 @@ private:
 
     float           voltage_;           ///< Current voltage of the battery in V
     float           level_;             ///< Current level of the battery in % (from 0 to 100)
-    float           last_update_us_;    ///< Last update time in microseconds
+    time_us_t       last_update_us_;    ///< Last update time in microseconds
     bool            is_low_;            ///< Indiciates if the battery level is low
 };
 

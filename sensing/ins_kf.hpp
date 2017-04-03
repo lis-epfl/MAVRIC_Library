@@ -181,7 +181,7 @@ public:
      *
      * \return    time
      */
-    float last_update_s(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -257,18 +257,18 @@ private:
     Mat<3,11> H_flow_;
     Mat<3,3> R_flow_;
 
-    float last_accel_update_s_;             ///< Last time we updated the estimate using accelerometer
-    float last_sonar_update_s_;             ///< Last time we updated the estimate using sonar
-    float last_flow_update_s_;              ///< Last time we updated the estimate using optical flow
-    float last_baro_update_s_;              ///< Last time we updated the estimate using barometer
-    float last_gps_pos_update_s_;           ///< Last time we updated the estimate using gps position
-    float last_gps_vel_update_s_;           ///< Last time we updated the estimate using gps velocity
-    float last_gps_mocap_update_s_;         ///< Last time we updated the estimate using motion capture system
+    time_us_t last_accel_update_us_;             ///< Last time we updated the estimate using accelerometer
+    time_us_t last_sonar_update_us_;             ///< Last time we updated the estimate using sonar
+    time_us_t last_flow_update_us_;              ///< Last time we updated the estimate using optical flow
+    time_us_t last_baro_update_us_;              ///< Last time we updated the estimate using barometer
+    time_us_t last_gps_pos_update_us_;           ///< Last time we updated the estimate using gps position
+    time_us_t last_gps_vel_update_us_;           ///< Last time we updated the estimate using gps velocity
+    time_us_t last_gps_mocap_update_us_;         ///< Last time we updated the estimate using motion capture system
     bool  first_fix_received_;              ///< Indicates if a fix was received (false at startup, true after first fix from gps or mocap)
 
 
-    float dt_;                              ///< Time interval since last update in seconds
-    float last_update_;                     ///< Last update time in seconds
+    time_s_t dt_s_;                         ///< Time interval since last update in seconds
+    time_us_t last_update_us_;              ///< Last update time in microseconds
 
 
     /**

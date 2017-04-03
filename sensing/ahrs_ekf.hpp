@@ -111,7 +111,7 @@ public:
      *
      * \return    time
      */
-    float last_update_s(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -178,7 +178,7 @@ protected:
      */
     void update_step_mag_2d(void);
 
-    const Imu& imu_;                                    ///< The Reference to the IMU structure
+    const Imu& imu_;                            ///< The Reference to the IMU structure
 
     quat_t              attitude_;              ///< Estimated attitude
     std::array<float,3> angular_speed_;         ///< Estimated angular speed
@@ -186,12 +186,12 @@ protected:
 
     ahrs_state_t internal_state_;
 
-    Mat<3,3> R_acc_;                                    ///< The accelerometer measruement noise matrix
-    Mat<3,3> R_acc_norm_;                               ///< The additonal accelerometer measurement noise matrix when acceleration norm is different from 1.0g
-    Mat<3,3> R_mag_;                                    ///< The magnetometer measurement noise matrix
+    Mat<3,3> R_acc_;                            ///< The accelerometer measruement noise matrix
+    Mat<3,3> R_acc_norm_;                       ///< The additonal accelerometer measurement noise matrix when acceleration norm is different from 1.0g
+    Mat<3,3> R_mag_;                            ///< The magnetometer measurement noise matrix
 
-    float dt_s_;                                        ///< Time interval since last update in seconds
-    float last_update_s_;                               ///< Last update time in seconds
+    time_s_t dt_s_;                             ///< Time interval since last update in seconds
+    time_us_t last_update_us_;                  ///< Last update time in microseconds
 };
 
 AHRS_ekf::conf_t AHRS_ekf::default_config()

@@ -62,14 +62,14 @@ double time_keeper_get_s(void)
 }
 
 
-uint64_t time_keeper_get_ms(void)
+time_ms_t time_keeper_get_ms(void)
 {
     // milliseconds since system start
     return time_keeper_get_us() / 1000;
 }
 
 
-uint64_t time_keeper_get_us(void)
+time_us_t time_keeper_get_us(void)
 {
     high_resolution_clock::time_point t_now = high_resolution_clock::now();
 
@@ -79,9 +79,9 @@ uint64_t time_keeper_get_us(void)
 }
 
 
-void time_keeper_delay_us(uint64_t microseconds)
+void time_keeper_delay_us(time_us_t microseconds)
 {
-    uint64_t now = time_keeper_get_us();
+    time_us_t now = time_keeper_get_us();
     while (time_keeper_get_us() < now + microseconds)
     {
         ;
@@ -89,9 +89,9 @@ void time_keeper_delay_us(uint64_t microseconds)
 }
 
 
-void time_keeper_delay_ms(uint64_t milliseconds)
+void time_keeper_delay_ms(time_ms_t milliseconds)
 {
-    uint64_t now = time_keeper_get_us();
+    time_us_t now = time_keeper_get_us();
 
     while (time_keeper_get_us() < now + 1000 * milliseconds)
     {
@@ -100,7 +100,7 @@ void time_keeper_delay_ms(uint64_t milliseconds)
 }
 
 
-void time_keeper_sleep_us(uint64_t microseconds)
+void time_keeper_sleep_us(time_us_t microseconds)
 {
     struct timespec reqtime;
     reqtime.tv_sec  = 0;

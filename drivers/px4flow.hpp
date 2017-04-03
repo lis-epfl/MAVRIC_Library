@@ -42,6 +42,7 @@
 #ifndef PX4FLOW_HPP_
 #define PX4FLOW_HPP_
 
+#include "hal/common/time_keeper.hpp"
 #include "util/buffer.hpp"
 #include <cstdint>
 
@@ -148,7 +149,7 @@ public:
      *
      * \return  Value
      */
-    float last_update_s(void) const;
+    time_us_t last_update_us(void) const;
 
 protected:
     /**
@@ -171,7 +172,7 @@ protected:
     float               velocity_z_;                ///< Velocity in z direction (m/s)
     float               ground_distance_;           ///< Ground distance (m)
     Buffer_T<3,float>   ground_distance_buffer_;    ///< Buffer used to filter sonar measurement
-    float               last_update_s_;             ///< Last update time in seconds
+    time_us_t           last_update_us_;            ///< Last update time in microseconds
     bool                is_healthy_;                ///< Indicates if sensor data can be trusted
 };
 

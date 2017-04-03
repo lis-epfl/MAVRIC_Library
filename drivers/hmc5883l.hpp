@@ -91,7 +91,7 @@ public:
      *
      * \return  Update time
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**
@@ -153,7 +153,7 @@ public:
 private:
     I2c&                 i2c_;              ///< Reference to I2C peripheral
     std::array<float, 3> data_;             ///< sensor data
-    float                last_update_us_;   ///< Last update time in microseconds
+    time_us_t            last_update_us_;   ///< Last update time in microseconds
     float                temperature_;      ///< NOT SUPPORTED : temperature
 };
 

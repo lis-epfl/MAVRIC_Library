@@ -54,7 +54,7 @@ Simulation::Simulation(Dynamic_model& dynamic_model, simulation_conf_t config):
     barometer_(dynamic_model_),
     sonar_(dynamic_model_),
     gps_(dynamic_model_),
-    last_update_us_(0.0f)
+    last_update_us_(0)
 {}
 
 
@@ -69,7 +69,7 @@ bool Simulation::update(void)
 }
 
 
-const float& Simulation::last_update_us(void) const
+const time_us_t& Simulation::last_update_us(void) const
 {
     return last_update_us_;
 }

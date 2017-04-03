@@ -103,7 +103,7 @@ public:
      *
      * \return  Update time
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**
@@ -145,7 +145,7 @@ private:
     float               distance_;              ///< Current distance
     float               velocity_;              ///< Current velocity
     bool                healthy_;               ///< Sensor status
-    float               last_update_us_;        ///< Last update time in microseconds
+    time_us_t           last_update_us_;        ///< Last update time in microseconds
     float               last_distances_[5];     ///< Last distances in m, to compute median filter
 
 
@@ -169,10 +169,10 @@ private:
 
     /**
      * \brief           Median filter with n measures (n should be odd)
-     * 
+     *
      * \param   in      Array with the input values
      * \param   n       Number of values in the array
-     * 
+     *
      * \return          Output value
      */
     float median_filter_n(float *in, int n);

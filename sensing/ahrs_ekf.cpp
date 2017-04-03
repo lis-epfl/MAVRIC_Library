@@ -76,7 +76,7 @@ AHRS_ekf::AHRS_ekf(const Imu& imu, const AHRS_ekf::conf_t config):
     angular_speed_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     linear_acc_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     dt_s_(0.0f),
-    last_update_s_(0.0f)
+    last_update_us_(0)
 {
     init_kalman();
 
@@ -89,11 +89,11 @@ bool AHRS_ekf::update(void)
     bool task_return = true;
 
     // Update time in us
-    float now_s    = time_keeper_get_s();
+    time_us_t now_us    = time_keeper_get_us();
 
     // Delta t in seconds
-    dt_s_          = now_s - last_update_s_;
-    last_update_s_ = now_s;
+    dt_s_           = (now_us - last_update_us_) / 1e6f;
+    last_update_us_ = now_us;
 
     // To enable changing of R with onboard parameters.
     R_acc_(0,0) = config_.R_acc;
@@ -191,9 +191,9 @@ bool AHRS_ekf::update(void)
     return task_return;
 }
 
-float AHRS_ekf::last_update_s(void) const
+time_us_t AHRS_ekf::last_update_us(void) const
 {
-    return last_update_s_;
+    return last_update_us_;
 }
 
 

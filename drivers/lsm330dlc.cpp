@@ -297,7 +297,7 @@ bool Lsm330dlc::update_gyr(void)
 }
 
 
-const float& Lsm330dlc::last_update_us(void) const
+const time_us_t& Lsm330dlc::last_update_us(void) const
 {
     return last_update_us_;
 }

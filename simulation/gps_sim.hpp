@@ -63,7 +63,7 @@ public:
 
     /**
      * \brief   Initializes the gps
-     * 
+     *
      * \return  Success
      */
     bool init(void);
@@ -89,7 +89,7 @@ public:
      *
      * \return  Update time
      */
-    float last_update_us(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -97,7 +97,7 @@ public:
      *
      * \return  Update time
      */
-    float last_position_update_us(void) const;
+    time_us_t last_position_update_us(void) const;
 
 
     /**
@@ -105,7 +105,7 @@ public:
      *
      * \return  Update time
      */
-    float last_velocity_update_us(void) const;
+    time_us_t last_velocity_update_us(void) const;
 
 
     /**
@@ -190,9 +190,9 @@ public:
 private:
     Dynamic_model&      dynamic_model_;                     ///< Reference to dynamic model
 
-    float               last_update_us_;                    ///< Last update time in microseconds
-    float               last_position_update_us_;           ///< Last time position was updated in microseconds
-    float               last_velocity_update_us_;           ///< Last time velocity was updated in microseconds
+    time_us_t           last_update_us_;                    ///< Last update time in microseconds
+    time_us_t           last_position_update_us_;           ///< Last time position was updated in microseconds
+    time_us_t           last_velocity_update_us_;           ///< Last time velocity was updated in microseconds
     global_position_t   global_position_;                   ///< Global position
     float               horizontal_position_accuracy_;      ///< Accuracy of position on horizontal plane in m
     float               vertical_position_accuracy_;        ///< Accuracy of position on vertical axis in m

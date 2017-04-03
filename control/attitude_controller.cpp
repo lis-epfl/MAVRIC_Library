@@ -60,7 +60,7 @@ Attitude_controller::Attitude_controller(const args_t& args, const conf_t& confi
     attitude_command_(args.attitude_command),
     rate_command_(args.rate_command),
     dt_s_(0.0f),
-    last_update_s_(0.0f)
+    last_update_us_(0)
 {
     // set initial attitude command
     attitude_command_.s     = 1.0f;
@@ -85,9 +85,9 @@ Attitude_controller::Attitude_controller(const args_t& args, const conf_t& confi
 
 bool Attitude_controller::update(void)
 {
-    float now      = time_keeper_get_s();
-    dt_s_          = now - last_update_s_;
-    last_update_s_ = now;
+    time_us_t now_us = time_keeper_get_us();
+    dt_s_            = (now_us - last_update_us_) / 1e6f;
+    last_update_us_  = now_us;
 
     // Get attitude command
     attitude_error_estimator_set_quat_ref(&attitude_error_estimator_,

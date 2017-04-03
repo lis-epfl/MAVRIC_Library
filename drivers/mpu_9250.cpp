@@ -222,7 +222,7 @@ bool Mpu_9250::update_mag(void)
 }
 
 
-const float& Mpu_9250::last_update_us(void) const
+const time_us_t& Mpu_9250::last_update_us(void) const
 {
     return last_update_us_;
 }

@@ -106,16 +106,16 @@ INS_kf::INS_kf( State& state,
     R_flow_({ SQR(config.sigma_flow), 0,                        0,
              0,                       SQR(config.sigma_flow),   0,
              0,                       0,                        SQR(config.sigma_sonar)}),
-    last_accel_update_s_(0.0f),
-    last_sonar_update_s_(0.0f),
-    last_flow_update_s_(0.0f),
-    last_baro_update_s_(0.0f),
-    last_gps_pos_update_s_(0.0f),
-    last_gps_vel_update_s_(0.0f),
-    last_gps_mocap_update_s_(0.0f),
+    last_accel_update_us_(0),
+    last_sonar_update_us_(0),
+    last_flow_update_us_(0),
+    last_baro_update_us_(0),
+    last_gps_pos_update_us_(0),
+    last_gps_vel_update_us_(0),
+    last_gps_mocap_update_us_(0),
     first_fix_received_(false),
-    dt_(0.0f),
-    last_update_(0.0f)
+    dt_s_(0.0f),
+    last_update_us_(0)
 {
     // Init the filter
     init();
@@ -136,21 +136,21 @@ void INS_kf::init(void)
 
 
     // Update last time to avoid glitches at initilaization
-    last_update_ = time_keeper_get_s();
+    last_update_us_ = time_keeper_get_us();
 }
 
 
-float INS_kf::last_update_s(void) const
+time_us_t INS_kf::last_update_us(void) const
 {
-    float last_update_s = 0.0f;
+    time_us_t last_update_us = 0;
 
-    last_update_s = maths_f_max(last_update_s, last_sonar_update_s_);
-    //last_update_s = maths_f_max(last_update_s, last_flow_update_s_);
-    last_update_s = maths_f_max(last_update_s, last_baro_update_s_);
-    last_update_s = maths_f_max(last_update_s, last_gps_pos_update_s_);
-    last_update_s = maths_f_max(last_update_s, last_gps_vel_update_s_);
+    last_update_us = maths_f_max(last_update_us, last_sonar_update_us_);
+    //last_update_us = maths_f_max(last_update_us, last_flow_update_us_);
+    last_update_us = maths_f_max(last_update_us, last_baro_update_us_);
+    last_update_us = maths_f_max(last_update_us, last_gps_pos_update_us_);
+    last_update_us = maths_f_max(last_update_us, last_gps_vel_update_us_);
 
-    return last_update_s;
+    return last_update_us;
 }
 
 
@@ -176,59 +176,59 @@ bool INS_kf::is_healthy(INS::healthy_t type) const
 {
     bool ret = false;
 
-    float now     = time_keeper_get_s();
-    float timeout = 1.0f;  // timeout after 1 second
+    time_us_t now_us     = time_keeper_get_us();
+    time_us_t timeout_us = 1000000;  // timeout after 1 second
 
     switch(type)
     {
         case INS::healthy_t::XY_VELOCITY:
-            ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_vel_update_s_) < timeout) )
-              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) )
+            ret = ( ((gps_.fix() >= FIX_2D) && ( (now_us - last_gps_vel_update_us_) < timeout_us) )
+              //|| ( flow_.healthy()      && ( (now_us - last_flow_update_us_)    < timeout_us) )
               );
 
         break;
 
         case INS::healthy_t::Z_VELOCITY:
-            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_vel_update_s_) < timeout) ) ||
-                    //( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
-                    ( sonar_.healthy()     && ( (now - last_sonar_update_s_)   < timeout) ) );
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now_us - last_gps_vel_update_us_) < timeout_us) ) ||
+                    //( flow_.healthy()      && ( (now_us - last_flow_update_us_)    < timeout_us) ) ||
+                    ( sonar_.healthy()     && ( (now_us - last_sonar_update_us_)   < timeout_us) ) );
         break;
 
         case INS::healthy_t::XYZ_VELOCITY:
-            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_vel_update_s_) < timeout) )
-              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) )
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now_us - last_gps_vel_update_us_) < timeout_us) )
+              //|| ( flow_.healthy()      && ( (now_us - last_flow_update_us_)    < timeout_us) )
               );
         break;
 
         case INS::healthy_t::XY_REL_POSITION:
-            ret = ( ((gps_.fix() >= FIX_2D) && ( (now - last_gps_pos_update_s_) < timeout) )
-              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) )
+            ret = ( ((gps_.fix() >= FIX_2D) && ( (now_us - last_gps_pos_update_us_) < timeout_us) )
+              //|| ( flow_.healthy()      && ( (now_us - last_flow_update_us_)    < timeout_us) )
               );
         break;
 
         case INS::healthy_t::Z_REL_POSITION:
             ret = (
-                    //( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) ) ||
-                    ( sonar_.healthy()     && ( (now - last_sonar_update_s_)   < timeout) ) );
+                    //( flow_.healthy()      && ( (now_us - last_flow_update_us_)    < timeout_us) ) ||
+                    ( sonar_.healthy()     && ( (now_us - last_sonar_update_us_)   < timeout_us) ) );
         break;
 
         case INS::healthy_t::XYZ_REL_POSITION:
-            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) )
-              //|| ( flow_.healthy()      && ( (now - last_flow_update_s_)    < timeout) )
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now_us - last_gps_pos_update_us_) < timeout_us) )
+              //|| ( flow_.healthy()      && ( (now_us - last_flow_update_us_)    < timeout_us) )
               );
         break;
 
         case INS::healthy_t::XY_ABS_POSITION:
-            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) ) );
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now_us - last_gps_pos_update_us_) < timeout_us) ) );
         break;
 
         case INS::healthy_t::Z_ABS_POSITION:
-            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) ) ||
-                  ( ( (now - last_baro_update_s_) < timeout   ) ) );
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now_us - last_gps_pos_update_us_) < timeout_us) ) ||
+                  ( ( (now_us - last_baro_update_us_) < timeout_us   ) ) );
         break;
 
         case INS::healthy_t::XYZ_ABS_POSITION:
-            ret = ( ((gps_.fix() >= FIX_3D) && ( (now - last_gps_pos_update_s_) < timeout) ));
+            ret = ( ((gps_.fix() >= FIX_3D) && ( (now_us - last_gps_pos_update_us_) < timeout_us) ));
         break;
     }
 
@@ -255,18 +255,18 @@ bool INS_kf::update(void)
     // Prediction step
     if (ahrs_.is_healthy())
     {
-        if (last_accel_update_s_ < ahrs_.last_update_s())
+        if (last_accel_update_us_ < ahrs_.last_update_us())
         {
             // Update the delta time (in second)
-            float now       = time_keeper_get_s();
-            dt_             = now - last_update_;
-            last_update_    = now;
+            time_us_t now_us = time_keeper_get_us();
+            dt_s_            = (now_us - last_update_us_) / 1e6f;
+            last_update_us_  = now_us;
 
             // Make the prediciton
             predict_kf();
 
             // update timimg
-            last_accel_update_s_ = ahrs_.last_update_s();
+            last_accel_update_us_ = ahrs_.last_update_us();
         }
     }
     else
@@ -279,49 +279,49 @@ bool INS_kf::update(void)
     if (gps_.healthy())
     {
         // GPS Position
-        if (last_gps_pos_update_s_ < (float)(gps_.last_position_update_us())/1e6f)
+        if (last_gps_pos_update_us_ < gps_.last_position_update_us())
         {
             // Do kalman update
             update_gps_pos();
 
             // Update timing
-            last_gps_pos_update_s_ = (float)(gps_.last_position_update_us())/1e6f;
+            last_gps_pos_update_us_ = gps_.last_position_update_us();
         }
 
         // GPS velocity
-        if (last_gps_vel_update_s_ < (float)(gps_.last_velocity_update_us())/1e6f)
+        if (last_gps_vel_update_us_ < gps_.last_velocity_update_us())
         {
             // Do kalman update
             update_gps_vel();
 
             // Update timing
-            last_gps_vel_update_s_ = (float)(gps_.last_velocity_update_us())/1e6f;
+            last_gps_vel_update_us_ = gps_.last_velocity_update_us();
         }
     }
 
     // Measure from gps moacp
     if (gps_mocap_.healthy())
     {
-        if (last_gps_mocap_update_s_ < (float)(gps_mocap_.last_position_update_us())/1e6f)
+        if (last_gps_mocap_update_us_ < gps_mocap_.last_position_update_us())
         {
             // Do kalman update
             update_gps_mocap();
 
             // Update timing
-            last_gps_mocap_update_s_ = (float)(gps_mocap_.last_position_update_us())/1e6f;
+            last_gps_mocap_update_us_ = gps_mocap_.last_position_update_us();
         }
     }
 
     // Measure from barometer
     if(true) // TODO: Add healthy function into barometer
     {
-       if (last_baro_update_s_ < (float)(barometer_.last_update_us())/1e6f)
+       if (last_baro_update_us_ < barometer_.last_update_us())
        {
           // Do kalman update
           update_barometer();
 
           // Update timing
-          last_baro_update_s_ = (float)(barometer_.last_update_us())/1e6f;
+          last_baro_update_us_ = barometer_.last_update_us();
        }
     }
 
@@ -331,26 +331,26 @@ bool INS_kf::update(void)
     if ( (maths_f_abs(current_attitude.rpy[ROLL])  < PI / 9.0f) &&
          (maths_f_abs(current_attitude.rpy[PITCH]) < PI / 9.0f)    )
     {
-        if (last_sonar_update_s_ < (float)(sonar_.last_update_us())/1e6f)
+        if (last_sonar_update_us_ < sonar_.last_update_us())
         {
             // Do kalman update
             update_sonar();
 
             // Update timing
-            last_sonar_update_s_ = (float)(sonar_.last_update_us())/1e6f;
+            last_sonar_update_us_ = sonar_.last_update_us();
         }
     }
 
     // Measure from optic-flow
     if (flow_.healthy())
     {
-        if (last_flow_update_s_ < flow_.last_update_s())
+        if (last_flow_update_us_ < flow_.last_update_us())
         {
             // Do kalman update
             update_flow();
 
             // Update timing
-            last_flow_update_s_ = flow_.last_update_s();
+            last_flow_update_us_ = flow_.last_update_us();
         }
     }
 
@@ -366,7 +366,7 @@ void INS_kf::predict_kf(void)
     // Recompute the variable model matrices
     // Get time
     //float dt = 0.004; //dt_;
-    float dt = dt_;
+    float dt = dt_s_;
     float dt2 = (dt*dt)/2.0f;
 
     // Get attitude quaternion

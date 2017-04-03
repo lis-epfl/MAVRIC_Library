@@ -156,8 +156,8 @@ protected:
 
     attitude_error_estimator_t  attitude_error_estimator_;   ///< Attitude error estimator
     pid_controller_t            pid_[3];                     ///< Attitude PID controller for roll, pitch and yaw
-    float                       dt_s_;                       ///< The time interval between two updates
-    float                       last_update_s_;              ///< The time of the last update in s
+    time_s_t                    dt_s_;                       ///< The time interval between two updates
+    time_us_t                   last_update_us_;             ///< The time of the last update in us
 };
 
 

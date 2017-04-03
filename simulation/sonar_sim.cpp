@@ -156,7 +156,7 @@ bool Sonar_sim::update(void)
 }
 
 
-const float& Sonar_sim::last_update_us(void) const
+const time_us_t& Sonar_sim::last_update_us(void) const
 {
     return last_update_us_;
 }

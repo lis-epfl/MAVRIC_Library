@@ -173,7 +173,7 @@ bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config)
         remote->channels[i] = 0.0f;
         remote->trims[i] = 0.0f;
     }
-    remote->last_satellite_update = time_keeper_get_us();
+    remote->last_satellite_update_us = time_keeper_get_us();
 
     return init_success;
 }
@@ -181,21 +181,21 @@ bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config)
 
 bool remote_update(remote_t* remote)
 {
-    uint32_t now = time_keeper_get_us() ;
+    time_us_t now_us = time_keeper_get_us() ;
     float raw;
 
-    if (remote->sat->last_update() > remote->last_satellite_update)
+    if (remote->sat->last_update_us() > remote->last_satellite_update_us)
     {
         // Keep last update time
-        remote->last_satellite_update = remote->sat->last_update();
+        remote->last_satellite_update_us = remote->sat->last_update_us();
 
         // Check signal quality
-        if (remote->sat->dt() < 100000)
+        if (remote->sat->dt_us() < 100000)
         {
             // ok
             remote->signal_quality = SIGNAL_GOOD;
         }
-        else if (remote->sat->dt() < 1500000)
+        else if (remote->sat->dt_us() < 1500000)
         {
             // warning
             remote->signal_quality = SIGNAL_BAD;
@@ -218,7 +218,7 @@ bool remote_update(remote_t* remote)
     else
     {
         // Check for signal loss
-        if ((now - remote->sat->last_update()) > 1500000)
+        if ((now_us - remote->sat->last_update_us()) > 1500000)
         {
             // CRITICAL: Set all channels to failsafe
             remote->channels[CHANNEL_THROTTLE] = -1.0f;

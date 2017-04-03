@@ -132,7 +132,7 @@ public:
      *
      * \return  Update time
      */
-    const float& last_update_us(void) const;
+    const time_us_t& last_update_us(void) const;
 
 
     /**
@@ -245,7 +245,7 @@ private:
     std::array<float, 3> gyro_data_;        ///< Gyroscope data
     std::array<float, 3> acc_data_;         ///< Accelerometer data
     float                temperature_;      ///< Temperature
-    float                last_update_us_;   ///< Last udate time in microseconds
+    time_us_t            last_update_us_;   ///< Last udate time in microseconds
 };
 
 #endif

@@ -149,7 +149,7 @@ static float pid_controller_differentiate(differentiator_t* diff, float input, f
 
 bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf_t* config)
 {
-    float t = time_keeper_get_s();
+    time_us_t t = time_keeper_get_us();
 
     controller->p_gain          = config->p_gain;
     controller->clip_min        = config->clip_min;
@@ -158,11 +158,11 @@ bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf
     controller->differentiator  = config->differentiator;
     controller->soft_zone_width = config->soft_zone_width;
 
-    controller->output        = 0.0f;
-    controller->error         = 0.0f;
-    controller->last_update_s = t;
-    controller->dt_s          = 1.0f;
-    controller->is_saturated  = false;
+    controller->output         = 0.0f;
+    controller->error          = 0.0f;
+    controller->last_update_us = t;
+    controller->dt_s           = 1e-6f;
+    controller->is_saturated   = false;
 
     return true;
 }
@@ -189,10 +189,10 @@ bool pid_controller_apply_config(pid_controller_t* controller, const pid_control
 
 void pid_controller_init_pass_through(pid_controller_t* controller)
 {
-    float t = time_keeper_get_s();
+    time_us_t t = time_keeper_get_us();
 
-    controller->dt_s          = 1.0f;
-    controller->last_update_s = t;
+    controller->dt_s           = 1e-6f;
+    controller->last_update_us = t;
 
     controller->p_gain      = 1.0f;
     controller->clip_min    = -10000.0f;
@@ -218,16 +218,16 @@ void pid_controller_reset_integrator(pid_controller_t* controller)
 
 float pid_controller_update(pid_controller_t* controller, float error)
 {
-    float dt = time_keeper_get_s() - controller->last_update_s;
+    time_s_t dt = (time_keeper_get_us() - controller->last_update_us) / 1e6f;
     return pid_controller_update_dt(controller, error, dt);
 }
 
 
-float pid_controller_update_dt(pid_controller_t* controller, float error, float dt)
+float pid_controller_update_dt(pid_controller_t* controller, float error, time_s_t dt)
 {
-    controller->error         = maths_soft_zone(error, controller->soft_zone_width);;
-    controller->dt_s          = dt;
-    controller->last_update_s = time_keeper_get_s();
+    controller->error          = maths_soft_zone(error, controller->soft_zone_width);;
+    controller->dt_s           = dt;
+    controller->last_update_us = time_keeper_get_us();
 
     // Compute output with P and D terms (no integration yet)
     controller->output        = controller->p_gain * controller->error

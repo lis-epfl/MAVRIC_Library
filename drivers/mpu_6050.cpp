@@ -78,7 +78,7 @@ bool Mpu_6050::init(void)
     uint8_t data;
     success &= i2c_.write(&WHO_ARE_YOU_COMMAND, 1, MPU_6050_ADDRESS);
     success &= i2c_.read(&data, 1, MPU_6050_ADDRESS);
-    
+
     if (data != I_AM_MPU_6050)
     {
      return false;
@@ -108,7 +108,7 @@ bool Mpu_6050::init(void)
 
     test[0] = reg; test[1] = temp;
     success &= i2c_.write(test, 2, MPU_6050_ADDRESS);
-    
+
     return success;
 }
 
@@ -122,7 +122,7 @@ bool Mpu_6050::update_acc(void)
     // Read data from accelero sensor
     success &= i2c_.write(&MPU_6050_GET_ACC, 1, MPU_6050_ADDRESS);
     success &= i2c_.read(accel_buffer, 6, MPU_6050_ADDRESS);
-    
+
     acc_data_[0] = (float)((int16_t)(accel_buffer[0] << 8 | accel_buffer[1]));
     acc_data_[1] = (float)((int16_t)(accel_buffer[2] << 8 | accel_buffer[3]));
     acc_data_[2] = (float)((int16_t)(accel_buffer[4] << 8 | accel_buffer[5]));
@@ -143,10 +143,10 @@ bool Mpu_6050::update_gyr(void)
     // Read data from gyro sensor
     success &= i2c_.write(&MPU_6050_GET_GYROS, 1, MPU_6050_ADDRESS);
     success &= i2c_.read(gyro_buffer, 6, MPU_6050_ADDRESS);
-    
+
     // sensor temperature
     // temperature_  = (float)((int16_t)gyro_buffer[0]);
-    
+
     gyro_data_[0] = (float)((int16_t)(gyro_buffer[0] << 8 | gyro_buffer[1]));
     gyro_data_[1] = (float)((int16_t)(gyro_buffer[2] << 8 | gyro_buffer[3]));
     gyro_data_[2] = (float)((int16_t)(gyro_buffer[4] << 8 | gyro_buffer[5]));
@@ -158,7 +158,7 @@ bool Mpu_6050::update_gyr(void)
 }
 
 
-const float& Mpu_6050::last_update_us(void) const
+const time_us_t& Mpu_6050::last_update_us(void) const
 {
     return last_update_us_;
 }

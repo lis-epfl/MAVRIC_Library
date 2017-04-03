@@ -150,7 +150,7 @@ bool Barometer_MS5611::update(void)
 }
 
 
-uint64_t Barometer_MS5611::last_update_us(void) const
+time_us_t Barometer_MS5611::last_update_us(void) const
 {
     return last_update_us_;
 }

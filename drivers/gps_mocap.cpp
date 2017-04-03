@@ -114,10 +114,10 @@ void Gps_mocap::callback(uint32_t __attribute__((unused)) sysid, const mavlink_m
     mavlink_msg_att_pos_mocap_decode(msg, &packet);
 
     // Get timing
-    float t = time_keeper_get_us();
+    time_us_t now_us = time_keeper_get_us();
 
     // Update velocity
-    float dt_s = (t - last_update_us_) / 1000000;
+    time_s_t dt_s = (now_us - last_update_us_) / 1e6f;
     if (dt_s > 0.0f)
     {
         velocity_lf_[X] = (packet.x - local_position_[X]) / dt_s;
@@ -136,7 +136,7 @@ void Gps_mocap::callback(uint32_t __attribute__((unused)) sysid, const mavlink_m
     local_position_[Z] = packet.z;
 
     // Update timing
-    last_update_us_ = t;
+    last_update_us_ = now_us;
 }
 
 
@@ -152,19 +152,19 @@ void Gps_mocap::configure(void)
 }
 
 
-float Gps_mocap::last_update_us(void) const
+time_us_t Gps_mocap::last_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-float Gps_mocap::last_position_update_us(void) const
+time_us_t Gps_mocap::last_position_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-float Gps_mocap::last_velocity_update_us(void) const
+time_us_t Gps_mocap::last_velocity_update_us(void) const
 {
     return last_update_us_;
 }
@@ -236,8 +236,8 @@ bool Gps_mocap::healthy(void) const
 {
     bool  is_healthy = true;
 
-    float t          = time_keeper_get_us();
-    if ( (t - last_update_us()) > 1000000 )
+    time_us_t now_us = time_keeper_get_us();
+    if ( (now_us - last_update_us()) > 1000000 )
     {
          is_healthy = false;
     }

@@ -72,7 +72,7 @@ Spektrum_satellite::Spektrum_satellite(Serial& uart, Gpio& receiver_pin, Gpio& p
     uart_(uart),
     receiver_pin_(receiver_pin),
     power_pin_(power_pin),
-    last_update_(0.0f)
+    last_update_us_(0)
 {}
 
 bool Spektrum_satellite::init(void)
@@ -88,7 +88,7 @@ bool Spektrum_satellite::init(void)
     }
 
     protocol_           = RADIO_PROTOCOL_UNKNOWN;
-    last_update_        = time_keeper_get_us();
+    last_update_us_     = time_keeper_get_us();
 
     //Set minimum number of frames to be received in order to guess the radio protocol used
     protocol_proba_.min_nb_frames   = 10;
@@ -167,15 +167,15 @@ int16_t Spektrum_satellite::channel(const uint8_t channel_number) const
 }
 
 
-uint32_t Spektrum_satellite::last_update(void) const
+time_us_t Spektrum_satellite::last_update_us(void) const
 {
-    return last_update_;
+    return last_update_us_;
 }
 
 
-uint32_t Spektrum_satellite::dt(void) const
+time_us_t Spektrum_satellite::dt_us(void) const
 {
-    return dt_;
+    return dt_us_;
 }
 
 
@@ -186,13 +186,13 @@ void Spektrum_satellite::handle_interrupt(void)
     uint8_t i = 0;
     uint16_t sw;
     uint8_t channel;
-    uint32_t now = time_keeper_get_us() ;
+    time_us_t now_us = time_keeper_get_us() ;
 
     // If byte received
     while (uart_.readable() > 0)
     {
-        uint32_t dt_interrupt = now - last_interrupt_;
-        last_interrupt_ = now;
+        time_us_t dt_interrupt = now_us - last_interrupt_us_;
+        last_interrupt_us_ = now_us;
 
         // the shorter frame period is 11'000us (11bits encoding) and the longer frame period is 22'000 us(10bits encoding)
         // the inter byte period within a frame is 77us
@@ -246,8 +246,8 @@ void Spektrum_satellite::handle_interrupt(void)
                 }
 
                 // Update timing
-                dt_             = now - last_update_;
-                last_update_    = now;
+                dt_us_          = now_us - last_update_us_;
+                last_update_us_ = now_us;
             }
             else
             {

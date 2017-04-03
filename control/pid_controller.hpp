@@ -47,6 +47,7 @@
 #include <cstdbool>
 #include <math.h>
 
+#include "hal/common/time_keeper.hpp"
 
 /**
  * \brief Integrator part of PID
@@ -97,8 +98,8 @@ typedef struct
     differentiator_t differentiator;    ///< Differentiator parameters
     float output;                       ///< Output
     float error;                        ///< Error
-    float last_update_s;                ///< Last update time in seconds
-    float dt_s;                         ///< Time step
+    time_us_t last_update_us;           ///< Last update time in microseconds
+    time_s_t dt_s;                      ///< Time step
     float soft_zone_width;              ///< Approximate width of a "soft zone" on the error input, i.e. a region of low gain around the target point. Value 0 -> switched off
     bool is_saturated;                  ///< Boolean indicated if at last update the output was saturated, this is used as integrator antiwinding
 } pid_controller_t;
@@ -163,7 +164,7 @@ float pid_controller_update(pid_controller_t* controller, float error);
  *
  * \return              The controller output
  */
-float pid_controller_update_dt(pid_controller_t* controller, float error, float dt);
+float pid_controller_update_dt(pid_controller_t* controller, float error, time_s_t dt);
 
 
 #endif /* PID_CONTROL_HPP_ */

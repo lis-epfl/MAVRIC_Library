@@ -147,7 +147,7 @@ public:
      *
      * \return    time
      */
-    float last_update_s(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -197,13 +197,13 @@ private:
     const Sonar& sonar_;                     ///< Reference to the sonar structure
     const PX4Flow& flow_;                    ///< Reference to the flow structure
 
-    float dt_s_;                            ///< Time interval between updates
-    float last_update_s_;                   ///< Last update time in seconds
-    uint64_t last_gps_pos_update_us_;       ///< Time at which we did correction using GPS position in us
-    uint64_t last_gps_vel_update_us_;       ///< Time at which we did correction using GPS velocity in us
-    uint64_t last_barometer_update_us_;     ///< Time at which we did correction using barometer in us
-    uint64_t last_sonar_update_us_;         ///< Time at which we did correction using sonar in us
-    uint64_t last_flow_update_us_;          ///< Time at which we did correction using optic flow in us
+    time_s_t dt_s_;                          ///< Time interval between updates
+    time_us_t last_update_us_;               ///< Last update time in microseconds
+    time_us_t last_gps_pos_update_us_;       ///< Time at which we did correction using GPS position in us
+    time_us_t last_gps_vel_update_us_;       ///< Time at which we did correction using GPS velocity in us
+    time_us_t last_barometer_update_us_;     ///< Time at which we did correction using barometer in us
+    time_us_t last_sonar_update_us_;         ///< Time at which we did correction using sonar in us
+    time_us_t last_flow_update_us_;          ///< Time at which we did correction using optic flow in us
 
     bool is_gps_pos_initialized_;           ///< Boolean flag ensuring that the GPS was initialized
     local_position_t fence_position_;        ///< Position of the fence

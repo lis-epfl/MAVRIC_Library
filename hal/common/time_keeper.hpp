@@ -49,6 +49,25 @@ extern "C" {
 
 #include <stdint.h>
 
+
+/**
+ * \brief   Type for times/durations in seconds
+ */
+typedef double time_s_t;
+
+
+/**
+ * \brief   Type for times/durations in seconds
+ */
+typedef uint64_t time_us_t;
+
+
+/**
+ * \brief   Type for times/durations in seconds
+ */
+typedef uint64_t time_ms_t;
+
+
 /**
  * \brief   This function initialize the clock of the microcontroller
  */
@@ -60,7 +79,7 @@ void time_keeper_init(void);
  *
  * \return  The time in seconds since system start
  */
-double time_keeper_get_s(void);
+time_s_t time_keeper_get_s(void);
 
 
 /**
@@ -68,7 +87,7 @@ double time_keeper_get_s(void);
  *
  * \return The time in milliseconds since system start
  */
-uint64_t time_keeper_get_ms(void);
+time_us_t time_keeper_get_ms(void);
 
 
 /**
@@ -78,7 +97,7 @@ uint64_t time_keeper_get_ms(void);
  *
  * \return The time in microseconds since system start
  */
-uint64_t time_keeper_get_us(void);
+time_us_t time_keeper_get_us(void);
 
 
 /**
@@ -86,7 +105,7 @@ uint64_t time_keeper_get_us(void);
  *
  * \param   microseconds        The number of microseconds to wait
  */
-void time_keeper_delay_us(uint64_t microseconds);
+void time_keeper_delay_us(time_us_t microseconds);
 
 
 /**
@@ -94,7 +113,7 @@ void time_keeper_delay_us(uint64_t microseconds);
  *
  * \param   until_time      The time during which the function will run
  */
-void time_keeper_delay_ms(uint64_t milliseconds);
+void time_keeper_delay_ms(time_ms_t milliseconds);
 
 
 /**
@@ -102,7 +121,7 @@ void time_keeper_delay_ms(uint64_t milliseconds);
  *
  * \param   until_time      The time during which the function will run
  */
-void time_keeper_sleep_us(uint64_t microseconds);
+void time_keeper_sleep_us(time_us_t microseconds);
 
 
 #ifdef __cplusplus

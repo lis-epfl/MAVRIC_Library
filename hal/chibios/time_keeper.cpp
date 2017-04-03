@@ -63,33 +63,33 @@ double time_keeper_get_s(void)
 }
 
 
-uint64_t time_keeper_get_ms(void)
+time_ms_t time_keeper_get_ms(void)
 {
     // milliseconds since system start
     return osalOsGetSystemTimeX() / 1000;
 }
 
 
-uint64_t time_keeper_get_us(void)
+time_us_t time_keeper_get_us(void)
 {
     // microseconds since system start. Will run over after an hour.
     return osalOsGetSystemTimeX();
 }
 
 
-void time_keeper_delay_us(uint64_t microseconds)
+void time_keeper_delay_us(time_us_t microseconds)
 {
     osalThreadSleepMicroseconds(microseconds);
 }
 
 
-void time_keeper_delay_ms(uint64_t milliseconds)
+void time_keeper_delay_ms(time_ms_t milliseconds)
 {
     osalThreadSleepMilliseconds(milliseconds);
 }
 
 
-void time_keeper_sleep_us(uint64_t microseconds)
+void time_keeper_sleep_us(time_us_t microseconds)
 {
     osalThreadSleepMicroseconds(microseconds);
 }

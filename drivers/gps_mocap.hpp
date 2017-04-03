@@ -116,7 +116,7 @@ public:
      *
      * \return  Update time
      */
-    float last_update_us(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -124,7 +124,7 @@ public:
      *
      * \return  Update time
      */
-    float last_position_update_us(void) const;
+    time_us_t last_position_update_us(void) const;
 
 
     /**
@@ -132,7 +132,7 @@ public:
      *
      * \return  Update time
      */
-    float last_velocity_update_us(void) const;
+    time_us_t last_velocity_update_us(void) const;
 
 
     /**
@@ -231,7 +231,7 @@ private:
     bool is_init_;                                     ///< Flag to prevent adding message callbacks several times
     bool is_healthy_;                                  ///< Flag indicating if the gps is connected
 
-    float last_update_us_;                             ///< Last time the gps values were updated
+    time_us_t last_update_us_;                         ///< Last time the gps values were updated
 };
 
 

@@ -91,7 +91,7 @@ bool Sonar_i2cxl::update(void)
 }
 
 
-const float& Sonar_i2cxl::last_update_us(void) const
+const time_us_t& Sonar_i2cxl::last_update_us(void) const
 {
     return last_update_us_;
 }

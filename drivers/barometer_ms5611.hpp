@@ -150,7 +150,7 @@ public:
     *
     * \return   Value
     */
-    uint64_t last_update_us(void) const;
+    time_us_t last_update_us(void) const;
 
 
     /**
@@ -219,9 +219,9 @@ private:
 
     uint32_t time_sampling_start_ms_;   ///< sampling starting time
 
-    float       last_state_update_us_;  ///< Time of the last state update
-    float       last_update_us_;        ///< Time of the last update
-    float       dt_s_;                  ///< Time step for the derivative
+    time_us_t last_state_update_us_;///< Time of the last state update
+    time_us_t last_update_us_;      ///< Time of the last update
+    time_s_t  dt_s_;                ///< Time step for the derivative
     float   pressure_;              ///< Measured pressure (in Pa)
     float   temperature_;           ///< Measured temperature
     float   altitude_gf_;           ///< Measured altitude (global frame)

@@ -67,7 +67,7 @@ Imu::Imu(Accelerometer& accelerometer, Gyroscope& gyroscope, Magnetometer& magne
     do_magnetic_north_calibration_(false),
     dt_s_(0.004f),
     last_update_us_(0.0f),
-    startup_calibration_start_time_(0.0f)
+    startup_calibration_start_time_s_(0.0f)
 {}
 
 
@@ -76,9 +76,9 @@ bool Imu::update(void)
     bool success = true;
 
     // Update timing
-    uint32_t t      = time_keeper_get_us();
-    dt_s_           = (float)(t - last_update_us_) / 1000000.0f;
-    last_update_us_ = t;
+    time_us_t now_us = time_keeper_get_us();
+    dt_s_            = (now_us - last_update_us_) / 1e6f;
+    last_update_us_  = now_us;
 
     // Read new values from sensors
     success &= accelerometer_.update();
@@ -122,13 +122,13 @@ bool Imu::update(void)
 }
 
 
-const float& Imu::last_update_us(void) const
+const time_us_t& Imu::last_update_us(void) const
 {
     return last_update_us_;
 }
 
 
-const float& Imu::dt_s(void) const
+const time_s_t& Imu::dt_s(void) const
 {
     return dt_s_;
 }
@@ -361,7 +361,7 @@ void Imu::do_calibration(void)
          if (do_gyroscope_bias_calibration_ == false)
          {
              start_gyroscope_bias_calibration();
-             startup_calibration_start_time_ = time_keeper_get_s();
+             startup_calibration_start_time_s_ = time_keeper_get_s();
          }
 
          // Check if the gyroscope values are stable
@@ -372,11 +372,11 @@ void Imu::do_calibration(void)
          if (gyro_is_stable == false)
          {
              // Reset timestamp
-             startup_calibration_start_time_ = time_keeper_get_s();
+             startup_calibration_start_time_s_ = time_keeper_get_s();
          }
 
          // If gyros have been stable for long enough
-         if ((gyro_is_stable == true) && ((time_keeper_get_s() - startup_calibration_start_time_) > config_.startup_calib_duration_s))
+         if ((gyro_is_stable == true) && ((time_keeper_get_s() - startup_calibration_start_time_s_) > config_.startup_calib_duration_s))
          {
              // Startup calibration is done
              print_util_dbg_print("[IMU] Startup calib ok\n");

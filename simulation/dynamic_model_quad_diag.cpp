@@ -73,7 +73,7 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag(Servo& servo_rear_left,
     vel_bf_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     vel_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
     attitude_(quat_t{1.0f, {0.0f, 0.0f, 0.0f}}),
-    last_update_us_(0.0f),
+    last_update_us_(0),
     dt_s_(0.004f)
 {
     // Init local position
@@ -93,8 +93,8 @@ bool Dynamic_model_quad_diag::update(void)
     const quat_t up     = { 0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z} };
 
     // Update timing
-    float now       = time_keeper_get_us();
-    dt_s_           = (now - last_update_us_) / 1000000.0f;
+    time_us_t now_us = time_keeper_get_us();
+    dt_s_            = (now_us - last_update_us_) / 1e6f;
 
     // Do nothing if updated too often
     if (dt_s_ < 0.001f)
@@ -102,7 +102,7 @@ bool Dynamic_model_quad_diag::update(void)
         return true;
     }
 
-    last_update_us_ = now;
+    last_update_us_ = now_us;
 
     // Clip dt if too large, this is not realistic but the simulation will be more precise
     if (dt_s_ > 0.1f)
@@ -197,7 +197,7 @@ bool Dynamic_model_quad_diag::update(void)
 }
 
 
-const float& Dynamic_model_quad_diag::last_update_us(void) const
+const time_us_t& Dynamic_model_quad_diag::last_update_us(void) const
 {
     return last_update_us_;
 }

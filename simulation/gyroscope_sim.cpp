@@ -71,7 +71,7 @@ bool Gyroscope_sim::update(void)
 }
 
 
-const float& Gyroscope_sim::last_update_us(void) const
+const time_us_t& Gyroscope_sim::last_update_us(void) const
 {
     return dynamic_model_.last_update_us();
 }
