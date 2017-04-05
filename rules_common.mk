@@ -92,6 +92,7 @@ LIB_SRCS += drones/lequad.cpp
 LIB_SRCS += hal/common/dbg.cpp
 LIB_SRCS += hal/common/led_gpio.cpp
 LIB_SRCS += hal/common/file.cpp
+LIB_SRCS += hal/common/file_openlog.cpp
 LIB_SRCS += hal/common/serial.cpp
 
 LIB_SRCS += flight_controller/flight_controller_stack.cpp

@@ -162,8 +162,8 @@ void MAV::loop(void)
     }
 
     // Create log files
-    data_logging_continuous.create_new_log_file("log", communication.sysid());
-    data_logging_stat.create_new_log_file("stat", communication.sysid());
+    data_logging_continuous.create_new_log_file("LOG", communication.sysid());
+    data_logging_stat.create_new_log_file("STAT", communication.sysid());
 
     // Init mav state
     state.mav_state_ = MAV_STATE_STANDBY;  // TODO check if this is necessary
